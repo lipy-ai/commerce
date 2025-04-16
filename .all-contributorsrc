@@ -1,4 +1,21 @@
 {
   "projectName": "commerce",
-  "projectOwner": "lipy-ai"
+  "projectOwner": "lipy-ai",
+  "files": [
+    "README.md"
+  ],
+  "commitType": "docs",
+  "commitConvention": "angular",
+  "contributorsPerLine": 7,
+  "contributors": [
+    {
+      "login": "kundanbhosale",
+      "name": "Kundan Bhosale",
+      "avatar_url": "https://avatars.githubusercontent.com/u/62865281?v=4",
+      "profile": "https://kundanbhosale.github.io/",
+      "contributions": [
+        "code"
+      ]
+    }
+  ]
 }

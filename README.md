@@ -13,12 +13,16 @@
 
 ---
 
-## 👨‍💻 Authors
+## 👨‍💻 Contributors
 
-- [@kundanbhosale](https://www.github.com/kundanbhosale)
-- [@rishabh891](https://www.github.com/rishabh891)
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
 
----
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ## 📄 License
 

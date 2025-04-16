@@ -1,6 +1,11 @@
 {
   "name": "lipy-commerce",
   "private": true,
+  "license": "GNU",
+  "author": {
+    "name": "kundanbhosale",
+    "url": "https://x.com/kundanmbhosale"
+  },
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",

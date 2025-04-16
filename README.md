@@ -22,6 +22,7 @@
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://kundanbhosale.github.io/"><img src="https://avatars.githubusercontent.com/u/62865281?v=4?s=100" width="100px;" alt="Kundan Bhosale"/><br /><sub><b>Kundan Bhosale</b></sub></a><br /><a href="#code-kundanbhosale" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/rishabh891"><img src="https://avatars.githubusercontent.com/u/111378547?v=4?s=100" width="100px;" alt="rishabh891"/><br /><sub><b>rishabh891</b></sub></a><br /><a href="#code-rishabh891" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>

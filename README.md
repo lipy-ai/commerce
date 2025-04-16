@@ -35,6 +35,6 @@ Need help or have feedback?
 
 ---
 
-<p align="center">
+<p align="start">
   <img src="https://github.com/lipy-ai/commerce/blob/main/apps/www/public/logo/white.png" alt="Lipy Logo" width="200"/>
 </p>

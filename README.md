@@ -1,18 +1,40 @@
-# Lipy Commerce
+# 🌟 Lipy Commerce
 
-A quick commerce platform to help local businesses connect and sell to nearby customers.
+**Lipy Commerce** is a quick commerce platform designed to empower local businesses by connecting them directly with nearby customers. Sell faster, grow smarter, and stay local.
 
-## Authors
+---
+
+## ✨ Features
+
+- Instant local delivery for nearby customers
+- Seamless onboarding for local businesses
+- Real-time inventory and order tracking
+- Customer engagement and analytics tools
+
+---
+
+## 👨‍💻 Authors
 
 - [@kundanbhosale](https://www.github.com/kundanbhosale)
 - [@rishabh891](https://www.github.com/rishabh891)
 
-## License
+---
 
-[GNU GENERAL PUBLIC LICENSE](https://github.com/lipy-ai/commerce/blob/main/LICENSE)
+## 📄 License
 
-## Support
+This project is licensed under the [GNU General Public License](https://github.com/lipy-ai/commerce/blob/main/LICENSE).
 
-For support, email kundabhosale@lipy.ai or join our Discord channel.
+---
 
-![Lipy](https://github.com/lipy-ai/commerce/blob/main/apps/www/public/logo/white.png)
+## 💬 Support
+
+Need help or have feedback?
+
+- 📧 Email: [kundanbhosale@lipy.ai](mailto:kundanbhosale@lipy.ai)
+- 💬 Join the conversation: [Discord Channel](#) <!-- Replace # with actual Discord link -->
+
+---
+
+<p align="center">
+  <img src="https://github.com/lipy-ai/commerce/blob/main/apps/www/public/logo/white.png" alt="Lipy Logo" width="200"/>
+</p>

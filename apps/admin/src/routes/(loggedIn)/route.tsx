@@ -5,7 +5,7 @@ import {
 } from "@web-ui/components/layouts/dashboard";
 import {
   CircleUser,
-  GitPullRequest,
+  Home,
   Layers2,
   LayoutDashboard,
   LogOut,
@@ -16,7 +16,7 @@ export const Route = createFileRoute("/(loggedIn)")({
   component: RouteComponent,
 });
 
-export const dashboardNavs = {
+export const dashboardNav = {
   primary: [
     {
       label: "My Dashboard",
@@ -27,6 +27,7 @@ export const dashboardNavs = {
       label: "Products",
       url: "/products",
       icon: Shirt,
+      mobile: true,
     },
     {
       label: "Category",
@@ -50,10 +51,40 @@ export const dashboardNavs = {
   ],
 };
 
+const mobileNav = [
+  {
+    label: "Home",
+    url: "/",
+    icon: Home,
+  },
+  {
+    label: "Products",
+    url: "/products",
+    icon: Shirt,
+  },
+  {
+    label: "Categories",
+    url: "/categories",
+    icon: Layers2,
+  },
+  {
+    label: "Merchant",
+    url: "/merchants",
+    icon: Users,
+  },
+
+  {
+    label: "Account",
+    url: "/account",
+    icon: CircleUser,
+  },
+];
+
 function RouteComponent() {
   return (
     <DashboardLayout
-      navs={dashboardNavs}
+      dashboardNav={dashboardNav}
+      mobileNav={mobileNav}
       logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
     >
       <DashboardBody>

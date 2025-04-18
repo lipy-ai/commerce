@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as loggedInRouteImport } from './routes/(loggedIn)/route'
 import { Route as loggedInIndexImport } from './routes/(loggedIn)/index'
 import { Route as loggedInMerchantsIndexImport } from './routes/(loggedIn)/merchants/index'
+import { Route as loggedInAccountIndexImport } from './routes/(loggedIn)/account/index'
 import { Route as loggedInproductsProductsImport } from './routes/(loggedIn)/(products)/products'
 import { Route as loggedIncategoriesCategoriesImport } from './routes/(loggedIn)/(categories)/categories'
 import { Route as loggedInproductsProductIdImport } from './routes/(loggedIn)/(products)/product.$id'
@@ -34,6 +35,12 @@ const loggedInIndexRoute = loggedInIndexImport.update({
 const loggedInMerchantsIndexRoute = loggedInMerchantsIndexImport.update({
   id: '/merchants/',
   path: '/merchants/',
+  getParentRoute: () => loggedInRouteRoute,
+} as any)
+
+const loggedInAccountIndexRoute = loggedInAccountIndexImport.update({
+  id: '/account/',
+  path: '/account/',
   getParentRoute: () => loggedInRouteRoute,
 } as any)
 
@@ -88,6 +95,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof loggedInproductsProductsImport
       parentRoute: typeof loggedInRouteImport
     }
+    '/(loggedIn)/account/': {
+      id: '/(loggedIn)/account/'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof loggedInAccountIndexImport
+      parentRoute: typeof loggedInRouteImport
+    }
     '/(loggedIn)/merchants/': {
       id: '/(loggedIn)/merchants/'
       path: '/merchants'
@@ -111,6 +125,7 @@ interface loggedInRouteRouteChildren {
   loggedInIndexRoute: typeof loggedInIndexRoute
   loggedIncategoriesCategoriesRoute: typeof loggedIncategoriesCategoriesRoute
   loggedInproductsProductsRoute: typeof loggedInproductsProductsRoute
+  loggedInAccountIndexRoute: typeof loggedInAccountIndexRoute
   loggedInMerchantsIndexRoute: typeof loggedInMerchantsIndexRoute
   loggedInproductsProductIdRoute: typeof loggedInproductsProductIdRoute
 }
@@ -119,6 +134,7 @@ const loggedInRouteRouteChildren: loggedInRouteRouteChildren = {
   loggedInIndexRoute: loggedInIndexRoute,
   loggedIncategoriesCategoriesRoute: loggedIncategoriesCategoriesRoute,
   loggedInproductsProductsRoute: loggedInproductsProductsRoute,
+  loggedInAccountIndexRoute: loggedInAccountIndexRoute,
   loggedInMerchantsIndexRoute: loggedInMerchantsIndexRoute,
   loggedInproductsProductIdRoute: loggedInproductsProductIdRoute,
 }
@@ -131,6 +147,7 @@ export interface FileRoutesByFullPath {
   '/': typeof loggedInIndexRoute
   '/categories': typeof loggedIncategoriesCategoriesRoute
   '/products': typeof loggedInproductsProductsRoute
+  '/account': typeof loggedInAccountIndexRoute
   '/merchants': typeof loggedInMerchantsIndexRoute
   '/product/$id': typeof loggedInproductsProductIdRoute
 }
@@ -139,6 +156,7 @@ export interface FileRoutesByTo {
   '/': typeof loggedInIndexRoute
   '/categories': typeof loggedIncategoriesCategoriesRoute
   '/products': typeof loggedInproductsProductsRoute
+  '/account': typeof loggedInAccountIndexRoute
   '/merchants': typeof loggedInMerchantsIndexRoute
   '/product/$id': typeof loggedInproductsProductIdRoute
 }
@@ -149,21 +167,35 @@ export interface FileRoutesById {
   '/(loggedIn)/': typeof loggedInIndexRoute
   '/(loggedIn)/(categories)/categories': typeof loggedIncategoriesCategoriesRoute
   '/(loggedIn)/(products)/products': typeof loggedInproductsProductsRoute
+  '/(loggedIn)/account/': typeof loggedInAccountIndexRoute
   '/(loggedIn)/merchants/': typeof loggedInMerchantsIndexRoute
   '/(loggedIn)/(products)/product/$id': typeof loggedInproductsProductIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/categories' | '/products' | '/merchants' | '/product/$id'
+  fullPaths:
+    | '/'
+    | '/categories'
+    | '/products'
+    | '/account'
+    | '/merchants'
+    | '/product/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/categories' | '/products' | '/merchants' | '/product/$id'
+  to:
+    | '/'
+    | '/categories'
+    | '/products'
+    | '/account'
+    | '/merchants'
+    | '/product/$id'
   id:
     | '__root__'
     | '/(loggedIn)'
     | '/(loggedIn)/'
     | '/(loggedIn)/(categories)/categories'
     | '/(loggedIn)/(products)/products'
+    | '/(loggedIn)/account/'
     | '/(loggedIn)/merchants/'
     | '/(loggedIn)/(products)/product/$id'
   fileRoutesById: FileRoutesById
@@ -196,6 +228,7 @@ export const routeTree = rootRoute
         "/(loggedIn)/",
         "/(loggedIn)/(categories)/categories",
         "/(loggedIn)/(products)/products",
+        "/(loggedIn)/account/",
         "/(loggedIn)/merchants/",
         "/(loggedIn)/(products)/product/$id"
       ]
@@ -210,6 +243,10 @@ export const routeTree = rootRoute
     },
     "/(loggedIn)/(products)/products": {
       "filePath": "(loggedIn)/(products)/products.tsx",
+      "parent": "/(loggedIn)"
+    },
+    "/(loggedIn)/account/": {
+      "filePath": "(loggedIn)/account/index.tsx",
       "parent": "/(loggedIn)"
     },
     "/(loggedIn)/merchants/": {

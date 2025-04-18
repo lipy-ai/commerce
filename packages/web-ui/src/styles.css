@@ -1,5 +1,5 @@
 @import "tailwindcss";
-
+@source "../../../packages/web-ui/src/**/*.{ts,tsx}";
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -152,5 +152,8 @@
   }
   body {
     @apply text-foreground text-sm;
+  }
+  .lucide {
+    stroke-width: 1.5;
   }
 }

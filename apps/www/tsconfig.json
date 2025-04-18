@@ -24,7 +24,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@repo/web-ui/*": ["../../packages/web-ui/src/*"]
+      "@web-ui/*": ["../../packages/web-ui/src/*"]
     }
   }
 }

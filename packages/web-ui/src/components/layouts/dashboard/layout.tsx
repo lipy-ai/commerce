@@ -4,21 +4,26 @@ import { useState, type ReactNode } from "react";
 import { motion } from "framer-motion";
 
 import { cn } from "@web-ui/lib/utils";
-import { Link, useMatchRoute, useRouter } from "@tanstack/react-router";
+import { Link, useMatchRoute } from "@tanstack/react-router";
 import type { LucideIcon } from "lucide-react";
-export type DashboardNavs = Record<
-  string,
-  Array<{ label: string; url: string; icon: LucideIcon }>
->;
+import { useViewport } from "@web-ui/contexts/viewport";
+type Navs = Array<{
+  label: string;
+  url: string;
+  icon: LucideIcon;
+  mobile?: boolean;
+}>;
+export type DashboardNavs = Record<"primary" | "secondary", Navs>;
 
 export const DashboardLayout = ({
   children,
-  navs,
+  dashboardNav,
+  mobileNav,
   logo,
 }: {
   children: ReactNode;
-  navs: DashboardNavs;
-
+  dashboardNav: DashboardNavs;
+  mobileNav: Navs;
   logo: {
     icon: string;
     full: string;
@@ -26,15 +31,8 @@ export const DashboardLayout = ({
   };
 }) => {
   const [open, setOpen] = useState(false);
-  const { state } = useRouter();
 
-  // if (data?.name) {
-  //   const idx = navs.secondary.findIndex((f) => f.label === "Company");
-
-  //   if (idx !== -1) {
-  //     navs.secondary[idx]!.label = `Comapny (${data.name})`;
-  //   }
-  // }
+  const { isMobile, width } = useViewport();
 
   const handleNavClick = (e: React.MouseEvent) => {
     // Only toggle the sidebar if the click is directly on the nav element
@@ -43,6 +41,24 @@ export const DashboardLayout = ({
       setOpen((o) => !o);
     }
   };
+
+  if (isMobile) {
+    return (
+      <div className="flex min-h-screen">
+        {children}
+        <div
+          className={cn(
+            `grid fixed bottom-0 justify-center px-4 border-t w-screen`
+          )}
+          style={{ gridTemplateColumns: `repeat(${mobileNav.length}, 1fr)` }}
+        >
+          {mobileNav.map((n, i) => (
+            <ActiveLink key={i} nav={n} mobile />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen">
@@ -72,13 +88,13 @@ export const DashboardLayout = ({
             </Link>
           </motion.div>
           <motion.div className="space-y-2">
-            {navs.primary.map((n, i) => (
+            {dashboardNav.primary.map((n, i) => (
               <ActiveLink key={i} nav={n} open={open} />
             ))}
           </motion.div>
         </div>
         <div className="space-y-2">
-          {navs.secondary.map((n, i) => (
+          {dashboardNav.secondary.map((n, i) => (
             <ActiveLink key={i} nav={n} open={open} />
           ))}
         </div>
@@ -96,9 +112,11 @@ export const DashboardLayout = ({
 export function ActiveLink({
   nav,
   open,
+  mobile,
 }: {
   nav: DashboardNavs["primary"][0];
-  open: boolean;
+  open?: boolean;
+  mobile?: boolean;
 }) {
   const matchRoute = useMatchRoute();
   const isActive = !!matchRoute({ to: nav.url, fuzzy: true }); // fuzzy for nested matches
@@ -106,14 +124,28 @@ export function ActiveLink({
   return (
     <div
       className={cn(
-        "overflow-hidden border-b border-border/20 truncate rounded-md px-2",
+        "overflow-hidden border-b border-border/20 truncate rounded-md px-2 relative w-full",
         open && "justify-start",
-        isActive ? "bg-primary text-primary-foreground" : "hover:bg-accent"
+        mobile && "px-0 justify-center rounded-none",
+        mobile
+          ? isActive && "text-primary [&_svg]:stroke-primary"
+          : isActive
+            ? "bg-primary text-primary-foreground"
+            : "hover:bg-accent"
       )}
     >
+      {mobile && (
+        <span
+          className={cn(
+            "h-1.5 w-4/5 block bg-transparent rounded-b-2xl m-auto",
+            isActive && "bg-primary"
+          )}
+        />
+      )}
       <Link
         className={cn(
-          "inline-flex items-center text-sm font-medium py-2 gap-2"
+          "inline-flex items-center text-sm font-medium py-2 gap-2",
+          mobile && "flex-col text-[10px] font-light w-full"
         )}
         to={nav.url}
       >
@@ -127,7 +159,8 @@ export function ActiveLink({
         </span>
         <motion.span
           className={cn(
-            "flex justify-between gap-2 w-full items-center flex-1"
+            "flex justify-between gap-2 w-full items-center flex-1",
+            mobile && "justify-center"
           )}
         >
           {nav.label}

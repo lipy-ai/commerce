@@ -1,4 +1,4 @@
-import { Env, Hono } from "hono";
+import { Hono } from "hono";
 
 import { cors } from "hono/cors";
 import { showRoutes } from "hono/dev";
@@ -12,7 +12,6 @@ import { db, pingDatabase } from "./db";
 import { auth } from "./auth";
 import { userRouter } from "./routes";
 import { Context } from "./types";
-import { compress } from "hono/compress";
 
 export const app = new Hono<Context>();
 

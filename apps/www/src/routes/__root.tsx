@@ -1,6 +1,5 @@
 import {
   HeadContent,
-  Link,
   Outlet,
   Scripts,
   createRootRoute,
@@ -10,6 +9,10 @@ import * as React from "react";
 import { DefaultCatchBoundary } from "@/components/defaultCatchBoundry";
 import { NotFound } from "@/components/notFound";
 import { seo } from "@/utils/seo";
+import NavBar from "@/components/navBar";
+// import appCss from "../styles.css?url";
+import appCss from "@web-ui/styles.css?url";
+import { ViewportProvider } from "@/context/viewport";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -21,32 +24,34 @@ export const Route = createRootRoute({
         name: "viewport",
         content: "width=device-width, initial-scale=1",
       },
+
       ...seo({
-        title:
-          "TanStack Start | Type-Safe, Client-First, Full-Stack React Framework",
-        description: `TanStack Start is a type-safe, client-first, full-stack React framework. `,
+        title: "Lipy Commerce",
+        description: `Lipy Commerce is a quick commerce platform designed to empower local businesses by connecting them directly with nearby customers. Sell faster, grow smarter, and stay local.`,
       }),
     ],
     links: [
+      { rel: "stylesheet", href: appCss },
+
       {
         rel: "apple-touch-icon",
         sizes: "180x180",
-        href: "/apple-touch-icon.png",
+        href: "/favicon/apple-touch-icon.png",
       },
       {
         rel: "icon",
         type: "image/png",
         sizes: "32x32",
-        href: "/favicon-32x32.png",
+        href: "/favicon/favicon-32x32.png",
       },
       {
         rel: "icon",
         type: "image/png",
         sizes: "16x16",
-        href: "/favicon-16x16.png",
+        href: "/favicon/favicon-16x16.png",
       },
-      { rel: "manifest", href: "/site.webmanifest", color: "#fffff" },
-      { rel: "icon", href: "/favicon.ico" },
+      { rel: "manifest", href: "/favicon/site.webmanifest", color: "#fffff" },
+      { rel: "icon", href: "/favicon/favicon.ico" },
     ],
   }),
   errorComponent: (props) => {
@@ -74,22 +79,14 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body>
-        <div className="p-2 flex gap-2 text-lg">
-          <Link
-            to="/"
-            activeProps={{
-              className: "font-bold",
-            }}
-            activeOptions={{ exact: true }}
-          >
-            Home
-          </Link>{" "}
-        </div>
-        <hr />
-        {children}
-        <TanStackRouterDevtools position="bottom-right" />
-        <Scripts />
+      <body suppressHydrationWarning>
+        <ViewportProvider>
+          <NavBar />
+          <hr />
+          {children}
+          <TanStackRouterDevtools position="bottom-right" />
+          <Scripts />
+        </ViewportProvider>
       </body>
     </html>
   );

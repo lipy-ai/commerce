@@ -1,5 +1,11 @@
-import { customType } from "drizzle-orm/gel-core";
-import { text, timestamp, boolean, pgSchema } from "drizzle-orm/pg-core";
+import { customType } from "drizzle-orm/pg-core";
+import {
+  text,
+  timestamp,
+  boolean,
+  pgSchema,
+  numeric,
+} from "drizzle-orm/pg-core";
 
 // Create a custom type for PostGIS POINT
 const geographyPoint = customType<{ data: string }>({
@@ -11,6 +17,7 @@ const geographyPoint = customType<{ data: string }>({
 export const authSchema = pgSchema("auth");
 export const orgSchema = pgSchema("org");
 export const userSchema = pgSchema("user");
+export const publicSchema = pgSchema("global");
 
 export const authUser = authSchema.table("user", {
   id: text("id").primaryKey(),
@@ -103,3 +110,54 @@ export const orgInvitation = orgSchema.table("invitation", {
     .notNull()
     .references(() => authUser.id, { onDelete: "cascade" }),
 });
+
+export const publicCategory = publicSchema.table("category", {
+  id: text("id").primaryKey(),
+  title: text("title"),
+  summary: text("summary"),
+  slug: text("slug"),
+  createdAt: timestamp("created_at").notNull(),
+  updateAt: timestamp("updated_at").notNull(),
+});
+
+export const publicSubCategory = publicSchema.table("sub_category", {
+  id: text("id").primaryKey(),
+  parent: text("category").references(() => publicCategory.id, {
+    onDelete: "set null",
+  }),
+  title: text("title"),
+  summary: text("summary"),
+  slug: text("slug"),
+  createdAt: timestamp("created_at").notNull(),
+  updateAt: timestamp("updated_at").notNull(),
+});
+
+export const publicProduct = publicSchema.table("product", {
+  id: text("id").primaryKey(),
+  title: text("title"),
+  summary: text("summary"),
+  brand: text("brand"),
+  type: text({ enum: ["physical"] }),
+  rating: numeric("rating", { precision: 2, scale: 1 }).notNull().default("0"),
+  category: text("category").references(() => publicCategory.id, {
+    onDelete: "set null",
+  }),
+  subCategory: text("sub_category").references(() => publicSubCategory.id, {
+    onDelete: "set null",
+  }),
+  createdAt: timestamp("created_at").notNull(),
+  updateAt: timestamp("updated_at").notNull(),
+});
+
+export const publicProductVariants = publicSchema.table("variants", {
+  id: text("id").primaryKey(),
+  title: text("title"),
+  product: text("product").references(() => publicSubCategory.id, {
+    onDelete: "cascade",
+  }),
+  unit: numeric("uint"),
+  createdAt: timestamp("created_at").notNull(),
+  updateAt: timestamp("updated_at").notNull(),
+});
+
+export const publicImages = publicSchema.table("images", {});

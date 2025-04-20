@@ -13,11 +13,12 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as loggedInRouteImport } from './routes/(loggedIn)/route'
 import { Route as loggedInIndexImport } from './routes/(loggedIn)/index'
-import { Route as loggedInMerchantsIndexImport } from './routes/(loggedIn)/merchants/index'
+import { Route as loggedInCustomersIndexImport } from './routes/(loggedIn)/customers/index'
 import { Route as loggedInAccountIndexImport } from './routes/(loggedIn)/account/index'
 import { Route as loggedInproductsProductsImport } from './routes/(loggedIn)/(products)/products'
-import { Route as loggedIncategoriesCategoriesImport } from './routes/(loggedIn)/(categories)/categories'
+import { Route as loggedInordersOrdersImport } from './routes/(loggedIn)/(orders)/orders'
 import { Route as loggedInproductsProductIdImport } from './routes/(loggedIn)/(products)/product.$id'
+import { Route as loggedInordersOrderIdImport } from './routes/(loggedIn)/(orders)/order.$id'
 
 // Create/Update Routes
 
@@ -32,9 +33,9 @@ const loggedInIndexRoute = loggedInIndexImport.update({
   getParentRoute: () => loggedInRouteRoute,
 } as any)
 
-const loggedInMerchantsIndexRoute = loggedInMerchantsIndexImport.update({
-  id: '/merchants/',
-  path: '/merchants/',
+const loggedInCustomersIndexRoute = loggedInCustomersIndexImport.update({
+  id: '/customers/',
+  path: '/customers/',
   getParentRoute: () => loggedInRouteRoute,
 } as any)
 
@@ -50,16 +51,21 @@ const loggedInproductsProductsRoute = loggedInproductsProductsImport.update({
   getParentRoute: () => loggedInRouteRoute,
 } as any)
 
-const loggedIncategoriesCategoriesRoute =
-  loggedIncategoriesCategoriesImport.update({
-    id: '/(categories)/categories',
-    path: '/categories',
-    getParentRoute: () => loggedInRouteRoute,
-  } as any)
+const loggedInordersOrdersRoute = loggedInordersOrdersImport.update({
+  id: '/(orders)/orders',
+  path: '/orders',
+  getParentRoute: () => loggedInRouteRoute,
+} as any)
 
 const loggedInproductsProductIdRoute = loggedInproductsProductIdImport.update({
   id: '/(products)/product/$id',
   path: '/product/$id',
+  getParentRoute: () => loggedInRouteRoute,
+} as any)
+
+const loggedInordersOrderIdRoute = loggedInordersOrderIdImport.update({
+  id: '/(orders)/order/$id',
+  path: '/order/$id',
   getParentRoute: () => loggedInRouteRoute,
 } as any)
 
@@ -81,11 +87,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof loggedInIndexImport
       parentRoute: typeof loggedInRouteImport
     }
-    '/(loggedIn)/(categories)/categories': {
-      id: '/(loggedIn)/(categories)/categories'
-      path: '/categories'
-      fullPath: '/categories'
-      preLoaderRoute: typeof loggedIncategoriesCategoriesImport
+    '/(loggedIn)/(orders)/orders': {
+      id: '/(loggedIn)/(orders)/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof loggedInordersOrdersImport
       parentRoute: typeof loggedInRouteImport
     }
     '/(loggedIn)/(products)/products': {
@@ -102,11 +108,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof loggedInAccountIndexImport
       parentRoute: typeof loggedInRouteImport
     }
-    '/(loggedIn)/merchants/': {
-      id: '/(loggedIn)/merchants/'
-      path: '/merchants'
-      fullPath: '/merchants'
-      preLoaderRoute: typeof loggedInMerchantsIndexImport
+    '/(loggedIn)/customers/': {
+      id: '/(loggedIn)/customers/'
+      path: '/customers'
+      fullPath: '/customers'
+      preLoaderRoute: typeof loggedInCustomersIndexImport
+      parentRoute: typeof loggedInRouteImport
+    }
+    '/(loggedIn)/(orders)/order/$id': {
+      id: '/(loggedIn)/(orders)/order/$id'
+      path: '/order/$id'
+      fullPath: '/order/$id'
+      preLoaderRoute: typeof loggedInordersOrderIdImport
       parentRoute: typeof loggedInRouteImport
     }
     '/(loggedIn)/(products)/product/$id': {
@@ -123,19 +136,21 @@ declare module '@tanstack/react-router' {
 
 interface loggedInRouteRouteChildren {
   loggedInIndexRoute: typeof loggedInIndexRoute
-  loggedIncategoriesCategoriesRoute: typeof loggedIncategoriesCategoriesRoute
+  loggedInordersOrdersRoute: typeof loggedInordersOrdersRoute
   loggedInproductsProductsRoute: typeof loggedInproductsProductsRoute
   loggedInAccountIndexRoute: typeof loggedInAccountIndexRoute
-  loggedInMerchantsIndexRoute: typeof loggedInMerchantsIndexRoute
+  loggedInCustomersIndexRoute: typeof loggedInCustomersIndexRoute
+  loggedInordersOrderIdRoute: typeof loggedInordersOrderIdRoute
   loggedInproductsProductIdRoute: typeof loggedInproductsProductIdRoute
 }
 
 const loggedInRouteRouteChildren: loggedInRouteRouteChildren = {
   loggedInIndexRoute: loggedInIndexRoute,
-  loggedIncategoriesCategoriesRoute: loggedIncategoriesCategoriesRoute,
+  loggedInordersOrdersRoute: loggedInordersOrdersRoute,
   loggedInproductsProductsRoute: loggedInproductsProductsRoute,
   loggedInAccountIndexRoute: loggedInAccountIndexRoute,
-  loggedInMerchantsIndexRoute: loggedInMerchantsIndexRoute,
+  loggedInCustomersIndexRoute: loggedInCustomersIndexRoute,
+  loggedInordersOrderIdRoute: loggedInordersOrderIdRoute,
   loggedInproductsProductIdRoute: loggedInproductsProductIdRoute,
 }
 
@@ -145,19 +160,21 @@ const loggedInRouteRouteWithChildren = loggedInRouteRoute._addFileChildren(
 
 export interface FileRoutesByFullPath {
   '/': typeof loggedInIndexRoute
-  '/categories': typeof loggedIncategoriesCategoriesRoute
+  '/orders': typeof loggedInordersOrdersRoute
   '/products': typeof loggedInproductsProductsRoute
   '/account': typeof loggedInAccountIndexRoute
-  '/merchants': typeof loggedInMerchantsIndexRoute
+  '/customers': typeof loggedInCustomersIndexRoute
+  '/order/$id': typeof loggedInordersOrderIdRoute
   '/product/$id': typeof loggedInproductsProductIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof loggedInIndexRoute
-  '/categories': typeof loggedIncategoriesCategoriesRoute
+  '/orders': typeof loggedInordersOrdersRoute
   '/products': typeof loggedInproductsProductsRoute
   '/account': typeof loggedInAccountIndexRoute
-  '/merchants': typeof loggedInMerchantsIndexRoute
+  '/customers': typeof loggedInCustomersIndexRoute
+  '/order/$id': typeof loggedInordersOrderIdRoute
   '/product/$id': typeof loggedInproductsProductIdRoute
 }
 
@@ -165,10 +182,11 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/(loggedIn)': typeof loggedInRouteRouteWithChildren
   '/(loggedIn)/': typeof loggedInIndexRoute
-  '/(loggedIn)/(categories)/categories': typeof loggedIncategoriesCategoriesRoute
+  '/(loggedIn)/(orders)/orders': typeof loggedInordersOrdersRoute
   '/(loggedIn)/(products)/products': typeof loggedInproductsProductsRoute
   '/(loggedIn)/account/': typeof loggedInAccountIndexRoute
-  '/(loggedIn)/merchants/': typeof loggedInMerchantsIndexRoute
+  '/(loggedIn)/customers/': typeof loggedInCustomersIndexRoute
+  '/(loggedIn)/(orders)/order/$id': typeof loggedInordersOrderIdRoute
   '/(loggedIn)/(products)/product/$id': typeof loggedInproductsProductIdRoute
 }
 
@@ -176,27 +194,30 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/categories'
+    | '/orders'
     | '/products'
     | '/account'
-    | '/merchants'
+    | '/customers'
+    | '/order/$id'
     | '/product/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/categories'
+    | '/orders'
     | '/products'
     | '/account'
-    | '/merchants'
+    | '/customers'
+    | '/order/$id'
     | '/product/$id'
   id:
     | '__root__'
     | '/(loggedIn)'
     | '/(loggedIn)/'
-    | '/(loggedIn)/(categories)/categories'
+    | '/(loggedIn)/(orders)/orders'
     | '/(loggedIn)/(products)/products'
     | '/(loggedIn)/account/'
-    | '/(loggedIn)/merchants/'
+    | '/(loggedIn)/customers/'
+    | '/(loggedIn)/(orders)/order/$id'
     | '/(loggedIn)/(products)/product/$id'
   fileRoutesById: FileRoutesById
 }
@@ -226,10 +247,11 @@ export const routeTree = rootRoute
       "filePath": "(loggedIn)/route.tsx",
       "children": [
         "/(loggedIn)/",
-        "/(loggedIn)/(categories)/categories",
+        "/(loggedIn)/(orders)/orders",
         "/(loggedIn)/(products)/products",
         "/(loggedIn)/account/",
-        "/(loggedIn)/merchants/",
+        "/(loggedIn)/customers/",
+        "/(loggedIn)/(orders)/order/$id",
         "/(loggedIn)/(products)/product/$id"
       ]
     },
@@ -237,8 +259,8 @@ export const routeTree = rootRoute
       "filePath": "(loggedIn)/index.tsx",
       "parent": "/(loggedIn)"
     },
-    "/(loggedIn)/(categories)/categories": {
-      "filePath": "(loggedIn)/(categories)/categories.tsx",
+    "/(loggedIn)/(orders)/orders": {
+      "filePath": "(loggedIn)/(orders)/orders.tsx",
       "parent": "/(loggedIn)"
     },
     "/(loggedIn)/(products)/products": {
@@ -249,8 +271,12 @@ export const routeTree = rootRoute
       "filePath": "(loggedIn)/account/index.tsx",
       "parent": "/(loggedIn)"
     },
-    "/(loggedIn)/merchants/": {
-      "filePath": "(loggedIn)/merchants/index.tsx",
+    "/(loggedIn)/customers/": {
+      "filePath": "(loggedIn)/customers/index.tsx",
+      "parent": "/(loggedIn)"
+    },
+    "/(loggedIn)/(orders)/order/$id": {
+      "filePath": "(loggedIn)/(orders)/order.$id.tsx",
       "parent": "/(loggedIn)"
     },
     "/(loggedIn)/(products)/product/$id": {

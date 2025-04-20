@@ -1,5 +1,5 @@
 import { Outlet, createRootRoute } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+// import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { ViewportProvider } from "@web-ui/contexts/viewport";
 import { NuqsAdapter } from "nuqs/adapters/react";
 

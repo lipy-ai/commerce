@@ -32,7 +32,7 @@ export const DashboardLayout = ({
 }) => {
   const [open, setOpen] = useState(false);
 
-  const { isMobile, width } = useViewport();
+  const { isMobile } = useViewport();
 
   const handleNavClick = (e: React.MouseEvent) => {
     // Only toggle the sidebar if the click is directly on the nav element
@@ -44,11 +44,14 @@ export const DashboardLayout = ({
 
   if (isMobile) {
     return (
-      <div className="flex min-h-screen">
+      <div className="flex flex-col min-h-screen">
         {children}
+        <br />
+        <br /> <br />
+        <br /> <br />
         <div
           className={cn(
-            `grid fixed bottom-0 justify-center px-4 border-t w-screen`
+            `grid fixed bottom-0 justify-center px-4 border-t w-screen bg-background z-50`
           )}
           style={{ gridTemplateColumns: `repeat(${mobileNav.length}, 1fr)` }}
         >

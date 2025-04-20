@@ -1,0 +1,64 @@
+{
+  "/Users/kundanbhosale/Workspace/lipy-commerce/packages/web-ui/src/styles.css": {
+    "file": "assets/styles--UDGPbWH.css",
+    "src": "/Users/kundanbhosale/Workspace/lipy-commerce/packages/web-ui/src/styles.css"
+  },
+  "_client-FHwhi_pl.js": {
+    "file": "assets/client-FHwhi_pl.js",
+    "name": "client",
+    "dynamicImports": [
+      "src/routes/checkout/route.tsx?tsr-split=component",
+      "src/routes/cart/route.tsx?tsr-split=component",
+      "src/routes/account/route.tsx?tsr-split=component",
+      "src/routes/index.tsx?tsr-split=component"
+    ],
+    "assets": [
+      "assets/styles--UDGPbWH.css"
+    ]
+  },
+  "src/routes/account/route.tsx?tsr-split=component": {
+    "file": "assets/route-DiC6ROD6.js",
+    "name": "route",
+    "src": "src/routes/account/route.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_client-FHwhi_pl.js"
+    ]
+  },
+  "src/routes/cart/route.tsx?tsr-split=component": {
+    "file": "assets/route-CvW36dQx.js",
+    "name": "route",
+    "src": "src/routes/cart/route.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_client-FHwhi_pl.js"
+    ]
+  },
+  "src/routes/checkout/route.tsx?tsr-split=component": {
+    "file": "assets/route-Bsu7n8Gh.js",
+    "name": "route",
+    "src": "src/routes/checkout/route.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_client-FHwhi_pl.js"
+    ]
+  },
+  "src/routes/index.tsx?tsr-split=component": {
+    "file": "assets/index-qfeaQmmM.js",
+    "name": "index",
+    "src": "src/routes/index.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_client-FHwhi_pl.js"
+    ]
+  },
+  "virtual:$vinxi/handler/client": {
+    "file": "assets/client-L8FJ6FCC.js",
+    "name": "client",
+    "src": "virtual:$vinxi/handler/client",
+    "isEntry": true,
+    "imports": [
+      "_client-FHwhi_pl.js"
+    ]
+  }
+}

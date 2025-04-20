@@ -16,7 +16,7 @@ const Input = React.forwardRef<
   return (
     <div
       className={cn(
-        "border-input focus-within:border-ring focus-within:ring-ring flex items-center overflow-hidden rounded-md border focus-within:outline-none focus-within:ring-1",
+        "border-input bg-background focus-within:border-ring focus-within:ring-ring flex items-center overflow-hidden rounded-md border focus-within:outline-none focus-within:ring-1",
         className
       )}
     >

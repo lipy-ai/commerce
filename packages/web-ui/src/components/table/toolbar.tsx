@@ -11,6 +11,7 @@ import { DataTableViewOptions } from "@web-ui/components/table/view-options";
 import { Button } from "@web-ui/components/ui/button";
 import { Input } from "@web-ui/components/ui/input";
 import { cn } from "@web-ui/lib/utils";
+import { useViewport } from "@web-ui/contexts/viewport";
 
 interface DataTableToolbarProps<TData> extends React.ComponentProps<"div"> {
   table: Table<TData>;
@@ -23,6 +24,7 @@ export function DataTableToolbar<TData>({
   ...props
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
+  const { isMobile } = useViewport();
 
   const columns = React.useMemo(
     () => table.getAllColumns().filter((column) => column.getCanFilter()),
@@ -33,37 +35,60 @@ export function DataTableToolbar<TData>({
     table.resetColumnFilters();
   }, [table]);
 
+  type SplitColumns = {
+    topBar: Column<TData, unknown> | null;
+    rest: Column<TData, unknown>[];
+  };
+  const { topBar, rest }: SplitColumns = columns.reduce<SplitColumns>(
+    (acc, item) => {
+      if (!acc.topBar && item.columnDef.meta?.variant === "text") {
+        acc.topBar = item;
+      } else {
+        acc.rest.push(item);
+      }
+      return acc;
+    },
+    { topBar: null, rest: [] }
+  );
+
+  const Filters = () => (
+    <div className="flex flex-1 flex-wrap items-center gap-2">
+      {!isMobile && topBar && <DataTableToolbarFilter column={topBar} />}
+      {rest.map((column) => (
+        <DataTableToolbarFilter key={column.id} column={column} />
+      ))}
+      {isFiltered && (
+        <Button
+          aria-label="Reset filters"
+          variant="outline"
+          size="sm"
+          className="border-dashed"
+          onClick={onReset}
+        >
+          <X />
+          Reset
+        </Button>
+      )}
+    </div>
+  );
+
   return (
     <div
       role="toolbar"
       aria-orientation="horizontal"
       className={cn(
-        "flex w-full items-start justify-between gap-2 p-1",
+        "flex flex-col w-full items-start justify-between gap-2 p-1",
         className
       )}
       {...props}
     >
-      <div className="flex flex-1 flex-wrap items-center gap-2">
-        {columns.map((column) => (
-          <DataTableToolbarFilter key={column.id} column={column} />
-        ))}
-        {isFiltered && (
-          <Button
-            aria-label="Reset filters"
-            variant="outline"
-            size="sm"
-            className="border-dashed"
-            onClick={onReset}
-          >
-            <X />
-            Reset
-          </Button>
-        )}
-      </div>
-      <div className="flex items-center gap-2">
-        {children}
+      <div className="flex items-center gap-2 w-full">
+        {isMobile && topBar && <DataTableToolbarFilter column={topBar} />}
+        {!isMobile && <Filters />}
         <DataTableViewOptions table={table} />
+        {children}
       </div>
+      {isMobile && <Filters />}
     </div>
   );
 }
@@ -87,7 +112,7 @@ function DataTableToolbarFilter<TData>({
               placeholder={columnMeta.placeholder ?? columnMeta.label}
               value={(column.getFilterValue() as string) ?? ""}
               onChange={(event) => column.setFilterValue(event.target.value)}
-              className="h-8 w-40 lg:w-56"
+              className="h-8 flex-1 lg:max-w-96"
             />
           );
 

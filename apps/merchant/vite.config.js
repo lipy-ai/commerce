@@ -11,6 +11,9 @@ export default defineConfig({
     viteReact(),
     tailwindcss(),
   ],
+  server: {
+    allowedHosts: true,
+  },
   test: {
     globals: true,
     environment: "jsdom",

@@ -6,10 +6,10 @@ import {
 import {
   CircleUser,
   Home,
-  Layers2,
   LayoutDashboard,
   LogOut,
   Shirt,
+  ShoppingBag,
   Users,
 } from "lucide-react";
 export const Route = createFileRoute("/(loggedIn)")({
@@ -30,13 +30,13 @@ export const dashboardNav = {
       mobile: true,
     },
     {
-      label: "Category",
-      url: "/categories",
-      icon: Layers2,
+      label: "Orders",
+      url: "/orders",
+      icon: ShoppingBag,
     },
     {
-      label: "Merchants",
-      url: "/merchants",
+      label: "Customers",
+      url: "/customers",
       icon: Users,
     },
   ],
@@ -63,13 +63,13 @@ const mobileNav = [
     icon: Shirt,
   },
   {
-    label: "Categories",
-    url: "/categories",
-    icon: Layers2,
+    label: "Orders",
+    url: "/orders",
+    icon: ShoppingBag,
   },
   {
-    label: "Merchant",
-    url: "/merchants",
+    label: "Customers",
+    url: "/customers",
     icon: Users,
   },
 

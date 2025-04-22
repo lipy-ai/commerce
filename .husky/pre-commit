@@ -1,1 +1,3 @@
-bunx run lint
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+# bunx run lint

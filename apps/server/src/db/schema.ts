@@ -1,4 +1,5 @@
-import { customType } from "drizzle-orm/pg-core";
+import { Kyselify } from "drizzle-orm/kysely";
+import { bigint, customType, jsonb } from "drizzle-orm/pg-core";
 import {
   text,
   timestamp,
@@ -17,7 +18,8 @@ const geographyPoint = customType<{ data: string }>({
 export const authSchema = pgSchema("auth");
 export const orgSchema = pgSchema("org");
 export const userSchema = pgSchema("user");
-export const publicSchema = pgSchema("global");
+export const shopSchema = pgSchema("shop");
+export const globalSchema = pgSchema("public");
 
 export const authUser = authSchema.table("user", {
   id: text("id").primaryKey(),
@@ -111,7 +113,7 @@ export const orgInvitation = orgSchema.table("invitation", {
     .references(() => authUser.id, { onDelete: "cascade" }),
 });
 
-export const publicCategory = publicSchema.table("category", {
+export const globalCategory = globalSchema.table("category", {
   id: text("id").primaryKey(),
   title: text("title"),
   summary: text("summary"),
@@ -120,9 +122,9 @@ export const publicCategory = publicSchema.table("category", {
   updateAt: timestamp("updated_at").notNull(),
 });
 
-export const publicSubCategory = publicSchema.table("sub_category", {
+export const globalSubCategory = globalSchema.table("sub_category", {
   id: text("id").primaryKey(),
-  parent: text("category").references(() => publicCategory.id, {
+  parent: text("category").references(() => globalCategory.id, {
     onDelete: "set null",
   }),
   title: text("title"),
@@ -132,32 +134,100 @@ export const publicSubCategory = publicSchema.table("sub_category", {
   updateAt: timestamp("updated_at").notNull(),
 });
 
-export const publicProduct = publicSchema.table("product", {
+export const shopProduct = shopSchema.table("product", {
   id: text("id").primaryKey(),
   title: text("title"),
   summary: text("summary"),
   brand: text("brand"),
   type: text({ enum: ["physical"] }),
   rating: numeric("rating", { precision: 2, scale: 1 }).notNull().default("0"),
-  category: text("category").references(() => publicCategory.id, {
+  category: text("category").references(() => globalCategory.id, {
     onDelete: "set null",
   }),
-  subCategory: text("sub_category").references(() => publicSubCategory.id, {
+  subCategory: text("sub_category").references(() => globalSubCategory.id, {
     onDelete: "set null",
   }),
+  organizationId: text("organization_id")
+    .notNull()
+    .references(() => orgList.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").notNull(),
   updateAt: timestamp("updated_at").notNull(),
 });
 
-export const publicProductVariants = publicSchema.table("variants", {
+export const shopProductVariant = orgSchema.table("product_variant", {
   id: text("id").primaryKey(),
   title: text("title"),
-  product: text("product").references(() => publicSubCategory.id, {
+  product: text("product").references(() => shopProduct.id, {
     onDelete: "cascade",
   }),
   unit: numeric("uint"),
+  organizationId: text("organization_id")
+    .notNull()
+    .references(() => orgList.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").notNull(),
   updateAt: timestamp("updated_at").notNull(),
 });
 
-export const publicImages = publicSchema.table("images", {});
+export const shopCart = shopSchema.table("cart", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => authUser.id, { onDelete: "cascade" }),
+  organizationId: text("organization_id").references(() => orgList.id, {
+    onDelete: "cascade",
+  }),
+  items: jsonb()
+    .$type<Array<{ product: string; quantity: string }>>()
+    .default([]),
+});
+
+export const shopOrders = shopSchema.table("order", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => authUser.id, { onDelete: "cascade" }),
+  shopId: text("shop_id").notNull(),
+  items: jsonb("items"),
+  taxes: jsonb("taxes"),
+  address: jsonb("address"),
+  total: bigint("total", { mode: "number" }).default(0),
+  delivery: jsonb("delivery"),
+  payment: jsonb("payment"),
+  status: text("status", {
+    enum: [
+      "ordered",
+      "accepted",
+      "packed",
+      "out_for_delivery",
+      "delivered",
+      "returned",
+      "refunded",
+    ],
+  }),
+});
+
+export const tables = {
+  "user.address": userAddress,
+  "auth.user": authUser,
+  "auth.account": authAccount,
+  "auth.verification": authVerification,
+  "org.list": orgList,
+  "org.member": orgMember,
+  "org.invitation": orgInvitation,
+  "public.category": globalCategory,
+  "public.sub_category": globalSubCategory,
+  "shop.product": shopProduct,
+  "shop.product_variant": shopProductVariant,
+  "shop.cart": shopCart,
+  "shop.orders": shopOrders,
+};
+
+export type DBTableMap = typeof tables;
+
+export type DBTypes = {
+  [K in keyof DBTableMap]: DBTableMap[K]["$inferSelect"];
+};
+
+export type Database = {
+  [K in keyof typeof tables]: Kyselify<(typeof tables)[K]>;
+};

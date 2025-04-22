@@ -1,7 +1,8 @@
+import { auth } from "@/auth";
 import { hasPermission } from "@/auth/permission";
 import { Context } from "hono";
 
-export interface Context extends Env {
+export interface ServerContext extends Env {
   Variables: {
     user: typeof auth.$Infer.Session.user | null;
     session: typeof auth.$Infer.Session.session | null;

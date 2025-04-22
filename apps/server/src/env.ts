@@ -34,6 +34,10 @@ const EnvSchema = z
     BETTER_AUTH_SECRET: z.string(),
     BETTER_AUTH_URL: z.string(),
     REDIS_URL: z.string(),
+    AWS_REGION: z.string(),
+    AWS_ACCESS_KEY: z.string(),
+    AWS_SECRET_KEY: z.string(),
+    TRANSACTIONAL_EMAIL: z.string(),
     TRUSTED_ORIGINS: z
       .string()
       .transform((t) => t.split(",").map((e) => e.trim())),

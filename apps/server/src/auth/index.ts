@@ -1,9 +1,12 @@
 import { betterAuth, BetterAuthOptions } from "better-auth";
-import { magicLink, organization } from "better-auth/plugins";
+import { emailOTP, magicLink, organization } from "better-auth/plugins";
 
 import env from "../env";
 import { redis } from "../cache";
 import { db, pool } from "../db";
+import { sendTransactionalEmail } from "@/services/ses";
+import { phoneNumber } from "better-auth/plugins";
+import { sendSMS } from "@/services/sns";
 
 const organizationPlugin = organization({
   schema: {
@@ -19,14 +22,26 @@ const organizationPlugin = organization({
   },
 });
 
-const magicLinkPlugin = magicLink({
-  sendMagicLink: async ({ email, url }) => {
-    // const data = await sendTransactionalEmail({
-    //   to: [email],
-    //   subject: "Login to HRDocx",
-    //   html: `Hello,\nlogin to HRDocx using this link:\n${url}`,
-    // });
-    // console.log(data);
+const emailOTPPlugin = emailOTP({
+  otpLength: 6,
+  sendVerificationOTP: async ({ email, otp }) => {
+    const data = await sendTransactionalEmail({
+      to: [email],
+      subject: "Login OTP - Lipy",
+      html: `Hello,<br/>Login to Lipy using this OTP:<br/><br/><b>${otp}</b>`,
+    });
+    console.log(data);
+  },
+});
+
+const phoneOTPPlugin = phoneNumber({
+  otpLength: 6,
+  sendOTP: async ({ phoneNumber, code }, _request) => {
+    const data = await sendSMS({
+      phoneNumber,
+      message: `Login in to Lipy using this OTP: ${code}`,
+    });
+    console.log(data);
   },
 });
 
@@ -84,7 +99,7 @@ export const auth = betterAuth({
   },
 
   socialProviders,
-  plugins: [organizationPlugin, magicLinkPlugin],
+  plugins: [organizationPlugin, emailOTPPlugin, phoneOTPPlugin],
   trustedOrigins: env.TRUSTED_ORIGINS,
   hooks: {
     // before: beforeAuthMiddleware,

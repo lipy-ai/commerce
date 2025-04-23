@@ -10,7 +10,6 @@ import { logger } from "./lib/logger";
 import env from "./env";
 import { db, pingDatabase } from "./db";
 import { auth } from "./auth";
-import { categoryRouter } from "./adminRoutes";
 import { ServerContext } from "./types";
 import { authMiddleware } from "./middlewares/auth";
 import { corsMiddleware } from "./middlewares/cors";
@@ -40,7 +39,7 @@ app.use(compress());
 
 const routes = app.basePath("/v1");
 
-routes.basePath("/admin").route("/category", categoryRouter);
+// routes.basePath("/admin").route("/category", categoryRouter);
 
 const shutdown = async () => {
   logger.info("Closing http server");

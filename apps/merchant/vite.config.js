@@ -26,6 +26,10 @@ export default defineConfig({
         replacement: path.resolve(__dirname, "../../packages/web-ui/src"),
       },
       {
+        find: "@lipy/server",
+        replacement: path.resolve(__dirname, "../server/src"),
+      },
+      {
         find: "@",
         replacement: path.resolve(__dirname, "./src"),
       },

@@ -1,5 +1,11 @@
 import { Kyselify } from "drizzle-orm/kysely";
-import { bigint, customType, jsonb } from "drizzle-orm/pg-core";
+import {
+  bigint,
+  bigserial,
+  customType,
+  jsonb,
+  uuid,
+} from "drizzle-orm/pg-core";
 import {
   text,
   timestamp,
@@ -206,16 +212,39 @@ export const shopOrders = shopSchema.table("order", {
   }),
 });
 
+export const globalUpload = globalSchema.table("upload", {
+  id: uuid("id").primaryKey(),
+  is_public: boolean("is_public").default(false),
+  content_type: text("content_type").notNull(),
+  content_length: bigint("content_length", { mode: "number" }).notNull(),
+  name: text("name").notNull(),
+  path: text("path"),
+  url: text("url"),
+  uploaded_by: text("uploaded_by")
+    .notNull()
+    .references(() => authUser.id, { onDelete: "cascade" }),
+  organization_id: text("organization_id").references(() => orgList.id, {
+    onDelete: "cascade",
+  }),
+  created_at: timestamp("created_at").notNull(),
+  updated_at: timestamp("updated_at").notNull(),
+});
+
 export const tables = {
+  "public.category": globalCategory,
+  "public.sub_category": globalSubCategory,
+  "public.upload": globalUpload,
+
   "user.address": userAddress,
+
   "auth.user": authUser,
   "auth.account": authAccount,
   "auth.verification": authVerification,
+
   "org.list": orgList,
   "org.member": orgMember,
   "org.invitation": orgInvitation,
-  "public.category": globalCategory,
-  "public.sub_category": globalSubCategory,
+
   "shop.product": shopProduct,
   "shop.product_variant": shopProductVariant,
   "shop.cart": shopCart,

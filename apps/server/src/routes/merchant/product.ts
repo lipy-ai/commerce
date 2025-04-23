@@ -68,10 +68,12 @@ route.get(
   }
 );
 
-route.post("/",  zValidator(
+route.post(
+  "/",
+  zValidator(
     "json",
     z.object({
-      products:z.array(z.object({})),
+      products: z.array(z.object({})),
     })
   ),
   async (c) => {
@@ -80,12 +82,11 @@ route.post("/",  zValidator(
 
     const result = await db
       .insertInto("shop.product")
-      .values(products.map(p => {
-        id:
-      }))
+      .values([])
       .executeTakeFirstOrThrow();
     return c.json(result);
-  })
+  }
+);
 
 route.patch(
   "/:id",

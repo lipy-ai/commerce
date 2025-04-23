@@ -1,6 +1,8 @@
 import { auth } from "@/auth";
 import { hasPermission } from "@/auth/permission";
-import { Context } from "hono";
+import { Context, Env } from "hono";
+
+export * from "./auth";
 
 export interface ServerContext extends Env {
   Variables: {
@@ -25,4 +27,4 @@ export type AwaitedReturn<T extends (...args: any) => any> = Awaited<
   ReturnType<T>
 >;
 
-export type HonoContext = Context<C>;
+export type HonoContext = Context;

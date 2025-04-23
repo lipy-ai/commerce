@@ -12,6 +12,7 @@ import {
   ShoppingBag,
   Users,
 } from "lucide-react";
+
 export const Route = createFileRoute("/(loggedIn)")({
   component: RouteComponent,
 });
@@ -25,18 +26,18 @@ export const dashboardNav = {
     },
     {
       label: "Products",
-      url: "/products",
+      url: "/product",
       icon: Shirt,
       mobile: true,
     },
     {
       label: "Orders",
-      url: "/orders",
+      url: "/order",
       icon: ShoppingBag,
     },
     {
       label: "Customers",
-      url: "/customers",
+      url: "/customer",
       icon: Users,
     },
   ],
@@ -59,17 +60,17 @@ const mobileNav = [
   },
   {
     label: "Products",
-    url: "/products",
+    url: "/product",
     icon: Shirt,
   },
   {
     label: "Orders",
-    url: "/orders",
+    url: "/order",
     icon: ShoppingBag,
   },
   {
     label: "Customers",
-    url: "/customers",
+    url: "/customer",
     icon: Users,
   },
 

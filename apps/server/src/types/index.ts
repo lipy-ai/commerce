@@ -1,7 +1,10 @@
+import { auth } from "@/auth";
 import { hasPermission } from "@/auth/permission";
-import { Context } from "hono";
+import { Context, Env } from "hono";
 
-export interface Context extends Env {
+export * from "./auth";
+
+export interface ServerContext extends Env {
   Variables: {
     user: typeof auth.$Infer.Session.user | null;
     session: typeof auth.$Infer.Session.session | null;
@@ -24,4 +27,4 @@ export type AwaitedReturn<T extends (...args: any) => any> = Awaited<
   ReturnType<T>
 >;
 
-export type HonoContext = Context<C>;
+export type HonoContext = Context;

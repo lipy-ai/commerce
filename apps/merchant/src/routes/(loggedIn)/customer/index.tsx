@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 
-export const Route = createFileRoute("/(loggedIn)/(orders)/orders")({
+export const Route = createFileRoute("/(loggedIn)/customer/")({
   component: RouteComponent,
 });
 

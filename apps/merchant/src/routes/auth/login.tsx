@@ -6,11 +6,11 @@ export const Route = createFileRoute("/auth/login")({
 
 function RouteComponent() {
   return (
-    <div className="h-screen overflow-hidden flex justify-center items-center md:grid grid-cols-2">
-      <div className="bg-amber-300/50 flex-1 h-full fixed md:w-2/5 -z-20 w-full" />
+    <div className="h-dvh overflow-hidden flex justify-center items-center xl:grid grid-cols-2">
+      <div className="bg-amber-300/50 flex-1 h-full fixed xl:w-2/5 -z-20 w-full" />
       <img
         src="/assets/paper-bag-items.webp"
-        className="fixed top-14 rotate-180 -z-10 scale-150 md:relative md:scale-140 md:left-30  md:rotate-0"
+        className="fixed top-14 rotate-180 -z-10 scale-150 xl:relative xl:scale-140 xl:left-30  xl:rotate-0"
         width={800}
       />
 

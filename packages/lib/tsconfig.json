@@ -1,5 +1,7 @@
 {
   "include": ["**/*.ts", "**/*.tsx"],
+  "files": [],
+  "references": [{ "path": "../../apps/server" }],
   "compilerOptions": {
     "target": "ES2022",
     "jsx": "react-jsx",
@@ -19,9 +21,14 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
+    "noImplicitAny": true,
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
     "baseUrl": ".",
     "paths": {
-      "@web-ui/*": ["./src/*"]
+      "@lipy/lib/*": ["./src/*"],
+      "@lipy/server/*": ["../../apps/server/src/*"]
     }
   }
 }

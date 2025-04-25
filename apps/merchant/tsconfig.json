@@ -1,5 +1,6 @@
 {
   "include": ["**/*.ts", "**/*.tsx"],
+
   "compilerOptions": {
     "target": "ES2022",
     "jsx": "react-jsx",
@@ -14,6 +15,9 @@
     "noEmit": true,
 
     /* Linting */
+    "noImplicitAny": true,
+    "declaration": true,
+    "declarationMap": true,
     "skipLibCheck": true,
     "strict": true,
     "noUnusedLocals": true,
@@ -24,6 +28,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "@web-ui/*": ["../../packages/web-ui/src/*"],
+      "@repo-lib/*": ["../../packages/lib/src/*"],
       "@lipy/server/*": ["../server/src/*"]
     }
   }

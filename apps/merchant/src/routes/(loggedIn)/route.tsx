@@ -1,8 +1,10 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
+
 import {
   DashboardBody,
   DashboardLayout,
 } from "@web-ui/components/layouts/dashboard";
+
 import {
   CircleUser,
   Home,

@@ -1,1 +1,0 @@
-ALTER TABLE "auth"."user" ALTER COLUMN "onboarded" SET DEFAULT false;

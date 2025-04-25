@@ -37,6 +37,7 @@ import {
 
 import LocationSelector from "@web-ui/components/ui/location-input";
 import type { FormElement } from "./types";
+import { InputImage } from "../ui/upload";
 
 const RequiredEl = <span className="text-destructive">*</span>;
 
@@ -408,6 +409,21 @@ export const RenderFormElement = ({
         />
       );
 
+    case "InputImage":
+      return (
+        <FormField
+          control={form.control}
+          name={formElement.name}
+          render={({ field }: { field: ControllerRenderProps }) => (
+            <InputImage
+              // placeholder={formElement.placeholder}
+              // disabled={formElement.disabled}
+              // onChange={(e) => field.onChange(e.target.valueAsNumber)}
+              {...field}
+            />
+          )}
+        />
+      );
     default:
       return <div>Invalid Form Element</div>;
   }

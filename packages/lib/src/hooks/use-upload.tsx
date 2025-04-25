@@ -1,77 +1,66 @@
 import { useEffect, useRef, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { useAPIMutation } from "../utils/queryClient";
+import { apiClient } from "../api";
 
-export function useUpload({ file }: { file: File }) {
-  type FnType = (id: string) => void | undefined;
-  let onRemove: FnType = (_id) => {},
-    onSuccess: FnType = (_id) => {},
-    onError: FnType = (_id) => {};
+type UploadCallbacks = {
+  onRemove?: (id?: string) => void;
+  onSuccess?: (id?: string) => void;
+  onError?: (id?: string) => void;
+};
+
+export function useUpload(
+  {
+    file,
+  }: {
+    file: File | null;
+    type: Parameters<
+      typeof apiClient.v1.upload.presigned.$post
+    >["0"]["json"]["type"];
+  },
+  callbacks: UploadCallbacks = {}
+) {
+  const [progress, setProgress] = useState(0);
   const abortController = useRef(new AbortController());
 
-  const [progress, setProgress] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const { onRemove, onSuccess, onError } = callbacks;
 
-  const documentUpload = (v: any) => "";
+  const presignedMutation = useAPIMutation(
+    apiClient.v1.upload.presigned,
+    "$post"
+  );
 
-  const reset = () => {
-    setIsLoading(true);
-    setIsError(false);
-    setIsSuccess(false);
-    setError(null);
-  };
-  useEffect(() => {
-    reset();
-  }, [file]);
-
-  const uploadFile = async (file: File) => {
-    try {
-      // Get presigned URL
-      const url = await documentUpload({
-        filename: file.name,
-        contentType: file.type,
+  const getPresignedUrl = async (file: File) => {
+    const response = await presignedMutation.mutateAsync({
+      json: {
+        type: "avatar",
         contentLength: file.size,
-      });
-
-      // Custom upload with progress
-      await uploadWithProgress(url, file);
-      setIsSuccess(true);
-      onSuccess();
-    } catch (error: any) {
-      if (error.name === "AbortError") {
-        console.log("Upload cancelled");
-      } else {
-        console.error("Upload failed:", error);
-      }
-      setIsError(true);
-      onError();
-    }
+        contentType: file.type,
+        filename: file.name,
+      },
+    });
+    return response;
   };
 
   const uploadWithProgress = (url: string, file: File) => {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.open("PUT", url);
 
       xhr.upload.onprogress = (event) => {
         if (event.lengthComputable) {
-          const percentComplete = (event.loaded / event.total) * 100;
-          setProgress(percentComplete);
+          const percent = (event.loaded / event.total) * 100;
+          setProgress(percent);
         }
       };
 
       xhr.onload = () => {
-        if (xhr.status === 200) {
-          resolve(xhr.response);
-        } else {
-          reject(new Error(`Upload failed with status ${xhr.status}`));
-        }
+        xhr.status === 200
+          ? resolve()
+          : reject(new Error(`Upload failed with status ${xhr.status}`));
       };
 
       xhr.onerror = () => {
-        setIsError(true);
-        onError();
         reject(new Error("Network error occurred"));
       };
 
@@ -79,36 +68,58 @@ export function useUpload({ file }: { file: File }) {
         reject(new Error("Upload aborted"));
       };
 
-      abortController.current.signal.addEventListener("abort", () =>
-        xhr.abort()
-      );
+      abortController.current.signal.addEventListener("abort", () => {
+        xhr.abort();
+      });
 
       xhr.send(file);
     });
   };
 
+  const uploadMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const data = await getPresignedUrl(file);
+      await uploadWithProgress(data.presigned_url, file);
+      onSuccess?.(data.id);
+      return data;
+    },
+    onError: (error: any) => {
+      if (error.name === "AbortError") {
+        console.log("Upload cancelled");
+      } else {
+        console.error("Upload failed:", error);
+      }
+      onError?.();
+    },
+  });
+
   const cancelUpload = () => {
     abortController.current.abort();
+    abortController.current = new AbortController(); // reset controller
+    onRemove?.(presignedMutation.data?.id);
+  };
+
+  const resetUpload = () => {
+    uploadMutation.reset();
+    setProgress(0);
     abortController.current = new AbortController();
-    onRemove(data.id);
   };
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      data.file && data.status === "pending" && uploadFile(data.file);
+      if (file && progress !== 100 && !uploadMutation.isPending) {
+        uploadMutation.mutate(file);
+      }
     }, 500);
+
     return () => clearTimeout(timer);
-  }, [data.file]);
+  }, [file]);
 
   return {
     cancelUpload,
+    resetUpload,
     progress,
-    onRemove,
-    onError,
-    onSuccess,
-    isLoading,
-    isError,
-    isSuccess,
-    error,
+    status: uploadMutation.status,
+    error: uploadMutation.error,
   };
 }

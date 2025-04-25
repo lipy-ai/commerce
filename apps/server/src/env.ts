@@ -3,7 +3,6 @@ import { config } from "dotenv";
 import { expand } from "dotenv-expand";
 import path from "node:path";
 import { z } from "zod";
-import { logger } from "./lib/logger";
 
 expand(
   config({
@@ -63,8 +62,8 @@ export type env = z.infer<typeof EnvSchema>;
 const { data: env, error } = EnvSchema.safeParse(process.env);
 
 if (error) {
-  logger.error("❌ Invalid env:");
-  logger.error(JSON.stringify(error.flatten().fieldErrors, null, 2));
+  console.error("❌ Invalid env:");
+  console.error(JSON.stringify(error.flatten().fieldErrors, null, 2));
   process.exit(1);
 }
 

@@ -1,5 +1,4 @@
 import FormRender, { type FormSchema } from "@web-ui/components/forms/renderer";
-import { Card } from "@web-ui/components/ui/card";
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 import { authClient } from "@/config/auth";
@@ -36,6 +35,13 @@ const forms: FormSchema<any, any> = [
       companyCountry: "IND",
     },
     elements: [
+      {
+        name: "Image",
+        fieldType: "InputImage",
+        placeholder: "John",
+        label: "First name",
+        required: true,
+      },
       [
         {
           name: "firstName",

@@ -1,8 +1,10 @@
 import { auth } from "@/auth";
 import { hasPermission } from "@/auth/permission";
 import { Context, Env } from "hono";
-
+import { routes } from "@/app";
 export * from "./auth";
+
+export type AppType = typeof routes;
 
 export interface ServerContext extends Env {
   Variables: {
@@ -16,6 +18,7 @@ export type SuccessResponse<T = void> = {
   success: true;
   message: string;
 } & (T extends void ? {} : { data: T });
+ß;
 
 export type ErrorResponse = {
   success: false;

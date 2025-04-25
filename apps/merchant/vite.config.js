@@ -13,6 +13,16 @@ export default defineConfig({
   ],
   server: {
     allowedHosts: true,
+    proxy: {
+      "/api/auth": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
+      "/api": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
+    },
   },
   test: {
     globals: true,
@@ -24,6 +34,10 @@ export default defineConfig({
       {
         find: "@web-ui",
         replacement: path.resolve(__dirname, "../../packages/web-ui/src"),
+      },
+      {
+        find: "@repo-lib",
+        replacement: path.resolve(__dirname, "../../packages/lib/src"),
       },
       {
         find: "@lipy/server",

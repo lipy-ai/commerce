@@ -1,11 +1,5 @@
-import { Kyselify } from "drizzle-orm/kysely";
-import {
-  bigint,
-  bigserial,
-  customType,
-  jsonb,
-  uuid,
-} from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
+import { bigint, customType, jsonb, uuid } from "drizzle-orm/pg-core";
 import {
   text,
   timestamp,
@@ -21,13 +15,11 @@ const geographyPoint = customType<{ data: string }>({
   },
 });
 
-export const authSchema = pgSchema("auth");
-export const orgSchema = pgSchema("org");
-export const userSchema = pgSchema("user");
-export const shopSchema = pgSchema("shop");
-export const globalSchema = pgSchema("public");
+export const schema = pgSchema("lipy");
 
-export const authUser = authSchema.table("user", {
+export const enableUuidExtension = sql`CREATE EXTENSION IF NOT EXISTS "postgis";`;
+
+export const user = schema.table("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
@@ -41,7 +33,7 @@ export const authUser = authSchema.table("user", {
   address: text("address"),
 });
 
-export const userAddress = userSchema.table("address", {
+export const address = schema.table("address", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   tag: text({ enum: ["home", "work", "other"] }).notNull(),
@@ -53,17 +45,17 @@ export const userAddress = userSchema.table("address", {
   postalCode: text("postal_code"),
   userId: text("user_id")
     .notNull()
-    .references(() => authUser.id, { onDelete: "cascade" }),
-  location: geographyPoint("location"),
+    .references(() => user.id, { onDelete: "cascade" }),
+  // location: geographyPoint("location"),
 });
 
-export const authAccount = authSchema.table("account", {
+export const account = schema.table("auth_account", {
   id: text("id").primaryKey(),
   accountId: text("account_id").notNull(),
   providerId: text("provider_id").notNull(),
   userId: text("user_id")
     .notNull()
-    .references(() => authUser.id, { onDelete: "cascade" }),
+    .references(() => user.id, { onDelete: "cascade" }),
   accessToken: text("access_token"),
   refreshToken: text("refresh_token"),
   idToken: text("id_token"),
@@ -75,7 +67,7 @@ export const authAccount = authSchema.table("account", {
   updatedAt: timestamp("updated_at").notNull(),
 });
 
-export const authVerification = authSchema.table("verification", {
+export const verification = schema.table("auth_verification", {
   id: text("id").primaryKey(),
   identifier: text("identifier").notNull(),
   value: text("value").notNull(),
@@ -83,8 +75,18 @@ export const authVerification = authSchema.table("verification", {
   createdAt: timestamp("created_at"),
   updatedAt: timestamp("updated_at"),
 });
+export const session = schema.table("auth_session", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  sessionToken: text("session_token").notNull().unique(),
+  expires: timestamp("expires").notNull(),
+  createdAt: timestamp("created_at").notNull(),
+  updatedAt: timestamp("updated_at").notNull(),
+});
 
-export const orgList = orgSchema.table("list", {
+export const org = schema.table("org", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   slug: text("slug").unique(),
@@ -93,33 +95,33 @@ export const orgList = orgSchema.table("list", {
   metadata: text("metadata"),
 });
 
-export const orgMember = orgSchema.table("member", {
+export const orgMember = schema.table("org_member", {
   id: text("id").primaryKey(),
   organizationId: text("organization_id")
     .notNull()
-    .references(() => orgList.id, { onDelete: "cascade" }),
+    .references(() => org.id, { onDelete: "cascade" }),
   userId: text("user_id")
     .notNull()
-    .references(() => authUser.id, { onDelete: "cascade" }),
+    .references(() => org.id, { onDelete: "cascade" }),
   role: text("role").notNull(),
   createdAt: timestamp("created_at").notNull(),
 });
 
-export const orgInvitation = orgSchema.table("invitation", {
+export const orgInvitation = schema.table("org_invitation", {
   id: text("id").primaryKey(),
   organizationId: text("organization_id")
     .notNull()
-    .references(() => orgList.id, { onDelete: "cascade" }),
+    .references(() => org.id, { onDelete: "cascade" }),
   email: text("email").notNull(),
   role: text("role"),
   status: text("status").notNull(),
   expiresAt: timestamp("expires_at").notNull(),
   inviterId: text("inviter_id")
     .notNull()
-    .references(() => authUser.id, { onDelete: "cascade" }),
+    .references(() => user.id, { onDelete: "cascade" }),
 });
 
-export const globalCategory = globalSchema.table("category", {
+export const category = schema.table("category", {
   id: text("id").primaryKey(),
   title: text("title"),
   summary: text("summary"),
@@ -128,9 +130,9 @@ export const globalCategory = globalSchema.table("category", {
   updateAt: timestamp("updated_at").notNull(),
 });
 
-export const globalSubCategory = globalSchema.table("sub_category", {
+export const subCategory = schema.table("sub_category", {
   id: text("id").primaryKey(),
-  parent: text("category").references(() => globalCategory.id, {
+  parent: text("category").references(() => category.id, {
     onDelete: "set null",
   }),
   title: text("title"),
@@ -140,46 +142,46 @@ export const globalSubCategory = globalSchema.table("sub_category", {
   updateAt: timestamp("updated_at").notNull(),
 });
 
-export const shopProduct = shopSchema.table("product", {
+export const product = schema.table("product", {
   id: text("id").primaryKey(),
   title: text("title"),
   summary: text("summary"),
   brand: text("brand"),
   type: text({ enum: ["physical"] }),
   rating: numeric("rating", { precision: 2, scale: 1 }).notNull().default("0"),
-  category: text("category").references(() => globalCategory.id, {
+  category: text("category").references(() => category.id, {
     onDelete: "set null",
   }),
-  subCategory: text("sub_category").references(() => globalSubCategory.id, {
+  subCategory: text("sub_category").references(() => subCategory.id, {
     onDelete: "set null",
   }),
   organizationId: text("organization_id")
     .notNull()
-    .references(() => orgList.id, { onDelete: "cascade" }),
+    .references(() => org.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").notNull(),
   updateAt: timestamp("updated_at").notNull(),
 });
 
-export const shopProductVariant = orgSchema.table("product_variant", {
+export const productVariant = schema.table("product_variant", {
   id: text("id").primaryKey(),
   title: text("title"),
-  product: text("product").references(() => shopProduct.id, {
+  product: text("product").references(() => product.id, {
     onDelete: "cascade",
   }),
   unit: numeric("uint"),
   organizationId: text("organization_id")
     .notNull()
-    .references(() => orgList.id, { onDelete: "cascade" }),
+    .references(() => org.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").notNull(),
   updateAt: timestamp("updated_at").notNull(),
 });
 
-export const shopCart = shopSchema.table("cart", {
+export const shopCart = schema.table("shop_cart", {
   id: text("id").primaryKey(),
   userId: text("user_id")
     .notNull()
-    .references(() => authUser.id, { onDelete: "cascade" }),
-  organizationId: text("organization_id").references(() => orgList.id, {
+    .references(() => user.id, { onDelete: "cascade" }),
+  organizationId: text("organization_id").references(() => org.id, {
     onDelete: "cascade",
   }),
   items: jsonb()
@@ -187,11 +189,11 @@ export const shopCart = shopSchema.table("cart", {
     .default([]),
 });
 
-export const shopOrders = shopSchema.table("order", {
+export const shopOrders = schema.table("shop_order", {
   id: text("id").primaryKey(),
   userId: text("user_id")
     .notNull()
-    .references(() => authUser.id, { onDelete: "cascade" }),
+    .references(() => user.id, { onDelete: "cascade" }),
   shopId: text("shop_id").notNull(),
   items: jsonb("items"),
   taxes: jsonb("taxes"),
@@ -212,7 +214,7 @@ export const shopOrders = shopSchema.table("order", {
   }),
 });
 
-export const globalUpload = globalSchema.table("upload", {
+export const upload = schema.table("upload", {
   id: uuid("id").primaryKey(),
   is_public: boolean("is_public").default(false),
   content_type: text("content_type").notNull(),
@@ -222,41 +224,26 @@ export const globalUpload = globalSchema.table("upload", {
   url: text("url"),
   uploaded_by: text("uploaded_by")
     .notNull()
-    .references(() => authUser.id, { onDelete: "cascade" }),
-  organization_id: text("organization_id").references(() => orgList.id, {
+    .references(() => user.id, { onDelete: "cascade" }),
+  organization_id: text("organization_id").references(() => org.id, {
     onDelete: "cascade",
   }),
   created_at: timestamp("created_at").notNull(),
   updated_at: timestamp("updated_at").notNull(),
 });
 
-export const tables = {
-  "public.category": globalCategory,
-  "public.sub_category": globalSubCategory,
-  "public.upload": globalUpload,
-
-  "user.address": userAddress,
-
-  "auth.user": authUser,
-  "auth.account": authAccount,
-  "auth.verification": authVerification,
-
-  "org.list": orgList,
-  "org.member": orgMember,
-  "org.invitation": orgInvitation,
-
-  "shop.product": shopProduct,
-  "shop.product_variant": shopProductVariant,
-  "shop.cart": shopCart,
-  "shop.orders": shopOrders,
-};
-
-export type DBTableMap = typeof tables;
-
-export type DBTypes = {
-  [K in keyof DBTableMap]: DBTableMap[K]["$inferSelect"];
-};
-
-export type Database = {
-  [K in keyof typeof tables]: Kyselify<(typeof tables)[K]>;
+export const dbTables = {
+  user,
+  address,
+  account,
+  session,
+  verification,
+  org,
+  orgMember,
+  orgInvitation,
+  product,
+  productVariant,
+  shopCart,
+  shopOrders,
+  upload,
 };

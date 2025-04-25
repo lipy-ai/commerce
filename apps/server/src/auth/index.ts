@@ -7,17 +7,18 @@ import { db, pool } from "../db";
 import { sendTransactionalEmail } from "@/services/ses";
 import { phoneNumber } from "better-auth/plugins";
 import { sendSMS } from "@/services/sns";
+import { org, orgInvitation, orgMember, tables } from "@/db/schema";
 
 const organizationPlugin = organization({
   schema: {
     organization: {
-      modelName: "org.list",
+      modelName: "lipy.org",
     },
     member: {
-      modelName: "org.member",
+      modelName: "lipy.org_member",
     },
     invitation: {
-      modelName: "org.invitation",
+      modelName: "lipy.org_invitation",
     },
   },
 });
@@ -128,15 +129,11 @@ export const auth = betterAuth({
       create: {
         before: async (session) => {
           const organization = await db
-            .selectFrom("org.list")
-            .innerJoin(
-              "org.member",
-              "org.member.organization_id",
-              "org.list.id"
-            )
-            .innerJoin("auth.user", "auth.user.id", "org.member.user_id")
-            .where("auth.user.id", "=", session.userId)
-            .select("org.list.id")
+            .selectFrom("org")
+            .innerJoin("org_member", "org_member.organization_id", "org.id")
+            .innerJoin("user", "user.id", "org_member.user_id")
+            .where("user.id", "=", session.userId)
+            .select("org.id")
             .limit(1)
             .executeTakeFirst();
           return {
@@ -150,7 +147,7 @@ export const auth = betterAuth({
     },
   },
   session: {
-    modelName: "auth.session",
+    modelName: "lipy.auth_session",
     fields: {
       userId: "user_id",
       sessionToken: "session_token",
@@ -163,7 +160,7 @@ export const auth = betterAuth({
     },
   },
   user: {
-    modelName: "auth.user",
+    modelName: "lipy.user",
     fields: {
       name: "name",
       email: "email",
@@ -198,7 +195,7 @@ export const auth = betterAuth({
   },
 
   account: {
-    modelName: "auth.account",
+    modelName: "lipy.auth_account",
     fields: {
       accountId: "account_id",
       providerId: "provider_id",
@@ -217,7 +214,7 @@ export const auth = betterAuth({
   },
 
   verification: {
-    modelName: "auth.verification",
+    modelName: "lipy.auth_verification",
     fields: {
       expiresAt: "expires_at",
       createdAt: "created_at",

@@ -1,4 +1,4 @@
-import { type AuthType } from "@lipy/server/types";
+import type { AuthType } from "@lipy/server/types";
 import {
   inferAdditionalFields,
   magicLinkClient,
@@ -9,7 +9,6 @@ import { env } from "./env";
 
 export const authClient = createAuthClient({
   baseURL: env.VITE_AUTH_URL,
-
   plugins: [
     inferAdditionalFields<AuthType>(),
     organizationClient(),

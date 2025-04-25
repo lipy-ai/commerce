@@ -13,6 +13,8 @@ import { auth } from "./auth";
 import { ServerContext } from "./types";
 import { authMiddleware } from "./middlewares/auth";
 import { corsMiddleware } from "./middlewares/cors";
+import { uploadRouter } from "./routes/sharedRoutes/upload";
+import { globalError } from "./lib/globalError";
 
 export const app = new Hono<ServerContext>();
 
@@ -35,11 +37,13 @@ app.on(["POST", "GET"], "/api/auth/*", (c) => {
   return auth.handler(c.req.raw);
 });
 
-app.use(compress());
+// app.use(compress());
 
-const routes = app.basePath("/v1");
+export const routes = app.basePath("/v1").route("/upload", uploadRouter);
 
 // routes.basePath("/admin").route("/category", categoryRouter);
+
+app.onError(globalError);
 
 const shutdown = async () => {
   logger.info("Closing http server");
@@ -51,4 +55,4 @@ const shutdown = async () => {
 process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);
 
-export type AppType = typeof app;
+export type AppType = typeof routes;

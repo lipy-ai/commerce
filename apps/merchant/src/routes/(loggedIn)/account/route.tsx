@@ -6,9 +6,9 @@ import {
   AvatarImage,
 } from "@web-ui/components/ui/avatar";
 import { Button } from "@web-ui/components/ui/button";
+import { User } from "lucide-react";
 
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { User } from "lucide-react";
 import { authClient } from "@/config/auth";
 import { DashboardHeader } from "@web-ui/components/layouts/dashboard";
 

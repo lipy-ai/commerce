@@ -10,7 +10,9 @@ import {
   type UseSuspenseQueryOptions,
   type UseSuspenseQueryResult,
 } from "@tanstack/react-query";
-import type { InferResponseType } from "hono/client";
+
+import { type InferResponseType } from "hono/client";
+
 import type {
   ClientErrorStatusCode,
   ServerErrorStatusCode,
@@ -62,13 +64,13 @@ type InferSelectReturnType<TData, TSelect> = TSelect extends (
   ? R
   : TData;
 
-export type QueryKey<
+export type APIQueryKey<
   T extends object & { $url: () => URL | { toString: () => string } },
   M extends AvailableMethodKeys<T>,
   Params extends EndpointMethodParams<T, M>,
 > = [M, string, Params];
 
-export const getQueryKey = <
+export const getAPIQueryKey = <
   T extends object & { $url: () => URL | { toString: () => string } },
   M extends AvailableMethodKeys<T>,
   Params extends EndpointMethodParams<T, M>,
@@ -76,7 +78,7 @@ export const getQueryKey = <
   endpoint: T,
   method: M,
   params: Params
-): QueryKey<T, M, Params> => {
+): APIQueryKey<T, M, Params> => {
   const urlString = endpoint.$url().toString();
   const path = getPathFromUrl(urlString);
 
@@ -89,10 +91,10 @@ export const getQueryKey = <
       filteredParams.query = params.query;
     }
   }
-  return [method, path, filteredParams] as unknown as QueryKey<T, M, Params>;
+  return [method, path, filteredParams] as unknown as APIQueryKey<T, M, Params>;
 };
 
-export const queryOptions = <
+export const apiQueryOptions = <
   T extends object & { $url: () => URL | { toString: () => string } },
   M extends AvailableMethodKeys<T>,
   Params extends EndpointMethodParams<T, M>,
@@ -101,7 +103,7 @@ export const queryOptions = <
       TResponse,
       TError,
       InferSelectReturnType<TResponse, TError>,
-      QueryKey<T, M, Params>
+      APIQueryKey<T, M, Params>
     >,
     "queryKey" | "queryFn"
   >,
@@ -118,7 +120,7 @@ export const queryOptions = <
       TResponse,
       TError,
       InferSelectReturnType<TResponse, Options["select"]>,
-      QueryKey<T, M, Params>
+      APIQueryKey<T, M, Params>
     >,
     "queryFn"
   > & {
@@ -127,7 +129,7 @@ export const queryOptions = <
         TResponse,
         TError,
         InferSelectReturnType<TResponse, Options["select"]>,
-        QueryKey<T, M, Params>
+        APIQueryKey<T, M, Params>
       >["queryFn"],
       SkipToken | undefined
     >;
@@ -136,8 +138,9 @@ export const queryOptions = <
   const endpointFn = endpoint[method] as unknown as (
     params: any
   ) => Promise<Response>;
+  console.log(endpoint, method, params);
   const result = {
-    queryKey: getQueryKey(endpoint, method, params),
+    queryKey: getAPIQueryKey(endpoint, method, params),
     queryFn: async () => {
       const res = await endpointFn(params);
       if (res.status >= 200 && res.status < 300) {
@@ -163,7 +166,7 @@ export const queryOptions = <
   return result as any;
 };
 
-export const mutationOptions = <
+export const apiMutationOptions = <
   T extends object,
   M extends AvailableMethodKeys<T>,
   TResponse = EndpointResponseType<T, M, SuccessStatusCode>,
@@ -183,16 +186,27 @@ export const mutationOptions = <
   ) => Promise<Response>;
 
   return {
-    mutationKey: getQueryKey(endpoint, method, {} as any),
+    mutationKey: getAPIQueryKey(endpoint, method, {} as any),
     mutationFn: async (variables) => {
       const res = await endpointFn(variables);
+
       if (res.status >= 200 && res.status < 300) {
         return (await res.json()) as TResponse;
       }
-      const errorData = (await res.json()) as TError;
-
+      const errorData = (await res
+        .json()
+        .then((e) => {
+          return e.error;
+        })
+        .catch(
+          async (_e) =>
+            await res
+              .text()
+              .catch((_f) => ({ message: "Failed to decode response..." }))
+        )) as TError;
+      console.log({ errorData });
       const error = new Error(
-        `Request failed with status ${res.status}`
+        (errorData as any).message || `Request failed with status ${res.status}`
       ) as Error & {
         status: number;
         data: TError;
@@ -207,7 +221,7 @@ export const mutationOptions = <
   };
 };
 
-export const useQuery = <
+export const useAPIQuery = <
   T extends object & { $url: () => URL | { toString: () => string } },
   M extends AvailableMethodKeys<T>,
   Params extends EndpointMethodParams<T, M>,
@@ -216,7 +230,7 @@ export const useQuery = <
       TResponse,
       TError,
       InferSelectReturnType<TResponse, TError>,
-      QueryKey<T, M, Params>
+      APIQueryKey<T, M, Params>
     >,
     "queryKey" | "queryFn"
   >,
@@ -232,7 +246,7 @@ export const useQuery = <
   TError
 > => {
   return useRQQuery(
-    queryOptions<T, M, Params, Options, TResponse, TError>(
+    apiQueryOptions<T, M, Params, Options, TResponse, TError>(
       endpoint,
       method,
       params,
@@ -241,7 +255,7 @@ export const useQuery = <
   );
 };
 
-export const useSuspenseQuery = <
+export const useAPISuspenseQuery = <
   T extends object & { $url: () => URL | { toString: () => string } },
   M extends AvailableMethodKeys<T>,
   Params extends EndpointMethodParams<T, M>,
@@ -250,7 +264,7 @@ export const useSuspenseQuery = <
       TResponse,
       TError,
       InferSelectReturnType<TResponse, TError>,
-      QueryKey<T, M, Params>
+      APIQueryKey<T, M, Params>
     >,
     "queryKey" | "queryFn"
   >,
@@ -266,7 +280,7 @@ export const useSuspenseQuery = <
   TError
 > => {
   return useRQSuspenseQuery(
-    queryOptions<T, M, Params, Options, TResponse, TError>(
+    apiQueryOptions<T, M, Params, Options, TResponse, TError>(
       endpoint,
       method,
       params,
@@ -275,7 +289,7 @@ export const useSuspenseQuery = <
   );
 };
 
-export const useMutation = <
+export const useAPIMutation = <
   T extends object,
   M extends AvailableMethodKeys<T>,
   TResponse = EndpointResponseType<T, M, SuccessStatusCode>,
@@ -291,7 +305,7 @@ export const useMutation = <
   >
 ): UseMutationResult<TResponse, TError, TVariables, TContext> => {
   return useRQMutation(
-    mutationOptions<T, M, TResponse, TError, TVariables, TContext>(
+    apiMutationOptions<T, M, TResponse, TError, TVariables, TContext>(
       endpoint,
       method,
       options

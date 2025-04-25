@@ -1,6 +1,6 @@
+import { logger } from "./lib/logger";
 import { app } from "./app";
 import env from "./env";
-import { logger } from "./lib/logger";
 
 const port = env.PORT;
 // eslint-disable-next-line no-console

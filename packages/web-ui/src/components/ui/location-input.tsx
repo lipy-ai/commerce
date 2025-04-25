@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 // Import JSON data directly
-import countries from "@web-ui/data/countries.json";
-import states from "@web-ui/data/states.json";
 import { Check, ChevronsUpDown } from "lucide-react";
 
 import { cn } from "@web-ui/lib/utils";
@@ -14,9 +12,9 @@ import {
   CommandItem,
   CommandList,
 } from "@web-ui/components/ui/command";
-
+import countriesData from "../../data/countries.json";
 import { ScrollArea, ScrollBar } from "@web-ui/components/ui/scroll-area";
-import { Dialog, DialogContent, DialogTrigger } from "./dialog";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./dialog";
 
 interface Timezone {
   zoneName: string;
@@ -83,7 +81,7 @@ const LocationSelector = ({
   const [openCountryDropdown, setOpenCountryDropdown] = useState(false);
 
   // Cast imported JSON data to their respective types
-  const countriesData = countries as CountryProps[];
+  const countries = countriesData as CountryProps[];
 
   const handleCountrySelect = (country: CountryProps | null) => {
     setSelectedCountry(country);
@@ -91,7 +89,7 @@ const LocationSelector = ({
   };
 
   useEffect(() => {
-    const find = countriesData.find((c) => c.iso3 === value);
+    const find = countries.find((c) => c.iso3 === value);
     setSelectedCountry(find || null);
   }, [value]);
 
@@ -120,13 +118,14 @@ const LocationSelector = ({
           </Button>
         </DialogTrigger>
         <DialogContent className="p-0">
+          <DialogTitle className="sr-only">Select Country</DialogTitle>
           <Command>
             <CommandInput placeholder="Search country..." />
             <CommandList>
               <CommandEmpty>No country found.</CommandEmpty>
               <CommandGroup>
                 <ScrollArea className="">
-                  {countriesData.map((country) => (
+                  {countries?.map((country) => (
                     <CommandItem
                       key={country.id}
                       value={country.name}

@@ -6,7 +6,7 @@ export const Route = createFileRoute("/auth/login")({
 
 function RouteComponent() {
   return (
-    <div className="h-dvh overflow-hidden flex justify-center items-center xl:grid grid-cols-2">
+    <div className="h-svh overflow-hidden flex justify-center items-center xl:grid grid-cols-2">
       <div className="bg-amber-300/50 flex-1 h-full fixed xl:w-2/5 -z-20 w-full" />
       <img
         src="/assets/paper-bag-items.webp"

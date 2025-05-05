@@ -2,21 +2,24 @@ import { useEffect, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useAPIMutation } from "../utils/queryClient";
 import { apiClient } from "../api";
-
+import { env } from "@envClient";
 type UploadCallbacks = {
   onRemove?: (id?: string) => void;
   onSuccess?: (id?: string) => void;
   onError?: (id?: string) => void;
 };
 
+type FileType = Parameters<
+  typeof apiClient.v1.upload.presigned.$post
+>["0"]["json"]["type"];
+
 export function useUpload(
   {
     file,
+    type,
   }: {
     file: File | null;
-    type: Parameters<
-      typeof apiClient.v1.upload.presigned.$post
-    >["0"]["json"]["type"];
+    type: FileType;
   },
   callbacks: UploadCallbacks = {}
 ) {
@@ -33,7 +36,7 @@ export function useUpload(
   const getPresignedUrl = async (file: File) => {
     const response = await presignedMutation.mutateAsync({
       json: {
-        type: "avatar",
+        type,
         contentLength: file.size,
         contentType: file.type,
         filename: file.name,
@@ -49,7 +52,7 @@ export function useUpload(
 
       xhr.upload.onprogress = (event) => {
         if (event.lengthComputable) {
-          const percent = (event.loaded / event.total) * 100;
+          const percent = Math.ceil((event.loaded / event.total) * 100);
           setProgress(percent);
         }
       };
@@ -119,6 +122,13 @@ export function useUpload(
     cancelUpload,
     resetUpload,
     progress,
+    data: {
+      ...uploadMutation.data,
+      url:
+        uploadMutation.data?.path &&
+        env.CDN_URL + "/" + presignedMutation.data?.path,
+    },
+
     status: uploadMutation.status,
     error: uploadMutation.error,
   };

@@ -1,10 +1,17 @@
 {
   "include": ["**/*.ts", "**/*.tsx"],
+  "references": [{ "path": "../../apps/server" }, { "path": "../lib" }],
+
   "compilerOptions": {
     "target": "ES2022",
     "jsx": "react-jsx",
     "module": "ESNext",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
+
+    "noImplicitAny": true,
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -22,7 +29,8 @@
     "baseUrl": ".",
     "paths": {
       "@web-ui/*": ["./src/*"],
-      "@repo-lib/*": ["../lib/src/*"]
+      "@repo-lib/*": ["../lib/src/*"],
+      "@envClient": ["../../env.client.ts"]
     }
   }
 }

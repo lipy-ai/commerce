@@ -1,7 +1,6 @@
 import type * as React from "react";
 import type { ControllerRenderProps, UseFormReturn } from "react-hook-form";
 
-import { cn } from "@web-ui/lib/utils";
 import { Checkbox } from "@web-ui/components/ui/checkbox";
 import {
   FormControl,
@@ -37,9 +36,9 @@ import {
 
 import LocationSelector from "@web-ui/components/ui/location-input";
 import type { FormElement } from "./types";
-import { InputImage } from "../ui/upload";
-
-const RequiredEl = <span className="text-destructive">*</span>;
+import { SingleImage } from "../ui/single-image";
+import ProductImage from "../ui/product-image";
+import { FormItemWrapper } from "./elements";
 
 export const RenderFormElement = ({
   formElement,
@@ -48,34 +47,6 @@ export const RenderFormElement = ({
   formElement: FormElement;
   form: UseFormReturn<any, any, undefined>;
 }): React.ReactElement => {
-  const ItemWrapper = ({
-    label,
-    required,
-    description,
-    className,
-    children,
-  }: {
-    label?: string;
-    description?: string;
-    required?: boolean;
-    className?: string;
-    children: React.ReactNode;
-  }) => {
-    return (
-      <FormItem className={cn("w-full", className)}>
-        <div>
-          <FormLabel className="mb-1 block font-normal text-muted-foreground">
-            {label}
-            {required ? RequiredEl : ""}
-          </FormLabel>
-          {children}
-        </div>
-        <FormDescription>{description}</FormDescription>
-        <FormMessage />
-      </FormItem>
-    );
-  };
-
   switch (formElement.fieldType) {
     case "Input":
       return (
@@ -83,7 +54,7 @@ export const RenderFormElement = ({
           control={form.control}
           name={formElement.name}
           render={({ field }: { field: ControllerRenderProps }) => (
-            <ItemWrapper {...formElement}>
+            <FormItemWrapper {...formElement}>
               {
                 <FormControl>
                   <Input
@@ -96,7 +67,7 @@ export const RenderFormElement = ({
                   />
                 </FormControl>
               }
-            </ItemWrapper>
+            </FormItemWrapper>
           )}
         />
       );
@@ -106,7 +77,7 @@ export const RenderFormElement = ({
           control={form.control}
           name={formElement.name}
           render={({ field }: { field: ControllerRenderProps }) => (
-            <ItemWrapper {...formElement}>
+            <FormItemWrapper {...formElement}>
               <FormControl>
                 <LocationSelector
                   size={formElement?.style?.size}
@@ -115,7 +86,7 @@ export const RenderFormElement = ({
                   onCountryChange={(country) => field.onChange(country?.iso3)}
                 />
               </FormControl>
-            </ItemWrapper>
+            </FormItemWrapper>
           )}
         />
       );
@@ -125,7 +96,7 @@ export const RenderFormElement = ({
           control={form.control}
           name={formElement.name}
           render={({ field }: { field: ControllerRenderProps }) => (
-            <ItemWrapper {...formElement}>
+            <FormItemWrapper {...formElement}>
               <FormControl>
                 <Input
                   placeholder={formElement.placeholder}
@@ -137,7 +108,7 @@ export const RenderFormElement = ({
                   onChange={field.onChange}
                 />
               </FormControl>
-            </ItemWrapper>
+            </FormItemWrapper>
           )}
         />
       );
@@ -147,7 +118,7 @@ export const RenderFormElement = ({
           control={form.control}
           name={formElement.name}
           render={({ field }: { field: ControllerRenderProps }) => (
-            <ItemWrapper {...formElement}>
+            <FormItemWrapper {...formElement}>
               <FormControl>
                 <InputOTP
                   {...field}
@@ -170,7 +141,7 @@ export const RenderFormElement = ({
                   </InputOTPGroup>
                 </InputOTP>
               </FormControl>
-            </ItemWrapper>
+            </FormItemWrapper>
           )}
         />
       );
@@ -180,7 +151,7 @@ export const RenderFormElement = ({
           control={form.control}
           name={formElement.name}
           render={({ field }: { field: ControllerRenderProps }) => (
-            <ItemWrapper {...formElement}>
+            <FormItemWrapper {...formElement}>
               <FormControl>
                 <Textarea
                   {...field}
@@ -192,7 +163,7 @@ export const RenderFormElement = ({
                   className="resize-none"
                 />
               </FormControl>
-            </ItemWrapper>
+            </FormItemWrapper>
           )}
         />
       );
@@ -231,7 +202,7 @@ export const RenderFormElement = ({
           control={form.control}
           name={formElement.name}
           render={({ field }: { field: ControllerRenderProps }) => (
-            <ItemWrapper
+            <FormItemWrapper
               {...formElement}
               className="flex flex-col gap-2 w-full py-1"
             >
@@ -248,7 +219,7 @@ export const RenderFormElement = ({
                   ))}
                 </RadioGroup>
               </FormControl>
-            </ItemWrapper>
+            </FormItemWrapper>
           )}
         />
       );
@@ -268,7 +239,7 @@ export const RenderFormElement = ({
           control={form.control}
           name={formElement.name}
           render={({ field }: { field: ControllerRenderProps }) => (
-            <ItemWrapper
+            <FormItemWrapper
               {...formElement}
               className="flex flex-col gap-2 w-full py-1"
             >
@@ -305,7 +276,7 @@ export const RenderFormElement = ({
                   </ToggleGroup>
                 )}
               </FormControl>
-            </ItemWrapper>
+            </FormItemWrapper>
           )}
         />
       );
@@ -383,7 +354,7 @@ export const RenderFormElement = ({
           control={form.control}
           name={formElement.name}
           render={({ field }: { field: ControllerRenderProps }) => (
-            <ItemWrapper {...formElement}>
+            <FormItemWrapper {...formElement}>
               <Select
                 value={field.value}
                 onValueChange={field.onChange}
@@ -404,26 +375,23 @@ export const RenderFormElement = ({
                   ))}
                 </SelectContent>
               </Select>
-            </ItemWrapper>
+            </FormItemWrapper>
           )}
         />
       );
 
-    case "InputImage":
+    case "SingleImage":
       return (
         <FormField
           control={form.control}
           name={formElement.name}
           render={({ field }: { field: ControllerRenderProps }) => (
-            <InputImage
-              // placeholder={formElement.placeholder}
-              // disabled={formElement.disabled}
-              // onChange={(e) => field.onChange(e.target.valueAsNumber)}
-              {...field}
-            />
+            <SingleImage fileType={"image"} {...field} />
           )}
         />
       );
+    case "ProductImage":
+      return <ProductImage {...formElement} />;
     default:
       return <div>Invalid Form Element</div>;
   }

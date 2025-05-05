@@ -44,14 +44,14 @@ export const DashboardLayout = ({
 
   if (isMobile) {
     return (
-      <div className="flex flex-col min-h-screen">
-        {children}
+      <div className="flex flex-col h-screen overflow-y-auto">
+        <div className="">{children}</div>
         <br />
         <br /> <br />
         <br /> <br />
         <div
           className={cn(
-            `grid fixed bottom-0 justify-center px-4 border-t w-screen bg-background z-50`
+            `grid fixed bottom-0 justify-center px-4 border-t w-screen z-50 bg-background`
           )}
           style={{ gridTemplateColumns: `repeat(${mobileNav.length}, 1fr)` }}
         >
@@ -103,7 +103,7 @@ export const DashboardLayout = ({
         </div>
       </motion.nav>
       <div
-        className="flex-1 flex flex-col overflow-x-auto"
+        className="flex-1 flex flex-col overflow-x-auto h-screen overflow-y-auto"
         onClick={() => open && setOpen(false)}
       >
         {children}

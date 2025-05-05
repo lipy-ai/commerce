@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { DataTableColumnHeader } from "@web-ui/components/table/column-header";
 import { DataTable } from "@web-ui/components/table/data-table";
-import { DataTableToolbar } from "@web-ui/components/table/toolbar";
 import { Checkbox } from "@web-ui/components/ui/checkbox";
 
 import React from "react";
@@ -26,6 +25,9 @@ import {
 } from "lucide-react";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 import { cn } from "@web-ui/lib/utils";
+import { DashboardHeader } from "@web-ui/components/layouts/dashboard";
+import { Input } from "@web-ui/components/ui/input";
+import { DataTableToolbar } from "@web-ui/components/table/toolbar";
 
 export const Route = createFileRoute("/(loggedIn)/product/")({
   component: RouteComponent,
@@ -153,11 +155,10 @@ function RouteComponent() {
         header: ({ column }: { column: Column<Project, unknown> }) => (
           <DataTableColumnHeader column={column} title="Title" />
         ),
-        cell: ({ cell }) => (
-          <Link to={"/product/$id"} params={{ id: cell.row.id }}>
-            {cell.getValue<Project["title"]>()}
-          </Link>
-        ),
+        cell: ({ getValue }) => {
+          const value = getValue<Project["title"]>();
+          return <>{value}</>;
+        },
         meta: {
           label: "Title",
           placeholder: "Search titles...",
@@ -183,15 +184,15 @@ function RouteComponent() {
             </Badge>
           );
         },
-        meta: {
-          label: "Status",
-          variant: "multiSelect",
-          options: [
-            { label: "Active", value: "active", icon: CheckCircle },
-            { label: "Inactive", value: "inactive", icon: XCircle },
-          ],
-        },
-        enableColumnFilter: true,
+        // meta: {
+        //   label: "Status",
+        //   variant: "multiSelect",
+        //   options: [
+        //     { label: "Active", value: "active", icon: CheckCircle },
+        //     { label: "Inactive", value: "inactive", icon: XCircle },
+        //   ],
+        // },
+        // enableColumnFilter: true,
       },
       {
         id: "budget",
@@ -244,22 +245,31 @@ function RouteComponent() {
       sorting: [{ id: "title", desc: true }],
       columnPinning: { right: ["actions"] },
     },
-    getRowId: (row) => row.id,
+    meta: {
+      updateData: (row: any) => {
+        // Skip page index reset until after next rerender
+        console.log(row);
+      },
+    },
   });
 
   return (
-    <div className="md:p-8">
-      <DataTable table={table}>
-        <DataTableToolbar table={table}>
-          <Link
-            to="/product/$id"
-            params={{ id: "new" }}
-            className={cn(buttonVariants({ size: "sm" }))}
-          >
-            New Product
-          </Link>
-        </DataTableToolbar>
-      </DataTable>
-    </div>
+    <>
+      <DashboardHeader title="Products">
+        <Link
+          to="/product/$id"
+          params={{ id: "new" }}
+          className={cn(buttonVariants({ size: "sm" }))}
+        >
+          New Product
+        </Link>
+      </DashboardHeader>
+
+      <div className="py-8 px-2 md:p-8">
+        <DataTable table={table}>
+          <DataTableToolbar table={table} className=""></DataTableToolbar>
+        </DataTable>
+      </div>
+    </>
   );
 }

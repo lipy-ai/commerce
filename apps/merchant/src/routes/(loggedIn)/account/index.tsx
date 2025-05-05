@@ -1,7 +1,7 @@
 import FormRender, { type FormSchema } from "@web-ui/components/forms/renderer";
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
-import { authClient } from "@/config/auth";
+import { authClient } from "@repo-lib/providers/auth";
 export const Route = createFileRoute("/(loggedIn)/account/")({
   component: RouteComponent,
 });
@@ -36,11 +36,8 @@ const forms: FormSchema<any, any> = [
     },
     elements: [
       {
-        name: "Image",
-        fieldType: "InputImage",
-        placeholder: "John",
-        label: "First name",
-        required: true,
+        name: "image",
+        fieldType: "SingleImage",
       },
       [
         {

@@ -1,6 +1,10 @@
 import { sql } from "drizzle-orm";
-import { bigint, customType, jsonb, uuid } from "drizzle-orm/pg-core";
 import {
+  bigint,
+  bigserial,
+  customType,
+  jsonb,
+  uuid,
   text,
   timestamp,
   boolean,
@@ -20,7 +24,7 @@ export const schema = pgSchema("lipy");
 export const enableUuidExtension = sql`CREATE EXTENSION IF NOT EXISTS "postgis";`;
 
 export const user = schema.table("user", {
-  id: text("id").primaryKey(),
+  id: uuid("id").primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").notNull(),
@@ -34,7 +38,7 @@ export const user = schema.table("user", {
 });
 
 export const address = schema.table("address", {
-  id: text("id").primaryKey(),
+  id: uuid("id").primaryKey(),
   name: text("name").notNull(),
   tag: text({ enum: ["home", "work", "other"] }).notNull(),
   line1: text("line1").notNull(),
@@ -43,17 +47,17 @@ export const address = schema.table("address", {
   state: text("state").notNull(),
   country: text("country"),
   postalCode: text("postal_code"),
-  userId: text("user_id")
+  userId: uuid("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   // location: geographyPoint("location"),
 });
 
 export const account = schema.table("auth_account", {
-  id: text("id").primaryKey(),
+  id: uuid("id").primaryKey(),
   accountId: text("account_id").notNull(),
   providerId: text("provider_id").notNull(),
-  userId: text("user_id")
+  userId: uuid("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   accessToken: text("access_token"),
@@ -68,7 +72,7 @@ export const account = schema.table("auth_account", {
 });
 
 export const verification = schema.table("auth_verification", {
-  id: text("id").primaryKey(),
+  id: uuid("id").primaryKey(),
   identifier: text("identifier").notNull(),
   value: text("value").notNull(),
   expiresAt: timestamp("expires_at").notNull(),
@@ -76,8 +80,8 @@ export const verification = schema.table("auth_verification", {
   updatedAt: timestamp("updated_at"),
 });
 export const session = schema.table("auth_session", {
-  id: text("id").primaryKey(),
-  userId: text("user_id")
+  id: uuid("id").primaryKey(),
+  userId: uuid("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   sessionToken: text("session_token").notNull().unique(),
@@ -87,7 +91,7 @@ export const session = schema.table("auth_session", {
 });
 
 export const org = schema.table("org", {
-  id: text("id").primaryKey(),
+  id: uuid("id").primaryKey(),
   name: text("name").notNull(),
   slug: text("slug").unique(),
   logo: text("logo"),
@@ -96,80 +100,66 @@ export const org = schema.table("org", {
 });
 
 export const orgMember = schema.table("org_member", {
-  id: text("id").primaryKey(),
-  organizationId: text("organization_id")
+  id: uuid("id").primaryKey(),
+  organizationId: uuid("organization_id")
     .notNull()
     .references(() => org.id, { onDelete: "cascade" }),
-  userId: text("user_id")
+  userId: uuid("user_id")
     .notNull()
-    .references(() => org.id, { onDelete: "cascade" }),
+    .references(() => user.id, { onDelete: "cascade" }),
   role: text("role").notNull(),
   createdAt: timestamp("created_at").notNull(),
 });
 
 export const orgInvitation = schema.table("org_invitation", {
-  id: text("id").primaryKey(),
-  organizationId: text("organization_id")
+  id: uuid("id").primaryKey(),
+  organizationId: uuid("organization_id")
     .notNull()
     .references(() => org.id, { onDelete: "cascade" }),
   email: text("email").notNull(),
   role: text("role"),
   status: text("status").notNull(),
   expiresAt: timestamp("expires_at").notNull(),
-  inviterId: text("inviter_id")
+  inviterId: uuid("inviter_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
 });
 
-export const category = schema.table("category", {
-  id: text("id").primaryKey(),
+export const category = schema.table("global_category", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  title: text("title"),
+  summary: text("summary"),
+  slug: text("slug").unique(),
+  image: text("image"),
+});
+
+export const tags = schema.table("global_tags", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
   title: text("title"),
   summary: text("summary"),
   slug: text("slug"),
-  createdAt: timestamp("created_at").notNull(),
-  updateAt: timestamp("updated_at").notNull(),
+  image: text("image"),
 });
 
-export const subCategory = schema.table("sub_category", {
-  id: text("id").primaryKey(),
-  parent: text("category").references(() => category.id, {
-    onDelete: "set null",
-  }),
-  title: text("title"),
-  summary: text("summary"),
-  slug: text("slug"),
-  createdAt: timestamp("created_at").notNull(),
-  updateAt: timestamp("updated_at").notNull(),
-});
-
-export const product = schema.table("product", {
-  id: text("id").primaryKey(),
+export const product = schema.table("global_product", {
+  id: uuid("id").primaryKey(),
   title: text("title"),
   summary: text("summary"),
   brand: text("brand"),
-  type: text({ enum: ["physical"] }),
-  rating: numeric("rating", { precision: 2, scale: 1 }).notNull().default("0"),
-  category: text("category").references(() => category.id, {
+  category: uuid("category").references(() => category.id, {
     onDelete: "set null",
   }),
-  subCategory: text("sub_category").references(() => subCategory.id, {
-    onDelete: "set null",
-  }),
-  organizationId: text("organization_id")
-    .notNull()
-    .references(() => org.id, { onDelete: "cascade" }),
-  createdAt: timestamp("created_at").notNull(),
-  updateAt: timestamp("updated_at").notNull(),
+  keywords: text("keywords").array(),
 });
 
 export const productVariant = schema.table("product_variant", {
-  id: text("id").primaryKey(),
+  id: uuid("id").primaryKey(),
   title: text("title"),
-  product: text("product").references(() => product.id, {
+  product: uuid("product").references(() => product.id, {
     onDelete: "cascade",
   }),
   unit: numeric("uint"),
-  organizationId: text("organization_id")
+  organizationId: uuid("organization_id")
     .notNull()
     .references(() => org.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").notNull(),
@@ -177,11 +167,11 @@ export const productVariant = schema.table("product_variant", {
 });
 
 export const shopCart = schema.table("shop_cart", {
-  id: text("id").primaryKey(),
-  userId: text("user_id")
+  id: uuid("id").primaryKey(),
+  userId: uuid("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
-  organizationId: text("organization_id").references(() => org.id, {
+  organizationId: uuid("organization_id").references(() => org.id, {
     onDelete: "cascade",
   }),
   items: jsonb()
@@ -190,8 +180,8 @@ export const shopCart = schema.table("shop_cart", {
 });
 
 export const shopOrders = schema.table("shop_order", {
-  id: text("id").primaryKey(),
-  userId: text("user_id")
+  id: uuid("id").primaryKey(),
+  userId: uuid("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   shopId: text("shop_id").notNull(),
@@ -222,10 +212,10 @@ export const upload = schema.table("upload", {
   name: text("name").notNull(),
   path: text("path"),
   url: text("url"),
-  uploaded_by: text("uploaded_by")
+  uploaded_by: uuid("uploaded_by")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
-  organization_id: text("organization_id").references(() => org.id, {
+  organization_id: uuid("organization_id").references(() => org.id, {
     onDelete: "cascade",
   }),
   created_at: timestamp("created_at").notNull(),

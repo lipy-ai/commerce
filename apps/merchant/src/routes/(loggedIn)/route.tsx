@@ -1,4 +1,8 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { env } from "@envClient";
+import { authClient } from "@repo-lib/providers/auth";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+import { getWebRequest } from "@tanstack/react-start/server";
 
 import {
   DashboardBody,
@@ -15,8 +19,31 @@ import {
   Users,
 } from "lucide-react";
 
+export const authFn = createServerFn({ method: "GET" }).handler(async (d) => {
+  const request = getWebRequest();
+  const res = await fetch(env.API_URL + "/api/auth/get-session", {
+    headers: request?.headers,
+  }).then(async (r) => {
+    const json = await r.json();
+    if (!r.ok) {
+      throw json;
+    }
+    return json;
+  });
+  if (!res?.session) {
+    redirect({ to: "/login" });
+    return null;
+  }
+
+  return res as ReturnType<typeof authClient.useSession>["data"];
+});
+
 export const Route = createFileRoute("/(loggedIn)")({
   component: RouteComponent,
+  loader: async () => {
+    const result = await authFn();
+    return result;
+  },
 });
 
 export const dashboardNav = {
@@ -84,15 +111,18 @@ const mobileNav = [
 ];
 
 function RouteComponent() {
+  // const data = Route.useLoaderData();
   return (
-    <DashboardLayout
-      dashboardNav={dashboardNav}
-      mobileNav={mobileNav}
-      logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
-    >
-      <DashboardBody>
-        <Outlet />
-      </DashboardBody>
-    </DashboardLayout>
+    <main>
+      <DashboardLayout
+        dashboardNav={dashboardNav}
+        mobileNav={mobileNav}
+        logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
+      >
+        <DashboardBody>
+          <Outlet />
+        </DashboardBody>
+      </DashboardLayout>
+    </main>
   );
 }

@@ -1,6 +1,6 @@
 {
-  "include": ["**/*.ts", "**/*.tsx"],
-  "files": [],
+  "include": ["**/*.ts", "**/*.tsx", "../../env.client.ts"],
+  // "files": [],
   "references": [{ "path": "../../apps/server" }],
   "compilerOptions": {
     "target": "ES2022",
@@ -10,9 +10,9 @@
 
     /* Bundler mode */
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
+    "allowImportingTsExtensions": false,
     "verbatimModuleSyntax": true,
-    "noEmit": true,
+    "noEmit": false,
 
     /* Linting */
     "skipLibCheck": true,
@@ -27,6 +27,7 @@
     "declarationMap": true,
     "baseUrl": ".",
     "paths": {
+      "@envClient": ["../../env.client.ts"],
       "@lipy/lib/*": ["./src/*"],
       "@lipy/server/*": ["../../apps/server/src/*"]
     }

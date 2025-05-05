@@ -1,5 +1,6 @@
 // import { HorizontalNav } from "@web-ui/components/nav/horizontal";
 // import HorizontalNavSkeleton from "@web-ui/components/skeleton/horizontal";
+
 import {
   Avatar,
   AvatarFallback,
@@ -9,8 +10,8 @@ import { Button } from "@web-ui/components/ui/button";
 import { User } from "lucide-react";
 
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { authClient } from "@/config/auth";
 import { DashboardHeader } from "@web-ui/components/layouts/dashboard";
+import { authClient } from "@repo-lib/providers/auth";
 
 export const Route = createFileRoute("/(loggedIn)/account")({
   component: RouteComponent,

@@ -11,7 +11,7 @@ import { type OTPInputProps } from "input-otp";
 
 type Option = { value: string; label: string };
 //------------------------------------------------------------
-type SharedFormProps = {
+export type SharedFormProps = {
   name: string;
   label?: string;
   description?: string;
@@ -28,6 +28,16 @@ type Input = {
   fieldType: "Input";
 } & React.InputHTMLAttributes<HTMLInputElement> &
   SharedFormProps;
+
+type SingleImage = {
+  name: string;
+  fieldType: "SingleImage";
+} & SharedFormProps;
+
+export type ProductImage = {
+  name: string;
+  fieldType: "ProductImage";
+} & SharedFormProps;
 
 type CountrySelector = {
   name: string;
@@ -180,7 +190,9 @@ type FormFieldElement =
   | MultiSelect
   | Slider
   | DatePicker
-  | CountrySelector;
+  | CountrySelector
+  | SingleImage
+  | ProductImage;
 
 /**
  * StaticFormElement is a type that represents a static form element

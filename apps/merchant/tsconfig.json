@@ -1,5 +1,6 @@
 {
   "include": ["**/*.ts", "**/*.tsx"],
+  "references": [{ "path": "../server" }],
 
   "compilerOptions": {
     "target": "ES2022",
@@ -8,6 +9,11 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "types": ["vite/client"],
 
+    "noImplicitAny": true,
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -15,10 +21,8 @@
     "noEmit": true,
 
     /* Linting */
-    "noImplicitAny": true,
-    "declaration": true,
-    "declarationMap": true,
     "skipLibCheck": true,
+    "strictNullChecks": true,
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -27,6 +31,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
+      "@envClient": ["../../env.client.ts"],
       "@web-ui/*": ["../../packages/web-ui/src/*"],
       "@repo-lib/*": ["../../packages/lib/src/*"],
       "@lipy/server/*": ["../server/src/*"]

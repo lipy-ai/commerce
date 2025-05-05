@@ -1,10 +1,10 @@
 CREATE SCHEMA "lipy";
 --> statement-breakpoint
 CREATE TABLE "lipy"."auth_account" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
 	"account_id" text NOT NULL,
 	"provider_id" text NOT NULL,
-	"user_id" text NOT NULL,
+	"user_id" uuid NOT NULL,
 	"access_token" text,
 	"refresh_token" text,
 	"id_token" text,
@@ -17,7 +17,7 @@ CREATE TABLE "lipy"."auth_account" (
 );
 --> statement-breakpoint
 CREATE TABLE "lipy"."address" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
 	"name" text NOT NULL,
 	"tag" text NOT NULL,
 	"line1" text NOT NULL,
@@ -26,11 +26,11 @@ CREATE TABLE "lipy"."address" (
 	"state" text NOT NULL,
 	"country" text,
 	"postal_code" text,
-	"user_id" text NOT NULL
+	"user_id" uuid NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "lipy"."category" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
 	"title" text,
 	"summary" text,
 	"slug" text,
@@ -39,7 +39,7 @@ CREATE TABLE "lipy"."category" (
 );
 --> statement-breakpoint
 CREATE TABLE "lipy"."org" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
 	"name" text NOT NULL,
 	"slug" text,
 	"logo" text,
@@ -49,50 +49,50 @@ CREATE TABLE "lipy"."org" (
 );
 --> statement-breakpoint
 CREATE TABLE "lipy"."org_invitation" (
-	"id" text PRIMARY KEY NOT NULL,
-	"organization_id" text NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
+	"organization_id" uuid NOT NULL,
 	"email" text NOT NULL,
 	"role" text,
 	"status" text NOT NULL,
 	"expires_at" timestamp NOT NULL,
-	"inviter_id" text NOT NULL
+	"inviter_id" uuid NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "lipy"."org_member" (
-	"id" text PRIMARY KEY NOT NULL,
-	"organization_id" text NOT NULL,
-	"user_id" text NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
+	"organization_id" uuid NOT NULL,
+	"user_id" uuid NOT NULL,
 	"role" text NOT NULL,
 	"created_at" timestamp NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "lipy"."product" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
 	"title" text,
 	"summary" text,
 	"brand" text,
 	"type" text,
 	"rating" numeric(2, 1) DEFAULT '0' NOT NULL,
-	"category" text,
-	"sub_category" text,
-	"organization_id" text NOT NULL,
+	"category" uuid,
+	"sub_category" uuid,
+	"organization_id" uuid NOT NULL,
 	"created_at" timestamp NOT NULL,
 	"updated_at" timestamp NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "lipy"."product_variant" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
 	"title" text,
-	"product" text,
+	"product" uuid,
 	"uint" numeric,
-	"organization_id" text NOT NULL,
+	"organization_id" uuid NOT NULL,
 	"created_at" timestamp NOT NULL,
 	"updated_at" timestamp NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "lipy"."auth_session" (
-	"id" text PRIMARY KEY NOT NULL,
-	"user_id" text NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
+	"user_id" uuid NOT NULL,
 	"session_token" text NOT NULL,
 	"expires" timestamp NOT NULL,
 	"created_at" timestamp NOT NULL,
@@ -101,15 +101,15 @@ CREATE TABLE "lipy"."auth_session" (
 );
 --> statement-breakpoint
 CREATE TABLE "lipy"."shop_cart" (
-	"id" text PRIMARY KEY NOT NULL,
-	"user_id" text NOT NULL,
-	"organization_id" text,
+	"id" uuid PRIMARY KEY NOT NULL,
+	"user_id" uuid NOT NULL,
+	"organization_id" uuid,
 	"items" jsonb DEFAULT '[]'::jsonb
 );
 --> statement-breakpoint
 CREATE TABLE "lipy"."shop_order" (
-	"id" text PRIMARY KEY NOT NULL,
-	"user_id" text NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
+	"user_id" uuid NOT NULL,
 	"shop_id" text NOT NULL,
 	"items" jsonb,
 	"taxes" jsonb,
@@ -121,8 +121,8 @@ CREATE TABLE "lipy"."shop_order" (
 );
 --> statement-breakpoint
 CREATE TABLE "lipy"."sub_category" (
-	"id" text PRIMARY KEY NOT NULL,
-	"category" text,
+	"id" uuid PRIMARY KEY NOT NULL,
+	"category" uuid,
 	"title" text,
 	"summary" text,
 	"slug" text,
@@ -138,14 +138,14 @@ CREATE TABLE "lipy"."upload" (
 	"name" text NOT NULL,
 	"path" text,
 	"url" text,
-	"uploaded_by" text NOT NULL,
-	"organization_id" text,
+	"uploaded_by" uuid NOT NULL,
+	"organization_id" uuid,
 	"created_at" timestamp NOT NULL,
 	"updated_at" timestamp NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "lipy"."user" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
 	"name" text NOT NULL,
 	"email" text NOT NULL,
 	"email_verified" boolean NOT NULL,
@@ -160,7 +160,7 @@ CREATE TABLE "lipy"."user" (
 );
 --> statement-breakpoint
 CREATE TABLE "lipy"."auth_verification" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
 	"identifier" text NOT NULL,
 	"value" text NOT NULL,
 	"expires_at" timestamp NOT NULL,
@@ -173,7 +173,7 @@ ALTER TABLE "lipy"."address" ADD CONSTRAINT "address_user_id_user_id_fk" FOREIGN
 ALTER TABLE "lipy"."org_invitation" ADD CONSTRAINT "org_invitation_organization_id_org_id_fk" FOREIGN KEY ("organization_id") REFERENCES "lipy"."org"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "lipy"."org_invitation" ADD CONSTRAINT "org_invitation_inviter_id_user_id_fk" FOREIGN KEY ("inviter_id") REFERENCES "lipy"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "lipy"."org_member" ADD CONSTRAINT "org_member_organization_id_org_id_fk" FOREIGN KEY ("organization_id") REFERENCES "lipy"."org"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "lipy"."org_member" ADD CONSTRAINT "org_member_user_id_org_id_fk" FOREIGN KEY ("user_id") REFERENCES "lipy"."org"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "lipy"."org_member" ADD CONSTRAINT "org_member_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "lipy"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "lipy"."product" ADD CONSTRAINT "product_category_category_id_fk" FOREIGN KEY ("category") REFERENCES "lipy"."category"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "lipy"."product" ADD CONSTRAINT "product_sub_category_sub_category_id_fk" FOREIGN KEY ("sub_category") REFERENCES "lipy"."sub_category"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "lipy"."product" ADD CONSTRAINT "product_organization_id_org_id_fk" FOREIGN KEY ("organization_id") REFERENCES "lipy"."org"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint

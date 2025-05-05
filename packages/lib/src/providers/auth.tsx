@@ -19,13 +19,7 @@ export const signIn = async (
   opts?: { email?: string; callbackURL?: string; otp?: string },
   routeCb?: (v: string) => void
 ) => {
-  console.log(opts);
-  if (!opts?.callbackURL) {
-    opts = {
-      ...opts,
-      callbackURL: "/org",
-    };
-  }
+  const callbackURL = opts?.callbackURL || window.location.origin;
   switch (type) {
     case "otp":
       return await authClient.emailOtp
@@ -46,15 +40,15 @@ export const signIn = async (
     case "signin-otp":
       return await authClient.signIn
         .emailOtp({
-          email: opts.email!,
-          otp: opts.otp!,
+          email: opts?.email!,
+          otp: opts?.otp!,
         })
         .then((r) => {
           // console.log({ r });
           if (!r.data?.user) {
             throw new Error("Failed to signin");
           }
-          return routeCb && routeCb(opts.callbackURL || "/");
+          return routeCb && routeCb(callbackURL);
         })
         .catch((e) => {
           throw e;
@@ -63,7 +57,7 @@ export const signIn = async (
       return await authClient.signIn
         .social({
           provider: "google",
-          callbackURL: opts!.callbackURL,
+          callbackURL: callbackURL,
         })
         .then((_r) => true)
         .catch((e) => {
@@ -74,7 +68,7 @@ export const signIn = async (
       return await authClient.signIn
         .social({
           provider: "microsoft",
-          callbackURL: opts!.callbackURL,
+          callbackURL: callbackURL,
         })
         .then((_r) => true)
         .catch((e) => {

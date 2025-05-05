@@ -1,3 +1,5 @@
+"use client";
+
 import {
   createContext,
   type ReactNode,
@@ -15,7 +17,15 @@ const viewportContext = createContext({
   isMobile: false,
 });
 
-const ViewportProvider = ({ children }: { children: ReactNode }) => {
+const ViewportProvider = ({
+  children,
+  isMobile,
+}: {
+  children: ReactNode;
+  isMobile: boolean;
+}) => {
+  const initial = isMobile ? 768 : 1250;
+
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
   const [screenWidth, setScreenWidth] = useState(0);
@@ -51,11 +61,12 @@ const ViewportProvider = ({ children }: { children: ReactNode }) => {
   return (
     <viewportContext.Provider
       value={{
-        width: width,
-        height: height,
-        screenWidth: screenWidth,
-        screenHeight: screenHeight,
-        isMobile: width > 800 ? false : true,
+        width: width || initial,
+        height: height || initial,
+        screenWidth: screenWidth || initial,
+        screenHeight: screenHeight || initial,
+        isMobile:
+          width === 0 && height === 0 ? isMobile : width > 800 ? false : true,
       }}
     >
       {children}

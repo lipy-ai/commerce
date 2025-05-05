@@ -30,7 +30,6 @@ if (env.NODE_ENV === "development") {
 }
 
 await pingDatabase();
-
 app.use("*", authMiddleware);
 
 app.on(["POST", "GET"], "/api/auth/*", (c) => {
@@ -39,7 +38,10 @@ app.on(["POST", "GET"], "/api/auth/*", (c) => {
 
 // app.use(compress());
 
-export const routes = app.basePath("/v1").route("/upload", uploadRouter);
+export const routes = app
+  .basePath("/v1")
+
+  .route("/upload", uploadRouter);
 
 // routes.basePath("/admin").route("/category", categoryRouter);
 

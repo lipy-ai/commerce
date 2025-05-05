@@ -1,4 +1,8 @@
 import { hc } from "hono/client";
 import type { AppType } from "@lipy/server/app";
 
-export const apiClient = hc<AppType>("http://localhost:8080");
+export const apiClient = hc<AppType>("http://localhost:8080", {
+  init: {
+    credentials: "include",
+  },
+});

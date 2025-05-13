@@ -9,7 +9,8 @@ import {
   timestamp,
   boolean,
   pgSchema,
-  numeric,
+  integer,
+  AnyPgColumn,
 } from "drizzle-orm/pg-core";
 
 // Create a custom type for PostGIS POINT
@@ -79,6 +80,7 @@ export const verification = schema.table("auth_verification", {
   createdAt: timestamp("created_at"),
   updatedAt: timestamp("updated_at"),
 });
+
 export const session = schema.table("auth_session", {
   id: uuid("id").primaryKey(),
   userId: uuid("user_id")
@@ -125,85 +127,6 @@ export const orgInvitation = schema.table("org_invitation", {
     .references(() => user.id, { onDelete: "cascade" }),
 });
 
-export const category = schema.table("global_category", {
-  id: bigserial("id", { mode: "number" }).primaryKey(),
-  title: text("title"),
-  summary: text("summary"),
-  slug: text("slug").unique(),
-  image: text("image"),
-});
-
-export const tags = schema.table("global_tags", {
-  id: bigserial("id", { mode: "number" }).primaryKey(),
-  title: text("title"),
-  summary: text("summary"),
-  slug: text("slug"),
-  image: text("image"),
-});
-
-export const product = schema.table("global_product", {
-  id: uuid("id").primaryKey(),
-  title: text("title"),
-  summary: text("summary"),
-  brand: text("brand"),
-  category: uuid("category").references(() => category.id, {
-    onDelete: "set null",
-  }),
-  keywords: text("keywords").array(),
-});
-
-export const productVariant = schema.table("product_variant", {
-  id: uuid("id").primaryKey(),
-  title: text("title"),
-  product: uuid("product").references(() => product.id, {
-    onDelete: "cascade",
-  }),
-  unit: numeric("uint"),
-  organizationId: uuid("organization_id")
-    .notNull()
-    .references(() => org.id, { onDelete: "cascade" }),
-  createdAt: timestamp("created_at").notNull(),
-  updateAt: timestamp("updated_at").notNull(),
-});
-
-export const shopCart = schema.table("shop_cart", {
-  id: uuid("id").primaryKey(),
-  userId: uuid("user_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  organizationId: uuid("organization_id").references(() => org.id, {
-    onDelete: "cascade",
-  }),
-  items: jsonb()
-    .$type<Array<{ product: string; quantity: string }>>()
-    .default([]),
-});
-
-export const shopOrders = schema.table("shop_order", {
-  id: uuid("id").primaryKey(),
-  userId: uuid("user_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  shopId: text("shop_id").notNull(),
-  items: jsonb("items"),
-  taxes: jsonb("taxes"),
-  address: jsonb("address"),
-  total: bigint("total", { mode: "number" }).default(0),
-  delivery: jsonb("delivery"),
-  payment: jsonb("payment"),
-  status: text("status", {
-    enum: [
-      "ordered",
-      "accepted",
-      "packed",
-      "out_for_delivery",
-      "delivered",
-      "returned",
-      "refunded",
-    ],
-  }),
-});
-
 export const upload = schema.table("upload", {
   id: uuid("id").primaryKey(),
   is_public: boolean("is_public").default(false),
@@ -222,6 +145,131 @@ export const upload = schema.table("upload", {
   updated_at: timestamp("updated_at").notNull(),
 });
 
+export const category = schema.table("category", {
+  id: uuid("id").primaryKey(),
+  title: text("title"),
+  summary: text("summary"),
+  slug: text("slug").unique(),
+  image: text("image"),
+  organization_id: uuid("organization_id").references(() => org.id, {
+    onDelete: "cascade",
+  }),
+});
+
+export const tags = schema.table("tag", {
+  id: uuid("id").primaryKey(),
+  title: text("title"),
+  summary: text("summary"),
+  slug: text("slug"),
+  image: text("image"),
+  organization_id: uuid("organization_id").references(() => org.id, {
+    onDelete: "cascade",
+  }),
+});
+
+export const globalProduct = schema.table("global_product", {
+  id: uuid("id")
+    .primaryKey()
+    .references((): AnyPgColumn => product.id, {
+      onDelete: "cascade",
+    }),
+});
+
+export const globalCategory = schema.table("global_category", {
+  id: uuid("id")
+    .primaryKey()
+    .references((): AnyPgColumn => category.id, {
+      onDelete: "cascade",
+    }),
+});
+
+export const globalTag = schema.table("global_tag", {
+  id: uuid("id")
+    .primaryKey()
+    .references((): AnyPgColumn => tags.id, {
+      onDelete: "cascade",
+    }),
+});
+
+export const product = schema.table("product", {
+  id: uuid("id").primaryKey(),
+  title: text("title"),
+  summary: text("summary"),
+  content: text("content"),
+  brand: text("brand"),
+  category: uuid("category").references(() => category.id, {
+    onDelete: "set null",
+  }),
+  organization_id: uuid("organization_id").references(() => org.id, {
+    onDelete: "cascade",
+  }),
+  global_product: uuid("organization_id").references(() => globalProduct.id, {
+    onDelete: "cascade",
+  }),
+  keywords: text("keywords").array(),
+  default_price: integer("default_price"),
+  in_stock: boolean("in_stock").default(false),
+});
+
+export const productVariants = schema.table("product_variant", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  title: text("title").notNull(),
+  description: text("description"),
+  sku: text("sku"),
+  model: text("model"),
+  price: integer("price").default(1),
+  qty: integer("qty").default(1),
+  unit: text("unit"),
+  metadata: jsonb(),
+  product: uuid("product").references(() => product.id, {
+    onDelete: "cascade",
+  }),
+  organization_id: uuid("organization_id").references(() => org.id, {
+    onDelete: "cascade",
+  }),
+});
+
+export const shopCart = schema.table("shop_cart", {
+  id: uuid("id").primaryKey(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  organization_id: uuid("organization_id").references(() => org.id, {
+    onDelete: "cascade",
+  }),
+  items: jsonb()
+    .array()
+    .$type<Array<{ product: string; quantity: string }>>()
+    .default([]),
+});
+
+export const shopOrders = schema.table("shop_order", {
+  id: uuid("id").primaryKey(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  items: jsonb("items").array(),
+  taxes: jsonb("taxes"),
+  address: jsonb("address"),
+  total: bigint("total", { mode: "number" }).default(0),
+  delivery: jsonb("delivery"),
+  payment: jsonb("payment"),
+  organization_id: uuid("organization_id").references(() => org.id, {
+    onDelete: "cascade",
+  }),
+  status: text("status", {
+    enum: [
+      "ordered",
+      "accepted",
+      "packed",
+      "out_for_delivery",
+      "delivered",
+      "returned",
+      "refunded",
+    ],
+  }),
+});
+
 export const dbTables = {
   user,
   address,
@@ -232,7 +280,7 @@ export const dbTables = {
   orgMember,
   orgInvitation,
   product,
-  productVariant,
+  productVariants,
   shopCart,
   shopOrders,
   upload,

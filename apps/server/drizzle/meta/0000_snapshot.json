@@ -1,5 +1,5 @@
 {
-  "id": "aa965840-a2ab-44fd-a809-0cf29ab578b9",
+  "id": "ee85df04-d6e9-46f3-b460-4ca6c1b09294",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -226,21 +226,146 @@
           "primaryKey": false,
           "notNull": false
         },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
+        "image": {
+          "name": "image",
+          "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
           "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "category_organization_id_org_id_fk": {
+          "name": "category_organization_id_org_id_fk",
+          "tableFrom": "category",
+          "tableTo": "org",
+          "schemaTo": "lipy",
+          "columnsFrom": [
+            "organization_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "category_slug_unique": {
+          "name": "category_slug_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "slug"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "lipy.global_category": {
+      "name": "global_category",
+      "schema": "lipy",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
           "notNull": true
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "global_category_id_category_id_fk": {
+          "name": "global_category_id_category_id_fk",
+          "tableFrom": "global_category",
+          "tableTo": "category",
+          "schemaTo": "lipy",
+          "columnsFrom": [
+            "id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "lipy.global_product": {
+      "name": "global_product",
+      "schema": "lipy",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "global_product_id_product_id_fk": {
+          "name": "global_product_id_product_id_fk",
+          "tableFrom": "global_product",
+          "tableTo": "product",
+          "schemaTo": "lipy",
+          "columnsFrom": [
+            "id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "lipy.global_tag": {
+      "name": "global_tag",
+      "schema": "lipy",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "global_tag_id_tag_id_fk": {
+          "name": "global_tag_id_tag_id_fk",
+          "tableFrom": "global_tag",
+          "tableTo": "tag",
+          "schemaTo": "lipy",
+          "columnsFrom": [
+            "id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -482,33 +607,20 @@
           "primaryKey": false,
           "notNull": false
         },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "brand": {
           "name": "brand",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "type": {
-          "name": "type",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "rating": {
-          "name": "rating",
-          "type": "numeric(2, 1)",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'0'"
-        },
         "category": {
           "name": "category",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "sub_category": {
-          "name": "sub_category",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
@@ -517,19 +629,26 @@
           "name": "organization_id",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
+        "keywords": {
+          "name": "keywords",
+          "type": "text[]",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
+        "default_price": {
+          "name": "default_price",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
+        },
+        "in_stock": {
+          "name": "in_stock",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
         }
       },
       "indexes": {},
@@ -548,24 +667,24 @@
           "onDelete": "set null",
           "onUpdate": "no action"
         },
-        "product_sub_category_sub_category_id_fk": {
-          "name": "product_sub_category_sub_category_id_fk",
-          "tableFrom": "product",
-          "tableTo": "sub_category",
-          "schemaTo": "lipy",
-          "columnsFrom": [
-            "sub_category"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        },
         "product_organization_id_org_id_fk": {
           "name": "product_organization_id_org_id_fk",
           "tableFrom": "product",
           "tableTo": "org",
+          "schemaTo": "lipy",
+          "columnsFrom": [
+            "organization_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "product_organization_id_global_product_id_fk": {
+          "name": "product_organization_id_global_product_id_fk",
+          "tableFrom": "product",
+          "tableTo": "global_product",
           "schemaTo": "lipy",
           "columnsFrom": [
             "organization_id"
@@ -589,13 +708,57 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "uuid",
+          "type": "bigserial",
           "primaryKey": true,
           "notNull": true
         },
         "title": {
           "name": "title",
           "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sku": {
+          "name": "sku",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "model": {
+          "name": "model",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "price": {
+          "name": "price",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 1
+        },
+        "qty": {
+          "name": "qty",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 1
+        },
+        "unit": {
+          "name": "unit",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "metadata": {
+          "name": "metadata",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
@@ -605,29 +768,11 @@
           "primaryKey": false,
           "notNull": false
         },
-        "uint": {
-          "name": "uint",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
         "organization_id": {
           "name": "organization_id",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
+          "notNull": false
         }
       },
       "indexes": {},
@@ -763,10 +908,10 @@
         },
         "items": {
           "name": "items",
-          "type": "jsonb",
+          "type": "jsonb[]",
           "primaryKey": false,
           "notNull": false,
-          "default": "'[]'::jsonb"
+          "default": "'{}'"
         }
       },
       "indexes": {},
@@ -822,15 +967,9 @@
           "primaryKey": false,
           "notNull": true
         },
-        "shop_id": {
-          "name": "shop_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
         "items": {
           "name": "items",
-          "type": "jsonb",
+          "type": "jsonb[]",
           "primaryKey": false,
           "notNull": false
         },
@@ -865,6 +1004,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
         "status": {
           "name": "status",
           "type": "text",
@@ -887,6 +1032,20 @@
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
+        },
+        "shop_order_organization_id_org_id_fk": {
+          "name": "shop_order_organization_id_org_id_fk",
+          "tableFrom": "shop_order",
+          "tableTo": "org",
+          "schemaTo": "lipy",
+          "columnsFrom": [
+            "organization_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -895,8 +1054,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "lipy.sub_category": {
-      "name": "sub_category",
+    "lipy.tag": {
+      "name": "tag",
       "schema": "lipy",
       "columns": {
         "id": {
@@ -904,12 +1063,6 @@
           "type": "uuid",
           "primaryKey": true,
           "notNull": true
-        },
-        "category": {
-          "name": "category",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
         },
         "title": {
           "name": "title",
@@ -929,33 +1082,33 @@
           "primaryKey": false,
           "notNull": false
         },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
+        "image": {
+          "name": "image",
+          "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "sub_category_category_category_id_fk": {
-          "name": "sub_category_category_category_id_fk",
-          "tableFrom": "sub_category",
-          "tableTo": "category",
+        "tag_organization_id_org_id_fk": {
+          "name": "tag_organization_id_org_id_fk",
+          "tableFrom": "tag",
+          "tableTo": "org",
           "schemaTo": "lipy",
           "columnsFrom": [
-            "category"
+            "organization_id"
           ],
           "columnsTo": [
             "id"
           ],
-          "onDelete": "set null",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },

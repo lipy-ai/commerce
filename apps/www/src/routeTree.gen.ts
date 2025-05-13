@@ -10,158 +10,165 @@
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as IndexImport } from './routes/index'
-import { Route as AccountIndexImport } from './routes/account/index'
-import { Route as AccountProfileImport } from './routes/account/profile'
-import { Route as AccountOrdersImport } from './routes/account/orders'
-import { Route as AccountAddressesImport } from './routes/account/addresses'
+import { Route as rootRoute } from "./routes/__root";
+import { Route as IndexImport } from "./routes/index";
+import { Route as authLogoutImport } from "./routes/(auth)/logout";
+import { Route as authLoginImport } from "./routes/(auth)/login";
 
 // Create/Update Routes
 
+const CheckoutRouteRoute = CheckoutRouteImport.update({
+  id: "/checkout",
+  path: "/checkout",
+  getParentRoute: () => rootRoute,
+} as any);
+
+const CartRouteRoute = CartRouteImport.update({
+  id: "/cart",
+  path: "/cart",
+  getParentRoute: () => rootRoute,
+} as any);
+
+const AccountRouteRoute = AccountRouteImport.update({
+  id: "/account",
+  path: "/account",
+  getParentRoute: () => rootRoute,
+} as any);
+
 const IndexRoute = IndexImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
-const AccountIndexRoute = AccountIndexImport.update({
-  id: '/account/',
-  path: '/account/',
+const authLogoutRoute = authLogoutImport.update({
+  id: "/(auth)/logout",
+  path: "/logout",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
-const AccountProfileRoute = AccountProfileImport.update({
-  id: '/account/profile',
-  path: '/account/profile',
+const authLoginRoute = authLoginImport.update({
+  id: "/(auth)/login",
+  path: "/login",
   getParentRoute: () => rootRoute,
-} as any)
-
-const AccountOrdersRoute = AccountOrdersImport.update({
-  id: '/account/orders',
-  path: '/account/orders',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const AccountAddressesRoute = AccountAddressesImport.update({
-  id: '/account/addresses',
-  path: '/account/addresses',
-  getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 // Populate the FileRoutesByPath interface
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/account/addresses': {
-      id: '/account/addresses'
-      path: '/account/addresses'
-      fullPath: '/account/addresses'
-      preLoaderRoute: typeof AccountAddressesImport
-      parentRoute: typeof rootRoute
-    }
-    '/account/orders': {
-      id: '/account/orders'
-      path: '/account/orders'
-      fullPath: '/account/orders'
-      preLoaderRoute: typeof AccountOrdersImport
-      parentRoute: typeof rootRoute
-    }
-    '/account/profile': {
-      id: '/account/profile'
-      path: '/account/profile'
-      fullPath: '/account/profile'
-      preLoaderRoute: typeof AccountProfileImport
-      parentRoute: typeof rootRoute
-    }
-    '/account/': {
-      id: '/account/'
-      path: '/account'
-      fullPath: '/account'
-      preLoaderRoute: typeof AccountIndexImport
-      parentRoute: typeof rootRoute
-    }
+    "/": {
+      id: "/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof IndexImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/account": {
+      id: "/account";
+      path: "/account";
+      fullPath: "/account";
+      preLoaderRoute: typeof AccountRouteImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/cart": {
+      id: "/cart";
+      path: "/cart";
+      fullPath: "/cart";
+      preLoaderRoute: typeof CartRouteImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/checkout": {
+      id: "/checkout";
+      path: "/checkout";
+      fullPath: "/checkout";
+      preLoaderRoute: typeof CheckoutRouteImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/(auth)/login": {
+      id: "/(auth)/login";
+      path: "/login";
+      fullPath: "/login";
+      preLoaderRoute: typeof authLoginImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/(auth)/logout": {
+      id: "/(auth)/logout";
+      path: "/logout";
+      fullPath: "/logout";
+      preLoaderRoute: typeof authLogoutImport;
+      parentRoute: typeof rootRoute;
+    };
   }
 }
 
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/account/addresses': typeof AccountAddressesRoute
-  '/account/orders': typeof AccountOrdersRoute
-  '/account/profile': typeof AccountProfileRoute
-  '/account': typeof AccountIndexRoute
+  "/": typeof IndexRoute;
+  "/account": typeof AccountRouteRoute;
+  "/cart": typeof CartRouteRoute;
+  "/checkout": typeof CheckoutRouteRoute;
+  "/login": typeof authLoginRoute;
+  "/logout": typeof authLogoutRoute;
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/account/addresses': typeof AccountAddressesRoute
-  '/account/orders': typeof AccountOrdersRoute
-  '/account/profile': typeof AccountProfileRoute
-  '/account': typeof AccountIndexRoute
+  "/": typeof IndexRoute;
+  "/account": typeof AccountRouteRoute;
+  "/cart": typeof CartRouteRoute;
+  "/checkout": typeof CheckoutRouteRoute;
+  "/login": typeof authLoginRoute;
+  "/logout": typeof authLogoutRoute;
 }
 
 export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/account/addresses': typeof AccountAddressesRoute
-  '/account/orders': typeof AccountOrdersRoute
-  '/account/profile': typeof AccountProfileRoute
-  '/account/': typeof AccountIndexRoute
+  __root__: typeof rootRoute;
+  "/": typeof IndexRoute;
+  "/account": typeof AccountRouteRoute;
+  "/cart": typeof CartRouteRoute;
+  "/checkout": typeof CheckoutRouteRoute;
+  "/(auth)/login": typeof authLoginRoute;
+  "/(auth)/logout": typeof authLogoutRoute;
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/account/addresses'
-    | '/account/orders'
-    | '/account/profile'
-    | '/account'
-  fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/account/addresses'
-    | '/account/orders'
-    | '/account/profile'
-    | '/account'
+  fileRoutesByFullPath: FileRoutesByFullPath;
+  fullPaths: "/" | "/account" | "/cart" | "/checkout" | "/login" | "/logout";
+  fileRoutesByTo: FileRoutesByTo;
+  to: "/" | "/account" | "/cart" | "/checkout" | "/login" | "/logout";
   id:
-    | '__root__'
-    | '/'
-    | '/account/addresses'
-    | '/account/orders'
-    | '/account/profile'
-    | '/account/'
-  fileRoutesById: FileRoutesById
+    | "__root__"
+    | "/"
+    | "/account"
+    | "/cart"
+    | "/checkout"
+    | "/(auth)/login"
+    | "/(auth)/logout";
+  fileRoutesById: FileRoutesById;
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AccountAddressesRoute: typeof AccountAddressesRoute
-  AccountOrdersRoute: typeof AccountOrdersRoute
-  AccountProfileRoute: typeof AccountProfileRoute
-  AccountIndexRoute: typeof AccountIndexRoute
+  IndexRoute: typeof IndexRoute;
+  AccountRouteRoute: typeof AccountRouteRoute;
+  CartRouteRoute: typeof CartRouteRoute;
+  CheckoutRouteRoute: typeof CheckoutRouteRoute;
+  authLoginRoute: typeof authLoginRoute;
+  authLogoutRoute: typeof authLogoutRoute;
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AccountAddressesRoute: AccountAddressesRoute,
-  AccountOrdersRoute: AccountOrdersRoute,
-  AccountProfileRoute: AccountProfileRoute,
-  AccountIndexRoute: AccountIndexRoute,
-}
+  AccountRouteRoute: AccountRouteRoute,
+  CartRouteRoute: CartRouteRoute,
+  CheckoutRouteRoute: CheckoutRouteRoute,
+  authLoginRoute: authLoginRoute,
+  authLogoutRoute: authLogoutRoute,
+};
 
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
 /* ROUTE_MANIFEST_START
 {
@@ -170,10 +177,11 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/account/addresses",
-        "/account/orders",
-        "/account/profile",
-        "/account/"
+        "/account",
+        "/cart",
+        "/checkout",
+        "/(auth)/login",
+        "/(auth)/logout"
       ]
     },
     "/": {
@@ -188,8 +196,14 @@ export const routeTree = rootRoute
     "/account/profile": {
       "filePath": "account/profile.tsx"
     },
-    "/account/": {
-      "filePath": "account/index.tsx"
+    "/checkout": {
+      "filePath": "checkout/route.tsx"
+    },
+    "/(auth)/login": {
+      "filePath": "(auth)/login.tsx"
+    },
+    "/(auth)/logout": {
+      "filePath": "(auth)/logout.tsx"
     }
   }
 }

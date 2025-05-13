@@ -13,6 +13,8 @@
     "check": "biome check"
   },
   "dependencies": {
+    "@lipy/server": "workspace:*",
+    "@repo/lib": "workspace:*",
     "@repo/web-ui": "workspace:*",
     "@tailwindcss/vite": "^4.0.6",
     "@tanstack/react-router": "^1.114.3",

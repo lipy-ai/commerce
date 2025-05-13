@@ -12,13 +12,12 @@ declare module "@tanstack/react-table" {
     range?: [number, number];
     unit?: string;
     icon?: React.FC<React.SVGProps<SVGSVGElement>>;
-    updateData?: (rowIndex: number, columnId: string, value: unknown) => void;
   }
 }
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {
-    updateData: (rowIndex: number, columnId: string, value: unknown) => void;
+    updateData: (row: Record<string, any>) => void;
   }
 }
 

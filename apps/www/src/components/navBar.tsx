@@ -3,8 +3,7 @@ import { logos } from "@/site.config";
 import SearchBar from "./searchBar";
 import { ShoppingBag, UserCircle } from "lucide-react";
 import { cn } from "@web-ui/lib/utils";
-import { useViewport } from "@/context/viewport";
-
+import { useViewport } from "@web-ui/contexts/viewport";
 export default function NavBar() {
   const { isMobile } = useViewport();
   if (isMobile) {

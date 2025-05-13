@@ -9,9 +9,21 @@ import * as React from "react";
 import { DefaultCatchBoundary } from "@/components/defaultCatchBoundry";
 import { NotFound } from "@/components/notFound";
 import { seo } from "@/utils/seo";
-// import appCss from "../styles.css?url";
 import appCss from "@web-ui/styles.css?url";
-import { ViewportProvider } from "@/context/viewport";
+import { ViewportProvider } from "@web-ui/contexts/viewport";
+import { toast, Toaster } from "@web-ui/components/ui/sonner";
+import { getIsSsrMobile } from "@repo-lib/utils/isServerMobile";
+import QueryProvider from "@repo-lib/providers/queryProvider";
+import { createServerFn } from "@tanstack/react-start";
+import { getHeader } from "@tanstack/react-start/server";
+import { NuqsAdapter } from "nuqs/adapters/react";
+
+export const isMobile = createServerFn({ method: "GET" }).handler(async () => {
+  const userAgent = getHeader("User-Agent");
+
+  const isSsrMobile = getIsSsrMobile(userAgent);
+  return { isSsrMobile };
+});
 
 export const Route = createRootRoute({
   head: () => ({
@@ -60,6 +72,9 @@ export const Route = createRootRoute({
       </RootDocument>
     );
   },
+  loader: async () => {
+    return await isMobile();
+  },
   notFoundComponent: () => <NotFound />,
   component: RootComponent,
 });
@@ -73,16 +88,28 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const handleThrowOnError = React.useCallback((error: Error) => {
+    toast.error(error?.message || "Something went wrong!");
+    return false;
+  }, []);
+
+  const { isSsrMobile } = Route.useLoaderData();
+
   return (
-    <html>
+    <html className="bg-muted/30">
       <head>
         <HeadContent />
       </head>
-      <body suppressHydrationWarning>
-        <ViewportProvider>
-          {/* <NavBar /> */}
-          <hr />
-          {children}
+      <body
+        suppressHydrationWarning
+        className="m-auto outline-1 outline-border shadow min-h-screen flex flex-col "
+        style={{ maxWidth: "1920px" }}
+      >
+        <ViewportProvider isMobile={isSsrMobile}>
+          <QueryProvider handleThrowOnError={handleThrowOnError}>
+            <NuqsAdapter>{children}</NuqsAdapter>
+            <Toaster />
+          </QueryProvider>
           <TanStackRouterDevtools position="bottom-right" />
           <Scripts />
         </ViewportProvider>

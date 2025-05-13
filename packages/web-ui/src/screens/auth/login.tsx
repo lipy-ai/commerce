@@ -22,6 +22,7 @@ import {
 import { authClient, signIn } from "@repo-lib/providers/auth";
 import { Link, useNavigate } from "@tanstack/react-router";
 import Loading from "@web-ui/components/ui/loading";
+import { env } from "@envClient";
 
 export function LoginScreen({
   className,
@@ -38,11 +39,13 @@ export function LoginScreen({
 
   const [otp, setOtp] = useState("");
 
-  const [callbackURL] = useQueryState("cb", parseAsString.withDefault("/"));
-
+  const [callbackURL] = useQueryState(
+    "cb",
+    parseAsString.withDefault(env.WEB_URL!)
+  );
   useEffect(() => {
     if (data?.user?.id) {
-      navigate({ to: callbackURL || "/", replace: true });
+      navigate({ to: callbackURL, replace: true });
     }
   }, [data, isPending]);
 

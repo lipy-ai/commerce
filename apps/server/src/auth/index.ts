@@ -1,13 +1,12 @@
-import { betterAuth, BetterAuthOptions } from "better-auth";
-import { emailOTP, magicLink, organization } from "better-auth/plugins";
+import { betterAuth, BetterAuthOptions, generateId } from "better-auth";
+import { emailOTP, organization } from "better-auth/plugins";
 
 import env from "../env";
 import { redis } from "../cache";
-import { db, pool } from "../db";
+import { db } from "../db";
 import { sendTransactionalEmail } from "@/services/ses";
 import { phoneNumber } from "better-auth/plugins";
 import { sendSMS } from "@/services/sns";
-import { org, orgInvitation, orgMember, tables } from "@/db/schema";
 
 const organizationPlugin = organization({
   schema: {
@@ -107,6 +106,9 @@ export const auth = betterAuth({
     // after: afterAuthMiddleware,
   },
   advanced: {
+    database: {
+      generateId: () => crypto.randomUUID(),
+    },
     crossSubDomainCookies: {
       enabled: true,
     },

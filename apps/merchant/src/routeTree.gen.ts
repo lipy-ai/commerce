@@ -13,8 +13,6 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as loggedInRouteImport } from './routes/(loggedIn)/route'
 import { Route as loggedInIndexImport } from './routes/(loggedIn)/index'
-import { Route as authLogoutImport } from './routes/(auth)/logout'
-import { Route as authLoginImport } from './routes/(auth)/login'
 import { Route as loggedInAccountRouteImport } from './routes/(loggedIn)/account/route'
 import { Route as loggedInProductIndexImport } from './routes/(loggedIn)/product/index'
 import { Route as loggedInOrderIndexImport } from './routes/(loggedIn)/order/index'
@@ -36,18 +34,6 @@ const loggedInIndexRoute = loggedInIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => loggedInRouteRoute,
-} as any)
-
-const authLogoutRoute = authLogoutImport.update({
-  id: '/(auth)/logout',
-  path: '/logout',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const authLoginRoute = authLoginImport.update({
-  id: '/(auth)/login',
-  path: '/login',
-  getParentRoute: () => rootRoute,
 } as any)
 
 const loggedInAccountRouteRoute = loggedInAccountRouteImport.update({
@@ -123,20 +109,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/account'
       preLoaderRoute: typeof loggedInAccountRouteImport
       parentRoute: typeof loggedInRouteImport
-    }
-    '/(auth)/login': {
-      id: '/(auth)/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof authLoginImport
-      parentRoute: typeof rootRoute
-    }
-    '/(auth)/logout': {
-      id: '/(auth)/logout'
-      path: '/logout'
-      fullPath: '/logout'
-      preLoaderRoute: typeof authLogoutImport
-      parentRoute: typeof rootRoute
     }
     '/(loggedIn)/': {
       id: '/(loggedIn)/'
@@ -248,8 +220,6 @@ const loggedInRouteRouteWithChildren = loggedInRouteRoute._addFileChildren(
 export interface FileRoutesByFullPath {
   '/': typeof loggedInIndexRoute
   '/account': typeof loggedInAccountRouteRouteWithChildren
-  '/login': typeof authLoginRoute
-  '/logout': typeof authLogoutRoute
   '/account/preferences': typeof loggedInAccountPreferencesRoute
   '/account/security': typeof loggedInAccountSecurityRoute
   '/order/$id': typeof loggedInOrderIdRoute
@@ -261,8 +231,6 @@ export interface FileRoutesByFullPath {
 }
 
 export interface FileRoutesByTo {
-  '/login': typeof authLoginRoute
-  '/logout': typeof authLogoutRoute
   '/': typeof loggedInIndexRoute
   '/account/preferences': typeof loggedInAccountPreferencesRoute
   '/account/security': typeof loggedInAccountSecurityRoute
@@ -278,8 +246,6 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/(loggedIn)': typeof loggedInRouteRouteWithChildren
   '/(loggedIn)/account': typeof loggedInAccountRouteRouteWithChildren
-  '/(auth)/login': typeof authLoginRoute
-  '/(auth)/logout': typeof authLogoutRoute
   '/(loggedIn)/': typeof loggedInIndexRoute
   '/(loggedIn)/account/preferences': typeof loggedInAccountPreferencesRoute
   '/(loggedIn)/account/security': typeof loggedInAccountSecurityRoute
@@ -296,8 +262,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/account'
-    | '/login'
-    | '/logout'
     | '/account/preferences'
     | '/account/security'
     | '/order/$id'
@@ -308,8 +272,6 @@ export interface FileRouteTypes {
     | '/product'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/login'
-    | '/logout'
     | '/'
     | '/account/preferences'
     | '/account/security'
@@ -323,8 +285,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/(loggedIn)'
     | '/(loggedIn)/account'
-    | '/(auth)/login'
-    | '/(auth)/logout'
     | '/(loggedIn)/'
     | '/(loggedIn)/account/preferences'
     | '/(loggedIn)/account/security'
@@ -339,14 +299,10 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   loggedInRouteRoute: typeof loggedInRouteRouteWithChildren
-  authLoginRoute: typeof authLoginRoute
-  authLogoutRoute: typeof authLogoutRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   loggedInRouteRoute: loggedInRouteRouteWithChildren,
-  authLoginRoute: authLoginRoute,
-  authLogoutRoute: authLogoutRoute,
 }
 
 export const routeTree = rootRoute
@@ -359,9 +315,7 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/(loggedIn)",
-        "/(auth)/login",
-        "/(auth)/logout"
+        "/(loggedIn)"
       ]
     },
     "/(loggedIn)": {
@@ -384,12 +338,6 @@ export const routeTree = rootRoute
         "/(loggedIn)/account/security",
         "/(loggedIn)/account/"
       ]
-    },
-    "/(auth)/login": {
-      "filePath": "(auth)/login.tsx"
-    },
-    "/(auth)/logout": {
-      "filePath": "(auth)/logout.tsx"
     },
     "/(loggedIn)/": {
       "filePath": "(loggedIn)/index.tsx",

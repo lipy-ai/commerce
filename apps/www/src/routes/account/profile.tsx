@@ -7,12 +7,11 @@ export const Route = createFileRoute('/account/profile')({
 })
 
 function RouteComponent() {
-  return  (
-    <>
-    <DashboardHeader title="Profile" />
-    <EmptyPage />
-    </>
-    
-
-  )
+   return (
+      <>
+      <DashboardHeader title="Profile" />
+      <EmptyPage/>
+      
+      </>
+    )
 }

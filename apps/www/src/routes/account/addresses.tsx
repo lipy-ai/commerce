@@ -8,9 +8,10 @@ export const Route = createFileRoute('/account/addresses')({
 
 function RouteComponent() {
   return (
-    <>
-    <DashboardHeader title="My Addresses" />
-              <EmptyPage />
-    </>
-  )
+      <>
+      <DashboardHeader title="Addresses" />
+      <EmptyPage/>
+      
+      </>
+    )
 }

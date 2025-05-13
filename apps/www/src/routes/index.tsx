@@ -6,12 +6,7 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   return (
-<<<<<<< HEAD
-    <div>
-      <NavBar/>
-      <h3>Welcome Home!!!</h3>
-    </div>
-=======
+
     <>
       <NavBar />
 
@@ -19,6 +14,5 @@ function Home() {
         <h3>Welcome Home!!!</h3>
       </div>
     </>
->>>>>>> a4c94557186e2f4e06f43a496838ced5cc4878ad
   );
 }

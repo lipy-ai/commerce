@@ -10,7 +10,7 @@
   --dark-green: oklch(0.37 0.08 132);
   --black-green: oklch(0.28 0.06 133);
   --light-green: oklch(0.97 0.02 144);
-  --orange: oklch(0.78 0.17 34);
+  --green: oklch(0.7567 0.1813 143.56);
   --white: oklch(1 0 0);
 
   /* Shadcn */
@@ -20,7 +20,7 @@
   --card-foreground: oklch(0.08 0.01 20);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.08 0.01 20);
-  --primary: var(--orange);
+  --primary: var(--green);
   --primary-foreground: var(--black-green);
   --secondary: var(--black-green);
   --secondary-foreground: var(--white);
@@ -32,7 +32,7 @@
   --destructive-foreground: oklch(0.97 0.01 60);
   --border: oklch(0.93 0.006 240);
   --input: oklch(0.9 0.006 20);
-  --ring: var(--orange);
+  --ring: var(--green);
 
   --chart-1: oklch(0.66 0.15 12);
   --chart-2: oklch(0.6 0.12 173);

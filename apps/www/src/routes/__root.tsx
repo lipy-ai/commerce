@@ -9,7 +9,6 @@ import * as React from "react";
 import { DefaultCatchBoundary } from "@/components/defaultCatchBoundry";
 import { NotFound } from "@/components/notFound";
 import { seo } from "@/utils/seo";
-import NavBar from "@/components/navBar";
 // import appCss from "../styles.css?url";
 import appCss from "@web-ui/styles.css?url";
 import { ViewportProvider } from "@/context/viewport";
@@ -81,7 +80,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body suppressHydrationWarning>
         <ViewportProvider>
-          <NavBar />
+          {/* <NavBar /> */}
           <hr />
           {children}
           <TanStackRouterDevtools position="bottom-right" />

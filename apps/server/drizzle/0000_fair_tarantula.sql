@@ -34,8 +34,21 @@ CREATE TABLE "lipy"."category" (
 	"title" text,
 	"summary" text,
 	"slug" text,
-	"created_at" timestamp NOT NULL,
-	"updated_at" timestamp NOT NULL
+	"image" text,
+	"organization_id" uuid,
+	CONSTRAINT "category_slug_unique" UNIQUE("slug")
+);
+--> statement-breakpoint
+CREATE TABLE "lipy"."global_category" (
+	"id" uuid PRIMARY KEY NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "lipy"."global_product" (
+	"id" uuid PRIMARY KEY NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "lipy"."global_tag" (
+	"id" uuid PRIMARY KEY NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "lipy"."org" (
@@ -70,24 +83,27 @@ CREATE TABLE "lipy"."product" (
 	"id" uuid PRIMARY KEY NOT NULL,
 	"title" text,
 	"summary" text,
+	"content" text,
 	"brand" text,
-	"type" text,
-	"rating" numeric(2, 1) DEFAULT '0' NOT NULL,
 	"category" uuid,
-	"sub_category" uuid,
-	"organization_id" uuid NOT NULL,
-	"created_at" timestamp NOT NULL,
-	"updated_at" timestamp NOT NULL
+	"organization_id" uuid,
+	"keywords" text[],
+	"default_price" integer,
+	"in_stock" boolean DEFAULT false
 );
 --> statement-breakpoint
 CREATE TABLE "lipy"."product_variant" (
-	"id" uuid PRIMARY KEY NOT NULL,
-	"title" text,
+	"id" bigserial PRIMARY KEY NOT NULL,
+	"title" text NOT NULL,
+	"description" text,
+	"sku" text,
+	"model" text,
+	"price" integer DEFAULT 1,
+	"qty" integer DEFAULT 1,
+	"unit" text,
+	"metadata" jsonb,
 	"product" uuid,
-	"uint" numeric,
-	"organization_id" uuid NOT NULL,
-	"created_at" timestamp NOT NULL,
-	"updated_at" timestamp NOT NULL
+	"organization_id" uuid
 );
 --> statement-breakpoint
 CREATE TABLE "lipy"."auth_session" (
@@ -104,30 +120,29 @@ CREATE TABLE "lipy"."shop_cart" (
 	"id" uuid PRIMARY KEY NOT NULL,
 	"user_id" uuid NOT NULL,
 	"organization_id" uuid,
-	"items" jsonb DEFAULT '[]'::jsonb
+	"items" jsonb[] DEFAULT '{}'
 );
 --> statement-breakpoint
 CREATE TABLE "lipy"."shop_order" (
 	"id" uuid PRIMARY KEY NOT NULL,
 	"user_id" uuid NOT NULL,
-	"shop_id" text NOT NULL,
-	"items" jsonb,
+	"items" jsonb[],
 	"taxes" jsonb,
 	"address" jsonb,
 	"total" bigint DEFAULT 0,
 	"delivery" jsonb,
 	"payment" jsonb,
+	"organization_id" uuid,
 	"status" text
 );
 --> statement-breakpoint
-CREATE TABLE "lipy"."sub_category" (
+CREATE TABLE "lipy"."tag" (
 	"id" uuid PRIMARY KEY NOT NULL,
-	"category" uuid,
 	"title" text,
 	"summary" text,
 	"slug" text,
-	"created_at" timestamp NOT NULL,
-	"updated_at" timestamp NOT NULL
+	"image" text,
+	"organization_id" uuid
 );
 --> statement-breakpoint
 CREATE TABLE "lipy"."upload" (
@@ -170,19 +185,24 @@ CREATE TABLE "lipy"."auth_verification" (
 --> statement-breakpoint
 ALTER TABLE "lipy"."auth_account" ADD CONSTRAINT "auth_account_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "lipy"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "lipy"."address" ADD CONSTRAINT "address_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "lipy"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "lipy"."category" ADD CONSTRAINT "category_organization_id_org_id_fk" FOREIGN KEY ("organization_id") REFERENCES "lipy"."org"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "lipy"."global_category" ADD CONSTRAINT "global_category_id_category_id_fk" FOREIGN KEY ("id") REFERENCES "lipy"."category"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "lipy"."global_product" ADD CONSTRAINT "global_product_id_product_id_fk" FOREIGN KEY ("id") REFERENCES "lipy"."product"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "lipy"."global_tag" ADD CONSTRAINT "global_tag_id_tag_id_fk" FOREIGN KEY ("id") REFERENCES "lipy"."tag"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "lipy"."org_invitation" ADD CONSTRAINT "org_invitation_organization_id_org_id_fk" FOREIGN KEY ("organization_id") REFERENCES "lipy"."org"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "lipy"."org_invitation" ADD CONSTRAINT "org_invitation_inviter_id_user_id_fk" FOREIGN KEY ("inviter_id") REFERENCES "lipy"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "lipy"."org_member" ADD CONSTRAINT "org_member_organization_id_org_id_fk" FOREIGN KEY ("organization_id") REFERENCES "lipy"."org"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "lipy"."org_member" ADD CONSTRAINT "org_member_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "lipy"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "lipy"."product" ADD CONSTRAINT "product_category_category_id_fk" FOREIGN KEY ("category") REFERENCES "lipy"."category"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "lipy"."product" ADD CONSTRAINT "product_sub_category_sub_category_id_fk" FOREIGN KEY ("sub_category") REFERENCES "lipy"."sub_category"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "lipy"."product" ADD CONSTRAINT "product_organization_id_org_id_fk" FOREIGN KEY ("organization_id") REFERENCES "lipy"."org"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "lipy"."product" ADD CONSTRAINT "product_organization_id_global_product_id_fk" FOREIGN KEY ("organization_id") REFERENCES "lipy"."global_product"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "lipy"."product_variant" ADD CONSTRAINT "product_variant_product_product_id_fk" FOREIGN KEY ("product") REFERENCES "lipy"."product"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "lipy"."product_variant" ADD CONSTRAINT "product_variant_organization_id_org_id_fk" FOREIGN KEY ("organization_id") REFERENCES "lipy"."org"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "lipy"."auth_session" ADD CONSTRAINT "auth_session_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "lipy"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "lipy"."shop_cart" ADD CONSTRAINT "shop_cart_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "lipy"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "lipy"."shop_cart" ADD CONSTRAINT "shop_cart_organization_id_org_id_fk" FOREIGN KEY ("organization_id") REFERENCES "lipy"."org"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "lipy"."shop_order" ADD CONSTRAINT "shop_order_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "lipy"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "lipy"."sub_category" ADD CONSTRAINT "sub_category_category_category_id_fk" FOREIGN KEY ("category") REFERENCES "lipy"."category"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "lipy"."shop_order" ADD CONSTRAINT "shop_order_organization_id_org_id_fk" FOREIGN KEY ("organization_id") REFERENCES "lipy"."org"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "lipy"."tag" ADD CONSTRAINT "tag_organization_id_org_id_fk" FOREIGN KEY ("organization_id") REFERENCES "lipy"."org"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "lipy"."upload" ADD CONSTRAINT "upload_uploaded_by_user_id_fk" FOREIGN KEY ("uploaded_by") REFERENCES "lipy"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "lipy"."upload" ADD CONSTRAINT "upload_organization_id_org_id_fk" FOREIGN KEY ("organization_id") REFERENCES "lipy"."org"("id") ON DELETE cascade ON UPDATE no action;

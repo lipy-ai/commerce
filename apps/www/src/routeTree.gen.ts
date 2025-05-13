@@ -15,6 +15,8 @@ import { Route as CheckoutRouteImport } from './routes/checkout/route'
 import { Route as CartRouteImport } from './routes/cart/route'
 import { Route as AccountRouteImport } from './routes/account/route'
 import { Route as IndexImport } from './routes/index'
+import { Route as authLogoutImport } from './routes/(auth)/logout'
+import { Route as authLoginImport } from './routes/(auth)/login'
 
 // Create/Update Routes
 
@@ -39,6 +41,18 @@ const AccountRouteRoute = AccountRouteImport.update({
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const authLogoutRoute = authLogoutImport.update({
+  id: '/(auth)/logout',
+  path: '/logout',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const authLoginRoute = authLoginImport.update({
+  id: '/(auth)/login',
+  path: '/login',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -74,6 +88,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CheckoutRouteImport
       parentRoute: typeof rootRoute
     }
+    '/(auth)/login': {
+      id: '/(auth)/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof authLoginImport
+      parentRoute: typeof rootRoute
+    }
+    '/(auth)/logout': {
+      id: '/(auth)/logout'
+      path: '/logout'
+      fullPath: '/logout'
+      preLoaderRoute: typeof authLogoutImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -84,6 +112,8 @@ export interface FileRoutesByFullPath {
   '/account': typeof AccountRouteRoute
   '/cart': typeof CartRouteRoute
   '/checkout': typeof CheckoutRouteRoute
+  '/login': typeof authLoginRoute
+  '/logout': typeof authLogoutRoute
 }
 
 export interface FileRoutesByTo {
@@ -91,6 +121,8 @@ export interface FileRoutesByTo {
   '/account': typeof AccountRouteRoute
   '/cart': typeof CartRouteRoute
   '/checkout': typeof CheckoutRouteRoute
+  '/login': typeof authLoginRoute
+  '/logout': typeof authLogoutRoute
 }
 
 export interface FileRoutesById {
@@ -99,14 +131,23 @@ export interface FileRoutesById {
   '/account': typeof AccountRouteRoute
   '/cart': typeof CartRouteRoute
   '/checkout': typeof CheckoutRouteRoute
+  '/(auth)/login': typeof authLoginRoute
+  '/(auth)/logout': typeof authLogoutRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/account' | '/cart' | '/checkout'
+  fullPaths: '/' | '/account' | '/cart' | '/checkout' | '/login' | '/logout'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/account' | '/cart' | '/checkout'
-  id: '__root__' | '/' | '/account' | '/cart' | '/checkout'
+  to: '/' | '/account' | '/cart' | '/checkout' | '/login' | '/logout'
+  id:
+    | '__root__'
+    | '/'
+    | '/account'
+    | '/cart'
+    | '/checkout'
+    | '/(auth)/login'
+    | '/(auth)/logout'
   fileRoutesById: FileRoutesById
 }
 
@@ -115,6 +156,8 @@ export interface RootRouteChildren {
   AccountRouteRoute: typeof AccountRouteRoute
   CartRouteRoute: typeof CartRouteRoute
   CheckoutRouteRoute: typeof CheckoutRouteRoute
+  authLoginRoute: typeof authLoginRoute
+  authLogoutRoute: typeof authLogoutRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -122,6 +165,8 @@ const rootRouteChildren: RootRouteChildren = {
   AccountRouteRoute: AccountRouteRoute,
   CartRouteRoute: CartRouteRoute,
   CheckoutRouteRoute: CheckoutRouteRoute,
+  authLoginRoute: authLoginRoute,
+  authLogoutRoute: authLogoutRoute,
 }
 
 export const routeTree = rootRoute
@@ -137,7 +182,9 @@ export const routeTree = rootRoute
         "/",
         "/account",
         "/cart",
-        "/checkout"
+        "/checkout",
+        "/(auth)/login",
+        "/(auth)/logout"
       ]
     },
     "/": {
@@ -151,6 +198,12 @@ export const routeTree = rootRoute
     },
     "/checkout": {
       "filePath": "checkout/route.tsx"
+    },
+    "/(auth)/login": {
+      "filePath": "(auth)/login.tsx"
+    },
+    "/(auth)/logout": {
+      "filePath": "(auth)/logout.tsx"
     }
   }
 }

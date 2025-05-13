@@ -33,7 +33,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <input
           type={type}
           className={cn(
-            "placeholder:text-muted-foreground flex h-9 shadow-none w-full bg-transparent py-1 text-sm outline-none transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:cursor-not-allowed disabled:opacity-50",
+            "placeholder:text-muted-foreground flex-1 flex h-9 shadow-none w-full bg-transparent py-1 text-sm outline-none transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:cursor-not-allowed disabled:opacity-50",
             !suffixEl && "pr-3",
             !prefixEl && "pl-3",
             size === "lg" && "h-12",

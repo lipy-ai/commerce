@@ -2,12 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { DataTableColumnHeader } from "@web-ui/components/table/column-header";
 import { DataTable } from "@web-ui/components/table/data-table";
 import { DataTableToolbar } from "@web-ui/components/table/toolbar";
-import { Checkbox } from "@web-ui/components/ui/checkbox";
+import { RowInput } from "@web-ui/components/ui/row-input";
 
 import React from "react";
 
-import { Badge } from "@web-ui/components/ui/badge";
-import { Button } from "@web-ui/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,15 +14,14 @@ import {
 } from "@web-ui/components/ui/dropdown-menu";
 import { useDataTable } from "@web-ui/hooks/use-data-table";
 import type { Column, ColumnDef } from "@tanstack/react-table";
+import { CheckCircle2, Text, XCircle } from "lucide-react";
 import {
-  CheckCircle,
-  CheckCircle2,
-  DollarSign,
-  MoreHorizontal,
-  Text,
-  XCircle,
-} from "lucide-react";
-import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@web-ui/components/ui/select";
 
 export const Route = createFileRoute("/(loggedIn)/(products)/products")({
   component: RouteComponent,
@@ -34,125 +31,45 @@ interface Project {
   id: string;
   title: string;
   status: "active" | "inactive";
-  budget: number;
+  description: string;
+  price: number;
 }
 
 const data: Project[] = [
   {
     id: "1",
     title: "Project Alpha",
+    description: "This is the description",
     status: "active",
-    budget: 50000,
-  },
-  {
-    id: "2",
-    title: "Project Beta",
-    status: "inactive",
-    budget: 75000,
-  },
-  {
-    id: "3",
-    title: "Project Gamma",
-    status: "active",
-    budget: 25000,
-  },
-  {
-    id: "4",
-    title: "Project Delta",
-    status: "active",
-    budget: 100000,
-  },
-  {
-    id: "5",
-    title: "Project Epsilon",
-    status: "inactive",
-    budget: 60000,
-  },
-  {
-    id: "6",
-    title: "Project Zeta",
-    status: "active",
-    budget: 30000,
-  },
-  {
-    id: "7",
-    title: "Project Eta",
-    status: "active",
-    budget: 85000,
-  },
-  {
-    id: "8",
-    title: "Project Theta",
-    status: "inactive",
-    budget: 40000,
-  },
-  {
-    id: "9",
-    title: "Project Iota",
-    status: "active",
-    budget: 95000,
-  },
-  {
-    id: "10",
-    title: "Project Kappa",
-    status: "inactive",
-    budget: 55000,
-  },
-  {
-    id: "11",
-    title: "Project Lambda",
-    status: "active",
-    budget: 47000,
-  },
-  {
-    id: "12",
-    title: "Project Mu",
-    status: "active",
-    budget: 62000,
+    price: 50000,
   },
 ];
 
 function RouteComponent() {
-  const [title] = useQueryState("title", parseAsString.withDefault(""));
-  const [status] = useQueryState(
-    "status",
-    parseAsArrayOf(parseAsString).withDefault([])
-  );
-
   const columns = React.useMemo<ColumnDef<Project>[]>(
     () => [
-      {
-        id: "select",
-        header: ({ table }) => (
-          <Checkbox
-            checked={
-              table.getIsAllPageRowsSelected() ||
-              (table.getIsSomePageRowsSelected() && "indeterminate")
-            }
-            onCheckedChange={(value) =>
-              table.toggleAllPageRowsSelected(!!value)
-            }
-            aria-label="Select all"
-          />
-        ),
-        cell: ({ row }) => (
-          <Checkbox
-            checked={row.getIsSelected()}
-            onCheckedChange={(value) => row.toggleSelected(!!value)}
-            aria-label="Select row"
-          />
-        ),
-        size: 32,
-        enableSorting: false,
-        enableHiding: false,
-      },
       {
         id: "title",
         accessorKey: "title",
         header: ({ column }: { column: Column<Project, unknown> }) => (
           <DataTableColumnHeader column={column} title="Title" />
         ),
-        cell: ({ cell }) => <div>{cell.getValue<Project["title"]>()}</div>,
+        cell: ({ cell, table, row }) => {
+          const title = cell.getValue<Project["title"]>();
+          return (
+            <div>
+              <RowInput
+                onChange={(v) =>
+                  table.options.meta?.updateData({
+                    ...row.original,
+                    title: v,
+                  })
+                }
+                value={title}
+              />
+            </div>
+          );
+        },
         meta: {
           label: "Title",
           placeholder: "Search titles...",
@@ -167,40 +84,82 @@ function RouteComponent() {
         header: ({ column }: { column: Column<Project, unknown> }) => (
           <DataTableColumnHeader column={column} title="Status" />
         ),
-        cell: ({ cell }) => {
+        cell: ({ cell, table, row }) => {
           const status = cell.getValue<Project["status"]>();
-          const Icon = status === "active" ? CheckCircle2 : XCircle;
-
           return (
-            <Badge variant="outline" className="capitalize">
-              <Icon />
-              {status}
-            </Badge>
+            <Select
+              value={status}
+              onValueChange={() =>
+                table.options.meta?.updateData({ ...row.original, status })
+              }
+            >
+              <SelectTrigger noStyle>
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="active">
+                  <CheckCircle2 /> Active
+                </SelectItem>
+                <SelectItem value="inactive">
+                  <XCircle /> Inactive
+                </SelectItem>
+              </SelectContent>
+            </Select>
           );
         },
-        meta: {
-          label: "Status",
-          variant: "multiSelect",
-          options: [
-            { label: "Active", value: "active", icon: CheckCircle },
-            { label: "Inactive", value: "inactive", icon: XCircle },
-          ],
-        },
+        // meta: {
+        //   label: "Status",
+        //   variant: "multiSelect",
+        //   options: [
+        //     { label: "Active", value: "active", icon: CheckCircle },
+        //     { label: "Inactive", value: "inactive", icon: XCircle },
+        //   ],
+        // },
         enableColumnFilter: true,
       },
       {
-        id: "budget",
-        accessorKey: "budget",
+        id: "description",
+        accessorKey: "description",
         header: ({ column }: { column: Column<Project, unknown> }) => (
-          <DataTableColumnHeader column={column} title="Budget" />
+          <DataTableColumnHeader column={column} title="Description" />
         ),
-        cell: ({ cell }) => {
-          const budget = cell.getValue<Project["budget"]>();
-
+        cell: ({ cell, row }) => {
+          const description = cell.getValue<Project["description"]>();
           return (
-            <div className="flex items-center gap-1">
-              <DollarSign className="size-4" />
-              {budget.toLocaleString()}
+            <div>
+              <RowInput
+                onChange={(v) =>
+                  table.options.meta?.updateData({
+                    ...row.original,
+                    description: v,
+                  })
+                }
+                value={description}
+              />
+            </div>
+          );
+        },
+      },
+      {
+        id: "price",
+        accessorKey: "price",
+        header: ({ column }: { column: Column<Project, unknown> }) => (
+          <DataTableColumnHeader column={column} title="Price" />
+        ),
+        cell: ({ cell, row }) => {
+          const price = cell.getValue<Project["price"]>();
+          return (
+            <div>
+              <RowInput
+                onChange={(v) =>
+                  table.options.meta?.updateData({
+                    ...row.original,
+                    price: v,
+                  })
+                }
+                type="number"
+                value={price}
+              />
             </div>
           );
         },
@@ -238,6 +197,11 @@ function RouteComponent() {
     initialState: {
       sorting: [{ id: "title", desc: true }],
       columnPinning: { right: ["actions"] },
+    },
+    meta: {
+      updateData(row) {
+        console.log(row);
+      },
     },
     getRowId: (row) => row.id,
   });

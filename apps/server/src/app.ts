@@ -15,6 +15,7 @@ import { authMiddleware } from "./middlewares/auth";
 import { corsMiddleware } from "./middlewares/cors";
 import { uploadRouter } from "./routes/sharedRoutes/upload";
 import { globalError } from "./lib/globalError";
+import { addressRoute } from "./routes/sharedRoutes/address";
 
 export const app = new Hono<ServerContext>();
 
@@ -40,8 +41,8 @@ app.on(["POST", "GET"], "/api/auth/*", (c) => {
 
 export const routes = app
   .basePath("/v1")
-
-  .route("/upload", uploadRouter);
+  .route("/upload", uploadRouter)
+  .route("/address", addressRoute);
 
 // routes.basePath("/admin").route("/category", categoryRouter);
 

@@ -148,7 +148,7 @@ export function ActiveLink({
       <Link
         className={cn(
           "inline-flex items-center text-sm font-medium py-2 gap-2",
-          mobile && "flex-col text-[10px] font-light w-full"
+          mobile && "flex-col text-[12px] font-light w-full"
         )}
         to={nav.url}
       >
@@ -162,8 +162,8 @@ export function ActiveLink({
         </span>
         <motion.span
           className={cn(
-            "flex justify-between gap-2 w-full items-center flex-1",
-            mobile && "justify-center"
+            "flex justify-between gap-2 w-full items-center flex-1 font-medium",
+            mobile && "justify-center",
           )}
         >
           {nav.label}

@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import { ChevronRight, Clock, MapPin, Star, Search, Filter, Heart, ShoppingCart, Coffee, Store, ShoppingBag, Phone, Milk} from 'lucide-react';
+import { useState } from 'react';
+import {  MapPin, Star, Filter, Heart, ShoppingCart, Coffee, Store, ShoppingBag, Milk} from 'lucide-react';
 import SearchBar from './searchBar';
 import { Button } from '@web-ui/components/ui/button';
 import {Badge} from '@web-ui/components/ui/badge'
 import { Card } from '@web-ui/components/ui/card';
 import {ScrollingTabs} from '@web-ui/components/scrollable-tabs'
+import { Link } from '@tanstack/react-router';
+import {DairyIcon, FruitBasketIcon, GroceryIcon, ShopIcon, VegetableIcon } from '@web-ui/components/icons/index';
 
 // Sample data
 const SHOPS = [
@@ -101,11 +103,11 @@ const SHOPS = [
 ];
 
 const CATEGORIES = [
-  { id: 'all', name: 'All Stores', icon: Store },
-  { id: 'grocery', name: 'Grocery', icon: ShoppingCart},
-  { id: 'retail', name: 'Retail', icon: ShoppingBag },
-  { id: 'cafe', name: 'Cafes', icon: Coffee },
-  { id: 'dairy', name: 'Dairy', icon: Milk }
+  { id: 'all', name: 'All Stores', icon: ShopIcon },
+  { id: 'grocery', name: 'Grocery', icon: GroceryIcon},
+  { id: 'fruits', name: 'Fruits', icon: FruitBasketIcon },
+  { id: 'vegetables', name: 'Vegetables', icon: VegetableIcon},
+  { id: 'dairy', name: 'Dairy', icon: DairyIcon }
 ];
 
 export default function NearByShops() {
@@ -135,12 +137,12 @@ export default function NearByShops() {
           <div className="relative flex-1 ">
             <SearchBar/>
           </div>
-          <Button variant={'secondary'} className='p-1s'>
+          <Button variant={'secondary'} className='p-2'>
             <Filter className="size-6" />
           </Button>
         </div>
 
-        <div className='-mb-3 -ml-4 -mr-4'>
+        <div className='-ml-4 -mr-4 -mb-3'>
            <ScrollingTabs tabs={CATEGORIES} handleTabChange={setActiveCategory}/>
 
         </div>
@@ -156,7 +158,10 @@ export default function NearByShops() {
               key={shop.id} 
               className='p-0'
             >
-              {/* Image Container */}
+              <Link to={`/shop/${shop.id}`}>
+
+
+               {/* Image Container */}
               <div className="relative h-48">
                 <img 
                   src={shop.image} 
@@ -199,7 +204,7 @@ export default function NearByShops() {
               
               
               {/* Content */}
-              <div className="p-4 -mt-8">
+              <div className="p-4 -my-4">
                
                   <div className='flex items-center justify-between'>
                     <h3 className="font-bold text-lg">{shop.name}</h3>
@@ -228,6 +233,10 @@ export default function NearByShops() {
                   
                 </div>
               </div>
+              
+              
+              </Link>
+             
             </Card>
           ))}
         </div>

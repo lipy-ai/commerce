@@ -8,7 +8,7 @@ export default function SearchBar() {
         placeholder="Search over 5000 products..."
         size="lg"
         prefixEl={<Search />}
-        className="bg-background"
+        className="bg-background rounded-xl text-lg"
       />
     </div>
   );

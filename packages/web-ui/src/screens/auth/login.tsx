@@ -41,11 +41,11 @@ export function LoginScreen({
 
   const [callbackURL] = useQueryState(
     "cb",
-    parseAsString.withDefault(env.WEB_URL!)
+    parseAsString.withDefault(env.WEB_URL)
   );
   useEffect(() => {
     if (data?.user?.id) {
-      navigate({ to: callbackURL, replace: true });
+    window.location.href = callbackURL
     }
   }, [data, isPending]);
 

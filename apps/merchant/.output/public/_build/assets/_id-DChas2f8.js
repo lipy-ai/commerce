@@ -1,0 +1,1 @@
+import{h as o,g as t,j as e}from"./client-CS--nF_Z.js";const p=function(){const{data:s}=o(t.v1.address,"$get",{});return e.jsx("div",{children:'Hello "/(loggedIn)/products/"!'})};export{p as component};

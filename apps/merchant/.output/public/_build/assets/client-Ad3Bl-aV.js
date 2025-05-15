@@ -1,0 +1,1 @@
+import{h as t,g as n,j as s}from"./client-CS--nF_Z.js";const a=function(){const e=t(n.v1.address,"$get",{});return s.jsx("pre",{className:"whitespace-pre-wrap",children:JSON.stringify(e,null,2)})};export{a as component};

@@ -1,11 +1,11 @@
 "use client";
 
-import type { Option } from "@web-ui/types/data-table";
+import type { Option } from "@lipy/web-ui/types/data-table";
 import type { Column } from "@tanstack/react-table";
 import { Check, PlusCircle, XCircle } from "lucide-react";
 
-import { Badge } from "@web-ui/components/ui/badge";
-import { Button } from "@web-ui/components/ui/button";
+import { Badge } from "@lipy/web-ui/components/ui/badge";
+import { Button } from "@lipy/web-ui/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -14,14 +14,14 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-} from "@web-ui/components/ui/command";
+} from "@lipy/web-ui/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@web-ui/components/ui/popover";
-import { Separator } from "@web-ui/components/ui/separator";
-import { cn } from "@web-ui/lib/utils";
+} from "@lipy/web-ui/components/ui/popover";
+import { Separator } from "@lipy/web-ui/components/ui/separator";
+import { cn } from "@lipy/web-ui/lib/utils";
 import * as React from "react";
 
 interface DataTableFacetedFilterProps<TData, TValue> {
@@ -41,7 +41,7 @@ export function DataTableFacetedFilter<TData, TValue>({
 
   const columnFilterValue = column?.getFilterValue();
   const selectedValues = new Set(
-    Array.isArray(columnFilterValue) ? columnFilterValue : [],
+    Array.isArray(columnFilterValue) ? columnFilterValue : []
   );
 
   const onItemSelect = React.useCallback(
@@ -62,7 +62,7 @@ export function DataTableFacetedFilter<TData, TValue>({
         setOpen(false);
       }
     },
-    [column, multiple, selectedValues],
+    [column, multiple, selectedValues]
   );
 
   const onReset = React.useCallback(
@@ -70,7 +70,7 @@ export function DataTableFacetedFilter<TData, TValue>({
       event?.stopPropagation();
       column?.setFilterValue(undefined);
     },
-    [column],
+    [column]
   );
 
   return (
@@ -148,7 +148,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                         "flex size-4 items-center justify-center rounded-sm border border-primary",
                         isSelected
                           ? "bg-primary"
-                          : "opacity-50 [&_svg]:invisible",
+                          : "opacity-50 [&_svg]:invisible"
                       )}
                     >
                       <Check />

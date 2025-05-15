@@ -1,7 +1,9 @@
-import FormRender, { type FormSchema } from "@web-ui/components/forms/renderer";
+import FormRender, {
+  type FormSchema,
+} from "@lipy/web-ui/components/forms/renderer";
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
-import { authClient } from "@repo-lib/providers/auth";
+import { authClient } from "@lipy/lib/providers/auth";
 export const Route = createFileRoute("/(loggedIn)/account/")({
   component: RouteComponent,
 });

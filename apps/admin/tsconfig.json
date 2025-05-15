@@ -23,7 +23,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@web-ui/*": ["../../packages/web-ui/src/*"]
+      "@lipy/web-ui/*": ["../../packages/web-ui/src/*"]
     }
   }
 }

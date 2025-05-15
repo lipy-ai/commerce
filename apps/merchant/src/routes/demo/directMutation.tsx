@@ -1,7 +1,7 @@
-import { apiClient } from "@repo/lib/api/index.js";
+import { apiClient } from "@lipy/lib/api/index.js";
 import { createFileRoute } from "@tanstack/react-router";
-import { Button } from "@web-ui/components/ui/button";
-import { toast } from "@web-ui/components/ui/sonner";
+import { Button } from "@lipy/web-ui/components/ui/button";
+import { toast } from "@lipy/web-ui/components/ui/sonner";
 
 export const Route = createFileRoute("/demo/directMutation")({
   component: RouteComponent,

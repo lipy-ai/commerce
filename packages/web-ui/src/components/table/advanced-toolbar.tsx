@@ -3,8 +3,8 @@
 import type { Table } from "@tanstack/react-table";
 import type * as React from "react";
 
-import { DataTableViewOptions } from "@web-ui/components/table/view-options";
-import { cn } from "@web-ui/lib/utils";
+import { DataTableViewOptions } from "@lipy/web-ui/components/table/view-options";
+import { cn } from "@lipy/web-ui/lib/utils";
 
 interface DataTableAdvancedToolbarProps<TData>
   extends React.ComponentProps<"div"> {

@@ -1,19 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { DataTableColumnHeader } from "@web-ui/components/table/column-header";
-import { DataTable } from "@web-ui/components/table/data-table";
-import { Checkbox } from "@web-ui/components/ui/checkbox";
+import { DataTableColumnHeader } from "@lipy/web-ui/components/table/column-header";
+import { DataTable } from "@lipy/web-ui/components/table/data-table";
+import { Checkbox } from "@lipy/web-ui/components/ui/checkbox";
 
 import React from "react";
 
-import { Badge } from "@web-ui/components/ui/badge";
-import { Button, buttonVariants } from "@web-ui/components/ui/button";
+import { Badge } from "@lipy/web-ui/components/ui/badge";
+import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@web-ui/components/ui/dropdown-menu";
-import { useDataTable } from "@web-ui/hooks/use-data-table";
+} from "@lipy/web-ui/components/ui/dropdown-menu";
+import { useDataTable } from "@lipy/web-ui/hooks/use-data-table";
 import type { Column, ColumnDef } from "@tanstack/react-table";
 import {
   CheckCircle,
@@ -24,10 +24,10 @@ import {
   XCircle,
 } from "lucide-react";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
-import { cn } from "@web-ui/lib/utils";
-import { DashboardHeader } from "@web-ui/components/layouts/dashboard";
-import { Input } from "@web-ui/components/ui/input";
-import { DataTableToolbar } from "@web-ui/components/table/toolbar";
+import { cn } from "@lipy/web-ui/lib/utils";
+import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
+import { Input } from "@lipy/web-ui/components/ui/input";
+import { DataTableToolbar } from "@lipy/web-ui/components/table/toolbar";
 
 export const Route = createFileRoute("/(loggedIn)/product/")({
   component: RouteComponent,

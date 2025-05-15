@@ -5,15 +5,15 @@ import { CalendarIcon, XCircle } from "lucide-react";
 import * as React from "react";
 import type { DateRange } from "react-day-picker";
 
-import { Button } from "@web-ui/components/ui/button";
-import { Calendar } from "@web-ui/components/ui/calendar";
+import { Button } from "@lipy/web-ui/components/ui/button";
+import { Calendar } from "@lipy/web-ui/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@web-ui/components/ui/popover";
-import { Separator } from "@web-ui/components/ui/separator";
-import { formatDate } from "@web-ui/lib/format";
+} from "@lipy/web-ui/components/ui/popover";
+import { Separator } from "@lipy/web-ui/components/ui/separator";
+import { formatDate } from "@lipy/web-ui/lib/format";
 
 type DateSelection = Date[] | DateRange;
 
@@ -96,7 +96,7 @@ export function DataTableDateFilter<TData>({
         column.setFilterValue(date.getTime());
       }
     },
-    [column, multiple],
+    [column, multiple]
   );
 
   const onReset = React.useCallback(
@@ -104,7 +104,7 @@ export function DataTableDateFilter<TData>({
       event.stopPropagation();
       column.setFilterValue(undefined);
     },
-    [column],
+    [column]
   );
 
   const hasValue = React.useMemo(() => {

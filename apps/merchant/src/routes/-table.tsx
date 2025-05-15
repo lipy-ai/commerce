@@ -1,19 +1,19 @@
 "use client";
 
-import { DataTable } from "@web-ui/components/table/data-table";
-import { DataTableColumnHeader } from "@web-ui/components/table/column-header";
-import { DataTableToolbar } from "@web-ui/components/table/toolbar";
+import { DataTable } from "@lipy/web-ui/components/table/data-table";
+import { DataTableColumnHeader } from "@lipy/web-ui/components/table/column-header";
+import { DataTableToolbar } from "@lipy/web-ui/components/table/toolbar";
 
-import { Badge } from "@web-ui/components/ui/badge";
-import { Button } from "@web-ui/components/ui/button";
-import { Checkbox } from "@web-ui/components/ui/checkbox";
+import { Badge } from "@lipy/web-ui/components/ui/badge";
+import { Button } from "@lipy/web-ui/components/ui/button";
+import { Checkbox } from "@lipy/web-ui/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@web-ui/components/ui/dropdown-menu";
-import { useDataTable } from "@web-ui/hooks/use-data-table";
+} from "@lipy/web-ui/components/ui/dropdown-menu";
+import { useDataTable } from "@lipy/web-ui/hooks/use-data-table";
 
 import type { Column, ColumnDef } from "@tanstack/react-table";
 import {

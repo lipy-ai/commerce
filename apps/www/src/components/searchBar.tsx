@@ -1,4 +1,4 @@
-import { Input } from "@web-ui/components/ui/input";
+import { Input } from "@lipy/web-ui/components/ui/input";
 import { Search } from "lucide-react";
 
 export default function SearchBar() {

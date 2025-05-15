@@ -2,8 +2,8 @@ import { Link } from "@tanstack/react-router";
 import { logos } from "@/site.config";
 import SearchBar from "./searchBar";
 import { ShoppingBag, UserCircle } from "lucide-react";
-import { cn } from "@web-ui/lib/utils";
-import { useViewport } from "@web-ui/contexts/viewport";
+import { cn } from "@lipy/web-ui/lib/utils";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
 export default function NavBar() {
   const { isMobile } = useViewport();
   if (isMobile) {

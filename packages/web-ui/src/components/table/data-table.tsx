@@ -1,7 +1,7 @@
 import { type Table as TanstackTable, flexRender } from "@tanstack/react-table";
 import type * as React from "react";
 
-import { DataTablePagination } from "@web-ui/components/table/pagination";
+import { DataTablePagination } from "@lipy/web-ui/components/table/pagination";
 import {
   Table,
   TableBody,
@@ -9,9 +9,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@web-ui/components/ui/table";
-import { getCommonPinningStyles } from "@web-ui/lib/data-table";
-import { cn } from "@web-ui/lib/utils";
+} from "@lipy/web-ui/components/ui/table";
+import { getCommonPinningStyles } from "@lipy/web-ui/lib/data-table";
+import { cn } from "@lipy/web-ui/lib/utils";
 
 interface DataTableProps<TData> extends React.ComponentProps<"div"> {
   table: TanstackTable<TData>;

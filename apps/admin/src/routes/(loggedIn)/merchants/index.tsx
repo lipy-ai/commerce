@@ -1,20 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { DataTableColumnHeader } from "@web-ui/components/table/column-header";
-import { DataTable } from "@web-ui/components/table/data-table";
-import { DataTableToolbar } from "@web-ui/components/table/toolbar";
-import { Checkbox } from "@web-ui/components/ui/checkbox";
+import { DataTableColumnHeader } from "@lipy/web-ui/components/table/column-header";
+import { DataTable } from "@lipy/web-ui/components/table/data-table";
+import { DataTableToolbar } from "@lipy/web-ui/components/table/toolbar";
+import { Checkbox } from "@lipy/web-ui/components/ui/checkbox";
 
 import React from "react";
 
-import { Badge } from "@web-ui/components/ui/badge";
-import { Button } from "@web-ui/components/ui/button";
+import { Badge } from "@lipy/web-ui/components/ui/badge";
+import { Button } from "@lipy/web-ui/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@web-ui/components/ui/dropdown-menu";
-import { useDataTable } from "@web-ui/hooks/use-data-table";
+} from "@lipy/web-ui/components/ui/dropdown-menu";
+import { useDataTable } from "@lipy/web-ui/hooks/use-data-table";
 import type { Column, ColumnDef } from "@tanstack/react-table";
 import {
   CheckCircle,
@@ -24,7 +24,7 @@ import {
   Text,
   XCircle,
 } from "lucide-react";
-import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
+// import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 
 export const Route = createFileRoute("/(loggedIn)/merchants/")({
   component: RouteComponent,
@@ -113,11 +113,11 @@ const data: Project[] = [
 ];
 
 function RouteComponent() {
-  const [title] = useQueryState("title", parseAsString.withDefault(""));
-  const [status] = useQueryState(
-    "status",
-    parseAsArrayOf(parseAsString).withDefault([])
-  );
+  // const [title] = useQueryState("title", parseAsString.withDefault(""));
+  // const [status] = useQueryState(
+  //   "status",
+  //   parseAsArrayOf(parseAsString).withDefault([])
+  // );
 
   const columns = React.useMemo<ColumnDef<Project>[]>(
     () => [

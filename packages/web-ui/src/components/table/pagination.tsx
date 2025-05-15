@@ -6,15 +6,15 @@ import {
   ChevronsRight,
 } from "lucide-react";
 
-import { Button } from "@web-ui/components/ui/button";
+import { Button } from "@lipy/web-ui/components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@web-ui/components/ui/select";
-import { cn } from "@web-ui/lib/utils";
+} from "@lipy/web-ui/components/ui/select";
+import { cn } from "@lipy/web-ui/lib/utils";
 
 interface DataTablePaginationProps<TData> extends React.ComponentProps<"div"> {
   table: Table<TData>;
@@ -31,7 +31,7 @@ export function DataTablePagination<TData>({
     <div
       className={cn(
         "flex w-full flex-col-reverse items-center justify-between gap-4 overflow-auto p-1 sm:flex-row sm:gap-8",
-        className,
+        className
       )}
       {...props}
     >

@@ -1,20 +1,17 @@
 import { Database, DBTypes } from "@/db";
 import env from "../env";
 import { HTTPException } from "hono/http-exception";
-import Redis from "ioredis";
-import { SelectType } from "kysely";
+import { RedisClient } from "bun";
 
-export const redis = new Redis(env?.REDIS_URL!);
+export const redis = new RedisClient(env?.REDIS_URL!);
 
 export const redisKeys = {
   org: {
-    single: (val: DBTypes["org.list"]["id"]) => `org:${val}`,
+    single: (val: DBTypes["org"]["id"]) => `org:${val}`,
   },
   orgUser: {
-    single: (
-      orgId: DBTypes["org.list"]["id"],
-      userId: DBTypes["auth.user"]["id"]
-    ) => `orgUser:${orgId}:${userId}`,
+    single: (orgId: DBTypes["org"]["id"], userId: DBTypes["user"]["id"]) =>
+      `orgUser:${orgId}:${userId}`,
   },
 };
 

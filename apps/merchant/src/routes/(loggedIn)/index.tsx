@@ -1,4 +1,4 @@
-import { authClient } from "@repo-lib/providers/auth";
+import { authClient } from "@lipy/lib/providers/auth";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(loggedIn)/")({

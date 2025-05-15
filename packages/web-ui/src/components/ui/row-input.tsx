@@ -1,4 +1,4 @@
-import * as Editable from "@web-ui/components/ui/editable";
+import * as Editable from "@lipy/web-ui/components/ui/editable";
 import type { InputProps } from "./input";
 
 export const RowInput = ({

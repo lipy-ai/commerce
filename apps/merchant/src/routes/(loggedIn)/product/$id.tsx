@@ -1,19 +1,19 @@
-import { DashboardHeader } from "@web-ui/components/layouts/dashboard";
+import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { createFileRoute } from "@tanstack/react-router";
-import { Button } from "@web-ui/components/ui/button";
+import { Button } from "@lipy/web-ui/components/ui/button";
 import { ExternalLink, Share2, Trash } from "lucide-react";
-import { useViewport } from "@web-ui/contexts/viewport";
-import { Form } from "@web-ui/components/ui/form";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
+import { Form } from "@lipy/web-ui/components/ui/form";
 import { useForm } from "react-hook-form";
 import {
   FormImage,
   FormInput,
   FormTextarea,
-} from "@web-ui/components/forms/elements";
+} from "@lipy/web-ui/components/forms/elements";
 import {
   AnnotatedLayout,
   AnnotatedSection,
-} from "@web-ui/components/ui/annotated";
+} from "@lipy/web-ui/components/ui/annotated";
 export const Route = createFileRoute("/(loggedIn)/product/$id")({
   component: RouteComponent,
 });

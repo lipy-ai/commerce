@@ -11,11 +11,11 @@
     "prefix": ""
   },
   "aliases": {
-    "components": "@web-ui/components",
-    "utils": "@web-ui/lib/utils",
-    "ui": "@web-ui/components/ui",
-    "lib": "@web-ui/lib",
-    "hooks": "@web-ui/hooks"
+    "components": "@lipy/web-ui/components",
+    "utils": "@lipy/web-ui/lib/utils",
+    "ui": "@lipy/web-ui/components/ui",
+    "lib": "@lipy/web-ui/lib",
+    "hooks": "@lipy/web-ui/hooks"
   },
   "iconLibrary": "lucide"
 }

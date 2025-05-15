@@ -1,5 +1,5 @@
-import { apiClient } from "@repo/lib/api/index.js";
-import { useAPIQuery } from "@repo/lib/utils/queryClient.js";
+import { apiClient } from "@lipy/lib/api/index.js";
+import { useAPIQuery } from "@lipy/lib/utils/queryClient.js";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(loggedIn)/order/$id")({

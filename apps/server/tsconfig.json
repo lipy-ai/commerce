@@ -7,9 +7,9 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "noImplicitAny": true,
-    "composite": true,
-    "declaration": true,
-    "declarationMap": true,
+    "removeComments": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
     "paths": {
       "@/*": ["./src/*"]
     },

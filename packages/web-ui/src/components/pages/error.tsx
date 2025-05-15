@@ -2,12 +2,12 @@
 
 import { ArrowLeft, type LucideIcon, RotateCcw, XCircle } from "lucide-react";
 
-import { cn } from "@web-ui/lib/utils";
+import { cn } from "@lipy/web-ui/lib/utils";
 
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { useRouter } from "@tanstack/react-router";
-import { goBack } from "@web-ui/lib/router";
+import { goBack } from "@lipy/web-ui/lib/router";
 
 export default function ErrorPage({
   error,

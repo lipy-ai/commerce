@@ -1,8 +1,11 @@
 "use client";
 
-import { composeEventHandlers, useComposedRefs } from "@web-ui/lib/composition";
-import { cn } from "@web-ui/lib/utils";
-import { VisuallyHiddenInput } from "@web-ui/components/visually-hidden-input";
+import {
+  composeEventHandlers,
+  useComposedRefs,
+} from "@lipy/web-ui/lib/composition";
+import { cn } from "@lipy/web-ui/lib/utils";
+import { VisuallyHiddenInput } from "@lipy/web-ui/components/visually-hidden-input";
 import { Slot } from "@radix-ui/react-slot";
 import * as React from "react";
 import type { InputProps } from "./input";
@@ -188,7 +191,7 @@ const EditableRoot = React.forwardRef<HTMLDivElement, EditableRootProps>(
 
     const onCancel = React.useCallback(() => {
       const prevValue = previousValueRef.current;
-      onValueChange(prevValue);
+      onValueChange(prevValue.toString());
       onEditingChange(false);
       onCancelProp?.();
     }, [onValueChange, onCancelProp, onEditingChange]);
@@ -214,8 +217,8 @@ const EditableRoot = React.forwardRef<HTMLDivElement, EditableRootProps>(
         id,
         inputId,
         labelId,
-        defaultValue,
-        value,
+        defaultValue: defaultValue.toString(),
+        value: value.toString(),
         onValueChange,
         editing,
         onSubmit,

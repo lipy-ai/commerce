@@ -1,6 +1,6 @@
-import { authClient } from "@repo-lib/providers/auth";
+import { authClient } from "@lipy/lib/providers/auth";
 import { createFileRoute } from "@tanstack/react-router";
-import Loading from "@web-ui/components/ui/loading";
+import Loading from "@lipy/web-ui/components/ui/loading";
 import { useEffect } from "react";
 
 export const Route = createFileRoute("/(auth)/logout")({

@@ -22,7 +22,7 @@ const ViewportProvider = ({
   isMobile,
 }: {
   children: ReactNode;
-  isMobile: boolean;
+  isMobile?: boolean;
 }) => {
   const initial = isMobile ? 768 : 1250;
 
@@ -66,7 +66,7 @@ const ViewportProvider = ({
         screenWidth: screenWidth || initial,
         screenHeight: screenHeight || initial,
         isMobile:
-          width === 0 && height === 0 ? isMobile : width > 800 ? false : true,
+          width === 0 && height === 0 ? !!isMobile : width > 800 ? false : true,
       }}
     >
       {children}

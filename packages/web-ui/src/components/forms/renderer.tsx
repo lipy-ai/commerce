@@ -3,20 +3,20 @@
 import { Fragment, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-import { Button, buttonVariants } from "@web-ui/components/ui/button";
-import { Form } from "@web-ui/components/ui/form";
+import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
+import { Form } from "@lipy/web-ui/components/ui/form";
 
-import ErrorPage from "@web-ui/components/pages/error";
-import Loading from "@web-ui/components/ui/loading";
+import ErrorPage from "@lipy/web-ui/components/pages/error";
+import Loading from "@lipy/web-ui/components/ui/loading";
 import { RenderFormElement } from "./mapper";
 import { useFormStore } from "./store";
 import { type FormElement } from "./types";
-import { cn } from "@web-ui/lib/utils";
+import { cn } from "@lipy/web-ui/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { ZodType } from "zod";
 
 import type { VariantProps } from "class-variance-authority";
-import { useViewport } from "@web-ui/contexts/viewport";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
 
 type FormStyle = {
   labelPos?: "top" | "left";

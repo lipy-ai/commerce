@@ -2,7 +2,7 @@ import * as ComboboxPrimitive from "@diceui/combobox";
 import { Check, ChevronDown, X } from "lucide-react";
 import * as React from "react";
 
-import { cn } from "@web-ui/lib/utils";
+import { cn } from "@lipy/web-ui/lib/utils";
 
 const Combobox = React.forwardRef<
   React.ComponentRef<typeof ComboboxPrimitive.Root>,
@@ -39,7 +39,7 @@ const ComboboxAnchor = React.forwardRef<
     ref={ref}
     className={cn(
       "relative flex h-9 w-full items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 shadow-xs data-focused:ring-1 data-focused:ring-ring",
-      className,
+      className
     )}
     {...props}
   />
@@ -55,7 +55,7 @@ const ComboboxInput = React.forwardRef<
     ref={ref}
     className={cn(
       "flex h-9 w-full rounded-md bg-transparent text-base placeholder:text-muted-foreground focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-      className,
+      className
     )}
     {...props}
   />
@@ -71,7 +71,7 @@ const ComboboxTrigger = React.forwardRef<
     ref={ref}
     className={cn(
       "flex shrink-0 items-center justify-center rounded-r-md border-input bg-transparent text-muted-foreground transition-colors hover:text-foreground/80 focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
-      className,
+      className
     )}
     {...props}
   >
@@ -89,7 +89,7 @@ const ComboboxCancel = React.forwardRef<
     ref={ref}
     className={cn(
       "-translate-y-1/2 absolute top-1/2 right-1 flex h-6 w-6 items-center justify-center rounded-sm bg-background opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none",
-      className,
+      className
     )}
     {...props}
   />
@@ -118,7 +118,7 @@ const ComboboxBadgeItem = React.forwardRef<
     ref={ref}
     className={cn(
       "inline-flex items-center justify-between gap-1 rounded-sm bg-secondary px-2 py-0.5",
-      className,
+      className
     )}
     {...props}
   >
@@ -146,7 +146,7 @@ const ComboboxContent = React.forwardRef<
       sideOffset={sideOffset}
       className={cn(
         "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 relative z-50 max-h-fit min-w-[var(--dice-anchor-width)] origin-[var(--dice-transform-origin)] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[state=closed]:animate-out data-[state=open]:animate-in",
-        className,
+        className
       )}
       {...props}
     >
@@ -206,7 +206,7 @@ const ComboboxGroupLabel = React.forwardRef<
     ref={ref}
     className={cn(
       "px-2 py-1.5 font-semibold text-muted-foreground text-xs",
-      className,
+      className
     )}
     {...props}
   />
@@ -225,14 +225,14 @@ const ComboboxItem = React.forwardRef<
     className={cn(
       "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 text-sm outline-hidden data-disabled:pointer-events-none data-highlighted:bg-accent data-highlighted:text-accent-foreground data-disabled:opacity-50",
       outset ? "pr-8 pl-2" : "pr-2 pl-8",
-      className,
+      className
     )}
     {...props}
   >
     <ComboboxPrimitive.ItemIndicator
       className={cn(
         "absolute flex h-3.5 w-3.5 items-center justify-center",
-        outset ? "right-2" : "left-2",
+        outset ? "right-2" : "left-2"
       )}
     >
       <Check className="h-4 w-4" />

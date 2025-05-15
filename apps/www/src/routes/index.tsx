@@ -1,6 +1,6 @@
 import NavBar from "@/components/navBar";
 import { createFileRoute } from "@tanstack/react-router";
-import { authClient } from "@repo-lib/providers/auth";
+import { authClient } from "@lipy/lib/providers/auth";
 
 export const Route = createFileRoute("/")({
   component: Home,

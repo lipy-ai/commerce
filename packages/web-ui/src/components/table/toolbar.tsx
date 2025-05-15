@@ -4,14 +4,14 @@ import type { Column, Table } from "@tanstack/react-table";
 import { X } from "lucide-react";
 import * as React from "react";
 
-import { DataTableDateFilter } from "@web-ui/components/table/date-filter";
-import { DataTableFacetedFilter } from "@web-ui/components/table/faceted-filter";
-import { DataTableSliderFilter } from "@web-ui/components/table/slider-filter";
-import { DataTableViewOptions } from "@web-ui/components/table/view-options";
-import { Button } from "@web-ui/components/ui/button";
-import { Input } from "@web-ui/components/ui/input";
-import { cn } from "@web-ui/lib/utils";
-import { useViewport } from "@web-ui/contexts/viewport";
+import { DataTableDateFilter } from "@lipy/web-ui/components/table/date-filter";
+import { DataTableFacetedFilter } from "@lipy/web-ui/components/table/faceted-filter";
+import { DataTableSliderFilter } from "@lipy/web-ui/components/table/slider-filter";
+import { DataTableViewOptions } from "@lipy/web-ui/components/table/view-options";
+import { Button } from "@lipy/web-ui/components/ui/button";
+import { Input } from "@lipy/web-ui/components/ui/input";
+import { cn } from "@lipy/web-ui/lib/utils";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
 
 interface DataTableToolbarProps<TData> extends React.ComponentProps<"div"> {
   table: Table<TData>;

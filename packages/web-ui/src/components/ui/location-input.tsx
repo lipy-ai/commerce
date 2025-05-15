@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 // Import JSON data directly
 import { Check, ChevronsUpDown } from "lucide-react";
 
-import { cn } from "@web-ui/lib/utils";
-import { Button } from "@web-ui/components/ui/button";
+import { cn } from "@lipy/web-ui/lib/utils";
+import { Button } from "@lipy/web-ui/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -11,9 +11,9 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@web-ui/components/ui/command";
+} from "@lipy/web-ui/components/ui/command";
 import countriesData from "../../data/countries.json";
-import { ScrollArea, ScrollBar } from "@web-ui/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@lipy/web-ui/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./dialog";
 
 interface Timezone {

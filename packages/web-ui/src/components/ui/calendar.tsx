@@ -1,9 +1,9 @@
-import * as React from "react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import { DayPicker } from "react-day-picker"
+import * as React from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { DayPicker } from "react-day-picker";
 
-import { cn } from "@web-ui/lib/utils"
-import { buttonVariants } from "@web-ui/components/ui/button"
+import { cn } from "@lipy/web-ui/lib/utils";
+import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 
 function Calendar({
   className,
@@ -67,7 +67,7 @@ function Calendar({
       }}
       {...props}
     />
-  )
+  );
 }
 
-export { Calendar }
+export { Calendar };

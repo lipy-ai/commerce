@@ -12,10 +12,10 @@ import {
 import { parseAsStringEnum, useQueryState } from "nuqs";
 import * as React from "react";
 
-import { DataTableRangeFilter } from "@web-ui/components/table/range-filter";
-import { Badge } from "@web-ui/components/ui/badge";
-import { Button } from "@web-ui/components/ui/button";
-import { Calendar } from "@web-ui/components/ui/calendar";
+import { DataTableRangeFilter } from "@lipy/web-ui/components/table/range-filter";
+import { Badge } from "@lipy/web-ui/components/ui/badge";
+import { Button } from "@lipy/web-ui/components/ui/button";
+import { Calendar } from "@lipy/web-ui/components/ui/calendar";
 import {
   Command,
   CommandEmpty,
@@ -23,7 +23,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@web-ui/components/ui/command";
+} from "@lipy/web-ui/components/ui/command";
 import {
   Faceted,
   FacetedBadgeList,
@@ -34,42 +34,42 @@ import {
   FacetedItem,
   FacetedList,
   FacetedTrigger,
-} from "@web-ui/components/ui/faceted";
-import { Input } from "@web-ui/components/ui/input";
+} from "@lipy/web-ui/components/ui/faceted";
+import { Input } from "@lipy/web-ui/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@web-ui/components/ui/popover";
+} from "@lipy/web-ui/components/ui/popover";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@web-ui/components/ui/select";
+} from "@lipy/web-ui/components/ui/select";
 import {
   Sortable,
   SortableContent,
   SortableItem,
   SortableItemHandle,
   SortableOverlay,
-} from "@web-ui/components/ui/sortable";
-import { dataTableConfig } from "@web-ui/config/data-table";
-import { useDebouncedCallback } from "@web-ui/hooks/use-debounced-callback";
+} from "@lipy/web-ui/components/ui/sortable";
+import { dataTableConfig } from "@lipy/web-ui/config/data-table";
+import { useDebouncedCallback } from "@lipy/web-ui/hooks/use-debounced-callback";
 import {
   getDefaultFilterOperator,
   getFilterOperators,
-} from "@web-ui/lib/data-table";
-import { formatDate } from "@web-ui/lib/format";
-import { generateId } from "@web-ui/lib/id";
-import { getFiltersStateParser } from "@web-ui/lib/parsers";
-import { cn } from "@web-ui/lib/utils";
+} from "@lipy/web-ui/lib/data-table";
+import { formatDate } from "@lipy/web-ui/lib/format";
+import { generateId } from "@lipy/web-ui/lib/id";
+import { getFiltersStateParser } from "@lipy/web-ui/lib/parsers";
+import { cn } from "@lipy/web-ui/lib/utils";
 import type {
   ExtendedColumnFilter,
   FilterOperator,
   JoinOperator,
-} from "@web-ui/types/data-table";
+} from "@lipy/web-ui/types/data-table";
 
 const FILTERS_KEY = "filters";
 const JOIN_OPERATOR_KEY = "joinOperator";

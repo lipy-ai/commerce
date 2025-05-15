@@ -1,15 +1,15 @@
 "use client";
-import { cn } from "@web-ui/lib/utils";
-import { Button } from "@web-ui/components/ui/button";
+import { cn } from "@lipy/web-ui/lib/utils";
+import { Button } from "@lipy/web-ui/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@web-ui/components/ui/card";
-import { Input } from "@web-ui/components/ui/input";
-import { Label } from "@web-ui/components/ui/label";
+} from "@lipy/web-ui/components/ui/card";
+import { Input } from "@lipy/web-ui/components/ui/input";
+import { Label } from "@lipy/web-ui/components/ui/label";
 import { useEffect, useState, useTransition, type FormEvent } from "react";
 import { toast } from "sonner";
 import { parseAsString, useQueryState } from "nuqs";
@@ -18,10 +18,10 @@ import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from "@web-ui/components/ui/input-otp";
-import { authClient, signIn } from "@repo-lib/providers/auth";
+} from "@lipy/web-ui/components/ui/input-otp";
+import { authClient, signIn } from "@lipy/lib/providers/auth";
 import { Link, useNavigate } from "@tanstack/react-router";
-import Loading from "@web-ui/components/ui/loading";
+import Loading from "@lipy/web-ui/components/ui/loading";
 import { env } from "@envClient";
 
 export function LoginScreen({

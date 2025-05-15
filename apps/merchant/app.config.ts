@@ -35,7 +35,7 @@ export default defineConfig({
     resolve: {
       alias: [
         {
-          find: "@web-ui",
+          find: "@lipy/web-ui",
           replacement: path.resolve(__dirname, "../../packages/web-ui/src"),
         },
         {
@@ -43,7 +43,7 @@ export default defineConfig({
           replacement: path.resolve(__dirname, "../../env.client.ts"),
         },
         {
-          find: "@repo-lib",
+          find: "@lipy/lib",
           replacement: path.resolve(__dirname, "../../packages/lib/src"),
         },
         {

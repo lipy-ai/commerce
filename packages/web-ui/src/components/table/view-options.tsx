@@ -3,7 +3,7 @@
 import type { Table } from "@tanstack/react-table";
 import { Check, ChevronsUpDown, Settings2 } from "lucide-react";
 
-import { Button } from "@web-ui/components/ui/button";
+import { Button } from "@lipy/web-ui/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -11,13 +11,13 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@web-ui/components/ui/command";
+} from "@lipy/web-ui/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@web-ui/components/ui/popover";
-import { cn } from "@web-ui/lib/utils";
+} from "@lipy/web-ui/components/ui/popover";
+import { cn } from "@lipy/web-ui/lib/utils";
 import * as React from "react";
 
 interface DataTableViewOptionsProps<TData> {

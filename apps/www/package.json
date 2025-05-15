@@ -14,8 +14,8 @@
   },
   "dependencies": {
     "@lipy/server": "workspace:*",
-    "@repo/lib": "workspace:*",
-    "@repo/web-ui": "workspace:*",
+    "@lipy/lib": "workspace:*",
+    "@lipy/web-ui": "workspace:*",
     "@tailwindcss/vite": "^4.0.6",
     "@tanstack/react-router": "^1.114.3",
     "@tanstack/react-router-devtools": "^1.114.3",

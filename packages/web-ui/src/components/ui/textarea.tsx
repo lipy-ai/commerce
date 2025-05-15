@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { cn } from "@web-ui/lib/utils";
+import { cn } from "@lipy/web-ui/lib/utils";
 
 function Textarea({
   className,

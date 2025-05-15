@@ -1,7 +1,7 @@
 import type * as React from "react";
 import type { ControllerRenderProps, UseFormReturn } from "react-hook-form";
 
-import { Checkbox } from "@web-ui/components/ui/checkbox";
+import { Checkbox } from "@lipy/web-ui/components/ui/checkbox";
 import {
   FormControl,
   FormDescription,
@@ -9,32 +9,35 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@web-ui/components/ui/form";
-import { Input } from "@web-ui/components/ui/input";
+} from "@lipy/web-ui/components/ui/form";
+import { Input } from "@lipy/web-ui/components/ui/input";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
-} from "@web-ui/components/ui/input-otp";
-import { Label } from "@web-ui/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@web-ui/components/ui/radio-group";
+} from "@lipy/web-ui/components/ui/input-otp";
+import { Label } from "@lipy/web-ui/components/ui/label";
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from "@lipy/web-ui/components/ui/radio-group";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@web-ui/components/ui/select";
-import { Slider } from "@web-ui/components/ui/slider";
-import { Switch } from "@web-ui/components/ui/switch";
-import { Textarea } from "@web-ui/components/ui/textarea";
+} from "@lipy/web-ui/components/ui/select";
+import { Slider } from "@lipy/web-ui/components/ui/slider";
+import { Switch } from "@lipy/web-ui/components/ui/switch";
+import { Textarea } from "@lipy/web-ui/components/ui/textarea";
 import {
   ToggleGroup,
   ToggleGroupItem,
-} from "@web-ui/components/ui/toggle-group";
+} from "@lipy/web-ui/components/ui/toggle-group";
 
-import LocationSelector from "@web-ui/components/ui/location-input";
+import LocationSelector from "@lipy/web-ui/components/ui/location-input";
 import type { FormElement } from "./types";
 import { SingleImage } from "../ui/single-image";
 import ProductImage from "../ui/product-image";

@@ -1,14 +1,5 @@
 {
   "include": ["**/*.ts", "**/*.tsx"],
-  "references": [
-    { "path": "../server" },
-    {
-      "path": "../../packages/lib"
-    },
-    {
-      "path": "../../packages/web-ui"
-    }
-  ],
 
   "compilerOptions": {
     "target": "ES2022",
@@ -18,9 +9,7 @@
     "types": ["vite/client"],
 
     "noImplicitAny": true,
-    "composite": true,
-    "declaration": true,
-    "declarationMap": true,
+    "removeComments": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -40,8 +29,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@envClient": ["../../env.client.ts"],
-      "@web-ui/*": ["../../packages/web-ui/src/*"],
-      "@repo-lib/*": ["../../packages/lib/src/*"],
+      "@lipy/web-ui/*": ["../../packages/web-ui/src/*"],
+      "@lipy/lib/*": ["../../packages/lib/src/*"],
       "@lipy/server/*": ["../server/src/*"]
     }
   }

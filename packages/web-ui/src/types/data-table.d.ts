@@ -1,5 +1,5 @@
-import type { DataTableConfig } from "@web-ui/config/data-table";
-import type { FilterItemSchema } from "@web-ui/lib/parsers";
+import type { DataTableConfig } from "@lipy/web-ui/config/data-table";
+import type { FilterItemSchema } from "@lipy/web-ui/lib/parsers";
 import type { ColumnSort, Row, RowData } from "@tanstack/react-table";
 
 declare module "@tanstack/react-table" {

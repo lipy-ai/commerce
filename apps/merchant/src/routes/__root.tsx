@@ -6,15 +6,15 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import * as React from "react";
-import appCss from "@web-ui/styles.css?url";
-import { toast, Toaster } from "@web-ui/components/ui/sonner";
+import appCss from "@lipy/web-ui/styles.css?url";
+import { toast, Toaster } from "@lipy/web-ui/components/ui/sonner";
 import { DefaultCatchBoundary, NotFound } from "@/router";
-import { ViewportProvider } from "@web-ui/contexts/viewport";
-import QueryProvider from "@repo-lib/providers/queryProvider";
+import { ViewportProvider } from "@lipy/web-ui/contexts/viewport";
+import QueryProvider from "@lipy/lib/providers/queryProvider";
 import { NuqsAdapter } from "nuqs/adapters/react";
 import { seo } from "@/utils/seo";
 import { getHeader } from "@tanstack/react-start/server";
-import { getIsSsrMobile } from "@repo-lib/utils/isServerMobile";
+import { getIsSsrMobile } from "@lipy/lib/utils/isServerMobile";
 import { createServerFn } from "@tanstack/react-start";
 
 export const isMobile = createServerFn({ method: "GET" }).handler(async () => {
@@ -119,10 +119,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 
 // import { Outlet, createRootRoute } from "@tanstack/react-router";
 // // import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-// import { ViewportProvider } from "@web-ui/contexts/viewport";
+// import { ViewportProvider } from "@lipy/web-ui/contexts/viewport";
 // import { NuqsAdapter } from "nuqs/adapters/react";
-// import QueryProvider from "@repo-lib/providers/queryProvider";
-// import { toast, Toaster } from "@web-ui/components/ui/sonner";
+// import QueryProvider from "@lipy/lib/providers/queryProvider";
+// import { toast, Toaster } from "@lipy/web-ui/components/ui/sonner";
 // import { useCallback } from "react";
 
 // export const Route = createRootRoute({

@@ -1,8 +1,8 @@
 import * as React from "react";
 
-import { cn } from "@web-ui/lib/utils";
+import { cn } from "@lipy/web-ui/lib/utils";
 import { Plus } from "lucide-react";
-import { useUpload } from "@repo-lib/hooks/use-upload";
+import { useUpload } from "@lipy/lib/hooks/use-upload";
 import CircularProgress from "./circular-progress";
 
 type SingleImageProps = {

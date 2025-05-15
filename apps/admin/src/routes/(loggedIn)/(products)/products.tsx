@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { DataTableColumnHeader } from "@web-ui/components/table/column-header";
-import { DataTable } from "@web-ui/components/table/data-table";
-import { DataTableToolbar } from "@web-ui/components/table/toolbar";
-import { RowInput } from "@web-ui/components/ui/row-input";
+import { DataTableColumnHeader } from "@lipy/web-ui/components/table/column-header";
+import { DataTable } from "@lipy/web-ui/components/table/data-table";
+import { DataTableToolbar } from "@lipy/web-ui/components/table/toolbar";
+import { RowInput } from "@lipy/web-ui/components/ui/row-input";
 
 import React from "react";
 
@@ -11,17 +11,18 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@web-ui/components/ui/dropdown-menu";
-import { useDataTable } from "@web-ui/hooks/use-data-table";
+} from "@lipy/web-ui/components/ui/dropdown-menu";
+import { useDataTable } from "@lipy/web-ui/hooks/use-data-table";
 import type { Column, ColumnDef } from "@tanstack/react-table";
-import { CheckCircle2, Text, XCircle } from "lucide-react";
+import { CheckCircle2, MoreHorizontal, Text, XCircle } from "lucide-react";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@web-ui/components/ui/select";
+} from "@lipy/web-ui/components/ui/select";
+import { Button } from "@lipy/web-ui/components/ui/button";
 
 export const Route = createFileRoute("/(loggedIn)/(products)/products")({
   component: RouteComponent,
@@ -59,6 +60,7 @@ function RouteComponent() {
           return (
             <div>
               <RowInput
+                type="text"
                 onChange={(v) =>
                   table.options.meta?.updateData({
                     ...row.original,
@@ -128,6 +130,7 @@ function RouteComponent() {
           return (
             <div>
               <RowInput
+                type="text"
                 onChange={(v) =>
                   table.options.meta?.updateData({
                     ...row.original,

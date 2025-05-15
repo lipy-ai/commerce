@@ -1,11 +1,15 @@
 {
   "include": ["**/*.ts", "**/*.tsx"],
+
   "compilerOptions": {
     "target": "ES2022",
     "jsx": "react-jsx",
     "module": "ESNext",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "types": ["vite/client"],
+
+    "noImplicitAny": true,
+    "removeComments": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -24,7 +28,10 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@web-ui/*": ["../../packages/web-ui/src/*"]
+      "@envClient": ["../../env.client.ts"],
+      "@lipy/web-ui/*": ["../../packages/web-ui/src/*"],
+      "@lipy/lib/*": ["../../packages/lib/src/*"],
+      "@lipy/server/*": ["../server/src/*"]
     }
   }
 }

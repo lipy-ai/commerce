@@ -29,9 +29,9 @@ import {
 } from "nuqs";
 import * as React from "react";
 
-import { useDebouncedCallback } from "@web-ui/hooks/use-debounced-callback";
-import { getSortingStateParser } from "@web-ui/lib/parsers";
-import type { ExtendedColumnSort } from "@web-ui/types/data-table";
+import { useDebouncedCallback } from "@lipy/web-ui/hooks/use-debounced-callback";
+import { getSortingStateParser } from "@lipy/web-ui/lib/parsers";
+import type { ExtendedColumnSort } from "@lipy/web-ui/types/data-table";
 
 const PAGE_KEY = "page";
 const PER_PAGE_KEY = "perPage";

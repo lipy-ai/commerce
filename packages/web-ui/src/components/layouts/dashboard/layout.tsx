@@ -3,10 +3,10 @@
 import { useState, type ReactNode } from "react";
 import { motion } from "framer-motion";
 
-import { cn } from "@web-ui/lib/utils";
+import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, useMatchRoute } from "@tanstack/react-router";
 import type { LucideIcon } from "lucide-react";
-import { useViewport } from "@web-ui/contexts/viewport";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
 type Navs = Array<{
   label: string;
   url: string;

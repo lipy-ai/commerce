@@ -3,14 +3,14 @@
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 
-import { Button } from "@web-ui/components/ui/button";
-import { Calendar } from "@web-ui/components/ui/calendar";
+import { Button } from "@lipy/web-ui/components/ui/button";
+import { Calendar } from "@lipy/web-ui/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@web-ui/components/ui/popover";
-import { cn } from "@web-ui/lib/utils";
+} from "@lipy/web-ui/components/ui/popover";
+import { cn } from "@lipy/web-ui/lib/utils";
 
 interface DatePickerProps {
   date?: Date;

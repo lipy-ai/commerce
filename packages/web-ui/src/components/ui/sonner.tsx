@@ -1,4 +1,4 @@
-import { useViewport } from "@web-ui/contexts/viewport";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { useTheme } from "next-themes";
 import { Toaster as Sonner, type ToasterProps, toast } from "sonner";
 

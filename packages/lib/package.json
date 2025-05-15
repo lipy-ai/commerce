@@ -1,5 +1,5 @@
 {
-  "name": "@repo/lib",
+  "name": "@lipy/lib",
   "version": "1.0.0",
   "description": "",
   "private": "true",
@@ -28,6 +28,9 @@
     "mobile-detect": "^1.4.5"
   },
   "exports": {
-    "./*": "./src/*"
+    "./*": [
+      "./src/**/*.tsx",
+      "./src/**/*.ts"
+    ]
   }
 }

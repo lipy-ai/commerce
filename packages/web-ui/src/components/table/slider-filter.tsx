@@ -3,17 +3,17 @@
 import type { Column } from "@tanstack/react-table";
 import * as React from "react";
 
-import { Button } from "@web-ui/components/ui/button";
-import { Input } from "@web-ui/components/ui/input";
-import { Label } from "@web-ui/components/ui/label";
+import { Button } from "@lipy/web-ui/components/ui/button";
+import { Input } from "@lipy/web-ui/components/ui/input";
+import { Label } from "@lipy/web-ui/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@web-ui/components/ui/popover";
-import { Separator } from "@web-ui/components/ui/separator";
-import { Slider } from "@web-ui/components/ui/slider";
-import { cn } from "@web-ui/lib/utils";
+} from "@lipy/web-ui/components/ui/popover";
+import { Separator } from "@lipy/web-ui/components/ui/separator";
+import { Slider } from "@lipy/web-ui/components/ui/slider";
+import { cn } from "@lipy/web-ui/lib/utils";
 import { PlusCircle, XCircle } from "lucide-react";
 
 interface Range {
@@ -96,7 +96,7 @@ export function DataTableSliderFilter<TData>({
         column.setFilterValue([numValue, range[1]]);
       }
     },
-    [column, min, range],
+    [column, min, range]
   );
 
   const onToInputChange = React.useCallback(
@@ -106,7 +106,7 @@ export function DataTableSliderFilter<TData>({
         column.setFilterValue([range[0], numValue]);
       }
     },
-    [column, max, range],
+    [column, max, range]
   );
 
   const onSliderValueChange = React.useCallback(
@@ -115,7 +115,7 @@ export function DataTableSliderFilter<TData>({
         column.setFilterValue(value);
       }
     },
-    [column],
+    [column]
   );
 
   const onReset = React.useCallback(
@@ -125,7 +125,7 @@ export function DataTableSliderFilter<TData>({
       }
       column.setFilterValue(undefined);
     },
-    [column],
+    [column]
   );
 
   return (

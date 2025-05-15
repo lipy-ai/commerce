@@ -2,10 +2,14 @@
   "name": "@lipy/server",
   "types": "src/types/index.d.ts",
   "scripts": {
-    "dev": "bun run --hot src/index.ts && bun run studio",
+    "dev": "bun run --hot src/index.ts",
+    "build": "bun build src/index.ts --outdir ./build --target bun --minify",
     "studio": "bun drizzle-kit studio --port 3001",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "bun run db:generate && drizzle-kit migrate"
+    "db:migrate": "bun run db:generate && drizzle-kit migrate",
+    "format": "biome format",
+    "lint": "biome lint",
+    "check": "biome check"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.787.0",
@@ -14,11 +18,11 @@
     "@aws-sdk/s3-request-presigner": "^3.787.0",
     "@hono/zod-validator": "^0.4.3",
     "better-auth": "^1.2.5",
+    "bun": "^1.2.13",
     "dotenv": "^16.4.7",
     "dotenv-expand": "^12.0.1",
     "drizzle-orm": "^0.41.0",
     "hono": "^4.7.5",
-    "ioredis": "^5.6.0",
     "kysely": "^0.27.6",
     "pg": "^8.14.1",
     "pino": "^9.6.0",

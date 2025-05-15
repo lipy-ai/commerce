@@ -1,5 +1,5 @@
 import { env } from "@envClient";
-import { authClient } from "@repo-lib/providers/auth";
+import { authClient } from "@lipy/lib/providers/auth";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { getHeaders, getWebRequest } from "@tanstack/react-start/server";
@@ -7,7 +7,7 @@ import { getHeaders, getWebRequest } from "@tanstack/react-start/server";
 import {
   DashboardBody,
   DashboardLayout,
-} from "@web-ui/components/layouts/dashboard";
+} from "@lipy/web-ui/components/layouts/dashboard";
 
 import {
   CircleUser,

@@ -13,8 +13,8 @@ import {
   type FieldValues,
 } from "react-hook-form";
 
-import { cn } from "@web-ui/lib/utils";
-import { Label } from "@web-ui/components/ui/label";
+import { cn } from "@lipy/web-ui/lib/utils";
+import { Label } from "@lipy/web-ui/components/ui/label";
 
 const Form = FormProvider;
 

@@ -4,7 +4,7 @@ import {
   Outlet,
   useMatchRoute,
 } from "@tanstack/react-router";
-import { buttonVariants } from "@web-ui/components/ui/button";
+import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 
 export const Route = createFileRoute("/demo")({
   component: RouteComponent,

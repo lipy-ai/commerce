@@ -13,8 +13,12 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as CheckoutRouteImport } from './routes/checkout/route'
 import { Route as CartRouteImport } from './routes/cart/route'
-import { Route as AccountRouteImport } from './routes/account/route'
 import { Route as IndexImport } from './routes/index'
+import { Route as AccountIndexImport } from './routes/account/index'
+import { Route as ShopIdImport } from './routes/shop/$id'
+import { Route as AccountProfileImport } from './routes/account/profile'
+import { Route as AccountOrdersImport } from './routes/account/orders'
+import { Route as AccountAddressesImport } from './routes/account/addresses'
 import { Route as authLogoutImport } from './routes/(auth)/logout'
 import { Route as authLoginImport } from './routes/(auth)/login'
 
@@ -32,15 +36,39 @@ const CartRouteRoute = CartRouteImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AccountRouteRoute = AccountRouteImport.update({
-  id: '/account',
-  path: '/account',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AccountIndexRoute = AccountIndexImport.update({
+  id: '/account/',
+  path: '/account/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ShopIdRoute = ShopIdImport.update({
+  id: '/shop/$id',
+  path: '/shop/$id',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AccountProfileRoute = AccountProfileImport.update({
+  id: '/account/profile',
+  path: '/account/profile',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AccountOrdersRoute = AccountOrdersImport.update({
+  id: '/account/orders',
+  path: '/account/orders',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AccountAddressesRoute = AccountAddressesImport.update({
+  id: '/account/addresses',
+  path: '/account/addresses',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -65,13 +93,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/account': {
-      id: '/account'
-      path: '/account'
-      fullPath: '/account'
-      preLoaderRoute: typeof AccountRouteImport
       parentRoute: typeof rootRoute
     }
     '/cart': {
@@ -102,6 +123,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authLogoutImport
       parentRoute: typeof rootRoute
     }
+    '/account/addresses': {
+      id: '/account/addresses'
+      path: '/account/addresses'
+      fullPath: '/account/addresses'
+      preLoaderRoute: typeof AccountAddressesImport
+      parentRoute: typeof rootRoute
+    }
+    '/account/orders': {
+      id: '/account/orders'
+      path: '/account/orders'
+      fullPath: '/account/orders'
+      preLoaderRoute: typeof AccountOrdersImport
+      parentRoute: typeof rootRoute
+    }
+    '/account/profile': {
+      id: '/account/profile'
+      path: '/account/profile'
+      fullPath: '/account/profile'
+      preLoaderRoute: typeof AccountProfileImport
+      parentRoute: typeof rootRoute
+    }
+    '/shop/$id': {
+      id: '/shop/$id'
+      path: '/shop/$id'
+      fullPath: '/shop/$id'
+      preLoaderRoute: typeof ShopIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/account/': {
+      id: '/account/'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -109,64 +165,108 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/account': typeof AccountRouteRoute
   '/cart': typeof CartRouteRoute
   '/checkout': typeof CheckoutRouteRoute
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
+  '/account/addresses': typeof AccountAddressesRoute
+  '/account/orders': typeof AccountOrdersRoute
+  '/account/profile': typeof AccountProfileRoute
+  '/shop/$id': typeof ShopIdRoute
+  '/account': typeof AccountIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/account': typeof AccountRouteRoute
   '/cart': typeof CartRouteRoute
   '/checkout': typeof CheckoutRouteRoute
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
+  '/account/addresses': typeof AccountAddressesRoute
+  '/account/orders': typeof AccountOrdersRoute
+  '/account/profile': typeof AccountProfileRoute
+  '/shop/$id': typeof ShopIdRoute
+  '/account': typeof AccountIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/account': typeof AccountRouteRoute
   '/cart': typeof CartRouteRoute
   '/checkout': typeof CheckoutRouteRoute
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/logout': typeof authLogoutRoute
+  '/account/addresses': typeof AccountAddressesRoute
+  '/account/orders': typeof AccountOrdersRoute
+  '/account/profile': typeof AccountProfileRoute
+  '/shop/$id': typeof ShopIdRoute
+  '/account/': typeof AccountIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/account' | '/cart' | '/checkout' | '/login' | '/logout'
+  fullPaths:
+    | '/'
+    | '/cart'
+    | '/checkout'
+    | '/login'
+    | '/logout'
+    | '/account/addresses'
+    | '/account/orders'
+    | '/account/profile'
+    | '/shop/$id'
+    | '/account'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/account' | '/cart' | '/checkout' | '/login' | '/logout'
+  to:
+    | '/'
+    | '/cart'
+    | '/checkout'
+    | '/login'
+    | '/logout'
+    | '/account/addresses'
+    | '/account/orders'
+    | '/account/profile'
+    | '/shop/$id'
+    | '/account'
   id:
     | '__root__'
     | '/'
-    | '/account'
     | '/cart'
     | '/checkout'
     | '/(auth)/login'
     | '/(auth)/logout'
+    | '/account/addresses'
+    | '/account/orders'
+    | '/account/profile'
+    | '/shop/$id'
+    | '/account/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AccountRouteRoute: typeof AccountRouteRoute
   CartRouteRoute: typeof CartRouteRoute
   CheckoutRouteRoute: typeof CheckoutRouteRoute
   authLoginRoute: typeof authLoginRoute
   authLogoutRoute: typeof authLogoutRoute
+  AccountAddressesRoute: typeof AccountAddressesRoute
+  AccountOrdersRoute: typeof AccountOrdersRoute
+  AccountProfileRoute: typeof AccountProfileRoute
+  ShopIdRoute: typeof ShopIdRoute
+  AccountIndexRoute: typeof AccountIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AccountRouteRoute: AccountRouteRoute,
   CartRouteRoute: CartRouteRoute,
   CheckoutRouteRoute: CheckoutRouteRoute,
   authLoginRoute: authLoginRoute,
   authLogoutRoute: authLogoutRoute,
+  AccountAddressesRoute: AccountAddressesRoute,
+  AccountOrdersRoute: AccountOrdersRoute,
+  AccountProfileRoute: AccountProfileRoute,
+  ShopIdRoute: ShopIdRoute,
+  AccountIndexRoute: AccountIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -180,18 +280,19 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/account",
         "/cart",
         "/checkout",
         "/(auth)/login",
-        "/(auth)/logout"
+        "/(auth)/logout",
+        "/account/addresses",
+        "/account/orders",
+        "/account/profile",
+        "/shop/$id",
+        "/account/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
-    },
-    "/account": {
-      "filePath": "account/route.tsx"
     },
     "/cart": {
       "filePath": "cart/route.tsx"
@@ -204,6 +305,21 @@ export const routeTree = rootRoute
     },
     "/(auth)/logout": {
       "filePath": "(auth)/logout.tsx"
+    },
+    "/account/addresses": {
+      "filePath": "account/addresses.tsx"
+    },
+    "/account/orders": {
+      "filePath": "account/orders.tsx"
+    },
+    "/account/profile": {
+      "filePath": "account/profile.tsx"
+    },
+    "/shop/$id": {
+      "filePath": "shop/$id.tsx"
+    },
+    "/account/": {
+      "filePath": "account/index.tsx"
     }
   }
 }

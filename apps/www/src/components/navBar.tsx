@@ -1,14 +1,17 @@
 import { Link } from "@tanstack/react-router";
 import { logos } from "@/site.config";
 import SearchBar from "./searchBar";
-import { ShoppingBag, UserCircle } from "lucide-react";
+import { Home, Info, ShoppingBag, UserCircle, UserCircle2 } from "lucide-react";
 import { cn } from "@web-ui/lib/utils";
 import { useViewport } from "@web-ui/contexts/viewport";
+import { authClient } from "@repo/lib/providers/auth.js";
+import { Avatar, AvatarFallback, AvatarImage } from "@web-ui/components/ui/avatar";
 export default function NavBar() {
   const { isMobile } = useViewport();
+  const {data} = authClient.useSession()
   if (isMobile) {
     return (
-      <nav className="p-4 w-screen overflow-hidden space-y-6 bg-primary/70 min-h-52">
+      <nav className="p-4 w-screen overflow-hidden space-y-6 bg-primary/50 backdrop-blur-sm rounded-b-2xl shadow-lg"> 
         <div className="flex justify-between">
           <Link to="/">
             <div className="flex justify-between items-center flex-col">
@@ -31,47 +34,55 @@ export default function NavBar() {
               to={"/account"}
               className="text-center flex flex-col justify-center items-center"
             >
-              <UserCircle className="size-8" />
+               <Avatar className="size-8">
+                          <AvatarImage src={data?.user.image} alt="@shadcn" />
+                          <AvatarFallback>
+                            <UserCircle2 width={40} height={75} strokeWidth={1.5} />
+                          </AvatarFallback>
+                        </Avatar>
+             
             </Link>
           </div>
         </div>
         <div>
-          <SearchBar />
+          {/* <SearchBar />
+           */}
         </div>
+        
       </nav>
     );
   }
-  return (
-    <nav className="p-4 md:px-8 flex justify-between gap-8 items-center">
-      <div>
-        <Link to="/" className="block">
-          <img
-            src={logos.default}
-            className={cn("size-10")}
-            width={50}
-            height={50}
-          />
-        </Link>
-      </div>
-      <div className="flex-1">
-        <SearchBar />
-      </div>
-      <div className="flex gap-8 items-center text-xs justify-center">
-        <Link
-          to={"/account"}
-          className="text-center flex flex-col justify-center items-center space-y-1"
-        >
-          <UserCircle />
-          <span>Account</span>
-        </Link>
-        <Link
-          to={"/cart"}
-          className="text-center flex flex-col justify-center items-center space-y-1"
-        >
-          <ShoppingBag />
-          <span>Cart</span>
-        </Link>
-      </div>
-    </nav>
-  );
+  // return (
+  //   <nav className="p-4 md:px-8 flex justify-between gap-8 items-center">
+  //     <div>
+  //       <Link to="/" className="block">
+  //         <img
+  //           src={logos.default}
+  //           className={cn("size-10")}
+  //           width={50}
+  //           height={50}
+  //         />
+  //       </Link>
+  //     </div>
+  //     <div className="flex-1">
+  //       <SearchBar />
+  //     </div>
+  //     <div className="flex gap-8 items-center text-xs justify-center">
+  //       <Link
+  //         to={"/account"}
+  //         className="text-center flex flex-col justify-center items-center space-y-1"
+  //       >
+  //         <UserCircle />
+  //         <span>Account</span>
+  //       </Link>
+  //       <Link
+  //         to={"/cart"}
+  //         className="text-center flex flex-col justify-center items-center space-y-1"
+  //       >
+  //         <ShoppingBag />
+  //         <span>Cart</span>
+  //       </Link>
+  //     </div>
+  //   </nav>
+  // );
 }

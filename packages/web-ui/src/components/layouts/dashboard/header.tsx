@@ -26,7 +26,11 @@ export const DashboardHeader = ({
             onClick={onBack}
             className="p-2 hover:[&_svg]:stroke-primary"
           >
+           
             <ChevronLeft className="stroke-2" />
+
+      
+           
           </Link>{" "}
           <h1 className="font-semibold text-xl leading-0 ">{title}</h1>
         </div>

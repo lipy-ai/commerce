@@ -1,6 +1,14 @@
 {
   "include": ["**/*.ts", "**/*.tsx"],
-  "references": [{ "path": "../server" }],
+  "references": [
+    { "path": "../server" },
+    {
+      "path": "../../packages/lib"
+    },
+    {
+      "path": "../../packages/web-ui"
+    }
+  ],
 
   "compilerOptions": {
     "target": "ES2022",

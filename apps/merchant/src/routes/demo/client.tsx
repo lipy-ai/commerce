@@ -2,11 +2,14 @@ import { apiClient } from "@repo/lib/api/index.js";
 import { useAPIQuery } from "@repo/lib/utils/queryClient.js";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/(loggedIn)/order/$id")({
+export const Route = createFileRoute("/demo/client")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { data } = useAPIQuery(apiClient.v1.address, "$get", {});
-  return <div>Hello "/(loggedIn)/products/"!</div>;
+  const data = useAPIQuery(apiClient.v1.address, "$get", {});
+
+  return (
+    <pre className="whitespace-pre-wrap">{JSON.stringify(data, null, 2)}</pre>
+  );
 }

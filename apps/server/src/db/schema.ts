@@ -47,8 +47,8 @@ export const address = schema.table("address", {
   city: text("city").notNull(),
   state: text("state").notNull(),
   country: text("country"),
-  postalCode: text("postal_code"),
-  userId: uuid("user_id")
+  postal_code: text("postal_code"),
+  user_id: uuid("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   // location: geographyPoint("location"),

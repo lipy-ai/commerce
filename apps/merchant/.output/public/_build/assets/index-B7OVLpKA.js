@@ -1,1 +1,0 @@
-import{j as e}from"./client-CS--nF_Z.js";import{a as o}from"./auth-C8Ws00oz.js";const i=function(){const n=o.useSession();return e.jsxs("div",{children:['Hello "/(loggedIn)/"!',e.jsx("pre",{className:"whitespace-pre-wrap max-w-md p-8",children:JSON.stringify(n,null,2)})]})};export{i as component};

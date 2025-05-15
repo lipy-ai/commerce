@@ -1,1 +1,0 @@
-import{j as t,O as s}from"./client-CS--nF_Z.js";import{D as o}from"./header-HcI9Ugvr.js";import{a as e}from"./auth-C8Ws00oz.js";import"./chevron-left-BI6ZavCx.js";const d=function(){const{data:i,isPending:r}=e.useSession();return t.jsxs(t.Fragment,{children:[t.jsx(o,{title:"Settings"}),t.jsx("div",{className:"p-8",children:t.jsx(s,{})})]})};export{d as component};

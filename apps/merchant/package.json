@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vinxi dev --port 3001",
     "build": "vinxi build",
-    "start": "vinxi start --port 3001",
+    "start": "vinxi start --port 3001 --host",
     "test": "vitest run",
     "format": "biome format",
     "lint": "biome lint",

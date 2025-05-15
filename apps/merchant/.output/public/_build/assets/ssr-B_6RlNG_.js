@@ -1,1 +1,0 @@
-import{R as t,j as e}from"./client-CS--nF_Z.js";const r=function(){const o=t.useLoaderData();return e.jsxs("div",{children:['Hello "/demo/ssr"!',e.jsx("pre",{className:"whitespace-pre-wrap",children:JSON.stringify({data:o},null,2)})]})};export{r as component};

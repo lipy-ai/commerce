@@ -4,9 +4,9 @@
   "type": "module",
   "packageManager": "bun@1.1.21",
   "scripts": {
-    "dev": "vinxi dev",
+    "dev": "vinxi dev --port 3002",
     "build": "vinxi build",
-    "start": "vinxi start",
+    "start": "vinxi start --port 3002",
     "test": "vitest run",
     "format": "biome format",
     "lint": "biome lint",

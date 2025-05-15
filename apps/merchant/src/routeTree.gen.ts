@@ -11,8 +11,14 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as DemoRouteImport } from './routes/demo/route'
 import { Route as loggedInRouteImport } from './routes/(loggedIn)/route'
+import { Route as DemoIndexImport } from './routes/demo/index'
 import { Route as loggedInIndexImport } from './routes/(loggedIn)/index'
+import { Route as DemoTanstackMutationImport } from './routes/demo/tanstackMutation'
+import { Route as DemoSsrImport } from './routes/demo/ssr'
+import { Route as DemoDirectMutationImport } from './routes/demo/directMutation'
+import { Route as DemoClientImport } from './routes/demo/client'
 import { Route as loggedInAccountRouteImport } from './routes/(loggedIn)/account/route'
 import { Route as loggedInProductIndexImport } from './routes/(loggedIn)/product/index'
 import { Route as loggedInOrderIndexImport } from './routes/(loggedIn)/order/index'
@@ -25,15 +31,51 @@ import { Route as loggedInAccountPreferencesImport } from './routes/(loggedIn)/a
 
 // Create/Update Routes
 
+const DemoRouteRoute = DemoRouteImport.update({
+  id: '/demo',
+  path: '/demo',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const loggedInRouteRoute = loggedInRouteImport.update({
   id: '/(loggedIn)',
   getParentRoute: () => rootRoute,
+} as any)
+
+const DemoIndexRoute = DemoIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DemoRouteRoute,
 } as any)
 
 const loggedInIndexRoute = loggedInIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => loggedInRouteRoute,
+} as any)
+
+const DemoTanstackMutationRoute = DemoTanstackMutationImport.update({
+  id: '/tanstackMutation',
+  path: '/tanstackMutation',
+  getParentRoute: () => DemoRouteRoute,
+} as any)
+
+const DemoSsrRoute = DemoSsrImport.update({
+  id: '/ssr',
+  path: '/ssr',
+  getParentRoute: () => DemoRouteRoute,
+} as any)
+
+const DemoDirectMutationRoute = DemoDirectMutationImport.update({
+  id: '/directMutation',
+  path: '/directMutation',
+  getParentRoute: () => DemoRouteRoute,
+} as any)
+
+const DemoClientRoute = DemoClientImport.update({
+  id: '/client',
+  path: '/client',
+  getParentRoute: () => DemoRouteRoute,
 } as any)
 
 const loggedInAccountRouteRoute = loggedInAccountRouteImport.update({
@@ -103,6 +145,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof loggedInRouteImport
       parentRoute: typeof rootRoute
     }
+    '/demo': {
+      id: '/demo'
+      path: '/demo'
+      fullPath: '/demo'
+      preLoaderRoute: typeof DemoRouteImport
+      parentRoute: typeof rootRoute
+    }
     '/(loggedIn)/account': {
       id: '/(loggedIn)/account'
       path: '/account'
@@ -110,12 +159,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof loggedInAccountRouteImport
       parentRoute: typeof loggedInRouteImport
     }
+    '/demo/client': {
+      id: '/demo/client'
+      path: '/client'
+      fullPath: '/demo/client'
+      preLoaderRoute: typeof DemoClientImport
+      parentRoute: typeof DemoRouteImport
+    }
+    '/demo/directMutation': {
+      id: '/demo/directMutation'
+      path: '/directMutation'
+      fullPath: '/demo/directMutation'
+      preLoaderRoute: typeof DemoDirectMutationImport
+      parentRoute: typeof DemoRouteImport
+    }
+    '/demo/ssr': {
+      id: '/demo/ssr'
+      path: '/ssr'
+      fullPath: '/demo/ssr'
+      preLoaderRoute: typeof DemoSsrImport
+      parentRoute: typeof DemoRouteImport
+    }
+    '/demo/tanstackMutation': {
+      id: '/demo/tanstackMutation'
+      path: '/tanstackMutation'
+      fullPath: '/demo/tanstackMutation'
+      preLoaderRoute: typeof DemoTanstackMutationImport
+      parentRoute: typeof DemoRouteImport
+    }
     '/(loggedIn)/': {
       id: '/(loggedIn)/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof loggedInIndexImport
       parentRoute: typeof loggedInRouteImport
+    }
+    '/demo/': {
+      id: '/demo/'
+      path: '/'
+      fullPath: '/demo/'
+      preLoaderRoute: typeof DemoIndexImport
+      parentRoute: typeof DemoRouteImport
     }
     '/(loggedIn)/account/preferences': {
       id: '/(loggedIn)/account/preferences'
@@ -217,9 +301,35 @@ const loggedInRouteRouteWithChildren = loggedInRouteRoute._addFileChildren(
   loggedInRouteRouteChildren,
 )
 
+interface DemoRouteRouteChildren {
+  DemoClientRoute: typeof DemoClientRoute
+  DemoDirectMutationRoute: typeof DemoDirectMutationRoute
+  DemoSsrRoute: typeof DemoSsrRoute
+  DemoTanstackMutationRoute: typeof DemoTanstackMutationRoute
+  DemoIndexRoute: typeof DemoIndexRoute
+}
+
+const DemoRouteRouteChildren: DemoRouteRouteChildren = {
+  DemoClientRoute: DemoClientRoute,
+  DemoDirectMutationRoute: DemoDirectMutationRoute,
+  DemoSsrRoute: DemoSsrRoute,
+  DemoTanstackMutationRoute: DemoTanstackMutationRoute,
+  DemoIndexRoute: DemoIndexRoute,
+}
+
+const DemoRouteRouteWithChildren = DemoRouteRoute._addFileChildren(
+  DemoRouteRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof loggedInIndexRoute
+  '/demo': typeof DemoRouteRouteWithChildren
   '/account': typeof loggedInAccountRouteRouteWithChildren
+  '/demo/client': typeof DemoClientRoute
+  '/demo/directMutation': typeof DemoDirectMutationRoute
+  '/demo/ssr': typeof DemoSsrRoute
+  '/demo/tanstackMutation': typeof DemoTanstackMutationRoute
+  '/demo/': typeof DemoIndexRoute
   '/account/preferences': typeof loggedInAccountPreferencesRoute
   '/account/security': typeof loggedInAccountSecurityRoute
   '/order/$id': typeof loggedInOrderIdRoute
@@ -231,7 +341,12 @@ export interface FileRoutesByFullPath {
 }
 
 export interface FileRoutesByTo {
+  '/demo/client': typeof DemoClientRoute
+  '/demo/directMutation': typeof DemoDirectMutationRoute
+  '/demo/ssr': typeof DemoSsrRoute
+  '/demo/tanstackMutation': typeof DemoTanstackMutationRoute
   '/': typeof loggedInIndexRoute
+  '/demo': typeof DemoIndexRoute
   '/account/preferences': typeof loggedInAccountPreferencesRoute
   '/account/security': typeof loggedInAccountSecurityRoute
   '/order/$id': typeof loggedInOrderIdRoute
@@ -245,8 +360,14 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/(loggedIn)': typeof loggedInRouteRouteWithChildren
+  '/demo': typeof DemoRouteRouteWithChildren
   '/(loggedIn)/account': typeof loggedInAccountRouteRouteWithChildren
+  '/demo/client': typeof DemoClientRoute
+  '/demo/directMutation': typeof DemoDirectMutationRoute
+  '/demo/ssr': typeof DemoSsrRoute
+  '/demo/tanstackMutation': typeof DemoTanstackMutationRoute
   '/(loggedIn)/': typeof loggedInIndexRoute
+  '/demo/': typeof DemoIndexRoute
   '/(loggedIn)/account/preferences': typeof loggedInAccountPreferencesRoute
   '/(loggedIn)/account/security': typeof loggedInAccountSecurityRoute
   '/(loggedIn)/order/$id': typeof loggedInOrderIdRoute
@@ -261,7 +382,13 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/demo'
     | '/account'
+    | '/demo/client'
+    | '/demo/directMutation'
+    | '/demo/ssr'
+    | '/demo/tanstackMutation'
+    | '/demo/'
     | '/account/preferences'
     | '/account/security'
     | '/order/$id'
@@ -272,7 +399,12 @@ export interface FileRouteTypes {
     | '/product'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/demo/client'
+    | '/demo/directMutation'
+    | '/demo/ssr'
+    | '/demo/tanstackMutation'
     | '/'
+    | '/demo'
     | '/account/preferences'
     | '/account/security'
     | '/order/$id'
@@ -284,8 +416,14 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/(loggedIn)'
+    | '/demo'
     | '/(loggedIn)/account'
+    | '/demo/client'
+    | '/demo/directMutation'
+    | '/demo/ssr'
+    | '/demo/tanstackMutation'
     | '/(loggedIn)/'
+    | '/demo/'
     | '/(loggedIn)/account/preferences'
     | '/(loggedIn)/account/security'
     | '/(loggedIn)/order/$id'
@@ -299,10 +437,12 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   loggedInRouteRoute: typeof loggedInRouteRouteWithChildren
+  DemoRouteRoute: typeof DemoRouteRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   loggedInRouteRoute: loggedInRouteRouteWithChildren,
+  DemoRouteRoute: DemoRouteRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -315,7 +455,8 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/(loggedIn)"
+        "/(loggedIn)",
+        "/demo"
       ]
     },
     "/(loggedIn)": {
@@ -330,6 +471,16 @@ export const routeTree = rootRoute
         "/(loggedIn)/product/"
       ]
     },
+    "/demo": {
+      "filePath": "demo/route.tsx",
+      "children": [
+        "/demo/client",
+        "/demo/directMutation",
+        "/demo/ssr",
+        "/demo/tanstackMutation",
+        "/demo/"
+      ]
+    },
     "/(loggedIn)/account": {
       "filePath": "(loggedIn)/account/route.tsx",
       "parent": "/(loggedIn)",
@@ -339,9 +490,29 @@ export const routeTree = rootRoute
         "/(loggedIn)/account/"
       ]
     },
+    "/demo/client": {
+      "filePath": "demo/client.tsx",
+      "parent": "/demo"
+    },
+    "/demo/directMutation": {
+      "filePath": "demo/directMutation.tsx",
+      "parent": "/demo"
+    },
+    "/demo/ssr": {
+      "filePath": "demo/ssr.tsx",
+      "parent": "/demo"
+    },
+    "/demo/tanstackMutation": {
+      "filePath": "demo/tanstackMutation.tsx",
+      "parent": "/demo"
+    },
     "/(loggedIn)/": {
       "filePath": "(loggedIn)/index.tsx",
       "parent": "/(loggedIn)"
+    },
+    "/demo/": {
+      "filePath": "demo/index.tsx",
+      "parent": "/demo"
     },
     "/(loggedIn)/account/preferences": {
       "filePath": "(loggedIn)/account/preferences.tsx",

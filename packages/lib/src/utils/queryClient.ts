@@ -312,3 +312,27 @@ export const useAPIMutation = <
     )
   );
 };
+
+// Usage
+// const data = useAPIQuery(
+//   apiClient.posts,
+//   "$get",
+//   { query: { filter: "active" } },
+//   { staleTime: 60000 }
+// );
+
+// const data =useAPIQuery(
+// apiQueryOptions(
+//   client.posts,
+//   "$get",
+//   { query: { filter: "active" } },
+//   { staleTime: 60000 }
+// )
+// );
+// const data =useAPIQuery(
+// apiQueryOptions(
+//   client.posts,
+//   "$post",
+//   {  json: { name: "john" } }
+// )
+// );

@@ -1,0 +1,17 @@
+{
+  "name": "@repo/fake-data",
+  "module": "src/index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^9.7.0"
+  },
+  "exports": {
+    "./*": "./src/*.ts"
+  }
+}

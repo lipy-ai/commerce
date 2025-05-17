@@ -1,13 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { DashboardHeader } from "@web-ui/components/layouts/dashboard";
-import { Card } from "@web-ui/components/ui/card";
+import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
+import { Card } from "@lipy/web-ui/components/ui/card";
 import { ChevronRight, Info, LogOut, MapPin, NotebookPen, Share, Share2, ShoppingBag, UserCircle2 } from "lucide-react";
-import {authClient} from '@repo/lib/providers/auth.tsx'
+import {authClient} from '@lipy/lib/providers/auth.tsx'
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@web-ui/components/ui/avatar";
+} from "@lipy/web-ui/components/ui/avatar";
 
 export const Route = createFileRoute("/account/")({
   component: RouteComponent,

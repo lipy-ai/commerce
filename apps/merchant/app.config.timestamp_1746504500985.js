@@ -31,7 +31,7 @@ var app_config_default = defineConfig({
     resolve: {
       alias: [
         {
-          find: "@web-ui",
+          find: "@lipy/web-ui",
           replacement: path.resolve(__dirname, "../../packages/web-ui/src"),
         },
         {

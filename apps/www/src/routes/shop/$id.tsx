@@ -4,9 +4,9 @@ import ShopShortDetails from '@/components/shop/shopShortDetails'
 import {Separator} from '@lipy/web-ui/components/ui/separator'
 import SearchBar from '@/components/searchBar'
 
-export const Route = createFileRoute('/shop/$id')({
+export const Route = createFileRoute("/shop/$id")({
   component: RouteComponent,
-})
+});
 
 const shopInfo =  {
   name: "Tasty Bites Restaurant",
@@ -32,5 +32,5 @@ function RouteComponent() {
    
     
     </>
-  )
+  );
 }

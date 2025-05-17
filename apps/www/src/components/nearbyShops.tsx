@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import {  MapPin, Star, Filter, Heart, ShoppingCart, Coffee, Store, ShoppingBag, Milk} from 'lucide-react';
+import {  MapPin, Star, Filter, Heart, ShoppingCart, Coffee, Store, ShoppingBag, Milk, ShoppingBasket, Cherry, Salad} from 'lucide-react';
 import SearchBar from './searchBar';
-import { Button } from '@web-ui/components/ui/button';
-import {Badge} from '@web-ui/components/ui/badge'
-import { Card } from '@web-ui/components/ui/card';
-import {ScrollingTabs} from '@web-ui/components/scrollable-tabs'
+import { Button } from '@lipy/web-ui/components/ui/button';
+import {Badge} from '@lipy/web-ui/components/ui/badge'
+import { Card } from '@lipy/web-ui/components/ui/card';
+import {ScrollingTabs} from '@lipy/web-ui/components/scrollable-tabs'
 import { Link } from '@tanstack/react-router';
-import {DairyIcon, FruitBasketIcon, GroceryIcon, ShopIcon, VegetableIcon } from '@web-ui/components/icons/index';
 
 // Sample data
 const SHOPS = [
@@ -103,11 +102,11 @@ const SHOPS = [
 ];
 
 const CATEGORIES = [
-  { id: 'all', name: 'All Stores', icon: ShopIcon },
-  { id: 'grocery', name: 'Grocery', icon: GroceryIcon},
-  { id: 'fruits', name: 'Fruits', icon: FruitBasketIcon },
-  { id: 'vegetables', name: 'Vegetables', icon: VegetableIcon},
-  { id: 'dairy', name: 'Dairy', icon: DairyIcon }
+  { id: 'all', name: 'All Stores', icon: Store },
+  { id: 'grocery', name: 'Grocery', icon: ShoppingBasket},
+  { id: 'fruits', name: 'Fruits', icon: Cherry },
+  { id: 'vegetables', name: 'Vegetables', icon: Salad},
+  { id: 'dairy', name: 'Dairy', icon: Milk }
 ];
 
 export default function NearByShops() {

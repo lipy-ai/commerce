@@ -92,7 +92,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     return false;
   }, []);
 
-  const { isSsrMobile } = Route.useLoaderData();
+  const data = Route.useLoaderData();
 
   return (
     <html className="bg-muted/30">
@@ -104,7 +104,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         className="m-auto outline-1 outline-border shadow min-h-screen flex flex-col "
         style={{ maxWidth: "1920px" }}
       >
-        <ViewportProvider isMobile={isSsrMobile}>
+        <ViewportProvider isMobile={data?.isSsrMobile}>
           <QueryProvider handleThrowOnError={handleThrowOnError}>
             <NuqsAdapter>{children}</NuqsAdapter>
             <Toaster />

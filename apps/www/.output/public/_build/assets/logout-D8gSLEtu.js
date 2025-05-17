@@ -1,1 +1,0 @@
-import{R as o,r as e,j as n}from"./client-DSsj00kt.js";import{a as r}from"./auth-BH0fQzbF.js";import{L as a}from"./loading-B6sRdCUo.js";import"./utils-Cd13OnTz.js";const g=function(){const t=o.useNavigate();return e.useEffect(()=>{r.signOut().then(i=>t({to:"/",replace:!0}))},[]),n.jsx(a,{title:"Logging out..."})};export{g as component};

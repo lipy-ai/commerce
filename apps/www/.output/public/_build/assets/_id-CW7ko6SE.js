@@ -1,1 +1,0 @@
-import{j as t}from"./client-DSsj00kt.js";import{D as o}from"./header-COxbX9eK.js";import{E as r}from"./empty-Bu6ifZhR.js";import"./createLucideIcon-Dz2Le6F5.js";import"./label-ypWwUxTZ.js";import"./index-Dazthtk9.js";import"./utils-Cd13OnTz.js";const j=function(){return t.jsxs(t.Fragment,{children:[t.jsx(o,{title:"Grihasthi Kirana"}),t.jsx(r,{})]})};export{j as component};

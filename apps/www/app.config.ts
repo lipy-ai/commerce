@@ -12,7 +12,7 @@ export default defineConfig({
     appDirectory: "src",
   },
   server: {
-    // preset: "bun",
+    preset: "node",
     routeRules: {
       "/api/**": {
         proxy: { to: process.env.VITE_API_URL + "/api/**" },

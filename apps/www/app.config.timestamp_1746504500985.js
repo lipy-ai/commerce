@@ -7,11 +7,11 @@ var __filename = fileURLToPath(import.meta.url);
 var __dirname = dirname(__filename);
 var app_config_default = defineConfig({
   tsr: {
-    appDirectory: "src"
+    appDirectory: "src",
   },
   vite: {
     plugins: [
-      tailwindcss()
+      tailwindcss(),
       // tsConfigPaths({
       //   projects: ["./tsconfig.json"],
       // }),
@@ -19,17 +19,15 @@ var app_config_default = defineConfig({
     resolve: {
       alias: [
         {
-          find: "@web-ui",
-          replacement: path.resolve(__dirname, "../../packages/web-ui/src")
+          find: "@lipy/web-ui",
+          replacement: path.resolve(__dirname, "../../packages/web-ui/src"),
         },
         {
           find: "@",
-          replacement: path.resolve(__dirname, "./src")
-        }
-      ]
-    }
-  }
+          replacement: path.resolve(__dirname, "./src"),
+        },
+      ],
+    },
+  },
 });
-export {
-  app_config_default as default
-};
+export { app_config_default as default };

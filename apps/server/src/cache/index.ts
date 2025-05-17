@@ -1,9 +1,9 @@
 import { Database, DBTypes } from "@/db";
 import env from "../env";
 import { HTTPException } from "hono/http-exception";
-import { RedisClient } from "bun";
+import { Redis } from "ioredis";
 
-export const redis = new RedisClient(env?.REDIS_URL!);
+export const redis = new Redis(env?.REDIS_URL!);
 
 export const redisKeys = {
   org: {

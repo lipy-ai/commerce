@@ -44,10 +44,10 @@ export function LoginScreen({
     parseAsString.withDefault(env.WEB_URL)
   );
   useEffect(() => {
-    if (data?.user?.id) {
+    if (data?.user?.id && callbackURL) {
       window.location.href = callbackURL;
     }
-  }, [data, isPending]);
+  }, [data, isPending, callbackURL]);
 
   const handler = (p: Parameters<typeof signIn>) => {
     trans(async () => {

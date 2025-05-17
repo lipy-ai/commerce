@@ -21,7 +21,7 @@ coverage
 .turbo
 .vinxi
 .output
-ststs.html
+stats.html
 
 # Vercel
 .vercel

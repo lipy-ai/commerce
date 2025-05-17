@@ -23,7 +23,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {prefixEl && (
           <span
             className={cn(
-              "text-muted-foreground flex h-9 items-center px-4 [&>svg]:w-4",
+              " flex h-9 items-center px-4 [&>svg]:w-4",
               size === "lg" && "h-12"
             )}
           >

@@ -1,16 +1,35 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { DashboardHeader } from '@lipy/web-ui/components/layouts/dashboard'
-import EmptyPage from '@lipy/web-ui/components/pages/empty'
+import ShopShortDetails from '@/components/shop/shopShortDetails'
+import {Separator} from '@lipy/web-ui/components/ui/separator'
+import SearchBar from '@/components/searchBar'
 
 export const Route = createFileRoute('/shop/$id')({
   component: RouteComponent,
 })
 
+const shopInfo =  {
+  name: "Tasty Bites Restaurant",
+  address: "123 Main Street, Downtown, City",
+  rating: 4.7,
+  reviews: 328,
+  isOpen: true,
+  deliveryTime: "25-35"
+} 
+
 function RouteComponent() {
   return (
     <>
-    <DashboardHeader title={'Grihasthi Kirana'}/>
-    <EmptyPage/>
+    <DashboardHeader title={''}/>
+   
+       <ShopShortDetails shopInfo={shopInfo}/>
+
+     <Separator className='-my-4'/>
+
+     <div className='fixed bottom-0 p-4 w-full bg-muted-foreground/20'>
+      <SearchBar placeholder={`Search in ${shopInfo.name}`}/>
+     </div>
+   
     
     </>
   )

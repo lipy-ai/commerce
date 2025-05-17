@@ -12,7 +12,7 @@ import {
   ShoppingBag,
   UserCircle2,
 } from "lucide-react";
-import { authClient } from "@repo/lib/providers/auth.tsx";
+import { authClient } from "@lipy/lib/providers/auth.tsx";
 import {
   Avatar,
   AvatarFallback,

@@ -1,91 +1,38 @@
-import process from "node:process";
-globalThis._importMeta_ = globalThis._importMeta_ || {
-  url: "file:///_entry.js",
-  env: process.env,
-};
-import http, { Server as Server$1 } from "node:http";
-import https, { Server } from "node:https";
-import { EventEmitter } from "node:events";
-import { Buffer as Buffer$1 } from "node:buffer";
-import { promises, existsSync } from "node:fs";
-import { resolve as resolve$1, dirname as dirname$1, join } from "node:path";
-import { createHash } from "node:crypto";
-import { AsyncLocalStorage } from "node:async_hooks";
-import invariant from "vinxi/lib/invariant";
-import { virtualId, handlerModule, join as join$1 } from "vinxi/lib/path";
-import { pathToFileURL, fileURLToPath } from "node:url";
-import {
-  isRedirect,
-  isNotFound,
-  isPlainObject as isPlainObject$1,
-  encode as encode$1,
-} from "@tanstack/router-core";
-import T$1 from "tiny-invariant";
-import {
-  eventHandler as eventHandler$1,
-  toWebRequest,
-  getResponseStatus,
-  getEvent,
-  createStartHandler,
-  defineHandlerCallback,
-  transformReadableStreamWithRouter,
-  transformPipeableStreamWithRouter,
-  getHeaders,
-} from "@tanstack/start-server-core";
-import {
-  startSerializer,
-  createServerFn,
-  mergeHeaders as mergeHeaders$2,
-} from "@tanstack/start-client-core";
-import { jsx, jsxs } from "react/jsx-runtime";
-import {
-  createRouter as createRouter$2,
-  createRootRoute,
-  useRouter,
-  useMatch,
-  rootRouteId,
-  ErrorComponent,
-  Link,
-  createFileRoute,
-  RouterProvider,
-  lazyRouteComponent,
-  Outlet,
-  HeadContent,
-  Scripts,
-} from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import * as U from "react";
-import {
-  useRef,
-  useEffect,
-  useMemo,
-  useState,
-  useLayoutEffect,
-  createContext as createContext$1,
-  useContext,
-} from "react";
-import { useTheme } from "next-themes";
-import { toast, Toaster } from "sonner";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { NuqsAdapter } from "nuqs/adapters/react";
-import { PassThrough } from "node:stream";
-import { isbot } from "isbot";
-import R$1 from "react-dom/server";
+import process from 'node:process';globalThis._importMeta_=globalThis._importMeta_||{url:"file:///_entry.js",env:process.env};import http, { Server as Server$1 } from 'node:http';
+import https, { Server } from 'node:https';
+import { EventEmitter } from 'node:events';
+import { Buffer as Buffer$1 } from 'node:buffer';
+import { promises, existsSync } from 'node:fs';
+import { resolve as resolve$1, dirname as dirname$1, join } from 'node:path';
+import { createHash } from 'node:crypto';
+import { AsyncLocalStorage } from 'node:async_hooks';
+import invariant from 'vinxi/lib/invariant';
+import { virtualId, handlerModule, join as join$1 } from 'vinxi/lib/path';
+import { pathToFileURL, fileURLToPath } from 'node:url';
+import { isRedirect, isNotFound, isPlainObject as isPlainObject$1, encode as encode$1 } from '@tanstack/router-core';
+import T$1 from 'tiny-invariant';
+import { eventHandler as eventHandler$1, toWebRequest, getResponseStatus, getEvent, createStartHandler, defineHandlerCallback, transformReadableStreamWithRouter, transformPipeableStreamWithRouter, getHeaders } from '@tanstack/start-server-core';
+import { startSerializer, createServerFn, mergeHeaders as mergeHeaders$2 } from '@tanstack/start-client-core';
+import { jsx, jsxs } from 'react/jsx-runtime';
+import { createRouter as createRouter$2, createRootRoute, useRouter, useMatch, rootRouteId, ErrorComponent, Link, createFileRoute, RouterProvider, lazyRouteComponent, Outlet, HeadContent, Scripts } from '@tanstack/react-router';
+import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
+import * as X from 'react';
+import { useRef, useEffect, useMemo, useState, useLayoutEffect, createContext as createContext$1, useContext } from 'react';
+import { useTheme } from 'next-themes';
+import { toast, Toaster } from 'sonner';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { NuqsAdapter } from 'nuqs/adapters/react';
+import { CircleUser, LogOut, Store, ShoppingCart } from 'lucide-react';
+import { PassThrough } from 'node:stream';
+import { isbot } from 'isbot';
+import R$1 from 'react-dom/server';
 
-const suspectProtoRx =
-  /"(?:_|\\u0{2}5[Ff]){2}(?:p|\\u0{2}70)(?:r|\\u0{2}72)(?:o|\\u0{2}6[Ff])(?:t|\\u0{2}74)(?:o|\\u0{2}6[Ff])(?:_|\\u0{2}5[Ff]){2}"\s*:/;
-const suspectConstructorRx =
-  /"(?:c|\\u0063)(?:o|\\u006[Ff])(?:n|\\u006[Ee])(?:s|\\u0073)(?:t|\\u0074)(?:r|\\u0072)(?:u|\\u0075)(?:c|\\u0063)(?:t|\\u0074)(?:o|\\u006[Ff])(?:r|\\u0072)"\s*:/;
+const suspectProtoRx = /"(?:_|\\u0{2}5[Ff]){2}(?:p|\\u0{2}70)(?:r|\\u0{2}72)(?:o|\\u0{2}6[Ff])(?:t|\\u0{2}74)(?:o|\\u0{2}6[Ff])(?:_|\\u0{2}5[Ff]){2}"\s*:/;
+const suspectConstructorRx = /"(?:c|\\u0063)(?:o|\\u006[Ff])(?:n|\\u006[Ee])(?:s|\\u0073)(?:t|\\u0074)(?:r|\\u0072)(?:u|\\u0075)(?:c|\\u0063)(?:t|\\u0074)(?:o|\\u006[Ff])(?:r|\\u0072)"\s*:/;
 const JsonSigRx = /^\s*["[{]|^\s*-?\d{1,16}(\.\d{1,17})?([Ee][+-]?\d+)?\s*$/;
 function jsonParseTransform(key, value) {
-  if (
-    key === "__proto__" ||
-    (key === "constructor" &&
-      value &&
-      typeof value === "object" &&
-      "prototype" in value)
-  ) {
+  if (key === "__proto__" || key === "constructor" && value && typeof value === "object" && "prototype" in value) {
     warnKeyDropped(key);
     return;
   }
@@ -98,11 +45,7 @@ function destr(value, options = {}) {
   if (typeof value !== "string") {
     return value;
   }
-  if (
-    value[0] === '"' &&
-    value[value.length - 1] === '"' &&
-    value.indexOf("\\") === -1
-  ) {
+  if (value[0] === '"' && value[value.length - 1] === '"' && value.indexOf("\\") === -1) {
     return value.slice(1, -1);
   }
   const _value = value.trim();
@@ -167,14 +110,7 @@ function encode(text) {
   return encodeURI("" + text).replace(ENC_PIPE_RE, "|");
 }
 function encodeQueryValue(input) {
-  return encode(typeof input === "string" ? input : JSON.stringify(input))
-    .replace(PLUS_RE, "%2B")
-    .replace(ENC_SPACE_RE, "+")
-    .replace(HASH_RE, "%23")
-    .replace(AMPERSAND_RE, "%26")
-    .replace(ENC_BACKTICK_RE, "`")
-    .replace(ENC_CARET_RE, "^")
-    .replace(SLASH_RE, "%2F");
+  return encode(typeof input === "string" ? input : JSON.stringify(input)).replace(PLUS_RE, "%2B").replace(ENC_SPACE_RE, "+").replace(HASH_RE, "%23").replace(AMPERSAND_RE, "%26").replace(ENC_BACKTICK_RE, "`").replace(ENC_CARET_RE, "^").replace(SLASH_RE, "%2F");
 }
 function encodeQueryKey(text) {
   return encodeQueryValue(text).replace(EQUAL_RE, "%3D");
@@ -229,18 +165,14 @@ function encodeQueryItem(key, value) {
     return encodeQueryKey(key);
   }
   if (Array.isArray(value)) {
-    return value
-      .map((_value) => `${encodeQueryKey(key)}=${encodeQueryValue(_value)}`)
-      .join("&");
+    return value.map(
+      (_value) => `${encodeQueryKey(key)}=${encodeQueryValue(_value)}`
+    ).join("&");
   }
   return `${encodeQueryKey(key)}=${encodeQueryValue(value)}`;
 }
 function stringifyQuery(query) {
-  return Object.keys(query)
-    .filter((k) => query[k] !== void 0)
-    .map((k) => encodeQueryItem(k, query[k]))
-    .filter(Boolean)
-    .join("&");
+  return Object.keys(query).filter((k) => query[k] !== void 0).map((k) => encodeQueryItem(k, query[k])).filter(Boolean).join("&");
 }
 
 const PROTOCOL_STRICT_REGEX = /^[\s\w\0+.-]{2,}:([/\\]{1,2})/;
@@ -254,10 +186,7 @@ function hasProtocol(inputString, opts = {}) {
   if (opts.strict) {
     return PROTOCOL_STRICT_REGEX.test(inputString);
   }
-  return (
-    PROTOCOL_REGEX.test(inputString) ||
-    (opts.acceptRelative ? PROTOCOL_RELATIVE_REGEX.test(inputString) : false)
-  );
+  return PROTOCOL_REGEX.test(inputString) || (opts.acceptRelative ? PROTOCOL_RELATIVE_REGEX.test(inputString) : false);
 }
 function hasTrailingSlash(input = "", respectQueryAndFragment) {
   {
@@ -343,16 +272,13 @@ function parseURL(input = "", defaultProto) {
       auth: "",
       host: "",
       search: "",
-      hash: "",
+      hash: ""
     };
   }
   if (!hasProtocol(input, { acceptRelative: true })) {
     return parsePath(input);
   }
-  const [, protocol = "", auth, hostAndPath = ""] =
-    input
-      .replace(/\\/g, "/")
-      .match(/^[\s\0]*([\w+.-]{2,}:)?\/\/([^/@]+@)?(.*)/) || [];
+  const [, protocol = "", auth, hostAndPath = ""] = input.replace(/\\/g, "/").match(/^[\s\0]*([\w+.-]{2,}:)?\/\/([^/@]+@)?(.*)/) || [];
   let [, host = "", path = ""] = hostAndPath.match(/([^#/?]*)(.*)?/) || [];
   if (protocol === "file:") {
     path = path.replace(/\/(?=[A-Za-z]:)/, "");
@@ -365,48 +291,40 @@ function parseURL(input = "", defaultProto) {
     pathname,
     search,
     hash,
-    [protocolRelative]: !protocol,
+    [protocolRelative]: !protocol
   };
 }
 function parsePath(input = "") {
-  const [pathname = "", search = "", hash = ""] = (
-    input.match(/([^#?]*)(\?[^#]*)?(#.*)?/) || []
-  ).splice(1);
+  const [pathname = "", search = "", hash = ""] = (input.match(/([^#?]*)(\?[^#]*)?(#.*)?/) || []).splice(1);
   return {
     pathname,
     search,
-    hash,
+    hash
   };
 }
 function stringifyParsedURL(parsed) {
   const pathname = parsed.pathname || "";
-  const search = parsed.search
-    ? (parsed.search.startsWith("?") ? "" : "?") + parsed.search
-    : "";
+  const search = parsed.search ? (parsed.search.startsWith("?") ? "" : "?") + parsed.search : "";
   const hash = parsed.hash || "";
   const auth = parsed.auth ? parsed.auth + "@" : "";
   const host = parsed.host || "";
-  const proto =
-    parsed.protocol || parsed[protocolRelative]
-      ? (parsed.protocol || "") + "//"
-      : "";
+  const proto = parsed.protocol || parsed[protocolRelative] ? (parsed.protocol || "") + "//" : "";
   return proto + auth + host + pathname + search + hash;
 }
 
 const NODE_TYPES = {
   NORMAL: 0,
   WILDCARD: 1,
-  PLACEHOLDER: 2,
+  PLACEHOLDER: 2
 };
 
 function createRouter$1(options = {}) {
   const ctx = {
     options,
     rootNode: createRadixNode(),
-    staticRoutesMap: {},
+    staticRoutesMap: {}
   };
-  const normalizeTrailingSlash = (p) =>
-    options.strictTrailingSlash ? p : p.replace(/\/$/, "") || "/";
+  const normalizeTrailingSlash = (p) => options.strictTrailingSlash ? p : p.replace(/\/$/, "") || "/";
   if (options.routes) {
     for (const path in options.routes) {
       insert(ctx, normalizeTrailingSlash(path), options.routes[path]);
@@ -416,7 +334,7 @@ function createRouter$1(options = {}) {
     ctx,
     lookup: (path) => lookup(ctx, normalizeTrailingSlash(path)),
     insert: (path, data) => insert(ctx, normalizeTrailingSlash(path), data),
-    remove: (path) => remove(ctx, normalizeTrailingSlash(path)),
+    remove: (path) => remove(ctx, normalizeTrailingSlash(path))
   };
 }
 function lookup(ctx, path) {
@@ -440,9 +358,7 @@ function lookup(ctx, path) {
     if (nextNode === void 0) {
       if (node && node.placeholderChildren.length > 1) {
         const remaining = sections.length - i;
-        node =
-          node.placeholderChildren.find((c) => c.maxDepth === remaining) ||
-          null;
+        node = node.placeholderChildren.find((c) => c.maxDepth === remaining) || null;
       } else {
         node = node.placeholderChildren[0] || null;
       }
@@ -468,7 +384,7 @@ function lookup(ctx, path) {
   if (paramsFound) {
     return {
       ...node.data,
-      params: paramsFound ? params : void 0,
+      params: paramsFound ? params : void 0
     };
   }
   return node.data;
@@ -481,24 +397,22 @@ function insert(ctx, path, data) {
   const matchedNodes = [node];
   for (const section of sections) {
     let childNode;
-    if ((childNode = node.children.get(section))) {
+    if (childNode = node.children.get(section)) {
       node = childNode;
     } else {
       const type = getNodeType(section);
       childNode = createRadixNode({ type, parent: node });
       node.children.set(section, childNode);
       if (type === NODE_TYPES.PLACEHOLDER) {
-        childNode.paramName =
-          section === "*" ? `_${_unnamedPlaceholderCtr++}` : section.slice(1);
+        childNode.paramName = section === "*" ? `_${_unnamedPlaceholderCtr++}` : section.slice(1);
         node.placeholderChildren.push(childNode);
         isStaticRoute = false;
       } else if (type === NODE_TYPES.WILDCARD) {
         node.wildcardChildNode = childNode;
-        childNode.paramName =
-          section.slice(
-            3
-            /* "**:" */
-          ) || "_";
+        childNode.paramName = section.slice(
+          3
+          /* "**:" */
+        ) || "_";
         isStaticRoute = false;
       }
       matchedNodes.push(childNode);
@@ -545,7 +459,7 @@ function createRadixNode(options = {}) {
     data: options.data || null,
     paramName: options.paramName || null,
     wildcardChildNode: null,
-    placeholderChildren: [],
+    placeholderChildren: []
   };
 }
 function getNodeType(str) {
@@ -565,14 +479,14 @@ function toRouteMatcher(router) {
 function _createMatcher(table, strictTrailingSlash) {
   return {
     ctx: { table },
-    matchAll: (path) => _matchRoutes(path, table, strictTrailingSlash),
+    matchAll: (path) => _matchRoutes(path, table, strictTrailingSlash)
   };
 }
 function _createRouteTable() {
   return {
     static: /* @__PURE__ */ new Map(),
     wildcard: /* @__PURE__ */ new Map(),
-    dynamic: /* @__PURE__ */ new Map(),
+    dynamic: /* @__PURE__ */ new Map()
   };
 }
 function _matchRoutes(path, table, strictTrailingSlash) {
@@ -587,8 +501,7 @@ function _matchRoutes(path, table, strictTrailingSlash) {
   }
   for (const [key, value] of _sortRoutesMap(table.dynamic)) {
     if (path.startsWith(key + "/")) {
-      const subPath =
-        "/" + path.slice(key.length).split("/").splice(2).join("/");
+      const subPath = "/" + path.slice(key.length).split("/").splice(2).join("/");
       matches.push(..._matchRoutes(subPath, value));
     }
   }
@@ -605,10 +518,7 @@ function _routerNodeToTable(initialPath, initialNode) {
   const table = _createRouteTable();
   function _addNode(path, node) {
     if (path) {
-      if (
-        node.type === NODE_TYPES.NORMAL &&
-        !(path.includes("*") || path.includes(":"))
-      ) {
+      if (node.type === NODE_TYPES.NORMAL && !(path.includes("*") || path.includes(":"))) {
         if (node.data) {
           table.static.set(path, node.data);
         }
@@ -636,11 +546,7 @@ function isPlainObject(value) {
     return false;
   }
   const prototype = Object.getPrototypeOf(value);
-  if (
-    prototype !== null &&
-    prototype !== Object.prototype &&
-    Object.getPrototypeOf(prototype) !== null
-  ) {
+  if (prototype !== null && prototype !== Object.prototype && Object.getPrototypeOf(prototype) !== null) {
     return false;
   }
   if (Symbol.iterator in value) {
@@ -684,9 +590,10 @@ function _defu(baseObject, defaults, namespace = ".", merger) {
   return object;
 }
 function createDefu(merger) {
-  return (...arguments_) =>
+  return (...arguments_) => (
     // eslint-disable-next-line unicorn/no-array-reduce
-    arguments_.reduce((p, c) => _defu(p, c, "", merger), {});
+    arguments_.reduce((p, c) => _defu(p, c, "", merger), {})
+  );
 }
 const defu = createDefu();
 const defuFn = createDefu((object, key, currentValue) => {
@@ -696,490 +603,7 @@ const defuFn = createDefu((object, key, currentValue) => {
   }
 });
 
-function o(n) {
-  throw new Error(`${n} is not implemented yet!`);
-}
-let i$1 = class i extends EventEmitter {
-  __unenv__ = {};
-  readableEncoding = null;
-  readableEnded = true;
-  readableFlowing = false;
-  readableHighWaterMark = 0;
-  readableLength = 0;
-  readableObjectMode = false;
-  readableAborted = false;
-  readableDidRead = false;
-  closed = false;
-  errored = null;
-  readable = false;
-  destroyed = false;
-  static from(e, t) {
-    return new i(t);
-  }
-  constructor(e) {
-    super();
-  }
-  _read(e) {}
-  read(e) {}
-  setEncoding(e) {
-    return this;
-  }
-  pause() {
-    return this;
-  }
-  resume() {
-    return this;
-  }
-  isPaused() {
-    return true;
-  }
-  unpipe(e) {
-    return this;
-  }
-  unshift(e, t) {}
-  wrap(e) {
-    return this;
-  }
-  push(e, t) {
-    return false;
-  }
-  _destroy(e, t) {
-    this.removeAllListeners();
-  }
-  destroy(e) {
-    return (this.destroyed = true), this._destroy(e), this;
-  }
-  pipe(e, t) {
-    return {};
-  }
-  compose(e, t) {
-    throw new Error("Method not implemented.");
-  }
-  [Symbol.asyncDispose]() {
-    return this.destroy(), Promise.resolve();
-  }
-  async *[Symbol.asyncIterator]() {
-    throw o("Readable.asyncIterator");
-  }
-  iterator(e) {
-    throw o("Readable.iterator");
-  }
-  map(e, t) {
-    throw o("Readable.map");
-  }
-  filter(e, t) {
-    throw o("Readable.filter");
-  }
-  forEach(e, t) {
-    throw o("Readable.forEach");
-  }
-  reduce(e, t, r) {
-    throw o("Readable.reduce");
-  }
-  find(e, t) {
-    throw o("Readable.find");
-  }
-  findIndex(e, t) {
-    throw o("Readable.findIndex");
-  }
-  some(e, t) {
-    throw o("Readable.some");
-  }
-  toArray(e) {
-    throw o("Readable.toArray");
-  }
-  every(e, t) {
-    throw o("Readable.every");
-  }
-  flatMap(e, t) {
-    throw o("Readable.flatMap");
-  }
-  drop(e, t) {
-    throw o("Readable.drop");
-  }
-  take(e, t) {
-    throw o("Readable.take");
-  }
-  asIndexedPairs(e) {
-    throw o("Readable.asIndexedPairs");
-  }
-};
-let l$1 = class l extends EventEmitter {
-  __unenv__ = {};
-  writable = true;
-  writableEnded = false;
-  writableFinished = false;
-  writableHighWaterMark = 0;
-  writableLength = 0;
-  writableObjectMode = false;
-  writableCorked = 0;
-  closed = false;
-  errored = null;
-  writableNeedDrain = false;
-  destroyed = false;
-  _data;
-  _encoding = "utf8";
-  constructor(e) {
-    super();
-  }
-  pipe(e, t) {
-    return {};
-  }
-  _write(e, t, r) {
-    if (this.writableEnded) {
-      r && r();
-      return;
-    }
-    if (this._data === void 0) this._data = e;
-    else {
-      const s =
-          typeof this._data == "string"
-            ? Buffer$1.from(this._data, this._encoding || t || "utf8")
-            : this._data,
-        a =
-          typeof e == "string"
-            ? Buffer$1.from(e, t || this._encoding || "utf8")
-            : e;
-      this._data = Buffer$1.concat([s, a]);
-    }
-    (this._encoding = t), r && r();
-  }
-  _writev(e, t) {}
-  _destroy(e, t) {}
-  _final(e) {}
-  write(e, t, r) {
-    const s = typeof t == "string" ? this._encoding : "utf8",
-      a = typeof t == "function" ? t : typeof r == "function" ? r : void 0;
-    return this._write(e, s, a), true;
-  }
-  setDefaultEncoding(e) {
-    return this;
-  }
-  end(e, t, r) {
-    const s =
-      typeof e == "function"
-        ? e
-        : typeof t == "function"
-          ? t
-          : typeof r == "function"
-            ? r
-            : void 0;
-    if (this.writableEnded) return s && s(), this;
-    const a = e === s ? void 0 : e;
-    if (a) {
-      const u = t === s ? void 0 : t;
-      this.write(a, u, s);
-    }
-    return (
-      (this.writableEnded = true),
-      (this.writableFinished = true),
-      this.emit("close"),
-      this.emit("finish"),
-      this
-    );
-  }
-  cork() {}
-  uncork() {}
-  destroy(e) {
-    return (
-      (this.destroyed = true),
-      delete this._data,
-      this.removeAllListeners(),
-      this
-    );
-  }
-  compose(e, t) {
-    throw new Error("Method not implemented.");
-  }
-};
-const c$1 = class c {
-  allowHalfOpen = true;
-  _destroy;
-  constructor(e = new i$1(), t = new l$1()) {
-    Object.assign(this, e),
-      Object.assign(this, t),
-      (this._destroy = g(e._destroy, t._destroy));
-  }
-};
-function _$1() {
-  return (
-    Object.assign(c$1.prototype, i$1.prototype),
-    Object.assign(c$1.prototype, l$1.prototype),
-    c$1
-  );
-}
-function g(...n) {
-  return function (...e) {
-    for (const t of n) t(...e);
-  };
-}
-const m = _$1();
-let A$1 = class A extends m {
-  __unenv__ = {};
-  bufferSize = 0;
-  bytesRead = 0;
-  bytesWritten = 0;
-  connecting = false;
-  destroyed = false;
-  pending = false;
-  localAddress = "";
-  localPort = 0;
-  remoteAddress = "";
-  remoteFamily = "";
-  remotePort = 0;
-  autoSelectFamilyAttemptedAddresses = [];
-  readyState = "readOnly";
-  constructor(e) {
-    super();
-  }
-  write(e, t, r) {
-    return false;
-  }
-  connect(e, t, r) {
-    return this;
-  }
-  end(e, t, r) {
-    return this;
-  }
-  setEncoding(e) {
-    return this;
-  }
-  pause() {
-    return this;
-  }
-  resume() {
-    return this;
-  }
-  setTimeout(e, t) {
-    return this;
-  }
-  setNoDelay(e) {
-    return this;
-  }
-  setKeepAlive(e, t) {
-    return this;
-  }
-  address() {
-    return {};
-  }
-  unref() {
-    return this;
-  }
-  ref() {
-    return this;
-  }
-  destroySoon() {
-    this.destroy();
-  }
-  resetAndDestroy() {
-    const e = new Error("ERR_SOCKET_CLOSED");
-    return (e.code = "ERR_SOCKET_CLOSED"), this.destroy(e), this;
-  }
-};
-class y extends i$1 {
-  aborted = false;
-  httpVersion = "1.1";
-  httpVersionMajor = 1;
-  httpVersionMinor = 1;
-  complete = true;
-  connection;
-  socket;
-  headers = {};
-  trailers = {};
-  method = "GET";
-  url = "/";
-  statusCode = 200;
-  statusMessage = "";
-  closed = false;
-  errored = null;
-  readable = false;
-  constructor(e) {
-    super(), (this.socket = this.connection = e || new A$1());
-  }
-  get rawHeaders() {
-    const e = this.headers,
-      t = [];
-    for (const r in e)
-      if (Array.isArray(e[r])) for (const s of e[r]) t.push(r, s);
-      else t.push(r, e[r]);
-    return t;
-  }
-  get rawTrailers() {
-    return [];
-  }
-  setTimeout(e, t) {
-    return this;
-  }
-  get headersDistinct() {
-    return p(this.headers);
-  }
-  get trailersDistinct() {
-    return p(this.trailers);
-  }
-}
-function p(n) {
-  const e = {};
-  for (const [t, r] of Object.entries(n))
-    t && (e[t] = (Array.isArray(r) ? r : [r]).filter(Boolean));
-  return e;
-}
-class w extends l$1 {
-  statusCode = 200;
-  statusMessage = "";
-  upgrading = false;
-  chunkedEncoding = false;
-  shouldKeepAlive = false;
-  useChunkedEncodingByDefault = false;
-  sendDate = false;
-  finished = false;
-  headersSent = false;
-  strictContentLength = false;
-  connection = null;
-  socket = null;
-  req;
-  _headers = {};
-  constructor(e) {
-    super(), (this.req = e);
-  }
-  assignSocket(e) {
-    (e._httpMessage = this),
-      (this.socket = e),
-      (this.connection = e),
-      this.emit("socket", e),
-      this._flush();
-  }
-  _flush() {
-    this.flushHeaders();
-  }
-  detachSocket(e) {}
-  writeContinue(e) {}
-  writeHead(e, t, r) {
-    e && (this.statusCode = e),
-      typeof t == "string" && ((this.statusMessage = t), (t = void 0));
-    const s = r || t;
-    if (s && !Array.isArray(s)) for (const a in s) this.setHeader(a, s[a]);
-    return (this.headersSent = true), this;
-  }
-  writeProcessing() {}
-  setTimeout(e, t) {
-    return this;
-  }
-  appendHeader(e, t) {
-    e = e.toLowerCase();
-    const r = this._headers[e],
-      s = [
-        ...(Array.isArray(r) ? r : [r]),
-        ...(Array.isArray(t) ? t : [t]),
-      ].filter(Boolean);
-    return (this._headers[e] = s.length > 1 ? s : s[0]), this;
-  }
-  setHeader(e, t) {
-    return (this._headers[e.toLowerCase()] = t), this;
-  }
-  setHeaders(e) {
-    for (const [t, r] of Object.entries(e)) this.setHeader(t, r);
-    return this;
-  }
-  getHeader(e) {
-    return this._headers[e.toLowerCase()];
-  }
-  getHeaders() {
-    return this._headers;
-  }
-  getHeaderNames() {
-    return Object.keys(this._headers);
-  }
-  hasHeader(e) {
-    return e.toLowerCase() in this._headers;
-  }
-  removeHeader(e) {
-    delete this._headers[e.toLowerCase()];
-  }
-  addTrailers(e) {}
-  flushHeaders() {}
-  writeEarlyHints(e, t) {
-    typeof t == "function" && t();
-  }
-}
-const E$1 = (() => {
-  const n = function () {};
-  return (n.prototype = Object.create(null)), n;
-})();
-function R(n = {}) {
-  const e = new E$1(),
-    t = Array.isArray(n) || H$1(n) ? n : Object.entries(n);
-  for (const [r, s] of t)
-    if (s) {
-      if (e[r] === void 0) {
-        e[r] = s;
-        continue;
-      }
-      e[r] = [
-        ...(Array.isArray(e[r]) ? e[r] : [e[r]]),
-        ...(Array.isArray(s) ? s : [s]),
-      ];
-    }
-  return e;
-}
-function H$1(n) {
-  return typeof n?.entries == "function";
-}
-function S$1(n = {}) {
-  if (n instanceof Headers) return n;
-  const e = new Headers();
-  for (const [t, r] of Object.entries(n))
-    if (r !== void 0) {
-      if (Array.isArray(r)) {
-        for (const s of r) e.append(t, String(s));
-        continue;
-      }
-      e.set(t, String(r));
-    }
-  return e;
-}
-const C = new Set([101, 204, 205, 304]);
-async function b(n, e) {
-  const t = new y(),
-    r = new w(t);
-  t.url = e.url?.toString() || "/";
-  let s;
-  if (!t.url.startsWith("/")) {
-    const d = new URL(t.url);
-    (s = d.host), (t.url = d.pathname + d.search + d.hash);
-  }
-  (t.method = e.method || "GET"),
-    (t.headers = R(e.headers || {})),
-    t.headers.host || (t.headers.host = e.host || s || "localhost"),
-    (t.connection.encrypted = t.connection.encrypted || e.protocol === "https"),
-    (t.body = e.body || null),
-    (t.__unenv__ = e.context),
-    await n(t, r);
-  let a = r._data;
-  (C.has(r.statusCode) || t.method.toUpperCase() === "HEAD") &&
-    ((a = null), delete r._headers["content-length"]);
-  const u = {
-    status: r.statusCode,
-    statusText: r.statusMessage,
-    headers: r._headers,
-    body: a,
-  };
-  return t.destroy(), r.destroy(), u;
-}
-async function O$1(n, e, t = {}) {
-  try {
-    const r = await b(n, { url: e, ...t });
-    return new Response(r.body, {
-      status: r.status,
-      statusText: r.statusText,
-      headers: S$1(r.headers),
-    });
-  } catch (r) {
-    return new Response(r.toString(), {
-      status: Number.parseInt(r.statusCode || r.code) || 500,
-      statusText: r.statusText,
-    });
-  }
-}
+function o(n){throw new Error(`${n} is not implemented yet!`)}let i$1 = class i extends EventEmitter{__unenv__={};readableEncoding=null;readableEnded=true;readableFlowing=false;readableHighWaterMark=0;readableLength=0;readableObjectMode=false;readableAborted=false;readableDidRead=false;closed=false;errored=null;readable=false;destroyed=false;static from(e,t){return new i(t)}constructor(e){super();}_read(e){}read(e){}setEncoding(e){return this}pause(){return this}resume(){return this}isPaused(){return  true}unpipe(e){return this}unshift(e,t){}wrap(e){return this}push(e,t){return  false}_destroy(e,t){this.removeAllListeners();}destroy(e){return this.destroyed=true,this._destroy(e),this}pipe(e,t){return {}}compose(e,t){throw new Error("Method not implemented.")}[Symbol.asyncDispose](){return this.destroy(),Promise.resolve()}async*[Symbol.asyncIterator](){throw o("Readable.asyncIterator")}iterator(e){throw o("Readable.iterator")}map(e,t){throw o("Readable.map")}filter(e,t){throw o("Readable.filter")}forEach(e,t){throw o("Readable.forEach")}reduce(e,t,r){throw o("Readable.reduce")}find(e,t){throw o("Readable.find")}findIndex(e,t){throw o("Readable.findIndex")}some(e,t){throw o("Readable.some")}toArray(e){throw o("Readable.toArray")}every(e,t){throw o("Readable.every")}flatMap(e,t){throw o("Readable.flatMap")}drop(e,t){throw o("Readable.drop")}take(e,t){throw o("Readable.take")}asIndexedPairs(e){throw o("Readable.asIndexedPairs")}};let l$1 = class l extends EventEmitter{__unenv__={};writable=true;writableEnded=false;writableFinished=false;writableHighWaterMark=0;writableLength=0;writableObjectMode=false;writableCorked=0;closed=false;errored=null;writableNeedDrain=false;destroyed=false;_data;_encoding="utf8";constructor(e){super();}pipe(e,t){return {}}_write(e,t,r){if(this.writableEnded){r&&r();return}if(this._data===void 0)this._data=e;else {const s=typeof this._data=="string"?Buffer$1.from(this._data,this._encoding||t||"utf8"):this._data,a=typeof e=="string"?Buffer$1.from(e,t||this._encoding||"utf8"):e;this._data=Buffer$1.concat([s,a]);}this._encoding=t,r&&r();}_writev(e,t){}_destroy(e,t){}_final(e){}write(e,t,r){const s=typeof t=="string"?this._encoding:"utf8",a=typeof t=="function"?t:typeof r=="function"?r:void 0;return this._write(e,s,a),true}setDefaultEncoding(e){return this}end(e,t,r){const s=typeof e=="function"?e:typeof t=="function"?t:typeof r=="function"?r:void 0;if(this.writableEnded)return s&&s(),this;const a=e===s?void 0:e;if(a){const u=t===s?void 0:t;this.write(a,u,s);}return this.writableEnded=true,this.writableFinished=true,this.emit("close"),this.emit("finish"),this}cork(){}uncork(){}destroy(e){return this.destroyed=true,delete this._data,this.removeAllListeners(),this}compose(e,t){throw new Error("Method not implemented.")}};const c$2=class c{allowHalfOpen=true;_destroy;constructor(e=new i$1,t=new l$1){Object.assign(this,e),Object.assign(this,t),this._destroy=g(e._destroy,t._destroy);}};function _$1(){return Object.assign(c$2.prototype,i$1.prototype),Object.assign(c$2.prototype,l$1.prototype),c$2}function g(...n){return function(...e){for(const t of n)t(...e);}}const m=_$1();let A$2 = class A extends m{__unenv__={};bufferSize=0;bytesRead=0;bytesWritten=0;connecting=false;destroyed=false;pending=false;localAddress="";localPort=0;remoteAddress="";remoteFamily="";remotePort=0;autoSelectFamilyAttemptedAddresses=[];readyState="readOnly";constructor(e){super();}write(e,t,r){return  false}connect(e,t,r){return this}end(e,t,r){return this}setEncoding(e){return this}pause(){return this}resume(){return this}setTimeout(e,t){return this}setNoDelay(e){return this}setKeepAlive(e,t){return this}address(){return {}}unref(){return this}ref(){return this}destroySoon(){this.destroy();}resetAndDestroy(){const e=new Error("ERR_SOCKET_CLOSED");return e.code="ERR_SOCKET_CLOSED",this.destroy(e),this}};class y extends i$1{aborted=false;httpVersion="1.1";httpVersionMajor=1;httpVersionMinor=1;complete=true;connection;socket;headers={};trailers={};method="GET";url="/";statusCode=200;statusMessage="";closed=false;errored=null;readable=false;constructor(e){super(),this.socket=this.connection=e||new A$2;}get rawHeaders(){const e=this.headers,t=[];for(const r in e)if(Array.isArray(e[r]))for(const s of e[r])t.push(r,s);else t.push(r,e[r]);return t}get rawTrailers(){return []}setTimeout(e,t){return this}get headersDistinct(){return p(this.headers)}get trailersDistinct(){return p(this.trailers)}}function p(n){const e={};for(const[t,r]of Object.entries(n))t&&(e[t]=(Array.isArray(r)?r:[r]).filter(Boolean));return e}class w extends l$1{statusCode=200;statusMessage="";upgrading=false;chunkedEncoding=false;shouldKeepAlive=false;useChunkedEncodingByDefault=false;sendDate=false;finished=false;headersSent=false;strictContentLength=false;connection=null;socket=null;req;_headers={};constructor(e){super(),this.req=e;}assignSocket(e){e._httpMessage=this,this.socket=e,this.connection=e,this.emit("socket",e),this._flush();}_flush(){this.flushHeaders();}detachSocket(e){}writeContinue(e){}writeHead(e,t,r){e&&(this.statusCode=e),typeof t=="string"&&(this.statusMessage=t,t=void 0);const s=r||t;if(s&&!Array.isArray(s))for(const a in s)this.setHeader(a,s[a]);return this.headersSent=true,this}writeProcessing(){}setTimeout(e,t){return this}appendHeader(e,t){e=e.toLowerCase();const r=this._headers[e],s=[...Array.isArray(r)?r:[r],...Array.isArray(t)?t:[t]].filter(Boolean);return this._headers[e]=s.length>1?s:s[0],this}setHeader(e,t){return this._headers[e.toLowerCase()]=t,this}setHeaders(e){for(const[t,r]of Object.entries(e))this.setHeader(t,r);return this}getHeader(e){return this._headers[e.toLowerCase()]}getHeaders(){return this._headers}getHeaderNames(){return Object.keys(this._headers)}hasHeader(e){return e.toLowerCase()in this._headers}removeHeader(e){delete this._headers[e.toLowerCase()];}addTrailers(e){}flushHeaders(){}writeEarlyHints(e,t){typeof t=="function"&&t();}}const E$1=(()=>{const n=function(){};return n.prototype=Object.create(null),n})();function R(n={}){const e=new E$1,t=Array.isArray(n)||H$1(n)?n:Object.entries(n);for(const[r,s]of t)if(s){if(e[r]===void 0){e[r]=s;continue}e[r]=[...Array.isArray(e[r])?e[r]:[e[r]],...Array.isArray(s)?s:[s]];}return e}function H$1(n){return typeof n?.entries=="function"}function S$1(n={}){if(n instanceof Headers)return n;const e=new Headers;for(const[t,r]of Object.entries(n))if(r!==void 0){if(Array.isArray(r)){for(const s of r)e.append(t,String(s));continue}e.set(t,String(r));}return e}const C$1=new Set([101,204,205,304]);async function b(n,e){const t=new y,r=new w(t);t.url=e.url?.toString()||"/";let s;if(!t.url.startsWith("/")){const d=new URL(t.url);s=d.host,t.url=d.pathname+d.search+d.hash;}t.method=e.method||"GET",t.headers=R(e.headers||{}),t.headers.host||(t.headers.host=e.host||s||"localhost"),t.connection.encrypted=t.connection.encrypted||e.protocol==="https",t.body=e.body||null,t.__unenv__=e.context,await n(t,r);let a=r._data;(C$1.has(r.statusCode)||t.method.toUpperCase()==="HEAD")&&(a=null,delete r._headers["content-length"]);const u={status:r.statusCode,statusText:r.statusMessage,headers:r._headers,body:a};return t.destroy(),r.destroy(),u}async function O$2(n,e,t={}){try{const r=await b(n,{url:e,...t});return new Response(r.body,{status:r.status,statusText:r.statusText,headers:S$1(r.headers)})}catch(r){return new Response(r.toString(),{status:Number.parseInt(r.statusCode||r.code)||500,statusText:r.statusText})}}
 
 function hasProp(obj, prop) {
   try {
@@ -1206,7 +630,7 @@ class H3Error extends Error {
   toJSON() {
     const obj = {
       message: this.message,
-      statusCode: sanitizeStatusCode(this.statusCode, 500),
+      statusCode: sanitizeStatusCode(this.statusCode, 500)
     };
     if (this.statusMessage) {
       obj.statusMessage = sanitizeStatusMessage(this.statusMessage);
@@ -1225,19 +649,20 @@ function createError$1(input) {
     return input;
   }
   const err = new H3Error(input.message ?? input.statusMessage ?? "", {
-    cause: input.cause || input,
+    cause: input.cause || input
   });
   if (hasProp(input, "stack")) {
     try {
       Object.defineProperty(err, "stack", {
         get() {
           return input.stack;
-        },
+        }
       });
     } catch {
       try {
         err.stack = input.stack;
-      } catch {}
+      } catch {
+      }
     }
   }
   if (input.data) {
@@ -1279,7 +704,7 @@ function sendError(event, error, debug) {
     statusCode: h3Error.statusCode,
     statusMessage: h3Error.statusMessage,
     stack: [],
-    data: h3Error.data,
+    data: h3Error.data
   };
   if (debug) {
     responseBody.stack = (h3Error.stack || "").split("\n").map((l) => l.trim());
@@ -1309,7 +734,7 @@ function assertMethod(event, expected, allowHead) {
   if (!isMethod(event, expected)) {
     throw createError$1({
       statusCode: 405,
-      statusMessage: "HTTP method is not allowed.",
+      statusMessage: "HTTP method is not allowed."
     });
   }
 }
@@ -1336,10 +761,7 @@ function getRequestHost(event, opts = {}) {
   return event.node.req.headers.host || "localhost";
 }
 function getRequestProtocol(event, opts = {}) {
-  if (
-    opts.xForwardedProto !== false &&
-    event.node.req.headers["x-forwarded-proto"] === "https"
-  ) {
+  if (opts.xForwardedProto !== false && event.node.req.headers["x-forwarded-proto"] === "https") {
     return "https";
   }
   return event.node.req.connection?.encrypted ? "https" : "http";
@@ -1358,12 +780,7 @@ const RawBodySymbol = Symbol.for("h3RawBody");
 const PayloadMethods$1 = ["PATCH", "POST", "PUT", "DELETE"];
 function readRawBody(event, encoding = "utf8") {
   assertMethod(event, PayloadMethods$1);
-  const _rawBody =
-    event._requestBody ||
-    event.web?.request?.body ||
-    event.node.req[RawBodySymbol] ||
-    event.node.req.rawBody ||
-    event.node.req.body;
+  const _rawBody = event._requestBody || event.web?.request?.body || event.node.req[RawBodySymbol] || event.node.req.rawBody || event.node.req.body;
   if (_rawBody) {
     const promise2 = Promise.resolve(_rawBody).then((_resolved) => {
       if (Buffer.isBuffer(_resolved)) {
@@ -1372,33 +789,28 @@ function readRawBody(event, encoding = "utf8") {
       if (typeof _resolved.pipeTo === "function") {
         return new Promise((resolve, reject) => {
           const chunks = [];
-          _resolved
-            .pipeTo(
-              new WritableStream({
-                write(chunk) {
-                  chunks.push(chunk);
-                },
-                close() {
-                  resolve(Buffer.concat(chunks));
-                },
-                abort(reason) {
-                  reject(reason);
-                },
-              })
-            )
-            .catch(reject);
+          _resolved.pipeTo(
+            new WritableStream({
+              write(chunk) {
+                chunks.push(chunk);
+              },
+              close() {
+                resolve(Buffer.concat(chunks));
+              },
+              abort(reason) {
+                reject(reason);
+              }
+            })
+          ).catch(reject);
         });
       } else if (typeof _resolved.pipe === "function") {
         return new Promise((resolve, reject) => {
           const chunks = [];
-          _resolved
-            .on("data", (chunk) => {
-              chunks.push(chunk);
-            })
-            .on("end", () => {
-              resolve(Buffer.concat(chunks));
-            })
-            .on("error", reject);
+          _resolved.on("data", (chunk) => {
+            chunks.push(chunk);
+          }).on("end", () => {
+            resolve(Buffer.concat(chunks));
+          }).on("error", reject);
         });
       }
       if (_resolved.constructor === Object) {
@@ -1409,38 +821,24 @@ function readRawBody(event, encoding = "utf8") {
       }
       return Buffer.from(_resolved);
     });
-    return encoding
-      ? promise2.then((buff) => buff.toString(encoding))
-      : promise2;
+    return encoding ? promise2.then((buff) => buff.toString(encoding)) : promise2;
   }
-  if (
-    !Number.parseInt(event.node.req.headers["content-length"] || "") &&
-    !String(event.node.req.headers["transfer-encoding"] ?? "")
-      .split(",")
-      .map((e) => e.trim())
-      .filter(Boolean)
-      .includes("chunked")
-  ) {
+  if (!Number.parseInt(event.node.req.headers["content-length"] || "") && !String(event.node.req.headers["transfer-encoding"] ?? "").split(",").map((e) => e.trim()).filter(Boolean).includes("chunked")) {
     return Promise.resolve(undefined);
   }
-  const promise = (event.node.req[RawBodySymbol] = new Promise(
+  const promise = event.node.req[RawBodySymbol] = new Promise(
     (resolve, reject) => {
       const bodyData = [];
-      event.node.req
-        .on("error", (err) => {
-          reject(err);
-        })
-        .on("data", (chunk) => {
-          bodyData.push(chunk);
-        })
-        .on("end", () => {
-          resolve(Buffer.concat(bodyData));
-        });
+      event.node.req.on("error", (err) => {
+        reject(err);
+      }).on("data", (chunk) => {
+        bodyData.push(chunk);
+      }).on("end", () => {
+        resolve(Buffer.concat(bodyData));
+      });
     }
-  ));
-  const result = encoding
-    ? promise.then((buff) => buff.toString(encoding))
-    : promise;
+  );
+  const result = encoding ? promise.then((buff) => buff.toString(encoding)) : promise;
   return result;
 }
 function getRequestWebStream(event) {
@@ -1451,11 +849,7 @@ function getRequestWebStream(event) {
   if (bodyStream) {
     return bodyStream;
   }
-  const _hasRawBody =
-    RawBodySymbol in event.node.req ||
-    "rawBody" in event.node.req ||
-    "body" in event.node.req ||
-    "__unenv__" in event.node.req;
+  const _hasRawBody = RawBodySymbol in event.node.req || "rawBody" in event.node.req || "body" in event.node.req || "__unenv__" in event.node.req;
   if (_hasRawBody) {
     return new ReadableStream({
       async start(controller) {
@@ -1464,7 +858,7 @@ function getRequestWebStream(event) {
           controller.enqueue(_rawBody);
         }
         controller.close();
-      },
+      }
     });
   }
   return new ReadableStream({
@@ -1478,12 +872,12 @@ function getRequestWebStream(event) {
       event.node.req.on("error", (err) => {
         controller.error(err);
       });
-    },
+    }
   });
 }
 
 function handleCacheHeaders(event, opts) {
-  const cacheControls = ["public", ...(opts.cacheControls || [])];
+  const cacheControls = ["public", ...opts.cacheControls || []];
   let cacheMatched = false;
   if (opts.maxAge !== undefined) {
     cacheControls.push(`max-age=${+opts.maxAge}`, `s-maxage=${+opts.maxAge}`);
@@ -1516,7 +910,7 @@ function handleCacheHeaders(event, opts) {
 
 const MIMES = {
   html: "text/html",
-  json: "application/json",
+  json: "application/json"
 };
 
 const DISALLOWED_STATUS_CHARS = /[^\u0009\u0020-\u007E]/g;
@@ -1631,11 +1025,7 @@ function setResponseStatus(event, code, text) {
   }
 }
 function defaultContentType(event, type) {
-  if (
-    type &&
-    event.node.res.statusCode !== 304 &&
-    !event.node.res.getHeader("content-type")
-  ) {
+  if (type && event.node.res.statusCode !== 304 && !event.node.res.getHeader("content-type")) {
     event.node.res.setHeader("content-type", type);
   }
 }
@@ -1654,7 +1044,10 @@ function getResponseHeader(event, name) {
 }
 function setResponseHeaders(event, headers) {
   for (const [name, value] of Object.entries(headers)) {
-    event.node.res.setHeader(name, value);
+    event.node.res.setHeader(
+      name,
+      value
+    );
   }
 }
 const setHeaders = setResponseHeaders;
@@ -1705,17 +1098,15 @@ function sendStream(event, stream) {
     return Promise.resolve();
   }
   if (hasProp(stream, "pipeTo") && typeof stream.pipeTo === "function") {
-    return stream
-      .pipeTo(
-        new WritableStream({
-          write(chunk) {
-            event.node.res.write(chunk);
-          },
-        })
-      )
-      .then(() => {
-        event.node.res.end();
-      });
+    return stream.pipeTo(
+      new WritableStream({
+        write(chunk) {
+          event.node.res.write(chunk);
+        }
+      })
+    ).then(() => {
+      event.node.res.end();
+    });
   }
   if (hasProp(stream, "pipe") && typeof stream.pipe === "function") {
     return new Promise((resolve, reject) => {
@@ -1765,12 +1156,7 @@ function sendWebResponse(event, response) {
   return sendStream(event, response.body);
 }
 
-const PayloadMethods = /* @__PURE__ */ new Set([
-  "PATCH",
-  "POST",
-  "PUT",
-  "DELETE",
-]);
+const PayloadMethods = /* @__PURE__ */ new Set(["PATCH", "POST", "PUT", "DELETE"]);
 const ignoredHeaders = /* @__PURE__ */ new Set([
   "transfer-encoding",
   "accept-encoding",
@@ -1779,7 +1165,7 @@ const ignoredHeaders = /* @__PURE__ */ new Set([
   "upgrade",
   "expect",
   "host",
-  "accept",
+  "accept"
 ]);
 async function proxyRequest(event, target, opts = {}) {
   let body;
@@ -1805,8 +1191,8 @@ async function proxyRequest(event, target, opts = {}) {
       body,
       duplex,
       ...opts.fetchOptions,
-      headers: fetchHeaders,
-    },
+      headers: fetchHeaders
+    }
   });
 }
 async function sendProxy(event, target, opts = {}) {
@@ -1816,13 +1202,13 @@ async function sendProxy(event, target, opts = {}) {
       headers: opts.headers,
       ignoreResponseError: true,
       // make $ofetch.raw transparent
-      ...opts.fetchOptions,
+      ...opts.fetchOptions
     });
   } catch (error) {
     throw createError$1({
       status: 502,
       statusMessage: "Bad Gateway",
-      cause: error,
+      cause: error
     });
   }
   event.node.res.statusCode = sanitizeStatusCode(
@@ -1890,7 +1276,7 @@ function getProxyRequestHeaders(event, opts) {
   const headers = /* @__PURE__ */ Object.create(null);
   const reqHeaders = getRequestHeaders(event);
   for (const name in reqHeaders) {
-    if (!ignoredHeaders.has(name) || (name === "host" && opts?.host)) {
+    if (!ignoredHeaders.has(name) || name === "host" && opts?.host) {
       headers[name] = reqHeaders[name];
     }
   }
@@ -1902,10 +1288,10 @@ function fetchWithEvent(event, req, init, options) {
     context: init?.context || event.context,
     headers: {
       ...getProxyRequestHeaders(event, {
-        host: typeof req === "string" && req.startsWith("/"),
+        host: typeof req === "string" && req.startsWith("/")
       }),
-      ...init?.headers,
-    },
+      ...init?.headers
+    }
   });
 }
 function _getFetch(_fetch) {
@@ -1953,7 +1339,7 @@ function mergeHeaders$1(defaults, ...inputs) {
 }
 
 class H3Event {
-  __is_event__ = true;
+  "__is_event__" = true;
   // Context
   node;
   // Node
@@ -1992,13 +1378,11 @@ class H3Event {
   }
   // --- Respoonse ---
   get handled() {
-    return (
-      this._handled || this.node.res.writableEnded || this.node.res.headersSent
-    );
+    return this._handled || this.node.res.writableEnded || this.node.res.headersSent;
   }
   respondWith(response) {
-    return Promise.resolve(response).then((_response) =>
-      sendWebResponse(this, _response)
+    return Promise.resolve(response).then(
+      (_response) => sendWebResponse(this, _response)
     );
   }
   // --- Utils ---
@@ -2045,7 +1429,7 @@ function defineEventHandler(handler) {
   }
   const _hooks = {
     onRequest: _normalizeArray(handler.onRequest),
-    onBeforeResponse: _normalizeArray(handler.onBeforeResponse),
+    onBeforeResponse: _normalizeArray(handler.onBeforeResponse)
   };
   const _handler = (event) => {
     return _callHandler(event, handler.handler, _hooks);
@@ -2056,7 +1440,7 @@ function defineEventHandler(handler) {
   return _handler;
 }
 function _normalizeArray(input) {
-  return input ? (Array.isArray(input) ? input : [input]) : undefined;
+  return input ? Array.isArray(input) ? input : [input] : undefined;
 }
 async function _callHandler(event, handler, hooks) {
   if (hooks.onRequest) {
@@ -2084,10 +1468,8 @@ function toEventHandler(input, _, _route) {
   if (!isEventHandler(input)) {
     console.warn(
       "[h3] Implicit event handler conversion is deprecated. Use `eventHandler()` or `fromNodeMiddleware()` to define event handlers.",
-      _route && _route !== "/"
-        ? `
-     Route: ${_route}`
-        : "",
+      _route && _route !== "/" ? `
+     Route: ${_route}` : "",
       `
      Handler: ${input}`
     );
@@ -2142,7 +1524,7 @@ function createApp(options = {}) {
     options,
     get websocket() {
       return getWebsocket();
-    },
+    }
   };
   return app;
 }
@@ -2156,7 +1538,9 @@ function use(app, arg1, arg2, arg3) {
       use(app, arg1, i, arg3);
     }
   } else if (typeof arg1 === "string") {
-    app.stack.push(normalizeLayer({ ...arg3, route: arg1, handler: arg2 }));
+    app.stack.push(
+      normalizeLayer({ ...arg3, route: arg1, handler: arg2 })
+    );
   } else if (typeof arg1 === "function") {
     app.stack.push(normalizeLayer({ ...arg2, handler: arg1 }));
   } else {
@@ -2167,8 +1551,7 @@ function use(app, arg1, arg2, arg3) {
 function createAppEventHandler(stack, options) {
   const spacing = options.debug ? 2 : undefined;
   return eventHandler(async (event) => {
-    event.node.req.originalUrl =
-      event.node.req.originalUrl || event.node.req.url || "/";
+    event.node.req.originalUrl = event.node.req.originalUrl || event.node.req.url || "/";
     const _reqPath = event._path || event.node.req.url || "/";
     let _layerPath;
     if (options.onRequest) {
@@ -2214,7 +1597,7 @@ function createAppEventHandler(stack, options) {
     if (!event.handled) {
       throw createError$1({
         statusCode: 404,
-        statusMessage: `Cannot find any path matching ${event.path || "/"}.`,
+        statusMessage: `Cannot find any path matching ${event.path || "/"}.`
       });
     }
     if (options.onAfterResponse) {
@@ -2246,7 +1629,7 @@ function createResolver(stack) {
         res = {
           ...res,
           ..._res,
-          route: joinURL(res.route || "/", _res.route || "/"),
+          route: joinURL(res.route || "/", _res.route || "/")
         };
       }
       return res;
@@ -2266,7 +1649,7 @@ function normalizeLayer(input) {
   return {
     route: withoutTrailingSlash(input.route),
     match: input.match,
-    handler,
+    handler
   };
 }
 function handleHandlerResponse(event, val, jsonSpace) {
@@ -2307,7 +1690,7 @@ function handleHandlerResponse(event, val, jsonSpace) {
   }
   throw createError$1({
     statusCode: 500,
-    statusMessage: `[h3] Cannot send ${valType} as response.`,
+    statusMessage: `[h3] Cannot send ${valType} as response.`
   });
 }
 function cachedFn(fn) {
@@ -2327,7 +1710,7 @@ function websocketOptions(evResolver, appOptions) {
       const { pathname } = typeof url === "string" ? parseURL(url) : url;
       const resolved = await evResolver(pathname);
       return resolved?.handler?.__websocket__ || {};
-    },
+    }
   };
 }
 
@@ -2340,7 +1723,7 @@ const RouterMethods = [
   "post",
   "put",
   "trace",
-  "patch",
+  "patch"
 ];
 function createRouter(opts = {}) {
   const _router = createRouter$1({});
@@ -2362,8 +1745,7 @@ function createRouter(opts = {}) {
     }
     return router;
   };
-  router.use = router.add = (path, handler, method) =>
-    addRoute(path, handler, method || "all");
+  router.use = router.add = (path, handler, method) => addRoute(path, handler, method || "all");
   for (const method of RouterMethods) {
     router[method] = (path, handle) => router.add(path, handle, method);
   }
@@ -2378,8 +1760,8 @@ function createRouter(opts = {}) {
         error: createError$1({
           statusCode: 404,
           name: "Not Found",
-          statusMessage: `Cannot find any route matching ${path || "/"}.`,
-        }),
+          statusMessage: `Cannot find any route matching ${path || "/"}.`
+        })
       };
     }
     let handler = matched.handlers[method] || matched.handlers.all;
@@ -2406,15 +1788,18 @@ function createRouter(opts = {}) {
         error: createError$1({
           statusCode: 405,
           name: "Method Not Allowed",
-          statusMessage: `Method ${method} is not allowed on this route.`,
-        }),
+          statusMessage: `Method ${method} is not allowed on this route.`
+        })
       };
     }
     return { matched, handler };
   };
   const isPreemptive = opts.preemptive || opts.preemtive;
   router.handler = eventHandler((event) => {
-    const match = matchHandler(event.path, event.method.toLowerCase());
+    const match = matchHandler(
+      event.path,
+      event.method.toLowerCase()
+    );
     if ("error" in match) {
       if (isPreemptive) {
         throw match.error;
@@ -2440,7 +1825,7 @@ function createRouter(opts = {}) {
     }
     let res = {
       route: match.matched.path,
-      handler: match.handler,
+      handler: match.handler
     };
     if (match.handler.__resolve__) {
       const _res = await match.handler.__resolve__(path);
@@ -2454,7 +1839,7 @@ function createRouter(opts = {}) {
   return router;
 }
 function toNodeListener(app) {
-  const toNodeHandle = async function (req, res) {
+  const toNodeHandle = async function(req, res) {
     const event = createEvent(req, res);
     try {
       await app.handler(event);
@@ -2499,14 +1884,12 @@ function flatHooks(configHooks, hooks = {}, parentName) {
 }
 const defaultTask = { run: (function_) => function_() };
 const _createTask = () => defaultTask;
-const createTask =
-  typeof console.createTask !== "undefined" ? console.createTask : _createTask;
+const createTask = typeof console.createTask !== "undefined" ? console.createTask : _createTask;
 function serialTaskCaller(hooks, args) {
   const name = args.shift();
   const task = createTask(name);
   return hooks.reduce(
-    (promise, hookFunction) =>
-      promise.then(() => task.run(() => hookFunction(...args))),
+    (promise, hookFunction) => promise.then(() => task.run(() => hookFunction(...args))),
     Promise.resolve()
   );
 }
@@ -2534,7 +1917,8 @@ class Hookable {
   }
   hook(name, function_, options = {}) {
     if (!name || typeof function_ !== "function") {
-      return () => {};
+      return () => {
+      };
     }
     const originalName = name;
     let dep;
@@ -2545,9 +1929,7 @@ class Hookable {
     if (dep && !options.allowDeprecated) {
       let message = dep.message;
       if (!message) {
-        message =
-          `${originalName} hook has been deprecated` +
-          (dep.to ? `, please use ${dep.to}` : "");
+        message = `${originalName} hook has been deprecated` + (dep.to ? `, please use ${dep.to}` : "");
       }
       if (!this._deprecatedMessages) {
         this._deprecatedMessages = /* @__PURE__ */ new Set();
@@ -2561,9 +1943,10 @@ class Hookable {
       try {
         Object.defineProperty(function_, "name", {
           get: () => "_" + name.replace(/\W+/g, "_") + "_hook_cb",
-          configurable: true,
+          configurable: true
         });
-      } catch {}
+      } catch {
+      }
     }
     this._hooks[name] = this._hooks[name] || [];
     this._hooks[name].push(function_);
@@ -2599,8 +1982,7 @@ class Hookable {
     }
   }
   deprecateHook(name, deprecated) {
-    this._deprecatedHooks[name] =
-      typeof deprecated === "string" ? { to: deprecated } : deprecated;
+    this._deprecatedHooks[name] = typeof deprecated === "string" ? { to: deprecated } : deprecated;
     const _hooks = this._hooks[name] || [];
     delete this._hooks[name];
     for (const hook of _hooks) {
@@ -2615,8 +1997,8 @@ class Hookable {
   }
   addHooks(configHooks) {
     const hooks = flatHooks(configHooks);
-    const removeFns = Object.keys(hooks).map((key) =>
-      this.hook(key, hooks[key])
+    const removeFns = Object.keys(hooks).map(
+      (key) => this.hook(key, hooks[key])
     );
     return () => {
       for (const unreg of removeFns.splice(0, removeFns.length)) {
@@ -2644,10 +2026,7 @@ class Hookable {
     return this.callHookWith(parallelTaskCaller, name, ...arguments_);
   }
   callHookWith(caller, name, ...arguments_) {
-    const event =
-      this._before || this._after
-        ? { name, args: arguments_, context: {} }
-        : void 0;
+    const event = this._before || this._after ? { name, args: arguments_, context: {} } : void 0;
     if (this._before) {
       callEachWith(this._before, event);
     }
@@ -2696,15 +2075,7 @@ function createHooks() {
   return new Hookable();
 }
 
-const s$1 = globalThis.Headers,
-  i = globalThis.AbortController,
-  l =
-    globalThis.fetch ||
-    (() => {
-      throw new Error(
-        "[node-fetch-native] Failed to fetch: `globalThis.fetch` is not available!"
-      );
-    });
+const s$1=globalThis.Headers,i=globalThis.AbortController,l=globalThis.fetch||(()=>{throw new Error("[node-fetch-native] Failed to fetch: `globalThis.fetch` is not available!")});
 
 class FetchError extends Error {
   constructor(message, opts) {
@@ -2720,9 +2091,7 @@ function createFetchError(ctx) {
   const method = ctx.request?.method || ctx.options?.method || "GET";
   const url = ctx.request?.url || String(ctx.request) || "/";
   const requestStr = `[${method}] ${JSON.stringify(url)}`;
-  const statusStr = ctx.response
-    ? `${ctx.response.status} ${ctx.response.statusText}`
-    : "<no response>";
+  const statusStr = ctx.response ? `${ctx.response.status} ${ctx.response.statusText}` : "<no response>";
   const message = `${requestStr}: ${statusStr}${errorMessage ? ` ${errorMessage}` : ""}`;
   const fetchError = new FetchError(
     message,
@@ -2732,7 +2101,7 @@ function createFetchError(ctx) {
     Object.defineProperty(fetchError, key, {
       get() {
         return ctx[key];
-      },
+      }
     });
   }
   for (const [key, refKey] of [
@@ -2740,12 +2109,12 @@ function createFetchError(ctx) {
     ["status", "status"],
     ["statusCode", "status"],
     ["statusText", "statusText"],
-    ["statusMessage", "statusText"],
+    ["statusMessage", "statusText"]
   ]) {
     Object.defineProperty(fetchError, key, {
       get() {
         return ctx.response && ctx.response[refKey];
-      },
+      }
     });
   }
   return fetchError;
@@ -2774,16 +2143,13 @@ function isJSONSerializable(value) {
   if (value.buffer) {
     return false;
   }
-  return (
-    (value.constructor && value.constructor.name === "Object") ||
-    typeof value.toJSON === "function"
-  );
+  return value.constructor && value.constructor.name === "Object" || typeof value.toJSON === "function";
 }
 const textTypes = /* @__PURE__ */ new Set([
   "image/svg",
   "application/xml",
   "application/xhtml",
-  "application/html",
+  "application/html"
 ]);
 const JSON_RE = /^application\/(?:[\w!#$%&*.^`~-]*\+)?json(;.+)?$/i;
 function detectResponseType(_contentType = "") {
@@ -2811,7 +2177,7 @@ function resolveFetchOptions(request, input, defaults, Headers) {
       ...defaults?.params,
       ...defaults?.query,
       ...input?.params,
-      ...input?.query,
+      ...input?.query
     };
   }
   return {
@@ -2819,7 +2185,7 @@ function resolveFetchOptions(request, input, defaults, Headers) {
     ...input,
     query,
     params: query,
-    headers,
+    headers
   };
 }
 function mergeHeaders(input, defaults, Headers) {
@@ -2828,9 +2194,7 @@ function mergeHeaders(input, defaults, Headers) {
   }
   const headers = new Headers(defaults);
   if (input) {
-    for (const [key, value] of Symbol.iterator in input || Array.isArray(input)
-      ? input
-      : new Headers(input)) {
+    for (const [key, value] of Symbol.iterator in input || Array.isArray(input) ? input : new Headers(input)) {
       headers.set(key, value);
     }
   }
@@ -2863,7 +2227,7 @@ const retryStatusCodes = /* @__PURE__ */ new Set([
   // Bad Gateway
   503,
   // Service Unavailable
-  504,
+  504
   // Gateway Timeout
 ]);
 const nullBodyResponses = /* @__PURE__ */ new Set([101, 204, 205, 304]);
@@ -2871,14 +2235,10 @@ function createFetch(globalOptions = {}) {
   const {
     fetch = globalThis.fetch,
     Headers = globalThis.Headers,
-    AbortController = globalThis.AbortController,
+    AbortController = globalThis.AbortController
   } = globalOptions;
   async function onError(context) {
-    const isAbort =
-      (context.error &&
-        context.error.name === "AbortError" &&
-        !context.options.timeout) ||
-      false;
+    const isAbort = context.error && context.error.name === "AbortError" && !context.options.timeout || false;
     if (context.options.retry !== false && !isAbort) {
       let retries;
       if (typeof context.options.retry === "number") {
@@ -2886,23 +2246,15 @@ function createFetch(globalOptions = {}) {
       } else {
         retries = isPayloadMethod(context.options.method) ? 0 : 1;
       }
-      const responseCode = (context.response && context.response.status) || 500;
-      if (
-        retries > 0 &&
-        (Array.isArray(context.options.retryStatusCodes)
-          ? context.options.retryStatusCodes.includes(responseCode)
-          : retryStatusCodes.has(responseCode))
-      ) {
-        const retryDelay =
-          typeof context.options.retryDelay === "function"
-            ? context.options.retryDelay(context)
-            : context.options.retryDelay || 0;
+      const responseCode = context.response && context.response.status || 500;
+      if (retries > 0 && (Array.isArray(context.options.retryStatusCodes) ? context.options.retryStatusCodes.includes(responseCode) : retryStatusCodes.has(responseCode))) {
+        const retryDelay = typeof context.options.retryDelay === "function" ? context.options.retryDelay(context) : context.options.retryDelay || 0;
         if (retryDelay > 0) {
           await new Promise((resolve) => setTimeout(resolve, retryDelay));
         }
         return $fetchRaw(context.request, {
           ...context.options,
-          retry: retries - 1,
+          retry: retries - 1
         });
       }
     }
@@ -2922,7 +2274,7 @@ function createFetch(globalOptions = {}) {
         Headers
       ),
       response: void 0,
-      error: void 0,
+      error: void 0
     };
     if (context.options.method) {
       context.options.method = context.options.method.toUpperCase();
@@ -2947,10 +2299,7 @@ function createFetch(globalOptions = {}) {
     }
     if (context.options.body && isPayloadMethod(context.options.method)) {
       if (isJSONSerializable(context.options.body)) {
-        context.options.body =
-          typeof context.options.body === "string"
-            ? context.options.body
-            : JSON.stringify(context.options.body);
+        context.options.body = typeof context.options.body === "string" ? context.options.body : JSON.stringify(context.options.body);
         context.options.headers = new Headers(context.options.headers || {});
         if (!context.options.headers.has("content-type")) {
           context.options.headers.set("content-type", "application/json");
@@ -2960,8 +2309,7 @@ function createFetch(globalOptions = {}) {
         }
       } else if (
         // ReadableStream Body
-        ("pipeTo" in context.options.body &&
-          typeof context.options.body.pipeTo === "function") || // Node.js Stream Body
+        "pipeTo" in context.options.body && typeof context.options.body.pipeTo === "function" || // Node.js Stream Body
         typeof context.options.body.pipe === "function"
       ) {
         if (!("duplex" in context.options)) {
@@ -2983,11 +2331,17 @@ function createFetch(globalOptions = {}) {
       context.options.signal = controller.signal;
     }
     try {
-      context.response = await fetch(context.request, context.options);
+      context.response = await fetch(
+        context.request,
+        context.options
+      );
     } catch (error) {
       context.error = error;
       if (context.options.onRequestError) {
-        await callHooks(context, context.options.onRequestError);
+        await callHooks(
+          context,
+          context.options.onRequestError
+        );
       }
       return await onError(context);
     } finally {
@@ -2995,19 +2349,12 @@ function createFetch(globalOptions = {}) {
         clearTimeout(abortTimeout);
       }
     }
-    const hasBody =
-      (context.response.body || // https://github.com/unjs/ofetch/issues/324
-        // https://github.com/unjs/ofetch/issues/294
-        // https://github.com/JakeChampion/fetch/issues/1454
-        context.response._bodyInit) &&
-      !nullBodyResponses.has(context.response.status) &&
-      context.options.method !== "HEAD";
+    const hasBody = (context.response.body || // https://github.com/unjs/ofetch/issues/324
+    // https://github.com/unjs/ofetch/issues/294
+    // https://github.com/JakeChampion/fetch/issues/1454
+    context.response._bodyInit) && !nullBodyResponses.has(context.response.status) && context.options.method !== "HEAD";
     if (hasBody) {
-      const responseType =
-        (context.options.parseResponse
-          ? "json"
-          : context.options.responseType) ||
-        detectResponseType(context.response.headers.get("content-type") || "");
+      const responseType = (context.options.parseResponse ? "json" : context.options.responseType) || detectResponseType(context.response.headers.get("content-type") || "");
       switch (responseType) {
         case "json": {
           const data = await context.response.text();
@@ -3016,8 +2363,7 @@ function createFetch(globalOptions = {}) {
           break;
         }
         case "stream": {
-          context.response._data =
-            context.response.body || context.response._bodyInit;
+          context.response._data = context.response.body || context.response._bodyInit;
           break;
         }
         default: {
@@ -3026,15 +2372,17 @@ function createFetch(globalOptions = {}) {
       }
     }
     if (context.options.onResponse) {
-      await callHooks(context, context.options.onResponse);
+      await callHooks(
+        context,
+        context.options.onResponse
+      );
     }
-    if (
-      !context.options.ignoreResponseError &&
-      context.response.status >= 400 &&
-      context.response.status < 600
-    ) {
+    if (!context.options.ignoreResponseError && context.response.status >= 400 && context.response.status < 600) {
       if (context.options.onResponseError) {
-        await callHooks(context, context.options.onResponseError);
+        await callHooks(
+          context,
+          context.options.onResponseError
+        );
       }
       return await onError(context);
     }
@@ -3046,16 +2394,15 @@ function createFetch(globalOptions = {}) {
   };
   $fetch.raw = $fetchRaw;
   $fetch.native = (...args) => fetch(...args);
-  $fetch.create = (defaultOptions = {}, customGlobalOptions = {}) =>
-    createFetch({
-      ...globalOptions,
-      ...customGlobalOptions,
-      defaults: {
-        ...globalOptions.defaults,
-        ...customGlobalOptions.defaults,
-        ...defaultOptions,
-      },
-    });
+  $fetch.create = (defaultOptions = {}, customGlobalOptions = {}) => createFetch({
+    ...globalOptions,
+    ...customGlobalOptions,
+    defaults: {
+      ...globalOptions.defaults,
+      ...customGlobalOptions.defaults,
+      ...defaultOptions
+    }
+  });
   return $fetch;
 }
 
@@ -3070,15 +2417,13 @@ function createNodeFetch() {
   const nodeFetchOptions = {
     agent(parsedURL) {
       return parsedURL.protocol === "http:" ? httpAgent : httpsAgent;
-    },
+    }
   };
   return function nodeFetchWithKeepAlive(input, init) {
     return l(input, { ...nodeFetchOptions, ...init });
   };
 }
-const fetch = globalThis.fetch
-  ? (...args) => globalThis.fetch(...args)
-  : createNodeFetch();
+const fetch = globalThis.fetch ? (...args) => globalThis.fetch(...args) : createNodeFetch();
 const Headers$1 = globalThis.Headers || s$1;
 const AbortController$1 = globalThis.AbortController || i;
 createFetch({ fetch, Headers: Headers$1, AbortController: AbortController$1 });
@@ -3098,7 +2443,7 @@ function asyncCall(function_, ...arguments_) {
 }
 function isPrimitive(value) {
   const type = typeof value;
-  return value === null || (type !== "object" && type !== "function");
+  return value === null || type !== "object" && type !== "function";
 }
 function isPureObject(value) {
   const proto = Object.getPrototypeOf(value);
@@ -3136,7 +2481,10 @@ function base64Decode(input) {
   if (globalThis.Buffer) {
     return Buffer.from(input, "base64");
   }
-  return Uint8Array.from(globalThis.atob(input), (c) => c.codePointAt(0));
+  return Uint8Array.from(
+    globalThis.atob(input),
+    (c) => c.codePointAt(0)
+  );
 }
 function base64Encode(input) {
   if (globalThis.Buffer) {
@@ -3163,7 +2511,7 @@ const storageKeyProperties = [
   "getKeys",
   "clear",
   "mount",
-  "unmount",
+  "unmount"
 ];
 function prefixStorage(storage, base) {
   base = normalizeBaseKey(base);
@@ -3172,27 +2520,19 @@ function prefixStorage(storage, base) {
   }
   const nsStorage = { ...storage };
   for (const property of storageKeyProperties) {
-    nsStorage[property] = (key = "", ...args) =>
+    nsStorage[property] = (key = "", ...args) => (
       // @ts-ignore
-      storage[property](base + key, ...args);
+      storage[property](base + key, ...args)
+    );
   }
-  nsStorage.getKeys = (key = "", ...arguments_) =>
-    storage
-      .getKeys(base + key, ...arguments_)
-      .then((keys) => keys.map((key2) => key2.slice(base.length)));
+  nsStorage.getKeys = (key = "", ...arguments_) => storage.getKeys(base + key, ...arguments_).then((keys) => keys.map((key2) => key2.slice(base.length)));
   return nsStorage;
 }
 function normalizeKey$1(key) {
   if (!key) {
     return "";
   }
-  return (
-    key
-      .split("?")[0]
-      ?.replace(/[/\\]/g, ":")
-      .replace(/:+/g, ":")
-      .replace(/^:|:$/g, "") || ""
-  );
+  return key.split("?")[0]?.replace(/[/\\]/g, ":").replace(/:+/g, ":").replace(/^:|:$/g, "") || "";
 }
 function joinKeys(...keys) {
   return normalizeKey$1(keys.join(":"));
@@ -3256,7 +2596,7 @@ const memory = defineDriver$1(() => {
     },
     dispose() {
       data.clear();
-    },
+    }
   };
 });
 
@@ -3266,7 +2606,7 @@ function createStorage(options = {}) {
     mountpoints: [""],
     watching: false,
     watchListeners: [],
-    unwatch: {},
+    unwatch: {}
   };
   const getMount = (key) => {
     for (const base of context.mountpoints) {
@@ -3274,31 +2614,24 @@ function createStorage(options = {}) {
         return {
           base,
           relativeKey: key.slice(base.length),
-          driver: context.mounts[base],
+          driver: context.mounts[base]
         };
       }
     }
     return {
       base: "",
       relativeKey: key,
-      driver: context.mounts[""],
+      driver: context.mounts[""]
     };
   };
   const getMounts = (base, includeParent) => {
-    return context.mountpoints
-      .filter(
-        (mountpoint) =>
-          mountpoint.startsWith(base) ||
-          (includeParent && base.startsWith(mountpoint))
-      )
-      .map((mountpoint) => ({
-        relativeBase:
-          base.length > mountpoint.length
-            ? base.slice(mountpoint.length)
-            : void 0,
-        mountpoint,
-        driver: context.mounts[mountpoint],
-      }));
+    return context.mountpoints.filter(
+      (mountpoint) => mountpoint.startsWith(base) || includeParent && base.startsWith(mountpoint)
+    ).map((mountpoint) => ({
+      relativeBase: base.length > mountpoint.length ? base.slice(mountpoint.length) : void 0,
+      mountpoint,
+      driver: context.mounts[mountpoint]
+    }));
   };
   const onChange = (event, key) => {
     if (!context.watching) {
@@ -3340,7 +2673,7 @@ function createStorage(options = {}) {
         batch = {
           driver: mount.driver,
           base: mount.base,
-          items: [],
+          items: []
         };
         batches.set(mount.base, batch);
       }
@@ -3350,16 +2683,13 @@ function createStorage(options = {}) {
       const isStringItem = typeof item === "string";
       const key = normalizeKey$1(isStringItem ? item : item.key);
       const value = isStringItem ? void 0 : item.value;
-      const options2 =
-        isStringItem || !item.options
-          ? commonOptions
-          : { ...commonOptions, ...item.options };
+      const options2 = isStringItem || !item.options ? commonOptions : { ...commonOptions, ...item.options };
       const mount = getMount(key);
       getBatch(mount).items.push({
         key,
         value,
         relativeKey: mount.relativeKey,
-        options: options2,
+        options: options2
       });
     }
     return Promise.all([...batches.values()].map((batch) => cb(batch))).then(
@@ -3376,8 +2706,8 @@ function createStorage(options = {}) {
     getItem(key, opts = {}) {
       key = normalizeKey$1(key);
       const { relativeKey, driver } = getMount(key);
-      return asyncCall(driver.getItem, relativeKey, opts).then((value) =>
-        destr(value)
+      return asyncCall(driver.getItem, relativeKey, opts).then(
+        (value) => destr(value)
       );
     },
     getItems(items, commonOptions = {}) {
@@ -3387,13 +2717,13 @@ function createStorage(options = {}) {
             batch.driver.getItems,
             batch.items.map((item) => ({
               key: item.relativeKey,
-              options: item.options,
+              options: item.options
             })),
             commonOptions
-          ).then((r) =>
-            r.map((item) => ({
+          ).then(
+            (r) => r.map((item) => ({
               key: joinKeys(batch.base, item.key),
-              value: destr(item.value),
+              value: destr(item.value)
             }))
           );
         }
@@ -3405,7 +2735,7 @@ function createStorage(options = {}) {
               item.options
             ).then((value) => ({
               key: item.key,
-              value: destr(value),
+              value: destr(value)
             }));
           })
         );
@@ -3417,8 +2747,8 @@ function createStorage(options = {}) {
       if (driver.getItemRaw) {
         return asyncCall(driver.getItemRaw, relativeKey, opts);
       }
-      return asyncCall(driver.getItem, relativeKey, opts).then((value) =>
-        deserializeRaw(value)
+      return asyncCall(driver.getItem, relativeKey, opts).then(
+        (value) => deserializeRaw(value)
       );
     },
     async setItem(key, value, opts = {}) {
@@ -3443,7 +2773,7 @@ function createStorage(options = {}) {
             batch.items.map((item) => ({
               key: item.relativeKey,
               value: stringify(item.value),
-              options: item.options,
+              options: item.options
             })),
             commonOptions
           );
@@ -3556,15 +2886,12 @@ function createStorage(options = {}) {
         }
         maskedMounts = [
           mount.mountpoint,
-          ...maskedMounts.filter((p) => !p.startsWith(mount.mountpoint)),
+          ...maskedMounts.filter((p) => !p.startsWith(mount.mountpoint))
         ];
       }
-      const shouldFilterByDepth =
-        opts.maxDepth !== void 0 && !allMountsSupportMaxDepth;
+      const shouldFilterByDepth = opts.maxDepth !== void 0 && !allMountsSupportMaxDepth;
       return allKeys.filter(
-        (key) =>
-          (!shouldFilterByDepth || filterKeyByDepth(key, opts.maxDepth)) &&
-          filterKeyByBase(key, base)
+        (key) => (!shouldFilterByDepth || filterKeyByDepth(key, opts.maxDepth)) && filterKeyByBase(key, base)
       );
     },
     // Utils
@@ -3617,11 +2944,9 @@ function createStorage(options = {}) {
       }
       context.mounts[base] = driver;
       if (context.watching) {
-        Promise.resolve(watch(driver, onChange, base))
-          .then((unwatcher) => {
-            context.unwatch[base] = unwatcher;
-          })
-          .catch(console.error);
+        Promise.resolve(watch(driver, onChange, base)).then((unwatcher) => {
+          context.unwatch[base] = unwatcher;
+        }).catch(console.error);
       }
       return storage;
     },
@@ -3645,7 +2970,7 @@ function createStorage(options = {}) {
       const m = getMount(key);
       return {
         driver: m.driver,
-        base: m.base,
+        base: m.base
       };
     },
     getMounts(base = "", opts = {}) {
@@ -3653,7 +2978,7 @@ function createStorage(options = {}) {
       const mounts = getMounts(base, opts.parents);
       return mounts.map((m) => ({
         driver: m.driver,
-        base: m.mountpoint,
+        base: m.mountpoint
       }));
     },
     // Aliases
@@ -3662,14 +2987,13 @@ function createStorage(options = {}) {
     set: (key, value, opts = {}) => storage.setItem(key, value, opts),
     has: (key, opts = {}) => storage.hasItem(key, opts),
     del: (key, opts = {}) => storage.removeItem(key, opts),
-    remove: (key, opts = {}) => storage.removeItem(key, opts),
+    remove: (key, opts = {}) => storage.removeItem(key, opts)
   };
   return storage;
 }
 function watch(driver, onChange, base) {
-  return driver.watch
-    ? driver.watch((event, key) => onChange(event, base + key))
-    : () => {};
+  return driver.watch ? driver.watch((event, key) => onChange(event, base + key)) : () => {
+  };
 }
 async function dispose(driver) {
   if (typeof driver.dispose === "function") {
@@ -3677,37 +3001,33 @@ async function dispose(driver) {
   }
 }
 
-const _assets = {};
+const _assets = {
+
+};
 
 const normalizeKey = function normalizeKey(key) {
   if (!key) {
     return "";
   }
-  return (
-    key
-      .split("?")[0]
-      ?.replace(/[/\\]/g, ":")
-      .replace(/:+/g, ":")
-      .replace(/^:|:$/g, "") || ""
-  );
+  return key.split("?")[0]?.replace(/[/\\]/g, ":").replace(/:+/g, ":").replace(/^:|:$/g, "") || "";
 };
 
 const assets$1 = {
   getKeys() {
-    return Promise.resolve(Object.keys(_assets));
+    return Promise.resolve(Object.keys(_assets))
   },
-  hasItem(id) {
+  hasItem (id) {
     id = normalizeKey(id);
-    return Promise.resolve(id in _assets);
+    return Promise.resolve(id in _assets)
   },
-  getItem(id) {
+  getItem (id) {
     id = normalizeKey(id);
-    return Promise.resolve(_assets[id] ? _assets[id].import() : null);
+    return Promise.resolve(_assets[id] ? _assets[id].import() : null)
   },
-  getMeta(id) {
+  getMeta (id) {
     id = normalizeKey(id);
-    return Promise.resolve(_assets[id] ? _assets[id].meta : {});
-  },
+    return Promise.resolve(_assets[id] ? _assets[id].meta : {})
+  }
 };
 
 function defineDriver(factory) {
@@ -3747,10 +3067,7 @@ function unlink(path) {
   return promises.unlink(path).catch(ignoreNotfound);
 }
 function readdir(dir) {
-  return promises
-    .readdir(dir, { withFileTypes: true })
-    .catch(ignoreNotfound)
-    .then((r) => r || []);
+  return promises.readdir(dir, { withFileTypes: true }).catch(ignoreNotfound).then((r) => r || []);
 }
 async function ensuredir(dir) {
   if (existsSync(dir)) {
@@ -3821,7 +3138,7 @@ const unstorage_47drivers_47fs_45lite = defineDriver((opts = {}) => {
     name: DRIVER_NAME,
     options: opts,
     flags: {
-      maxDepth: true,
+      maxDepth: true
     },
     hasItem(key) {
       return existsSync(r(key));
@@ -3833,9 +3150,7 @@ const unstorage_47drivers_47fs_45lite = defineDriver((opts = {}) => {
       return readFile(r(key));
     },
     async getMeta(key) {
-      const { atime, mtime, size, birthtime, ctime } = await promises
-        .stat(r(key))
-        .catch(() => ({}));
+      const { atime, mtime, size, birthtime, ctime } = await promises.stat(r(key)).catch(() => ({}));
       return { atime, mtime, size, birthtime, ctime };
     },
     setItem(key, value) {
@@ -3864,33 +3179,21 @@ const unstorage_47drivers_47fs_45lite = defineDriver((opts = {}) => {
         return;
       }
       await rmRecursive(r("."));
-    },
+    }
   };
 });
 
 const storage = createStorage({});
 
-storage.mount("/assets", assets$1);
+storage.mount('/assets', assets$1);
 
-storage.mount(
-  "data",
-  unstorage_47drivers_47fs_45lite({ driver: "fsLite", base: "./.data/kv" })
-);
+storage.mount('data', unstorage_47drivers_47fs_45lite({"driver":"fsLite","base":"./.data/kv"}));
 
 function useStorage(base = "") {
   return base ? prefixStorage(storage, base) : storage;
 }
 
-const e = globalThis.process?.getBuiltinModule?.("crypto")?.hash,
-  r = "sha256",
-  s = "base64url";
-function digest(t) {
-  if (e) return e(r, t, s);
-  const o = createHash(r).update(t);
-  return globalThis.process?.versions?.webcontainer
-    ? o.digest().toString(s)
-    : o.digest(s);
-}
+const e=globalThis.process?.getBuiltinModule?.("crypto")?.hash,r="sha256",s="base64url";function digest(t){if(e)return e(r,t,s);const o=createHash(r).update(t);return globalThis.process?.versions?.webcontainer?o.digest().toString(s):o.digest(s)}
 
 const Hasher = /* @__PURE__ */ (() => {
   class Hasher2 {
@@ -3910,10 +3213,7 @@ const Hasher = /* @__PURE__ */ (() => {
       const objString = Object.prototype.toString.call(object);
       let objType = "";
       const objectLength = objString.length;
-      objType =
-        objectLength < 10
-          ? "unknown:[" + objString + "]"
-          : objString.slice(8, objectLength - 1);
+      objType = objectLength < 10 ? "unknown:[" + objString + "]" : objString.slice(8, objectLength - 1);
       objType = objType.toLowerCase();
       let objectNumber = null;
       if ((objectNumber = this.#context.get(object)) === void 0) {
@@ -3921,19 +3221,11 @@ const Hasher = /* @__PURE__ */ (() => {
       } else {
         return this.dispatch("[CIRCULAR:" + objectNumber + "]");
       }
-      if (
-        typeof Buffer !== "undefined" &&
-        Buffer.isBuffer &&
-        Buffer.isBuffer(object)
-      ) {
+      if (typeof Buffer !== "undefined" && Buffer.isBuffer && Buffer.isBuffer(object)) {
         this.write("buffer:");
         return this.write(object.toString("utf8"));
       }
-      if (
-        objType !== "object" &&
-        objType !== "function" &&
-        objType !== "asyncfunction"
-      ) {
+      if (objType !== "object" && objType !== "function" && objType !== "asyncfunction") {
         if (this[objType]) {
           this[objType](object);
         } else {
@@ -4059,9 +3351,9 @@ const Hasher = /* @__PURE__ */ (() => {
     "uint32array",
     "unt32array",
     "float32array",
-    "float64array",
+    "float64array"
   ]) {
-    Hasher2.prototype[type] = function (arr) {
+    Hasher2.prototype[type] = function(arr) {
       this.write(type + ":");
       return this.array([...arr], false);
     };
@@ -4070,12 +3362,10 @@ const Hasher = /* @__PURE__ */ (() => {
     if (typeof f !== "function") {
       return false;
     }
-    return (
-      Function.prototype.toString.call(f).slice(
-        -15
-        /* "[native code] }".length */
-      ) === "[native code] }"
-    );
+    return Function.prototype.toString.call(f).slice(
+      -15
+      /* "[native code] }".length */
+    ) === "[native code] }";
   }
   return Hasher2;
 })();
@@ -4085,9 +3375,7 @@ function serialize(object) {
   return hasher.buff;
 }
 function hash(value) {
-  return digest(typeof value === "string" ? value : serialize(value))
-    .replace(/[-_]/g, "")
-    .slice(0, 10);
+  return digest(typeof value === "string" ? value : serialize(value)).replace(/[-_]/g, "").slice(0, 10);
 }
 
 function defaultCacheOptions() {
@@ -4095,7 +3383,7 @@ function defaultCacheOptions() {
     name: "_",
     base: "/cache",
     swr: true,
-    maxAge: 1,
+    maxAge: 1
   };
 }
 function defineCachedFunction(fn, opts = {}) {
@@ -4106,17 +3394,11 @@ function defineCachedFunction(fn, opts = {}) {
   const integrity = opts.integrity || hash([fn, opts]);
   const validate = opts.validate || ((entry) => entry.value !== void 0);
   async function get(key, resolver, shouldInvalidateCache, event) {
-    const cacheKey = [opts.base, group, name, key + ".json"]
-      .filter(Boolean)
-      .join(":")
-      .replace(/:\/$/, ":index");
-    let entry =
-      (await useStorage()
-        .getItem(cacheKey)
-        .catch((error) => {
-          console.error(`[cache] Cache read error.`, error);
-          useNitroApp().captureError(error, { event, tags: ["cache"] });
-        })) || {};
+    const cacheKey = [opts.base, group, name, key + ".json"].filter(Boolean).join(":").replace(/:\/$/, ":index");
+    let entry = await useStorage().getItem(cacheKey).catch((error) => {
+      console.error(`[cache] Cache read error.`, error);
+      useNitroApp().captureError(error, { event, tags: ["cache"] });
+    }) || {};
     if (typeof entry !== "object") {
       entry = {};
       const error = new Error("Malformed data read from cache.");
@@ -4127,19 +3409,11 @@ function defineCachedFunction(fn, opts = {}) {
     if (ttl) {
       entry.expires = Date.now() + ttl;
     }
-    const expired =
-      shouldInvalidateCache ||
-      entry.integrity !== integrity ||
-      (ttl && Date.now() - (entry.mtime || 0) > ttl) ||
-      validate(entry) === false;
+    const expired = shouldInvalidateCache || entry.integrity !== integrity || ttl && Date.now() - (entry.mtime || 0) > ttl || validate(entry) === false;
     const _resolve = async () => {
       const isPending = pending[key];
       if (!isPending) {
-        if (
-          entry.value !== void 0 &&
-          (opts.staleMaxAge || 0) >= 0 &&
-          opts.swr === false
-        ) {
+        if (entry.value !== void 0 && (opts.staleMaxAge || 0) >= 0 && opts.swr === false) {
           entry.value = void 0;
           entry.integrity = void 0;
           entry.mtime = void 0;
@@ -4164,12 +3438,10 @@ function defineCachedFunction(fn, opts = {}) {
           if (opts.maxAge && !opts.swr) {
             setOpts = { ttl: opts.maxAge };
           }
-          const promise = useStorage()
-            .setItem(cacheKey, entry, setOpts)
-            .catch((error) => {
-              console.error(`[cache] Cache write error.`, error);
-              useNitroApp().captureError(error, { event, tags: ["cache"] });
-            });
+          const promise = useStorage().setItem(cacheKey, entry, setOpts).catch((error) => {
+            console.error(`[cache] Cache write error.`, error);
+            useNitroApp().captureError(error, { event, tags: ["cache"] });
+          });
           if (event?.waitUntil) {
             event.waitUntil(promise);
           }
@@ -4206,7 +3478,7 @@ function defineCachedFunction(fn, opts = {}) {
     );
     let value = entry.value;
     if (opts.transform) {
-      value = (await opts.transform(entry, ...args)) || value;
+      value = await opts.transform(entry, ...args) || value;
     }
     return value;
   };
@@ -4221,10 +3493,7 @@ function escapeKey(key) {
   return String(key).replace(/\W/g, "");
 }
 function defineCachedEventHandler(handler, opts = defaultCacheOptions()) {
-  const variableHeaderNames = (opts.varies || [])
-    .filter(Boolean)
-    .map((h) => h.toLowerCase())
-    .sort();
+  const variableHeaderNames = (opts.varies || []).filter(Boolean).map((h) => h.toLowerCase()).sort();
   const _opts = {
     ...opts,
     getKey: async (event) => {
@@ -4232,20 +3501,15 @@ function defineCachedEventHandler(handler, opts = defaultCacheOptions()) {
       if (customKey) {
         return escapeKey(customKey);
       }
-      const _path =
-        event.node.req.originalUrl || event.node.req.url || event.path;
+      const _path = event.node.req.originalUrl || event.node.req.url || event.path;
       let _pathname;
       try {
-        _pathname =
-          escapeKey(decodeURI(parseURL(_path).pathname)).slice(0, 16) ||
-          "index";
+        _pathname = escapeKey(decodeURI(parseURL(_path).pathname)).slice(0, 16) || "index";
       } catch {
         _pathname = "-";
       }
       const _hashedPath = `${_pathname}.${hash(_path)}`;
-      const _headers = variableHeaderNames
-        .map((header) => [header, event.node.req.headers[header]])
-        .map(([name, value]) => `${escapeKey(name)}.${hash(value)}`);
+      const _headers = variableHeaderNames.map((header) => [header, event.node.req.headers[header]]).map(([name, value]) => `${escapeKey(name)}.${hash(value)}`);
       return [_hashedPath, ..._headers].join(":");
     },
     validate: (entry) => {
@@ -4258,140 +3522,141 @@ function defineCachedEventHandler(handler, opts = defaultCacheOptions()) {
       if (entry.value.body === void 0) {
         return false;
       }
-      if (
-        entry.value.headers.etag === "undefined" ||
-        entry.value.headers["last-modified"] === "undefined"
-      ) {
+      if (entry.value.headers.etag === "undefined" || entry.value.headers["last-modified"] === "undefined") {
         return false;
       }
       return true;
     },
     group: opts.group || "nitro/handlers",
-    integrity: opts.integrity || hash([handler, opts]),
+    integrity: opts.integrity || hash([handler, opts])
   };
-  const _cachedHandler = cachedFunction(async (incomingEvent) => {
-    const variableHeaders = {};
-    for (const header of variableHeaderNames) {
-      const value = incomingEvent.node.req.headers[header];
-      if (value !== void 0) {
-        variableHeaders[header] = value;
+  const _cachedHandler = cachedFunction(
+    async (incomingEvent) => {
+      const variableHeaders = {};
+      for (const header of variableHeaderNames) {
+        const value = incomingEvent.node.req.headers[header];
+        if (value !== void 0) {
+          variableHeaders[header] = value;
+        }
       }
-    }
-    const reqProxy = cloneWithProxy(incomingEvent.node.req, {
-      headers: variableHeaders,
-    });
-    const resHeaders = {};
-    let _resSendBody;
-    const resProxy = cloneWithProxy(incomingEvent.node.res, {
-      statusCode: 200,
-      writableEnded: false,
-      writableFinished: false,
-      headersSent: false,
-      closed: false,
-      getHeader(name) {
-        return resHeaders[name];
-      },
-      setHeader(name, value) {
-        resHeaders[name] = value;
-        return this;
-      },
-      getHeaderNames() {
-        return Object.keys(resHeaders);
-      },
-      hasHeader(name) {
-        return name in resHeaders;
-      },
-      removeHeader(name) {
-        delete resHeaders[name];
-      },
-      getHeaders() {
-        return resHeaders;
-      },
-      end(chunk, arg2, arg3) {
-        if (typeof chunk === "string") {
-          _resSendBody = chunk;
-        }
-        if (typeof arg2 === "function") {
-          arg2();
-        }
-        if (typeof arg3 === "function") {
-          arg3();
-        }
-        return this;
-      },
-      write(chunk, arg2, arg3) {
-        if (typeof chunk === "string") {
-          _resSendBody = chunk;
-        }
-        if (typeof arg2 === "function") {
-          arg2(void 0);
-        }
-        if (typeof arg3 === "function") {
-          arg3();
-        }
-        return true;
-      },
-      writeHead(statusCode, headers2) {
-        this.statusCode = statusCode;
-        if (headers2) {
-          if (Array.isArray(headers2) || typeof headers2 === "string") {
-            throw new TypeError("Raw headers  is not supported.");
+      const reqProxy = cloneWithProxy(incomingEvent.node.req, {
+        headers: variableHeaders
+      });
+      const resHeaders = {};
+      let _resSendBody;
+      const resProxy = cloneWithProxy(incomingEvent.node.res, {
+        statusCode: 200,
+        writableEnded: false,
+        writableFinished: false,
+        headersSent: false,
+        closed: false,
+        getHeader(name) {
+          return resHeaders[name];
+        },
+        setHeader(name, value) {
+          resHeaders[name] = value;
+          return this;
+        },
+        getHeaderNames() {
+          return Object.keys(resHeaders);
+        },
+        hasHeader(name) {
+          return name in resHeaders;
+        },
+        removeHeader(name) {
+          delete resHeaders[name];
+        },
+        getHeaders() {
+          return resHeaders;
+        },
+        end(chunk, arg2, arg3) {
+          if (typeof chunk === "string") {
+            _resSendBody = chunk;
           }
-          for (const header in headers2) {
-            const value = headers2[header];
-            if (value !== void 0) {
-              this.setHeader(header, value);
+          if (typeof arg2 === "function") {
+            arg2();
+          }
+          if (typeof arg3 === "function") {
+            arg3();
+          }
+          return this;
+        },
+        write(chunk, arg2, arg3) {
+          if (typeof chunk === "string") {
+            _resSendBody = chunk;
+          }
+          if (typeof arg2 === "function") {
+            arg2(void 0);
+          }
+          if (typeof arg3 === "function") {
+            arg3();
+          }
+          return true;
+        },
+        writeHead(statusCode, headers2) {
+          this.statusCode = statusCode;
+          if (headers2) {
+            if (Array.isArray(headers2) || typeof headers2 === "string") {
+              throw new TypeError("Raw headers  is not supported.");
+            }
+            for (const header in headers2) {
+              const value = headers2[header];
+              if (value !== void 0) {
+                this.setHeader(
+                  header,
+                  value
+                );
+              }
             }
           }
+          return this;
         }
-        return this;
-      },
-    });
-    const event = createEvent(reqProxy, resProxy);
-    event.fetch = (url, fetchOptions) =>
-      fetchWithEvent(event, url, fetchOptions, {
-        fetch: useNitroApp().localFetch,
       });
-    event.$fetch = (url, fetchOptions) =>
-      fetchWithEvent(event, url, fetchOptions, {
-        fetch: globalThis.$fetch,
+      const event = createEvent(reqProxy, resProxy);
+      event.fetch = (url, fetchOptions) => fetchWithEvent(event, url, fetchOptions, {
+        fetch: useNitroApp().localFetch
       });
-    event.waitUntil = incomingEvent.waitUntil;
-    event.context = incomingEvent.context;
-    event.context.cache = {
-      options: _opts,
-    };
-    const body = (await handler(event)) || _resSendBody;
-    const headers = event.node.res.getHeaders();
-    headers.etag = String(headers.Etag || headers.etag || `W/"${hash(body)}"`);
-    headers["last-modified"] = String(
-      headers["Last-Modified"] ||
-        headers["last-modified"] ||
-        /* @__PURE__ */ new Date().toUTCString()
-    );
-    const cacheControl = [];
-    if (opts.swr) {
-      if (opts.maxAge) {
-        cacheControl.push(`s-maxage=${opts.maxAge}`);
+      event.$fetch = (url, fetchOptions) => fetchWithEvent(event, url, fetchOptions, {
+        fetch: globalThis.$fetch
+      });
+      event.waitUntil = incomingEvent.waitUntil;
+      event.context = incomingEvent.context;
+      event.context.cache = {
+        options: _opts
+      };
+      const body = await handler(event) || _resSendBody;
+      const headers = event.node.res.getHeaders();
+      headers.etag = String(
+        headers.Etag || headers.etag || `W/"${hash(body)}"`
+      );
+      headers["last-modified"] = String(
+        headers["Last-Modified"] || headers["last-modified"] || (/* @__PURE__ */ new Date()).toUTCString()
+      );
+      const cacheControl = [];
+      if (opts.swr) {
+        if (opts.maxAge) {
+          cacheControl.push(`s-maxage=${opts.maxAge}`);
+        }
+        if (opts.staleMaxAge) {
+          cacheControl.push(`stale-while-revalidate=${opts.staleMaxAge}`);
+        } else {
+          cacheControl.push("stale-while-revalidate");
+        }
+      } else if (opts.maxAge) {
+        cacheControl.push(`max-age=${opts.maxAge}`);
       }
-      if (opts.staleMaxAge) {
-        cacheControl.push(`stale-while-revalidate=${opts.staleMaxAge}`);
-      } else {
-        cacheControl.push("stale-while-revalidate");
+      if (cacheControl.length > 0) {
+        headers["cache-control"] = cacheControl.join(", ");
       }
-    } else if (opts.maxAge) {
-      cacheControl.push(`max-age=${opts.maxAge}`);
-    }
-    if (cacheControl.length > 0) {
-      headers["cache-control"] = cacheControl.join(", ");
-    }
-    const cacheEntry = {
-      code: event.node.res.statusCode,
-      headers,
-      body,
-    };
-    return cacheEntry;
-  }, _opts);
+      const cacheEntry = {
+        code: event.node.res.statusCode,
+        headers,
+        body
+      };
+      return cacheEntry;
+    },
+    _opts
+  );
   return defineEventHandler(async (event) => {
     if (opts.headersOnly) {
       if (handleCacheHeaders(event, { maxAge: opts.maxAge })) {
@@ -4399,24 +3664,27 @@ function defineCachedEventHandler(handler, opts = defaultCacheOptions()) {
       }
       return handler(event);
     }
-    const response = await _cachedHandler(event);
+    const response = await _cachedHandler(
+      event
+    );
     if (event.node.res.headersSent || event.node.res.writableEnded) {
       return response.body;
     }
-    if (
-      handleCacheHeaders(event, {
-        modifiedTime: new Date(response.headers["last-modified"]),
-        etag: response.headers.etag,
-        maxAge: opts.maxAge,
-      })
-    ) {
+    if (handleCacheHeaders(event, {
+      modifiedTime: new Date(response.headers["last-modified"]),
+      etag: response.headers.etag,
+      maxAge: opts.maxAge
+    })) {
       return;
     }
     event.node.res.statusCode = response.code;
     for (const name in response.headers) {
       const value = response.headers[name];
       if (name === "set-cookie") {
-        event.node.res.appendHeader(name, splitCookiesString(value));
+        event.node.res.appendHeader(
+          name,
+          splitCookiesString(value)
+        );
       } else {
         if (value !== void 0) {
           event.node.res.setHeader(name, value);
@@ -4440,96 +3708,96 @@ function cloneWithProxy(obj, overrides) {
         return true;
       }
       return Reflect.set(target, property, value, receiver);
-    },
+    }
   });
 }
 const cachedEventHandler = defineCachedEventHandler;
 
 function klona(x) {
-  if (typeof x !== "object") return x;
+	if (typeof x !== 'object') return x;
 
-  var k,
-    tmp,
-    str = Object.prototype.toString.call(x);
+	var k, tmp, str=Object.prototype.toString.call(x);
 
-  if (str === "[object Object]") {
-    if (x.constructor !== Object && typeof x.constructor === "function") {
-      tmp = new x.constructor();
-      for (k in x) {
-        if (x.hasOwnProperty(k) && tmp[k] !== x[k]) {
-          tmp[k] = klona(x[k]);
-        }
-      }
-    } else {
-      tmp = {}; // null
-      for (k in x) {
-        if (k === "__proto__") {
-          Object.defineProperty(tmp, k, {
-            value: klona(x[k]),
-            configurable: true,
-            enumerable: true,
-            writable: true,
-          });
-        } else {
-          tmp[k] = klona(x[k]);
-        }
-      }
-    }
-    return tmp;
-  }
+	if (str === '[object Object]') {
+		if (x.constructor !== Object && typeof x.constructor === 'function') {
+			tmp = new x.constructor();
+			for (k in x) {
+				if (x.hasOwnProperty(k) && tmp[k] !== x[k]) {
+					tmp[k] = klona(x[k]);
+				}
+			}
+		} else {
+			tmp = {}; // null
+			for (k in x) {
+				if (k === '__proto__') {
+					Object.defineProperty(tmp, k, {
+						value: klona(x[k]),
+						configurable: true,
+						enumerable: true,
+						writable: true,
+					});
+				} else {
+					tmp[k] = klona(x[k]);
+				}
+			}
+		}
+		return tmp;
+	}
 
-  if (str === "[object Array]") {
-    k = x.length;
-    for (tmp = Array(k); k--; ) {
-      tmp[k] = klona(x[k]);
-    }
-    return tmp;
-  }
+	if (str === '[object Array]') {
+		k = x.length;
+		for (tmp=Array(k); k--;) {
+			tmp[k] = klona(x[k]);
+		}
+		return tmp;
+	}
 
-  if (str === "[object Set]") {
-    tmp = new Set();
-    x.forEach(function (val) {
-      tmp.add(klona(val));
-    });
-    return tmp;
-  }
+	if (str === '[object Set]') {
+		tmp = new Set;
+		x.forEach(function (val) {
+			tmp.add(klona(val));
+		});
+		return tmp;
+	}
 
-  if (str === "[object Map]") {
-    tmp = new Map();
-    x.forEach(function (val, key) {
-      tmp.set(klona(key), klona(val));
-    });
-    return tmp;
-  }
+	if (str === '[object Map]') {
+		tmp = new Map;
+		x.forEach(function (val, key) {
+			tmp.set(klona(key), klona(val));
+		});
+		return tmp;
+	}
 
-  if (str === "[object Date]") {
-    return new Date(+x);
-  }
+	if (str === '[object Date]') {
+		return new Date(+x);
+	}
 
-  if (str === "[object RegExp]") {
-    tmp = new RegExp(x.source, x.flags);
-    tmp.lastIndex = x.lastIndex;
-    return tmp;
-  }
+	if (str === '[object RegExp]') {
+		tmp = new RegExp(x.source, x.flags);
+		tmp.lastIndex = x.lastIndex;
+		return tmp;
+	}
 
-  if (str === "[object DataView]") {
-    return new x.constructor(klona(x.buffer));
-  }
+	if (str === '[object DataView]') {
+		return new x.constructor( klona(x.buffer) );
+	}
 
-  if (str === "[object ArrayBuffer]") {
-    return x.slice(0);
-  }
+	if (str === '[object ArrayBuffer]') {
+		return x.slice(0);
+	}
 
-  // ArrayBuffer.isView(x)
-  // ~> `new` bcuz `Buffer.slice` => ref
-  if (str.slice(-6) === "Array]") {
-    return new x.constructor(x);
-  }
+	// ArrayBuffer.isView(x)
+	// ~> `new` bcuz `Buffer.slice` => ref
+	if (str.slice(-6) === 'Array]') {
+		return new x.constructor(x);
+	}
 
-  return x;
+	return x;
 }
 
 const inlineAppConfig = {};
+
+
 
 const appConfig$1 = defuFn(inlineAppConfig);
 
@@ -4582,11 +3850,7 @@ function splitByCase(str, separators) {
   return parts;
 }
 function kebabCase(str, joiner) {
-  return str
-    ? (Array.isArray(str) ? str : splitByCase(str))
-        .map((p) => p.toLowerCase())
-        .join(joiner)
-    : "";
+  return str ? (Array.isArray(str) ? str : splitByCase(str)).map((p) => p.toLowerCase()).join(joiner) : "";
 }
 function snakeCase(str) {
   return kebabCase(str || "", "_");
@@ -4631,28 +3895,24 @@ function _expandFromEnv(value) {
 }
 
 const _inlineRuntimeConfig = {
-  app: {
-    baseURL: "/",
+  "app": {
+    "baseURL": "/"
   },
-  nitro: {
-    routeRules: {
+  "nitro": {
+    "routeRules": {
       "/api/**": {
-        proxy: {
-          to: "http://localhost:8080/api/**",
-          _proxyStripBase: "/api",
-        },
-      },
-    },
-  },
+        "proxy": {
+          "to": "http://localhost:8080/api/**",
+          "_proxyStripBase": "/api"
+        }
+      }
+    }
+  }
 };
 const envOptions = {
   prefix: "NITRO_",
-  altPrefix:
-    _inlineRuntimeConfig.nitro.envPrefix ?? process.env.NITRO_ENV_PREFIX ?? "_",
-  envExpansion:
-    _inlineRuntimeConfig.nitro.envExpansion ??
-    process.env.NITRO_ENV_EXPANSION ??
-    false,
+  altPrefix: _inlineRuntimeConfig.nitro.envPrefix ?? process.env.NITRO_ENV_PREFIX ?? "_",
+  envExpansion: _inlineRuntimeConfig.nitro.envExpansion ?? process.env.NITRO_ENV_EXPANSION ?? false
 };
 const _sharedRuntimeConfig = _deepFreeze(
   applyEnv(klona(_inlineRuntimeConfig), envOptions)
@@ -4683,7 +3943,7 @@ new Proxy(/* @__PURE__ */ Object.create(null), {
       return runtimeConfig[prop];
     }
     return void 0;
-  },
+  }
 });
 
 function createContext(opts = {}) {
@@ -4696,8 +3956,7 @@ function createContext(opts = {}) {
   };
   let als;
   if (opts.asyncContext) {
-    const _AsyncLocalStorage =
-      opts.AsyncLocalStorage || globalThis.AsyncLocalStorage;
+    const _AsyncLocalStorage = opts.AsyncLocalStorage || globalThis.AsyncLocalStorage;
     if (_AsyncLocalStorage) {
       als = new _AsyncLocalStorage();
     } else {
@@ -4751,7 +4010,7 @@ function createContext(opts = {}) {
       const onRestore = () => {
         currentInstance = instance;
       };
-      const onLeave = () => (currentInstance === instance ? onRestore : void 0);
+      const onLeave = () => currentInstance === instance ? onRestore : void 0;
       asyncHandlers.add(onLeave);
       try {
         const r = als ? als.run(instance, callback) : callback();
@@ -4762,7 +4021,7 @@ function createContext(opts = {}) {
       } finally {
         asyncHandlers.delete(onLeave);
       }
-    },
+    }
   };
 }
 function createNamespace(defaultOpts = {}) {
@@ -4773,29 +4032,19 @@ function createNamespace(defaultOpts = {}) {
         contexts[key] = createContext({ ...defaultOpts, ...opts });
       }
       return contexts[key];
-    },
+    }
   };
 }
-const _globalThis =
-  typeof globalThis !== "undefined"
-    ? globalThis
-    : typeof self !== "undefined"
-      ? self
-      : typeof global !== "undefined"
-        ? global
-        : {};
+const _globalThis = typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : typeof global !== "undefined" ? global : {};
 const globalKey = "__unctx__";
-const defaultNamespace =
-  _globalThis[globalKey] || (_globalThis[globalKey] = createNamespace());
+const defaultNamespace = _globalThis[globalKey] || (_globalThis[globalKey] = createNamespace());
 const getContext = (key, opts = {}) => defaultNamespace.get(key, opts);
 const asyncHandlersKey = "__unctx_async_handlers__";
-const asyncHandlers =
-  _globalThis[asyncHandlersKey] ||
-  (_globalThis[asyncHandlersKey] = /* @__PURE__ */ new Set());
+const asyncHandlers = _globalThis[asyncHandlersKey] || (_globalThis[asyncHandlersKey] = /* @__PURE__ */ new Set());
 
 const nitroAsyncContext = getContext("nitro-app", {
   asyncContext: true,
-  AsyncLocalStorage: AsyncLocalStorage,
+  AsyncLocalStorage: AsyncLocalStorage 
 });
 
 const config = useRuntimeConfig();
@@ -4838,7 +4087,7 @@ function createRouteRulesHandler(ctx) {
       }
       return proxyRequest(event, target, {
         fetch: ctx.localFetch,
-        ...routeRules.proxy,
+        ...routeRules.proxy
       });
     }
   });
@@ -4861,11 +4110,13 @@ function _captureError(error, type) {
   useNitroApp().captureError(error, { tags: [type] });
 }
 function trapUnhandledNodeErrors() {
-  process.on("unhandledRejection", (error) =>
-    _captureError(error, "unhandledRejection")
+  process.on(
+    "unhandledRejection",
+    (error) => _captureError(error, "unhandledRejection")
   );
-  process.on("uncaughtException", (error) =>
-    _captureError(error, "uncaughtException")
+  process.on(
+    "uncaughtException",
+    (error) => _captureError(error, "uncaughtException")
   );
 }
 function joinHeaders(value) {
@@ -4878,7 +4129,7 @@ function normalizeFetchResponse(response) {
   return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,
-    headers: normalizeCookieHeaders(response.headers),
+    headers: normalizeCookieHeaders(response.headers)
   });
 }
 function normalizeCookieHeader(header = "") {
@@ -4914,10 +4165,7 @@ function defaultHandler(error, event, opts) {
   const isSensitive = error.unhandled || error.fatal;
   const statusCode = error.statusCode || 500;
   const statusMessage = error.statusMessage || "Server Error";
-  const url = getRequestURL(event, {
-    xForwardedHost: true,
-    xForwardedProto: true,
-  });
+  const url = getRequestURL(event, { xForwardedHost: true, xForwardedProto: true });
   if (statusCode === 404) {
     const baseURL = "/";
     if (/^\/[^/]/.test(baseURL) && !url.pathname.startsWith(baseURL)) {
@@ -4926,19 +4174,14 @@ function defaultHandler(error, event, opts) {
         status: 302,
         statusText: "Found",
         headers: { location: redirectTo },
-        body: `Redirecting...`,
+        body: `Redirecting...`
       };
     }
   }
   if (isSensitive && !opts?.silent) {
-    const tags = [error.unhandled && "[unhandled]", error.fatal && "[fatal]"]
-      .filter(Boolean)
-      .join(" ");
-    console.error(
-      `[request error] ${tags} [${event.method}] ${url}
-`,
-      error
-    );
+    const tags = [error.unhandled && "[unhandled]", error.fatal && "[fatal]"].filter(Boolean).join(" ");
+    console.error(`[request error] ${tags} [${event.method}] ${url}
+`, error);
   }
   const headers = {
     "content-type": "application/json",
@@ -4949,7 +4192,7 @@ function defaultHandler(error, event, opts) {
     // Prevent browsers from sending the Referer header
     "referrer-policy": "no-referrer",
     // Disable the execution of any js
-    "content-security-policy": "script-src 'none'; frame-ancestors 'none';",
+    "content-security-policy": "script-src 'none'; frame-ancestors 'none';"
   };
   setResponseStatus(event, statusCode, statusMessage);
   if (statusCode === 404 || !getResponseHeader(event, "cache-control")) {
@@ -4961,13 +4204,13 @@ function defaultHandler(error, event, opts) {
     statusCode,
     statusMessage,
     message: isSensitive ? "Server Error" : error.message,
-    data: isSensitive ? void 0 : error.data,
+    data: isSensitive ? void 0 : error.data
   };
   return {
     status: statusCode,
     statusText: statusMessage,
     headers,
-    body,
+    body
   };
 }
 
@@ -4980,7 +4223,7 @@ async function errorHandler(error, event) {
       if (event.handled) {
         return; // Response handled
       }
-    } catch (error) {
+    } catch(error) {
       // Handler itself thrown, log and continue
       console.error(error);
     }
@@ -4988,303 +4231,27 @@ async function errorHandler(error, event) {
   // H3 will handle fallback
 }
 
-const appConfig = {
-  name: "vinxi",
-  routers: [
-    {
-      name: "public",
-      type: "static",
-      dir: "./public",
-      base: "/",
-      root: "/Users/kundanbhosale/Workspace/lipy-commerce/apps/www",
-      order: 0,
-      outDir:
-        "/Users/kundanbhosale/Workspace/lipy-commerce/apps/www/.vinxi/build/public",
-    },
-    {
-      name: "client",
-      type: "client",
-      target: "browser",
-      handler: "src/client.tsx",
-      base: "/_build",
-      build: { sourcemap: true },
-      root: "/Users/kundanbhosale/Workspace/lipy-commerce/apps/www",
-      outDir:
-        "/Users/kundanbhosale/Workspace/lipy-commerce/apps/www/.vinxi/build/client",
-      order: 1,
-    },
-    {
-      name: "ssr",
-      type: "http",
-      target: "server",
-      handler: "src/ssr.tsx",
-      link: { client: "client" },
-      root: "/Users/kundanbhosale/Workspace/lipy-commerce/apps/www",
-      base: "/",
-      outDir:
-        "/Users/kundanbhosale/Workspace/lipy-commerce/apps/www/.vinxi/build/ssr",
-      order: 2,
-    },
-    {
-      name: "server",
-      type: "http",
-      target: "server",
-      base: "/_server",
-      handler:
-        "../../node_modules/@tanstack/start-server-functions-handler/dist/esm/index.js",
-      root: "/Users/kundanbhosale/Workspace/lipy-commerce/apps/www",
-      outDir:
-        "/Users/kundanbhosale/Workspace/lipy-commerce/apps/www/.vinxi/build/server",
-      order: 3,
-    },
-  ],
-  server: {
-    routeRules: {
-      "/api/**": { proxy: { to: "http://localhost:8080/api/**" } },
-    },
-    preset: "node-server",
-    experimental: { asyncContext: true },
-  },
-  root: "/Users/kundanbhosale/Workspace/lipy-commerce/apps/www",
-};
-const buildManifest = {
-  client: {
-    "/Users/kundanbhosale/Workspace/lipy-commerce/packages/web-ui/src/styles.css":
-      {
-        file: "assets/styles-BNIwYrRN.css",
-        src: "/Users/kundanbhosale/Workspace/lipy-commerce/packages/web-ui/src/styles.css",
-      },
-    "__vite-browser-external": {
-      file: "assets/__vite-browser-external-BIHI7g3E.js",
-      name: "__vite-browser-external",
-      src: "__vite-browser-external",
-      isDynamicEntry: true,
-    },
-    "_auth-DzL7yw3J.js": {
-      file: "assets/auth-DzL7yw3J.js",
-      name: "auth",
-      imports: ["_client-DJZyYeHn.js"],
-    },
-    "_client-DJZyYeHn.js": {
-      file: "assets/client-DJZyYeHn.js",
-      name: "client",
-      dynamicImports: [
-        "__vite-browser-external",
-        "__vite-browser-external",
-        "__vite-browser-external",
-        "__vite-browser-external",
-        "src/routes/checkout/route.tsx?tsr-split=component",
-        "src/routes/cart/route.tsx?tsr-split=component",
-        "src/routes/account/route.tsx?tsr-split=component",
-        "src/routes/index.tsx?tsr-split=component",
-        "src/routes/(auth)/logout.tsx?tsr-split=component",
-        "src/routes/(auth)/login.tsx?tsr-split=component",
-      ],
-      assets: ["assets/styles-BNIwYrRN.css"],
-    },
-    "_input-BLXIWNlW.js": {
-      file: "assets/input-BLXIWNlW.js",
-      name: "input",
-      imports: ["_client-DJZyYeHn.js", "_auth-DzL7yw3J.js"],
-    },
-    "_loading-BAzzZg5_.js": {
-      file: "assets/loading-BAzzZg5_.js",
-      name: "loading",
-      imports: ["_client-DJZyYeHn.js", "_auth-DzL7yw3J.js"],
-    },
-    "src/routes/(auth)/login.tsx?tsr-split=component": {
-      file: "assets/login-B-vxi0u6.js",
-      name: "login",
-      src: "src/routes/(auth)/login.tsx?tsr-split=component",
-      isDynamicEntry: true,
-      imports: [
-        "_client-DJZyYeHn.js",
-        "_auth-DzL7yw3J.js",
-        "_input-BLXIWNlW.js",
-        "_loading-BAzzZg5_.js",
-      ],
-    },
-    "src/routes/(auth)/logout.tsx?tsr-split=component": {
-      file: "assets/logout-BypIGhSO.js",
-      name: "logout",
-      src: "src/routes/(auth)/logout.tsx?tsr-split=component",
-      isDynamicEntry: true,
-      imports: [
-        "_client-DJZyYeHn.js",
-        "_auth-DzL7yw3J.js",
-        "_loading-BAzzZg5_.js",
-      ],
-    },
-    "src/routes/account/route.tsx?tsr-split=component": {
-      file: "assets/route-gN8FYUF7.js",
-      name: "route",
-      src: "src/routes/account/route.tsx?tsr-split=component",
-      isDynamicEntry: true,
-      imports: ["_client-DJZyYeHn.js"],
-    },
-    "src/routes/cart/route.tsx?tsr-split=component": {
-      file: "assets/route-WDC4eBUF.js",
-      name: "route",
-      src: "src/routes/cart/route.tsx?tsr-split=component",
-      isDynamicEntry: true,
-      imports: ["_client-DJZyYeHn.js"],
-    },
-    "src/routes/checkout/route.tsx?tsr-split=component": {
-      file: "assets/route-Cl5ew0Ft.js",
-      name: "route",
-      src: "src/routes/checkout/route.tsx?tsr-split=component",
-      isDynamicEntry: true,
-      imports: ["_client-DJZyYeHn.js"],
-    },
-    "src/routes/index.tsx?tsr-split=component": {
-      file: "assets/index-BOJpvDwf.js",
-      name: "index",
-      src: "src/routes/index.tsx?tsr-split=component",
-      isDynamicEntry: true,
-      imports: [
-        "_client-DJZyYeHn.js",
-        "_input-BLXIWNlW.js",
-        "_auth-DzL7yw3J.js",
-      ],
-    },
-    "virtual:$vinxi/handler/client": {
-      file: "assets/client-CUMJ4jEz.js",
-      name: "client",
-      src: "virtual:$vinxi/handler/client",
-      isEntry: true,
-      imports: ["_client-DJZyYeHn.js"],
-    },
-  },
-  ssr: {
-    "/Users/kundanbhosale/Workspace/lipy-commerce/packages/web-ui/src/styles.css":
-      {
-        file: "assets/styles-BNIwYrRN.css",
-        src: "/Users/kundanbhosale/Workspace/lipy-commerce/packages/web-ui/src/styles.css",
-      },
-    "_auth-Cn125Asr.js": { file: "assets/auth-Cn125Asr.js", name: "auth" },
-    "_input-BCUhQIMs.js": {
-      file: "assets/input-BCUhQIMs.js",
-      name: "input",
-      imports: ["_auth-Cn125Asr.js"],
-    },
-    "_loading-CHHY5S6n.js": {
-      file: "assets/loading-CHHY5S6n.js",
-      name: "loading",
-      imports: ["_auth-Cn125Asr.js"],
-    },
-    "_ssr-s4nl5S_2.js": {
-      file: "assets/ssr-s4nl5S_2.js",
-      name: "ssr",
-      dynamicImports: [
-        "src/routes/checkout/route.tsx?tsr-split=component",
-        "src/routes/cart/route.tsx?tsr-split=component",
-        "src/routes/account/route.tsx?tsr-split=component",
-        "src/routes/index.tsx?tsr-split=component",
-        "src/routes/(auth)/logout.tsx?tsr-split=component",
-        "src/routes/(auth)/login.tsx?tsr-split=component",
-      ],
-      assets: ["assets/styles-BNIwYrRN.css"],
-    },
-    "src/routes/(auth)/login.tsx?tsr-split=component": {
-      file: "assets/login-CgrjhG_f.js",
-      name: "login",
-      src: "src/routes/(auth)/login.tsx?tsr-split=component",
-      isDynamicEntry: true,
-      imports: [
-        "_auth-Cn125Asr.js",
-        "_input-BCUhQIMs.js",
-        "_loading-CHHY5S6n.js",
-        "_ssr-s4nl5S_2.js",
-      ],
-    },
-    "src/routes/(auth)/logout.tsx?tsr-split=component": {
-      file: "assets/logout-BbXkKtn0.js",
-      name: "logout",
-      src: "src/routes/(auth)/logout.tsx?tsr-split=component",
-      isDynamicEntry: true,
-      imports: [
-        "_auth-Cn125Asr.js",
-        "_loading-CHHY5S6n.js",
-        "_ssr-s4nl5S_2.js",
-      ],
-    },
-    "src/routes/account/route.tsx?tsr-split=component": {
-      file: "assets/route-DZoLFZtc.js",
-      name: "route",
-      src: "src/routes/account/route.tsx?tsr-split=component",
-      isDynamicEntry: true,
-      imports: ["_ssr-s4nl5S_2.js"],
-    },
-    "src/routes/cart/route.tsx?tsr-split=component": {
-      file: "assets/route-QplxH5YA.js",
-      name: "route",
-      src: "src/routes/cart/route.tsx?tsr-split=component",
-      isDynamicEntry: true,
-      imports: ["_ssr-s4nl5S_2.js"],
-    },
-    "src/routes/checkout/route.tsx?tsr-split=component": {
-      file: "assets/route-B0Tk1XrM.js",
-      name: "route",
-      src: "src/routes/checkout/route.tsx?tsr-split=component",
-      isDynamicEntry: true,
-      imports: ["_ssr-s4nl5S_2.js"],
-    },
-    "src/routes/index.tsx?tsr-split=component": {
-      file: "assets/index-ys8DQwRh.js",
-      name: "index",
-      src: "src/routes/index.tsx?tsr-split=component",
-      isDynamicEntry: true,
-      imports: ["_input-BCUhQIMs.js", "_auth-Cn125Asr.js", "_ssr-s4nl5S_2.js"],
-    },
-    "virtual:$vinxi/handler/ssr": {
-      file: "ssr.js",
-      name: "ssr",
-      src: "virtual:$vinxi/handler/ssr",
-      isEntry: true,
-      imports: ["_ssr-s4nl5S_2.js"],
-    },
-  },
-  server: {
-    "/Users/kundanbhosale/Workspace/lipy-commerce/packages/web-ui/src/styles.css":
-      {
-        file: "assets/styles-BNIwYrRN.css",
-        src: "/Users/kundanbhosale/Workspace/lipy-commerce/packages/web-ui/src/styles.css",
-      },
-    "src/routes/__root.tsx?tsr-directive-use-server=": {
-      file: "assets/__root-Bz_HmNpq.js",
-      name: "__root",
-      src: "src/routes/__root.tsx?tsr-directive-use-server=",
-      isDynamicEntry: true,
-      assets: ["assets/styles-BNIwYrRN.css"],
-    },
-    "virtual:$vinxi/handler/server": {
-      file: "server.js",
-      name: "server",
-      src: "virtual:$vinxi/handler/server",
-      isEntry: true,
-      dynamicImports: ["src/routes/__root.tsx?tsr-directive-use-server="],
-    },
-  },
-};
+const appConfig = {"name":"vinxi","routers":[{"name":"public","type":"static","dir":"./public","base":"/","root":"/Users/kundanbhosale/Workspace/lipy-commerce/apps/www","order":0,"outDir":"/Users/kundanbhosale/Workspace/lipy-commerce/apps/www/.vinxi/build/public"},{"name":"client","type":"client","target":"browser","handler":"src/client.tsx","base":"/_build","build":{"sourcemap":true},"root":"/Users/kundanbhosale/Workspace/lipy-commerce/apps/www","outDir":"/Users/kundanbhosale/Workspace/lipy-commerce/apps/www/.vinxi/build/client","order":1},{"name":"ssr","type":"http","target":"server","handler":"src/ssr.tsx","link":{"client":"client"},"root":"/Users/kundanbhosale/Workspace/lipy-commerce/apps/www","base":"/","outDir":"/Users/kundanbhosale/Workspace/lipy-commerce/apps/www/.vinxi/build/ssr","order":2},{"name":"server","type":"http","target":"server","base":"/_server","handler":"../../node_modules/@tanstack/start-server-functions-handler/dist/esm/index.js","root":"/Users/kundanbhosale/Workspace/lipy-commerce/apps/www","outDir":"/Users/kundanbhosale/Workspace/lipy-commerce/apps/www/.vinxi/build/server","order":3}],"server":{"routeRules":{"/api/**":{"proxy":{"to":"http://localhost:8080/api/**"}}},"preset":"node-server","experimental":{"asyncContext":true}},"root":"/Users/kundanbhosale/Workspace/lipy-commerce/apps/www"};
+				const buildManifest = {"client":{"/Users/kundanbhosale/Workspace/lipy-commerce/packages/web-ui/src/styles.css":{"file":"assets/styles-BjkkjdbK.css","src":"/Users/kundanbhosale/Workspace/lipy-commerce/packages/web-ui/src/styles.css"},"__vite-browser-external":{"file":"assets/__vite-browser-external-BIHI7g3E.js","name":"__vite-browser-external","src":"__vite-browser-external","isDynamicEntry":true},"_auth-BH0fQzbF.js":{"file":"assets/auth-BH0fQzbF.js","name":"auth","imports":["_client-DSsj00kt.js"]},"_avatar-Jx8W_WA7.js":{"file":"assets/avatar-Jx8W_WA7.js","name":"avatar","imports":["_client-DSsj00kt.js","_index-Dazthtk9.js","_utils-Cd13OnTz.js"]},"_button-DXCF5KV-.js":{"file":"assets/button-DXCF5KV-.js","name":"button","imports":["_client-DSsj00kt.js","_utils-Cd13OnTz.js","_index-Dazthtk9.js"]},"_card-Bz5FfSE2.js":{"file":"assets/card-Bz5FfSE2.js","name":"card","imports":["_client-DSsj00kt.js","_utils-Cd13OnTz.js"]},"_client-DSsj00kt.js":{"file":"assets/client-DSsj00kt.js","name":"client","dynamicImports":["__vite-browser-external","__vite-browser-external","__vite-browser-external","__vite-browser-external","src/routes/checkout/route.tsx?tsr-split=component","src/routes/cart/route.tsx?tsr-split=component","src/routes/index.tsx?tsr-split=component","src/routes/account/index.tsx?tsr-split=component","src/routes/shop/$id.tsx?tsr-split=component","src/routes/account/profile.tsx?tsr-split=component","src/routes/account/orders.tsx?tsr-split=component","src/routes/account/addresses.tsx?tsr-split=component","src/routes/(auth)/logout.tsx?tsr-split=component","src/routes/(auth)/login.tsx?tsr-split=component"],"assets":["assets/styles-BjkkjdbK.css"]},"_createLucideIcon-Dz2Le6F5.js":{"file":"assets/createLucideIcon-Dz2Le6F5.js","name":"createLucideIcon","imports":["_client-DSsj00kt.js"]},"_empty-Bu6ifZhR.js":{"file":"assets/empty-Bu6ifZhR.js","name":"empty","imports":["_client-DSsj00kt.js","_label-ypWwUxTZ.js","_createLucideIcon-Dz2Le6F5.js"]},"_header-COxbX9eK.js":{"file":"assets/header-COxbX9eK.js","name":"header","imports":["_client-DSsj00kt.js","_createLucideIcon-Dz2Le6F5.js"]},"_index-Dazthtk9.js":{"file":"assets/index-Dazthtk9.js","name":"index","imports":["_client-DSsj00kt.js"]},"_label-ypWwUxTZ.js":{"file":"assets/label-ypWwUxTZ.js","name":"label","imports":["_client-DSsj00kt.js","_index-Dazthtk9.js","_utils-Cd13OnTz.js"]},"_loading-B6sRdCUo.js":{"file":"assets/loading-B6sRdCUo.js","name":"loading","imports":["_client-DSsj00kt.js","_utils-Cd13OnTz.js"]},"_utils-Cd13OnTz.js":{"file":"assets/utils-Cd13OnTz.js","name":"utils"},"src/routes/(auth)/login.tsx?tsr-split=component":{"file":"assets/login-B5ztY6M_.js","name":"login","src":"src/routes/(auth)/login.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-DSsj00kt.js","_utils-Cd13OnTz.js","_button-DXCF5KV-.js","_card-Bz5FfSE2.js","_label-ypWwUxTZ.js","_auth-BH0fQzbF.js","_loading-B6sRdCUo.js","_createLucideIcon-Dz2Le6F5.js","_index-Dazthtk9.js"]},"src/routes/(auth)/logout.tsx?tsr-split=component":{"file":"assets/logout-D8gSLEtu.js","name":"logout","src":"src/routes/(auth)/logout.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-DSsj00kt.js","_auth-BH0fQzbF.js","_loading-B6sRdCUo.js","_utils-Cd13OnTz.js"]},"src/routes/account/addresses.tsx?tsr-split=component":{"file":"assets/addresses-B1HvB_K9.js","name":"addresses","src":"src/routes/account/addresses.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-DSsj00kt.js","_header-COxbX9eK.js","_empty-Bu6ifZhR.js","_createLucideIcon-Dz2Le6F5.js","_label-ypWwUxTZ.js","_index-Dazthtk9.js","_utils-Cd13OnTz.js"]},"src/routes/account/index.tsx?tsr-split=component":{"file":"assets/index-DUUPs-KI.js","name":"index","src":"src/routes/account/index.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-DSsj00kt.js","_header-COxbX9eK.js","_card-Bz5FfSE2.js","_auth-BH0fQzbF.js","_avatar-Jx8W_WA7.js","_createLucideIcon-Dz2Le6F5.js","_utils-Cd13OnTz.js","_index-Dazthtk9.js"]},"src/routes/account/orders.tsx?tsr-split=component":{"file":"assets/orders-J_ZP69Rh.js","name":"orders","src":"src/routes/account/orders.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-DSsj00kt.js","_header-COxbX9eK.js","_empty-Bu6ifZhR.js","_createLucideIcon-Dz2Le6F5.js","_label-ypWwUxTZ.js","_index-Dazthtk9.js","_utils-Cd13OnTz.js"]},"src/routes/account/profile.tsx?tsr-split=component":{"file":"assets/profile-92biJx_b.js","name":"profile","src":"src/routes/account/profile.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-DSsj00kt.js","_header-COxbX9eK.js","_empty-Bu6ifZhR.js","_createLucideIcon-Dz2Le6F5.js","_label-ypWwUxTZ.js","_index-Dazthtk9.js","_utils-Cd13OnTz.js"]},"src/routes/cart/route.tsx?tsr-split=component":{"file":"assets/route-Bv_bgLYK.js","name":"route","src":"src/routes/cart/route.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-DSsj00kt.js"]},"src/routes/checkout/route.tsx?tsr-split=component":{"file":"assets/route-D_a1_EPC.js","name":"route","src":"src/routes/checkout/route.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-DSsj00kt.js"]},"src/routes/index.tsx?tsr-split=component":{"file":"assets/index-C4ZkQLQw.js","name":"index","src":"src/routes/index.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-DSsj00kt.js","_utils-Cd13OnTz.js","_auth-BH0fQzbF.js","_avatar-Jx8W_WA7.js","_button-DXCF5KV-.js","_card-Bz5FfSE2.js","_index-Dazthtk9.js"]},"src/routes/shop/$id.tsx?tsr-split=component":{"file":"assets/_id-CW7ko6SE.js","name":"_id","src":"src/routes/shop/$id.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_client-DSsj00kt.js","_header-COxbX9eK.js","_empty-Bu6ifZhR.js","_createLucideIcon-Dz2Le6F5.js","_label-ypWwUxTZ.js","_index-Dazthtk9.js","_utils-Cd13OnTz.js"]},"virtual:$vinxi/handler/client":{"file":"assets/client-CH2FOPvg.js","name":"client","src":"virtual:$vinxi/handler/client","isEntry":true,"imports":["_client-DSsj00kt.js"]}},"ssr":{"/Users/kundanbhosale/Workspace/lipy-commerce/packages/web-ui/src/styles.css":{"file":"assets/styles-BjkkjdbK.css","src":"/Users/kundanbhosale/Workspace/lipy-commerce/packages/web-ui/src/styles.css"},"_auth-DFbHUl8B.js":{"file":"assets/auth-DFbHUl8B.js","name":"auth"},"_avatar-C7xU5yNr.js":{"file":"assets/avatar-C7xU5yNr.js","name":"avatar","imports":["_utils-bhneXptQ.js"]},"_button-Byjxc8RW.js":{"file":"assets/button-Byjxc8RW.js","name":"button","imports":["_utils-bhneXptQ.js"]},"_card-ByTKzZ7N.js":{"file":"assets/card-ByTKzZ7N.js","name":"card","imports":["_utils-bhneXptQ.js"]},"_empty-BhZiAD0c.js":{"file":"assets/empty-BhZiAD0c.js","name":"empty","imports":["_label-B9tw4qZN.js"]},"_header-BLO0shji.js":{"file":"assets/header-BLO0shji.js","name":"header"},"_label-B9tw4qZN.js":{"file":"assets/label-B9tw4qZN.js","name":"label","imports":["_utils-bhneXptQ.js"]},"_loading-ColhP9_c.js":{"file":"assets/loading-ColhP9_c.js","name":"loading","imports":["_utils-bhneXptQ.js"]},"_ssr-CzIvNDqC.js":{"file":"assets/ssr-CzIvNDqC.js","name":"ssr","dynamicImports":["src/routes/checkout/route.tsx?tsr-split=component","src/routes/cart/route.tsx?tsr-split=component","src/routes/index.tsx?tsr-split=component","src/routes/account/index.tsx?tsr-split=component","src/routes/shop/$id.tsx?tsr-split=component","src/routes/account/profile.tsx?tsr-split=component","src/routes/account/orders.tsx?tsr-split=component","src/routes/account/addresses.tsx?tsr-split=component","src/routes/(auth)/logout.tsx?tsr-split=component","src/routes/(auth)/login.tsx?tsr-split=component"],"assets":["assets/styles-BjkkjdbK.css"]},"_utils-bhneXptQ.js":{"file":"assets/utils-bhneXptQ.js","name":"utils"},"src/routes/(auth)/login.tsx?tsr-split=component":{"file":"assets/login-27ixESj_.js","name":"login","src":"src/routes/(auth)/login.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_utils-bhneXptQ.js","_button-Byjxc8RW.js","_card-ByTKzZ7N.js","_label-B9tw4qZN.js","_auth-DFbHUl8B.js","_loading-ColhP9_c.js","_ssr-CzIvNDqC.js"]},"src/routes/(auth)/logout.tsx?tsr-split=component":{"file":"assets/logout-Dw22GSYs.js","name":"logout","src":"src/routes/(auth)/logout.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_auth-DFbHUl8B.js","_loading-ColhP9_c.js","_ssr-CzIvNDqC.js","_utils-bhneXptQ.js"]},"src/routes/account/addresses.tsx?tsr-split=component":{"file":"assets/addresses-CDhWgij6.js","name":"addresses","src":"src/routes/account/addresses.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_header-BLO0shji.js","_ssr-CzIvNDqC.js","_empty-BhZiAD0c.js","_label-B9tw4qZN.js","_utils-bhneXptQ.js"]},"src/routes/account/index.tsx?tsr-split=component":{"file":"assets/index-CE2nAnI5.js","name":"index","src":"src/routes/account/index.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_header-BLO0shji.js","_ssr-CzIvNDqC.js","_card-ByTKzZ7N.js","_auth-DFbHUl8B.js","_avatar-C7xU5yNr.js","_utils-bhneXptQ.js"]},"src/routes/account/orders.tsx?tsr-split=component":{"file":"assets/orders-D-pw2DxL.js","name":"orders","src":"src/routes/account/orders.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_header-BLO0shji.js","_ssr-CzIvNDqC.js","_empty-BhZiAD0c.js","_label-B9tw4qZN.js","_utils-bhneXptQ.js"]},"src/routes/account/profile.tsx?tsr-split=component":{"file":"assets/profile-DBgugXOz.js","name":"profile","src":"src/routes/account/profile.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_header-BLO0shji.js","_ssr-CzIvNDqC.js","_empty-BhZiAD0c.js","_label-B9tw4qZN.js","_utils-bhneXptQ.js"]},"src/routes/cart/route.tsx?tsr-split=component":{"file":"assets/route-fUHAwVkK.js","name":"route","src":"src/routes/cart/route.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_ssr-CzIvNDqC.js"]},"src/routes/checkout/route.tsx?tsr-split=component":{"file":"assets/route-DcOC6ro0.js","name":"route","src":"src/routes/checkout/route.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_ssr-CzIvNDqC.js"]},"src/routes/index.tsx?tsr-split=component":{"file":"assets/index-CmB0JdLw.js","name":"index","src":"src/routes/index.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_utils-bhneXptQ.js","_ssr-CzIvNDqC.js","_auth-DFbHUl8B.js","_avatar-C7xU5yNr.js","_button-Byjxc8RW.js","_card-ByTKzZ7N.js"]},"src/routes/shop/$id.tsx?tsr-split=component":{"file":"assets/_id-BmhAf7iB.js","name":"_id","src":"src/routes/shop/$id.tsx?tsr-split=component","isDynamicEntry":true,"imports":["_header-BLO0shji.js","_ssr-CzIvNDqC.js","_empty-BhZiAD0c.js","_label-B9tw4qZN.js","_utils-bhneXptQ.js"]},"virtual:$vinxi/handler/ssr":{"file":"ssr.js","name":"ssr","src":"virtual:$vinxi/handler/ssr","isEntry":true,"imports":["_ssr-CzIvNDqC.js"]}},"server":{"/Users/kundanbhosale/Workspace/lipy-commerce/packages/web-ui/src/styles.css":{"file":"assets/styles-BjkkjdbK.css","src":"/Users/kundanbhosale/Workspace/lipy-commerce/packages/web-ui/src/styles.css"},"src/routes/__root.tsx?tsr-directive-use-server=":{"file":"assets/__root-BcJQ0kD0.js","name":"__root","src":"src/routes/__root.tsx?tsr-directive-use-server=","isDynamicEntry":true,"assets":["assets/styles-BjkkjdbK.css"]},"virtual:$vinxi/handler/server":{"file":"server.js","name":"server","src":"virtual:$vinxi/handler/server","isEntry":true,"dynamicImports":["src/routes/__root.tsx?tsr-directive-use-server="]}}};
 
-const routeManifest = {};
+				const routeManifest = {};
 
-function createProdApp(appConfig) {
-  return {
-    config: { ...appConfig, buildManifest, routeManifest },
-    getRouter(name) {
-      return appConfig.routers.find((router) => router.name === name);
-    },
-  };
-}
+        function createProdApp(appConfig) {
+          return {
+            config: { ...appConfig, buildManifest, routeManifest },
+            getRouter(name) {
+              return appConfig.routers.find(router => router.name === name)
+            }
+          }
+        }
 
-function plugin$2(app) {
-  const prodApp = createProdApp(appConfig);
-  globalThis.app = prodApp;
-}
+        function plugin$2(app) {
+          const prodApp = createProdApp(appConfig);
+          globalThis.app = prodApp;
+        }
 
 function plugin$1(app) {
-  globalThis.$handle = (event) => app.h3App.handler(event);
+	globalThis.$handle = (event) => app.h3App.handler(event);
 }
 
 /**
@@ -5296,65 +4263,58 @@ function plugin$1(app) {
  * @param {string[]} stack Stack of chunk ids to prevent circular dependencies
  * @returns Array of asset URLs
  */
-function findAssetsInViteManifest(
-  manifest,
-  id,
-  assetMap = new Map(),
-  stack = []
-) {
-  if (stack.includes(id)) {
-    return [];
-  }
+function findAssetsInViteManifest(manifest, id, assetMap = new Map(), stack = []) {
+	if (stack.includes(id)) {
+		return [];
+	}
 
-  const cached = assetMap.get(id);
-  if (cached) {
-    return cached;
-  }
-  const chunk = manifest[id];
-  if (!chunk) {
-    return [];
-  }
+	const cached = assetMap.get(id);
+	if (cached) {
+		return cached;
+	}
+	const chunk = manifest[id];
+	if (!chunk) {
+		return [];
+	}
 
-  const assets = [
-    ...(chunk.assets?.filter(Boolean) || []),
-    ...(chunk.css?.filter(Boolean) || []),
-  ];
-  if (chunk.imports) {
-    stack.push(id);
-    for (let i = 0, l = chunk.imports.length; i < l; i++) {
-      assets.push(
-        ...findAssetsInViteManifest(manifest, chunk.imports[i], assetMap, stack)
-      );
-    }
-    stack.pop();
-  }
-  assets.push(chunk.file);
-  const all = Array.from(new Set(assets));
-  assetMap.set(id, all);
+	const assets = [
+		...(chunk.assets?.filter(Boolean) || []),
+		...(chunk.css?.filter(Boolean) || [])
+	];
+	if (chunk.imports) {
+		stack.push(id);
+		for (let i = 0, l = chunk.imports.length; i < l; i++) {
+			assets.push(...findAssetsInViteManifest(manifest, chunk.imports[i], assetMap, stack));
+		}
+		stack.pop();
+	}
+	assets.push(chunk.file);
+	const all = Array.from(new Set(assets));
+	assetMap.set(id, all);
 
-  return all;
+	return all;
 }
 
 /** @typedef {import("../app.js").App & { config: { buildManifest: { [key:string]: any } }}} ProdApp */
 
 function createHtmlTagsForAssets(router, app, assets) {
-  return assets
-    .filter(
-      (asset) =>
-        asset.endsWith(".css") ||
-        asset.endsWith(".js") ||
-        asset.endsWith(".mjs")
-    )
-    .map((asset) => ({
-      tag: "link",
-      attrs: {
-        href: joinURL(app.config.server.baseURL ?? "/", router.base, asset),
-        key: join$1(app.config.server.baseURL ?? "", router.base, asset),
-        ...(asset.endsWith(".css")
-          ? { rel: "stylesheet", fetchPriority: "high" }
-          : { rel: "modulepreload" }),
-      },
-    }));
+	return assets
+		.filter(
+			(asset) =>
+				asset.endsWith(".css") ||
+				asset.endsWith(".js") ||
+				asset.endsWith(".mjs"),
+		)
+		.map((asset) => ({
+			tag: "link",
+			attrs: {
+				href: joinURL(app.config.server.baseURL ?? "/", router.base, asset),
+				key: join$1(app.config.server.baseURL ?? "", router.base, asset),
+				...(asset.endsWith(".css")
+					? { rel: "stylesheet", fetchPriority: "high" }
+					: { rel: "modulepreload" }),
+			},
+		}));
 }
 
 /**
@@ -5363,395 +4323,490 @@ function createHtmlTagsForAssets(router, app, assets) {
  * @returns
  */
 function createProdManifest(app) {
-  const manifest = new Proxy(
-    {},
-    {
-      get(target, routerName) {
-        invariant(typeof routerName === "string", "Bundler name expected");
-        const router = app.getRouter(routerName);
-        const bundlerManifest = app.config.buildManifest[routerName];
+	const manifest = new Proxy(
+		{},
+		{
+			get(target, routerName) {
+				invariant(typeof routerName === "string", "Bundler name expected");
+				const router = app.getRouter(routerName);
+				const bundlerManifest = app.config.buildManifest[routerName];
 
-        invariant(
-          router.type !== "static",
-          "manifest not available for static router"
-        );
-        return {
-          handler: router.handler,
-          async assets() {
-            /** @type {{ [key: string]: string[] }} */
-            let assets = {};
-            assets[router.handler] = await this.inputs[router.handler].assets();
-            for (const route of (await router.internals.routes?.getRoutes()) ??
-              []) {
-              assets[route.filePath] =
-                await this.inputs[route.filePath].assets();
-            }
-            return assets;
-          },
-          async routes() {
-            return (await router.internals.routes?.getRoutes()) ?? [];
-          },
-          async json() {
-            /** @type {{ [key: string]: { output: string; assets: string[]} }} */
-            let json = {};
-            for (const input of Object.keys(this.inputs)) {
-              json[input] = {
-                output: this.inputs[input].output.path,
-                assets: await this.inputs[input].assets(),
-              };
-            }
-            return json;
-          },
-          chunks: new Proxy(
-            {},
-            {
-              get(target, chunk) {
-                invariant(typeof chunk === "string", "Chunk expected");
-                const chunkPath = join$1(
-                  router.outDir,
-                  router.base,
-                  chunk + ".mjs"
-                );
-                return {
-                  import() {
-                    if (globalThis.$$chunks[chunk + ".mjs"]) {
-                      return globalThis.$$chunks[chunk + ".mjs"];
-                    }
-                    return import(
-                      /* @vite-ignore */ pathToFileURL(chunkPath).href
-                    );
-                  },
-                  output: {
-                    path: chunkPath,
-                  },
-                };
-              },
-            }
-          ),
-          inputs: new Proxy(
-            {},
-            {
-              ownKeys(target) {
-                const keys = Object.keys(bundlerManifest)
-                  .filter((id) => bundlerManifest[id].isEntry)
-                  .map((id) => id);
-                return keys;
-              },
-              getOwnPropertyDescriptor(k) {
-                return {
-                  enumerable: true,
-                  configurable: true,
-                };
-              },
-              get(target, input) {
-                invariant(typeof input === "string", "Input expected");
-                if (router.target === "server") {
-                  const id =
-                    input === router.handler
-                      ? virtualId(handlerModule(router))
-                      : input;
-                  return {
-                    assets() {
-                      return createHtmlTagsForAssets(
-                        router,
-                        app,
-                        findAssetsInViteManifest(bundlerManifest, id)
-                      );
-                    },
-                    output: {
-                      path: join$1(
-                        router.outDir,
-                        router.base,
-                        bundlerManifest[id].file
-                      ),
-                    },
-                  };
-                } else if (router.target === "browser") {
-                  const id =
-                    input === router.handler && !input.endsWith(".html")
-                      ? virtualId(handlerModule(router))
-                      : input;
-                  return {
-                    import() {
-                      return import(
-                        /* @vite-ignore */ joinURL(
-                          app.config.server.baseURL ?? "",
-                          router.base,
-                          bundlerManifest[id].file
-                        )
-                      );
-                    },
-                    assets() {
-                      return createHtmlTagsForAssets(
-                        router,
-                        app,
-                        findAssetsInViteManifest(bundlerManifest, id)
-                      );
-                    },
-                    output: {
-                      path: joinURL(
-                        app.config.server.baseURL ?? "",
-                        router.base,
-                        bundlerManifest[id].file
-                      ),
-                    },
-                  };
-                }
-              },
-            }
-          ),
-        };
-      },
-    }
-  );
+				invariant(
+					router.type !== "static",
+					"manifest not available for static router",
+				);
+				return {
+					handler: router.handler,
+					async assets() {
+						/** @type {{ [key: string]: string[] }} */
+						let assets = {};
+						assets[router.handler] = await this.inputs[router.handler].assets();
+						for (const route of (await router.internals.routes?.getRoutes()) ??
+							[]) {
+							assets[route.filePath] = await this.inputs[
+								route.filePath
+							].assets();
+						}
+						return assets;
+					},
+					async routes() {
+						return (await router.internals.routes?.getRoutes()) ?? [];
+					},
+					async json() {
+						/** @type {{ [key: string]: { output: string; assets: string[]} }} */
+						let json = {};
+						for (const input of Object.keys(this.inputs)) {
+							json[input] = {
+								output: this.inputs[input].output.path,
+								assets: await this.inputs[input].assets(),
+							};
+						}
+						return json;
+					},
+					chunks: new Proxy(
+						{},
+						{
+							get(target, chunk) {
+								invariant(typeof chunk === "string", "Chunk expected");
+								const chunkPath = join$1(
+									router.outDir,
+									router.base,
+									chunk + ".mjs",
+								);
+								return {
+									import() {
+										if (globalThis.$$chunks[chunk + ".mjs"]) {
+											return globalThis.$$chunks[chunk + ".mjs"];
+										}
+										return import(
+											/* @vite-ignore */ pathToFileURL(chunkPath).href
+										);
+									},
+									output: {
+										path: chunkPath,
+									},
+								};
+							},
+						},
+					),
+					inputs: new Proxy(
+						{},
+						{
+							ownKeys(target) {
+								const keys = Object.keys(bundlerManifest)
+									.filter((id) => bundlerManifest[id].isEntry)
+									.map((id) => id);
+								return keys;
+							},
+							getOwnPropertyDescriptor(k) {
+								return {
+									enumerable: true,
+									configurable: true,
+								};
+							},
+							get(target, input) {
+								invariant(typeof input === "string", "Input expected");
+								if (router.target === "server") {
+									const id =
+										input === router.handler
+											? virtualId(handlerModule(router))
+											: input;
+									return {
+										assets() {
+											return createHtmlTagsForAssets(
+												router,
+												app,
+												findAssetsInViteManifest(bundlerManifest, id),
+											);
+										},
+										output: {
+											path: join$1(
+												router.outDir,
+												router.base,
+												bundlerManifest[id].file,
+											),
+										},
+									};
+								} else if (router.target === "browser") {
+									const id =
+										input === router.handler && !input.endsWith(".html")
+											? virtualId(handlerModule(router))
+											: input;
+									return {
+										import() {
+											return import(
+												/* @vite-ignore */ joinURL(
+													app.config.server.baseURL ?? "",
+													router.base,
+													bundlerManifest[id].file,
+												)
+											);
+										},
+										assets() {
+											return createHtmlTagsForAssets(
+												router,
+												app,
+												findAssetsInViteManifest(bundlerManifest, id),
+											);
+										},
+										output: {
+											path: joinURL(
+												app.config.server.baseURL ?? "",
+												router.base,
+												bundlerManifest[id].file,
+											),
+										},
+									};
+								}
+							},
+						},
+					),
+				};
+			},
+		},
+	);
 
-  return manifest;
+	return manifest;
 }
 
 function plugin() {
-  globalThis.MANIFEST = createProdManifest(globalThis.app);
+	globalThis.MANIFEST =
+		createProdManifest(globalThis.app)
+			;
 }
 
 const chunks = {};
+			 
 
-function app() {
-  globalThis.$$chunks = chunks;
-}
 
-const plugins = [plugin$2, plugin$1, plugin, app];
+
+			 function app() {
+				 globalThis.$$chunks = chunks;
+			 }
+
+const plugins = [
+  plugin$2,
+plugin$1,
+plugin,
+app
+];
 
 const assets = {
   "/robots.txt": {
-    type: "text/plain; charset=utf-8",
-    etag: '"43-BEzmj4PuhUNHX+oW9uOnPSihxtU"',
-    mtime: "2025-05-15T12:16:24.537Z",
-    size: 67,
-    path: "../public/robots.txt",
+    "type": "text/plain; charset=utf-8",
+    "etag": "\"43-BEzmj4PuhUNHX+oW9uOnPSihxtU\"",
+    "mtime": "2025-05-17T12:22:25.383Z",
+    "size": 67,
+    "path": "../public/robots.txt"
   },
   "/assets/paper-bag-items.webp": {
-    type: "image/webp",
-    etag: '"39d74-5UIRG0moMMMQWSESiMMgwjHo85s"',
-    mtime: "2025-05-15T12:16:24.533Z",
-    size: 236916,
-    path: "../public/assets/paper-bag-items.webp",
+    "type": "image/webp",
+    "etag": "\"39d74-5UIRG0moMMMQWSESiMMgwjHo85s\"",
+    "mtime": "2025-05-17T12:22:25.380Z",
+    "size": 236916,
+    "path": "../public/assets/paper-bag-items.webp"
   },
-  "/assets/styles-BNIwYrRN.css": {
-    type: "text/css; charset=utf-8",
-    etag: '"103d1-x49yaReV08FZ/qbWeXQGZuyAe64"',
-    mtime: "2025-05-15T12:16:24.550Z",
-    size: 66513,
-    path: "../public/assets/styles-BNIwYrRN.css",
+  "/assets/styles-BjkkjdbK.css": {
+    "type": "text/css; charset=utf-8",
+    "etag": "\"135db-DRErgIFab+ksdAGsTRjqiWfFXB0\"",
+    "mtime": "2025-05-17T12:22:25.399Z",
+    "size": 79323,
+    "path": "../public/assets/styles-BjkkjdbK.css"
   },
   "/favicon/apple-touch-icon.png": {
-    type: "image/png",
-    etag: '"62f-5ZinJZRMQuFcuf+mFGXuSEbYldU"',
-    mtime: "2025-05-15T12:16:24.531Z",
-    size: 1583,
-    path: "../public/favicon/apple-touch-icon.png",
+    "type": "image/png",
+    "etag": "\"62f-5ZinJZRMQuFcuf+mFGXuSEbYldU\"",
+    "mtime": "2025-05-17T12:22:25.379Z",
+    "size": 1583,
+    "path": "../public/favicon/apple-touch-icon.png"
   },
   "/favicon/favicon-16x16.png": {
-    type: "image/png",
-    etag: '"71-9fISiJ66a/u+KG0NbGCoO4TSacI"',
-    mtime: "2025-05-15T12:16:24.532Z",
-    size: 113,
-    path: "../public/favicon/favicon-16x16.png",
+    "type": "image/png",
+    "etag": "\"71-9fISiJ66a/u+KG0NbGCoO4TSacI\"",
+    "mtime": "2025-05-17T12:22:25.382Z",
+    "size": 113,
+    "path": "../public/favicon/favicon-16x16.png"
   },
   "/favicon/favicon-32x32.png": {
-    type: "image/png",
-    etag: '"ab-eUZYSlMxQFj2PlueMhECPvgOh6w"',
-    mtime: "2025-05-15T12:16:24.532Z",
-    size: 171,
-    path: "../public/favicon/favicon-32x32.png",
+    "type": "image/png",
+    "etag": "\"ab-eUZYSlMxQFj2PlueMhECPvgOh6w\"",
+    "mtime": "2025-05-17T12:22:25.380Z",
+    "size": 171,
+    "path": "../public/favicon/favicon-32x32.png"
   },
   "/favicon/favicon.ico": {
-    type: "image/vnd.microsoft.icon",
-    etag: '"374-boheuYRmIpwnIcaTVhPCHxefFkQ"',
-    mtime: "2025-05-15T12:16:24.533Z",
-    size: 884,
-    path: "../public/favicon/favicon.ico",
+    "type": "image/vnd.microsoft.icon",
+    "etag": "\"374-boheuYRmIpwnIcaTVhPCHxefFkQ\"",
+    "mtime": "2025-05-17T12:22:25.380Z",
+    "size": 884,
+    "path": "../public/favicon/favicon.ico"
   },
   "/favicon/pwa-192x192.png": {
-    type: "image/png",
-    etag: '"656-6hO6vOf+/oMXrI/O7rysizsoMiA"',
-    mtime: "2025-05-15T12:16:24.533Z",
-    size: 1622,
-    path: "../public/favicon/pwa-192x192.png",
+    "type": "image/png",
+    "etag": "\"656-6hO6vOf+/oMXrI/O7rysizsoMiA\"",
+    "mtime": "2025-05-17T12:22:25.380Z",
+    "size": 1622,
+    "path": "../public/favicon/pwa-192x192.png"
   },
   "/favicon/pwa-512x512.png": {
-    type: "image/png",
-    etag: '"1b47-Zb12Mhi9A9qzh5/BwnPZX+mFnSg"',
-    mtime: "2025-05-15T12:16:24.535Z",
-    size: 6983,
-    path: "../public/favicon/pwa-512x512.png",
+    "type": "image/png",
+    "etag": "\"1b47-Zb12Mhi9A9qzh5/BwnPZX+mFnSg\"",
+    "mtime": "2025-05-17T12:22:25.381Z",
+    "size": 6983,
+    "path": "../public/favicon/pwa-512x512.png"
   },
   "/favicon/pwa-maskable-192x192.png": {
-    type: "image/png",
-    etag: '"4a3-xi0067Sekt6lSAu00hRaVLmrUNw"',
-    mtime: "2025-05-15T12:16:24.533Z",
-    size: 1187,
-    path: "../public/favicon/pwa-maskable-192x192.png",
+    "type": "image/png",
+    "etag": "\"4a3-xi0067Sekt6lSAu00hRaVLmrUNw\"",
+    "mtime": "2025-05-17T12:22:25.382Z",
+    "size": 1187,
+    "path": "../public/favicon/pwa-maskable-192x192.png"
   },
   "/favicon/pwa-maskable-512x512.png": {
-    type: "image/png",
-    etag: '"1596-elKa66nyxM+EC9VcsHODGM5iI+w"',
-    mtime: "2025-05-15T12:16:24.535Z",
-    size: 5526,
-    path: "../public/favicon/pwa-maskable-512x512.png",
+    "type": "image/png",
+    "etag": "\"1596-elKa66nyxM+EC9VcsHODGM5iI+w\"",
+    "mtime": "2025-05-17T12:22:25.382Z",
+    "size": 5526,
+    "path": "../public/favicon/pwa-maskable-512x512.png"
   },
   "/favicon/site.webmanifest": {
-    type: "application/manifest+json",
-    etag: '"2ab-/PaSfYPisCleVkIV07AyzafAvfA"',
-    mtime: "2025-05-15T12:16:24.533Z",
-    size: 683,
-    path: "../public/favicon/site.webmanifest",
+    "type": "application/manifest+json",
+    "etag": "\"2ab-/PaSfYPisCleVkIV07AyzafAvfA\"",
+    "mtime": "2025-05-17T12:22:25.382Z",
+    "size": 683,
+    "path": "../public/favicon/site.webmanifest"
   },
   "/logo/ico-white.png": {
-    type: "image/png",
-    etag: '"872-bh1wtYIULmIpybASeCVd0L1iP4g"',
-    mtime: "2025-05-15T12:16:24.531Z",
-    size: 2162,
-    path: "../public/logo/ico-white.png",
+    "type": "image/png",
+    "etag": "\"872-bh1wtYIULmIpybASeCVd0L1iP4g\"",
+    "mtime": "2025-05-17T12:22:25.379Z",
+    "size": 2162,
+    "path": "../public/logo/ico-white.png"
   },
   "/logo/ico-white.svg": {
-    type: "image/svg+xml",
-    etag: '"816-5feM1c4sUfrbkB8+YCOppq9A28E"',
-    mtime: "2025-05-15T12:16:24.534Z",
-    size: 2070,
-    path: "../public/logo/ico-white.svg",
+    "type": "image/svg+xml",
+    "etag": "\"816-5feM1c4sUfrbkB8+YCOppq9A28E\"",
+    "mtime": "2025-05-17T12:22:25.382Z",
+    "size": 2070,
+    "path": "../public/logo/ico-white.svg"
   },
   "/logo/ico.png": {
-    type: "image/png",
-    etag: '"872-GbL+btbqzhkou2taNk0KrCXmix8"',
-    mtime: "2025-05-15T12:16:24.536Z",
-    size: 2162,
-    path: "../public/logo/ico.png",
+    "type": "image/png",
+    "etag": "\"872-GbL+btbqzhkou2taNk0KrCXmix8\"",
+    "mtime": "2025-05-17T12:22:25.383Z",
+    "size": 2162,
+    "path": "../public/logo/ico.png"
   },
   "/logo/ico.svg": {
-    type: "image/svg+xml",
-    etag: '"816-6OyJN3LpTgVgCqf6EHrZncGmoZk"',
-    mtime: "2025-05-15T12:16:24.534Z",
-    size: 2070,
-    path: "../public/logo/ico.svg",
+    "type": "image/svg+xml",
+    "etag": "\"816-6OyJN3LpTgVgCqf6EHrZncGmoZk\"",
+    "mtime": "2025-05-17T12:22:25.382Z",
+    "size": 2070,
+    "path": "../public/logo/ico.svg"
   },
   "/logo/logo-white.png": {
-    type: "image/png",
-    etag: '"100e-hbDHEU4igK/lPyW3ugZgdN4Hie4"',
-    mtime: "2025-05-15T12:16:24.536Z",
-    size: 4110,
-    path: "../public/logo/logo-white.png",
+    "type": "image/png",
+    "etag": "\"100e-hbDHEU4igK/lPyW3ugZgdN4Hie4\"",
+    "mtime": "2025-05-17T12:22:25.382Z",
+    "size": 4110,
+    "path": "../public/logo/logo-white.png"
   },
   "/logo/logo.png": {
-    type: "image/png",
-    etag: '"102f-CCx3zGknx5WpsRjAcjGwNPZQ4v8"',
-    mtime: "2025-05-15T12:16:24.536Z",
-    size: 4143,
-    path: "../public/logo/logo.png",
+    "type": "image/png",
+    "etag": "\"102f-CCx3zGknx5WpsRjAcjGwNPZQ4v8\"",
+    "mtime": "2025-05-17T12:22:25.382Z",
+    "size": 4143,
+    "path": "../public/logo/logo.png"
+  },
+  "/_server/assets/styles-BjkkjdbK.css": {
+    "type": "text/css; charset=utf-8",
+    "etag": "\"135db-DRErgIFab+ksdAGsTRjqiWfFXB0\"",
+    "mtime": "2025-05-17T12:22:25.400Z",
+    "size": 79323,
+    "path": "../public/_server/assets/styles-BjkkjdbK.css"
   },
   "/_build/.vite/manifest.json": {
-    type: "application/json",
-    etag: '"dd2-op9XDcHeoS5F7PDE0DfxxdQWpRo"',
-    mtime: "2025-05-15T12:16:24.541Z",
-    size: 3538,
-    path: "../public/_build/.vite/manifest.json",
-  },
-  "/_server/assets/styles-BNIwYrRN.css": {
-    type: "text/css; charset=utf-8",
-    etag: '"103d1-x49yaReV08FZ/qbWeXQGZuyAe64"',
-    mtime: "2025-05-15T12:16:24.552Z",
-    size: 66513,
-    path: "../public/_server/assets/styles-BNIwYrRN.css",
+    "type": "application/json",
+    "etag": "\"1d2c-7VE1D072QHRFT4acHMjEL4gEa2I\"",
+    "mtime": "2025-05-17T12:22:25.388Z",
+    "size": 7468,
+    "path": "../public/_build/.vite/manifest.json"
   },
   "/_build/assets/__vite-browser-external-BIHI7g3E.js": {
-    type: "text/javascript; charset=utf-8",
-    etag: '"21-TnSDqNzuAbz1l2Zfx/fW4jY7tlk"',
-    mtime: "2025-05-15T12:16:24.542Z",
-    size: 33,
-    path: "../public/_build/assets/__vite-browser-external-BIHI7g3E.js",
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"21-TnSDqNzuAbz1l2Zfx/fW4jY7tlk\"",
+    "mtime": "2025-05-17T12:22:25.391Z",
+    "size": 33,
+    "path": "../public/_build/assets/__vite-browser-external-BIHI7g3E.js"
   },
-  "/_build/assets/auth-DzL7yw3J.js": {
-    type: "text/javascript; charset=utf-8",
-    etag: '"b069-1ZnHceXl8P002F0DyCC53EWs518"',
-    mtime: "2025-05-15T12:16:24.541Z",
-    size: 45161,
-    path: "../public/_build/assets/auth-DzL7yw3J.js",
+  "/_build/assets/_id-CW7ko6SE.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"178-oSrAmfwVbNqDfVZ5Ks01UaqFAfI\"",
+    "mtime": "2025-05-17T12:22:25.388Z",
+    "size": 376,
+    "path": "../public/_build/assets/_id-CW7ko6SE.js"
   },
-  "/_build/assets/client-CUMJ4jEz.js": {
-    type: "text/javascript; charset=utf-8",
-    etag: '"3f-HPxbIE3Y1jq7vi0AMULhZC5B8EM"',
-    mtime: "2025-05-15T12:16:24.541Z",
-    size: 63,
-    path: "../public/_build/assets/client-CUMJ4jEz.js",
+  "/_build/assets/addresses-B1HvB_K9.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"171-6q3lsROMro1h/i3ZCZc/ZLLIDXw\"",
+    "mtime": "2025-05-17T12:22:25.391Z",
+    "size": 369,
+    "path": "../public/_build/assets/addresses-B1HvB_K9.js"
   },
-  "/_build/assets/client-DJZyYeHn.js": {
-    type: "text/javascript; charset=utf-8",
-    etag: '"52a05-t8XefsdZSIAxZ8qT5GlHL3fVvM0"',
-    mtime: "2025-05-15T12:16:24.541Z",
-    size: 338437,
-    path: "../public/_build/assets/client-DJZyYeHn.js",
+  "/_build/assets/auth-BH0fQzbF.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"4f09-x/zEOG3kcr4aXAjor/GSENDzj1g\"",
+    "mtime": "2025-05-17T12:22:25.389Z",
+    "size": 20233,
+    "path": "../public/_build/assets/auth-BH0fQzbF.js"
   },
-  "/_build/assets/index-BOJpvDwf.js": {
-    type: "text/javascript; charset=utf-8",
-    etag: '"1355-QCEIQWdfR5IEvpLf7SLF3HkrexU"',
-    mtime: "2025-05-15T12:16:24.541Z",
-    size: 4949,
-    path: "../public/_build/assets/index-BOJpvDwf.js",
+  "/_build/assets/avatar-Jx8W_WA7.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"113e-VtHTg4AA858aFMAnpSJ9ybIpBFQ\"",
+    "mtime": "2025-05-17T12:22:25.389Z",
+    "size": 4414,
+    "path": "../public/_build/assets/avatar-Jx8W_WA7.js"
   },
-  "/_build/assets/input-BLXIWNlW.js": {
-    type: "text/javascript; charset=utf-8",
-    etag: '"45c-6ERpr6Gx9V62t4JBp9tmsAXwC8g"',
-    mtime: "2025-05-15T12:16:24.542Z",
-    size: 1116,
-    path: "../public/_build/assets/input-BLXIWNlW.js",
+  "/_build/assets/button-DXCF5KV-.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"125c-63YsElG1nZpB02KHW+4SmOAnp2Y\"",
+    "mtime": "2025-05-17T12:22:25.389Z",
+    "size": 4700,
+    "path": "../public/_build/assets/button-DXCF5KV-.js"
   },
-  "/_build/assets/loading-BAzzZg5_.js": {
-    type: "text/javascript; charset=utf-8",
-    etag: '"1f6-fvJDKfh+SMRb7Nz9y9iHLTzmPOQ"',
-    mtime: "2025-05-15T12:16:24.540Z",
-    size: 502,
-    path: "../public/_build/assets/loading-BAzzZg5_.js",
+  "/_build/assets/card-Bz5FfSE2.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"39f-ZHxDF9y5ePWXfNWh2FDUNlDLQcU\"",
+    "mtime": "2025-05-17T12:22:25.389Z",
+    "size": 927,
+    "path": "../public/_build/assets/card-Bz5FfSE2.js"
   },
-  "/_build/assets/login-B-vxi0u6.js": {
-    type: "text/javascript; charset=utf-8",
-    etag: '"75b0-Oe98bM7rzympQKA3TohWmokcVAE"',
-    mtime: "2025-05-15T12:16:24.541Z",
-    size: 30128,
-    path: "../public/_build/assets/login-B-vxi0u6.js",
+  "/_build/assets/client-CH2FOPvg.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"3f-wtVkluTPXgtTxFXBQL9VNujWwYs\"",
+    "mtime": "2025-05-17T12:22:25.389Z",
+    "size": 63,
+    "path": "../public/_build/assets/client-CH2FOPvg.js"
   },
-  "/_build/assets/logout-BypIGhSO.js": {
-    type: "text/javascript; charset=utf-8",
-    etag: '"132-D2zc9kY8uzOgr+O7RQZUPjqtecI"',
-    mtime: "2025-05-15T12:16:24.541Z",
-    size: 306,
-    path: "../public/_build/assets/logout-BypIGhSO.js",
+  "/_build/assets/client-DSsj00kt.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"5401c-2g5JUvz9u1X0ixY0TIY7tuahdjQ\"",
+    "mtime": "2025-05-17T12:22:25.389Z",
+    "size": 344092,
+    "path": "../public/_build/assets/client-DSsj00kt.js"
   },
-  "/_build/assets/route-Cl5ew0Ft.js": {
-    type: "text/javascript; charset=utf-8",
-    etag: '"89-psjFSmUlNJJ8bkmCZ1Mt86OlRbk"',
-    mtime: "2025-05-15T12:16:24.542Z",
-    size: 137,
-    path: "../public/_build/assets/route-Cl5ew0Ft.js",
+  "/_build/assets/createLucideIcon-Dz2Le6F5.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"742-VWm02drCet2lXtYGsVFk6xUzuOs\"",
+    "mtime": "2025-05-17T12:22:25.389Z",
+    "size": 1858,
+    "path": "../public/_build/assets/createLucideIcon-Dz2Le6F5.js"
   },
-  "/_build/assets/route-WDC4eBUF.js": {
-    type: "text/javascript; charset=utf-8",
-    etag: '"85-0t3MldvkIXiocSpiCb5ONjXXmK8"',
-    mtime: "2025-05-15T12:16:24.541Z",
-    size: 133,
-    path: "../public/_build/assets/route-WDC4eBUF.js",
+  "/_build/assets/empty-Bu6ifZhR.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"3ab-gC+W6PQQJnP6cMJZiDJmX6W1Y9U\"",
+    "mtime": "2025-05-17T12:22:25.389Z",
+    "size": 939,
+    "path": "../public/_build/assets/empty-Bu6ifZhR.js"
   },
-  "/_build/assets/route-gN8FYUF7.js": {
-    type: "text/javascript; charset=utf-8",
-    etag: '"88-IVqJT2TTvigN6IBeHYaV55EQ8ck"',
-    mtime: "2025-05-15T12:16:24.542Z",
-    size: 136,
-    path: "../public/_build/assets/route-gN8FYUF7.js",
+  "/_build/assets/header-COxbX9eK.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"3d2-PL2QpVm3XXPnv9BDpd0r6R3YN4s\"",
+    "mtime": "2025-05-17T12:22:25.390Z",
+    "size": 978,
+    "path": "../public/_build/assets/header-COxbX9eK.js"
   },
-  "/_build/assets/styles-BNIwYrRN.css": {
-    type: "text/css; charset=utf-8",
-    etag: '"103d1-x49yaReV08FZ/qbWeXQGZuyAe64"',
-    mtime: "2025-05-15T12:16:24.542Z",
-    size: 66513,
-    path: "../public/_build/assets/styles-BNIwYrRN.css",
+  "/_build/assets/index-C4ZkQLQw.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"1ea47-U//cwt+UYQ0DNs1XQgeF9iovruQ\"",
+    "mtime": "2025-05-17T12:22:25.390Z",
+    "size": 125511,
+    "path": "../public/_build/assets/index-C4ZkQLQw.js"
   },
+  "/_build/assets/index-DUUPs-KI.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"ce5-SGD97RyUuJLZDDEGTe4j51ImV4M\"",
+    "mtime": "2025-05-17T12:22:25.390Z",
+    "size": 3301,
+    "path": "../public/_build/assets/index-DUUPs-KI.js"
+  },
+  "/_build/assets/index-Dazthtk9.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"833-Kq6y1OgdDxvhqQgHOrSBvi+3nBQ\"",
+    "mtime": "2025-05-17T12:22:25.390Z",
+    "size": 2099,
+    "path": "../public/_build/assets/index-Dazthtk9.js"
+  },
+  "/_build/assets/label-ypWwUxTZ.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"2b4-GMpcgu2C17K3sRzt7o106AIdC38\"",
+    "mtime": "2025-05-17T12:22:25.390Z",
+    "size": 692,
+    "path": "../public/_build/assets/label-ypWwUxTZ.js"
+  },
+  "/_build/assets/loading-B6sRdCUo.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"1f7-P4Iz1UxFQZzhhUdOZDVTLfIhXOs\"",
+    "mtime": "2025-05-17T12:22:25.390Z",
+    "size": 503,
+    "path": "../public/_build/assets/loading-B6sRdCUo.js"
+  },
+  "/_build/assets/login-B5ztY6M_.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"5459-/KQuYdJBOOyCBf8L++cxKT0kISE\"",
+    "mtime": "2025-05-17T12:22:25.390Z",
+    "size": 21593,
+    "path": "../public/_build/assets/login-B5ztY6M_.js"
+  },
+  "/_build/assets/logout-D8gSLEtu.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"153-VYarYTVz5S8aUbXZWXM8tqOf9Vg\"",
+    "mtime": "2025-05-17T12:22:25.390Z",
+    "size": 339,
+    "path": "../public/_build/assets/logout-D8gSLEtu.js"
+  },
+  "/_build/assets/orders-J_ZP69Rh.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"171-GjBSH/hS+GjsYYyfdMRAld0h68Y\"",
+    "mtime": "2025-05-17T12:22:25.391Z",
+    "size": 369,
+    "path": "../public/_build/assets/orders-J_ZP69Rh.js"
+  },
+  "/_build/assets/profile-92biJx_b.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"16f-eITJpx6enyWqoQfzSHHwhD01k78\"",
+    "mtime": "2025-05-17T12:22:25.391Z",
+    "size": 367,
+    "path": "../public/_build/assets/profile-92biJx_b.js"
+  },
+  "/_build/assets/route-Bv_bgLYK.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"85-jBC4tN5jxeMmrX2DyYnwCpsnp+0\"",
+    "mtime": "2025-05-17T12:22:25.390Z",
+    "size": 133,
+    "path": "../public/_build/assets/route-Bv_bgLYK.js"
+  },
+  "/_build/assets/route-D_a1_EPC.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"89-DzPjnERG2MrXW2kG7LpWX6FUg1c\"",
+    "mtime": "2025-05-17T12:22:25.391Z",
+    "size": 137,
+    "path": "../public/_build/assets/route-D_a1_EPC.js"
+  },
+  "/_build/assets/styles-BjkkjdbK.css": {
+    "type": "text/css; charset=utf-8",
+    "etag": "\"135db-DRErgIFab+ksdAGsTRjqiWfFXB0\"",
+    "mtime": "2025-05-17T12:22:25.391Z",
+    "size": 79323,
+    "path": "../public/_build/assets/styles-BjkkjdbK.css"
+  },
+  "/_build/assets/utils-Cd13OnTz.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"6103-tZ+g+tRggZzUChHMXAaCpQzs9g0\"",
+    "mtime": "2025-05-17T12:22:25.391Z",
+    "size": 24835,
+    "path": "../public/_build/assets/utils-Cd13OnTz.js"
+  }
 };
 
 const _DRIVE_LETTER_START_RE = /^[A-Za-z]:\//;
@@ -5759,9 +4814,7 @@ function normalizeWindowsPath(input = "") {
   if (!input) {
     return input;
   }
-  return input
-    .replace(/\\/g, "/")
-    .replace(_DRIVE_LETTER_START_RE, (r) => r.toUpperCase());
+  return input.replace(/\\/g, "/").replace(_DRIVE_LETTER_START_RE, (r) => r.toUpperCase());
 }
 const _IS_ABSOLUTE_RE = /^[/\\](?![/\\])|^[/\\]{2}(?!\.)|^[A-Za-z]:[/\\]/;
 const _DRIVE_LETTER_RE = /^[A-Za-z]:$/;
@@ -5771,15 +4824,11 @@ function cwd() {
   }
   return "/";
 }
-const resolve = function (...arguments_) {
+const resolve = function(...arguments_) {
   arguments_ = arguments_.map((argument) => normalizeWindowsPath(argument));
   let resolvedPath = "";
   let resolvedAbsolute = false;
-  for (
-    let index = arguments_.length - 1;
-    index >= -1 && !resolvedAbsolute;
-    index--
-  ) {
+  for (let index = arguments_.length - 1; index >= -1 && !resolvedAbsolute; index--) {
     const path = index >= 0 ? arguments_[index] : cwd();
     if (!path || path.length === 0) {
       continue;
@@ -5808,14 +4857,8 @@ function normalizeString(path, allowAboveRoot) {
       char = "/";
     }
     if (char === "/") {
-      if (lastSlash === index - 1 || dots === 1);
-      else if (dots === 2) {
-        if (
-          res.length < 2 ||
-          lastSegmentLength !== 2 ||
-          res[res.length - 1] !== "." ||
-          res[res.length - 2] !== "."
-        ) {
+      if (lastSlash === index - 1 || dots === 1) ; else if (dots === 2) {
+        if (res.length < 2 || lastSegmentLength !== 2 || res[res.length - 1] !== "." || res[res.length - 2] !== ".") {
           if (res.length > 2) {
             const lastSlashIndex = res.lastIndexOf("/");
             if (lastSlashIndex === -1) {
@@ -5858,41 +4901,36 @@ function normalizeString(path, allowAboveRoot) {
   }
   return res;
 }
-const isAbsolute = function (p) {
+const isAbsolute = function(p) {
   return _IS_ABSOLUTE_RE.test(p);
 };
-const dirname = function (p) {
-  const segments = normalizeWindowsPath(p)
-    .replace(/\/$/, "")
-    .split("/")
-    .slice(0, -1);
+const dirname = function(p) {
+  const segments = normalizeWindowsPath(p).replace(/\/$/, "").split("/").slice(0, -1);
   if (segments.length === 1 && _DRIVE_LETTER_RE.test(segments[0])) {
     segments[0] += "/";
   }
   return segments.join("/") || (isAbsolute(p) ? "/" : ".");
 };
 
-function readAsset(id) {
+function readAsset (id) {
   const serverDir = dirname(fileURLToPath(globalThis._importMeta_.url));
-  return promises.readFile(resolve(serverDir, assets[id].path));
+  return promises.readFile(resolve(serverDir, assets[id].path))
 }
 
 const publicAssetBases = {};
 
-function isPublicAssetURL(id = "") {
+function isPublicAssetURL(id = '') {
   if (assets[id]) {
-    return true;
+    return true
   }
   for (const base in publicAssetBases) {
-    if (id.startsWith(base)) {
-      return true;
-    }
+    if (id.startsWith(base)) { return true }
   }
-  return false;
+  return false
 }
 
-function getAsset(id) {
-  return assets[id];
+function getAsset (id) {
+  return assets[id]
 }
 
 const METHODS = /* @__PURE__ */ new Set(["HEAD", "GET"]);
@@ -5909,12 +4947,8 @@ const _mq1PUh = eventHandler((event) => {
     getRequestHeader(event, "accept-encoding") || ""
   );
   const encodings = [
-    ...encodingHeader
-      .split(",")
-      .map((e) => EncodingMap[e.trim()])
-      .filter(Boolean)
-      .sort(),
-    "",
+    ...encodingHeader.split(",").map((e) => EncodingMap[e.trim()]).filter(Boolean).sort(),
+    ""
   ];
   if (encodings.length > 1) {
     appendResponseHeader(event, "Vary", "Accept-Encoding");
@@ -5934,7 +4968,7 @@ const _mq1PUh = eventHandler((event) => {
       removeResponseHeader(event, "Cache-Control");
       throw createError$1({
         statusMessage: "Cannot find static asset " + id,
-        statusCode: 404,
+        statusCode: 404
       });
     }
     return;
@@ -5946,11 +4980,7 @@ const _mq1PUh = eventHandler((event) => {
   }
   const ifModifiedSinceH = getRequestHeader(event, "if-modified-since");
   const mtimeDate = new Date(asset.mtime);
-  if (
-    ifModifiedSinceH &&
-    asset.mtime &&
-    new Date(ifModifiedSinceH) >= mtimeDate
-  ) {
+  if (ifModifiedSinceH && asset.mtime && new Date(ifModifiedSinceH) >= mtimeDate) {
     setResponseStatus(event, 304, "Not Modified");
     return "";
   }
@@ -5972,119 +5002,45 @@ const _mq1PUh = eventHandler((event) => {
   return readAsset(id);
 });
 
-const O = {
-    "src_routes_root_tsx--isMobile_createServerFn_handler": {
-      functionName: "isMobile_createServerFn_handler",
-      importer: () => import("../build/__root-Bz_HmNpq.mjs"),
-    },
-  },
-  q = eventHandler$1(D),
-  d = O;
-async function D(n) {
+const O$1 = { "src_routes_root_tsx--isMobile_createServerFn_handler": { functionName: "isMobile_createServerFn_handler", importer: () => import('../build/__root-BcJQ0kD0.mjs') } }, q = eventHandler$1(D$1), d = O$1;
+async function D$1(n) {
   const t = toWebRequest(n);
-  return await A({ request: t, event: n });
+  return await A$1({ request: t, event: n });
 }
 function L(n) {
   return n.replace(/^\/|\/$/g, "");
 }
-async function A({ request: n, event: t }) {
-  const s = new AbortController(),
-    i = s.signal,
-    v = () => s.abort();
+async function A$1({ request: n, event: t }) {
+  const s = new AbortController(), i = s.signal, v = () => s.abort();
   t.node.req.on("close", v);
-  const h = n.method,
-    g = new URL(n.url, "http://localhost:3002"),
-    _ = new RegExp(`${L("/_server")}/([^/?#]+)`),
-    y = g.pathname.match(_),
-    o = y ? y[1] : null,
-    c = Object.fromEntries(g.searchParams.entries()),
-    w = "createServerFn" in c,
-    E = "raw" in c;
-  if (typeof o != "string")
-    throw new Error("Invalid server action param for serverFnId: " + o);
+  const h = n.method, g = new URL(n.url, "http://localhost:3000"), _ = new RegExp(`${L("/_server")}/([^/?#]+)`), y = g.pathname.match(_), o = y ? y[1] : null, c = Object.fromEntries(g.searchParams.entries()), w = "createServerFn" in c, E = "raw" in c;
+  if (typeof o != "string") throw new Error("Invalid server action param for serverFnId: " + o);
   const m = d[o];
-  if (!m)
-    throw (
-      (console.log("serverFnManifest", d),
-      new Error("Server function info not found for " + o))
-    );
+  if (!m) throw console.log("serverFnManifest", d), new Error("Server function info not found for " + o);
   let l;
-  if (((l = await m.importer()), !l))
-    throw (
-      (console.log("serverFnManifest", d),
-      new Error("Server function module not resolved for " + o))
-    );
+  if (l = await m.importer(), !l) throw console.log("serverFnManifest", d), new Error("Server function module not resolved for " + o);
   const a = l[m.functionName];
-  if (!a)
-    throw (
-      (console.log("serverFnManifest", d),
-      console.log("fnModule", l),
-      new Error(
-        `Server function module export not resolved for serverFn ID: ${o}`
-      ))
-    );
-  const M = ["multipart/form-data", "application/x-www-form-urlencoded"],
-    f = await (async () => {
-      try {
-        let e = await (async () => {
-          if (
-            n.headers.get("Content-Type") &&
-            M.some((r) => {
-              var S;
-              return (S = n.headers.get("Content-Type")) == null
-                ? void 0
-                : S.includes(r);
-            })
-          )
-            return (
-              T$1(
-                h.toLowerCase() !== "get",
-                "GET requests with FormData payloads are not supported"
-              ),
-              await a(await n.formData(), i)
-            );
-          if (h.toLowerCase() === "get") {
-            let r = c;
-            return (
-              w && (r = c.payload),
-              (r = r && startSerializer.parse(r)),
-              await a(r, i)
-            );
-          }
-          const p = await n.text(),
-            F = startSerializer.parse(p);
-          return w ? await a(F, i) : await a(...F, i);
-        })();
-        return e.result instanceof Response
-          ? e.result
-          : !w && ((e = e.result), e instanceof Response)
-            ? e
-            : isRedirect(e) || isNotFound(e)
-              ? x(e)
-              : new Response(
-                  e !== void 0 ? startSerializer.stringify(e) : void 0,
-                  {
-                    status: getResponseStatus(getEvent()),
-                    headers: { "Content-Type": "application/json" },
-                  }
-                );
-      } catch (e) {
-        return e instanceof Response
-          ? e
-          : isRedirect(e) || isNotFound(e)
-            ? x(e)
-            : (console.info(),
-              console.info("Server Fn Error!"),
-              console.info(),
-              console.error(e),
-              console.info(),
-              new Response(startSerializer.stringify(e), {
-                status: 500,
-                headers: { "Content-Type": "application/json" },
-              }));
-      }
-    })();
-  if ((t.node.req.removeListener("close", v), E)) return f;
+  if (!a) throw console.log("serverFnManifest", d), console.log("fnModule", l), new Error(`Server function module export not resolved for serverFn ID: ${o}`);
+  const M = ["multipart/form-data", "application/x-www-form-urlencoded"], f = await (async () => {
+    try {
+      let e = await (async () => {
+        if (n.headers.get("Content-Type") && M.some((r) => {
+          var S;
+          return (S = n.headers.get("Content-Type")) == null ? void 0 : S.includes(r);
+        })) return T$1(h.toLowerCase() !== "get", "GET requests with FormData payloads are not supported"), await a(await n.formData(), i);
+        if (h.toLowerCase() === "get") {
+          let r = c;
+          return w && (r = c.payload), r = r && startSerializer.parse(r), await a(r, i);
+        }
+        const p = await n.text(), F = startSerializer.parse(p);
+        return w ? await a(F, i) : await a(...F, i);
+      })();
+      return e.result instanceof Response ? e.result : !w && (e = e.result, e instanceof Response) ? e : isRedirect(e) || isNotFound(e) ? x(e) : new Response(e !== void 0 ? startSerializer.stringify(e) : void 0, { status: getResponseStatus(getEvent()), headers: { "Content-Type": "application/json" } });
+    } catch (e) {
+      return e instanceof Response ? e : isRedirect(e) || isNotFound(e) ? x(e) : (console.info(), console.info("Server Fn Error!"), console.info(), console.error(e), console.info(), new Response(startSerializer.stringify(e), { status: 500, headers: { "Content-Type": "application/json" } }));
+    }
+  })();
+  if (t.node.req.removeListener("close", v), E) return f;
   if (f.headers.get("Content-Type") === "application/json") {
     const p = await f.clone().text();
     p && JSON.stringify(JSON.parse(p));
@@ -6093,640 +5049,151 @@ async function A({ request: n, event: t }) {
 }
 function x(n) {
   const { headers: t, ...s } = n;
-  return new Response(JSON.stringify(s), {
-    status: 200,
-    headers: { "Content-Type": "application/json", ...(t || {}) },
-  });
+  return new Response(JSON.stringify(s), { status: 200, headers: { "Content-Type": "application/json", ...t || {} } });
 }
 
-function c(e, u, c) {
-  var i = this,
-    a = useRef(null),
-    o = useRef(0),
-    f = useRef(null),
-    l = useRef([]),
-    v = useRef(),
-    m = useRef(),
-    d = useRef(e),
-    g = useRef(true);
-  d.current = e;
-  var p = "undefined" != "undefined",
-    w = !u && 0 !== u && p;
-  if ("function" != typeof e) throw new TypeError("Expected a function");
-  u = +u || 0;
-  var s = !!(c = c || {}).leading,
-    x = !("trailing" in c) || !!c.trailing,
-    h = "maxWait" in c,
-    y = "debounceOnServer" in c && !!c.debounceOnServer,
-    F = h ? Math.max(+c.maxWait || 0, u) : null;
-  useEffect(function () {
-    return (
-      (g.current = true),
-      function () {
-        g.current = false;
-      }
-    );
-  }, []);
-  var A = useMemo(
-    function () {
-      var r = function (r) {
-          var n = l.current,
-            t = v.current;
-          return (
-            (l.current = v.current = null),
-            (o.current = r),
-            (m.current = d.current.apply(t, n))
-          );
-        },
-        n = function (r, n) {
-          w && cancelAnimationFrame(f.current),
-            (f.current = w ? requestAnimationFrame(r) : setTimeout(r, n));
-        },
-        t = function (r) {
-          if (!g.current) return false;
-          var n = r - a.current;
-          return !a.current || n >= u || n < 0 || (h && r - o.current >= F);
-        },
-        e = function (n) {
-          return (
-            (f.current = null),
-            x && l.current ? r(n) : ((l.current = v.current = null), m.current)
-          );
-        },
-        c = function r() {
-          var c = Date.now();
-          if (t(c)) return e(c);
-          if (g.current) {
-            var i = u - (c - a.current),
-              f = h ? Math.min(i, F - (c - o.current)) : i;
-            n(r, f);
-          }
-        },
-        A = function () {
-          if (y) {
-            var e = Date.now(),
-              d = t(e);
-            if (
-              ((l.current = [].slice.call(arguments)),
-              (v.current = i),
-              (a.current = e),
-              d)
-            ) {
-              if (!f.current && g.current)
-                return (
-                  (o.current = a.current), n(c, u), s ? r(a.current) : m.current
-                );
-              if (h) return n(c, u), r(a.current);
-            }
-            return f.current || n(c, u), m.current;
-          }
-        };
-      return (
-        (A.cancel = function () {
-          f.current &&
-            (w ? cancelAnimationFrame(f.current) : clearTimeout(f.current)),
-            (o.current = 0),
-            (l.current = a.current = v.current = f.current = null);
-        }),
-        (A.isPending = function () {
-          return !!f.current;
-        }),
-        (A.flush = function () {
-          return f.current ? e(Date.now()) : m.current;
-        }),
-        A
-      );
-    },
-    [s, h, u, F, x, w, p, y]
-  );
-  return A;
-}
+function c$1(e,u,c){var i=this,a=useRef(null),o=useRef(0),f=useRef(null),l=useRef([]),v=useRef(),m=useRef(),d=useRef(e),g=useRef(true);d.current=e;var p="undefined"!="undefined",w=!u&&0!==u&&p;if("function"!=typeof e)throw new TypeError("Expected a function");u=+u||0;var s=!!(c=c||{}).leading,x=!("trailing"in c)||!!c.trailing,h="maxWait"in c,y="debounceOnServer"in c&&!!c.debounceOnServer,F=h?Math.max(+c.maxWait||0,u):null;useEffect(function(){return g.current=true,function(){g.current=false;}},[]);var A=useMemo(function(){var r=function(r){var n=l.current,t=v.current;return l.current=v.current=null,o.current=r,m.current=d.current.apply(t,n)},n=function(r,n){w&&cancelAnimationFrame(f.current),f.current=w?requestAnimationFrame(r):setTimeout(r,n);},t=function(r){if(!g.current)return  false;var n=r-a.current;return !a.current||n>=u||n<0||h&&r-o.current>=F},e=function(n){return f.current=null,x&&l.current?r(n):(l.current=v.current=null,m.current)},c=function r(){var c=Date.now();if(t(c))return e(c);if(g.current){var i=u-(c-a.current),f=h?Math.min(i,F-(c-o.current)):i;n(r,f);}},A=function(){if(y){var e=Date.now(),d=t(e);if(l.current=[].slice.call(arguments),v.current=i,a.current=e,d){if(!f.current&&g.current)return o.current=a.current,n(c,u),s?r(a.current):m.current;if(h)return n(c,u),r(a.current)}return f.current||n(c,u),m.current}};return A.cancel=function(){f.current&&(w?cancelAnimationFrame(f.current):clearTimeout(f.current)),o.current=0,l.current=a.current=v.current=f.current=null;},A.isPending=function(){return !!f.current},A.flush=function(){return f.current?e(Date.now()):m.current},A},[s,h,u,F,x,w,p,y]);return A}
 
-function S(e) {
+function C(e) {
   return jsx(RouterProvider, { router: e.router });
 }
-const we = defineHandlerCallback(
-    async ({ request: e, router: t, responseHeaders: n }) => {
-      if (typeof R$1.renderToReadableStream == "function") {
-        const o = await R$1.renderToReadableStream(jsx(S, { router: t }), {
-          signal: e.signal,
-        });
-        isbot(e.headers.get("User-Agent")) && (await o.allReady);
-        const a = transformReadableStreamWithRouter(t, o);
-        return new Response(a, { status: t.state.statusCode, headers: n });
-      }
-      if (typeof R$1.renderToPipeableStream == "function") {
-        const o = new PassThrough();
-        try {
-          const i = R$1.renderToPipeableStream(jsx(S, { router: t }), {
-            ...(isbot(e.headers.get("User-Agent"))
-              ? {
-                  onAllReady() {
-                    i.pipe(o);
-                  },
-                }
-              : {
-                  onShellReady() {
-                    i.pipe(o);
-                  },
-                }),
-            onError: (c, s) => {
-              console.error("Error in renderToPipeableStream:", c, s);
-            },
-          });
-        } catch (i) {
-          console.error("Error in renderToPipeableStream:", i);
-        }
-        const a = transformPipeableStreamWithRouter(t, o);
-        return new Response(a, { status: t.state.statusCode, headers: n });
-      }
-      throw new Error(
-        "No renderToReadableStream or renderToPipeableStream found in react-dom/server. Ensure you are using a version of react-dom that supports streaming."
-      );
+const Pe = defineHandlerCallback(async ({ request: e, router: t, responseHeaders: n }) => {
+  if (typeof R$1.renderToReadableStream == "function") {
+    const o = await R$1.renderToReadableStream(jsx(C, { router: t }), { signal: e.signal });
+    isbot(e.headers.get("User-Agent")) && await o.allReady;
+    const a = transformReadableStreamWithRouter(t, o);
+    return new Response(a, { status: t.state.statusCode, headers: n });
+  }
+  if (typeof R$1.renderToPipeableStream == "function") {
+    const o = new PassThrough();
+    try {
+      const i = R$1.renderToPipeableStream(jsx(C, { router: t }), { ...isbot(e.headers.get("User-Agent")) ? { onAllReady() {
+        i.pipe(o);
+      } } : { onShellReady() {
+        i.pipe(o);
+      } }, onError: (d, s) => {
+        console.error("Error in renderToPipeableStream:", d, s);
+      } });
+    } catch (i) {
+      console.error("Error in renderToPipeableStream:", i);
     }
-  ),
-  Re = () => ({
-    routes: {
-      __root__: {
-        filePath: "__root.tsx",
-        children: [
-          "/",
-          "/account",
-          "/cart",
-          "/checkout",
-          "/(auth)/login",
-          "/(auth)/logout",
-        ],
-        preloads: [
-          "/_build/assets/client-CUMJ4jEz.js",
-          "/_build/assets/client-DJZyYeHn.js",
-        ],
-      },
-      "/": { filePath: "index.tsx" },
-      "/account": { filePath: "account/route.tsx" },
-      "/cart": { filePath: "cart/route.tsx" },
-      "/checkout": { filePath: "checkout/route.tsx" },
-      "/(auth)/login": { filePath: "(auth)/login.tsx" },
-      "/(auth)/logout": { filePath: "(auth)/logout.tsx" },
-    },
-  });
-function be(e) {
+    const a = transformPipeableStreamWithRouter(t, o);
+    return new Response(a, { status: t.state.statusCode, headers: n });
+  }
+  throw new Error("No renderToReadableStream or renderToPipeableStream found in react-dom/server. Ensure you are using a version of react-dom that supports streaming.");
+}), _e = () => ({ routes: { __root__: { filePath: "__root.tsx", children: ["/", "/cart", "/checkout", "/(auth)/login", "/(auth)/logout", "/account/addresses", "/account/orders", "/account/profile", "/shop/$id", "/account/"], preloads: ["/_build/assets/client-CH2FOPvg.js", "/_build/assets/client-DSsj00kt.js"] }, "/": { filePath: "index.tsx" }, "/cart": { filePath: "cart/route.tsx" }, "/checkout": { filePath: "checkout/route.tsx" }, "/(auth)/login": { filePath: "(auth)/login.tsx" }, "/(auth)/logout": { filePath: "(auth)/logout.tsx" }, "/account/addresses": { filePath: "account/addresses.tsx" }, "/account/orders": { filePath: "account/orders.tsx" }, "/account/profile": { filePath: "account/profile.tsx" }, "/shop/$id": { filePath: "shop/$id.tsx" }, "/account/": { filePath: "account/index.tsx" } } });
+function ke(e) {
   return globalThis.MANIFEST[e];
 }
-function xe() {
+function Te() {
   var _a;
-  const e = Re(),
-    t = (e.routes.__root__ = e.routes.__root__ || {});
+  const e = _e(), t = e.routes.__root__ = e.routes.__root__ || {};
   t.assets = t.assets || [];
   let n = "";
-  const o = be("client"),
-    a = (_a = o.inputs[o.handler]) == null ? void 0 : _a.output.path;
-  return (
-    a || T$1(a, "Could not find client entry in vinxi manifest"),
-    t.assets.push({
-      tag: "script",
-      attrs: { type: "module", suppressHydrationWarning: true, async: true },
-      children: `${n}import("${a}")`,
-    }),
-    e
-  );
+  const o = ke("client"), a = (_a = o.inputs[o.handler]) == null ? void 0 : _a.output.path;
+  return a || T$1(a, "Could not find client entry in vinxi manifest"), t.assets.push({ tag: "script", attrs: { type: "module", suppressHydrationWarning: true, async: true }, children: `${n}import("${a}")` }), e;
 }
-function ve() {
-  const e = xe();
-  return {
-    ...e,
-    routes: Object.fromEntries(
-      Object.entries(e.routes).map(([t, n]) => {
-        const { preloads: o, assets: a } = n;
-        return [t, { preloads: o, assets: a }];
-      })
-    ),
-  };
+function je() {
+  const e = Te();
+  return { ...e, routes: Object.fromEntries(Object.entries(e.routes).map(([t, n]) => {
+    const { preloads: o, assets: a } = n;
+    return [t, { preloads: o, assets: a }];
+  })) };
 }
-async function Ce(e, t, n) {
+async function Ee(e, t, n) {
   var o;
   const a = t[0];
   if (isPlainObject$1(a) && a.method) {
-    const s = a,
-      m = s.data instanceof FormData ? "formData" : "payload",
-      y = new Headers({
-        ...(m === "payload"
-          ? { "content-type": "application/json", accept: "application/json" }
-          : {}),
-        ...(s.headers instanceof Headers
-          ? Object.fromEntries(s.headers.entries())
-          : s.headers),
-      });
+    const s = a, f = s.data instanceof FormData ? "formData" : "payload", y = new Headers({ ...f === "payload" ? { "content-type": "application/json", accept: "application/json" } : {}, ...s.headers instanceof Headers ? Object.fromEntries(s.headers.entries()) : s.headers });
     if (s.method === "GET") {
-      const d = encode$1({
-        payload: startSerializer.stringify({
-          data: s.data,
-          context: s.context,
-        }),
-      });
-      d && (e.includes("?") ? (e += `&${d}`) : (e += `?${d}`));
+      const p = encode$1({ payload: startSerializer.stringify({ data: s.data, context: s.context }) });
+      p && (e.includes("?") ? e += `&${p}` : e += `?${p}`);
     }
-    e.includes("?") ? (e += "&createServerFn") : (e += "?createServerFn"),
-      s.response === "raw" && (e += "&raw");
-    const b = await n(e, {
-        method: s.method,
-        headers: y,
-        signal: s.signal,
-        ...Se(s),
-      }),
-      p = await _(b);
-    if (
-      (o = p.headers.get("content-type")) != null &&
-      o.includes("application/json")
-    ) {
-      const d = startSerializer.decode(await p.json());
-      if (isRedirect(d) || isNotFound(d) || d instanceof Error) throw d;
-      return d;
+    e.includes("?") ? e += "&createServerFn" : e += "?createServerFn", s.response === "raw" && (e += "&raw");
+    const b = await n(e, { method: s.method, headers: y, signal: s.signal, ...Ne(s) }), h = await S(b);
+    if ((o = h.headers.get("content-type")) != null && o.includes("application/json")) {
+      const p = startSerializer.decode(await h.json());
+      if (isRedirect(p) || isNotFound(p) || p instanceof Error) throw p;
+      return p;
     }
-    return p;
+    return h;
   }
-  const i = await _(
-      await n(e, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(t),
-      })
-    ),
-    c = i.headers.get("content-type");
-  return c && c.includes("application/json")
-    ? startSerializer.decode(await i.json())
-    : i.text();
+  const i = await S(await n(e, { method: "POST", headers: { Accept: "application/json", "Content-Type": "application/json" }, body: JSON.stringify(t) })), d = i.headers.get("content-type");
+  return d && d.includes("application/json") ? startSerializer.decode(await i.json()) : i.text();
 }
-function Se(e) {
+function Ne(e) {
   var _a;
-  return e.method === "POST"
-    ? e.data instanceof FormData
-      ? (e.data.set("__TSR_CONTEXT", startSerializer.stringify(e.context)),
-        { body: e.data })
-      : {
-          body: startSerializer.stringify({
-            data: (_a = e.data) != null ? _a : null,
-            context: e.context,
-          }),
-        }
-    : {};
+  return e.method === "POST" ? e.data instanceof FormData ? (e.data.set("__TSR_CONTEXT", startSerializer.stringify(e.context)), { body: e.data }) : { body: startSerializer.stringify({ data: (_a = e.data) != null ? _a : null, context: e.context }) } : {};
 }
-async function _(e) {
+async function S(e) {
   if (!e.ok) {
     const t = e.headers.get("content-type");
-    throw t && t.includes("application/json")
-      ? startSerializer.decode(await e.json())
-      : new Error(await e.text());
+    throw t && t.includes("application/json") ? startSerializer.decode(await e.json()) : new Error(await e.text());
   }
   return e;
 }
-function _e(e) {
+function Fe(e) {
   return e.replace(/^\/|\/$/g, "");
 }
-const $e = (e, t) => {
-  const n = `/${_e(t)}/${e}`;
-  return Object.assign(
-    (...a) =>
-      Ce(n, a, async (i, c) => {
-        c.headers = mergeHeaders$2(getHeaders(), c.headers);
-        const s = await $fetch.native(i, c),
-          m = getEvent(),
-          y = mergeHeaders$2(s.headers, m.___ssrRpcResponseHeaders);
-        return (m.___ssrRpcResponseHeaders = y), s;
-      }),
-    { url: n, functionId: e }
-  );
+const He = (e, t) => {
+  const n = `/${Fe(t)}/${e}`;
+  return Object.assign((...a) => Ee(n, a, async (i, d) => {
+    d.headers = mergeHeaders$2(getHeaders(), d.headers);
+    const s = await $fetch.native(i, d), f = getEvent(), y = mergeHeaders$2(s.headers, f.___ssrRpcResponseHeaders);
+    return f.___ssrRpcResponseHeaders = y, s;
+  }), { url: n, functionId: e });
 };
-function $({ error: e }) {
-  const t = useRouter(),
-    n = useMatch({ strict: false, select: (o) => o.id === rootRouteId });
-  return (
-    console.error("DefaultCatchBoundary Error:", e),
-    jsxs("div", {
-      className:
-        "min-w-0 flex-1 p-4 flex flex-col items-center justify-center gap-6",
-      children: [
-        jsx(ErrorComponent, { error: e }),
-        jsxs("div", {
-          className: "flex gap-2 items-center flex-wrap",
-          children: [
-            jsx("button", {
-              onClick: () => {
-                t.invalidate();
-              },
-              className:
-                "px-2 py-1 bg-gray-600 dark:bg-gray-700 rounded text-white uppercase font-extrabold",
-              children: "Try Again",
-            }),
-            n
-              ? jsx(Link, {
-                  to: "/",
-                  className:
-                    "px-2 py-1 bg-gray-600 dark:bg-gray-700 rounded text-white uppercase font-extrabold",
-                  children: "Home",
-                })
-              : jsx(Link, {
-                  to: "/",
-                  className:
-                    "px-2 py-1 bg-gray-600 dark:bg-gray-700 rounded text-white uppercase font-extrabold",
-                  onClick: (o) => {
-                    o.preventDefault(), window.history.back();
-                  },
-                  children: "Go Back",
-                }),
-          ],
-        }),
-      ],
-    })
-  );
+function P({ error: e }) {
+  const t = useRouter(), n = useMatch({ strict: false, select: (o) => o.id === rootRouteId });
+  return console.error("DefaultCatchBoundary Error:", e), jsxs("div", { className: "min-w-0 flex-1 p-4 flex flex-col items-center justify-center gap-6", children: [jsx(ErrorComponent, { error: e }), jsxs("div", { className: "flex gap-2 items-center flex-wrap", children: [jsx("button", { onClick: () => {
+    t.invalidate();
+  }, className: "px-2 py-1 bg-gray-600 dark:bg-gray-700 rounded text-white uppercase font-extrabold", children: "Try Again" }), n ? jsx(Link, { to: "/", className: "px-2 py-1 bg-gray-600 dark:bg-gray-700 rounded text-white uppercase font-extrabold", children: "Home" }) : jsx(Link, { to: "/", className: "px-2 py-1 bg-gray-600 dark:bg-gray-700 rounded text-white uppercase font-extrabold", onClick: (o) => {
+    o.preventDefault(), window.history.back();
+  }, children: "Go Back" })] })] });
 }
-function P({ children: e }) {
-  return jsxs("div", {
-    className: "space-y-2 p-2",
-    children: [
-      jsx("div", {
-        className: "text-gray-600 dark:text-gray-400",
-        children:
-          e ||
-          jsx("p", {
-            children: "The page you are looking for does not exist.",
-          }),
-      }),
-      jsxs("p", {
-        className: "flex items-center gap-2 flex-wrap",
-        children: [
-          jsx("button", {
-            onClick: () => window.history.back(),
-            className:
-              "bg-emerald-500 text-white px-2 py-1 rounded uppercase font-black text-sm",
-            children: "Go back",
-          }),
-          jsx(Link, {
-            to: "/",
-            className:
-              "bg-cyan-600 text-white px-2 py-1 rounded uppercase font-black text-sm",
-            children: "Start Over",
-          }),
-        ],
-      }),
-    ],
-  });
+function _({ children: e }) {
+  return jsxs("div", { className: "space-y-2 p-2", children: [jsx("div", { className: "text-gray-600 dark:text-gray-400", children: e || jsx("p", { children: "The page you are looking for does not exist." }) }), jsxs("p", { className: "flex items-center gap-2 flex-wrap", children: [jsx("button", { onClick: () => window.history.back(), className: "bg-emerald-500 text-white px-2 py-1 rounded uppercase font-black text-sm", children: "Go back" }), jsx(Link, { to: "/", className: "bg-cyan-600 text-white px-2 py-1 rounded uppercase font-black text-sm", children: "Start Over" })] })] });
 }
-const Pe = ({ title: e, description: t, keywords: n, image: o }) => [
-    { title: e },
-    { name: "description", content: t },
-    { name: "keywords", content: n },
-    { name: "twitter:title", content: e },
-    { name: "twitter:description", content: t },
-    { name: "twitter:creator", content: "@tannerlinsley" },
-    { name: "twitter:site", content: "@tannerlinsley" },
-    { name: "og:type", content: "website" },
-    { name: "og:title", content: e },
-    { name: "og:description", content: t },
-    ...(o
-      ? [
-          { name: "twitter:image", content: o },
-          { name: "twitter:card", content: "summary_large_image" },
-          { name: "og:image", content: o },
-        ]
-      : []),
-  ],
-  Te = "/_build/assets/styles-BNIwYrRN.css",
-  T = createContext$1({
-    width: 0,
-    height: 0,
-    screenWidth: 0,
-    screenHeight: 0,
-    isMobile: false,
-  }),
-  ke = ({ children: e, isMobile: t }) => {
-    const n = t ? 768 : 1250,
-      [o, a] = useState(0),
-      [i, c$1] = useState(0),
-      [s, m] = useState(0),
-      [y, b] = useState(0);
-    c(() => {}, 500);
-    return (
-      useLayoutEffect(() => {}, [o, i]),
-      jsx(T.Provider, {
-        value: {
-          width: o || n,
-          height: i || n,
-          screenWidth: s || n,
-          screenHeight: y || n,
-          isMobile: o === 0 && i === 0 ? !!t : !(o > 800),
-        },
-        children: e,
-      })
-    );
-  },
-  Ee = () => useContext(T),
-  Ne = ({ position: e, ...t }) => {
-    const { theme: n = "system" } = useTheme(),
-      { isMobile: o } = Ee();
-    return jsx(Toaster, {
-      theme: n,
-      className: "toaster group",
-      closeButton: true,
-      richColors: true,
-      style: {
-        "--normal-bg": "var(--popover)",
-        "--normal-text": "var(--popover-foreground)",
-        "--normal-border": "var(--border)",
-      },
-      position: o ? "top-right" : e,
-      ...t,
-    });
-  };
-function je({ children: e, handleThrowOnError: t }) {
-  const [n] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: { staleTime: 6e4, retry: 3 },
-          mutations: { onError: t },
-        },
-      })
-  );
-  return jsxs(QueryClientProvider, {
-    client: n,
-    children: [e, jsx(ReactQueryDevtools, { initialIsOpen: false })],
-  });
+const Oe = ({ title: e, description: t, keywords: n, image: o }) => [{ title: e }, { name: "description", content: t }, { name: "keywords", content: n }, { name: "twitter:title", content: e }, { name: "twitter:description", content: t }, { name: "twitter:creator", content: "@tannerlinsley" }, { name: "twitter:site", content: "@tannerlinsley" }, { name: "og:type", content: "website" }, { name: "og:title", content: e }, { name: "og:description", content: t }, ...o ? [{ name: "twitter:image", content: o }, { name: "twitter:card", content: "summary_large_image" }, { name: "og:image", content: o }] : []], Me = "/_build/assets/styles-BjkkjdbK.css", k = createContext$1({ width: 0, height: 0, screenWidth: 0, screenHeight: 0, isMobile: false }), Ae = ({ children: e, isMobile: t }) => {
+  const n = t ? 768 : 1250, [o, a] = useState(0), [i, d] = useState(0), [s, f] = useState(0), [y, b] = useState(0); c$1(() => {
+  }, 500);
+  return useLayoutEffect(() => {
+  }, [o, i]), jsx(k.Provider, { value: { width: o || n, height: i || n, screenWidth: s || n, screenHeight: y || n, isMobile: o === 0 && i === 0 ? !!t : !(o > 800) }, children: e });
+}, De = () => useContext(k), Ie = ({ position: e, ...t }) => {
+  const { theme: n = "system" } = useTheme(), { isMobile: o } = De();
+  return jsx(Toaster, { theme: n, className: "toaster group", closeButton: true, richColors: true, style: { "--normal-bg": "var(--popover)", "--normal-text": "var(--popover-foreground)", "--normal-border": "var(--border)" }, position: o ? "top-right" : e, ...t });
+};
+function We({ children: e, handleThrowOnError: t }) {
+  const [n] = useState(() => new QueryClient({ defaultOptions: { queries: { staleTime: 6e4, retry: 3 }, mutations: { onError: t } } }));
+  return jsxs(QueryClientProvider, { client: n, children: [e, jsx(ReactQueryDevtools, { initialIsOpen: false })] });
 }
-const Fe = $e(
-    "src_routes_root_tsx--isMobile_createServerFn_handler",
-    "/_server"
-  ),
-  He = createServerFn({ method: "GET" }).handler(Fe),
-  u = createRootRoute({
-    head: () => ({
-      meta: [
-        { charSet: "utf-8" },
-        { name: "viewport", content: "width=device-width, initial-scale=1" },
-        ...Pe({
-          title: "Lipy Commerce",
-          description:
-            "Lipy Commerce is a quick commerce platform designed to empower local businesses by connecting them directly with nearby customers. Sell faster, grow smarter, and stay local.",
-        }),
-      ],
-      links: [
-        { rel: "stylesheet", href: Te },
-        {
-          rel: "apple-touch-icon",
-          sizes: "180x180",
-          href: "/favicon/apple-touch-icon.png",
-        },
-        {
-          rel: "icon",
-          type: "image/png",
-          sizes: "32x32",
-          href: "/favicon/favicon-32x32.png",
-        },
-        {
-          rel: "icon",
-          type: "image/png",
-          sizes: "16x16",
-          href: "/favicon/favicon-16x16.png",
-        },
-        { rel: "manifest", href: "/favicon/site.webmanifest", color: "#fffff" },
-        { rel: "icon", href: "/favicon/favicon.ico" },
-      ],
-    }),
-    errorComponent: (e) => jsx(k, { children: jsx($, { ...e }) }),
-    loader: async () => await He(),
-    notFoundComponent: () => jsx(P, {}),
-    component: Me,
-  });
-function Me() {
-  return jsx(k, { children: jsx(Outlet, {}) });
+const Le = He("src_routes_root_tsx--isMobile_createServerFn_handler", "/_server"), ze = createServerFn({ method: "GET" }).handler(Le), c = createRootRoute({ head: () => ({ meta: [{ charSet: "utf-8" }, { name: "viewport", content: "width=device-width, initial-scale=1" }, ...Oe({ title: "Lipy Commerce", description: "Lipy Commerce is a quick commerce platform designed to empower local businesses by connecting them directly with nearby customers. Sell faster, grow smarter, and stay local." })], links: [{ rel: "stylesheet", href: Me }, { rel: "apple-touch-icon", sizes: "180x180", href: "/favicon/apple-touch-icon.png" }, { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon/favicon-32x32.png" }, { rel: "icon", type: "image/png", sizes: "16x16", href: "/favicon/favicon-16x16.png" }, { rel: "manifest", href: "/favicon/site.webmanifest", color: "#fffff" }, { rel: "icon", href: "/favicon/favicon.ico" }] }), errorComponent: (e) => jsx(T, { children: jsx(P, { ...e }) }), loader: async () => await ze(), notFoundComponent: () => jsx(_, {}), component: Be });
+function Be() {
+  return jsx(T, { children: jsx(Outlet, {}) });
 }
-function k({ children: e }) {
-  const t = U.useCallback(
-      (o) => (
-        toast.error(
-          (o == null ? void 0 : o.message) || "Something went wrong!"
-        ),
-        false
-      ),
-      []
-    ),
-    { isSsrMobile: n } = u.useLoaderData();
-  return jsxs("html", {
-    className: "bg-muted/30",
-    children: [
-      jsx("head", { children: jsx(HeadContent, {}) }),
-      jsx("body", {
-        suppressHydrationWarning: true,
-        className:
-          "m-auto outline-1 outline-border shadow min-h-screen flex flex-col ",
-        style: { maxWidth: "1920px" },
-        children: jsxs(ke, {
-          isMobile: n,
-          children: [
-            jsxs(je, {
-              handleThrowOnError: t,
-              children: [jsx(NuqsAdapter, { children: e }), jsx(Ne, {})],
-            }),
-            jsx(TanStackRouterDevtools, { position: "bottom-right" }),
-            jsx(Scripts, {}),
-          ],
-        }),
-      }),
-    ],
-  });
+function T({ children: e }) {
+  const t = X.useCallback((o) => (toast.error((o == null ? void 0 : o.message) || "Something went wrong!"), false), []), { isSsrMobile: n } = c.useLoaderData();
+  return jsxs("html", { className: "bg-muted/30", children: [jsx("head", { children: jsx(HeadContent, {}) }), jsx("body", { suppressHydrationWarning: true, className: "m-auto outline-1 outline-border shadow min-h-screen flex flex-col ", style: { maxWidth: "1920px" }, children: jsxs(Ae, { isMobile: n, children: [jsxs(We, { handleThrowOnError: t, children: [jsx(NuqsAdapter, { children: e }), jsx(Ie, {})] }), jsx(TanStackRouterDevtools, { position: "bottom-right" }), jsx(Scripts, {})] }) })] });
 }
-const Oe = () => import("../build/route-B0Tk1XrM.mjs"),
-  E = createFileRoute("/checkout")({
-    component: lazyRouteComponent(Oe, "component", () => E.ssr),
-  }),
-  De = () => import("../build/route-QplxH5YA.mjs"),
-  N = createFileRoute("/cart")({
-    component: lazyRouteComponent(De, "component", () => N.ssr),
-  }),
-  We = () => import("../build/route-DZoLFZtc.mjs"),
-  j = createFileRoute("/account")({
-    component: lazyRouteComponent(We, "component", () => j.ssr),
-  }),
-  ze = () => import("../build/index-ys8DQwRh.mjs"),
-  F = createFileRoute("/")({
-    component: lazyRouteComponent(ze, "component", () => F.ssr),
-  }),
-  Ae = () => import("../build/logout-BbXkKtn0.mjs"),
-  H = createFileRoute("/(auth)/logout")({
-    component: lazyRouteComponent(Ae, "component", () => H.ssr),
-  }),
-  Le = () => import("../build/login-CgrjhG_f.mjs"),
-  M = createFileRoute("/(auth)/login")({
-    component: lazyRouteComponent(Le, "component", () => M.ssr),
-  }),
-  Ie = E.update({
-    id: "/checkout",
-    path: "/checkout",
-    getParentRoute: () => u,
-  }),
-  Be = N.update({ id: "/cart", path: "/cart", getParentRoute: () => u }),
-  Ge = j.update({ id: "/account", path: "/account", getParentRoute: () => u }),
-  Je = F.update({ id: "/", path: "/", getParentRoute: () => u }),
-  Qe = H.update({
-    id: "/(auth)/logout",
-    path: "/logout",
-    getParentRoute: () => u,
-  }),
-  Ue = M.update({
-    id: "/(auth)/login",
-    path: "/login",
-    getParentRoute: () => u,
-  }),
-  Ve = {
-    IndexRoute: Je,
-    AccountRouteRoute: Ge,
-    CartRouteRoute: Be,
-    CheckoutRouteRoute: Ie,
-    authLoginRoute: Ue,
-    authLogoutRoute: Qe,
-  },
-  Ye = u._addFileChildren(Ve)._addFileTypes();
-function qe() {
-  return createRouter$2({
-    routeTree: Ye,
-    defaultPreload: "intent",
-    defaultErrorComponent: $,
-    defaultNotFoundComponent: () => jsx(P, {}),
-    scrollRestoration: true,
-  });
+const Ge = () => import('../build/route-DcOC6ro0.mjs'), j = createFileRoute("/checkout")({ component: lazyRouteComponent(Ge, "component", () => j.ssr) }), Qe = () => import('../build/route-fUHAwVkK.mjs'), E = createFileRoute("/cart")({ component: lazyRouteComponent(Qe, "component", () => E.ssr) }), Je = () => import('../build/index-CmB0JdLw.mjs'), N = createFileRoute("/")({ component: lazyRouteComponent(Je, "component", () => N.ssr) }), Et = { primary: [{ label: "Shops Near me", url: "/", icon: Store }, { label: "Cart", url: "/account/profile", icon: ShoppingCart }], secondary: [{ label: "Account", url: "/account", icon: CircleUser }, { label: "Sign out", url: "/logout", icon: LogOut }] }, Ue = () => import('../build/index-CE2nAnI5.mjs'), F = createFileRoute("/account/")({ component: lazyRouteComponent(Ue, "component", () => F.ssr) }), Ve = () => import('../build/_id-BmhAf7iB.mjs'), H = createFileRoute("/shop/$id")({ component: lazyRouteComponent(Ve, "component", () => H.ssr) }), qe = () => import('../build/profile-DBgugXOz.mjs'), O = createFileRoute("/account/profile")({ component: lazyRouteComponent(qe, "component", () => O.ssr) }), Ke = () => import('../build/orders-D-pw2DxL.mjs'), M = createFileRoute("/account/orders")({ component: lazyRouteComponent(Ke, "component", () => M.ssr) }), Xe = () => import('../build/addresses-CDhWgij6.mjs'), A = createFileRoute("/account/addresses")({ component: lazyRouteComponent(Xe, "component", () => A.ssr) }), Ye = () => import('../build/logout-Dw22GSYs.mjs'), D = createFileRoute("/(auth)/logout")({ component: lazyRouteComponent(Ye, "component", () => D.ssr) }), Ze = () => import('../build/login-27ixESj_.mjs'), I = createFileRoute("/(auth)/login")({ component: lazyRouteComponent(Ze, "component", () => I.ssr) }), et = j.update({ id: "/checkout", path: "/checkout", getParentRoute: () => c }), tt = E.update({ id: "/cart", path: "/cart", getParentRoute: () => c }), ot = N.update({ id: "/", path: "/", getParentRoute: () => c }), nt = F.update({ id: "/account/", path: "/account/", getParentRoute: () => c }), rt = H.update({ id: "/shop/$id", path: "/shop/$id", getParentRoute: () => c }), at = O.update({ id: "/account/profile", path: "/account/profile", getParentRoute: () => c }), st = M.update({ id: "/account/orders", path: "/account/orders", getParentRoute: () => c }), it = A.update({ id: "/account/addresses", path: "/account/addresses", getParentRoute: () => c }), ct = D.update({ id: "/(auth)/logout", path: "/logout", getParentRoute: () => c }), dt = I.update({ id: "/(auth)/login", path: "/login", getParentRoute: () => c }), ut = { IndexRoute: ot, CartRouteRoute: tt, CheckoutRouteRoute: et, authLoginRoute: dt, authLogoutRoute: ct, AccountAddressesRoute: it, AccountOrdersRoute: st, AccountProfileRoute: at, ShopIdRoute: rt, AccountIndexRoute: nt }, lt = c._addFileChildren(ut)._addFileTypes();
+function pt() {
+  return createRouter$2({ routeTree: lt, defaultPreload: "intent", defaultErrorComponent: P, defaultNotFoundComponent: () => jsx(_, {}), scrollRestoration: true });
 }
-const ht = createStartHandler({ createRouter: qe, getRouterManifest: ve })(we);
+const Nt = createStartHandler({ createRouter: pt, getRouterManifest: je })(Pe);
 
 const handlers = [
-  {
-    route: "",
-    handler: _mq1PUh,
-    lazy: false,
-    middleware: true,
-    method: undefined,
-  },
-  {
-    route: "/_server",
-    handler: q,
-    lazy: false,
-    middleware: true,
-    method: undefined,
-  },
-  { route: "/", handler: ht, lazy: false, middleware: true, method: undefined },
+  { route: '', handler: _mq1PUh, lazy: false, middleware: true, method: undefined },
+  { route: '/_server', handler: q, lazy: false, middleware: true, method: undefined },
+  { route: '/', handler: Nt, lazy: false, middleware: true, method: undefined }
 ];
 
 function createNitroApp() {
   const config = useRuntimeConfig();
   const hooks = createHooks();
   const captureError = (error, context = {}) => {
-    const promise = hooks
-      .callHookParallel("error", error, context)
-      .catch((error_) => {
-        console.error("Error while capturing another error", error_);
-      });
+    const promise = hooks.callHookParallel("error", error, context).catch((error_) => {
+      console.error("Error while capturing another error", error_);
+    });
     if (context.event && isEvent(context.event)) {
       const errors = context.event.context.nitro?.errors;
       if (errors) {
@@ -6749,18 +5216,16 @@ function createNitroApp() {
       if (fetchContext?._platform) {
         event.context = {
           ...fetchContext._platform,
-          ...event.context,
+          ...event.context
         };
       }
       if (!event.context.waitUntil && fetchContext?.waitUntil) {
         event.context.waitUntil = fetchContext.waitUntil;
       }
-      event.fetch = (req, init) =>
-        fetchWithEvent(event, req, init, { fetch: localFetch });
-      event.$fetch = (req, init) =>
-        fetchWithEvent(event, req, init, {
-          fetch: $fetch,
-        });
+      event.fetch = (req, init) => fetchWithEvent(event, req, init, { fetch: localFetch });
+      event.$fetch = (req, init) => fetchWithEvent(event, req, init, {
+        fetch: $fetch
+      });
       event.waitUntil = (promise) => {
         if (!event.context.nitro._waitUntilPromises) {
           event.context.nitro._waitUntilPromises = [];
@@ -6778,22 +5243,18 @@ function createNitroApp() {
       });
     },
     onBeforeResponse: async (event, response) => {
-      await nitroApp$1.hooks
-        .callHook("beforeResponse", event, response)
-        .catch((error) => {
-          captureError(error, { event, tags: ["request", "response"] });
-        });
+      await nitroApp$1.hooks.callHook("beforeResponse", event, response).catch((error) => {
+        captureError(error, { event, tags: ["request", "response"] });
+      });
     },
     onAfterResponse: async (event, response) => {
-      await nitroApp$1.hooks
-        .callHook("afterResponse", event, response)
-        .catch((error) => {
-          captureError(error, { event, tags: ["request", "response"] });
-        });
-    },
+      await nitroApp$1.hooks.callHook("afterResponse", event, response).catch((error) => {
+        captureError(error, { event, tags: ["request", "response"] });
+      });
+    }
   });
   const router = createRouter({
-    preemptive: true,
+    preemptive: true
   });
   const nodeHandler = toNodeListener(h3App);
   const localCall = (aRequest) => b(nodeHandler, aRequest);
@@ -6801,14 +5262,16 @@ function createNitroApp() {
     if (!input.toString().startsWith("/")) {
       return globalThis.fetch(input, init);
     }
-    return O$1(nodeHandler, input, init).then((response) =>
-      normalizeFetchResponse(response)
-    );
+    return O$2(
+      nodeHandler,
+      input,
+      init
+    ).then((response) => normalizeFetchResponse(response));
   };
   const $fetch = createFetch({
     fetch: localFetch,
     Headers: Headers$1,
-    defaults: { baseURL: config.app.baseURL },
+    defaults: { baseURL: config.app.baseURL }
   });
   globalThis.$fetch = $fetch;
   h3App.use(createRouteRulesHandler({ localFetch }));
@@ -6827,7 +5290,7 @@ function createNitroApp() {
       if (routeRules.cache) {
         handler = cachedEventHandler(handler, {
           group: "nitro/routes",
-          ...routeRules.cache,
+          ...routeRules.cache
         });
       }
       router.use(h.route, handler, h.method);
@@ -6847,7 +5310,7 @@ function createNitroApp() {
     router,
     localCall,
     localFetch,
-    captureError,
+    captureError
   };
   return app;
 }
@@ -6867,7 +5330,8 @@ function useNitroApp() {
 }
 runNitroPlugins(nitroApp$1);
 
-const debug = (...args) => {};
+const debug = (...args) => {
+};
 function GracefulShutdown(server, opts) {
   opts = opts || {};
   const options = Object.assign(
@@ -6877,7 +5341,7 @@ function GracefulShutdown(server, opts) {
       development: false,
       forceExit: true,
       onShutdown: (signal) => Promise.resolve(signal),
-      preShutdown: (signal) => Promise.resolve(signal),
+      preShutdown: (signal) => Promise.resolve(signal)
     },
     opts
   );
@@ -6902,30 +5366,25 @@ function GracefulShutdown(server, opts) {
       }
     };
   }
-  const signals = options.signals
-    .split(" ")
-    .map((s) => s.trim())
-    .filter((s) => s.length > 0);
+  const signals = options.signals.split(" ").map((s) => s.trim()).filter((s) => s.length > 0);
   const once = onceFactory();
   once(process, signals, (signal) => {
     debug("received shut down signal", signal);
-    shutdown(signal)
-      .then(() => {
-        if (options.forceExit) {
-          process.exit(failed ? 1 : 0);
-        }
-      })
-      .catch((error) => {
-        debug("server shut down error occurred", error);
-        process.exit(1);
-      });
+    shutdown(signal).then(() => {
+      if (options.forceExit) {
+        process.exit(failed ? 1 : 0);
+      }
+    }).catch((error) => {
+      debug("server shut down error occurred", error);
+      process.exit(1);
+    });
   });
   function isFunction(functionToCheck) {
     const getType = Object.prototype.toString.call(functionToCheck);
     return /^\[object\s([A-Za-z]+)?Function]$/.test(getType);
   }
   function destroy(socket, force = false) {
-    if ((socket._isIdle && isShuttingDown) || force) {
+    if (socket._isIdle && isShuttingDown || force) {
       socket.destroy();
       if (socket.server instanceof http.Server) {
         delete connections[socket._connectionId];
@@ -7042,9 +5501,7 @@ function GracefulShutdown(server, opts) {
         );
         return Promise.resolve(true);
       }
-      const allConnectionsClosed =
-        Object.keys(connections).length === 0 &&
-        Object.keys(secureConnections).length === 0;
+      const allConnectionsClosed = Object.keys(connections).length === 0 && Object.keys(secureConnections).length === 0;
       if (allConnectionsClosed) {
         debug("All connections closed. Continue to shutting down");
         return Promise.resolve(false);
@@ -7060,33 +5517,24 @@ function GracefulShutdown(server, opts) {
       return Promise.resolve();
     }
     debug("shutting down");
-    return options
-      .preShutdown(sig)
-      .then(() => {
-        isShuttingDown = true;
-        cleanupHttp();
-      })
-      .then(() => {
-        const pollIterations = options.timeout
-          ? Math.round(options.timeout / 250)
-          : 0;
-        return waitForReadyToShutDown(pollIterations);
-      })
-      .then((force) => {
-        debug("Do onShutdown now");
-        if (force) {
-          destroyAllConnections(force);
-        }
-        return options.onShutdown(sig);
-      })
-      .then(finalHandler)
-      .catch((error) => {
-        const errString =
-          typeof error === "string" ? error : JSON.stringify(error);
-        debug(errString);
-        failed = true;
-        throw errString;
-      });
+    return options.preShutdown(sig).then(() => {
+      isShuttingDown = true;
+      cleanupHttp();
+    }).then(() => {
+      const pollIterations = options.timeout ? Math.round(options.timeout / 250) : 0;
+      return waitForReadyToShutDown(pollIterations);
+    }).then((force) => {
+      debug("Do onShutdown now");
+      if (force) {
+        destroyAllConnections(force);
+      }
+      return options.onShutdown(sig);
+    }).then(finalHandler).catch((error) => {
+      const errString = typeof error === "string" ? error : JSON.stringify(error);
+      debug(errString);
+      failed = true;
+      throw errString;
+    });
   }
   function shutdownManual() {
     return shutdown("manual");
@@ -7097,12 +5545,9 @@ function GracefulShutdown(server, opts) {
 function getGracefulShutdownConfig() {
   return {
     disabled: !!process.env.NITRO_SHUTDOWN_DISABLED,
-    signals: (process.env.NITRO_SHUTDOWN_SIGNALS || "SIGTERM SIGINT")
-      .split(" ")
-      .map((s) => s.trim()),
-    timeout:
-      Number.parseInt(process.env.NITRO_SHUTDOWN_TIMEOUT || "", 10) || 3e4,
-    forceExit: !process.env.NITRO_SHUTDOWN_NO_FORCE_EXIT,
+    signals: (process.env.NITRO_SHUTDOWN_SIGNALS || "SIGTERM SIGINT").split(" ").map((s) => s.trim()),
+    timeout: Number.parseInt(process.env.NITRO_SHUTDOWN_TIMEOUT || "", 10) || 3e4,
+    forceExit: !process.env.NITRO_SHUTDOWN_NO_FORCE_EXIT
   };
 }
 function setupGracefulShutdown(listener, nitroApp) {
@@ -7120,27 +5565,21 @@ function setupGracefulShutdown(listener, nitroApp) {
           console.warn("Graceful shutdown timeout, force exiting...");
           resolve();
         }, shutdownConfig.timeout);
-        nitroApp.hooks
-          .callHook("close")
-          .catch((error) => {
-            console.error(error);
-          })
-          .finally(() => {
-            clearTimeout(timeout);
-            resolve();
-          });
+        nitroApp.hooks.callHook("close").catch((error) => {
+          console.error(error);
+        }).finally(() => {
+          clearTimeout(timeout);
+          resolve();
+        });
       });
-    },
+    }
   });
 }
 
 const cert = process.env.NITRO_SSL_CERT;
 const key = process.env.NITRO_SSL_KEY;
 const nitroApp = useNitroApp();
-const server =
-  cert && key
-    ? new Server({ key, cert }, toNodeListener(nitroApp.h3App))
-    : new Server$1(toNodeListener(nitroApp.h3App));
+const server = cert && key ? new Server({ key, cert }, toNodeListener(nitroApp.h3App)) : new Server$1(toNodeListener(nitroApp.h3App));
 const port = destr(process.env.NITRO_PORT || process.env.PORT) || 3e3;
 const host = process.env.NITRO_HOST || process.env.HOST;
 const path = process.env.NITRO_UNIX_SOCKET;
@@ -7163,5 +5602,5 @@ trapUnhandledNodeErrors();
 setupGracefulShutdown(listener, nitroApp);
 const nodeServer = {};
 
-export { Ee as E, H, c, nodeServer as n };
+export { De as D, Et as E, D as a, c$1 as c, nodeServer as n };
 //# sourceMappingURL=nitro.mjs.map

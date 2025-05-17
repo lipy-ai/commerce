@@ -6,8 +6,6 @@ import {
   Info,
   LogOut,
   MapPin,
-  NotebookPen,
-  Share,
   Share2,
   ShoppingBag,
   UserCircle2,

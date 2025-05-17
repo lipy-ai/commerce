@@ -1,0 +1,16 @@
+import{c as o,j as e,L as c,e as m}from"./client-DSsj00kt.js";import{D as x}from"./header-COxbX9eK.js";import{C as a}from"./card-Bz5FfSE2.js";import{a as h}from"./auth-BH0fQzbF.js";import{A as i,a as u,b as n,C as d,S as p,M as j}from"./avatar-Jx8W_WA7.js";import"./createLucideIcon-Dz2Le6F5.js";import"./utils-Cd13OnTz.js";import"./index-Dazthtk9.js";/**
+ * @license lucide-react v0.488.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const f=[["path",{d:"m9 18 6-6-6-6",key:"mthhwq"}]],l=o("chevron-right",f);/**
+ * @license lucide-react v0.488.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const g=[["circle",{cx:"12",cy:"12",r:"10",key:"1mglay"}],["path",{d:"M12 16v-4",key:"1dtifu"}],["path",{d:"M12 8h.01",key:"e9boi3"}]],y=o("info",g);/**
+ * @license lucide-react v0.488.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const N=[["circle",{cx:"18",cy:"5",r:"3",key:"gq8acd"}],["circle",{cx:"6",cy:"12",r:"3",key:"w7nqdw"}],["circle",{cx:"18",cy:"19",r:"3",key:"1xt0gg"}],["line",{x1:"8.59",x2:"15.42",y1:"13.51",y2:"17.49",key:"47mynk"}],["line",{x1:"15.41",x2:"8.59",y1:"6.51",y2:"10.49",key:"1n3mei"}]],v=o("share-2",N),k=[{icon:p,title:"Your Orders",url:"/account/orders"},{icon:d,title:"Profile",url:"/account/profile"},{icon:j,title:"Saved Addresses",url:"/account/addresses"}],b=[{title:"Share the app",icon:v,url:"/"},{title:"General Info",icon:y,url:"/"},{title:"Logout",icon:m,url:"/logout"}],R=function(){const{data:t}=h.useSession();return e.jsxs("div",{children:[e.jsx(x,{title:"Settings"}),e.jsxs("div",{className:"p-4",children:[e.jsxs("div",{className:"flex items-center gap-4",children:[e.jsxs(i,{className:"size-12",children:[e.jsx(u,{src:t?.user.image,alt:"@shadcn"}),e.jsx(n,{children:e.jsx(d,{width:40,height:75,strokeWidth:1.5})})]}),e.jsxs("div",{children:[e.jsx("h1",{className:"font-semibold text-xl",children:t?.user.name||"Hello, User"}),e.jsx("p",{className:"text-muted-foreground text-xs",children:t?.user.email||""})]})]}),e.jsx("h1",{className:"text-sm font-semibold pb-1 pt-4 text-muted-foreground",children:"Your Information"}),e.jsx(a,{className:"p-4 shadow-none",children:k.map((s,r)=>e.jsx("div",{children:e.jsxs(c,{className:"flex items-center justify-between",to:s.url,children:[e.jsxs("div",{className:"flex items-center gap-2",children:[e.jsx(i,{className:"size-7",children:e.jsx(n,{children:e.jsx(s.icon,{className:"size-4 text-muted-foreground"})})}),e.jsx("div",{className:"text-sm font-medium",children:s.title})]}),e.jsx(l,{})]})},r))}),e.jsx("h1",{className:"text-sm font-semibold pb-1 pt-4 text-muted-foreground",children:"More"}),e.jsx(a,{className:"p-4 shadow-none",children:b.map((s,r)=>e.jsx("div",{children:e.jsxs(c,{className:"flex items-center justify-between",to:s.url,children:[e.jsxs("div",{className:"flex items-center gap-2",children:[e.jsx(i,{className:"size-7",children:e.jsx(n,{children:e.jsx(s.icon,{className:"size-4 text-muted-foreground"})})}),e.jsx("div",{className:"text-sm font-medium",children:s.title})]}),e.jsx(l,{})]})},r))})]})]})};export{R as component};

@@ -2,22 +2,20 @@ import { defineConfig } from "@tanstack/react-start/config";
 import tailwindcss from "@tailwindcss/vite";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
-// import visualizer from "rollup-plugin-visualizer";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+console.log({ __dirname }, process.env.VITE_API_URL);
 
 export default defineConfig({
   tsr: {
     appDirectory: "src",
   },
   server: {
+    preset: "bun",
     routeRules: {
-      //   "/api/auth/*": {
-      //     proxy: { to: "http://localhost:8080" },
-      //   },
       "/api/**": {
-        proxy: { to: "http://localhost:8080/api/**" },
+        proxy: { to: process.env.VITE_API_URL + "/api/**" },
       },
     },
   },

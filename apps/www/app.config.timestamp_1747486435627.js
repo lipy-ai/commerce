@@ -5,17 +5,19 @@ import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 var __filename = fileURLToPath(import.meta.url);
 var __dirname = dirname(__filename);
+console.log(__dirname, process.env.VITE_API_URL);
 var app_config_default = defineConfig({
   tsr: {
     appDirectory: "src"
   },
   server: {
+    preset: "bun",
     routeRules: {
       //   "/api/auth/*": {
       //     proxy: { to: "http://localhost:8080" },
       //   },
       "/api/**": {
-        proxy: { to: "http://localhost:8080/api/**" }
+        proxy: { to: env.API_URL + "/api/**" }
       }
     }
   },

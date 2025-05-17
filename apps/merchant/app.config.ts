@@ -2,6 +2,7 @@ import { defineConfig } from "@tanstack/react-start/config";
 import tailwindcss from "@tailwindcss/vite";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
+import { env } from "@envClient";
 // import visualizer from "rollup-plugin-visualizer";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -17,7 +18,7 @@ export default defineConfig({
       //     proxy: { to: "http://localhost:8080" },
       //   },
       "/api/**": {
-        proxy: { to: "http://localhost:8080/api/**" },
+        proxy: { to: env.API_URL + "/api/**" },
       },
     },
   },

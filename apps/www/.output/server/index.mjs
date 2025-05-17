@@ -23,6 +23,7 @@ import 'sonner';
 import '@tanstack/react-query';
 import '@tanstack/react-query-devtools';
 import 'nuqs/adapters/react';
+import 'lucide-react';
 import 'node:stream';
 import 'isbot';
 import 'react-dom/server';

@@ -19,6 +19,8 @@ coverage
 
 # Turbo
 .turbo
+.vinxi
+.output
 
 # Vercel
 .vercel

@@ -1,3 +1,0 @@
-# web-ui
-
-All Web related components will be mentioned here...

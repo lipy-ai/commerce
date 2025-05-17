@@ -12,6 +12,8 @@ export default defineConfig({
     appDirectory: "src",
   },
   server: {
+    preset: "bun",
+
     routeRules: {
       //   "/api/auth/*": {
       //     proxy: { to: "http://localhost:8080" },

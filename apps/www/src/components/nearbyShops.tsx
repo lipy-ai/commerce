@@ -13,7 +13,7 @@ import {
   Cherry,
   Salad,
 } from "lucide-react";
-import SearchBar from "./searchBar";
+import SearchBar from "@lipy/web-ui/components/searchBar";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Card } from "@lipy/web-ui/components/ui/card";

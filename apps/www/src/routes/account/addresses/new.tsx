@@ -1,7 +1,8 @@
-import SearchBar from '@/components/searchBar'
+
 import { DashboardHeader } from '@lipy/web-ui/components/layouts/dashboard'
 import { createFileRoute } from '@tanstack/react-router'
-
+import GoogleMapImage from '@lipy/web-ui/components/maps/googleMap'
+import { apiClient } from '@lipy/lib/api'
 export const Route = createFileRoute('/account/addresses/new')({
   component: RouteComponent,
 })
@@ -11,13 +12,8 @@ function RouteComponent() {
     <>
 
      <DashboardHeader title='New address' />
-     <div className='m-2'>
-
-       <SearchBar placeholder='Search for address'/>
-
-
-
-     </div>
+    
+     <GoogleMapImage/>
    
     
     </>

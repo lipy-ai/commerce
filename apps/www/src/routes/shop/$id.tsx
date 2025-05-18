@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { DashboardHeader } from '@lipy/web-ui/components/layouts/dashboard'
 import ShopShortDetails from '@/components/shop/shopShortDetails'
 import {Separator} from '@lipy/web-ui/components/ui/separator'
-import SearchBar from '@/components/searchBar'
+import SearchBar from '@lipy/web-ui/components/searchBar'
 
 export const Route = createFileRoute("/shop/$id")({
   component: RouteComponent,

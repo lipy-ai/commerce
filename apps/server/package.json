@@ -4,7 +4,7 @@
   "scripts": {
     "env": "dotenv -e ../../.env --",
     "start": "bun run env -- bun build/index.js",
-    "dev": "bun run --hot src/index.ts",
+    "dev": "bun run env bun run --hot src/index.ts",
     "build": "bun build src/index.ts --outdir ./build --target bun --minify",
     "studio": "bun drizzle-kit studio --port 3001",
     "db:generate": "drizzle-kit generate",

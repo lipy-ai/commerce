@@ -101,7 +101,10 @@ export const zValidator = <
 
     if (!result.success) {
       // return c.json(result, 400);
-      throw new HTTPException(400, { cause: result.error });
+      throw new HTTPException(400, {
+        message: "Validation Error",
+        cause: result.error,
+      });
     }
 
     return result.data as z.infer<T>;

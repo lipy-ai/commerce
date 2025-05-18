@@ -18,6 +18,9 @@ export default defineConfig({
       "/api/**": {
         proxy: {
           to: process.env.VITE_API_URL + "/api/**",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
       },
     },

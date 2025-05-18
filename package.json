@@ -8,8 +8,9 @@
   },
   "scripts": {
     "env": "dotenv --",
-    "build": "bun run env -- bun run dev -- turbo run build",
-    "dev": "bun run env -- turbo run dev",
+    "build": "bun run env turbo run build",
+    "start": "bun run env turbo run start",
+    "dev": "bun run env turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",

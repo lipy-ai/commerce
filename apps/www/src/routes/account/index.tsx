@@ -1,8 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Card } from "@lipy/web-ui/components/ui/card";
-import { ChevronRight, Info, LogOut, MapPin, NotebookPen, Share, Share2, ShoppingBag, Store, UserCircle2 } from "lucide-react";
-import {authClient} from '@lipy/lib/providers/auth.tsx'
+import {
+  ChevronRight,
+  Info,
+  LogOut,
+  MapPin,
+  Share2,
+  ShoppingBag,
+  UserCircle2,
+} from "lucide-react";
+import { authClient } from "@lipy/lib/providers/auth.tsx";
 import {
   Avatar,
   AvatarFallback,

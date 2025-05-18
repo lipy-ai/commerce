@@ -7,6 +7,8 @@ import { db } from "../db";
 import { sendTransactionalEmail } from "@/services/ses";
 import { phoneNumber } from "better-auth/plugins";
 import { sendSMS } from "@/services/sns";
+import { emailHarmony } from "better-auth-harmony";
+import { phoneHarmony } from "better-auth-harmony";
 
 const organizationPlugin = organization({
   schema: {
@@ -99,7 +101,13 @@ export const auth = betterAuth({
   },
 
   socialProviders,
-  plugins: [organizationPlugin, emailOTPPlugin, phoneOTPPlugin],
+  plugins: [
+    organizationPlugin,
+    emailOTPPlugin,
+    phoneOTPPlugin,
+    emailHarmony(),
+    phoneHarmony(),
+  ],
   trustedOrigins: env.TRUSTED_ORIGINS,
   hooks: {
     // before: beforeAuthMiddleware,

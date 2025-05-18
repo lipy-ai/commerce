@@ -1,13 +1,17 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
+  "globalEnv": ["*"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".output/**", ".vinxi/**"]
+      "outputs": [".output/**", ".vinxi/**", "dist/**", "build/**"]
     },
-
+    "start": {
+      "cache": true,
+      "persistent": true
+    },
     "lint": {
       "dependsOn": ["^lint"]
     },

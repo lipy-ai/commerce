@@ -12,12 +12,13 @@ export default defineConfig({
     appDirectory: "src",
   },
   server: {
+    // preset: "node",
+
     routeRules: {
-      //   "/api/auth/*": {
-      //     proxy: { to: "http://localhost:8080" },
-      //   },
       "/api/**": {
-        proxy: { to: "http://localhost:8080/api/**" },
+        proxy: {
+          to: process.env.VITE_API_URL + "/api/**",
+        },
       },
     },
   },

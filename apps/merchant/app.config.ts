@@ -13,9 +13,12 @@ export default defineConfig({
   },
   server: {
     // preset: "node",
+
     routeRules: {
       "/api/**": {
-        proxy: { to: process.env.VITE_API_URL + "/api/**" },
+        proxy: {
+          to: process.env.VITE_API_URL + "/api/**",
+        },
       },
     },
   },

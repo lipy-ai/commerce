@@ -16,14 +16,19 @@ import { corsMiddleware } from "./middlewares/cors";
 import { uploadRouter } from "./routes/sharedRoutes/upload";
 import { globalError } from "./lib/globalError";
 import { addressRoute } from "./routes/sharedRoutes/address";
+import { secureHeaders } from "hono/secure-headers";
+import { globalMiddleware } from "./middlewares/global";
 
 export const app = new Hono<ServerContext>();
 
 // Generic middlewares
 app.use("*", corsMiddleware);
+
+app.use(secureHeaders());
 // app.use(tracing);
 app.use(httpLogger());
 app.use(trimTrailingSlash());
+app.use("*", globalMiddleware);
 
 if (env.NODE_ENV === "development") {
   logger.info("Available routes:");

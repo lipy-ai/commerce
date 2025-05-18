@@ -5,6 +5,6 @@ import { env } from "@envClient";
 export const apiClient = hc<AppType>(env.API_URL!, {
   init: {
     credentials: "include",
-    headers: { "M2M-Key": env.M2M_KEY! }, //{ ...(process.env.M2M_key && { "M2M-Key": process.env.M2M_key }) },
+    headers: { "Content-Type": "application/json", "M2M-Key": env.M2M_KEY! }, //{ ...(process.env.M2M_key && { "M2M-Key": process.env.M2M_key }) },
   },
 });

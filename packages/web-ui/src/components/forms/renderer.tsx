@@ -193,7 +193,9 @@ function FormComp(props: {
             Previous
           </Button>
         )}
-        <Button
+        <div className="fixed bottom-0 bg-background w-full p-4 flex justify-center pr-10">
+
+          <Button
           className={cn(style.submitBtn.className)}
           type="submit"
           size={props.form.size}
@@ -206,6 +208,9 @@ function FormComp(props: {
               ? style.submitBtn.label
               : "Next"}
         </Button>
+          
+        </div>
+        
       </div>
     </div>
   );

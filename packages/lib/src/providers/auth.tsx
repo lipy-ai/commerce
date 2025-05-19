@@ -1,3 +1,4 @@
+import { env } from "@envClient";
 import type { AuthType } from "@lipy/server/types";
 import {
   emailOTPClient,
@@ -13,6 +14,18 @@ export const authClient = createAuthClient({
     emailOTPClient(),
   ],
 });
+
+export const getSsrSession = async (headers?: Headers) => {
+  return await fetch(env.API_URL + "/api/auth/get-session", {
+    headers,
+  }).then(async (r) => {
+    const json = await r.json();
+    if (!r.ok) {
+      throw json;
+    }
+    return json;
+  });
+};
 
 export const signIn = async (
   type: "google" | "microsoft" | "otp" | "signin-otp",

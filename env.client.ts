@@ -9,5 +9,4 @@ export const env = {
   NODE_ENV: e.VITE_NODE_ENV,
   API_URL: e.VITE_API_URL,
   CDN_URL: e.VITE_CDN_URL,
-  M2M_KEY: e.VITE_M2M_KEY,
 };

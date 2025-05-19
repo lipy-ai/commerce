@@ -8,7 +8,7 @@ var __dirname = dirname(__filename);
 console.log({ __dirname }, process.env.VITE_API_URL);
 var app_config_default = defineConfig({
   tsr: {
-    appDirectory: "src"
+    appDirectory: "src",
   },
   server: {
     // preset: "node",
@@ -16,14 +16,13 @@ var app_config_default = defineConfig({
       "/api/**": {
         proxy: {
           to: process.env.VITE_API_URL + "/api/**",
-          headers: { "M2M-Key": import.meta.env.M2M_KEY }
-        }
-      }
-    }
+        },
+      },
+    },
   },
   vite: {
     plugins: [
-      tailwindcss()
+      tailwindcss(),
       //   visualizer(), // Generates a visual report
     ],
     //  test: {
@@ -34,28 +33,26 @@ var app_config_default = defineConfig({
       alias: [
         {
           find: "@lipy/web-ui",
-          replacement: path.resolve(__dirname, "../../packages/web-ui/src")
+          replacement: path.resolve(__dirname, "../../packages/web-ui/src"),
         },
         {
           find: "@envClient",
-          replacement: path.resolve(__dirname, "../../env.client.ts")
+          replacement: path.resolve(__dirname, "../../env.client.ts"),
         },
         {
           find: "@lipy/lib",
-          replacement: path.resolve(__dirname, "../../packages/lib/src")
+          replacement: path.resolve(__dirname, "../../packages/lib/src"),
         },
         {
           find: "@lipy/server",
-          replacement: path.resolve(__dirname, "../server/src")
+          replacement: path.resolve(__dirname, "../server/src"),
         },
         {
           find: "@",
-          replacement: path.resolve(__dirname, "./src")
-        }
-      ]
-    }
-  }
+          replacement: path.resolve(__dirname, "./src"),
+        },
+      ],
+    },
+  },
 });
-export {
-  app_config_default as default
-};
+export { app_config_default as default };

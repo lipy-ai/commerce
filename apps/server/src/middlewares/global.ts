@@ -9,12 +9,12 @@ export const globalMiddleware: MiddlewareHandler<ServerContext> = async (
   next
 ) => {
   const validKey = c.req.header("M2M-Key") === env.VITE_M2M_KEY.toString();
-  if (!validKey) {
-    logger.warn("Blocked an due to missing M2M key...");
-    throw new HTTPException(401, {
-      message: "Unauthorized!",
-    });
-  }
+  // if (!validKey) {
+  //   logger.warn("Blocked an due to missing M2M key...");
+  //   throw new HTTPException(401, {
+  //     message: "Unauthorized!",
+  //   });
+  // }
 
   return next();
 };

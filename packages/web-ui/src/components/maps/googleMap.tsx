@@ -10,6 +10,7 @@ import { LocateFixed, MapPinned } from "lucide-react";
 import { Button } from "../ui/button";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
+import DetailedAddress from "./detailedAddress";
 
 
 
@@ -177,7 +178,7 @@ export default function GoogleMapImage() {
           />
         </GoogleMap>
 
-        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-10">
+        <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 z-10">
           <Button
             className="text-primary border-primary font-semibold shadow-md hover:bg-primary/10"
             variant="outline"
@@ -215,13 +216,10 @@ export default function GoogleMapImage() {
                 <p className="text-sm text-muted-foreground line-clamp-2">{address || "Please wait while we retrieve location details"}</p>
               </div>
             </div>
-            <div className={cn(isMobile ? "w-full mt-3" : "flex-shrink-0")}>
-              <Button className="font-semibold px-6 w-full lg:w-auto"
-              
-              >
-                Save address
-              </Button>
-            </div>
+           
+        
+              <DetailedAddress fullAddress={fullAddress} label="Add"/>
+           
           </div>
         </div>
       </div>

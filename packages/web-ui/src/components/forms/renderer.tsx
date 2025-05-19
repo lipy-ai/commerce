@@ -27,6 +27,7 @@ type FormStyle = {
     };
     label?: string;
     variant?: VariantProps<typeof buttonVariants>["variant"];
+    className?: string
   };
   editBtn?: {
     label?: string;
@@ -151,6 +152,7 @@ function FormComp(props: {
     submitBtn: {
       label: s?.submitBtn?.label || "Submit",
       variant: s?.submitBtn?.variant || "default",
+      className:s?.submitBtn?.className || ''
     },
     editBtn: {
       label: s?.editBtn?.label || "Edit Information",
@@ -192,7 +194,7 @@ function FormComp(props: {
           </Button>
         )}
         <Button
-          className=""
+          className={cn(style.submitBtn.className)}
           type="submit"
           size={props.form.size}
           variant={style.submitBtn.variant}

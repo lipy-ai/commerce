@@ -35,6 +35,7 @@
     "packages/*"
   ],
   "dependencies": {
+    "@radix-ui/react-alert-dialog": "^1.1.13",
     "@react-google-maps/api": "^2.20.6",
     "@tanstack/react-router": "^1.116.0",
     "@tanstack/react-start": "^1.116.1",
@@ -44,6 +45,7 @@
     "lucide-react": "^0.492.0",
     "nuqs": "^2.4.3",
     "react-google-maps": "^9.4.5",
+    "vaul": "^1.1.2",
     "vinxi": "^0.5.4"
   }
 }

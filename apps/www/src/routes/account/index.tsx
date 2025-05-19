@@ -8,6 +8,7 @@ import {
   MapPin,
   Share2,
   ShoppingBag,
+  Store,
   UserCircle2,
 } from "lucide-react";
 import { authClient } from "@lipy/lib/providers/auth.tsx";

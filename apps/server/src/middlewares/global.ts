@@ -3,17 +3,25 @@ import { logger } from "@/lib/logger";
 import { ServerContext } from "@/types";
 import { type MiddlewareHandler } from "hono";
 import { HTTPException } from "hono/http-exception";
+import { isbot } from "isbot";
+
+const hosts = env.TRUSTED_ORIGINS.map((t) => new URL(t).host);
 
 export const globalMiddleware: MiddlewareHandler<ServerContext> = async (
   c,
   next
 ) => {
-  const validKey = c.req.header("M2M-Key") === env.VITE_M2M_KEY.toString();
-  if (!validKey) {
-    logger.warn("Blocked an due to missing M2M key...");
-    throw new HTTPException(401, {
-      message: "Unauthorized!",
-    });
+  const bot = isbot(c.req.header("User-Agent"));
+  if (bot) {
+    const trustedHost = hosts.includes(
+      (c.req.header("Referer") && new URL(c.req.header("Referer")!).host) || ""
+    );
+    if (!trustedHost) {
+      logger.warn("Blocked an due isBot lib...");
+      throw new HTTPException(401, {
+        message: "Unauthorized!",
+      });
+    }
   }
 
   return next();

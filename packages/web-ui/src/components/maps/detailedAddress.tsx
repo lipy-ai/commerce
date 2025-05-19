@@ -21,6 +21,7 @@ import { useAPIMutation } from "@lipy/lib/utils/queryClient";
 import { apiClient } from "@lipy/lib/api";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Avatar, AvatarFallback } from "../ui/avatar";
+import { ScrollArea } from "../ui/scroll-area";
 
 export default function DetailedAddress({ fullAddress, label }: { fullAddress: any; label: 'Edit' | 'Add' }) {
   const { isMobile } = useViewport();
@@ -41,8 +42,9 @@ if (label === 'Edit'){
           label: "Save address",
           pos: {
             horizontal: "right",
+            vertical: "bottom",
           },
-          className: "w-84",
+          className: "w-full",
         },
         editBtn: {
           label: "Edit Information",
@@ -99,11 +101,8 @@ if (label === 'Edit'){
   ];
 
   
-    const mutation = useAPIMutation(apiClient.v1.address,"$post");
+  const mutation = useAPIMutation(apiClient.v1.address,"$post");
     
-  
-  
-
   const handleAddAddress = (values: any) => {
      toast.promise(
     
@@ -159,7 +158,7 @@ if (label === 'Edit'){
   }
 
   return (
-    <Drawer>
+    <Drawer >
       <DrawerTrigger className={cn(isMobile && "w-full")}>
         {
           label ==='Add' ? (
@@ -179,10 +178,14 @@ if (label === 'Edit'){
           )
         }
        
-      </DrawerTrigger>
-      <DrawerContent>
-        <DrawerHeader>
-          <div className="flex items-center justify-between px-2">
+      </DrawerTrigger >
+    
+
+         <DrawerContent>
+          
+
+             <DrawerHeader  className="p-4">
+          <div className="flex items-center justify-between">
             <DrawerTitle className="font-semibold text-lg">Add address details</DrawerTitle>
              <DrawerDescription></DrawerDescription>
             <DrawerClose>
@@ -191,9 +194,10 @@ if (label === 'Edit'){
           </div>
         </DrawerHeader>
 
-        <Separator />
+        <Separator/>
+        <ScrollArea className="h-[50vh]">
 
-        <div className="p-4">
+        <div className="p-4 mb-6">
           <div className="text-sm rounded-md border p-2 bg-accent font-medium">
             {/* <p>{fullAddress.address}</p> */}
 
@@ -237,7 +241,13 @@ if (label === 'Edit'){
             label==='Edit' ? handleEditAddress : handleAddAddress
           } />
         </div>
+
+          </ScrollArea>
+       
       </DrawerContent>
+
+
+     
     </Drawer>
   );
 }

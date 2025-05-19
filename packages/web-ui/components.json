@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "src/styles.css",
+    "baseColor": "neutral",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "aliases": {
+    "components": "@lipy/web-ui/components",
+    "utils": "@lipy/web-ui/lib/utils",
+    "ui": "@lipy/web-ui/components/ui",
+    "lib": "@lipy/web-ui/lib",
+    "hooks": "@lipy/web-ui/hooks"
+  },
+  "iconLibrary": "lucide"
+}

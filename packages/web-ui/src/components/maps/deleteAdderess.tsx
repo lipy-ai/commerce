@@ -1,0 +1,65 @@
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
+import { Avatar, AvatarFallback } from "../ui/avatar";
+import { Trash } from "lucide-react";
+import { apiClient } from "@lipy/lib/api";
+import { toast } from "sonner";
+import { type FC } from "react";
+import { useNavigate } from "@tanstack/react-router";
+
+interface DeleteAddressProps {
+  addressId: string;
+}
+
+export const DeleteAddress: FC<DeleteAddressProps> = ({ addressId }) => {
+
+  const navigator = useNavigate()
+  const handleDeleteAddress = () => {
+    toast.promise(
+     apiClient.v1.address[":id"].$delete({ param: { id: addressId } }),
+      {
+        loading: "Deleting address...",
+        success: () => {
+          navigator({ to: "/account/addresses", replace: true });
+          return "Address deleted successfully";
+        },
+        error: "Something went wrong",
+      }
+    );
+  };
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Avatar className="w-8 h-8 cursor-pointer">
+          <AvatarFallback>
+            <Trash className="size-4 text-muted-foreground" />
+          </AvatarFallback>
+        </Avatar>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone. This address will be permanently deleted.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={handleDeleteAddress}>
+            Continue
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};

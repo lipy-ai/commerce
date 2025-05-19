@@ -11,12 +11,13 @@ import { Button } from "../ui/button";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import DetailedAddress from "./detailedAddress";
+import { env } from "@envClient";
 
 
 
 export default function GoogleMapImage() {
   const { isLoaded} = useJsApiLoader({
-    googleMapsApiKey: "AIzaSyAsNy254oD0STougpSJlkBg3nzUemntS9s",
+    googleMapsApiKey: env.GOOGLE_MAP_API_KEY as string,
     libraries: ["places", "geocoding"],
   });
 

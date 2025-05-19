@@ -9,4 +9,5 @@ export const env = {
   NODE_ENV: e.VITE_NODE_ENV,
   API_URL: e.VITE_API_URL,
   CDN_URL: e.VITE_CDN_URL,
+  GOOGLE_MAP_API_KEY: e.VITE_GOOGLE_MAP_API_KEY,
 };

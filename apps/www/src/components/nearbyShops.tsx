@@ -25,7 +25,7 @@ const SHOPS = [
   {
     id: "1",
     name: "Green Market Grocery",
-    image: "/public/assets/paper-bag-items.webp",
+    image: "/assets/paper-bag-items.webp",
     rating: 4.7,
     reviews: 324,
     categories: ["Grocery", "Organic"],

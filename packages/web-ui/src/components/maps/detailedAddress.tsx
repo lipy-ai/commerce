@@ -4,7 +4,9 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
+  DrawerDescription,
   DrawerHeader,
+  DrawerTitle,
   DrawerTrigger,
 } from "../ui/drawer";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
@@ -144,16 +146,16 @@ if (label === 'Edit'){
           state: fullAddress.state,
           postal_code: fullAddress.postal_code,
         },
-      })
-    ), 
-    {
-      success:()=>{
-        navigate({ to: "/account/addresses" , replace: true })
-        return "Address saved successfully"
-      },
-      error: "Something went wrong",
-      loading: "Saving your address",
-    }
+      }),
+      {
+        success:()=>{
+          navigate({ to: "/account/addresses" , replace: true })
+          return "Address saved successfully"
+        },
+        error: "Something went wrong",
+        loading: "Saving your address",
+      }
+    )
   }
 
   return (
@@ -181,7 +183,8 @@ if (label === 'Edit'){
       <DrawerContent>
         <DrawerHeader>
           <div className="flex items-center justify-between px-2">
-            <div className="font-semibold text-lg">Add address details</div>
+            <DrawerTitle className="font-semibold text-lg">Add address details</DrawerTitle>
+             <DrawerDescription></DrawerDescription>
             <DrawerClose>
               <X className="h-5 w-5" />
             </DrawerClose>

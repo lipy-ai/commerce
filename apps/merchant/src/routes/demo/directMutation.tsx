@@ -10,18 +10,19 @@ export const Route = createFileRoute("/demo/directMutation")({
 function RouteComponent() {
   const handle = () => {
     toast.promise(
-      apiClient.v1.address.$post({
-        json: {
-          name: "string",
-          country: "string",
-          tag: "home",
-          line1: "string",
-          line2: "string",
-          city: "string",
-          state: "string",
-          postal_code: "string",
-        },
-      }),
+      // apiClient.v1.address.$post({
+      //   json: {
+      //     name: "string",
+      //     country: "string",
+      //     tag: "home",
+      //     line1: "string",
+      //     line2: "string",
+      //     city: "string",
+      //     state: "string",
+      //     postal_code: "string",
+      //   },
+      // }),
+      apiClient.v1.address[":id"].$delete({ param: { id: '23de9ed4-0d5f-4be5-bfb8-5a62c9fbe532' } }),
       {
         success: "Success",
         error: "Error",

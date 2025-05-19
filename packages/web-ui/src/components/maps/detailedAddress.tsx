@@ -1,4 +1,4 @@
-import { LetterText, SquarePen, StepForward, X } from "lucide-react";
+import { SquarePen, StepForward, X } from "lucide-react";
 import { Button, buttonVariants } from "../ui/button";
 import {
   Drawer,
@@ -20,26 +20,15 @@ import { apiClient } from "@lipy/lib/api";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 
-export default function DetailedAddress({
-  fullAddress,
-  label,
-}: {
-  fullAddress: any;
-  label: "Edit" | "Add";
-}) {
+export default function DetailedAddress({ fullAddress, label }: { fullAddress: any; label: 'Edit' | 'Add' }) {
   const { isMobile } = useViewport();
   const { data } = authClient.useSession();
-  const navigate = useNavigate();
+let building = ''
+if (label === 'Edit'){
+  building = fullAddress.line1.split(",")[0]
+}
 
-  const isEdit = label === "Edit";
-  const mutation = useAPIMutation(
-    apiClient.v1.address,
-    isEdit ? "$patch" : "$post"
-  );
-
-  const building = isEdit
-    ? fullAddress?.line1?.split(",")[0] || ""
-    : "";
+  const navigate = useNavigate()
 
   const forms: FormSchema<any, any> = [
     {
@@ -68,7 +57,7 @@ export default function DetailedAddress({
         yourName: fullAddress.name || data?.user?.name || "",
         phoneNumber: "",
         tag: fullAddress.tag || "home",
-        building: building,
+        building: building || ''
       },
       elements: [
         {
@@ -107,52 +96,88 @@ export default function DetailedAddress({
     },
   ];
 
-  const handleSaveAddress = (values: any) => {
-    const payload = {
-      name: values.yourName || fullAddress.name,
-      country: fullAddress.country,
-      tag: values.tag,
-      line1: values.building + ", " + (
-        isEdit
-          ? fullAddress?.line1?.split(",").slice(1).join(", ")
-          : fullAddress.address
-      ),
-      line2: "",
-      city: fullAddress.city,
-      state: fullAddress.state,
-      postal_code: fullAddress.postal_code,
-    };
+  
+    const mutation = useAPIMutation(apiClient.v1.address,"$post");
+    
+  
+  
 
-    toast.promise(
-      mutation.mutateAsync({ json: payload }),
-      {
-        loading: "Saving your address",
-        success: () => {
-          navigate({ to: "/account/addresses", replace: true });
-          return "Address saved successfully";
-        },
-        error: "Something went wrong",
-      }
-    );
+  const handleAddAddress = (values: any) => {
+     toast.promise(
+    
+           mutation.mutateAsync({
+          json: {
+            name: values.yourName || fullAddress.name,
+            country: fullAddress.country,
+            tag: values.tag,
+            line1: values.building + ", " +fullAddress.address,
+            line2: "",
+            city: fullAddress.city,
+            state: fullAddress.state,
+            postal_code: fullAddress.postal_code,
+          },
+        }),
+        {
+          success:()=>{
+            navigate({ to: "/account/addresses" , replace: true })
+            return ("Address saved successfully")
+          },
+          error: "Something went wrong",
+          loading: "Saving your address",
+        }
+    
+        )
   };
+
+
+  const handleEditAddress =(values)=>{
+    toast.promise(
+      apiClient.v1.address[":id"].$patch({
+        param: { id: fullAddress.id },
+        json: {
+          name: values.yourName || fullAddress.name,
+          country: fullAddress.country,
+          tag: values.tag,
+          line1: values.building + ", " +fullAddress.line1.split(",").slice(1).join(","),
+          line2: "",
+          city: fullAddress.city,
+          state: fullAddress.state,
+          postal_code: fullAddress.postal_code,
+        },
+      })
+    ), 
+    {
+      success:()=>{
+        navigate({ to: "/account/addresses" , replace: true })
+        return "Address saved successfully"
+      },
+      error: "Something went wrong",
+      loading: "Saving your address",
+    }
+  }
 
   return (
     <Drawer>
       <DrawerTrigger className={cn(isMobile && "w-full")}>
-        {label === "Add" ? (
-          <Button className="font-semibold px-6 w-full">
-            Confirm this address
-            <StepForward className="ml-2 h-4 w-4" />
-          </Button>
-        ) : (
-          <Avatar className="w-8 h-8">
-            <AvatarFallback>
-              <SquarePen className="size-4 text-muted-foreground" />
-            </AvatarFallback>
-          </Avatar>
-        )}
-      </DrawerTrigger>
+        {
+          label ==='Add' ? (
+               <Button className="font-semibold px-6 w-full">
+          Confirm this address
+          <StepForward className="ml-2 h-4 w-4" />
+        </Button>
+          ) : label ==='Edit' ? (
+             <Avatar className="w-8 h-8">
+                      <AvatarFallback>
+                         <SquarePen className="size-4  flex-shrink-0 text-muted-foreground" />
 
+                      </AvatarFallback>
+                    </Avatar>
+          ): (
+            < ></>
+          )
+        }
+       
+      </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
           <div className="flex items-center justify-between px-2">
@@ -167,35 +192,47 @@ export default function DetailedAddress({
 
         <div className="p-4">
           <div className="text-sm rounded-md border p-2 bg-accent font-medium">
-            <p>
-              {isEdit
-                ? fullAddress?.line1?.split(",").slice(1).join(", ")
-                : fullAddress?.address}
-            </p>
+            {/* <p>{fullAddress.address}</p> */}
 
+            {
+              label === 'Edit' ? (
+                <p>{fullAddress.line1.split(",").slice(1).join(",")}</p>
+              ):
+              label === 'Add' ? (
+                <p>{fullAddress.address}</p>
+              ):(<></>)
+            }
             <div className="flex justify-end">
-              {isEdit ? (
-                <Link
-                  className={cn(
-                    buttonVariants({ variant: "outline", size: "sm" }),
-                    "ml-auto"
-                  )}
-                  to="/account/addresses/new"
-                  params={{ addressId: fullAddress.id }}
-                >
-                  Change
-                </Link>
-              ) : (
-                <DrawerClose>
-                  <Button size="sm" variant="outline" className="ml-auto">
-                    Change
-                  </Button>
+              
+                {/* <DrawerClose>
+                     <Button size="sm" variant="outline" className="ml-auto">
+                Change
+              </Button>
+
+                </DrawerClose> */}
+                {
+                  label === 'Add' ? (
+                    <DrawerClose>
+                     <Button size="sm" variant="outline" className="ml-auto">
+                Change
+              </Button>
+
                 </DrawerClose>
-              )}
+                  ): label === 'Edit' ? (
+                    // <GoogleMapImage/>
+                    <Link className={cn(buttonVariants({variant:'outline', size:'sm'}), 'ml-auto')} to ="/account/addresses/new" params={{addressId: fullAddress.id}}>Change</Link>
+                  ):(
+                    <></>
+                  )
+                  
+                }
+             
             </div>
           </div>
 
-          <FormRender forms={forms} onSubmit={handleSaveAddress} />
+          <FormRender forms={forms} onSubmit={
+            label==='Edit' ? handleEditAddress : handleAddAddress
+          } />
         </div>
       </DrawerContent>
     </Drawer>

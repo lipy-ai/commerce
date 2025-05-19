@@ -198,7 +198,7 @@ function FormComp(props: {
           type="submit"
           size={props.form.size}
           variant={style.submitBtn.variant}
-          disabled={formState.isSubmitting || !formState.isDirty}
+          disabled={formState.isSubmitting || !formState.isDirty || !formState.isValid || formState.isSubmitSuccessful} 
         >
           {formState.isSubmitting
             ? "Submitting"

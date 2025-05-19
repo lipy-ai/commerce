@@ -1,5 +1,5 @@
 import { env } from "@envClient";
-import { authClient } from "@lipy/lib/providers/auth";
+import { getSsrSession } from "@lipy/lib/providers/auth";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { getHeaders, getWebRequest } from "@tanstack/react-start/server";
@@ -22,19 +22,11 @@ import {
 export const authFn = createServerFn({ method: "GET" }).handler(async (d) => {
   const request = getWebRequest();
   const h = getHeaders();
-  const res = await fetch(env.API_URL + "/api/auth/get-session", {
-    headers: request?.headers,
-  }).then(async (r) => {
-    const json = await r.json();
 
-    if (!r.ok) {
-      throw json;
-    }
-    return json;
-  });
+  const res = await getSsrSession(request?.headers);
 
   if (!res?.session) {
-    const cb = h.referer || env.DASHBOARD_URL;
+    const cb = h.referer || env.MERCHANT_URL;
 
     redirect({
       href: `${env.WEB_URL}/login?cb=${cb}` as any,
@@ -42,7 +34,7 @@ export const authFn = createServerFn({ method: "GET" }).handler(async (d) => {
     });
   }
 
-  return res as ReturnType<typeof authClient.useSession>["data"];
+  return res;
 });
 
 export const Route = createFileRoute("/(loggedIn)")({
@@ -118,7 +110,8 @@ const mobileNav = [
 ];
 
 function RouteComponent() {
-  // const data = Route.useLoaderData();
+  const data = Route.useLoaderData();
+  console.log(data);
   return (
     <main>
       <DashboardLayout

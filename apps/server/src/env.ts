@@ -40,7 +40,6 @@ const EnvSchema = z.object({
   AWS_ACCESS_KEY: z.string(),
   AWS_SECRET_KEY: z.string(),
   TRANSACTIONAL_EMAIL: z.string(),
-  VITE_M2M_KEY: z.string(),
   TRUSTED_ORIGINS: z
     .string()
     .transform((t) => t.split(",").map((e) => e.trim())),

@@ -25,6 +25,21 @@ const route = new Hono<ServerContext>()
       .execute();
     return c.json(address);
   })
+  .delete(
+    "/:id",
+    zValidator("param", z.object({ id: z.string().uuid() })),
+    async (c) => {
+      const session = c.get("session");
+      const { id } = c.req.valid("param");
+      const address = await db
+        .deleteFrom("address")
+        .where("id", "=", id)
+        .where("user_id", "=", session?.userId!)
+        .returning(["id"])
+        .executeTakeFirst();
+      return c.json(address);
+    }
+  )
   .post("/", zValidator("json", addressSchema), async (c) => {
     const session = c.get("session");
     const values = c.req.valid("json");
@@ -50,21 +65,6 @@ const route = new Hono<ServerContext>()
         .set({
           ...values,
         })
-        .returning(["id"])
-        .executeTakeFirst();
-      return c.json(address);
-    }
-  )
-  .delete(
-    "/:id",
-    zValidator("param", z.object({ id: z.string().uuid() })),
-    async (c) => {
-      const session = c.get("session");
-      const { id } = c.req.valid("param");
-      const address = await db
-        .deleteFrom("address")
-        .where("id", "=", id)
-        .where("user_id", "=", session?.userId!)
         .returning(["id"])
         .executeTakeFirst();
       return c.json(address);

@@ -29,7 +29,6 @@ const EnvSchema = z.object({
   // DATABASE_AUTH_TOKEN: z.string().optional(),
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
-  GOOGLE_MAPS_API_KEY: z.string(),
   BETTER_AUTH_SECRET: z.string(),
   BETTER_AUTH_URL: z.string(),
   REDIS_URL: z.string(),

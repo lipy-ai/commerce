@@ -17,7 +17,7 @@ export default function NavBar() {
   // Mobile layout
   if (isMobile) {
     return (
-      <nav className="p-4 flex items-center justify-between">
+      <div className="p-4 flex items-center justify-between">
         <div>
           <Link to="/account/addresses">
             <div className="text-lg font-bold flex items-center gap-2">
@@ -41,7 +41,7 @@ export default function NavBar() {
             </AvatarFallback>
           </Avatar>
         </Link>
-      </nav>
+      </div>
     );
   }
 }

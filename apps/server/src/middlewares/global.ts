@@ -4,7 +4,6 @@ import { ServerContext } from "@/types";
 import { type MiddlewareHandler } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { isbot } from "isbot";
-
 const hosts = env.TRUSTED_ORIGINS.map((t) => new URL(t).host);
 
 export const globalMiddleware: MiddlewareHandler<ServerContext> = async (

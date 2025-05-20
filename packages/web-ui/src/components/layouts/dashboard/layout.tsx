@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, useMatchRoute } from "@tanstack/react-router";
-import { ArrowDownToLine, Download, type LucideIcon } from "lucide-react";
+import { ArrowDownToLine, type LucideIcon } from "lucide-react";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { usePWAInstall } from "@lipy/web-ui/hooks/use-pwa-install";
 type Navs = Array<{

@@ -17,7 +17,7 @@ export const authClient = createAuthClient({
 });
 
 export const getSsrSession = async (headers?: Headers) => {
-  return await fetch(env.API_URL + "/api/auth/get-session", {
+  return await fetch(env.AUTH_URL + "/api/auth/get-session", {
     headers,
   }).then(async (r) => {
     const json = await r.json();

@@ -41,7 +41,7 @@ function RouteComponent() {
           {data.map((address) => (
             <div
               key={address.id}
-              className={cn(!isMobile ? " flex items-center justify-between" : "flex flex-col space-y-2", "p-4")
+              className={cn(!isMobile ? " flex items-center justify-between" : "flex flex-col space-y-2", "p-4 ")
               }
             
             >

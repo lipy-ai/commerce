@@ -108,7 +108,6 @@ export const auth = betterAuth({
     emailHarmony(),
     phoneHarmony(),
   ],
-  trustedOrigins: env.TRUSTED_ORIGINS,
   hooks: {
     // before: beforeAuthMiddleware,
     // after: afterAuthMiddleware,
@@ -119,8 +118,18 @@ export const auth = betterAuth({
     },
     crossSubDomainCookies: {
       enabled: true,
+      domain: "." + env.BETTER_AUTH_URL.split(".").slice(1).join("."), // Domain with a leading period
+    },
+    useSecureCookies: true,
+    defaultCookieAttributes: {
+      secure: true,
+      httpOnly: true,
+      sameSite: "none", // Allows CORS-based cookie sharing across subdomains
+      partitioned: true, // New browser standards will mandate this for foreign cookies
     },
   },
+  trustedOrigins: env.TRUSTED_ORIGINS,
+
   secondaryStorage: {
     get: async (key) => {
       const value = await redis.get(key);

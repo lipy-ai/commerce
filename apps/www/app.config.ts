@@ -2,7 +2,7 @@ import { defineConfig } from "@tanstack/react-start/config";
 import tailwindcss from "@tailwindcss/vite";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
-
+import { VitePWA } from "vite-plugin-pwa";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -11,7 +11,6 @@ export default defineConfig({
     appDirectory: "src",
   },
   server: {
-    // preset: "node",
     routeRules: {
       "/api/**": {
         proxy: {
@@ -26,6 +25,22 @@ export default defineConfig({
   vite: {
     plugins: [
       tailwindcss(),
+      // VitePWA({
+      //   registerType: "autoUpdate",
+      //   devOptions: {
+      //     enabled: true,
+      //   },
+      //   manifest: {
+      //     icons: [
+      //       {
+      //         src: "/pwa-512x512.png",
+      //         sizes: "512x512",
+      //         type: "image/png",
+      //         purpose: "any maskable",
+      //       },
+      //     ],
+      //   },
+      // }),
       //   visualizer(), // Generates a visual report
     ],
 

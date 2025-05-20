@@ -1,5 +1,9 @@
 import { betterAuth, BetterAuthOptions, generateId } from "better-auth";
-import { emailOTP, organization } from "better-auth/plugins";
+import {
+  createAuthMiddleware,
+  emailOTP,
+  organization,
+} from "better-auth/plugins";
 
 import env from "../env";
 import { redis } from "../cache";
@@ -7,8 +11,8 @@ import { db } from "../db";
 import { sendTransactionalEmail } from "@/services/ses";
 import { phoneNumber } from "better-auth/plugins";
 import { sendSMS } from "@/services/sns";
-import { emailHarmony } from "better-auth-harmony";
-import { phoneHarmony } from "better-auth-harmony";
+import emailHarmony from "./plugins/emailValidator";
+import phoneHarmony from "./plugins/phoneValidator";
 
 const organizationPlugin = organization({
   schema: {
@@ -46,40 +50,6 @@ const phoneOTPPlugin = phoneNumber({
     console.log(data);
   },
 });
-
-// const afterAuthMiddleware = createAuthMiddleware(async (ctx) => {
-//   const newSession = ctx.context.newSession
-//   if (!newSession) return
-//   console.log("New Session")
-//   if (!newSession.session.activeOrganizationId) {
-//     console.log("No active organization")
-//     let orgId = ""
-
-// await db
-//   .selectFrom("org.list")
-//   .innerJoin("org.member", "org.member.organizationId", "org.list.id")
-//   .innerJoin("auth.user", "auth.user.id", "org.member.userId")
-//   .where("auth.user.id", "=", newSession!.user.id)
-//   .select("org.list.id")
-//   .limit(1)
-//   .executeTakeFirst()
-//   .then((o) => {
-//     if (o?.id) {
-//       orgId = o?.id
-//     }
-//   })
-
-//     if (orgId) {
-//       await db
-//         .updateTable("auth.session")
-//         .where("auth.session.id", "=", newSession.session.id)
-//         .set({ activeOrganizationId: orgId })
-//         .execute()
-//       return true
-//     }
-//     return redirect("/create/org")
-//   }
-// })
 
 const socialProviders: BetterAuthOptions["socialProviders"] = {
   google: {
@@ -188,6 +158,7 @@ export const auth = betterAuth({
       image: "image",
       createdAt: "created_at",
       updatedAt: "updated_at",
+      normalizedEmail: "normalized_email",
     },
     deleteUser: {
       enabled: true,

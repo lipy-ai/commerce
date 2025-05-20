@@ -5,7 +5,6 @@ import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-console.log({ __dirname }, process.env.VITE_API_URL);
 
 export default defineConfig({
   tsr: {

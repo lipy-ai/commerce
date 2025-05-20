@@ -18,7 +18,7 @@ export const globalMiddleware: MiddlewareHandler<ServerContext> = async (
 
   if (userAgent === "node") {
     if (!env.TRUSTED_IPS?.includes(info.remote.address || "")) {
-      logger.warn("Blocked an not trusted IP...");
+      logger.warn("Blocked an not trusted IP..." + info.remote.address);
       throw new HTTPException(401, {
         message: "Unauthorized!",
       });

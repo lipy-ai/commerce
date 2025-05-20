@@ -8,6 +8,7 @@ import {
 import { createAuthClient } from "better-auth/react";
 
 export const authClient = createAuthClient({
+  baseURL: env.API_URL,
   plugins: [
     inferAdditionalFields<AuthType>(),
     organizationClient(),

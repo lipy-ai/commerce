@@ -6,6 +6,7 @@ import {
   DashboardLayout,
 } from "@lipy/web-ui/components/layouts/dashboard";
 import { CircleUser, LogOut, ShoppingCart, Store } from "lucide-react";
+import LocationComponent from '@lipy/web-ui/components/maps/deliveryAddress'
 export const Route = createFileRoute("/")({
   component: Home,
 });
@@ -83,6 +84,7 @@ function Home() {
       >
         <DashboardBody>
           <NavBar />
+          <LocationComponent/>
           <NearByShops />
         </DashboardBody>
       </DashboardLayout>

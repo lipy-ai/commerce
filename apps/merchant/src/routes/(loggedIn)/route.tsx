@@ -8,7 +8,7 @@ import {
   DashboardBody,
   DashboardLayout,
 } from "@lipy/web-ui/components/layouts/dashboard";
-
+//
 import {
   CircleUser,
   Home,
@@ -25,14 +25,14 @@ export const authFn = createServerFn({ method: "GET" }).handler(async (d) => {
 
   const res = await getSsrSession(request?.headers);
 
-  if (!res?.session) {
-    const cb = h.referer || env.MERCHANT_URL;
+  // if (!res?.session) {
+  //   const cb = h.referer || env.MERCHANT_URL;
 
-    redirect({
-      href: `${env.WEB_URL}/login?cb=${cb}` as any,
-      throw: true,
-    });
-  }
+  //   redirect({
+  //     href: `${env.WEB_URL}/login?cb=${cb}` as any,
+  //     throw: true,
+  //   });
+  // }
 
   return res;
 });

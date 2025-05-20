@@ -1,10 +1,13 @@
-import { Button } from "@lipy/web-ui/components/ui/button";
-import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
-export const Route = createFileRoute("/install")({
-  component: RouteComponent,
-});
+type BeforeInstallPromptEvent = Event & {
+  readonly platforms: string[];
+  readonly userChoice: Promise<{
+    outcome: "accepted" | "dismissed";
+    platform: string;
+  }>;
+  prompt: () => Promise<void>;
+};
 
 export function usePWAInstall() {
   const [installPrompt, setInstallPrompt] =
@@ -52,28 +55,4 @@ export function usePWAInstall() {
   };
 
   return { isInstallable, promptInstall };
-}
-
-type BeforeInstallPromptEvent = Event & {
-  readonly platforms: string[];
-  readonly userChoice: Promise<{
-    outcome: "accepted" | "dismissed";
-    platform: string;
-  }>;
-  prompt: () => Promise<void>;
-};
-
-function RouteComponent() {
-  const { isInstallable, promptInstall } = usePWAInstall();
-
-  if (!isInstallable) return null;
-
-  return (
-    <button
-      onClick={promptInstall}
-      className="fixed bottom-4 right-4 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-lg"
-    >
-      Install App
-    </button>
-  );
 }

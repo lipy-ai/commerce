@@ -9,8 +9,8 @@ self.addEventListener("activate", (event) => {
   return self.clients.claim();
 });
 
-// Cache assets and handle fetch requests
-self.addEventListener("fetch", (event) => {
-  // Add caching logic here if needed
-  event.respondWith(fetch(event.request));
-});
+// // Cache assets and handle fetch requests
+// self.addEventListener("fetch", (event) => {
+//   // Add caching logic here if needed
+//   event.respondWith(fetch(event.request));
+// });

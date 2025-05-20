@@ -2,11 +2,12 @@
 
 import { useState, type ReactNode } from "react";
 import { motion } from "framer-motion";
-
+import { Button } from "@lipy/web-ui/components/ui/button";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, useMatchRoute } from "@tanstack/react-router";
-import type { LucideIcon } from "lucide-react";
+import { ArrowDownToLine, Download, type LucideIcon } from "lucide-react";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
+import { usePWAInstall } from "@lipy/web-ui/hooks/use-pwa-install";
 type Navs = Array<{
   label: string;
   url: string;
@@ -33,6 +34,7 @@ export const DashboardLayout = ({
   const [open, setOpen] = useState(false);
 
   const { isMobile } = useViewport();
+  const { isInstallable, promptInstall } = usePWAInstall();
 
   const handleNavClick = (e: React.MouseEvent) => {
     // Only toggle the sidebar if the click is directly on the nav element
@@ -45,19 +47,34 @@ export const DashboardLayout = ({
   if (isMobile) {
     return (
       <div className="flex flex-col h-screen overflow-y-auto">
+        {isInstallable && (
+          <div
+            onClick={promptInstall}
+            className="bg-foreground w-full col-span-2 p-2  sticky top-0 flex gap-2 items-center justify-between"
+          >
+            <div className="flex items-center gap-2 text-background ">
+              <span>Install app on your phone</span>
+            </div>
+            <div>
+              <Button variant={"outline"} size={"icon"} className="size-6">
+                <ArrowDownToLine />
+              </Button>
+            </div>
+          </div>
+        )}
         <div className="">{children}</div>
         <br />
         <br /> <br />
         <br /> <br />
-        <div
-          className={cn(
-            `grid fixed bottom-0 justify-center px-4 border-t w-screen z-50 bg-background`
-          )}
-          style={{ gridTemplateColumns: `repeat(${mobileNav.length}, 1fr)` }}
-        >
-          {mobileNav.map((n, i) => (
-            <ActiveLink key={i} nav={n} mobile />
-          ))}
+        <div className="fixed bottom-0 w-screen z-50 bg-background  border-t">
+          <div
+            className={cn(`grid justify-center px-4`)}
+            style={{ gridTemplateColumns: `repeat(${mobileNav.length}, 1fr)` }}
+          >
+            {mobileNav.map((n, i) => (
+              <ActiveLink key={i} nav={n} mobile />
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -163,7 +180,7 @@ export function ActiveLink({
         <motion.span
           className={cn(
             "flex justify-between gap-2 w-full items-center flex-1 font-medium",
-            mobile && "justify-center",
+            mobile && "justify-center"
           )}
         >
           {nav.label}

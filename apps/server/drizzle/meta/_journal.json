@@ -8,6 +8,13 @@
       "when": 1746885412487,
       "tag": "0000_fair_tarantula",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1747744273414,
+      "tag": "0001_dark_korath",
+      "breakpoints": true
     }
   ]
 }

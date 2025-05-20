@@ -36,6 +36,7 @@ export const user = schema.table("user", {
   country: text("country"),
   onboarded: boolean("onboarded").notNull().default(false),
   address: text("address"),
+  normalizedEmail: text("normalized_email"),
 });
 
 export const address = schema.table("address", {

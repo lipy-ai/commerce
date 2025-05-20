@@ -1,7 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 
-
-
 export const ScrollingTabs = ({ tabs, handleTabChange}) => {
   const [activeTab, setActiveTab] = useState(0);
   const tabsRef = useRef(null);
@@ -61,7 +59,9 @@ export const ScrollingTabs = ({ tabs, handleTabChange}) => {
       : 'text-muted-foreground hover:text-muted-foreground'
   }`}
 >
-  <Icon size={20} />
+  <Icon size={20} className={
+    activeTab === index ? 'fill-primary/40': ""
+  }/>
   <span className="mt-1 text-sm whitespace-nowrap">{tab.name}</span>
 </div>
 

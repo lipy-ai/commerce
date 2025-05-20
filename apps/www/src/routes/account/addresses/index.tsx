@@ -2,7 +2,7 @@ import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/queryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
-import { buttonVariants } from "@lipy/web-ui/components/ui/button";
+import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 import Loading from "@lipy/web-ui/components/ui/loading";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
@@ -17,20 +17,19 @@ export const Route = createFileRoute("/account/addresses/")({
 
 function RouteComponent() {
   const { data, isLoading } = useAPIQuery(apiClient.v1.address, "$get", {});
-
   const { isMobile } = useViewport();
+
+
 
   if (isLoading) {
     return <Loading description="Searching for your saved addresses" />;
   }
+
   return (
     <>
       <DashboardHeader title="Addresses">
         {!isMobile && (
-          <Link
-            className={cn(buttonVariants({ variant: "default" }))}
-            to="/account/addresses/new"
-          >
+          <Link className={cn(buttonVariants({ variant: "default" }))} to="/account/addresses/new">
             <CirclePlus />
             Add New Address
           </Link>
@@ -42,7 +41,9 @@ function RouteComponent() {
           {data.map((address) => (
             <div
               key={address.id}
-              className="flex items-center justify-between p-4 border-b"
+              className={cn(!isMobile ? " flex items-center justify-between" : "flex flex-col space-y-2", "p-4")
+              }
+            
             >
               <div className="flex items-center gap-2">
                 {address.tag === "home" ? (
@@ -58,13 +59,15 @@ function RouteComponent() {
                   <p className="text-muted-foreground">{address.line1}</p>
                 </div>
               </div>
-
-              <div className="flex items-center gap-2">
-                <DetailedAddress fullAddress={address} label={"Edit"} />
-                <DeleteAddress addressId={address.id} />
-              </div>
+              
+                <div className="flex gap-2 items-center pl-12">
+                  <DetailedAddress fullAddress={address} label="Edit" />
+                  <DeleteAddress addressId={address.id} />
+                </div>
+              
             </div>
           ))}
+        
         </div>
       ) : (
         <EmptyPage

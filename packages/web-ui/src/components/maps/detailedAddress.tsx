@@ -1,4 +1,4 @@
-import { SquarePen, StepForward, X } from "lucide-react";
+import { ChevronRight, SquarePen, StepForward, X } from "lucide-react";
 import { Button, buttonVariants } from "../ui/button";
 import {
   Drawer,
@@ -159,7 +159,7 @@ if (label === 'Edit'){
 
   return (
     <Drawer >
-      <DrawerTrigger className={cn(isMobile && "w-full")}>
+      <DrawerTrigger className={cn(isMobile && label=='Add' ? "w-full" : " " )}>
         {
           label ==='Add' ? (
                <Button className="font-semibold px-6 w-full">
@@ -167,12 +167,14 @@ if (label === 'Edit'){
           <StepForward className="ml-2 h-4 w-4" />
         </Button>
           ) : label ==='Edit' ? (
+          
              <Avatar className="w-8 h-8">
                       <AvatarFallback>
                          <SquarePen className="size-4  flex-shrink-0 text-muted-foreground" />
 
                       </AvatarFallback>
                     </Avatar>
+               
           ): (
             < ></>
           )

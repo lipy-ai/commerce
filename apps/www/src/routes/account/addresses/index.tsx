@@ -10,6 +10,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Building, CirclePlus, House, MapPinHouse } from "lucide-react";
 import { DeleteAddress } from "@lipy/web-ui/components/maps/deleteAdderess";
 import DetailedAddress from "@lipy/web-ui/components/maps/detailedAddress";
+import { Avatar, AvatarFallback } from "@lipy/web-ui/components/ui/avatar";
 
 export const Route = createFileRoute("/account/addresses/")({
   component: RouteComponent,
@@ -35,24 +36,32 @@ function RouteComponent() {
           </Link>
         )}
       </DashboardHeader>
+      <div className="mb-10">
 
+        
       {data && data?.length > 0 ? (
         <div>
           {data.map((address) => (
             <div
               key={address.id}
-              className={cn(!isMobile ? " flex items-center justify-between" : "flex flex-col space-y-2", "p-4 ")
+              className={cn(!isMobile ? " flex items-center justify-between" : "flex flex-col space-y-2", "p-4 border-b")
               }
             
             >
-              <div className="flex items-center gap-2">
-                {address.tag === "home" ? (
-                  <House className="mr-2 size-8 text-muted-foreground flex-shrink-0" />
+              <div className="flex  gap-2">
+                <Avatar >
+                  <AvatarFallback>
+                       {address.tag === "home" ? (
+                  <House className="text-muted-foreground flex-shrink-0" />
                 ) : address.tag === "work" ? (
-                  <Building className="mr-2 size-8 text-muted-foreground flex-shrink-0" />
+                  <Building className="size-6 text-muted-foreground flex-shrink-0" />
                 ) : (
-                  <MapPinHouse className="mr-2 size-8 text-muted-foreground flex-shrink-0" />
+                  <MapPinHouse className="size-6 text-muted-foreground flex-shrink-0" />
                 )}
+
+                  </AvatarFallback>
+                </Avatar>
+             
 
                 <div>
                   <h2 className="text-lg font-semibold">{address.name}</h2>
@@ -76,6 +85,12 @@ function RouteComponent() {
           label="Add a new address to get started"
         />
       )}
+
+
+
+
+      </div>
+
 
       {isMobile && (
         <div className="fixed bottom-0 w-full p-4 bg-background">

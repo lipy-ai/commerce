@@ -7,6 +7,7 @@ import SearchBar from '@lipy/web-ui/components/searchBar';
 import ProductCard from '@lipy/web-ui/components/product/productCard'; // Fixed the path
 import { cn } from '@lipy/web-ui/lib/utils';
 import Loading from '@lipy/web-ui/components/ui/loading';
+import {motion} from "framer-motion"
 
 export const Route = createFileRoute("/shop/$id")({
   component: RouteComponent,
@@ -25,6 +26,7 @@ function RouteComponent() {
   const [categories, setCategories] = useState<string[]>([]);
   const [products, setProducts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [shopInfoVisible, setShopInfoVisible] = useState(true)
 
  useEffect(() => {
   const fetchCategories = async () => {
@@ -59,12 +61,32 @@ setIsLoading(false);
 }, []);
 
 if(isLoading) return <Loading/>
+
+
+
   
 
   return (
     <>
-      <DashboardHeader title="" />
-      <ShopShortDetails shopInfo={shopInfo} />
+      <DashboardHeader
+  titleChildren={
+    <motion.div
+  key={shopInfoVisible ? 'empty' : 'title'}
+  initial={{ opacity: 0, y: 10 }}         // Start slightly lower
+  animate={{ opacity: 1, y: 0 }}          // Move to normal position
+  exit={{ opacity: 0, y: -10 }}           // Exit upward
+  transition={{ duration: 0.1 }}
+  className="text-lg font-semibold"
+>
+  {!shopInfoVisible ? shopInfo.name : ""}
+</motion.div>
+  }
+/>
+      
+         <ShopShortDetails shopInfo={shopInfo} setShopInfoVisible={setShopInfoVisible}/>
+
+   
+     
       <Separator className="-my-4" />
 
       <div className='mb-16'>

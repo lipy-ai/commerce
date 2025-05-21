@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
@@ -9,18 +8,6 @@ import ProductCard from "@lipy/web-ui/components/product/productCard"; // Fixed 
 import { cn } from "@lipy/web-ui/lib/utils";
 import Loading from "@lipy/web-ui/components/ui/loading";
 import { motion } from "framer-motion";
-=======
-import { useEffect, useState } from 'react';
-import { createFileRoute } from '@tanstack/react-router';
-import { DashboardHeader } from '@lipy/web-ui/components/layouts/dashboard';
-import ShopShortDetails from '@/components/shop/shopShortDetails';
-import { Separator } from '@lipy/web-ui/components/ui/separator';
-import SearchBar from '@lipy/web-ui/components/searchBar';
-import ProductCard from '@lipy/web-ui/components/product/productCard'; // Fixed the path
-import { cn } from '@lipy/web-ui/lib/utils';
-import Loading from '@lipy/web-ui/components/ui/loading';
-import {motion} from "framer-motion"
->>>>>>> 40fdb8261807ab37047c51a915e62b4ca54bf883
 
 export const Route = createFileRoute("/shop/$id")({
   component: RouteComponent,
@@ -39,11 +26,7 @@ function RouteComponent() {
   const [categories, setCategories] = useState<string[]>([]);
   const [products, setProducts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-<<<<<<< HEAD
   const [shopInfoVisible, setShopInfoVisible] = useState(true);
-=======
-  const [shopInfoVisible, setShopInfoVisible] = useState(true)
->>>>>>> 40fdb8261807ab37047c51a915e62b4ca54bf883
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -76,20 +59,11 @@ function RouteComponent() {
     fetchCategories();
   }, []);
 
-<<<<<<< HEAD
   if (isLoading) return <Loading />;
-=======
-if(isLoading) return <Loading/>
-
-
-
-  
->>>>>>> 40fdb8261807ab37047c51a915e62b4ca54bf883
 
   return (
     <>
       <DashboardHeader
-<<<<<<< HEAD
         titleChildren={
           <motion.div
             key={shopInfoVisible ? "empty" : "title"}
@@ -109,26 +83,6 @@ if(isLoading) return <Loading/>
         setShopInfoVisible={setShopInfoVisible}
       />
 
-=======
-  titleChildren={
-    <motion.div
-  key={shopInfoVisible ? 'empty' : 'title'}
-  initial={{ opacity: 0, y: 10 }}         // Start slightly lower
-  animate={{ opacity: 1, y: 0 }}          // Move to normal position
-  exit={{ opacity: 0, y: -10 }}           // Exit upward
-  transition={{ duration: 0.1 }}
-  className="text-lg font-semibold"
->
-  {!shopInfoVisible ? shopInfo.name : ""}
-</motion.div>
-  }
-/>
-      
-         <ShopShortDetails shopInfo={shopInfo} setShopInfoVisible={setShopInfoVisible}/>
-
-   
-     
->>>>>>> 40fdb8261807ab37047c51a915e62b4ca54bf883
       <Separator className="-my-4" />
 
       <div className="mb-16">

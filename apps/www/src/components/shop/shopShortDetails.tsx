@@ -1,21 +1,11 @@
-<<<<<<< HEAD
 import { Clock, MapPin, Star } from "lucide-react";
 import { motion } from "framer-motion";
 export default function ShopShortDetails({ shopInfo, setShopInfoVisible }) {
-=======
-
-import { Clock, MapPin, Star} from "lucide-react";
-import {motion} from 'framer-motion'
-export default function ShopShortDetails({ shopInfo, setShopInfoVisible}) {
-
-
->>>>>>> 40fdb8261807ab37047c51a915e62b4ca54bf883
   return (
     <div className="p-4">
       {/* Header with Shop Name and Rating */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex-1">
-<<<<<<< HEAD
           <motion.div
             onViewportLeave={() => setShopInfoVisible(false)}
             onViewportEnter={() => setShopInfoVisible(true)}
@@ -23,10 +13,6 @@ export default function ShopShortDetails({ shopInfo, setShopInfoVisible}) {
           >
             {shopInfo.name}
           </motion.div>
-=======
-          <motion.div onViewportLeave={() => setShopInfoVisible(false)} onViewportEnter={() => setShopInfoVisible(true)} className="font-bold text-xl text-gray-800">
-{shopInfo.name}</motion.div>
->>>>>>> 40fdb8261807ab37047c51a915e62b4ca54bf883
           <div className="flex items-center mt-1 text-gray-600">
             <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
             <p className="text-sm line-clamp-1">{shopInfo.address}</p>

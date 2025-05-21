@@ -1,176 +1,176 @@
-import { type CheckboxProps } from "@radix-ui/react-checkbox";
-import { type RadioGroupProps } from "@radix-ui/react-radio-group";
-import { type SeparatorProps } from "@radix-ui/react-separator";
-import { type SliderProps } from "@radix-ui/react-slider";
-import { type SwitchProps } from "@radix-ui/react-switch";
-import {
-  type ToggleGroupMultipleProps,
-  type ToggleGroupSingleProps,
+import type { CheckboxProps } from "@radix-ui/react-checkbox";
+import type { RadioGroupProps } from "@radix-ui/react-radio-group";
+import type { SeparatorProps } from "@radix-ui/react-separator";
+import type { SliderProps } from "@radix-ui/react-slider";
+import type { SwitchProps } from "@radix-ui/react-switch";
+import type {
+	ToggleGroupMultipleProps,
+	ToggleGroupSingleProps,
 } from "@radix-ui/react-toggle-group";
-import { type OTPInputProps } from "input-otp";
+import type { OTPInputProps } from "input-otp";
 
 type Option = { value: string; label: string };
 //------------------------------------------------------------
 export type SharedFormProps = {
-  name: string;
-  label?: string;
-  description?: string;
-  required?: boolean;
-  static?: boolean;
-  style?: {
-    size?: "lg" | "default";
-    className?: string;
-  };
+	name: string;
+	label?: string;
+	description?: string;
+	required?: boolean;
+	static?: boolean;
+	style?: {
+		size?: "lg" | "default";
+		className?: string;
+	};
 };
 
 type Input = {
-  name: string;
-  fieldType: "Input";
+	name: string;
+	fieldType: "Input";
 } & React.InputHTMLAttributes<HTMLInputElement> &
-  SharedFormProps;
+	SharedFormProps;
 
 type SingleImage = {
-  name: string;
-  fieldType: "SingleImage";
+	name: string;
+	fieldType: "SingleImage";
 } & SharedFormProps;
 
 export type ProductImage = {
-  name: string;
-  fieldType: "ProductImage";
+	name: string;
+	fieldType: "ProductImage";
 } & SharedFormProps;
 
 type CountrySelector = {
-  name: string;
-  fieldType: "CountrySelector";
+	name: string;
+	fieldType: "CountrySelector";
 } & React.InputHTMLAttributes<HTMLInputElement> &
-  SharedFormProps;
+	SharedFormProps;
 
 type PasswordInput = {
-  name: string;
-  fieldType: "Password";
-  type: "password";
+	name: string;
+	fieldType: "Password";
+	type: "password";
 } & React.InputHTMLAttributes<HTMLInputElement> &
-  SharedFormProps;
+	SharedFormProps;
 
 type OTPInput = {
-  name: string;
-  fieldType: "OTP";
+	name: string;
+	fieldType: "OTP";
 } & OTPInputProps &
-  SharedFormProps;
+	SharedFormProps;
 
 type Textarea = {
-  name: string;
-  fieldType: "Textarea";
+	name: string;
+	fieldType: "Textarea";
 } & React.TextareaHTMLAttributes<HTMLTextAreaElement> &
-  SharedFormProps;
+	SharedFormProps;
 
 type Checkbox = {
-  fieldType: "Checkbox";
+	fieldType: "Checkbox";
 } & CheckboxProps &
-  SharedFormProps;
+	SharedFormProps;
 
 type RadioGroup = {
-  fieldType: "RadioGroup";
-  options: Option[];
+	fieldType: "RadioGroup";
+	options: Option[];
 } & RadioGroupProps &
-  SharedFormProps;
+	SharedFormProps;
 //------------------------------
 type ToggleGroupBaseProps = {
-  fieldType: "ToggleGroup";
-  options: Option[];
+	fieldType: "ToggleGroup";
+	options: Option[];
 };
 
 type ToggleGroupSingle = ToggleGroupBaseProps &
-  ToggleGroupSingleProps & {
-    type: "single";
-  };
+	ToggleGroupSingleProps & {
+		type: "single";
+	};
 
 type ToggleGroupMultiple = ToggleGroupBaseProps &
-  ToggleGroupMultipleProps & {
-    type: "multiple";
-  };
+	ToggleGroupMultipleProps & {
+		type: "multiple";
+	};
 
 type ToggleGroup = (ToggleGroupSingle | ToggleGroupMultiple) & SharedFormProps;
 //------------------------------
 
 type Switch = {
-  fieldType: "Switch";
+	fieldType: "Switch";
 } & SwitchProps &
-  SharedFormProps;
+	SharedFormProps;
 
 type Slider = {
-  fieldType: "Slider";
+	fieldType: "Slider";
 } & SliderProps &
-  SharedFormProps;
+	SharedFormProps;
 
 type Select = {
-  fieldType: "Select";
-  /**
-   * Options for the select field
-   */
-  options: Option[];
-  placeholder: string;
+	fieldType: "Select";
+	/**
+	 * Options for the select field
+	 */
+	options: Option[];
+	placeholder: string;
 } & React.SelectHTMLAttributes<HTMLSelectElement> &
-  SharedFormProps;
+	SharedFormProps;
 
 type MultiSelect = {
-  fieldType: "MultiSelect";
-  /**
-   * Options for the multiselect field
-   */
-  options: Option[];
-  placeholder: string;
+	fieldType: "MultiSelect";
+	/**
+	 * Options for the multiselect field
+	 */
+	options: Option[];
+	placeholder: string;
 } & React.InputHTMLAttributes<HTMLInputElement> &
-  SharedFormProps;
+	SharedFormProps;
 type DatePicker = {
-  fieldType: "DatePicker";
+	fieldType: "DatePicker";
 } & React.InputHTMLAttributes<HTMLInputElement> &
-  SharedFormProps;
+	SharedFormProps;
 
 type H1 = {
-  fieldType: "H1";
-  /**
-   * the name is used as a key to identify the field
-   */
-  name: string;
-  content: string;
-  static: true;
+	fieldType: "H1";
+	/**
+	 * the name is used as a key to identify the field
+	 */
+	name: string;
+	content: string;
+	static: true;
 } & React.HTMLAttributes<HTMLHeadingElement>;
 type H2 = {
-  fieldType: "H2";
-  /**
-   * the name is used as a key to identify the field
-   */
-  name: string;
-  static: true;
-  content: string;
+	fieldType: "H2";
+	/**
+	 * the name is used as a key to identify the field
+	 */
+	name: string;
+	static: true;
+	content: string;
 } & React.HTMLAttributes<HTMLHeadingElement>;
 type H3 = {
-  fieldType: "H3";
-  /**
-   * the name is used as a key to identify the field
-   */
-  name: string;
-  static: true;
-  content: string;
+	fieldType: "H3";
+	/**
+	 * the name is used as a key to identify the field
+	 */
+	name: string;
+	static: true;
+	content: string;
 } & React.HTMLAttributes<HTMLHeadingElement>;
 type Paragraph = {
-  fieldType: "P";
-  /**
-   * the name is used as a key to identify the field
-   */
-  name: string;
-  static: true;
-  content: string;
+	fieldType: "P";
+	/**
+	 * the name is used as a key to identify the field
+	 */
+	name: string;
+	static: true;
+	content: string;
 } & React.HTMLAttributes<HTMLParagraphElement>;
 
 type Divider = {
-  fieldType: "Separator";
-  /**
-   * the name is used as a key to identify the field
-   */
-  name: string;
-  static: true;
+	fieldType: "Separator";
+	/**
+	 * the name is used as a key to identify the field
+	 */
+	name: string;
+	static: true;
 } & SeparatorProps;
 
 /**
@@ -178,21 +178,21 @@ type Divider = {
  * that can be rendered in a form
  */
 type FormFieldElement =
-  | Textarea
-  | Input
-  | PasswordInput
-  | OTPInput
-  | Checkbox
-  | RadioGroup
-  | ToggleGroup
-  | Switch
-  | Select
-  | MultiSelect
-  | Slider
-  | DatePicker
-  | CountrySelector
-  | SingleImage
-  | ProductImage;
+	| Textarea
+	| Input
+	| PasswordInput
+	| OTPInput
+	| Checkbox
+	| RadioGroup
+	| ToggleGroup
+	| Switch
+	| Select
+	| MultiSelect
+	| Slider
+	| DatePicker
+	| CountrySelector
+	| SingleImage
+	| ProductImage;
 
 /**
  * StaticFormElement is a type that represents a static form element
@@ -207,8 +207,8 @@ export type FormElementOrList = FormElement | FormElement[];
 export type FormElementList = FormElement[] | FormElementOrList[];
 
 export type FormStep = {
-  id: string;
-  stepFields: FormElementList;
+	id: string;
+	stepFields: FormElementList;
 };
 //------------------------------------------------------------Form Element Handlers
 /**
@@ -220,45 +220,45 @@ export type FormStep = {
  * - Nested Element in MS form: i, j, stepIndex is required
  */
 type DropElementOptions = {
-  /**
-   * Index where an element should be dropped to the form elements array
-   */
-  fieldIndex: number;
-  /**
-   * Index where a nested element should be dropped to the nested array
-   */
-  j?: number;
-  /**
-   * Whether the form is a multi-step form or not
-   */
-  isMS?: boolean;
-  stepIndex?: number;
+	/**
+	 * Index where an element should be dropped to the form elements array
+	 */
+	fieldIndex: number;
+	/**
+	 * Index where a nested element should be dropped to the nested array
+	 */
+	j?: number;
+	/**
+	 * Whether the form is a multi-step form or not
+	 */
+	isMS?: boolean;
+	stepIndex?: number;
 };
 export type DropElement = (options: DropElementOptions) => void;
 
 type EditElementOptions = {
-  fieldIndex: number;
-  modifiedFormElement: FormElement;
-  j?: number;
-  stepIndex?: number;
+	fieldIndex: number;
+	modifiedFormElement: FormElement;
+	j?: number;
+	stepIndex?: number;
 };
 export type EditElement = (options: EditElementOptions) => void;
 
 type ReorderParams = {
-  newOrder: FormElementOrList[];
-  fieldIndex?: number | null;
-  stepIndex?: number | null;
+	newOrder: FormElementOrList[];
+	fieldIndex?: number | null;
+	stepIndex?: number | null;
 };
 
 export type ReorderElements = (params: ReorderParams) => void;
 
 export type AppendElement = (options: {
-  fieldType: FormElement["fieldType"];
-  /**
-   * index where a nested element should be appended to the main array
-   */
-  fieldIndex?: number | null;
-  stepIndex?: number;
+	fieldType: FormElement["fieldType"];
+	/**
+	 * index where a nested element should be appended to the main array
+	 */
+	fieldIndex?: number | null;
+	stepIndex?: number;
 }) => void;
 
 export type SetTemplate = (template: string) => void;

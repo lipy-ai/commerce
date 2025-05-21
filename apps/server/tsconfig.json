@@ -6,7 +6,7 @@
     "baseUrl": "./",
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "removeComments": true,
     "allowImportingTsExtensions": true,
     "noEmit": true,

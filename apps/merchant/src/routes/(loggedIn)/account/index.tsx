@@ -87,7 +87,7 @@ function RouteComponent() {
 
   return (
     <div className="max-w-5xl">
-      <FormRender forms={forms} onSubmit={handle}></FormRender>
+      <FormRender forms={forms} onSubmit={handle} />
     </div>
   );
 }

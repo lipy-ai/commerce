@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { type ReactNode, useState } from "react";
 
 // NEVER DO THIS:
 // const queryClient = new QueryClient()
@@ -12,34 +12,34 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 // Besides being bad for performance, this also leaks any sensitive data.
 
 export default function QueryProvider({
-  children,
-  handleThrowOnError,
+	children,
+	handleThrowOnError,
 }: {
-  children: ReactNode;
-  handleThrowOnError: (v: Error) => boolean;
+	children: ReactNode;
+	handleThrowOnError: (v: Error) => boolean;
 }) {
-  // Instead do this, which ensures each request has its own cache:
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            // With SSR, we usually want to set some default staleTime
-            // above 0 to avoid refetching immediately on the client
-            staleTime: 60 * 1000,
-            retry: 3,
-          },
-          mutations: {
-            onError: handleThrowOnError,
-          },
-        },
-      })
-  );
+	// Instead do this, which ensures each request has its own cache:
+	const [queryClient] = useState(
+		() =>
+			new QueryClient({
+				defaultOptions: {
+					queries: {
+						// With SSR, we usually want to set some default staleTime
+						// above 0 to avoid refetching immediately on the client
+						staleTime: 60 * 1000,
+						retry: 3,
+					},
+					mutations: {
+						onError: handleThrowOnError,
+					},
+				},
+			}),
+	);
 
-  return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
-  );
+	return (
+		<QueryClientProvider client={queryClient}>
+			{children}
+			<ReactQueryDevtools initialIsOpen={false} />
+		</QueryClientProvider>
+	);
 }

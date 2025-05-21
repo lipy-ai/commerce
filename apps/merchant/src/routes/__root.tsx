@@ -37,7 +37,8 @@ export const Route = createRootRoute({
 
       ...seo({
         title: "Lipy Commerce",
-        description: `Lipy Commerce is a quick commerce platform designed to empower local businesses by connecting them directly with nearby customers. Sell faster, grow smarter, and stay local.`,
+        description:
+          "Lipy Commerce is a quick commerce platform designed to empower local businesses by connecting them directly with nearby customers. Sell faster, grow smarter, and stay local.",
       }),
     ],
     links: [
@@ -95,7 +96,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   const data = Route.useLoaderData();
 
   return (
-    <html className="bg-muted/30">
+    <html className="bg-muted/30" lang="en">
       <head>
         <HeadContent />
       </head>

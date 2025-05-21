@@ -1,7 +1,7 @@
-import { type User } from "better-auth";
+import type { User } from "better-auth";
 import { APIError } from "better-auth/api";
 import { createAuthMiddleware } from "better-auth/plugins";
-import { type BetterAuthPlugin } from "better-auth/types";
+import type { BetterAuthPlugin } from "better-auth/types";
 import Mailchecker from "mailchecker";
 import isEmail from "validator/es/lib/isEmail";
 import normalizeEmail from "validator/es/lib/normalizeEmail";
@@ -11,19 +11,19 @@ import type { HookEndpointContext } from "better-auth";
 export type Matcher = (context: HookEndpointContext) => boolean;
 
 const paths = [
-  "/sign-up/email",
-  "/email-otp/verify-email",
-  "/sign-in/email-otp",
-  "/sign-in/magic-link",
-  "/sign-in/email",
-  "/forget-password/email-otp",
-  "/email-otp/reset-password",
-  "/email-otp/create-verification-otp",
-  "/email-otp/get-verification-otp",
-  "/email-otp/send-verification-otp",
-  "/forget-password",
-  "/send-verification-email",
-  "/change-email",
+	"/sign-up/email",
+	"/email-otp/verify-email",
+	"/sign-in/email-otp",
+	"/sign-in/magic-link",
+	"/sign-in/email",
+	"/forget-password/email-otp",
+	"/email-otp/reset-password",
+	"/email-otp/create-verification-otp",
+	"/email-otp/get-verification-otp",
+	"/email-otp/send-verification-otp",
+	"/forget-password",
+	"/send-verification-email",
+	"/change-email",
 ];
 
 const all = new Set(paths);
@@ -102,7 +102,7 @@ export const emailForget: Matcher = ({ path }) => path === "/forget-password";
  * @returns boolean
  */
 export const emailSendVerification: Matcher = ({ path }) =>
-  path === "/send-verification-email";
+	path === "/send-verification-email";
 
 /**
  * Path is `'/change-email'`, used to update the user's email address.
@@ -120,7 +120,7 @@ export const changeEmail: Matcher = ({ path }) => path === "/change-email";
  * @returns boolean
  */
 export const emailOtpVerify: Matcher = ({ path }) =>
-  path === "/email-otp/verify-email";
+	path === "/email-otp/verify-email";
 
 /**
  * Path is `'/forget-password/email-otp'`, used by the [Email
@@ -130,7 +130,7 @@ export const emailOtpVerify: Matcher = ({ path }) =>
  * @returns boolean
  */
 export const emailOtpForget: Matcher = ({ path }) =>
-  path === "/forget-password/email-otp";
+	path === "/forget-password/email-otp";
 
 /**
  * Path is `'/email-otp/reset-password'`, used by the [Email
@@ -140,7 +140,7 @@ export const emailOtpForget: Matcher = ({ path }) =>
  * @returns boolean
  */
 export const emailOtpReset: Matcher = ({ path }) =>
-  path === "/email-otp/reset-password";
+	path === "/email-otp/reset-password";
 
 /**
  * Path is `'/email-otp/create-verification-otp'`, used by the [Email
@@ -150,7 +150,7 @@ export const emailOtpReset: Matcher = ({ path }) =>
  * @returns boolean
  */
 export const emailOtpCreateVerification: Matcher = ({ path }) =>
-  path === "/email-otp/create-verification-otp";
+	path === "/email-otp/create-verification-otp";
 
 /**
  * Path is `'/email-otp/get-verification-otp'`, used by the [Email
@@ -160,7 +160,7 @@ export const emailOtpCreateVerification: Matcher = ({ path }) =>
  * @returns boolean
  */
 export const emailOtpGetVerification: Matcher = ({ path }) =>
-  path === "/email-otp/get-verification-otp";
+	path === "/email-otp/get-verification-otp";
 
 /**
  * Path is `'/email-otp/send-verification-otp'`, used by the [Email
@@ -170,7 +170,7 @@ export const emailOtpGetVerification: Matcher = ({ path }) =>
  * @returns boolean
  */
 export const emailOtpSendVerification: Matcher = ({ path }) =>
-  path === "/email-otp/send-verification-otp";
+	path === "/email-otp/send-verification-otp";
 
 /**
  * Path is `'/sign-in/magic-link'`, used by the [Magic
@@ -180,63 +180,63 @@ export const emailOtpSendVerification: Matcher = ({ path }) =>
  * @returns boolean
  */
 export const magicLinkSignIn: Matcher = ({ path }) =>
-  path === "/sign-in/magic-link";
+	path === "/sign-in/magic-link";
 
 export interface UserWithNormalizedEmail extends User {
-  normalized_email?: string | null;
+	normalized_email?: string | null;
 }
 
 export interface EmailHarmonyOptions {
-  /**
-   * Allow logging in with any version of the unnormalized email address. Also works for password
-   * reset. For example a user who signed up with the email `johndoe@googlemail.com` may also log
-   * in with `john.doe@gmail.com`. Makes 1 extra database query for every login attempt.
-   * @default false
-   */
-  allowNormalizedSignin?: boolean;
-  /**
-   * Function to validate email. Default is `validateEmail`.
-   */
-  validator?: (email: string) => boolean | Promise<boolean>;
-  /**
-   * Function to normalize email address. Default is `validator.normalizeEmail(t)`.
-   * @see https://github.com/validatorjs/validator.js#sanitizers
-   */
-  normalizer?: typeof normalizeEmail;
-  /**
-   * Specify in which routes the plugin should run, for example by path.
-   * @example <caption>Ready-made matchers</caption>
-   * import * as matchers from 'better-auth-harmony/email/matchers';
-   *
-   * export const auth = betterAuth({
-   *   // ... other config options
-   *   plugins: [
-   *     emailHarmony({
-   *       matchers: {
-   *         signIn: [matchers.emailOtpVerify, matchers.emailOtpForget, matchers.emailOtpReset]
-   *       }
-   *     })
-   *   ]
-   * });
-   */
-  matchers?: {
-    /**
-     * Specify where the plugin should run to look up users by normalized email address if
-     * `allowNormalizedSignin` is true.
-     * @default [`allEmailSignIn`]
-     */
-    signIn?: Matcher[];
-    /**
-     * Specify which requests the plugin should validate, for example in which routes by path.
-     * @default [`allEmail`]
-     */
-    validation?: Matcher[];
-  };
+	/**
+	 * Allow logging in with any version of the unnormalized email address. Also works for password
+	 * reset. For example a user who signed up with the email `johndoe@googlemail.com` may also log
+	 * in with `john.doe@gmail.com`. Makes 1 extra database query for every login attempt.
+	 * @default false
+	 */
+	allowNormalizedSignin?: boolean;
+	/**
+	 * Function to validate email. Default is `validateEmail`.
+	 */
+	validator?: (email: string) => boolean | Promise<boolean>;
+	/**
+	 * Function to normalize email address. Default is `validator.normalizeEmail(t)`.
+	 * @see https://github.com/validatorjs/validator.js#sanitizers
+	 */
+	normalizer?: typeof normalizeEmail;
+	/**
+	 * Specify in which routes the plugin should run, for example by path.
+	 * @example <caption>Ready-made matchers</caption>
+	 * import * as matchers from 'better-auth-harmony/email/matchers';
+	 *
+	 * export const auth = betterAuth({
+	 *   // ... other config options
+	 *   plugins: [
+	 *     emailHarmony({
+	 *       matchers: {
+	 *         signIn: [matchers.emailOtpVerify, matchers.emailOtpForget, matchers.emailOtpReset]
+	 *       }
+	 *     })
+	 *   ]
+	 * });
+	 */
+	matchers?: {
+		/**
+		 * Specify where the plugin should run to look up users by normalized email address if
+		 * `allowNormalizedSignin` is true.
+		 * @default [`allEmailSignIn`]
+		 */
+		signIn?: Matcher[];
+		/**
+		 * Specify which requests the plugin should validate, for example in which routes by path.
+		 * @default [`allEmail`]
+		 */
+		validation?: Matcher[];
+	};
 }
 
 interface Context {
-  body?: Record<string, unknown>;
-  query?: Record<string, unknown>;
+	body?: Record<string, unknown>;
+	query?: Record<string, unknown>;
 }
 
 /**
@@ -248,147 +248,147 @@ interface Context {
  *   (`false`).
  */
 export const validateEmail = (email: string) =>
-  isEmail(email) && Mailchecker.isValid(email);
+	isEmail(email) && Mailchecker.isValid(email);
 
 type GetEmail = (ctx: Context) => {
-  email: unknown;
-  container: "body" | "query";
+	email: unknown;
+	container: "body" | "query";
 };
 const getEmail: GetEmail = (ctx) => ({
-  email: ctx.body?.email ?? ctx.query?.email,
-  container: ctx.body ? "body" : "query",
+	email: ctx.body?.email ?? ctx.query?.email,
+	container: ctx.body ? "body" : "query",
 });
 
 const emailHarmony = ({
-  allowNormalizedSignin = false,
-  validator = validateEmail,
-  matchers = {},
-  normalizer = normalizeEmail,
+	allowNormalizedSignin = false,
+	validator = validateEmail,
+	matchers = {},
+	normalizer = normalizeEmail,
 }: EmailHarmonyOptions = {}): BetterAuthPlugin =>
-  ({
-    id: "harmony-email",
-    init() {
-      // eslint-disable-next-line @typescript-eslint/require-await,unicorn/consistent-function-scoping -- better-auth types
-      const normalize = async (
-        user: Partial<User> & { phoneNumber?: string }
-      ) => {
-        const { email, phoneNumber } = user;
-        if (!email || phoneNumber) return { data: user as Required<User> };
+	({
+		id: "harmony-email",
+		init() {
+			// eslint-disable-next-line @typescript-eslint/require-await,unicorn/consistent-function-scoping -- better-auth types
+			const normalize = async (
+				user: Partial<User> & { phoneNumber?: string },
+			) => {
+				const { email, phoneNumber } = user;
+				if (!email || phoneNumber) return { data: user as Required<User> };
 
-        const normalized_email = normalizer(email);
-        /* v8 ignore next */
-        if (!normalized_email) return false;
+				const normalized_email = normalizer(email);
+				/* v8 ignore next */
+				if (!normalized_email) return false;
 
-        return {
-          data: {
-            ...(user as Required<User>),
-            normalized_email,
-          },
-        };
-      };
+				return {
+					data: {
+						...(user as Required<User>),
+						normalized_email,
+					},
+				};
+			};
 
-      return {
-        options: {
-          databaseHooks: {
-            user: {
-              create: {
-                before: normalize,
-              },
-              update: {
-                before: normalize,
-              },
-            },
-          },
-        },
-      };
-    },
-    schema: {
-      user: {
-        fields: {
-          normalized_email: {
-            type: "string",
-            required: false,
-            unique: true,
-            input: false,
-            returned: false,
-          },
-        },
-      },
-    },
-    hooks: {
-      before: [
-        {
-          matcher: (context) =>
-            matchers.validation
-              ? matchers.validation.some((matcher) => matcher(context))
-              : allEmail(context),
-          handler: createAuthMiddleware(async (ctx) => {
-            const email =
-              ctx.path === "/change-email"
-                ? (ctx.body as Context["body"])?.newEmail
-                : getEmail(ctx).email;
+			return {
+				options: {
+					databaseHooks: {
+						user: {
+							create: {
+								before: normalize,
+							},
+							update: {
+								before: normalize,
+							},
+						},
+					},
+				},
+			};
+		},
+		schema: {
+			user: {
+				fields: {
+					normalized_email: {
+						type: "string",
+						required: false,
+						unique: true,
+						input: false,
+						returned: false,
+					},
+				},
+			},
+		},
+		hooks: {
+			before: [
+				{
+					matcher: (context) =>
+						matchers.validation
+							? matchers.validation.some((matcher) => matcher(context))
+							: allEmail(context),
+					handler: createAuthMiddleware(async (ctx) => {
+						const email =
+							ctx.path === "/change-email"
+								? (ctx.body as Context["body"])?.newEmail
+								: getEmail(ctx).email;
 
-            if (typeof email !== "string") return;
+						if (typeof email !== "string") return;
 
-            const isValid = await validator(email);
-            if (!isValid)
-              throw new APIError("BAD_REQUEST", { message: "Invalid email" });
-          }),
-        },
-        {
-          matcher: (context) =>
-            allowNormalizedSignin &&
-            (matchers.signIn
-              ? matchers.signIn.some((matcher) => matcher(context))
-              : allEmailSignIn(context)),
-          handler: createAuthMiddleware(async (ctx) => {
-            const { email, container } = getEmail(ctx);
+						const isValid = await validator(email);
+						if (!isValid)
+							throw new APIError("BAD_REQUEST", { message: "Invalid email" });
+					}),
+				},
+				{
+					matcher: (context) =>
+						allowNormalizedSignin &&
+						(matchers.signIn
+							? matchers.signIn.some((matcher) => matcher(context))
+							: allEmailSignIn(context)),
+					handler: createAuthMiddleware(async (ctx) => {
+						const { email, container } = getEmail(ctx);
 
-            if (typeof email !== "string") return;
+						if (typeof email !== "string") return;
 
-            const normalized_email = normalizer(email);
+						const normalized_email = normalizer(email);
 
-            if (normalized_email !== email) {
-              const user =
-                await ctx.context.adapter.findOne<UserWithNormalizedEmail>({
-                  model: "user",
-                  where: [
-                    {
-                      field: "normalized_email",
-                      value: normalized_email,
-                    },
-                  ],
-                });
+						if (normalized_email !== email) {
+							const user =
+								await ctx.context.adapter.findOne<UserWithNormalizedEmail>({
+									model: "user",
+									where: [
+										{
+											field: "normalized_email",
+											value: normalized_email,
+										},
+									],
+								});
 
-              if (!user) return;
+							if (!user) return;
 
-              // Types are broken without explicit reference
-              return container === "query"
-                ? {
-                    context: {
-                      ...ctx,
-                      query: {
-                        ...ctx.query,
-                        email: user.email,
-                        normalized_email,
-                      },
-                    },
-                  }
-                : {
-                    context: {
-                      ...ctx,
-                      body: {
-                        ...(ctx.body as Context["body"]),
-                        email: user.email,
-                        normalized_email,
-                      },
-                    },
-                  };
-            }
-          }),
-        },
-      ],
-    },
-  }) satisfies BetterAuthPlugin;
+							// Types are broken without explicit reference
+							return container === "query"
+								? {
+										context: {
+											...ctx,
+											query: {
+												...ctx.query,
+												email: user.email,
+												normalized_email,
+											},
+										},
+									}
+								: {
+										context: {
+											...ctx,
+											body: {
+												...(ctx.body as Context["body"]),
+												email: user.email,
+												normalized_email,
+											},
+										},
+									};
+						}
+					}),
+				},
+			],
+		},
+	}) satisfies BetterAuthPlugin;
 
 export default emailHarmony;

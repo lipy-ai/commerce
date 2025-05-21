@@ -10,312 +10,312 @@
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as CheckoutRouteImport } from './routes/checkout/route'
-import { Route as CartRouteImport } from './routes/cart/route'
-import { Route as IndexImport } from './routes/index'
-import { Route as ShopIndexImport } from './routes/shop/index'
-import { Route as AccountIndexImport } from './routes/account/index'
-import { Route as ShopIdImport } from './routes/shop/$id'
-import { Route as AccountProfileImport } from './routes/account/profile'
-import { Route as AccountOrdersImport } from './routes/account/orders'
-import { Route as authLogoutImport } from './routes/(auth)/logout'
-import { Route as authLoginImport } from './routes/(auth)/login'
-import { Route as AccountAddressesIndexImport } from './routes/account/addresses/index'
-import { Route as AccountAddressesNewImport } from './routes/account/addresses/new'
+import { Route as rootRoute } from "./routes/__root";
+import { Route as CheckoutRouteImport } from "./routes/checkout/route";
+import { Route as CartRouteImport } from "./routes/cart/route";
+import { Route as IndexImport } from "./routes/index";
+import { Route as ShopIndexImport } from "./routes/shop/index";
+import { Route as AccountIndexImport } from "./routes/account/index";
+import { Route as ShopIdImport } from "./routes/shop/$id";
+import { Route as AccountProfileImport } from "./routes/account/profile";
+import { Route as AccountOrdersImport } from "./routes/account/orders";
+import { Route as authLogoutImport } from "./routes/(auth)/logout";
+import { Route as authLoginImport } from "./routes/(auth)/login";
+import { Route as AccountAddressesIndexImport } from "./routes/account/addresses/index";
+import { Route as AccountAddressesNewImport } from "./routes/account/addresses/new";
 
 // Create/Update Routes
 
 const CheckoutRouteRoute = CheckoutRouteImport.update({
-  id: '/checkout',
-  path: '/checkout',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/checkout",
+	path: "/checkout",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const CartRouteRoute = CartRouteImport.update({
-  id: '/cart',
-  path: '/cart',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/cart",
+	path: "/cart",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const IndexRoute = IndexImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/",
+	path: "/",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const ShopIndexRoute = ShopIndexImport.update({
-  id: '/shop/',
-  path: '/shop/',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/shop/",
+	path: "/shop/",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const AccountIndexRoute = AccountIndexImport.update({
-  id: '/account/',
-  path: '/account/',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/account/",
+	path: "/account/",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const ShopIdRoute = ShopIdImport.update({
-  id: '/shop/$id',
-  path: '/shop/$id',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/shop/$id",
+	path: "/shop/$id",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const AccountProfileRoute = AccountProfileImport.update({
-  id: '/account/profile',
-  path: '/account/profile',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/account/profile",
+	path: "/account/profile",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const AccountOrdersRoute = AccountOrdersImport.update({
-  id: '/account/orders',
-  path: '/account/orders',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/account/orders",
+	path: "/account/orders",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const authLogoutRoute = authLogoutImport.update({
-  id: '/(auth)/logout',
-  path: '/logout',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/(auth)/logout",
+	path: "/logout",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const authLoginRoute = authLoginImport.update({
-  id: '/(auth)/login',
-  path: '/login',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/(auth)/login",
+	path: "/login",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const AccountAddressesIndexRoute = AccountAddressesIndexImport.update({
-  id: '/account/addresses/',
-  path: '/account/addresses/',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/account/addresses/",
+	path: "/account/addresses/",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const AccountAddressesNewRoute = AccountAddressesNewImport.update({
-  id: '/account/addresses/new',
-  path: '/account/addresses/new',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/account/addresses/new",
+	path: "/account/addresses/new",
+	getParentRoute: () => rootRoute,
+} as any);
 
 // Populate the FileRoutesByPath interface
 
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/cart': {
-      id: '/cart'
-      path: '/cart'
-      fullPath: '/cart'
-      preLoaderRoute: typeof CartRouteImport
-      parentRoute: typeof rootRoute
-    }
-    '/checkout': {
-      id: '/checkout'
-      path: '/checkout'
-      fullPath: '/checkout'
-      preLoaderRoute: typeof CheckoutRouteImport
-      parentRoute: typeof rootRoute
-    }
-    '/(auth)/login': {
-      id: '/(auth)/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof authLoginImport
-      parentRoute: typeof rootRoute
-    }
-    '/(auth)/logout': {
-      id: '/(auth)/logout'
-      path: '/logout'
-      fullPath: '/logout'
-      preLoaderRoute: typeof authLogoutImport
-      parentRoute: typeof rootRoute
-    }
-    '/account/orders': {
-      id: '/account/orders'
-      path: '/account/orders'
-      fullPath: '/account/orders'
-      preLoaderRoute: typeof AccountOrdersImport
-      parentRoute: typeof rootRoute
-    }
-    '/account/profile': {
-      id: '/account/profile'
-      path: '/account/profile'
-      fullPath: '/account/profile'
-      preLoaderRoute: typeof AccountProfileImport
-      parentRoute: typeof rootRoute
-    }
-    '/shop/$id': {
-      id: '/shop/$id'
-      path: '/shop/$id'
-      fullPath: '/shop/$id'
-      preLoaderRoute: typeof ShopIdImport
-      parentRoute: typeof rootRoute
-    }
-    '/account/': {
-      id: '/account/'
-      path: '/account'
-      fullPath: '/account'
-      preLoaderRoute: typeof AccountIndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/shop/': {
-      id: '/shop/'
-      path: '/shop'
-      fullPath: '/shop'
-      preLoaderRoute: typeof ShopIndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/account/addresses/new': {
-      id: '/account/addresses/new'
-      path: '/account/addresses/new'
-      fullPath: '/account/addresses/new'
-      preLoaderRoute: typeof AccountAddressesNewImport
-      parentRoute: typeof rootRoute
-    }
-    '/account/addresses/': {
-      id: '/account/addresses/'
-      path: '/account/addresses'
-      fullPath: '/account/addresses'
-      preLoaderRoute: typeof AccountAddressesIndexImport
-      parentRoute: typeof rootRoute
-    }
-  }
+declare module "@tanstack/react-router" {
+	interface FileRoutesByPath {
+		"/": {
+			id: "/";
+			path: "/";
+			fullPath: "/";
+			preLoaderRoute: typeof IndexImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/cart": {
+			id: "/cart";
+			path: "/cart";
+			fullPath: "/cart";
+			preLoaderRoute: typeof CartRouteImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/checkout": {
+			id: "/checkout";
+			path: "/checkout";
+			fullPath: "/checkout";
+			preLoaderRoute: typeof CheckoutRouteImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/(auth)/login": {
+			id: "/(auth)/login";
+			path: "/login";
+			fullPath: "/login";
+			preLoaderRoute: typeof authLoginImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/(auth)/logout": {
+			id: "/(auth)/logout";
+			path: "/logout";
+			fullPath: "/logout";
+			preLoaderRoute: typeof authLogoutImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/account/orders": {
+			id: "/account/orders";
+			path: "/account/orders";
+			fullPath: "/account/orders";
+			preLoaderRoute: typeof AccountOrdersImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/account/profile": {
+			id: "/account/profile";
+			path: "/account/profile";
+			fullPath: "/account/profile";
+			preLoaderRoute: typeof AccountProfileImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/shop/$id": {
+			id: "/shop/$id";
+			path: "/shop/$id";
+			fullPath: "/shop/$id";
+			preLoaderRoute: typeof ShopIdImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/account/": {
+			id: "/account/";
+			path: "/account";
+			fullPath: "/account";
+			preLoaderRoute: typeof AccountIndexImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/shop/": {
+			id: "/shop/";
+			path: "/shop";
+			fullPath: "/shop";
+			preLoaderRoute: typeof ShopIndexImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/account/addresses/new": {
+			id: "/account/addresses/new";
+			path: "/account/addresses/new";
+			fullPath: "/account/addresses/new";
+			preLoaderRoute: typeof AccountAddressesNewImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/account/addresses/": {
+			id: "/account/addresses/";
+			path: "/account/addresses";
+			fullPath: "/account/addresses";
+			preLoaderRoute: typeof AccountAddressesIndexImport;
+			parentRoute: typeof rootRoute;
+		};
+	}
 }
 
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/cart': typeof CartRouteRoute
-  '/checkout': typeof CheckoutRouteRoute
-  '/login': typeof authLoginRoute
-  '/logout': typeof authLogoutRoute
-  '/account/orders': typeof AccountOrdersRoute
-  '/account/profile': typeof AccountProfileRoute
-  '/shop/$id': typeof ShopIdRoute
-  '/account': typeof AccountIndexRoute
-  '/shop': typeof ShopIndexRoute
-  '/account/addresses/new': typeof AccountAddressesNewRoute
-  '/account/addresses': typeof AccountAddressesIndexRoute
+	"/": typeof IndexRoute;
+	"/cart": typeof CartRouteRoute;
+	"/checkout": typeof CheckoutRouteRoute;
+	"/login": typeof authLoginRoute;
+	"/logout": typeof authLogoutRoute;
+	"/account/orders": typeof AccountOrdersRoute;
+	"/account/profile": typeof AccountProfileRoute;
+	"/shop/$id": typeof ShopIdRoute;
+	"/account": typeof AccountIndexRoute;
+	"/shop": typeof ShopIndexRoute;
+	"/account/addresses/new": typeof AccountAddressesNewRoute;
+	"/account/addresses": typeof AccountAddressesIndexRoute;
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/cart': typeof CartRouteRoute
-  '/checkout': typeof CheckoutRouteRoute
-  '/login': typeof authLoginRoute
-  '/logout': typeof authLogoutRoute
-  '/account/orders': typeof AccountOrdersRoute
-  '/account/profile': typeof AccountProfileRoute
-  '/shop/$id': typeof ShopIdRoute
-  '/account': typeof AccountIndexRoute
-  '/shop': typeof ShopIndexRoute
-  '/account/addresses/new': typeof AccountAddressesNewRoute
-  '/account/addresses': typeof AccountAddressesIndexRoute
+	"/": typeof IndexRoute;
+	"/cart": typeof CartRouteRoute;
+	"/checkout": typeof CheckoutRouteRoute;
+	"/login": typeof authLoginRoute;
+	"/logout": typeof authLogoutRoute;
+	"/account/orders": typeof AccountOrdersRoute;
+	"/account/profile": typeof AccountProfileRoute;
+	"/shop/$id": typeof ShopIdRoute;
+	"/account": typeof AccountIndexRoute;
+	"/shop": typeof ShopIndexRoute;
+	"/account/addresses/new": typeof AccountAddressesNewRoute;
+	"/account/addresses": typeof AccountAddressesIndexRoute;
 }
 
 export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/cart': typeof CartRouteRoute
-  '/checkout': typeof CheckoutRouteRoute
-  '/(auth)/login': typeof authLoginRoute
-  '/(auth)/logout': typeof authLogoutRoute
-  '/account/orders': typeof AccountOrdersRoute
-  '/account/profile': typeof AccountProfileRoute
-  '/shop/$id': typeof ShopIdRoute
-  '/account/': typeof AccountIndexRoute
-  '/shop/': typeof ShopIndexRoute
-  '/account/addresses/new': typeof AccountAddressesNewRoute
-  '/account/addresses/': typeof AccountAddressesIndexRoute
+	__root__: typeof rootRoute;
+	"/": typeof IndexRoute;
+	"/cart": typeof CartRouteRoute;
+	"/checkout": typeof CheckoutRouteRoute;
+	"/(auth)/login": typeof authLoginRoute;
+	"/(auth)/logout": typeof authLogoutRoute;
+	"/account/orders": typeof AccountOrdersRoute;
+	"/account/profile": typeof AccountProfileRoute;
+	"/shop/$id": typeof ShopIdRoute;
+	"/account/": typeof AccountIndexRoute;
+	"/shop/": typeof ShopIndexRoute;
+	"/account/addresses/new": typeof AccountAddressesNewRoute;
+	"/account/addresses/": typeof AccountAddressesIndexRoute;
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/cart'
-    | '/checkout'
-    | '/login'
-    | '/logout'
-    | '/account/orders'
-    | '/account/profile'
-    | '/shop/$id'
-    | '/account'
-    | '/shop'
-    | '/account/addresses/new'
-    | '/account/addresses'
-  fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/cart'
-    | '/checkout'
-    | '/login'
-    | '/logout'
-    | '/account/orders'
-    | '/account/profile'
-    | '/shop/$id'
-    | '/account'
-    | '/shop'
-    | '/account/addresses/new'
-    | '/account/addresses'
-  id:
-    | '__root__'
-    | '/'
-    | '/cart'
-    | '/checkout'
-    | '/(auth)/login'
-    | '/(auth)/logout'
-    | '/account/orders'
-    | '/account/profile'
-    | '/shop/$id'
-    | '/account/'
-    | '/shop/'
-    | '/account/addresses/new'
-    | '/account/addresses/'
-  fileRoutesById: FileRoutesById
+	fileRoutesByFullPath: FileRoutesByFullPath;
+	fullPaths:
+		| "/"
+		| "/cart"
+		| "/checkout"
+		| "/login"
+		| "/logout"
+		| "/account/orders"
+		| "/account/profile"
+		| "/shop/$id"
+		| "/account"
+		| "/shop"
+		| "/account/addresses/new"
+		| "/account/addresses";
+	fileRoutesByTo: FileRoutesByTo;
+	to:
+		| "/"
+		| "/cart"
+		| "/checkout"
+		| "/login"
+		| "/logout"
+		| "/account/orders"
+		| "/account/profile"
+		| "/shop/$id"
+		| "/account"
+		| "/shop"
+		| "/account/addresses/new"
+		| "/account/addresses";
+	id:
+		| "__root__"
+		| "/"
+		| "/cart"
+		| "/checkout"
+		| "/(auth)/login"
+		| "/(auth)/logout"
+		| "/account/orders"
+		| "/account/profile"
+		| "/shop/$id"
+		| "/account/"
+		| "/shop/"
+		| "/account/addresses/new"
+		| "/account/addresses/";
+	fileRoutesById: FileRoutesById;
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  CartRouteRoute: typeof CartRouteRoute
-  CheckoutRouteRoute: typeof CheckoutRouteRoute
-  authLoginRoute: typeof authLoginRoute
-  authLogoutRoute: typeof authLogoutRoute
-  AccountOrdersRoute: typeof AccountOrdersRoute
-  AccountProfileRoute: typeof AccountProfileRoute
-  ShopIdRoute: typeof ShopIdRoute
-  AccountIndexRoute: typeof AccountIndexRoute
-  ShopIndexRoute: typeof ShopIndexRoute
-  AccountAddressesNewRoute: typeof AccountAddressesNewRoute
-  AccountAddressesIndexRoute: typeof AccountAddressesIndexRoute
+	IndexRoute: typeof IndexRoute;
+	CartRouteRoute: typeof CartRouteRoute;
+	CheckoutRouteRoute: typeof CheckoutRouteRoute;
+	authLoginRoute: typeof authLoginRoute;
+	authLogoutRoute: typeof authLogoutRoute;
+	AccountOrdersRoute: typeof AccountOrdersRoute;
+	AccountProfileRoute: typeof AccountProfileRoute;
+	ShopIdRoute: typeof ShopIdRoute;
+	AccountIndexRoute: typeof AccountIndexRoute;
+	ShopIndexRoute: typeof ShopIndexRoute;
+	AccountAddressesNewRoute: typeof AccountAddressesNewRoute;
+	AccountAddressesIndexRoute: typeof AccountAddressesIndexRoute;
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  CartRouteRoute: CartRouteRoute,
-  CheckoutRouteRoute: CheckoutRouteRoute,
-  authLoginRoute: authLoginRoute,
-  authLogoutRoute: authLogoutRoute,
-  AccountOrdersRoute: AccountOrdersRoute,
-  AccountProfileRoute: AccountProfileRoute,
-  ShopIdRoute: ShopIdRoute,
-  AccountIndexRoute: AccountIndexRoute,
-  ShopIndexRoute: ShopIndexRoute,
-  AccountAddressesNewRoute: AccountAddressesNewRoute,
-  AccountAddressesIndexRoute: AccountAddressesIndexRoute,
-}
+	IndexRoute: IndexRoute,
+	CartRouteRoute: CartRouteRoute,
+	CheckoutRouteRoute: CheckoutRouteRoute,
+	authLoginRoute: authLoginRoute,
+	authLogoutRoute: authLogoutRoute,
+	AccountOrdersRoute: AccountOrdersRoute,
+	AccountProfileRoute: AccountProfileRoute,
+	ShopIdRoute: ShopIdRoute,
+	AccountIndexRoute: AccountIndexRoute,
+	ShopIndexRoute: ShopIndexRoute,
+	AccountAddressesNewRoute: AccountAddressesNewRoute,
+	AccountAddressesIndexRoute: AccountAddressesIndexRoute,
+};
 
 export const routeTree = rootRoute
-  ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+	._addFileChildren(rootRouteChildren)
+	._addFileTypes<FileRouteTypes>();
 
 /* ROUTE_MANIFEST_START
 {

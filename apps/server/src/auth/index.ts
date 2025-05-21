@@ -1,4 +1,4 @@
-import { betterAuth, BetterAuthOptions } from "better-auth";
+import { betterAuth, type BetterAuthOptions } from "better-auth";
 import { emailOTP, organization } from "better-auth/plugins";
 
 import env from "../env";
@@ -85,7 +85,7 @@ export const auth = betterAuth({
     crossSubDomainCookies: {
       enabled: true,
       ...(env.IN_PROD && {
-        domain: "." + env.BETTER_AUTH_URL.split(".").slice(1).join("."),
+        domain: `.${env.BETTER_AUTH_URL.split(".").slice(1).join(".")}`,
       }), // Domain with a leading period
     },
     ...(env.IN_PROD && {

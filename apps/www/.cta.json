@@ -1,13 +1,13 @@
 {
-  "framework": "react",
-  "projectName": "www",
-  "mode": "file-router",
-  "typescript": true,
-  "tailwind": true,
-  "packageManager": "bun",
-  "toolchain": "biome",
-  "variableValues": {},
-  "git": true,
-  "version": 1,
-  "existingAddOns": []
+	"framework": "react",
+	"projectName": "www",
+	"mode": "file-router",
+	"typescript": true,
+	"tailwind": true,
+	"packageManager": "bun",
+	"toolchain": "biome",
+	"variableValues": {},
+	"git": true,
+	"version": 1,
+	"existingAddOns": []
 }

@@ -10,208 +10,208 @@
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as loggedInRouteImport } from './routes/(loggedIn)/route'
-import { Route as loggedInIndexImport } from './routes/(loggedIn)/index'
-import { Route as loggedInMerchantsIndexImport } from './routes/(loggedIn)/merchants/index'
-import { Route as loggedInAccountIndexImport } from './routes/(loggedIn)/account/index'
-import { Route as loggedInproductsProductsImport } from './routes/(loggedIn)/(products)/products'
-import { Route as loggedIncategoriesCategoriesImport } from './routes/(loggedIn)/(categories)/categories'
-import { Route as loggedInproductsProductIdImport } from './routes/(loggedIn)/(products)/product.$id'
+import { Route as rootRoute } from "./routes/__root";
+import { Route as loggedInRouteImport } from "./routes/(loggedIn)/route";
+import { Route as loggedInIndexImport } from "./routes/(loggedIn)/index";
+import { Route as loggedInMerchantsIndexImport } from "./routes/(loggedIn)/merchants/index";
+import { Route as loggedInAccountIndexImport } from "./routes/(loggedIn)/account/index";
+import { Route as loggedInproductsProductsImport } from "./routes/(loggedIn)/(products)/products";
+import { Route as loggedIncategoriesCategoriesImport } from "./routes/(loggedIn)/(categories)/categories";
+import { Route as loggedInproductsProductIdImport } from "./routes/(loggedIn)/(products)/product.$id";
 
 // Create/Update Routes
 
 const loggedInRouteRoute = loggedInRouteImport.update({
-  id: '/(loggedIn)',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/(loggedIn)",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const loggedInIndexRoute = loggedInIndexImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => loggedInRouteRoute,
-} as any)
+	id: "/",
+	path: "/",
+	getParentRoute: () => loggedInRouteRoute,
+} as any);
 
 const loggedInMerchantsIndexRoute = loggedInMerchantsIndexImport.update({
-  id: '/merchants/',
-  path: '/merchants/',
-  getParentRoute: () => loggedInRouteRoute,
-} as any)
+	id: "/merchants/",
+	path: "/merchants/",
+	getParentRoute: () => loggedInRouteRoute,
+} as any);
 
 const loggedInAccountIndexRoute = loggedInAccountIndexImport.update({
-  id: '/account/',
-  path: '/account/',
-  getParentRoute: () => loggedInRouteRoute,
-} as any)
+	id: "/account/",
+	path: "/account/",
+	getParentRoute: () => loggedInRouteRoute,
+} as any);
 
 const loggedInproductsProductsRoute = loggedInproductsProductsImport.update({
-  id: '/(products)/products',
-  path: '/products',
-  getParentRoute: () => loggedInRouteRoute,
-} as any)
+	id: "/(products)/products",
+	path: "/products",
+	getParentRoute: () => loggedInRouteRoute,
+} as any);
 
 const loggedIncategoriesCategoriesRoute =
-  loggedIncategoriesCategoriesImport.update({
-    id: '/(categories)/categories',
-    path: '/categories',
-    getParentRoute: () => loggedInRouteRoute,
-  } as any)
+	loggedIncategoriesCategoriesImport.update({
+		id: "/(categories)/categories",
+		path: "/categories",
+		getParentRoute: () => loggedInRouteRoute,
+	} as any);
 
 const loggedInproductsProductIdRoute = loggedInproductsProductIdImport.update({
-  id: '/(products)/product/$id',
-  path: '/product/$id',
-  getParentRoute: () => loggedInRouteRoute,
-} as any)
+	id: "/(products)/product/$id",
+	path: "/product/$id",
+	getParentRoute: () => loggedInRouteRoute,
+} as any);
 
 // Populate the FileRoutesByPath interface
 
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/(loggedIn)': {
-      id: '/(loggedIn)'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof loggedInRouteImport
-      parentRoute: typeof rootRoute
-    }
-    '/(loggedIn)/': {
-      id: '/(loggedIn)/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof loggedInIndexImport
-      parentRoute: typeof loggedInRouteImport
-    }
-    '/(loggedIn)/(categories)/categories': {
-      id: '/(loggedIn)/(categories)/categories'
-      path: '/categories'
-      fullPath: '/categories'
-      preLoaderRoute: typeof loggedIncategoriesCategoriesImport
-      parentRoute: typeof loggedInRouteImport
-    }
-    '/(loggedIn)/(products)/products': {
-      id: '/(loggedIn)/(products)/products'
-      path: '/products'
-      fullPath: '/products'
-      preLoaderRoute: typeof loggedInproductsProductsImport
-      parentRoute: typeof loggedInRouteImport
-    }
-    '/(loggedIn)/account/': {
-      id: '/(loggedIn)/account/'
-      path: '/account'
-      fullPath: '/account'
-      preLoaderRoute: typeof loggedInAccountIndexImport
-      parentRoute: typeof loggedInRouteImport
-    }
-    '/(loggedIn)/merchants/': {
-      id: '/(loggedIn)/merchants/'
-      path: '/merchants'
-      fullPath: '/merchants'
-      preLoaderRoute: typeof loggedInMerchantsIndexImport
-      parentRoute: typeof loggedInRouteImport
-    }
-    '/(loggedIn)/(products)/product/$id': {
-      id: '/(loggedIn)/(products)/product/$id'
-      path: '/product/$id'
-      fullPath: '/product/$id'
-      preLoaderRoute: typeof loggedInproductsProductIdImport
-      parentRoute: typeof loggedInRouteImport
-    }
-  }
+declare module "@tanstack/react-router" {
+	interface FileRoutesByPath {
+		"/(loggedIn)": {
+			id: "/(loggedIn)";
+			path: "/";
+			fullPath: "/";
+			preLoaderRoute: typeof loggedInRouteImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/(loggedIn)/": {
+			id: "/(loggedIn)/";
+			path: "/";
+			fullPath: "/";
+			preLoaderRoute: typeof loggedInIndexImport;
+			parentRoute: typeof loggedInRouteImport;
+		};
+		"/(loggedIn)/(categories)/categories": {
+			id: "/(loggedIn)/(categories)/categories";
+			path: "/categories";
+			fullPath: "/categories";
+			preLoaderRoute: typeof loggedIncategoriesCategoriesImport;
+			parentRoute: typeof loggedInRouteImport;
+		};
+		"/(loggedIn)/(products)/products": {
+			id: "/(loggedIn)/(products)/products";
+			path: "/products";
+			fullPath: "/products";
+			preLoaderRoute: typeof loggedInproductsProductsImport;
+			parentRoute: typeof loggedInRouteImport;
+		};
+		"/(loggedIn)/account/": {
+			id: "/(loggedIn)/account/";
+			path: "/account";
+			fullPath: "/account";
+			preLoaderRoute: typeof loggedInAccountIndexImport;
+			parentRoute: typeof loggedInRouteImport;
+		};
+		"/(loggedIn)/merchants/": {
+			id: "/(loggedIn)/merchants/";
+			path: "/merchants";
+			fullPath: "/merchants";
+			preLoaderRoute: typeof loggedInMerchantsIndexImport;
+			parentRoute: typeof loggedInRouteImport;
+		};
+		"/(loggedIn)/(products)/product/$id": {
+			id: "/(loggedIn)/(products)/product/$id";
+			path: "/product/$id";
+			fullPath: "/product/$id";
+			preLoaderRoute: typeof loggedInproductsProductIdImport;
+			parentRoute: typeof loggedInRouteImport;
+		};
+	}
 }
 
 // Create and export the route tree
 
 interface loggedInRouteRouteChildren {
-  loggedInIndexRoute: typeof loggedInIndexRoute
-  loggedIncategoriesCategoriesRoute: typeof loggedIncategoriesCategoriesRoute
-  loggedInproductsProductsRoute: typeof loggedInproductsProductsRoute
-  loggedInAccountIndexRoute: typeof loggedInAccountIndexRoute
-  loggedInMerchantsIndexRoute: typeof loggedInMerchantsIndexRoute
-  loggedInproductsProductIdRoute: typeof loggedInproductsProductIdRoute
+	loggedInIndexRoute: typeof loggedInIndexRoute;
+	loggedIncategoriesCategoriesRoute: typeof loggedIncategoriesCategoriesRoute;
+	loggedInproductsProductsRoute: typeof loggedInproductsProductsRoute;
+	loggedInAccountIndexRoute: typeof loggedInAccountIndexRoute;
+	loggedInMerchantsIndexRoute: typeof loggedInMerchantsIndexRoute;
+	loggedInproductsProductIdRoute: typeof loggedInproductsProductIdRoute;
 }
 
 const loggedInRouteRouteChildren: loggedInRouteRouteChildren = {
-  loggedInIndexRoute: loggedInIndexRoute,
-  loggedIncategoriesCategoriesRoute: loggedIncategoriesCategoriesRoute,
-  loggedInproductsProductsRoute: loggedInproductsProductsRoute,
-  loggedInAccountIndexRoute: loggedInAccountIndexRoute,
-  loggedInMerchantsIndexRoute: loggedInMerchantsIndexRoute,
-  loggedInproductsProductIdRoute: loggedInproductsProductIdRoute,
-}
+	loggedInIndexRoute: loggedInIndexRoute,
+	loggedIncategoriesCategoriesRoute: loggedIncategoriesCategoriesRoute,
+	loggedInproductsProductsRoute: loggedInproductsProductsRoute,
+	loggedInAccountIndexRoute: loggedInAccountIndexRoute,
+	loggedInMerchantsIndexRoute: loggedInMerchantsIndexRoute,
+	loggedInproductsProductIdRoute: loggedInproductsProductIdRoute,
+};
 
 const loggedInRouteRouteWithChildren = loggedInRouteRoute._addFileChildren(
-  loggedInRouteRouteChildren,
-)
+	loggedInRouteRouteChildren,
+);
 
 export interface FileRoutesByFullPath {
-  '/': typeof loggedInIndexRoute
-  '/categories': typeof loggedIncategoriesCategoriesRoute
-  '/products': typeof loggedInproductsProductsRoute
-  '/account': typeof loggedInAccountIndexRoute
-  '/merchants': typeof loggedInMerchantsIndexRoute
-  '/product/$id': typeof loggedInproductsProductIdRoute
+	"/": typeof loggedInIndexRoute;
+	"/categories": typeof loggedIncategoriesCategoriesRoute;
+	"/products": typeof loggedInproductsProductsRoute;
+	"/account": typeof loggedInAccountIndexRoute;
+	"/merchants": typeof loggedInMerchantsIndexRoute;
+	"/product/$id": typeof loggedInproductsProductIdRoute;
 }
 
 export interface FileRoutesByTo {
-  '/': typeof loggedInIndexRoute
-  '/categories': typeof loggedIncategoriesCategoriesRoute
-  '/products': typeof loggedInproductsProductsRoute
-  '/account': typeof loggedInAccountIndexRoute
-  '/merchants': typeof loggedInMerchantsIndexRoute
-  '/product/$id': typeof loggedInproductsProductIdRoute
+	"/": typeof loggedInIndexRoute;
+	"/categories": typeof loggedIncategoriesCategoriesRoute;
+	"/products": typeof loggedInproductsProductsRoute;
+	"/account": typeof loggedInAccountIndexRoute;
+	"/merchants": typeof loggedInMerchantsIndexRoute;
+	"/product/$id": typeof loggedInproductsProductIdRoute;
 }
 
 export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/(loggedIn)': typeof loggedInRouteRouteWithChildren
-  '/(loggedIn)/': typeof loggedInIndexRoute
-  '/(loggedIn)/(categories)/categories': typeof loggedIncategoriesCategoriesRoute
-  '/(loggedIn)/(products)/products': typeof loggedInproductsProductsRoute
-  '/(loggedIn)/account/': typeof loggedInAccountIndexRoute
-  '/(loggedIn)/merchants/': typeof loggedInMerchantsIndexRoute
-  '/(loggedIn)/(products)/product/$id': typeof loggedInproductsProductIdRoute
+	__root__: typeof rootRoute;
+	"/(loggedIn)": typeof loggedInRouteRouteWithChildren;
+	"/(loggedIn)/": typeof loggedInIndexRoute;
+	"/(loggedIn)/(categories)/categories": typeof loggedIncategoriesCategoriesRoute;
+	"/(loggedIn)/(products)/products": typeof loggedInproductsProductsRoute;
+	"/(loggedIn)/account/": typeof loggedInAccountIndexRoute;
+	"/(loggedIn)/merchants/": typeof loggedInMerchantsIndexRoute;
+	"/(loggedIn)/(products)/product/$id": typeof loggedInproductsProductIdRoute;
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/categories'
-    | '/products'
-    | '/account'
-    | '/merchants'
-    | '/product/$id'
-  fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/categories'
-    | '/products'
-    | '/account'
-    | '/merchants'
-    | '/product/$id'
-  id:
-    | '__root__'
-    | '/(loggedIn)'
-    | '/(loggedIn)/'
-    | '/(loggedIn)/(categories)/categories'
-    | '/(loggedIn)/(products)/products'
-    | '/(loggedIn)/account/'
-    | '/(loggedIn)/merchants/'
-    | '/(loggedIn)/(products)/product/$id'
-  fileRoutesById: FileRoutesById
+	fileRoutesByFullPath: FileRoutesByFullPath;
+	fullPaths:
+		| "/"
+		| "/categories"
+		| "/products"
+		| "/account"
+		| "/merchants"
+		| "/product/$id";
+	fileRoutesByTo: FileRoutesByTo;
+	to:
+		| "/"
+		| "/categories"
+		| "/products"
+		| "/account"
+		| "/merchants"
+		| "/product/$id";
+	id:
+		| "__root__"
+		| "/(loggedIn)"
+		| "/(loggedIn)/"
+		| "/(loggedIn)/(categories)/categories"
+		| "/(loggedIn)/(products)/products"
+		| "/(loggedIn)/account/"
+		| "/(loggedIn)/merchants/"
+		| "/(loggedIn)/(products)/product/$id";
+	fileRoutesById: FileRoutesById;
 }
 
 export interface RootRouteChildren {
-  loggedInRouteRoute: typeof loggedInRouteRouteWithChildren
+	loggedInRouteRoute: typeof loggedInRouteRouteWithChildren;
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  loggedInRouteRoute: loggedInRouteRouteWithChildren,
-}
+	loggedInRouteRoute: loggedInRouteRouteWithChildren,
+};
 
 export const routeTree = rootRoute
-  ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+	._addFileChildren(rootRouteChildren)
+	._addFileTypes<FileRouteTypes>();
 
 /* ROUTE_MANIFEST_START
 {

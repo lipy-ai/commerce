@@ -1,3 +1,3 @@
-import { type AuthType } from "../auth";
+import type { AuthType } from "../auth";
 
 export type { AuthType };

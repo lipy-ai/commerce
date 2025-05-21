@@ -19,15 +19,15 @@ export const Route = createFileRoute("/(loggedIn)/account")({
 
 const navs = [
   {
-    url: `/account`,
+    url: "/account",
     label: "General",
   },
   {
-    url: `/account/security`,
+    url: "/account/security",
     label: "Security",
   },
   {
-    url: `/account/preferences`,
+    url: "/account/preferences",
     label: "Preferences",
   },
 ];

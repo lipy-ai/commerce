@@ -10,7 +10,7 @@ import { logger } from "./lib/logger";
 import env from "./env";
 import { db, pingDatabase } from "./db";
 import { auth } from "./auth";
-import { ServerContext } from "./types";
+import type { ServerContext } from "./types";
 import { authMiddleware } from "./middlewares/auth";
 import { corsMiddleware } from "./middlewares/cors";
 import { uploadRouter } from "./routes/sharedRoutes/upload";
@@ -31,33 +31,33 @@ app.use(trimTrailingSlash());
 app.use("*", globalMiddleware);
 
 if (env.NODE_ENV === "development") {
-  logger.info("Available routes:");
-  showRoutes(app);
+	logger.info("Available routes:");
+	showRoutes(app);
 }
 
 await pingDatabase();
 app.use("*", authMiddleware);
 
 app.on(["POST", "GET"], "/api/auth/*", (c) => {
-  return auth.handler(c.req.raw);
+	return auth.handler(c.req.raw);
 });
 
 // app.use(compress());
 
 export const routes = app
-  .basePath("/v1")
-  .route("/upload", uploadRouter)
-  .route("/address", addressRoute);
+	.basePath("/v1")
+	.route("/upload", uploadRouter)
+	.route("/address", addressRoute);
 
 // routes.basePath("/admin").route("/category", categoryRouter);
 
 app.onError(globalError);
 
 const shutdown = async () => {
-  logger.info("Closing http server");
-  await db.destroy();
-  logger.info("DB connection closed");
-  process.exit();
+	logger.info("Closing http server");
+	await db.destroy();
+	logger.info("DB connection closed");
+	process.exit();
 };
 
 process.on("SIGINT", shutdown);

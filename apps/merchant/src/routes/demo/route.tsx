@@ -18,7 +18,7 @@ function RouteComponent() {
         <Link
           to="/demo/client"
           className={buttonVariants({
-            variant: !!matchRoute({ to: "/demo/client", fuzzy: true })
+            variant: matchRoute({ to: "/demo/client", fuzzy: true })
               ? "default"
               : "outline",
           })}
@@ -28,7 +28,7 @@ function RouteComponent() {
         <Link
           to="/demo/ssr"
           className={buttonVariants({
-            variant: !!matchRoute({ to: "/demo/ssr", fuzzy: true })
+            variant: matchRoute({ to: "/demo/ssr", fuzzy: true })
               ? "default"
               : "outline",
           })}
@@ -38,7 +38,7 @@ function RouteComponent() {
         <Link
           to="/demo/directMutation"
           className={buttonVariants({
-            variant: !!matchRoute({ to: "/demo/directMutation", fuzzy: true })
+            variant: matchRoute({ to: "/demo/directMutation", fuzzy: true })
               ? "default"
               : "outline",
           })}
@@ -48,7 +48,7 @@ function RouteComponent() {
         <Link
           to="/demo/tanstackMutation"
           className={buttonVariants({
-            variant: !!matchRoute({ to: "/demo/tanstackMutation", fuzzy: true })
+            variant: matchRoute({ to: "/demo/tanstackMutation", fuzzy: true })
               ? "default"
               : "outline",
           })}

@@ -3,8 +3,8 @@ import { Pool } from "pg";
 import { logger } from "../lib/logger";
 import env from "../env";
 import { dbTables } from "./schema";
-import { Kyselify } from "drizzle-orm/kysely";
-import { PgTableWithColumns } from "drizzle-orm/pg-core";
+import type { Kyselify } from "drizzle-orm/kysely";
+import type { PgTableWithColumns } from "drizzle-orm/pg-core";
 
 export const pool = new Pool({ connectionString: env.DATABASE_URL });
 
@@ -36,10 +36,9 @@ function createTableMap<T extends Record<string, PgTableWithColumns<any>>>(
 
   for (const key in schemas) {
     const table = schemas[key];
-    if (!table || !table["_"]) break;
-    const k =
-      `${table["_"]["name"]}` as `${(typeof table)["_"]["name"] & string}`;
-    console.log(key, k, table["_"]["name"]);
+    if (!table || !table._) break;
+    const k = `${table._.name}` as `${(typeof table)["_"]["name"] & string}`;
+    console.log(key, k, table._.name);
     result[k] && table && Object.assign(result[k], table);
   }
 

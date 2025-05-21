@@ -2,22 +2,13 @@ import { useState } from "react";
 import {
   MapPin,
   Star,
-  Filter,
   Heart,
   ShoppingCart,
   Coffee,
-  Store,
   ShoppingBag,
-  Milk,
-  ShoppingBasket,
-  Cherry,
-  Salad,
 } from "lucide-react";
-import SearchBar from "@lipy/web-ui/components/searchBar";
-import { Button } from "@lipy/web-ui/components/ui/button";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Card } from "@lipy/web-ui/components/ui/card";
-import { ScrollingTabs } from "@lipy/web-ui/components/scrollable-tabs";
 import { Link } from "@tanstack/react-router";
 
 // Sample data
@@ -114,16 +105,8 @@ const SHOPS = [
   },
 ];
 
-const CATEGORIES = [
-  { id: "all", name: "All Stores", icon: Store },
-  { id: "grocery", name: "Grocery", icon: ShoppingBasket },
-  { id: "fruits", name: "Fruits", icon: Cherry },
-  { id: "vegetables", name: "Vegetables", icon: Salad },
-  { id: "dairy", name: "Dairy", icon: Milk },
-];
 
 export default function NearByShops() {
-  const [activeCategory, setActiveCategory] = useState("all");
   const [showFavorites, setShowFavorites] = useState(false);
   const [shops, setShops] = useState(SHOPS);
 
@@ -139,30 +122,14 @@ export default function NearByShops() {
   // Filter by category
   const filteredShops = shops.filter((shop) => {
     if (showFavorites && !shop.isBookmarked) return false;
-    if (activeCategory !== "all" && shop.type !== activeCategory) return false;
+   
     return true;
   });
 
   return (
     <div>
       {/* Search and Filter Header */}
-      <div className="sticky top-0 z-10 shadow-sm px-4 py-3 bg-background">
-        <div className="relative flex items-center mb-4 gap-2">
-          <div className="relative flex-1 ">
-            <SearchBar />
-          </div>
-          <Button variant={"secondary"} className="p-2">
-            <Filter className="size-6" />
-          </Button>
-        </div>
-
-        <div className="-ml-4 -mr-4 -mb-3">
-          <ScrollingTabs
-            tabs={CATEGORIES}
-            handleTabChange={setActiveCategory}
-          />
-        </div>
-      </div>
+     
 
       {/* Shop List */}
       <div className="px-4 pb-20">

@@ -12,7 +12,7 @@
     "start": "bun run env turbo run start",
     "dev": "bun run env turbo run dev",
     "lint": "turbo run lint",
-    "format": "biome --write \"**/*.{ts,tsx,md}\"",
+    "format": "biome format \"**/*.{ts,tsx}\"  --write",
     "check-types": "turbo run check-types",
     "prepare": "husky"
   },

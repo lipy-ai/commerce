@@ -5,124 +5,124 @@ import { createServerFn } from "@tanstack/react-start";
 import { getHeaders, getWebRequest } from "@tanstack/react-start/server";
 
 import {
-  DashboardBody,
-  DashboardLayout,
+	DashboardBody,
+	DashboardLayout,
 } from "@lipy/web-ui/components/layouts/dashboard";
 //
 import {
-  CircleUser,
-  Home,
-  LayoutDashboard,
-  LogOut,
-  Shirt,
-  ShoppingBag,
-  Users,
+	CircleUser,
+	Home,
+	LayoutDashboard,
+	LogOut,
+	Shirt,
+	ShoppingBag,
+	Users,
 } from "lucide-react";
 
 export const authFn = createServerFn({ method: "GET" }).handler(async (d) => {
-  const request = getWebRequest();
-  const h = getHeaders();
+	const request = getWebRequest();
+	const h = getHeaders();
 
-  const res = await getSsrSession(request?.headers);
+	const res = await getSsrSession(request?.headers);
 
-  // if (!res?.session) {
-  //   const cb = h.referer || env.MERCHANT_URL;
+	// if (!res?.session) {
+	//   const cb = h.referer || env.MERCHANT_URL;
 
-  //   redirect({
-  //     href: `${env.WEB_URL}/login?cb=${cb}` as any,
-  //     throw: true,
-  //   });
-  // }
+	//   redirect({
+	//     href: `${env.WEB_URL}/login?cb=${cb}` as any,
+	//     throw: true,
+	//   });
+	// }
 
-  return res;
+	return res;
 });
 
 export const Route = createFileRoute("/(loggedIn)")({
-  component: RouteComponent,
-  loader: async () => {
-    const result = await authFn();
-    return result;
-  },
+	component: RouteComponent,
+	loader: async () => {
+		const result = await authFn();
+		return result;
+	},
 });
 
 export const dashboardNav = {
-  primary: [
-    {
-      label: "My Dashboard",
-      url: "/",
-      icon: LayoutDashboard,
-    },
-    {
-      label: "Products",
-      url: "/product",
-      icon: Shirt,
-      mobile: true,
-    },
-    {
-      label: "Orders",
-      url: "/order",
-      icon: ShoppingBag,
-    },
-    {
-      label: "Customers",
-      url: "/customer",
-      icon: Users,
-    },
-  ],
-  secondary: [
-    {
-      label: "Account",
-      url: "/account",
-      icon: CircleUser,
-    },
-    { label: "Sign out", url: "/logout", icon: LogOut },
-    // { label: "Help", url: "/help", icon: CircleHel },
-  ],
+	primary: [
+		{
+			label: "My Dashboard",
+			url: "/",
+			icon: LayoutDashboard,
+		},
+		{
+			label: "Products",
+			url: "/product",
+			icon: Shirt,
+			mobile: true,
+		},
+		{
+			label: "Orders",
+			url: "/order",
+			icon: ShoppingBag,
+		},
+		{
+			label: "Customers",
+			url: "/customer",
+			icon: Users,
+		},
+	],
+	secondary: [
+		{
+			label: "Account",
+			url: "/account",
+			icon: CircleUser,
+		},
+		{ label: "Sign out", url: "/logout", icon: LogOut },
+		// { label: "Help", url: "/help", icon: CircleHel },
+	],
 };
 
 const mobileNav = [
-  {
-    label: "Home",
-    url: "/",
-    icon: Home,
-  },
-  {
-    label: "Products",
-    url: "/product",
-    icon: Shirt,
-  },
-  {
-    label: "Orders",
-    url: "/order",
-    icon: ShoppingBag,
-  },
-  {
-    label: "Customers",
-    url: "/customer",
-    icon: Users,
-  },
+	{
+		label: "Home",
+		url: "/",
+		icon: Home,
+	},
+	{
+		label: "Products",
+		url: "/product",
+		icon: Shirt,
+	},
+	{
+		label: "Orders",
+		url: "/order",
+		icon: ShoppingBag,
+	},
+	{
+		label: "Customers",
+		url: "/customer",
+		icon: Users,
+	},
 
-  {
-    label: "Account",
-    url: "/account",
-    icon: CircleUser,
-  },
+	{
+		label: "Account",
+		url: "/account",
+		icon: CircleUser,
+	},
 ];
 
 function RouteComponent() {
-  const data = Route.useLoaderData();
-  console.log(data);
-  return (
-    <main>
-      <DashboardLayout
-        dashboardNav={dashboardNav}
-        mobileNav={mobileNav}
-        logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
-      >
-        <DashboardBody>
-          <Outlet />
-        </DashboardBody>
-      </DashboardLayout>
-    </main>
-  );
+	const data = Route.useLoaderData();
+	console.log(data);
+	return (
+		<main>
+			<DashboardLayout
+				dashboardNav={dashboardNav}
+				mobileNav={mobileNav}
+				logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
+			>
+				<DashboardBody>
+					<Outlet />
+				</DashboardBody>
+			</DashboardLayout>
+		</main>
+	);
 }

@@ -1,4 +1,4 @@
-import { type HookEndpointContext } from "better-auth";
+import type { HookEndpointContext } from "better-auth";
 import { APIError } from "better-auth/api";
 import { createAuthMiddleware } from "better-auth/plugins";
 import {
@@ -190,11 +190,11 @@ const phoneHarmony = ({
             } catch (error) {
               if (!acceptRawInputOnError && error instanceof ParseError) {
                 throw new APIError("BAD_REQUEST", { message: error.message });
-              } else if (!acceptRawInputOnError) {
-                throw error;
-              } else {
-                normalizedPhone = phoneNumber; // fall back to the raw input
               }
+              if (!acceptRawInputOnError) {
+                throw error;
+              }
+              normalizedPhone = phoneNumber; // fall back to the raw input
             }
 
             return {

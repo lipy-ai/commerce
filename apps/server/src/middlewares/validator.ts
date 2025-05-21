@@ -27,9 +27,9 @@ export type Hook<
   c: Context<E, P>
 ) =>
   | Response
-  | void
+  | undefined
   | TypedResponse<O>
-  | Promise<Response | void | TypedResponse<O>>;
+  | Promise<Response | undefined | TypedResponse<O>>;
 
 type HasUndefined<T> = undefined extends T ? true : false;
 

@@ -73,18 +73,18 @@ function RouteComponent() {
                   name="title"
                   label="Title"
                   placeholder="Product Title"
-                ></FormInput>
+                />
 
                 <FormInput
                   name="category"
                   label="Category"
                   placeholder="Electronics"
-                ></FormInput>
+                />
                 <FormTextarea
                   name="summary"
                   label="Summary"
                   placeholder="Brief summary about this product..."
-                ></FormTextarea>
+                />
               </AnnotatedSection>
               <AnnotatedSection
                 title="Inventory Information"
@@ -106,26 +106,26 @@ function RouteComponent() {
                     type="number"
                     min={0}
                     className="col-span-6"
-                  ></FormInput>
+                  />
                   <FormInput
                     name="sku"
                     label="SKU"
                     placeholder=""
                     className="col-span-6 md:col-span-3"
-                  ></FormInput>
+                  />
 
                   <FormInput
                     name="brand"
                     label="Brand"
                     placeholder="Samsung"
                     className="col-span-6 md:col-span-3"
-                  ></FormInput>
+                  />
                   <FormInput
                     name="model_id"
                     label="Model ID"
                     placeholder="Samsung"
                     className="col-span-6 md:col-span-3"
-                  ></FormInput>
+                  />
                 </div>
               </AnnotatedSection>
 

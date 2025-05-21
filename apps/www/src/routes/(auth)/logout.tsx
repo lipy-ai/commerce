@@ -4,13 +4,13 @@ import Loading from "@lipy/web-ui/components/ui/loading";
 import { useEffect } from "react";
 
 export const Route = createFileRoute("/(auth)/logout")({
-  component: RouteComponent,
+	component: RouteComponent,
 });
 
 function RouteComponent() {
-  const navigate = Route.useNavigate();
-  useEffect(() => {
-    authClient.signOut().then((_e) => navigate({ to: "/", replace: true }));
-  }, []);
-  return <Loading title="Logging out..." />;
+	const navigate = Route.useNavigate();
+	useEffect(() => {
+		authClient.signOut().then((_e) => navigate({ to: "/", replace: true }));
+	}, []);
+	return <Loading title="Logging out..." />;
 }

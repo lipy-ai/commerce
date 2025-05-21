@@ -105,7 +105,6 @@ const SHOPS = [
   },
 ];
 
-
 export default function NearByShops() {
   const [showFavorites, setShowFavorites] = useState(false);
   const [shops, setShops] = useState(SHOPS);
@@ -122,14 +121,13 @@ export default function NearByShops() {
   // Filter by category
   const filteredShops = shops.filter((shop) => {
     if (showFavorites && !shop.isBookmarked) return false;
-   
+
     return true;
   });
 
   return (
     <div>
       {/* Search and Filter Header */}
-     
 
       {/* Shop List */}
       <div className="px-4 pb-20">
@@ -146,6 +144,7 @@ export default function NearByShops() {
                   />
                   {/* Bookmark Button */}
                   <button
+                    type="button"
                     onClick={() => toggleBookmark(shop.id)}
                     className="absolute top-3 right-3 p-2 rounded-full bg-white/80 backdrop-blur-sm shadow-sm hover:bg-white transition"
                   >
@@ -204,7 +203,7 @@ export default function NearByShops() {
                     {shop.categories.join(" • ")}
                   </div>
 
-                  <div className="flex items-center justify-between mt-3 text-sm"></div>
+                  <div className="flex items-center justify-between mt-3 text-sm" />
                 </div>
               </Link>
             </Card>

@@ -6,40 +6,40 @@ import { CalendarIcon } from "lucide-react";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { Calendar } from "@lipy/web-ui/components/ui/calendar";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
 } from "@lipy/web-ui/components/ui/popover";
 import { cn } from "@lipy/web-ui/lib/utils";
 
 interface DatePickerProps {
-  date?: Date;
-  setDate: (date: Date | undefined) => void;
+	date?: Date;
+	setDate: (date: Date | undefined) => void;
 }
 
 export function DatePicker({ date, setDate }: DatePickerProps) {
-  return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant={"outline"}
-          className={cn(
-            "w-[200px] justify-start text-left font-normal",
-            !date && "text-muted-foreground"
-          )}
-        >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP") : <span>Pick a date</span>}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={setDate}
-          initialFocus
-        />
-      </PopoverContent>
-    </Popover>
-  );
+	return (
+		<Popover>
+			<PopoverTrigger asChild>
+				<Button
+					variant={"outline"}
+					className={cn(
+						"w-[200px] justify-start text-left font-normal",
+						!date && "text-muted-foreground",
+					)}
+				>
+					<CalendarIcon className="mr-2 h-4 w-4" />
+					{date ? format(date, "PPP") : <span>Pick a date</span>}
+				</Button>
+			</PopoverTrigger>
+			<PopoverContent className="w-auto p-0" align="start">
+				<Calendar
+					mode="single"
+					selected={date}
+					onSelect={setDate}
+					initialFocus
+				/>
+			</PopoverContent>
+		</Popover>
+	);
 }

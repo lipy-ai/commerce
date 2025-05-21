@@ -1,7 +1,7 @@
-import { auth } from "@/auth";
-import { hasPermission } from "@/auth/permission";
-import { Context, Env } from "hono";
-import { routes } from "@/app";
+import type { auth } from "@/auth";
+import type { hasPermission } from "@/auth/permission";
+import type { Context, Env } from "hono";
+import type { routes } from "@/app";
 export * from "./auth";
 
 export type AppType = typeof routes;

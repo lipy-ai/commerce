@@ -267,7 +267,7 @@ function RouteComponent() {
 
       <div className="py-8 px-2 md:p-8">
         <DataTable table={table}>
-          <DataTableToolbar table={table} className=""></DataTableToolbar>
+          <DataTableToolbar table={table} className="" />
         </DataTable>
       </div>
     </>

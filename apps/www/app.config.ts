@@ -5,6 +5,7 @@ import { fileURLToPath } from "url";
 import { VitePWA } from "vite-plugin-pwa";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+import basicSsl from "@vitejs/plugin-basic-ssl";
 
 export default defineConfig({
   tsr: {
@@ -25,19 +26,21 @@ export default defineConfig({
   vite: {
     plugins: [
       tailwindcss(),
+
       // VitePWA({
-      //   registerType: "autoUpdate",
-      //   devOptions: {
-      //     enabled: true,
-      //   },
+      //   // strategies: "injectManifest",
+      //   // srcDir: "src",
+      //   // filename: "service-worker.js",
+      //   // registerType: "autoUpdate",
+      //   // injectManifest: {
+      //   //   injectionPoint: "self.__WB_MANIFEST",
+      //   // },
       //   manifest: {
+      //     name: "Your Vinxi App",
+      //     short_name: "VinxiApp",
+      //     theme_color: "#ffffff",
       //     icons: [
-      //       {
-      //         src: "/pwa-512x512.png",
-      //         sizes: "512x512",
-      //         type: "image/png",
-      //         purpose: "any maskable",
-      //       },
+      //       // Add your icons here
       //     ],
       //   },
       // }),

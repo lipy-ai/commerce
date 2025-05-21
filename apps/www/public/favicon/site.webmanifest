@@ -27,6 +27,7 @@
       "purpose": "maskable"
     }
   ],
+
   "start_url": "/",
   "display": "standalone",
   "display_override": ["fullscreen", "minimal-ui"],

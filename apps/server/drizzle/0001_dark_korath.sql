@@ -1,1 +1,0 @@
-ALTER TABLE "lipy"."user" ADD COLUMN "normalized_email" text;

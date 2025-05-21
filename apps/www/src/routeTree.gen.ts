@@ -15,6 +15,7 @@ import { Route as InstallImport } from './routes/install'
 import { Route as CheckoutRouteImport } from './routes/checkout/route'
 import { Route as CartRouteImport } from './routes/cart/route'
 import { Route as IndexImport } from './routes/index'
+import { Route as ShopIndexImport } from './routes/shop/index'
 import { Route as AccountIndexImport } from './routes/account/index'
 import { Route as ShopIdImport } from './routes/shop/$id'
 import { Route as AccountProfileImport } from './routes/account/profile'
@@ -47,6 +48,12 @@ const CartRouteRoute = CartRouteImport.update({
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ShopIndexRoute = ShopIndexImport.update({
+  id: '/shop/',
+  path: '/shop/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -172,6 +179,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountIndexImport
       parentRoute: typeof rootRoute
     }
+    '/shop/': {
+      id: '/shop/'
+      path: '/shop'
+      fullPath: '/shop'
+      preLoaderRoute: typeof ShopIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/account/addresses/new': {
       id: '/account/addresses/new'
       path: '/account/addresses/new'
@@ -202,6 +216,7 @@ export interface FileRoutesByFullPath {
   '/account/profile': typeof AccountProfileRoute
   '/shop/$id': typeof ShopIdRoute
   '/account': typeof AccountIndexRoute
+  '/shop': typeof ShopIndexRoute
   '/account/addresses/new': typeof AccountAddressesNewRoute
   '/account/addresses': typeof AccountAddressesIndexRoute
 }
@@ -217,6 +232,7 @@ export interface FileRoutesByTo {
   '/account/profile': typeof AccountProfileRoute
   '/shop/$id': typeof ShopIdRoute
   '/account': typeof AccountIndexRoute
+  '/shop': typeof ShopIndexRoute
   '/account/addresses/new': typeof AccountAddressesNewRoute
   '/account/addresses': typeof AccountAddressesIndexRoute
 }
@@ -233,6 +249,7 @@ export interface FileRoutesById {
   '/account/profile': typeof AccountProfileRoute
   '/shop/$id': typeof ShopIdRoute
   '/account/': typeof AccountIndexRoute
+  '/shop/': typeof ShopIndexRoute
   '/account/addresses/new': typeof AccountAddressesNewRoute
   '/account/addresses/': typeof AccountAddressesIndexRoute
 }
@@ -250,6 +267,7 @@ export interface FileRouteTypes {
     | '/account/profile'
     | '/shop/$id'
     | '/account'
+    | '/shop'
     | '/account/addresses/new'
     | '/account/addresses'
   fileRoutesByTo: FileRoutesByTo
@@ -264,6 +282,7 @@ export interface FileRouteTypes {
     | '/account/profile'
     | '/shop/$id'
     | '/account'
+    | '/shop'
     | '/account/addresses/new'
     | '/account/addresses'
   id:
@@ -278,6 +297,7 @@ export interface FileRouteTypes {
     | '/account/profile'
     | '/shop/$id'
     | '/account/'
+    | '/shop/'
     | '/account/addresses/new'
     | '/account/addresses/'
   fileRoutesById: FileRoutesById
@@ -294,6 +314,7 @@ export interface RootRouteChildren {
   AccountProfileRoute: typeof AccountProfileRoute
   ShopIdRoute: typeof ShopIdRoute
   AccountIndexRoute: typeof AccountIndexRoute
+  ShopIndexRoute: typeof ShopIndexRoute
   AccountAddressesNewRoute: typeof AccountAddressesNewRoute
   AccountAddressesIndexRoute: typeof AccountAddressesIndexRoute
 }
@@ -309,6 +330,7 @@ const rootRouteChildren: RootRouteChildren = {
   AccountProfileRoute: AccountProfileRoute,
   ShopIdRoute: ShopIdRoute,
   AccountIndexRoute: AccountIndexRoute,
+  ShopIndexRoute: ShopIndexRoute,
   AccountAddressesNewRoute: AccountAddressesNewRoute,
   AccountAddressesIndexRoute: AccountAddressesIndexRoute,
 }
@@ -333,6 +355,7 @@ export const routeTree = rootRoute
         "/account/profile",
         "/shop/$id",
         "/account/",
+        "/shop/",
         "/account/addresses/new",
         "/account/addresses/"
       ]
@@ -366,6 +389,9 @@ export const routeTree = rootRoute
     },
     "/account/": {
       "filePath": "account/index.tsx"
+    },
+    "/shop/": {
+      "filePath": "shop/index.tsx"
     },
     "/account/addresses/new": {
       "filePath": "account/addresses/new.tsx"

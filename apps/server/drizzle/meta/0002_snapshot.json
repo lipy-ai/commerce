@@ -1,6 +1,6 @@
 {
-  "id": "d5755bcf-46eb-42d7-a4ef-4739c41e518f",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "526c6da7-de72-4c47-bdd5-c29ebe8ac10b",
+  "prevId": "f205d431-ff1d-43f6-8051-0f36c8fd7860",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -205,14 +205,8 @@
         "user_id": {
           "name": "user_id",
           "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "organization_id": {
-          "name": "organization_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
+          "primaryKey": true,
+          "notNull": true
         },
         "items": {
           "name": "items",
@@ -237,31 +231,9 @@
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
-        },
-        "cart_organization_id_org_id_fk": {
-          "name": "cart_organization_id_org_id_fk",
-          "tableFrom": "cart",
-          "tableTo": "org",
-          "schemaTo": "lipy",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "cart_user_id_organization_id_pk": {
-          "name": "cart_user_id_organization_id_pk",
-          "columns": [
-            "user_id",
-            "organization_id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},

@@ -18,6 +18,7 @@ import { globalError } from "./lib/globalError";
 import { addressRoute } from "./routes/sharedRoutes/address";
 import { secureHeaders } from "hono/secure-headers";
 import { globalMiddleware } from "./middlewares/global";
+import { cartRoute } from "./routes/sharedRoutes/cart";
 
 export const app = new Hono<ServerContext>();
 
@@ -31,33 +32,34 @@ app.use(trimTrailingSlash());
 app.use("*", globalMiddleware);
 
 if (env.NODE_ENV === "development") {
-	logger.info("Available routes:");
-	showRoutes(app);
+  logger.info("Available routes:");
+  showRoutes(app);
 }
 
 await pingDatabase();
 app.use("*", authMiddleware);
 
 app.on(["POST", "GET"], "/api/auth/*", (c) => {
-	return auth.handler(c.req.raw);
+  return auth.handler(c.req.raw);
 });
 
 // app.use(compress());
 
 export const routes = app
-	.basePath("/v1")
-	.route("/upload", uploadRouter)
-	.route("/address", addressRoute);
+  .basePath("/v1")
+  .route("/upload", uploadRouter)
+  .route("/address", addressRoute)
+  .route("/cart", cartRoute);
 
 // routes.basePath("/admin").route("/category", categoryRouter);
 
 app.onError(globalError);
 
 const shutdown = async () => {
-	logger.info("Closing http server");
-	await db.destroy();
-	logger.info("DB connection closed");
-	process.exit();
+  logger.info("Closing http server");
+  await db.destroy();
+  logger.info("DB connection closed");
+  process.exit();
 };
 
 process.on("SIGINT", shutdown);

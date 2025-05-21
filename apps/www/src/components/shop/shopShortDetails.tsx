@@ -1,4 +1,6 @@
 import { Clock, MapPin, Star } from "lucide-react";
+
+import { Clock, MapPin, Star } from "lucide-react";
 import { motion } from "framer-motion";
 export default function ShopShortDetails({ shopInfo, setShopInfoVisible }) {
   return (

@@ -1,9 +1,5 @@
-import { betterAuth, BetterAuthOptions, generateId } from "better-auth";
-import {
-  createAuthMiddleware,
-  emailOTP,
-  organization,
-} from "better-auth/plugins";
+import { betterAuth, BetterAuthOptions } from "better-auth";
+import { emailOTP, organization } from "better-auth/plugins";
 
 import env from "../env";
 import { redis } from "../cache";
@@ -88,15 +84,21 @@ export const auth = betterAuth({
     },
     crossSubDomainCookies: {
       enabled: true,
-      domain: "." + env.BETTER_AUTH_URL.split(".").slice(1).join("."), // Domain with a leading period
+      ...(env.IN_PROD && {
+        domain: "." + env.BETTER_AUTH_URL.split(".").slice(1).join("."),
+      }), // Domain with a leading period
     },
-    useSecureCookies: true,
-    defaultCookieAttributes: {
-      secure: true,
-      httpOnly: true,
-      sameSite: "none", // Allows CORS-based cookie sharing across subdomains
-      partitioned: true, // New browser standards will mandate this for foreign cookies
-    },
+    ...(env.IN_PROD && {
+      useSecureCookies: true,
+    }),
+    ...(env.IN_PROD && {
+      defaultCookieAttributes: {
+        secure: true,
+        httpOnly: true,
+        sameSite: "none", // Allows CORS-based cookie sharing across subdomains
+        partitioned: true, // New browser standards will mandate this for foreign cookies
+      },
+    }),
   },
   trustedOrigins: env.TRUSTED_ORIGINS,
 

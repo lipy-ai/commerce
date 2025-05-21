@@ -7,9 +7,11 @@ import type { ReactNode } from "react";
 export const DashboardHeader = ({
   title,
   children,
+  titleChildren
 }: {
-  title: string;
+  title?: string;
   children?: ReactNode;
+  titleChildren?: ReactNode;
 }) => {
   const router = useRouter();
   const onBack = (e: any) => {
@@ -32,6 +34,7 @@ export const DashboardHeader = ({
       
            
           </Link>{" "}
+          {titleChildren && titleChildren}
           <h1 className="font-semibold text-xl leading-0 ">{title}</h1>
         </div>
         <div className="flex-1 flex justify-end xl:px-8 gap-2">{children}</div>

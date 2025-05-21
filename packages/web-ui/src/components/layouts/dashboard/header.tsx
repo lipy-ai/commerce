@@ -7,7 +7,11 @@ import type { ReactNode } from "react";
 export const DashboardHeader = ({
   title,
   children,
+<<<<<<< HEAD
   titleChildren,
+=======
+  titleChildren
+>>>>>>> 40fdb8261807ab37047c51a915e62b4ca54bf883
 }: {
   title?: string;
   children?: ReactNode;

@@ -7,6 +7,10 @@ import {
 } from "@lipy/web-ui/components/layouts/dashboard";
 import { CircleUser, LogOut, ShoppingCart, Store } from "lucide-react";
 import LocationComponent from '@lipy/web-ui/components/maps/deliveryAddress'
+import { SearchFilter } from "@/components/searchFilter";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+
 export const Route = createFileRoute("/")({
   component: Home,
 });
@@ -75,6 +79,9 @@ const shops = [
   },
 ];
 function Home() {
+
+ 
+
   return (
     <>
       <DashboardLayout
@@ -82,11 +89,24 @@ function Home() {
         mobileNav={mobileNav}
         logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
       >
-        <DashboardBody>
-          <NavBar />
-          <LocationComponent/>
-          <NearByShops />
-        </DashboardBody>
+      <DashboardBody>
+  {/* NavBar + SearchFilter with continuous gradient */}
+  <div className="relative bg-gradient-to-b from-primary/50 to-primary/40">
+    <NavBar />
+     </div>
+    
+    <motion.div className="bg-gradient-to-b from-primary/40 to-white sticky top-0 z-20 shadow-sm transition-colors duration-300 backdrop-blur-lg"  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true }}>
+      <SearchFilter />
+
+    </motion.div>
+ 
+
+  {/* Rest of the page */}
+  <NearByShops />
+  <LocationComponent />
+</DashboardBody>
       </DashboardLayout>
     </>
   );

@@ -35,9 +35,12 @@ function LocationComponent() {
 						.then((data) => {
 							const address = data.results[0]?.formatted_address;
 							const addressComp = data.results[0].address_components;
+						
 							let addressName = "";
 							let locality = "";
 							let subLocality = "";
+							let neighborhood = "";
+							let baseAddress="";	
 							let i = addressComp?.length || 0;
 							while (i > 0) {
 								if (addressComp[i - 1]?.types?.includes("locality")) {
@@ -45,10 +48,25 @@ function LocationComponent() {
 								}
 								if (addressComp[i - 1]?.types?.includes("sublocality")) {
 									subLocality = addressComp[i - 1]?.long_name || "";
-									addressName = `${subLocality}, ${locality}`;
+						
 									break;
 								}
+								if(addressComp[i - 1]?.types?.includes("neighborhood")) {
+									neighborhood = addressComp[i - 1]?.long_name || "";
+									
+									break;
+								}
+								if(addressComp[i - 1]?.types?.includes("political")) {
+									baseAddress= addressComp[i - 1]?.long_name || "";
+								}
 								i--;
+							}
+							if(subLocality && locality){
+								addressName = `${subLocality}, ${locality}`;
+							}else if(neighborhood && locality){
+								addressName = `${neighborhood}, ${locality}`
+							}else{
+								addressName = baseAddress
 							}
 
 							if (address) {

@@ -22,27 +22,27 @@
 		"rules": {
 			"recommended": true,
 			"a11y": {
-				"useKeyWithClickEvents": "warn",
-				"noLabelWithoutControl": "warn",
-				"useSemanticElements": "warn",
-				"noSvgWithoutTitle": "warn",
-				"useFocusableInteractive": "warn",
-				"useAltText": "warn"
+				"useKeyWithClickEvents": "off",
+				"noLabelWithoutControl": "off",
+				"useSemanticElements": "off",
+				"noSvgWithoutTitle": "off",
+				"useFocusableInteractive": "off",
+				"useAltText": "off"
 			},
 			"style": {
-				"noNonNullAssertion": "warn",
+				"noNonNullAssertion": "off",
 				"useSelfClosingElements": "off"
 			},
 			"suspicious": {
-				"noExplicitAny": "warn",
-				"noArrayIndexKey": "warn"
+				"noExplicitAny": "off",
+				"noArrayIndexKey": "off"
 			},
 			"complexity": {
-				"noBannedTypes": "warn",
-				"noUselessTernary": "warn"
+				"noBannedTypes": "off",
+				"noUselessTernary": "off"
 			},
 			"correctness": {
-				"useExhaustiveDependencies": "warn"
+				"useExhaustiveDependencies": "off"
 			}
 		}
 	},

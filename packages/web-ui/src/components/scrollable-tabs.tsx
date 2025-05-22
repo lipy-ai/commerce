@@ -52,7 +52,7 @@ export const ScrollingTabs = ({ tabs, handleTabChange }) => {
 								onClick={() => onTabChange(index, tab.id)}
 								className={`relative flex flex-col items-center px-4 py-2 mx-2 min-w-16 cursor-pointer transition-all duration-300 ${
 									activeTab === index
-										? "text-foreground-600 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[3px] after:bg-foreground after:rounded-full after:shadow-[0_2px_6px_theme(colors.primary.DEFAULT)]"
+										? "text-foreground-600 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[3px] after:bg-foreground after:rounded-full"
 										: "text-muted-foreground hover:text-muted-foreground"
 								}`}
 							>

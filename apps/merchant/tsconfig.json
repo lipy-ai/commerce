@@ -1,36 +1,38 @@
 {
-	"include": ["**/*.ts", "**/*.tsx"],
-	"compilerOptions": {
-		"target": "ES2022",
-		"jsx": "react-jsx",
-		"module": "ESNext",
-		"lib": ["ES2022", "DOM", "DOM.Iterable"],
-		"types": ["vite/client"],
+  "include": ["**/*.ts", "**/*.tsx"],
+  "references": [{ "path": "../../apps/server" }],
 
-		"noImplicitAny": true,
-		"removeComments": true,
+  "compilerOptions": {
+    "target": "ES2022",
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["vite/client"],
 
-		/* Bundler mode */
-		"moduleResolution": "bundler",
-		"allowImportingTsExtensions": true,
-		"verbatimModuleSyntax": true,
-		"noEmit": true,
+    "noImplicitAny": true,
+    "removeComments": true,
 
-		/* Linting */
-		"skipLibCheck": true,
-		"strictNullChecks": true,
-		"strict": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-		"noFallthroughCasesInSwitch": true,
-		"noUncheckedSideEffectImports": true,
-		"baseUrl": ".",
-		"paths": {
-			"@/*": ["./src/*"],
-			"@envClient": ["../../env.client.ts"],
-			"@lipy/web-ui/*": ["../../packages/web-ui/src/*"],
-			"@lipy/lib/*": ["../../packages/lib/src/*"],
-			"@lipy/server/*": ["../server/src/*"]
-		}
-	}
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true,
+
+    /* Linting */
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@envClient": ["../../env.client.ts"],
+      "@lipy/web-ui/*": ["../../packages/web-ui/src/*"],
+      "@lipy/lib/*": ["../../packages/lib/src/*"],
+      "@lipy/server/*": ["../server/src/*"]
+    }
+  }
 }

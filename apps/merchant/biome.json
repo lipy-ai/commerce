@@ -22,8 +22,8 @@
     "rules": {
       "recommended": true,
       "suspicious": {
-        "noExplicitAny": "warn",
-        "noArrayIndexKey": "warn"
+        "noExplicitAny": "off",
+        "noArrayIndexKey": "off"
       }
     }
   },

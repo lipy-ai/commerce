@@ -6,13 +6,13 @@
     "rules": {
       "recommended": true,
       "style": {
-        "noNonNullAssertion": "warn"
+        "noNonNullAssertion": "off"
       },
       "complexity": {
-        "noBannedTypes": "warn"
+        "noBannedTypes": "off"
       },
       "suspicious": {
-        "noExplicitAny": "warn"
+        "noExplicitAny": "off"
       }
     }
   },

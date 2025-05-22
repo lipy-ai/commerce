@@ -17,6 +17,8 @@ import {
 	AvatarFallback,
 	AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
+import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
+import { cn } from "@lipy/web-ui/lib/utils";
 
 export const Route = createFileRoute("/account/")({
 	component: RouteComponent,
@@ -64,15 +66,17 @@ const moreInfo = [
 ];
 
 function RouteComponent() {
-	const { data } = authClient.useSession();
+	const { data  } = authClient.useSession();
 
 	return (
 		<div>
 			<DashboardHeader title="Settings" />
 			<div className="p-4">
-				<div className="flex items-center gap-4">
+				{
+					data ? (
+						<div className="flex items-center gap-4">
 					<Avatar className="size-12">
-						<AvatarImage src={data?.user.image} alt="@shadcn" />
+						<AvatarImage src={data?.user.image || ""} alt="@shadcn" />
 						<AvatarFallback>
 							<UserCircle2 width={40} height={75} strokeWidth={1.5} />
 						</AvatarFallback>
@@ -88,7 +92,21 @@ function RouteComponent() {
 					</div>
 				</div>
 
-				<h1 className="text-sm font-semibold pb-1 pt-4 text-muted-foreground">
+					):(
+						<Card className='p-4'>
+							<h1 className='font-bold text-xl'> Hi 👋</h1>
+							<p className="text-muted-foreground font-normal">Discover and shop from your favorite local businesses online. Join our community today and support local commerce.</p>
+							<Link to="/login" className={cn(buttonVariants({ variant: "default" }), "flex items-center justify-between")}>Log In / Sign up
+								<ChevronRight/>
+							</Link>
+						</Card>
+					)
+				}
+				
+				{
+					data && (
+						<>
+						<h1 className="text-sm font-semibold pb-1 pt-4 text-muted-foreground">
 					Your Information
 				</h1>
 				<Card className="p-4 shadow-none">
@@ -110,12 +128,25 @@ function RouteComponent() {
 					))}
 				</Card>
 
+				</>
+
+
+					)
+				}
+
+				
 				<h1 className="text-sm font-semibold pb-1 pt-4 text-muted-foreground">
-					More
+				 {
+					data ? 'More' : 'General'
+				 }
 				</h1>
 				<Card className="p-4 shadow-none">
-					{moreInfo.map((item, index) => (
-						<div key={index}>
+					{moreInfo.map((item, index) => {
+
+						if(!data && item.title==='Logout') return
+						return (
+
+							<div key={index}>
 							<Link className="flex items-center justify-between" to={item.url}>
 								<div className="flex items-center gap-2">
 									<Avatar className="size-7">
@@ -128,9 +159,13 @@ function RouteComponent() {
 								<ChevronRight />
 							</Link>
 						</div>
-					))}
+
+						)
+					})}
 				</Card>
 			</div>
+			
+			
 		</div>
 	);
 }

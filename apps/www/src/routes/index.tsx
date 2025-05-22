@@ -102,10 +102,15 @@ function Home() {
 					</motion.div>
 
 					{/* Rest of the page */}
-					<NearByShops />
+					<motion.div>
+						<NearByShops />
+
+					</motion.div>
+					
 					<LocationComponent />
 				</DashboardBody>
 			</DashboardLayout>
 		</>
 	);
 }
+

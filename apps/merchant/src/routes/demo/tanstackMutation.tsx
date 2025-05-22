@@ -1,43 +1,98 @@
 import { apiClient } from "@lipy/lib/api/index.js";
-import { useAPIMutation } from "@lipy/lib/utils/queryClient.js";
+import {
+  apiQueryOptions,
+  useAPIMutation,
+  useAPIQuery,
+} from "@lipy/lib/utils/queryClient.js";
 import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/demo/tanstackMutation")({
-	component: RouteComponent,
+  component: RouteComponent,
 });
 
 function RouteComponent() {
-	const mutation = useAPIMutation(apiClient.v1.address, "$post");
+  const queryClient = useQueryClient();
+  //   console.log(queryClient.);
+  const updateMutation = useAPIMutation(apiClient.v1.address, "$post", {
+    onSuccess() {
+      console.log(apiQueryOptions(apiClient.v1.address, "$get").queryKey);
+      queryClient.invalidateQueries({
+        queryKey: apiQueryOptions(apiClient.v1.address, "$get").queryKey,
+      });
+    },
+  });
 
-	const handle = () => {
-		toast.promise(
-			mutation.mutateAsync({
-				json: {
-					name: "string",
-					country: "string",
-					tag: "home",
-					line1: "string",
-					line2: "string",
-					city: "string",
-					state: "string",
-					postal_code: "string",
-				},
-			}),
-			{
-				success: "Success",
-				error: "Error",
-				loading: "Saving",
-			},
-		);
-	};
-	return (
-		<div className="p-8">
-			<p>This will save address:</p>
-			<div>
-				<Button onClick={handle}>Save Mutation</Button>
-			</div>
-		</div>
-	);
+  const deleteMutation = useAPIMutation(
+    apiClient.v1.address[":id"],
+    "$delete",
+    {
+      onSuccess() {
+        queryClient.invalidateQueries({
+          queryKey: apiQueryOptions(apiClient.v1.address, "$get").queryKey,
+        });
+      },
+    }
+  );
+
+  const updateHandle = () => {
+    toast.promise(
+      updateMutation.mutateAsync({
+        json: {
+          name: "string",
+          country: "string",
+          tag: "home",
+          line1: "string",
+          line2: "string",
+          city: "string",
+          state: "string",
+          postal_code: "string",
+        },
+      }),
+      {
+        success: "Success",
+        error: "Error",
+        loading: "Saving",
+      }
+    );
+  };
+
+  const deleteHandle = (id) => {
+    toast.promise(
+      deleteMutation.mutateAsync({
+        param: { id },
+      }),
+      {
+        success: "Success",
+        error: "Error",
+        loading: "Deleting",
+      }
+    );
+  };
+
+  const { data } = useAPIQuery(apiClient.v1.address, "$get");
+  console.log(data);
+  return (
+    <div className="p-8">
+      <div>
+        <Button onClick={updateHandle}>Add</Button>
+
+        <div className="space-y-4 my-4">
+          {data?.map((d, i) => (
+            <div key={i} className="flex gap-2">
+              {" "}
+              <p key={i} className="p-2 bg-primary">
+                {d.id}
+              </p>
+              <Button onClick={() => deleteHandle(d.id)} variant={"outline"}>
+                Remove
+              </Button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }

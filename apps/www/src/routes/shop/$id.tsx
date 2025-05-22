@@ -70,7 +70,7 @@ function RouteComponent() {
             initial={{ opacity: 0, y: 10 }} // Start slightly lower
             animate={{ opacity: 1, y: 0 }} // Move to normal position
             exit={{ opacity: 0, y: -10 }} // Exit upward
-            transition={{ duration: 0.1 }}
+            transition={{ duration: 0.3 }}
             className="text-lg font-semibold"
           >
             {!shopInfoVisible ? shopInfo.name : ""}
@@ -78,10 +78,14 @@ function RouteComponent() {
         }
       />
 
-      <ShopShortDetails
-        shopInfo={shopInfo}
-        setShopInfoVisible={setShopInfoVisible}
-      />
+      <motion.div
+       onViewportEnter={() => setShopInfoVisible(true)}
+       onViewportLeave={() => setShopInfoVisible(false)}
+        className="mb-4"
+      >
+        <ShopShortDetails shopInfo={shopInfo} />
+      </motion.div>
+
 
       <Separator className="-my-4" />
 
@@ -118,7 +122,7 @@ function RouteComponent() {
         })}
       </div>
 
-      <div className="fixed bottom-0 p-4 w-full bg-background">
+      <div className="fixed bottom-0 p-4 w-full bg-accent">
         <SearchBar placeholder={`Search in ${shopInfo.name}`} />
       </div>
     </>

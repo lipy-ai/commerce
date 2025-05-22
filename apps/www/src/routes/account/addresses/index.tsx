@@ -2,7 +2,7 @@ import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/queryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
-import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
+import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import Loading from "@lipy/web-ui/components/ui/loading";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
@@ -37,9 +37,9 @@ function RouteComponent() {
 					</Link>
 				)}
 			</DashboardHeader>
-			<div className="mb-10">
+			
 				{data && data?.length > 0 ? (
-					<div>
+					<div className='mb-10'>
 						{data.map((address) => (
 							<div
 								key={address.id}
@@ -51,12 +51,12 @@ function RouteComponent() {
 								)}
 							>
 								<div className="flex  gap-2">
-									<Avatar>
+									<Avatar className="rounded-md mt-2">
 										<AvatarFallback>
 											{address.tag === "home" ? (
 												<House className="text-muted-foreground flex-shrink-0" />
 											) : address.tag === "work" ? (
-												<Building className="size-6 text-muted-foreground flex-shrink-0" />
+												<Building className="text-muted-foreground  flex-shrink-0" />
 											) : (
 												<MapPinHouse className="size-6 text-muted-foreground flex-shrink-0" />
 											)}
@@ -83,7 +83,7 @@ function RouteComponent() {
 						label="Add a new address to get started"
 					/>
 				)}
-			</div>
+		
 
 			{isMobile && (
 				<div className="fixed bottom-0 w-full p-4 bg-background">

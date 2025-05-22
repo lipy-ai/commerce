@@ -18,7 +18,7 @@ export default function NavBar() {
 							<div className="text-lg font-bold flex items-center gap-2">
 								<MapPin className="size-5 fill-primary" />
 								<p className="truncate max-w-[250px] block">
-									{deliveryLocation.addressName}
+									{deliveryLocation.addressName || "Locating"}
 								</p>
 								<ChevronDown className="size-5" />
 							</div>

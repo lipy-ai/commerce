@@ -4,6 +4,7 @@
 		"**/*.tsx",
 		"../../packages/web-ui/src/components/searchBar.tsx"
 	],
+	"references": [{ "path": "../../apps/server" }],
 
 	"compilerOptions": {
 		"target": "ES2022",

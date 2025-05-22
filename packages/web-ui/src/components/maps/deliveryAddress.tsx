@@ -64,7 +64,7 @@ function LocationComponent() {
 							if(subLocality && locality){
 								addressName = `${subLocality}, ${locality}`;
 							}else if(neighborhood && locality){
-								addressName = neighborhood +" , "+ locality;
+								addressName = `${neighborhood}, ${locality}`
 							}else{
 								addressName = baseAddress
 							}

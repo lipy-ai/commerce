@@ -77,7 +77,7 @@ export const getAPIQueryKey = <
 >(
   endpoint: T,
   method: M,
-  params?: Params
+  params: Params
 ): APIQueryKey<T, M, Params> => {
   const urlString = endpoint.$url().toString();
   const path = getPathFromUrl(urlString);
@@ -91,12 +91,7 @@ export const getAPIQueryKey = <
       filteredParams.query = params.query;
     }
   }
-
-  const r = [method, path] as unknown as APIQueryKey<T, M, Params>;
-  if (params) {
-    r.push(filteredParams);
-  }
-  return r;
+  return [method, path, filteredParams] as unknown as APIQueryKey<T, M, Params>;
 };
 
 export const apiQueryOptions = <
@@ -117,7 +112,7 @@ export const apiQueryOptions = <
 >(
   endpoint: T,
   method: M,
-  params?: Params,
+  params: Params,
   options?: Options
 ): NoInfer<
   Omit<
@@ -144,7 +139,7 @@ export const apiQueryOptions = <
     params: any
   ) => Promise<Response>;
   const result = {
-    queryKey: getAPIQueryKey(endpoint, method, params as any),
+    queryKey: getAPIQueryKey(endpoint, method, params),
     queryFn: async () => {
       const res = await endpointFn(params);
       if (res.status >= 200 && res.status < 300) {
@@ -243,7 +238,7 @@ export const useAPIQuery = <
 >(
   endpoint: T & { $url: () => URL | { toString: () => string } },
   method: M,
-  params?: Params,
+  params: Params,
   options?: Options
 ): UseQueryResult<
   InferSelectReturnType<TResponse, Options["select"]>,

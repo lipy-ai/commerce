@@ -9,7 +9,13 @@
     "noImplicitAny": false,
     "removeComments": true,
     "allowImportingTsExtensions": true,
-    "noEmit": true,
+    "noEmit": false,
+
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "rootDir": "src",
+
     "paths": {
       "@/*": ["./src/*"]
     },

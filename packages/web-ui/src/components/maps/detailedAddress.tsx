@@ -1,10 +1,11 @@
 import { apiClient } from "@lipy/lib/api";
 import { authClient } from "@lipy/lib/providers/auth";
-import { useAPIMutation } from "@lipy/lib/utils/queryClient";
+import { apiQueryOptions, useAPIMutation } from "@lipy/lib/utils/queryClient";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { ChevronRight, SquarePen, StepForward, X } from "lucide-react";
+import { SquarePen, StepForward, X } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 import type { FormSchema } from "../forms/renderer";
@@ -38,6 +39,7 @@ export default function DetailedAddress({
 	}
 
 	const navigate = useNavigate();
+	const queryClient = useQueryClient();
 
 	const forms: FormSchema<any, any> = [
 		{
@@ -106,7 +108,13 @@ export default function DetailedAddress({
 		},
 	];
 
-	const mutation = useAPIMutation(apiClient.v1.address, "$post");
+	const mutation = useAPIMutation(apiClient.v1.address, "$post", {
+		onSuccess() {
+			queryClient.invalidateQueries({
+				queryKey: apiQueryOptions(apiClient.v1.address, "$get", {}).queryKey,
+			});
+		},
+	});
 
 	const handleAddAddress = (values: any) => {
 		toast.promise(
@@ -197,8 +205,6 @@ export default function DetailedAddress({
 				<ScrollArea className="h-[50vh]">
 					<div className="p-4 mb-6">
 						<div className="text-sm rounded-md border p-2 bg-accent font-medium">
-							{/* <p>{fullAddress.address}</p> */}
-
 							{label === "Edit" ? (
 								<p>{fullAddress.line1.split(",").slice(1).join(",")}</p>
 							) : label === "Add" ? (
@@ -207,12 +213,6 @@ export default function DetailedAddress({
 								<></>
 							)}
 							<div className="flex justify-end">
-								{/* <DrawerClose>
-                     <Button size="sm" variant="outline" className="ml-auto">
-                Change
-              </Button>
-
-                </DrawerClose> */}
 								{label === "Add" ? (
 									<DrawerClose>
 										<Button size="sm" variant="outline" className="ml-auto">
@@ -220,7 +220,6 @@ export default function DetailedAddress({
 										</Button>
 									</DrawerClose>
 								) : label === "Edit" ? (
-									// <GoogleMapImage/>
 									<Link
 										className={cn(
 											buttonVariants({ variant: "outline", size: "sm" }),

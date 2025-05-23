@@ -4,7 +4,6 @@ import { MapPinOff, Search } from "lucide-react";
 import { Button, buttonVariants } from "../ui/button";
 import {
 	Drawer,
-	DrawerClose,
 	DrawerContent,
 	DrawerDescription,
 	DrawerFooter,

@@ -1,7 +1,9 @@
 import { apiClient } from "@lipy/lib/api";
+import { apiQueryOptions, useAPIMutation } from "@lipy/lib/utils/queryClient";
+import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { Trash } from "lucide-react";
-import type { FC } from "react";
+import { type FC, use } from "react";
 import { toast } from "sonner";
 import {
 	AlertDialog,
@@ -22,18 +24,28 @@ interface DeleteAddressProps {
 
 export const DeleteAddress: FC<DeleteAddressProps> = ({ addressId }) => {
 	const navigator = useNavigate();
-	const handleDeleteAddress = () => {
-		toast.promise(
-			apiClient.v1.address[":id"].$delete({ param: { id: addressId } }),
-			{
-				loading: "Deleting address...",
-				success: () => {
-					navigator({ to: "/account/addresses", replace: true });
-					return "Address deleted successfully";
-				},
-				error: "Something went wrong",
+	const queryClient = useQueryClient();
+
+	const deleteMutation = useAPIMutation(
+		apiClient.v1.address[":id"],
+		"$delete",
+		{
+			onSuccess() {
+				queryClient.invalidateQueries({
+					queryKey: apiQueryOptions(apiClient.v1.address, "$get", {}).queryKey,
+				});
 			},
-		);
+		},
+	);
+	const handleDeleteAddress = () => {
+		toast.promise(deleteMutation.mutateAsync({ param: { id: addressId } }), {
+			loading: "Deleting address...",
+			success: () => {
+				navigator({ to: "/account/addresses", replace: true });
+				return "Address deleted successfully";
+			},
+			error: "Something went wrong",
+		});
 	};
 
 	return (

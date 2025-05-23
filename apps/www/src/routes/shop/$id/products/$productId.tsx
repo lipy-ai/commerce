@@ -8,13 +8,10 @@ import {
 	AccordionTrigger,
 } from "@lipy/web-ui/components/ui/accordion";
 import { Button } from "@lipy/web-ui/components/ui/button";
-import { Card } from "@lipy/web-ui/components/ui/card";
+import { Card, CardContent, CardHeader } from "@lipy/web-ui/components/ui/card";
+import Loading from "@lipy/web-ui/components/ui/loading";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { createFileRoute } from "@tanstack/react-router";
-
-import EmptyPage from "@lipy/web-ui/components/pages/empty";
-import { Spinner } from "@lipy/web-ui/components/ui/spinner";
-import { Frown } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/shop/$id/products/$productId")({
@@ -25,7 +22,6 @@ function RouteComponent() {
 	const { productId } = Route.useParams();
 	const [product, setProduct] = useState(null);
 	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(null);
 
 	useEffect(() => {
 		const fetchProductData = async () => {
@@ -36,8 +32,8 @@ function RouteComponent() {
 				);
 				const data = await response.json();
 				setProduct(data);
-			} catch (err) {
-				setError(error);
+			} catch (error) {
+				console.error(error);
 			} finally {
 				setLoading(false);
 			}
@@ -53,74 +49,62 @@ function RouteComponent() {
 			: null;
 		return originalPrice % 1 === 0 ? originalPrice : originalPrice.toFixed(2);
 	};
-	// console.log(product);
-
 	console.log(product);
 
+	if (loading)
+		return (
+			<div>
+				<Loading />
+			</div>
+		);
 	return (
 		<>
-			{loading && !error && (
-				<Spinner className="absolute top-1/2 left-1/2" size={"large"} />
-			)}
-			{error && (
-				<p>
-					<EmptyPage
-						icon={Frown}
-						title="Could not load your data"
-						label={error}
-					/>
-				</p>
-			)}
-			{!loading && product && (
-				<div>
-					<DashboardHeader title={product?.title || ""} />
+			<DashboardHeader title={product?.title || ""} />
 
-					<Card className="p-4 shadow-none m-4 ">
-						<ImageCarousel images={product?.images} />
-						<Separator />
-						<div className="space-y-2">
-							<p className="text-lg font-semibold ">{product.title}</p>
+			<Card className="p-4 shadow-none m-4 ">
+				<ImageCarousel images={product?.images} />
+				<Separator />
+				<div className="space-y-2">
+					<p className="text-lg font-semibold ">{product.title}</p>
 
-							<div className="flex items-center justify-between">
-								<div>
-									<p className="text-muted-foreground">
-										{product.minimumOrderQuantity} kg
-									</p>
+					<div className="flex items-center justify-between">
+						<div>
+							<p className="text-muted-foreground">
+								{product.minimumOrderQuantity} kg
+							</p>
 
-									<span className="font-semibold text-lg pr-2">
-										{" "}
-										₹{product.price}
-									</span>
-									{originalPrice && (
-										<span className="text-xs line-through text-muted-foreground">
-											₹{originalPrice(product)}
-										</span>
-									)}
-								</div>
-
-								<Button
-									variant={"secondary"}
-									className="font-bold text-primary text-lg px-8 border-2 border-muted-foreground/10 shadow-sm"
-								>
-									ADD
-								</Button>
-							</div>
+							<span className="font-semibold text-lg pr-2">
+								{" "}
+								₹{product.price}
+							</span>
+							{originalPrice && (
+								<span className="text-xs line-through text-muted-foreground">
+									₹{originalPrice(product)}
+								</span>
+							)}
 						</div>
-					</Card>
-					<Card className="p-4 shadow-none m-4 ">
-						<Accordion type="single" collapsible className="w-full">
-							<AccordionItem value="item-1" className="border-b-0 -my-4">
-								<AccordionTrigger className="font-semibold text-muted-foreground text-lg">
-									Description
-								</AccordionTrigger>
-								<AccordionContent className="font-semibold text-sm text-muted-foreground/100">
-									{product.description}
-								</AccordionContent>
-							</AccordionItem>
-						</Accordion>
-					</Card>
+
+						<Button
+							variant={"secondary"}
+							className="font-bold text-primary text-lg px-8 border-2 border-muted-foreground/10 shadow-sm"
+						>
+							ADD
+						</Button>
+					</div>
 				</div>
-			)}
+			</Card>
+			<Card className="p-4 shadow-none m-4 ">
+				<Accordion type="single" collapsible className="w-full">
+					<AccordionItem value="item-1" className="border-b-0 -my-4">
+						<AccordionTrigger className="font-semibold text-muted-foreground text-lg">
+							Description
+						</AccordionTrigger>
+						<AccordionContent className="font-semibold text-sm text-muted-foreground/100">
+							{product.description}
+						</AccordionContent>
+					</AccordionItem>
+				</Accordion>
+			</Card>
 		</>
 	);
 }

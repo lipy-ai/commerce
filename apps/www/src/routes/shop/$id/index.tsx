@@ -1,14 +1,14 @@
-import ProductCard from "@/components/productCard"; // Fixed the path
 import ShopShortDetails from "@/components/shop/shopShortDetails";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
+import ProductCard from "@lipy/web-ui/components/product/productCard"; // Fixed the path
 import SearchBar from "@lipy/web-ui/components/searchBar";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { cn } from "@lipy/web-ui/lib/utils";
-import { Link, createFileRoute, useRouter } from "@tanstack/react-router";
-import { motion, useMotionValueEvent, useScroll } from "framer-motion";
+import { Link, createFileRoute } from "@tanstack/react-router";
+import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/shop/$id/")({
 });
 
 const shopInfo = {
-	id: "abcshop",
+	id: 1,
 	name: "Tasty Bites Restaurant",
 	address: "123 Main Street, Downtown, City",
 	rating: 4.7,
@@ -27,18 +27,10 @@ const shopInfo = {
 };
 
 function RouteComponent() {
+	const [categories, setCategories] = useState<string[]>([]);
 	const [products, setProducts] = useState<any[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
-	const [shopNameVisible, setShopNameVisible] = useState(false);
-	const { scrollY } = useScroll();
-
-	useMotionValueEvent(scrollY, "change", (current) => {
-		if (current > 30) {
-			setShopNameVisible(true);
-		} else {
-			setShopNameVisible(false);
-		}
-	});
+	const [shopInfoVisible, setShopInfoVisible] = useState(true);
 
 	useEffect(() => {
 		const fetchCategories = async () => {
@@ -46,6 +38,7 @@ function RouteComponent() {
 				setIsLoading(true);
 				const res = await fetch("https://dummyjson.com/products/categories");
 				const data: string[] = await res.json();
+				setCategories(data);
 
 				// Fetch products for all categories
 				const productsData = await Promise.all(
@@ -70,29 +63,32 @@ function RouteComponent() {
 		fetchCategories();
 	}, []);
 
-	const router = useRouter();
+	// if (isLoading) return <Loading />;
 
 	return (
 		<>
 			<DashboardHeader
 				titleChildren={
 					<motion.div
-						variants={{
-							visible: { opacity: 1, y: 0 },
-							hidden: { opacity: 0, y: 50 },
-						}}
-						animate={shopNameVisible ? "visible" : "hidden"}
-						transition={{ duration: 0.3, ease: "easeInOut" }}
-						className="text-xl font-semibold line-clamp-1"
+						key={shopInfoVisible ? "empty" : "title"}
+						initial={{ opacity: 0, y: 10 }} // Start slightly lower
+						animate={{ opacity: 1, y: 0 }} // Move to normal position
+						exit={{ opacity: 0, y: -10 }} // Exit upward
+						transition={{ duration: 0.3 }}
+						className="text-lg font-semibold line-clamp-1"
 					>
-						{shopNameVisible ? shopInfo.name : ""}
+						{!shopInfoVisible ? shopInfo.name : ""}
 					</motion.div>
 				}
 			/>
 
-			<div className="mb-4">
+			<motion.div
+				onViewportEnter={() => setShopInfoVisible(true)}
+				onViewportLeave={() => setShopInfoVisible(false)}
+				className="mb-4"
+			>
 				<ShopShortDetails shopInfo={shopInfo} />
-			</div>
+			</motion.div>
 
 			<Separator className="-my-4" />
 
@@ -123,7 +119,6 @@ function RouteComponent() {
 									<Link
 										className={cn(
 											buttonVariants({ variant: "link", size: "sm" }),
-											"font-semibold text-sm",
 										)}
 										to={`/shop/${shopInfo.id}/products/category/${categoryName}`}
 									>
@@ -137,30 +132,22 @@ function RouteComponent() {
 									style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
 								>
 									{productArray?.map((product: any, index) => (
-										<div
+										<Link
 											key={product.id}
-											onClick={() =>
-												router.navigate({
-													to: `/shop/${shopInfo.id}/products/${product.id}`,
-												})
-											}
-											onKeyDown={(e) => {
-												if (e.key === "Enter" || e.key === " ") {
-													e.preventDefault();
-													router.navigate({
-														to: `/shop/${shopInfo.id}/products/${product.id}`,
-													});
-												}
-											}}
+											to={`/shop/$id/products/${product.id}`}
 										>
 											<ProductCard
-												shopId={shopInfo.id}
 												product={product}
-												className={{
-													classNameBox: "flex-shrink-0 w-36 pl-4",
-												}}
+												className={cn(
+													index === 0
+														? "pl-4"
+														: index === productArray.length - 1
+															? "pr-4"
+															: "",
+													"flex-shrink-0 w-32 pl-4",
+												)}
 											/>
-										</div>
+										</Link>
 									))}
 								</div>
 							</div>

@@ -12,6 +12,7 @@ import { useEffect, useRef, useState } from "react";
 import SearchBar from "../searchBar";
 import { Button } from "../ui/button";
 import DetailedAddress from "./detailedAddress";
+import { getGeocodeFromLatLng } from "./utils/googlemap";
 
 export default function GoogleMapImage() {
 	const { isLoaded } = useJsApiLoader({
@@ -88,13 +89,17 @@ export default function GoogleMapImage() {
 
 	const handlePlaceSelect = () => {
 		if (autocompleteRef.current) {
+			const formattedPredicion =
+				autocompleteRef.current?.gm_accessors_.place.Pt.formattedPrediction;
+
 			const place = autocompleteRef.current.getPlace();
 			if (place?.geometry?.location) {
 				const lat = place.geometry.location.lat();
 				const lng = place.geometry.location.lng();
 
 				setMapCenter({ lat, lng });
-				const placeAddress = place.formatted_address || place.name;
+				const placeAddress =
+					formattedPredicion || place.formatted_address || place.name;
 				setAddress(placeAddress);
 				setAddressName(place.name);
 				setZoom(18);
@@ -107,34 +112,26 @@ export default function GoogleMapImage() {
 		}
 	};
 
-	const getGeocodeFromLatLng = (lat: number, lng: number) => {
-		if (!window.google || !window.google.maps) return;
-
-		const geocoder = new window.google.maps.Geocoder();
-
-		geocoder.geocode({ location: { lat, lng } }, (results, status) => {
-			if (status === "OK" && results && results.length > 0) {
-				setAddress(results[0].formatted_address);
-				setAddressName(results[0].address_components?.[1]?.long_name || "");
-				fillFullAddress(
-					results[0].address_components,
-					results[0].address_components?.length || 0,
-					results[0].formatted_address,
-				);
-			}
-		});
-	};
-
 	// Fetch initial address when the map loads
 	useEffect(() => {
 		if (isLoaded && mapCenter.lat && mapCenter.lng) {
-			getGeocodeFromLatLng(mapCenter.lat, mapCenter.lng);
+			getGeocodeFromLatLng(mapCenter.lat, mapCenter.lng).then(
+				({ formattedAddress, addressComponent }) => {
+					setAddress(formattedAddress);
+					setAddressName(addressComponent?.[1]?.long_name || "");
+					fillFullAddress(
+						addressComponent,
+						addressComponent?.length || 0,
+						formattedAddress,
+					);
+				},
+			);
 		}
-	}, [isLoaded]);
+	}, [isLoaded, mapCenter]);
 
 	if (!isLoaded) {
 		return (
-			<div className="w-full h-96 bg-muted-foreground/20 animate-pulse rounded-lg my-4"></div>
+			<div className="w-full h-96 bg-muted-foreground/20 animate-pulse rounded-lg my-4" />
 		);
 	}
 
@@ -172,7 +169,6 @@ export default function GoogleMapImage() {
 							const lng = e?.latLng?.lng();
 							if (lat && lng) {
 								setMapCenter({ lat, lng });
-								getGeocodeFromLatLng(lat, lng);
 							}
 						}}
 					/>
@@ -186,7 +182,6 @@ export default function GoogleMapImage() {
 							navigator.geolocation.getCurrentPosition((position) => {
 								const { latitude, longitude } = position.coords;
 								setMapCenter({ lat: latitude, lng: longitude });
-								getGeocodeFromLatLng(latitude, longitude);
 							});
 						}}
 					>

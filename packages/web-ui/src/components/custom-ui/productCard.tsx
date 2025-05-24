@@ -16,12 +16,13 @@ export default function ProductCard({ product, className }) {
 		<div className={cn(className, "")}>
 			<div className=" relative aspect-square">
 				<img
+					alt={""}
 					src={product.thumbnail}
-					className={cn("w-full h-26 object-cover rounded-md bg-green-50")}
+					className={cn("w-full h-30 object-cover rounded-md bg-gray-200")}
 				/>
 				{product.discountPercentage > 0 && (
-					<div className="absolute top-0 left-0 bg-primary text-white rounded-br-sm py-0.5 px-1 text-xs font-semibold">
-						{Math.round(product.discountPercentage)}% OFF
+					<div className="absolute top-0 left-0 bg-primary text-white rounded-br-sm px-2 py-1 text-xs font-semibold clip-zigzag">
+						{Math.round(product.discountPercentage)}%<p>Off</p>
 					</div>
 				)}
 				<Button

@@ -15,7 +15,7 @@ import { useState } from "react";
 // Sample data
 const SHOPS = [
 	{
-		id: "abcshop",
+		id: "1",
 		name: "Green Market Grocery",
 		image: "/assets/paper-bag-items.webp",
 		rating: 4.7,

@@ -110,7 +110,7 @@ function ActiveLinks({
 	const { scrollY } = useScroll();
 	useMotionValueEvent(scrollY, "change", (current) => {
 		const diff = current - lastRef.current;
-		if (Math.abs(diff) > 30) {
+		if (Math.abs(diff) > 50) {
 			setIsHidden(diff > 0);
 
 			lastRef.current = current;

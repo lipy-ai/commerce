@@ -1,6 +1,6 @@
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { Link } from "@tanstack/react-router";
 import { ChevronDown, MapPin, UserRound } from "lucide-react";
-import { useViewport } from "@lipy/web-ui/contexts/viewport";
 
 import { useLocationStore } from "@lipy/web-ui/components/maps/store";
 

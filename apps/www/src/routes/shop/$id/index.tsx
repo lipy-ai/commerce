@@ -1,7 +1,7 @@
 import ShopShortDetails from "@/components/shop/shopShortDetails";
+import ProductCard from "@lipy/web-ui/components/custom-ui/productCard"; // Fixed the path
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
-import ProductCard from "@lipy/web-ui/components/product/productCard"; // Fixed the path
 import SearchBar from "@lipy/web-ui/components/searchBar";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
@@ -63,8 +63,6 @@ function RouteComponent() {
 		fetchCategories();
 	}, []);
 
-	// if (isLoading) return <Loading />;
-
 	return (
 		<>
 			<DashboardHeader
@@ -119,6 +117,7 @@ function RouteComponent() {
 									<Link
 										className={cn(
 											buttonVariants({ variant: "link", size: "sm" }),
+											"font-semibold text-sm",
 										)}
 										to={`/shop/${shopInfo.id}/products/category/${categoryName}`}
 									>
@@ -144,7 +143,7 @@ function RouteComponent() {
 														: index === productArray.length - 1
 															? "pr-4"
 															: "",
-													"flex-shrink-0 w-32 pl-4",
+													"flex-shrink-0 w-36 pl-4",
 												)}
 											/>
 										</Link>

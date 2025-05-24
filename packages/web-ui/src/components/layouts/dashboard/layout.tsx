@@ -5,16 +5,19 @@ import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { usePWAInstall } from "@lipy/web-ui/hooks/use-pwa-install";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, useMatchRoute } from "@tanstack/react-router";
-import { motion } from "framer-motion";
+import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { ArrowDownToLine, type LucideIcon } from "lucide-react";
-import { type ReactNode, useState } from "react";
-type Navs = Array<{
-	label: string;
-	url: string;
-	icon: LucideIcon;
-	mobile?: boolean;
-}>;
-export type DashboardNavs = Record<"primary" | "secondary", Navs>;
+import { type ReactNode, useRef, useState } from "react";
+
+export type DashboardNavs = Record<
+	"primary" | "secondary",
+	Array<{
+		label: string;
+		url: string;
+		icon: LucideIcon;
+		mobile?: boolean;
+	}>
+>;
 
 export const DashboardLayout = ({
 	children,
@@ -22,9 +25,9 @@ export const DashboardLayout = ({
 	mobileNav,
 	logo,
 }: {
-	children: ReactNode;
+	children?: ReactNode;
 	dashboardNav: DashboardNavs;
-	mobileNav: Navs;
+	mobileNav: DashboardNavs["primary"];
 	logo: {
 		icon: string;
 		full: string;
@@ -32,93 +35,46 @@ export const DashboardLayout = ({
 	};
 }) => {
 	const [open, setOpen] = useState(false);
-
 	const { isMobile } = useViewport();
 	const { isInstallable, promptInstall } = usePWAInstall();
 
-	const handleNavClick = (e: React.MouseEvent) => {
-		// Only toggle the sidebar if the click is directly on the nav element
-		// and not on any of its children
-		if (e.currentTarget === e.target) {
-			setOpen((o) => !o);
-		}
-	};
-
 	if (isMobile) {
 		return (
-			<div className="flex flex-col h-screen overflow-y-auto">
+			<div className="flex flex-col h-screen">
 				{isInstallable && (
 					<div
 						onClick={promptInstall}
-						className="bg-foreground w-full col-span-2 p-2  sticky top-0 flex gap-2 items-center justify-between"
+						className="bg-foreground w-full col-span-2 p-2 sticky top-0 flex gap-2 items-center justify-between"
 					>
-						<div className="flex items-center gap-2 text-background ">
+						<div className="flex items-center gap-2 text-background">
 							<span>Install app on your phone</span>
 						</div>
-						<div>
-							<Button variant={"outline"} size={"icon"} className="size-6">
-								<ArrowDownToLine />
-							</Button>
-						</div>
+						<Button variant="outline" size="icon" className="size-6">
+							<ArrowDownToLine />
+						</Button>
 					</div>
 				)}
-				<div className="">{children}</div>
-				<br />
-				<br /> <br />
-				<br /> <br />
-				<div className="fixed bottom-0 w-screen z-50 bg-background  border-t">
-					<div
-						className={cn("grid justify-center px-4")}
-						style={{ gridTemplateColumns: `repeat(${mobileNav.length}, 1fr)` }}
-					>
-						{mobileNav.map((n, i) => (
-							<ActiveLink key={i} nav={n} mobile />
-						))}
-					</div>
-				</div>
+
+				<div>{children}</div>
+
+				<ActiveLinks
+					isMobile
+					mobileNav={mobileNav}
+					dashboardNav={dashboardNav}
+					logo={logo}
+				/>
 			</div>
 		);
 	}
 
 	return (
 		<div className="flex min-h-screen">
-			<motion.nav
-				className="flex flex-col justify-between h-screen sticky top-0 left-0 p-3 border-r z-10 bg-background"
-				onClick={handleNavClick}
-				initial={{
-					width: "70px",
-					color: open ? "hsl(var(--primary-foreground))" : "",
-				}}
-				animate={{
-					width: open ? "250px" : "70px",
-					color: open ? "hsl(var(--primary-foreground))" : "",
-				}}
-			>
-				<div className="space-y-8">
-					<motion.div className="flex justify-start items-center">
-						<Link to={"/"} className={cn("overflow-hidden size-[50px]")}>
-							<img
-								key={String(open)}
-								src={!open ? logo.icon : logo.full}
-								alt={logo.alt}
-								width={"50px"}
-								height={"50px"}
-								className="rounded-md"
-							/>
-						</Link>
-					</motion.div>
-					<motion.div className="space-y-2">
-						{dashboardNav.primary.map((n, i) => (
-							<ActiveLink key={i} nav={n} open={open} />
-						))}
-					</motion.div>
-				</div>
-				<div className="space-y-2">
-					{dashboardNav.secondary.map((n, i) => (
-						<ActiveLink key={i} nav={n} open={open} />
-					))}
-				</div>
-			</motion.nav>
+			<ActiveLinks
+				open={open}
+				setOpen={setOpen}
+				dashboardNav={dashboardNav}
+				logo={logo}
+			/>
 			<div
 				className="flex-1 flex flex-col overflow-x-auto h-screen overflow-y-auto"
 				onClick={() => open && setOpen(false)}
@@ -129,17 +85,115 @@ export const DashboardLayout = ({
 	);
 };
 
-export function ActiveLink({
+function ActiveLinks({
+	dashboardNav,
+	mobileNav,
+	logo,
+	isMobile = false,
+	open = false,
+	setOpen,
+}: {
+	dashboardNav: Record<
+		"primary" | "secondary",
+		Array<{ label: string; url: string; icon: LucideIcon }>
+	>;
+	mobileNav?: Array<{ label: string; url: string; icon: LucideIcon }>;
+	logo: { icon: string; full: string; alt: string };
+	isMobile?: boolean;
+	open?: boolean;
+	setOpen?: (o: boolean) => void;
+}) {
+	const matchRoute = useMatchRoute();
+	const [isHidden, setIsHidden] = useState(false);
+	const lastRef = useRef(0);
+
+	const { scrollY } = useScroll();
+	useMotionValueEvent(scrollY, "change", (current) => {
+		const diff = current - lastRef.current;
+		if (Math.abs(diff) > 50) {
+			setIsHidden(diff > 0);
+
+			lastRef.current = current;
+		}
+	});
+
+	if (isMobile && mobileNav) {
+		return (
+			<motion.div
+				className="fixed bottom-0 w-screen z-50 bg-background border-t"
+				animate={isHidden ? "hidden" : "visible"}
+				variants={{
+					hidden: { y: 100 },
+					visible: { y: 0 },
+				}}
+				transition={{ duration: 0.3, ease: "easeInOut" }}
+			>
+				<div
+					className={cn("grid justify-center px-4")}
+					style={{ gridTemplateColumns: `repeat(${mobileNav.length}, 1fr)` }}
+				>
+					{mobileNav.map((n, i) => (
+						<NavLink key={i} nav={n} mobile matchRoute={matchRoute} />
+					))}
+				</div>
+			</motion.div>
+		);
+	}
+
+	const handleNavClick = (e: React.MouseEvent) => {
+		if (e.currentTarget === e.target && setOpen) {
+			setOpen(!open);
+		}
+	};
+
+	return (
+		<motion.nav
+			className="flex flex-col justify-between h-screen sticky top-0 left-0 p-3 border-r z-10 bg-background"
+			onClick={handleNavClick}
+			initial={{ width: 70 }}
+			animate={{ width: open ? 250 : 70 }}
+			transition={{ duration: 0.3 }}
+		>
+			<div className="space-y-8">
+				<div className="flex justify-start items-center">
+					<Link to="/" className="overflow-hidden size-[50px]">
+						<img
+							key={String(open)}
+							src={!open ? logo.icon : logo.full}
+							alt={logo.alt}
+							width={50}
+							height={50}
+							className="rounded-md"
+						/>
+					</Link>
+				</div>
+				<div className="space-y-2">
+					{dashboardNav.primary.map((n, i) => (
+						<NavLink key={i} nav={n} open={open} matchRoute={matchRoute} />
+					))}
+				</div>
+			</div>
+			<div className="space-y-2">
+				{dashboardNav.secondary.map((n, i) => (
+					<NavLink key={i} nav={n} open={open} matchRoute={matchRoute} />
+				))}
+			</div>
+		</motion.nav>
+	);
+}
+
+function NavLink({
 	nav,
 	open,
 	mobile,
+	matchRoute,
 }: {
-	nav: DashboardNavs["primary"][0];
+	nav: { label: string; url: string; icon: LucideIcon };
 	open?: boolean;
 	mobile?: boolean;
+	matchRoute: ReturnType<typeof useMatchRoute>;
 }) {
-	const matchRoute = useMatchRoute();
-	const isActive = !!matchRoute({ to: nav.url, fuzzy: true }); // fuzzy for nested matches
+	const isActive = !!matchRoute({ to: nav.url, fuzzy: true });
 
 	return (
 		<div
@@ -177,14 +231,17 @@ export function ActiveLink({
 						)}
 					/>
 				</span>
-				<motion.span
-					className={cn(
-						"flex justify-between gap-2 w-full items-center flex-1 font-medium",
-						mobile && "justify-center",
-					)}
-				>
-					{nav.label}
-				</motion.span>
+				{!mobile && (
+					<motion.span
+						className="flex justify-between gap-2 w-full items-center flex-1 font-medium"
+						initial={{ opacity: 0 }}
+						animate={{ opacity: open ? 1 : 0 }}
+						transition={{ duration: 0.2 }}
+					>
+						{nav.label}
+					</motion.span>
+				)}
+				{mobile && <span>{nav.label}</span>}
 			</Link>
 		</div>
 	);

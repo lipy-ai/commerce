@@ -1,15 +1,14 @@
 import NavBar from "@/components/navBar";
 import NearByShops from "@/components/nearbyShops";
-import { createFileRoute } from "@tanstack/react-router";
+import { SearchFilter } from "@/components/searchFilter";
 import {
 	DashboardBody,
 	DashboardLayout,
 } from "@lipy/web-ui/components/layouts/dashboard";
-import { CircleUser, LogOut, ShoppingCart, Store } from "lucide-react";
 import LocationComponent from "@lipy/web-ui/components/maps/deliveryAddress";
-import { SearchFilter } from "@/components/searchFilter";
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
+import { createFileRoute } from "@tanstack/react-router";
+import { CircleUser, LogOut, ShoppingCart, Store } from "lucide-react";
 
 export const Route = createFileRoute("/")({
 	component: Home,
@@ -52,32 +51,6 @@ const mobileNav = [
 	},
 ];
 
-const shops = [
-	{
-		id: "1",
-		name: "Fresh Mart",
-		image: "/assets/paper-bag-items.webp",
-		rating: 4.7,
-		distance: "500m",
-		status: "Open",
-	},
-	{
-		id: "2",
-		name: "Grocery World",
-		image: "/assets/paper-bag-items.webp",
-		rating: 4.2,
-		distance: "1.2km",
-		status: "Closed",
-	},
-	{
-		id: "3",
-		name: "Daily Needs",
-		image: "/assets/paper-bag-items.webp",
-		rating: 4.9,
-		distance: "850m",
-		status: "Open",
-	},
-];
 function Home() {
 	return (
 		<>
@@ -87,30 +60,16 @@ function Home() {
 				logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
 			>
 				<DashboardBody>
-					{/* NavBar + SearchFilter with continuous gradient */}
 					<div className="relative bg-gradient-to-b from-primary/50 to-primary/40">
 						<NavBar />
 					</div>
-
-					<motion.div
-						className="bg-gradient-to-b from-primary/40 to-white sticky top-0 z-20 shadow-sm transition-colors duration-300 backdrop-blur-lg"
-						initial="hidden"
-						whileInView="visible"
-						viewport={{ once: true }}
-					>
+					<div className="bg-gradient-to-b from-primary/40 to-white sticky top-0 z-20 shadow-sm transition-colors duration-300 backdrop-blur-lg">
 						<SearchFilter />
-					</motion.div>
-
-					{/* Rest of the page */}
-					<motion.div>
-						<NearByShops />
-
-					</motion.div>
-					
+					</div>
+					<NearByShops />
 					<LocationComponent />
 				</DashboardBody>
 			</DashboardLayout>
 		</>
 	);
 }
-

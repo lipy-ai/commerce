@@ -109,6 +109,23 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+@layer utilities {
+  .clip-zigzag {
+   
+    clip-path: polygon(
+      0 0,
+      100% 0,
+     
+      
+      100% 100%,
+      80% calc(100% - 6px),
+      60% 100%,
+      40% calc(100% - 6px),
+      20% 100%,
+      0 calc(100% - 4px)
+    );
+  }
+}
 @layer base {
   * {
     @apply border-border outline-ring/50;

@@ -6,11 +6,9 @@ import {
 	DashboardLayout,
 } from "@lipy/web-ui/components/layouts/dashboard";
 import LocationComponent from "@lipy/web-ui/components/maps/deliveryAddress";
-import { cn } from "@lipy/web-ui/lib/utils";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { createFileRoute } from "@tanstack/react-router";
-import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { CircleUser, LogOut, ShoppingCart, Store } from "lucide-react";
-import { useState } from "react";
 
 export const Route = createFileRoute("/")({
 	component: Home,
@@ -74,16 +72,9 @@ function Home() {
 					<div className="relative bg-gradient-to-b from-primary/50 to-primary/40">
 						<NavBar />
 					</div>
-					<motion.div
-						className={cn(
-							navBarVisible
-								? "bg-gradient-to-b from-primary/40 to-white transition-colors duration-300"
-								: "bg-accent",
-							"sticky top-0 z-20 shadow-sm ",
-						)}
-					>
+					<div className="bg-gradient-to-b from-primary/40 to-white sticky top-0 z-20 shadow-sm transition-colors duration-300 backdrop-blur-lg">
 						<SearchFilter />
-					</motion.div>
+					</div>
 					<NearByShops />
 					<LocationComponent />
 				</DashboardBody>

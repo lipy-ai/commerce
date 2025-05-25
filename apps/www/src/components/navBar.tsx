@@ -2,7 +2,7 @@ import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { Link } from "@tanstack/react-router";
 import { ChevronDown, MapPin, UserRound } from "lucide-react";
 
-import { useLocationStore } from "@lipy/web-ui/components/maps/store";
+import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 
 export default function NavBar() {
 	const { isMobile } = useViewport();

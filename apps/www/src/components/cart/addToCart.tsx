@@ -11,11 +11,7 @@ export const AddToCart = ({
 	product: any;
 	variant: "icon" | "primary" | "active";
 }) => {
-	const handleAddToCart = (
-		e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-	) => {
-		e.preventDefault(); // Prevent link from triggering
-		e.stopPropagation(); // Stop bubbling up to Link
+	const handleAddToCart = () => {
 		addToCart({
 			shopId,
 			productId: product.id,
@@ -25,21 +21,20 @@ export const AddToCart = ({
 			price: product.price,
 			originalPrice: product.price,
 		});
+
+		console.log(cart);
 	};
 	const { addToCart, cart, updateProductQuantity } = useCartStore();
 
 	const updateQuantity = ({
 		operation,
-		e,
 	}: {
 		operation: "increment" | "decrement";
-		e: React.MouseEvent<HTMLButtonElement, MouseEvent>;
 	}) => {
-		e.preventDefault(); // Prevent link from triggering
-		e.stopPropagation(); // Stop bubbling up to Link
 		const quantityChange = product.minimumOrderQuantity;
 
 		updateProductQuantity(shopId, product.id, quantityChange, operation);
+		console.log(cart);
 	};
 
 	let ProductInCart = {};
@@ -58,7 +53,6 @@ export const AddToCart = ({
 					className="bg-white ring ring-primary text-primary font-bold text-2xl"
 					size={"icon"}
 					onClick={handleAddToCart}
-					type="button"
 				>
 					<Plus />
 				</Button>
@@ -77,7 +71,7 @@ export const AddToCart = ({
 				<div className="bg-primary flex items-center gap-1 rounded-lg">
 					<Button
 						size="icon"
-						onClick={(e) => updateQuantity({ operation: "decrement", e })}
+						onClick={() => updateQuantity({ operation: "decrement" })}
 					>
 						<Minus />
 					</Button>
@@ -86,7 +80,7 @@ export const AddToCart = ({
 					</span>
 					<Button
 						size="icon"
-						onClick={(e) => updateQuantity({ operation: "increment", e })}
+						onClick={() => updateQuantity({ operation: "increment" })}
 					>
 						<Plus strokeWidth={1.5} />
 					</Button>

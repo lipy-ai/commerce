@@ -1,5 +1,5 @@
+import ProductCard from "@/components/productCard"; // Fixed the path
 import ShopShortDetails from "@/components/shop/shopShortDetails";
-import ProductCard from "@lipy/web-ui/components/custom-ui/productCard"; // Fixed the path
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import SearchBar from "@lipy/web-ui/components/searchBar";
@@ -8,7 +8,7 @@ import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { motion } from "framer-motion";
+import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -30,7 +30,16 @@ function RouteComponent() {
 	const [categories, setCategories] = useState<string[]>([]);
 	const [products, setProducts] = useState<any[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
-	const [shopInfoVisible, setShopInfoVisible] = useState(true);
+	const [shopNameVisible, setShopNameVisible] = useState(false);
+	const { scrollY } = useScroll();
+
+	useMotionValueEvent(scrollY, "change", (current) => {
+		if (current > 30) {
+			setShopNameVisible(true);
+		} else {
+			setShopNameVisible(false);
+		}
+	});
 
 	useEffect(() => {
 		const fetchCategories = async () => {
@@ -68,25 +77,21 @@ function RouteComponent() {
 			<DashboardHeader
 				titleChildren={
 					<motion.div
-						key={shopInfoVisible ? "empty" : "title"}
-						initial={{ opacity: 0, y: 10 }} // Start slightly lower
-						animate={{ opacity: 1, y: 0 }} // Move to normal position
-						exit={{ opacity: 0, y: -10 }} // Exit upward
-						transition={{ duration: 0.3 }}
-						className="text-lg font-semibold line-clamp-1"
+						animate={{
+							opacity: shopNameVisible ? 1 : 0,
+							y: shopNameVisible ? 0 : 50,
+						}}
+						transition={{ duration: 0.3, ease: "easeInOut" }}
+						className="text-xl font-semibold line-clamp-1"
 					>
-						{!shopInfoVisible ? shopInfo.name : ""}
+						{shopNameVisible ? shopInfo.name : ""}
 					</motion.div>
 				}
 			/>
 
-			<motion.div
-				onViewportEnter={() => setShopInfoVisible(true)}
-				onViewportLeave={() => setShopInfoVisible(false)}
-				className="mb-4"
-			>
+			<div className="mb-4">
 				<ShopShortDetails shopInfo={shopInfo} />
-			</motion.div>
+			</div>
 
 			<Separator className="-my-4" />
 
@@ -131,11 +136,9 @@ function RouteComponent() {
 									style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
 								>
 									{productArray?.map((product: any, index) => (
-										<Link
-											key={product.id}
-											to={`/shop/$id/products/${product.id}`}
-										>
+										<div key={product.id}>
 											<ProductCard
+												shopId={shopInfo.id}
 												product={product}
 												className={cn(
 													index === 0
@@ -146,7 +149,7 @@ function RouteComponent() {
 													"flex-shrink-0 w-36 pl-4",
 												)}
 											/>
-										</Link>
+										</div>
 									))}
 								</div>
 							</div>

@@ -59,6 +59,8 @@ function RouteComponent() {
 			</div>
 		);
 
+	console.log(product);
+
 	return (
 		<>
 			<motion.div>

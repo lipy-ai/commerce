@@ -6,7 +6,7 @@ import DetailedAddress from "@lipy/web-ui/components/maps/detailedAddress";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { Avatar, AvatarFallback } from "@lipy/web-ui/components/ui/avatar";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
-import Loading from "@lipy/web-ui/components/ui/loading";
+
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
@@ -54,7 +54,7 @@ function RouteComponent() {
 							)}
 						>
 							<div className="flex  gap-2">
-								<Avatar className="rounded-md mt-2">
+								<Avatar className="rounded-md ">
 									<AvatarFallback>
 										{address.tag === "home" ? (
 											<House className="text-muted-foreground flex-shrink-0" />

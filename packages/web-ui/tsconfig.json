@@ -1,5 +1,9 @@
 {
-	"include": ["**/*.ts", "**/*.tsx"],
+	"include": [
+		"**/*.ts",
+		"**/*.tsx",
+		"../../apps/www/src/components/productCard.tsx"
+	],
 
 	"compilerOptions": {
 		"target": "ES2022",

@@ -28,20 +28,18 @@ export default function ProductCard({
 				<img
 					alt={""}
 					src={product.thumbnail}
-<<<<<<<< HEAD:apps/www/src/components/productCard.tsx
 					className={cn(
 						"w-full h-30 object-cover rounded-md bg-gray-200",
 						className?.classNameImg,
 					)}
 				/>
-				{product.discountPercentage > 0 && (
+
+				{/* {product.discountPercentage > 0 && (
 					<div className="absolute top-0 left-0 bg-orange-400 text-white rounded-br-sm px-2 py-1 text-xs font-semibold clip-zigzag">
-========
 					className={cn("w-full h-30 object-cover rounded-md bg-gray-200")}
-				/>
+				/> */}
 				{product.discountPercentage > 0 && (
 					<div className="absolute top-0 left-0 bg-primary text-white rounded-br-sm px-2 py-1 text-xs font-semibold clip-zigzag">
->>>>>>>> 8f6d9c8 (bas aise hi):packages/web-ui/src/components/custom-ui/productCard.tsx
 						{Math.round(product.discountPercentage)}%<p>Off</p>
 					</div>
 				)}

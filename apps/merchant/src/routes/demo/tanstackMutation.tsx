@@ -59,7 +59,7 @@ function RouteComponent() {
 		);
 	};
 
-	const deleteHandle = (id) => {
+	const deleteHandle = (id: string) => {
 		toast.promise(
 			deleteMutation.mutateAsync({
 				param: { id },
@@ -73,7 +73,6 @@ function RouteComponent() {
 	};
 
 	const { data } = useAPIQuery(apiClient.v1.address, "$get", {});
-	console.log(data);
 	return (
 		<div className="p-8">
 			<div>

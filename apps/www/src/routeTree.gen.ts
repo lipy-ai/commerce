@@ -25,6 +25,8 @@ import { Route as AccountAddressesIndexImport } from './routes/account/addresses
 import { Route as AccountAddressesNewImport } from './routes/account/addresses/new'
 import { Route as ShopIdProductsIndexImport } from './routes/shop/$id/products/index'
 import { Route as ShopIdProductsProductIdImport } from './routes/shop/$id/products/$productId'
+import { Route as ShopIdProductsCategoryIndexImport } from './routes/shop/$id/products/category/index'
+import { Route as ShopIdProductsCategoryCategoryNameImport } from './routes/shop/$id/products/category/$categoryName'
 
 // Create/Update Routes
 
@@ -111,6 +113,20 @@ const ShopIdProductsProductIdRoute = ShopIdProductsProductIdImport.update({
   path: '/shop/$id/products/$productId',
   getParentRoute: () => rootRoute,
 } as any)
+
+const ShopIdProductsCategoryIndexRoute =
+  ShopIdProductsCategoryIndexImport.update({
+    id: '/shop/$id/products/category/',
+    path: '/shop/$id/products/category/',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const ShopIdProductsCategoryCategoryNameRoute =
+  ShopIdProductsCategoryCategoryNameImport.update({
+    id: '/shop/$id/products/category/$categoryName',
+    path: '/shop/$id/products/category/$categoryName',
+    getParentRoute: () => rootRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -214,6 +230,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShopIdProductsIndexImport
       parentRoute: typeof rootRoute
     }
+    '/shop/$id/products/category/$categoryName': {
+      id: '/shop/$id/products/category/$categoryName'
+      path: '/shop/$id/products/category/$categoryName'
+      fullPath: '/shop/$id/products/category/$categoryName'
+      preLoaderRoute: typeof ShopIdProductsCategoryCategoryNameImport
+      parentRoute: typeof rootRoute
+    }
+    '/shop/$id/products/category/': {
+      id: '/shop/$id/products/category/'
+      path: '/shop/$id/products/category'
+      fullPath: '/shop/$id/products/category'
+      preLoaderRoute: typeof ShopIdProductsCategoryIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -234,6 +264,8 @@ export interface FileRoutesByFullPath {
   '/shop/$id': typeof ShopIdIndexRoute
   '/shop/$id/products/$productId': typeof ShopIdProductsProductIdRoute
   '/shop/$id/products': typeof ShopIdProductsIndexRoute
+  '/shop/$id/products/category/$categoryName': typeof ShopIdProductsCategoryCategoryNameRoute
+  '/shop/$id/products/category': typeof ShopIdProductsCategoryIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -251,6 +283,8 @@ export interface FileRoutesByTo {
   '/shop/$id': typeof ShopIdIndexRoute
   '/shop/$id/products/$productId': typeof ShopIdProductsProductIdRoute
   '/shop/$id/products': typeof ShopIdProductsIndexRoute
+  '/shop/$id/products/category/$categoryName': typeof ShopIdProductsCategoryCategoryNameRoute
+  '/shop/$id/products/category': typeof ShopIdProductsCategoryIndexRoute
 }
 
 export interface FileRoutesById {
@@ -269,6 +303,8 @@ export interface FileRoutesById {
   '/shop/$id/': typeof ShopIdIndexRoute
   '/shop/$id/products/$productId': typeof ShopIdProductsProductIdRoute
   '/shop/$id/products/': typeof ShopIdProductsIndexRoute
+  '/shop/$id/products/category/$categoryName': typeof ShopIdProductsCategoryCategoryNameRoute
+  '/shop/$id/products/category/': typeof ShopIdProductsCategoryIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -288,6 +324,8 @@ export interface FileRouteTypes {
     | '/shop/$id'
     | '/shop/$id/products/$productId'
     | '/shop/$id/products'
+    | '/shop/$id/products/category/$categoryName'
+    | '/shop/$id/products/category'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -304,6 +342,8 @@ export interface FileRouteTypes {
     | '/shop/$id'
     | '/shop/$id/products/$productId'
     | '/shop/$id/products'
+    | '/shop/$id/products/category/$categoryName'
+    | '/shop/$id/products/category'
   id:
     | '__root__'
     | '/'
@@ -320,6 +360,8 @@ export interface FileRouteTypes {
     | '/shop/$id/'
     | '/shop/$id/products/$productId'
     | '/shop/$id/products/'
+    | '/shop/$id/products/category/$categoryName'
+    | '/shop/$id/products/category/'
   fileRoutesById: FileRoutesById
 }
 
@@ -338,6 +380,8 @@ export interface RootRouteChildren {
   ShopIdIndexRoute: typeof ShopIdIndexRoute
   ShopIdProductsProductIdRoute: typeof ShopIdProductsProductIdRoute
   ShopIdProductsIndexRoute: typeof ShopIdProductsIndexRoute
+  ShopIdProductsCategoryCategoryNameRoute: typeof ShopIdProductsCategoryCategoryNameRoute
+  ShopIdProductsCategoryIndexRoute: typeof ShopIdProductsCategoryIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -355,6 +399,9 @@ const rootRouteChildren: RootRouteChildren = {
   ShopIdIndexRoute: ShopIdIndexRoute,
   ShopIdProductsProductIdRoute: ShopIdProductsProductIdRoute,
   ShopIdProductsIndexRoute: ShopIdProductsIndexRoute,
+  ShopIdProductsCategoryCategoryNameRoute:
+    ShopIdProductsCategoryCategoryNameRoute,
+  ShopIdProductsCategoryIndexRoute: ShopIdProductsCategoryIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -380,7 +427,9 @@ export const routeTree = rootRoute
         "/account/addresses/",
         "/shop/$id/",
         "/shop/$id/products/$productId",
-        "/shop/$id/products/"
+        "/shop/$id/products/",
+        "/shop/$id/products/category/$categoryName",
+        "/shop/$id/products/category/"
       ]
     },
     "/": {
@@ -424,6 +473,12 @@ export const routeTree = rootRoute
     },
     "/shop/$id/products/": {
       "filePath": "shop/$id/products/index.tsx"
+    },
+    "/shop/$id/products/category/$categoryName": {
+      "filePath": "shop/$id/products/category/$categoryName.tsx"
+    },
+    "/shop/$id/products/category/": {
+      "filePath": "shop/$id/products/category/index.tsx"
     }
   }
 }

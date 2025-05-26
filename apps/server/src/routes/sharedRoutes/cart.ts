@@ -15,16 +15,19 @@ const route = new Hono<ServerContext>()
 		const data = await db
 			.selectFrom("cart as c")
 			.where("user_id", "=", session?.userId!)
-			.rightJoin("product_variant as pv", "pv.id", "c.variant_id")
-			.rightJoin("product as p", "p.id", "pv.product")
+			.leftJoin("product_variant as pv", "pv.id", "c.variant_id")
+			.leftJoin("product as p", "p.id", "pv.product")
 			.select([
 				"c.quantity",
 				"p.brand",
-				"pv.price",
-				"p.id",
+				"p.id as product_id",
+				"p.in_stock as product_in_stock",
 				"c.variant_id",
-				"pv.max_price",
-				"pv.price",
+				"pv.max_price as variant_max_price",
+				"pv.price as variant_price",
+				"pv.title as variant_title",
+				"pv.qty as variant_stock",
+				"pv.unit as variant_unit",
 			])
 			.execute();
 

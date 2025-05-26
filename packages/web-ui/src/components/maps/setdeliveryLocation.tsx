@@ -12,6 +12,7 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "../ui/drawer";
+import { ScrollArea } from "../ui/scroll-area";
 import { Spinner } from "../ui/spinner";
 
 export default function SetDeliveryLocation({
@@ -44,33 +45,35 @@ export default function SetDeliveryLocation({
 				{isLoading && <Spinner />}
 				{!isLoading && data && data?.length > 0 && (
 					<Card className="mb-10 shadow-none p-2">
-						{data.map((address) => (
-							<div key={address.id} className="border-b last:border-b-0">
-								<div className="flex  gap-2 py-2">
-									<Avatar className="rounded-md ">
-										<AvatarFallback>
-											{address.tag === "home" ? (
-												<House className="text-muted-foreground flex-shrink-0" />
-											) : address.tag === "work" ? (
-												<Building className="text-muted-foreground  flex-shrink-0" />
-											) : (
-												<MapPinHouse className="size-6 text-muted-foreground flex-shrink-0" />
-											)}
-										</AvatarFallback>
-									</Avatar>
+						<ScrollArea className="h-[250px] w-full">
+							{data.map((address) => (
+								<div key={address.id} className="border-b last:border-b-0">
+									<div className="flex  gap-2 py-2">
+										<Avatar className="rounded-md ">
+											<AvatarFallback>
+												{address.tag === "home" ? (
+													<House className="text-muted-foreground flex-shrink-0" />
+												) : address.tag === "work" ? (
+													<Building className="text-muted-foreground  flex-shrink-0" />
+												) : (
+													<MapPinHouse className="size-6 text-muted-foreground flex-shrink-0" />
+												)}
+											</AvatarFallback>
+										</Avatar>
 
-									<div>
-										<h2 className="text-md font-semibold">{address.name}</h2>
-										<p className="text-muted-foreground">{address.line1}</p>
+										<div>
+											<h2 className="text-md font-semibold">{address.name}</h2>
+											<p className="text-muted-foreground">{address.line1}</p>
+										</div>
 									</div>
 								</div>
-							</div>
-						))}
+							))}
+						</ScrollArea>
 					</Card>
 				)}
 
 				{!isLoading && data?.length === 0 && (
-					<div className="flex justify-center my-2">No saved address</div>
+					<div className="flex justify-center my-8">No saved address</div>
 				)}
 			</DrawerContent>
 		</Drawer>

@@ -5,47 +5,68 @@ import { Hono } from "hono";
 import { z } from "zod";
 
 const cartSchema = z.object({
-  items: z.array(
-    z.object({
-      product_id: z.string(),
-      quantity: z.number().int(),
-    })
-  ),
+	variant_id: z.string(),
+	quantity: z.number().min(0).int(),
 });
 
 const route = new Hono<ServerContext>()
-  .get("/", async (c) => {
-    const session = c.get("session");
-    let data = await db
-      .selectFrom("cart")
-      .selectAll()
-      .where("user_id", "=", session?.userId!)
-      .executeTakeFirst();
-    if (!data) {
-      data = await db
-        .insertInto("cart")
-        .values({
-          user_id: session?.userId!,
-          items: [],
-        })
-        .returningAll()
-        .executeTakeFirst();
-    }
-    return c.json(data?.items || []);
-  })
+	.get("/", async (c) => {
+		const session = c.get("session");
+		const data = await db
+			.selectFrom("cart as c")
+			.where("user_id", "=", session?.userId!)
+			.leftJoin("product_variant as pv", "pv.id", "c.variant_id")
+			.leftJoin("product as p", "p.id", "pv.product")
+			.select([
+				"c.quantity",
+				"p.brand",
+				"p.id as product_id",
+				"p.in_stock as product_in_stock",
+				"c.variant_id",
+				"pv.max_price as variant_max_price",
+				"pv.price as variant_price",
+				"pv.title as variant_title",
+				"pv.qty as variant_stock",
+				"pv.unit as variant_unit",
+			])
+			.execute();
 
-  .patch("/", zValidator("json", cartSchema), async (c) => {
-    const session = c.get("session");
-    const values = c.req.valid("json");
-    console.log(session?.userId);
-    await db
-      .updateTable("cart")
-      .where("user_id", "=", session?.userId!)
-      .set({
-        items: values.items,
-      })
-      .executeTakeFirstOrThrow();
-    return c.json({ success: true });
-  });
+		return c.json(data || []);
+	})
+	.patch("/", zValidator("json", cartSchema), async (c) => {
+		const session = c.get("session");
+		const values = c.req.valid("json");
+
+		if (values.quantity === 0) {
+			await db
+				.deleteFrom("cart")
+				.where("user_id", "=", session?.userId!)
+				.where("variant_id", "=", values.variant_id)
+				.executeTakeFirstOrThrow();
+		}
+
+		const result = await db
+			.updateTable("cart")
+			.where("user_id", "=", session?.userId!)
+			.where("variant_id", "=", values.variant_id)
+			.set({
+				quantity: values.quantity,
+			})
+			.executeTakeFirstOrThrow();
+
+		if (Number(result.numUpdatedRows) === 0) {
+			await db
+				.insertInto("cart")
+				.values({
+					id: crypto.randomUUID(),
+					user_id: session?.userId!,
+					quantity: values.quantity,
+					variant_id: values.variant_id,
+				})
+				.execute();
+		}
+
+		return c.json({ success: true });
+	});
 
 export { route as cartRoute };

@@ -16,7 +16,6 @@ export function usePWAInstall() {
 
 	useEffect(() => {
 		// Register service worker
-
 		const handleBeforeInstallPrompt = (e: Event) => {
 			e.preventDefault();
 			const promptEvent = e as BeforeInstallPromptEvent;
@@ -37,6 +36,7 @@ export function usePWAInstall() {
 				"beforeinstallprompt",
 				handleBeforeInstallPrompt,
 			);
+
 			window.removeEventListener("appinstalled", handleAppInstalled);
 		};
 	}, []);

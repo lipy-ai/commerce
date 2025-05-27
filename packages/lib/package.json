@@ -25,7 +25,8 @@
 	"dependencies": {
 		"@tanstack/react-query": "^5.74.4",
 		"hono": "^4.7.7",
-		"mobile-detect": "^1.4.5"
+		"mobile-detect": "^1.4.5",
+		"react-cookie": "^8.0.1"
 	},
 	"exports": {
 		"./*": ["./src/**/*.tsx", "./src/**/*.ts"]

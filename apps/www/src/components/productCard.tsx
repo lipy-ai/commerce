@@ -33,6 +33,11 @@ export default function ProductCard({
 						className?.classNameImg,
 					)}
 				/>
+
+				{/* {product.discountPercentage > 0 && (
+					<div className="absolute top-0 left-0 bg-orange-400 text-white rounded-br-sm px-2 py-1 text-xs font-semibold clip-zigzag">
+					className={cn("w-full h-30 object-cover rounded-md bg-gray-200")}
+				/> */}
 				{product.discountPercentage > 0 && (
 					<div className="absolute top-0 left-0 bg-orange-400 text-white rounded-br-sm px-2 py-1 text-xs font-semibold clip-zigzag">
 						{Math.round(product.discountPercentage)}%<p>Off</p>

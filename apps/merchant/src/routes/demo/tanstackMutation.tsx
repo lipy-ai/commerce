@@ -49,6 +49,9 @@ function RouteComponent() {
 					city: "string",
 					state: "string",
 					postal_code: "string",
+					phone: "",
+					lat: 0,
+					lng: 0,
 				},
 			}),
 			{

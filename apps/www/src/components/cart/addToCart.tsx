@@ -1,3 +1,5 @@
+import { apiClient } from "@lipy/lib/api";
+import { useAPIMutation } from "@lipy/lib/utils/queryClient";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { Minus, Plus } from "lucide-react";
 import { useCartStore } from "./store";
@@ -11,20 +13,31 @@ export const AddToCart = ({
 	product: any;
 	variant: "icon" | "primary" | "active";
 }) => {
+	const mutation = useAPIMutation(apiClient.v1.cart, "$patch", {});
+
 	const handleAddToCart = (
 		e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
 	) => {
 		e.preventDefault(); // Prevent link from triggering
 		e.stopPropagation(); // Stop bubbling up to Link
-		addToCart({
-			shopId,
-			productId: product.id,
-			quantity: product.minimumOrderQuantity,
-			unit: null,
-			name: product.title,
-			price: product.price,
-			originalPrice: product.price,
+
+		const values = {
+			quantity: 1,
+			variant_id: 522820741255242,
+		};
+
+		mutation.mutateAsync({
+			json: values,
 		});
+		// addToCart({
+		// 	shopId,
+		// 	productId: product.id,
+		// 	quantity: product.minimumOrderQuantity,
+		// 	unit: null,
+		// 	name: product.title,
+		// 	price: product.price,
+		// 	originalPrice: product.price,
+		// });
 	};
 	const { addToCart, cart, updateProductQuantity } = useCartStore();
 

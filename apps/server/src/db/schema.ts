@@ -238,9 +238,12 @@ export const cart = schema.table("cart", {
 	user_id: uuid("user_id").references(() => user.id, {
 		onDelete: "cascade",
 	}),
-	variant: uuid("variant_id").references(() => product.id, {
-		onDelete: "cascade",
-	}),
+	variant: bigint("variant_id", { mode: "number" }).references(
+		() => productVariant.id,
+		{
+			onDelete: "cascade",
+		},
+	),
 	quantity: smallint("quantity").default(1),
 });
 

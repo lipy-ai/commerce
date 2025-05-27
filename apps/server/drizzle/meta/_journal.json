@@ -5,29 +5,15 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1747855229774,
-      "tag": "0000_mighty_madame_web",
+      "when": 1748334522620,
+      "tag": "0000_yielding_yellowjacket",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1747855974666,
-      "tag": "0001_brave_steve_rogers",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1747856182361,
-      "tag": "0002_optimal_valkyrie",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1748246202183,
-      "tag": "0003_breezy_old_lace",
+      "when": 1748338316075,
+      "tag": "0001_gray_penance",
       "breakpoints": true
     }
   ]

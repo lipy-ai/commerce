@@ -12,6 +12,9 @@ const addressSchema = z.object({
 	city: z.string().min(1),
 	state: z.string().min(1),
 	country: z.string().min(1),
+	lat: z.number(),
+	lng: z.number(),
+	phone: z.string().optional(),
 	postal_code: z.string().min(1),
 });
 

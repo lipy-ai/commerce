@@ -21,7 +21,7 @@ route.get(
 	async (c) => {
 		const { id } = c.req.valid("param");
 		const result = await db
-			.selectFrom("public.category")
+			.selectFrom("category")
 			.where("id", "=", id)
 			.executeTakeFirstOrThrow();
 

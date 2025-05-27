@@ -14,6 +14,7 @@ export const AddToCart = ({
 	variant: "icon" | "primary" | "active";
 }) => {
 	const mutation = useAPIMutation(apiClient.v1.cart, "$patch", {});
+
 	const handleAddToCart = (
 		e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
 	) => {
@@ -22,7 +23,7 @@ export const AddToCart = ({
 
 		const values = {
 			quantity: 1,
-			variant_id: product.id.toString(),
+			variant_id: 522820741255242,
 		};
 
 		mutation.mutateAsync({

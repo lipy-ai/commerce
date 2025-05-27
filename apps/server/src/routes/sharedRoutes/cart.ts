@@ -37,12 +37,14 @@ const route = new Hono<ServerContext>()
 		const session = c.get("session");
 		const values = c.req.valid("json");
 
-		if (values.quantity === 0) {
+		if (Number(values.quantity) === 0) {
 			await db
 				.deleteFrom("cart")
 				.where("user_id", "=", session?.userId!)
 				.where("variant_id", "=", values.variant_id)
 				.executeTakeFirstOrThrow();
+
+			return c.json({ success: true });
 		}
 
 		const result = await db

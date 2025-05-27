@@ -22,13 +22,13 @@ route.get("/", listZodValidator, async (c) => {
 	const offset = limit * page;
 
 	const countPromise = db
-		.selectFrom("shop.product")
+		.selectFrom("product")
 		.where("organization_id", "=", organizationId)
 		.select(sql<number>`count(*)`.as("total_count"))
 		.executeTakeFirst();
 
 	const resultsPromise = db
-		.selectFrom("shop.product")
+		.selectFrom("product")
 		.selectAll()
 		.where("organization_id", "=", organizationId)
 		.limit(limit)
@@ -60,7 +60,7 @@ route.get(
 		const organizationId = c.var.session?.activeOrganizationId!;
 
 		const result = await db
-			.selectFrom("shop.product")
+			.selectFrom("product")
 			.where("id", "=", id)
 			.where("organization_id", "=", organizationId)
 			.executeTakeFirstOrThrow();
@@ -81,7 +81,7 @@ route.post(
 		const organizationId = c.var.session?.activeOrganizationId!;
 
 		const result = await db
-			.insertInto("shop.product")
+			.insertInto("product")
 			.values([])
 			.executeTakeFirstOrThrow();
 		return c.json(result);
@@ -100,7 +100,7 @@ route.patch(
 		const { id } = c.req.valid("param");
 		const organizationId = c.var.session?.activeOrganizationId!;
 		const result = await db
-			.updateTable("shop.product")
+			.updateTable("product")
 			.where("id", "=", id)
 			.where("organization_id", "=", organizationId)
 			.set({})
@@ -122,7 +122,7 @@ route.delete(
 		const organizationId = c.var.session?.activeOrganizationId!;
 
 		const result = await db
-			.deleteFrom("shop.product")
+			.deleteFrom("product")
 			.where("id", "=", id)
 			.where("organization_id", "=", organizationId)
 			.executeTakeFirstOrThrow();

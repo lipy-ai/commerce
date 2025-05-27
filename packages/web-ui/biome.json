@@ -1,55 +1,54 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-  "vcs": {
-    "enabled": false,
-    "clientKind": "git",
-    "useIgnoreFile": false
-  },
-  "files": {
-    "ignoreUnknown": false,
-    "ignore": ["src/routeTree.gen.ts", "**/*.css", "**/*.json"],
-    "include": ["src/*", ".vscode/*", "index.html", "vite.config.js"]
-  },
-  "formatter": {
-    "enabled": true,
-    "indentStyle": "tab"
-  },
-  "organizeImports": {
-    "enabled": true
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true,
-      "a11y": {
-        "useKeyWithClickEvents": "off",
-        "noLabelWithoutControl": "off",
-        "useSemanticElements": "off",
-        "noSvgWithoutTitle": "off",
-        "useFocusableInteractive": "off",
-        "useAltText": "off"
-      },
-      "style": {
-        "noNonNullAssertion": "off",
-        "useSelfClosingElements": "off"
-      },
-      "suspicious": {
-        "noExplicitAny": "off",
-        "noArrayIndexKey": "off"
-      },
-      "complexity": {
-        "noBannedTypes": "off",
-        "noUselessTernary": "off"
-      },
-      "correctness": {
-        "useExhaustiveDependencies": "off"
-      }
-    }
-  },
-  "javascript": {
-    "formatter": {
-      "quoteStyle": "double"
-    }
-  }
-
+	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+	"vcs": {
+		"enabled": false,
+		"clientKind": "git",
+		"useIgnoreFile": false
+	},
+	"files": {
+		"ignoreUnknown": false,
+		"ignore": ["src/routeTree.gen.ts", "**/*.css", "**/*.json"],
+		"include": ["src/*", ".vscode/*", "index.html", "vite.config.js"]
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab"
+	},
+	"organizeImports": {
+		"enabled": true
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"a11y": {
+				"useKeyWithClickEvents": "off",
+				"noLabelWithoutControl": "off",
+				"useSemanticElements": "off",
+				"noSvgWithoutTitle": "off",
+				"useFocusableInteractive": "off",
+				"useAltText": "off"
+			},
+			"style": {
+				"noNonNullAssertion": "off",
+				"useSelfClosingElements": "off"
+			},
+			"suspicious": {
+				"noExplicitAny": "off",
+				"noArrayIndexKey": "off"
+			},
+			"complexity": {
+				"noBannedTypes": "off",
+				"noUselessTernary": "off"
+			},
+			"correctness": {
+				"useExhaustiveDependencies": "off"
+			}
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "double"
+		}
+	}
 }

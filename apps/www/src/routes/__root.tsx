@@ -2,7 +2,9 @@ import { DefaultCatchBoundary } from "@/components/defaultCatchBoundry";
 import { NotFound } from "@/components/notFound";
 import { seo } from "@/utils/seo";
 import QueryProvider from "@lipy/lib/providers/queryProvider";
+import { PLATFORM, PWA_INSTALLED } from "@lipy/lib/utils/detect";
 import { getIsSsrMobile } from "@lipy/lib/utils/isServerMobile";
+
 import { Toaster, toast } from "@lipy/web-ui/components/ui/sonner";
 import { ViewportProvider } from "@lipy/web-ui/contexts/viewport";
 import appCss from "@lipy/web-ui/styles.css?url";
@@ -98,8 +100,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 
 	return (
 		<html className="bg-muted/30" lang="en">
-			<p>{data.userAgent}</p>
-			<p>{data.isSsrMobile}</p>
+			<p>{PWA_INSTALLED ? "true" : "false"}</p>
+			<p>{PLATFORM}</p>
 			<head>
 				<HeadContent />
 			</head>

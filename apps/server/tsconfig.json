@@ -1,31 +1,31 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "jsx": "react-jsx",
-    "jsxImportSource": "hono/jsx",
-    "baseUrl": "./",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "noImplicitAny": false,
-    "removeComments": true,
-    "allowImportingTsExtensions": true,
-    "noEmit": false,
+	"compilerOptions": {
+		"target": "ESNext",
+		"jsx": "react-jsx",
+		"jsxImportSource": "hono/jsx",
+		"baseUrl": "./",
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"noImplicitAny": false,
+		"removeComments": true,
+		"allowImportingTsExtensions": false,
+		"noEmit": false,
 
-    "composite": true,
-    "declaration": true,
-    "declarationMap": true,
-    "rootDir": "src",
+		"composite": true,
+		"declaration": true,
+		"declarationMap": true,
+		"rootDir": "src",
 
-    "paths": {
-      "@/*": ["./src/*"]
-    },
-    "typeRoots": ["./node_modules/@types"],
-    "types": ["node"],
-    "strict": true,
-    "outDir": "./dist",
-    "skipLibCheck": true
-  },
-  "tsc-alias": {
-    "resolveFullPaths": true
-  }
+		"paths": {
+			"@/*": ["./src/*"]
+		},
+		"typeRoots": ["./node_modules/@types"],
+		"types": ["node"],
+		"strict": true,
+		"outDir": "./dist",
+		"skipLibCheck": true
+	},
+	"tsc-alias": {
+		"resolveFullPaths": true
+	}
 }

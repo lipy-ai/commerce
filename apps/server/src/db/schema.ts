@@ -246,7 +246,7 @@ export const cart = schema.table("cart", {
 	quantity: smallint("quantity").default(1),
 });
 
-export const shopOrders = schema.table("shop_order", {
+export const orders = schema.table("orders", {
 	id: uuid("id").primaryKey(),
 	userId: uuid("user_id")
 		.notNull()
@@ -285,6 +285,10 @@ export const dbTables = {
 	product,
 	productVariants,
 	cart,
-	shopOrders,
+	orders,
 	upload,
+	category,
+	tags,
+	globalProduct,
+	globalCategory,
 };

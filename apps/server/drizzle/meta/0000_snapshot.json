@@ -1,5 +1,5 @@
 {
-  "id": "73660883-ee95-44ad-a932-95343ad90465",
+  "id": "1d9a4e9a-a5d7-452d-b8b9-70b4284de202",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -234,7 +234,7 @@
         },
         "variant_id": {
           "name": "variant_id",
-          "type": "uuid",
+          "type": "bigint",
           "primaryKey": false,
           "notNull": false
         },
@@ -262,10 +262,10 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "cart_variant_id_product_id_fk": {
-          "name": "cart_variant_id_product_id_fk",
+        "cart_variant_id_product_variant_id_fk": {
+          "name": "cart_variant_id_product_variant_id_fk",
           "tableFrom": "cart",
-          "tableTo": "product",
+          "tableTo": "product_variant",
           "schemaTo": "lipy",
           "columnsFrom": [
             "variant_id"
@@ -819,6 +819,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "global_product": {
+          "name": "global_product",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
         "keywords": {
           "name": "keywords",
           "type": "text[]",
@@ -869,18 +875,18 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "product_organization_id_global_product_id_fk": {
-          "name": "product_organization_id_global_product_id_fk",
+        "product_global_product_global_product_id_fk": {
+          "name": "product_global_product_global_product_id_fk",
           "tableFrom": "product",
           "tableTo": "global_product",
           "schemaTo": "lipy",
           "columnsFrom": [
-            "organization_id"
+            "global_product"
           ],
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
+          "onDelete": "no action",
           "onUpdate": "no action"
         }
       },
@@ -924,15 +930,15 @@
           "primaryKey": false,
           "notNull": false
         },
-        "price": {
-          "name": "price",
+        "max_price": {
+          "name": "max_price",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "default": 0
         },
-        "max_price": {
-          "name": "max_price",
+        "price": {
+          "name": "price",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,

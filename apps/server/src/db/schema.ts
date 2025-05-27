@@ -208,22 +208,20 @@ export const product = schema.table("product", {
 	organization_id: uuid("organization_id").references(() => org.id, {
 		onDelete: "cascade",
 	}),
-	global_product: uuid("organization_id").references(() => globalProduct.id, {
-		onDelete: "cascade",
-	}),
+	global_product: uuid("global_product").references(() => globalProduct.id),
 	keywords: text("keywords").array(),
 	default_price: integer("default_price"),
 	in_stock: boolean("in_stock").default(false),
 });
 
-export const productVariants = schema.table("product_variant", {
+export const productVariant = schema.table("product_variant", {
 	id: bigserial("id", { mode: "number" }).primaryKey(),
 	title: text("title").notNull(),
 	description: text("description"),
 	sku: text("sku"),
 	model: text("model"),
-	max_price: integer("price").default(0),
-	price: integer("max_price").default(0),
+	max_price: integer("max_price").default(0),
+	price: integer("price").default(0),
 	qty: integer("qty").default(1),
 	unit: text("unit"),
 	metadata: jsonb(),
@@ -240,7 +238,7 @@ export const cart = schema.table("cart", {
 	user_id: uuid("user_id").references(() => user.id, {
 		onDelete: "cascade",
 	}),
-	variant_id: uuid("variant_id").references(() => product.id, {
+	variant: uuid("variant_id").references(() => product.id, {
 		onDelete: "cascade",
 	}),
 	quantity: smallint("quantity").default(1),
@@ -283,7 +281,7 @@ export const dbTables = {
 	orgMember,
 	orgInvitation,
 	product,
-	productVariants,
+	productVariant,
 	cart,
 	orders,
 	upload,

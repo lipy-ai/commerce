@@ -16,6 +16,7 @@ import { corsMiddleware } from "./middlewares/cors";
 import { globalMiddleware } from "./middlewares/global";
 import { addressRoute } from "./routes/sharedRoutes/address";
 import { cartRoute } from "./routes/sharedRoutes/cart";
+import { productRoute } from "./routes/sharedRoutes/product";
 import { uploadRouter } from "./routes/sharedRoutes/upload";
 import type { ServerContext } from "./types";
 
@@ -48,7 +49,8 @@ export const routes = app
 	.basePath("/v1")
 	.route("/upload", uploadRouter)
 	.route("/address", addressRoute)
-	.route("/cart", cartRoute);
+	.route("/cart", cartRoute)
+	.route("/products", productRoute);
 
 // routes.basePath("/admin").route("/category", categoryRouter);
 

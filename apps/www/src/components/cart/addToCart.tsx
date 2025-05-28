@@ -68,10 +68,11 @@ export const AddToCart = ({
 		case "icon":
 			return (
 				<Button
-					className="bg-white ring ring-primary text-primary font-bold text-2xl"
+					className="ring ring-primary text-primary font-bold text-2xl"
 					size={"icon"}
 					onClick={handleAddToCart}
 					type="button"
+					variant={"outline"}
 				>
 					<Plus />
 				</Button>

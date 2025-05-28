@@ -1,7 +1,9 @@
+import { apiClient } from "@lipy/lib/api";
+import { useAPIQuery } from "@lipy/lib/utils/queryClient";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Card } from "@lipy/web-ui/components/ui/card";
+import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { Link } from "@tanstack/react-router";
-import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import {
 	Coffee,
 	Heart,
@@ -10,7 +12,7 @@ import {
 	ShoppingCart,
 	Star,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // Sample data
 const SHOPS = [
@@ -138,51 +140,38 @@ const SHOPS = [
 
 export default function NearByShops() {
 	const [showFavorites, setShowFavorites] = useState(false);
-	const [shops, setShops] = useState(SHOPS);
+	const [shops, setShops] = useState([]);
 
-	// Toggle bookmarked status
-	const toggleBookmark = (id) => {
-		setShops(
-			shops.map((shop) =>
-				shop.id === id ? { ...shop, isBookmarked: !shop.isBookmarked } : shop,
-			),
-		);
-	};
+	const { data, isLoading, isFetched, isFetching } = useAPIQuery(
+		apiClient.v1.shops,
+		"$get",
+		{},
+	);
 
-	// Filter by category
-	const filteredShops = shops.filter((shop) => {
-		if (showFavorites && !shop.isBookmarked) return false;
+	useEffect(() => {
+		if (isFetched) setShops(data);
+	}, [data, isFetched]);
 
-		return true;
-	});
+	if (isFetching) {
+		return <Spinner className="absolute top-1/2 left-1/2" />;
+	}
 
 	return (
 		<div>
 			<div className="px-4 pb-20">
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 py-4">
-					{filteredShops.map((shop) => (
+					{shops.map((shop) => (
 						<Card key={shop.id} className="p-0">
 							<Link to={`/shop/${shop.id}`}>
 								{/* Image Container */}
 								<div className="relative h-48">
 									<img
-										src={shop.image}
+										src={shop.logo}
 										alt={shop.name}
 										className="w-full h-full object-cover"
 									/>
-									{/* Bookmark Button */}
-									<button
-										type="button"
-										onClick={() => toggleBookmark(shop.id)}
-										className="absolute top-3 right-3 p-2 rounded-full bg-white/80 backdrop-blur-sm shadow-sm hover:bg-white transition"
-									>
-										<Heart
-											className={`h-5 w-5 ${shop.isBookmarked ? "fill-red-500 text-red-500" : "text-gray-600"}`}
-										/>
-									</button>
 
-									{/* Store Type Badge - Different color for each type */}
-									<div
+									{/* <div
 										className={`absolute bottom-3 left-3 text-white text-xs px-2 py-1 rounded flex items-center ${
 											shop.type === "grocery"
 												? "bg-green-500"
@@ -199,7 +188,7 @@ export default function NearByShops() {
 											<Coffee className="h-3 w-3 mr-1" />
 										)}
 										{shop.type.charAt(0).toUpperCase() + shop.type.slice(1)}
-									</div>
+									</div> */}
 
 									{/* Discount Banner */}
 
@@ -209,7 +198,7 @@ export default function NearByShops() {
 									>
 										<div className="flex items-center">
 											<MapPin className="size-4 mr-1" />
-											<span>{shop.distance}</span>
+											<span>1 km</span>
 										</div>
 									</Badge>
 								</div>
@@ -221,14 +210,15 @@ export default function NearByShops() {
 
 										<div className="flex items-center mt-1">
 											<div className="flex items-center bg-green-800 text-background px-2 rounded text-sm">
-												<span>{shop.rating}</span>
+												<span>4.6</span>
 												<Star className="h-3 w-3 ml-1 fill-white" />
 											</div>
 										</div>
 									</div>
 
 									<div className="mt-2 text-sm text-muted-foreground">
-										{shop.categories.join(" • ")}
+										{/* {shop.categories.join(" • ")} */}
+										Books • Stationary
 									</div>
 
 									<div className="flex items-center justify-between mt-3 text-sm" />

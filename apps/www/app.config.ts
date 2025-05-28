@@ -1,11 +1,9 @@
-import { defineConfig } from "@tanstack/react-start/config";
-import tailwindcss from "@tailwindcss/vite";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
-import { VitePWA } from "vite-plugin-pwa";
+import tailwindcss from "@tailwindcss/vite";
+import { defineConfig } from "@tanstack/react-start/config";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-import basicSsl from "@vitejs/plugin-basic-ssl";
 
 export default defineConfig({
 	tsr: {

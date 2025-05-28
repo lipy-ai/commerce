@@ -1,6 +1,6 @@
 "use client";
 
-import { usePWAInstall } from "@lipy/lib/hooks/use-pwa-install";
+import { usePWAInstall } from "@lipy/web-ui/hooks/use-pwa-install";
 
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";

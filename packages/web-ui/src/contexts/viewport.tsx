@@ -33,6 +33,11 @@ const ViewportProvider = ({
 		// function
 		() => {
 			if (typeof window === "undefined") return;
+
+			if (window.innerWidth !== window.screen.width) {
+				window.resizeTo(window.screen.width, window.screen.height);
+			}
+
 			setWidth(window.innerWidth);
 			setHeight(window.innerHeight);
 			setScreenWidth(window.screen.width);

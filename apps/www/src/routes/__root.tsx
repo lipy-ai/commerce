@@ -100,8 +100,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 
 	return (
 		<html className="bg-muted/30" lang="en">
-			<p>{PWA_INSTALLED ? "true" : "false"}</p>
-			<p>{PLATFORM}</p>
 			<head>
 				<HeadContent />
 			</head>

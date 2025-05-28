@@ -18,6 +18,7 @@ import { productRoute } from "./routes/customer/products";
 import { ShopRoute } from "./routes/customer/shops";
 import { addressRoute } from "./routes/sharedRoutes/address";
 import { cartRoute } from "./routes/sharedRoutes/cart";
+import { productRoute } from "./routes/sharedRoutes/product";
 import { uploadRouter } from "./routes/sharedRoutes/upload";
 import type { ServerContext } from "./types";
 
@@ -51,7 +52,6 @@ export const routes = app
 	.route("/upload", uploadRouter)
 	.route("/address", addressRoute)
 	.route("/cart", cartRoute)
-	.route("/shops", ShopRoute)
 	.route("/products", productRoute);
 
 // routes.basePath("/admin").route("/category", categoryRouter);

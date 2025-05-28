@@ -1,8 +1,9 @@
 "use client";
 
-import { Button } from "@lipy/web-ui/components/ui/button";
-import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { usePWAInstall } from "@lipy/web-ui/hooks/use-pwa-install";
+
+import { buttonVariants } from "@lipy/web-ui/components/ui/button";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, useMatchRoute } from "@tanstack/react-router";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
@@ -37,21 +38,25 @@ export const DashboardLayout = ({
 	const [open, setOpen] = useState(false);
 	const { isMobile } = useViewport();
 	const { isInstallable, promptInstall } = usePWAInstall();
-
 	if (isMobile) {
 		return (
 			<div className="flex flex-col h-screen">
 				{isInstallable && (
 					<div
 						onClick={promptInstall}
-						className="bg-foreground w-full col-span-2 p-2 sticky top-0 flex gap-2 items-center justify-between"
+						className="appearance-none bg-foreground w-full col-span-2 p-2 sticky top-0 flex gap-2 items-center justify-between"
 					>
-						<div className="flex items-center gap-2 text-background">
+						<span className="flex items-center gap-2 text-background">
 							<span>Install app on your phone</span>
-						</div>
-						<Button variant="outline" size="icon" className="size-6">
+						</span>
+						<span
+							className={cn(
+								buttonVariants({ variant: "outline", size: "icon" }),
+								"size-6",
+							)}
+						>
 							<ArrowDownToLine />
-						</Button>
+						</span>
 					</div>
 				)}
 

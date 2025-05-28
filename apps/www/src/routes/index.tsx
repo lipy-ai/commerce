@@ -6,6 +6,7 @@ import {
 	DashboardLayout,
 } from "@lipy/web-ui/components/layouts/dashboard";
 import LocationComponent from "@lipy/web-ui/components/maps/deliveryAddress";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
@@ -55,6 +56,8 @@ const mobileNav = [
 
 function Home() {
 	const { scrollY } = useScroll();
+	const data = useViewport();
+
 	const [navBarVisible, setNavBarVisible] = useState(true);
 	useMotionValueEvent(scrollY, "change", (current) => {
 		if (current > 87) {
@@ -74,6 +77,9 @@ function Home() {
 					<div className="relative bg-gradient-to-b from-primary/50 to-primary/40">
 						<NavBar />
 					</div>
+					<pre className="whitespace-pre-wrap">
+						{JSON.stringify(data, null, 2)}
+					</pre>
 					<motion.div
 						className={cn(
 							navBarVisible

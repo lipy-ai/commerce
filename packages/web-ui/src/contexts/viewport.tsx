@@ -24,10 +24,10 @@ const ViewportProvider = ({
 	children: ReactNode;
 	isMobile?: boolean;
 }) => {
-	const [width, setWidth] = useState(0);
-	const [height, setHeight] = useState(0);
-	const [screenWidth, setScreenWidth] = useState(0);
-	const [screenHeight, setScreenHeight] = useState(0);
+	const [width, setWidth] = useState(-1);
+	const [height, setHeight] = useState(-1);
+	const [screenWidth, setScreenWidth] = useState(-1);
+	const [screenHeight, setScreenHeight] = useState(-1);
 
 	const handleWindowResize = useDebouncedCallback(
 		// function
@@ -45,7 +45,7 @@ const ViewportProvider = ({
 	);
 	useLayoutEffect(() => {
 		if (typeof window === "undefined") return;
-		if (width === 0 && height === 0) {
+		if (width === -1 && height === -1) {
 			handleWindowResize();
 		} else {
 			window.addEventListener("resize", handleWindowResize);
@@ -63,7 +63,7 @@ const ViewportProvider = ({
 				height: height,
 				screenWidth: screenWidth,
 				screenHeight: screenHeight,
-				isMobile: isMobile || false,
+				isMobile: isMobile || (screenWidth < 768 && screenWidth > -1) || false,
 			}}
 		>
 			{children}

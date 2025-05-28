@@ -7,6 +7,7 @@ import {
 } from "@lipy/web-ui/components/ui/avatar";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Card } from "@lipy/web-ui/components/ui/card";
+import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute } from "@tanstack/react-router";
@@ -43,7 +44,7 @@ const yourInfo = [
 	},
 ];
 
-const moreInfo = [
+let moreInfo = [
 	{
 		title: "Start your own shop",
 		icon: Store,
@@ -68,6 +69,9 @@ const moreInfo = [
 
 function RouteComponent() {
 	const { data } = authClient.useSession();
+	if (!data) {
+		moreInfo = moreInfo.filter((i) => i.title !== "Logout");
+	}
 
 	return (
 		<div>
@@ -119,20 +123,23 @@ function RouteComponent() {
 						<Card className="p-4 shadow-none">
 							{yourInfo.map((item, index) => (
 								<div key={index}>
-									<Link
-										className="flex items-center justify-between"
-										to={item.url}
-									>
-										<div className="flex items-center gap-2">
-											<Avatar className="size-7">
-												<AvatarFallback>
-													<item.icon className="size-4 text-muted-foreground" />
-												</AvatarFallback>
-											</Avatar>
+									<Link to={item.url} className="flex flex-col gap-2">
+										<div className="flex items-center justify-between">
+											<div className="flex items-center gap-2">
+												<Avatar className="size-7">
+													<AvatarFallback>
+														<item.icon className="size-4 text-muted-foreground" />
+													</AvatarFallback>
+												</Avatar>
 
-											<div className="text-sm font-medium">{item.title}</div>
+												<div className="text-sm font-medium">{item.title}</div>
+											</div>
+											<ChevronRight />
 										</div>
-										<ChevronRight />
+
+										{index !== yourInfo.length - 1 && (
+											<Separator className="-mb-4 border-t border-dashed bg-transparent" />
+										)}
 									</Link>
 								</div>
 							))}
@@ -145,22 +152,25 @@ function RouteComponent() {
 				</h1>
 				<Card className="p-4 shadow-none">
 					{moreInfo.map((item, index) => {
-						if (!data && item.title === "Logout") return;
+						// if (!data && item.title === "Logout") return;
 						return (
 							<div key={index}>
-								<Link
-									className="flex items-center justify-between"
-									to={item.url}
-								>
-									<div className="flex items-center gap-2">
-										<Avatar className="size-7">
-											<AvatarFallback>
-												<item.icon className="size-4 text-muted-foreground" />
-											</AvatarFallback>
-										</Avatar>
-										<div className="text-sm font-medium">{item.title}</div>
+								<Link className="flex flex-col gap-2" to={item.url}>
+									<div className="flex items-center justify-between">
+										<div className="flex items-center gap-2">
+											<Avatar className="size-7">
+												<AvatarFallback>
+													<item.icon className="size-4 text-muted-foreground" />
+												</AvatarFallback>
+											</Avatar>
+											<div className="text-sm font-medium">{item.title}</div>
+										</div>
+										<ChevronRight />
 									</div>
-									<ChevronRight />
+
+									{index !== moreInfo.length - 1 && (
+										<Separator className="-mb-4 border-t border-dashed bg-transparent" />
+									)}
 								</Link>
 							</div>
 						);

@@ -1,5 +1,7 @@
 import ProductCard from "@/components/productCard"; // Fixed the path
 import ShopShortDetails from "@/components/shop/shopShortDetails";
+import { apiClient } from "@lipy/lib/api";
+import { useAPIQuery } from "@lipy/lib/utils/queryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import SearchBar from "@lipy/web-ui/components/searchBar";
@@ -7,7 +9,12 @@ import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { cn } from "@lipy/web-ui/lib/utils";
-import { Link, createFileRoute, useRouter } from "@tanstack/react-router";
+import {
+	Link,
+	createFileRoute,
+	useParams,
+	useRouter,
+} from "@tanstack/react-router";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";

@@ -7,7 +7,7 @@ export const Route = createFileRoute("/cart")({
 });
 
 function RouteComponent() {
-	const { data, isLoading } = useAPIQuery(apiClient.v1.cart, "$get", {});
+	const { data, isLoading } = useAPIQuery(apiClient.v1.shops, "$get", {});
 	return (
 		<>
 			<pre className="whitespace-pre-wrap">{JSON.stringify(data, null, 2)}</pre>

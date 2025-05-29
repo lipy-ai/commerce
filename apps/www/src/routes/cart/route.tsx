@@ -83,7 +83,7 @@ function RouteComponent() {
 							})}
 						</Card>
 
-						<Card className="p-4 shadow-none my-6 mb-28">
+						<Card className="p-4 shadow-none my-6 mb-44">
 							<p className="text-lg font-semibold">Billing Details</p>
 							<Separator className="-my-4 border-t border-dashed bg-transparent" />
 
@@ -113,7 +113,7 @@ function RouteComponent() {
 						</Card>
 					</div>
 
-					<div className="absolute sticky bottom-0 border-t left-0 w-full rounded-lg bg-white shadow-md border-2">
+					<div className="absolute fixed  bottom-0 border-t left-0 w-full rounded-tl-lg rounded-tr-lg bg-white shadow-md border-2">
 						<div className="bg-accent rounded-lg">
 							<div className="flex items-center gap-2 pt-2 mb-4  px-4 justify-between">
 								<div className="flex items-center gap-2">

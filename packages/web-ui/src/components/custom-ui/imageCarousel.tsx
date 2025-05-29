@@ -1,30 +1,42 @@
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState } from "react";
 
-export default function ImageCarousel({ images }) {
+interface ImageCarouselProps {
+	images: string[];
+}
+
+export default function ImageCarousel({ images }: ImageCarouselProps) {
 	const [emblaRef, emblaApi] = useEmblaCarousel({
 		loop: false,
 		align: "center",
 		skipSnaps: false,
-		dragFree: false,
+		dragFree: false, 
 	});
-	const [selectedIndex, setSelectedIndex] = useState(0);
+
+	const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
 	const scrollTo = useCallback(
-		(index) => emblaApi?.scrollTo(index),
-		[emblaApi],
+		(index: number) => {
+			if (emblaApi) {
+				emblaApi.scrollTo(index);
+			}
+		},
+		[emblaApi]
 	);
 
 	const onSelect = useCallback(() => {
-		if (!emblaApi) return;
-		setSelectedIndex(emblaApi.selectedScrollSnap());
+		if (emblaApi) {
+			setSelectedIndex(emblaApi.selectedScrollSnap());
+		}
 	}, [emblaApi]);
 
 	useEffect(() => {
 		if (!emblaApi) return;
 		onSelect();
 		emblaApi.on("select", onSelect);
-		return () => emblaApi.off("select", onSelect);
+		return () => {
+			emblaApi.off("select", onSelect);
+		};
 	}, [emblaApi, onSelect]);
 
 	if (!images || images.length === 0) {
@@ -34,7 +46,7 @@ export default function ImageCarousel({ images }) {
 	return (
 		<div className="w-full max-w-2xl mx-auto">
 			{/* Main carousel container */}
-			<div className="relative ">
+			<div className="relative">
 				<div className="overflow-hidden" ref={emblaRef}>
 					<div className="flex">
 						{images.map((src, index) => (
@@ -43,7 +55,7 @@ export default function ImageCarousel({ images }) {
 									<img
 										src={src}
 										alt={`Product ${index + 1}`}
-										className="w-full h-full object-contain "
+										className="w-full h-full object-contain"
 										loading={index === 0 ? "eager" : "lazy"}
 									/>
 								</div>
@@ -55,7 +67,7 @@ export default function ImageCarousel({ images }) {
 
 			{/* Navigation dots */}
 			{images.length > 1 && (
-				<div className="flex justify-center items-center gap-2">
+				<div className="flex justify-center items-center gap-2 mt-2">
 					{images.map((_, index) => (
 						<button
 							type="button"

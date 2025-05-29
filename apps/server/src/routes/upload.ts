@@ -1,4 +1,4 @@
-import { db } from "@/db";
+import { db, type DBTypes } from "@/db";
 import { zValidator } from "@/middlewares/validator";
 import { getPresignedUrl } from "@/services/s3";
 import type { ServerContext } from "@/types";
@@ -16,8 +16,8 @@ const route = new Hono<ServerContext>().post(
 	zValidator("json", presignedSchema),
 	async (c) => {
 		const { contentLength, contentType, filename } = c.req.valid("json");
-		const organization_id = c.var.session?.activeOrganizationId!;
-		const user_id = c.var.session?.userId!;
+		const activeStoreId = c.var.session?.activeStoreId!;
+		const userId = c.var.session?.userId!;
 
 		const id = crypto.randomUUID();
 
@@ -32,17 +32,17 @@ const route = new Hono<ServerContext>().post(
 
 		const values = {
 			id,
-			content_type: contentType,
-			content_length: contentLength,
+			contentType: contentType,
+			contentLength: contentLength,
 			name: filename,
 			path: key,
 			url: `https://${url.host}/${key}`,
-			uploaded_by: user_id,
-			organization_id: organization_id || null,
-			presigned_url: url.toString(),
-			created_at: new Date(),
-			updated_at: new Date(),
-		};
+			uploadedBy: userId,
+			storeId: activeStoreId || null,
+			presigned_url: url.toString() ,
+			createdAt: new Date(),
+			updatedAt: new Date(),
+		} satisfies Partial<DBTypes['upload']> & {presigned_url:string};
 
 		const image = await db
 			.insertInto("upload")

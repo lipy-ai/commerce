@@ -1,5 +1,5 @@
 import { Input } from "@lipy/web-ui/components/ui/input";
-import { Mic, Search } from "lucide-react";
+import {  Search } from "lucide-react";
 
 export default function SearchBar({ placeholder }: { placeholder?: string }) {
 	return (

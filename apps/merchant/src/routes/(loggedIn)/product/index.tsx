@@ -7,14 +7,14 @@ import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { Plus, Search } from "lucide-react";
-import { parseAsString, useQueryState } from "nuqs";
+// import { parseAsString, useQueryState } from "nuqs";
 
 export const Route = createFileRoute("/(loggedIn)/product/")({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-	const [search, setSearch] = useQueryState("search", parseAsString);
+	// const [search, setSearch] = useQueryState("search", parseAsString);
 	const { isMobile } = useViewport();
 	return (
 		<div className="">

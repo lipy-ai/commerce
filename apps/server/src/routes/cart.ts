@@ -5,7 +5,7 @@ import { Hono } from "hono";
 import { z } from "zod";
 
 const cartSchema = z.object({
-	variant_id: z.number(),
+	variantId: z.number(),
 	quantity: z.number().min(0).int(),
 });
 
@@ -14,20 +14,20 @@ const route = new Hono<ServerContext>()
 		const session = c.get("session");
 		const data = await db
 			.selectFrom("cart as c")
-			.where("user_id", "=", session?.userId!)
-			.leftJoin("product_variant as pv", "pv.id", "c.variant_id")
+			.where("userId", "=", session?.userId!)
+			.leftJoin("productVariant as pv", "pv.id", "c.variantId")
 			.leftJoin("product as p", "p.id", "pv.product")
+			
 			.select([
 				"c.quantity",
 				"p.brand",
-				"p.id as product_id",
-				"p.in_stock as product_in_stock",
-				"c.variant_id",
-				"pv.max_price as variant_max_price",
-				"pv.price as variant_price",
-				"pv.title as variant_title",
-				"pv.qty as variant_stock",
-				"pv.unit as variant_unit",
+				"c.variantId",
+				"p.id as productId",
+				"pv.maxPrice as variantMaxPrice",
+				"pv.price as variantPrice",
+				"pv.title as varianTitle",
+				"pv.qty as variantStock",
+				"pv.unit as variantUnit",
 			])
 			.execute();
 
@@ -40,8 +40,8 @@ const route = new Hono<ServerContext>()
 		if (Number(values.quantity) === 0) {
 			await db
 				.deleteFrom("cart")
-				.where("user_id", "=", session?.userId!)
-				.where("variant_id", "=", values.variant_id)
+				.where("userId", "=", session?.userId!)
+				.where("variantId", "=", values.variantId)
 				.executeTakeFirstOrThrow();
 
 			return c.json({ success: true });
@@ -49,8 +49,8 @@ const route = new Hono<ServerContext>()
 
 		const result = await db
 			.updateTable("cart")
-			.where("user_id", "=", session?.userId!)
-			.where("variant_id", "=", values.variant_id)
+			.where("userId", "=", session?.userId!)
+			.where("variantId", "=", values.variantId)
 			.set({
 				quantity: values.quantity,
 			})
@@ -61,9 +61,9 @@ const route = new Hono<ServerContext>()
 				.insertInto("cart")
 				.values({
 					id: crypto.randomUUID(),
-					user_id: session?.userId!,
+					userId: session?.userId!,
 					quantity: values.quantity,
-					variant_id: values.variant_id,
+					variantId: values.variantId,
 				})
 				.execute();
 		}

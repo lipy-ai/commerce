@@ -1,5 +1,4 @@
-import { AppCartInitializer } from "@/components/cart/appCartInitializer";
-import { useCartStore } from "@/components/cart/store";
+// import { useCartStore } from "@/components/cart/store";
 import { DefaultCatchBoundary } from "@/components/defaultCatchBoundry";
 import { NotFound } from "@/components/notFound";
 import { seo } from "@/utils/seo";
@@ -99,7 +98,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 
 	const data = Route.useLoaderData();
 
-	const { cart } = useCartStore();
+	// const { cart } = useCartStore();
 
 	return (
 		<html className="bg-muted/30" lang="en">

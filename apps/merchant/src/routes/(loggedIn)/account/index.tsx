@@ -11,7 +11,6 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import {
 	Headset,
 	LogOut,
-	Receipt,
 	Settings2,
 	Share2,
 	Store,

@@ -7,7 +7,7 @@ export const Route = createFileRoute("/demo/client")({
 });
 
 function RouteComponent() {
-	const data = useAPIQuery(apiClient.v1.products, "$get", {});
+	const data = useAPIQuery(apiClient.v1.products, "$get", {query:{}});
 
 	return (
 		<pre className="whitespace-pre-wrap">{JSON.stringify(data, null, 2)}</pre>

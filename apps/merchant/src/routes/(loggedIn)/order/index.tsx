@@ -1,8 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { DataTableColumnHeader } from "@lipy/web-ui/components/table/column-header";
 import { DataTable } from "@lipy/web-ui/components/table/data-table";
 import { DataTableToolbar } from "@lipy/web-ui/components/table/toolbar";
 import { Checkbox } from "@lipy/web-ui/components/ui/checkbox";
+import { createFileRoute } from "@tanstack/react-router";
 
 import React from "react";
 
@@ -24,7 +24,7 @@ import {
 	Text,
 	XCircle,
 } from "lucide-react";
-import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
+// import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 
 export const Route = createFileRoute("/(loggedIn)/order/")({
 	component: RouteComponent,
@@ -113,11 +113,11 @@ const data: Project[] = [
 ];
 
 function RouteComponent() {
-	const [title] = useQueryState("title", parseAsString.withDefault(""));
-	const [status] = useQueryState(
-		"status",
-		parseAsArrayOf(parseAsString).withDefault([]),
-	);
+	// const [title] = useQueryState("title", parseAsString.withDefault(""));
+	// const [status] = useQueryState(
+	// 	"status",
+	// 	parseAsArrayOf(parseAsString).withDefault([]),
+	// );
 
 	const columns = React.useMemo<ColumnDef<Project>[]>(
 		() => [

@@ -6,12 +6,12 @@ import { Redis } from "ioredis";
 export const redis = new Redis(env?.REDIS_URL!);
 
 export const redisKeys = {
-	org: {
-		single: (val: DBTypes["org"]["id"]) => `org:${val}`,
+	store: {
+		single: (val: DBTypes["store"]["id"]) => `store:${val}`,
 	},
-	orgUser: {
-		single: (orgId: DBTypes["org"]["id"], userId: DBTypes["user"]["id"]) =>
-			`orgUser:${orgId}:${userId}`,
+	storeUser: {
+		single: (storeId: DBTypes["store"]["id"], userId: DBTypes["user"]["id"]) =>
+			`storeUser:${storeId}:${userId}`,
 	},
 };
 

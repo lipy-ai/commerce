@@ -8,4 +8,4 @@ const route = new Hono<ServerContext>().get("/", async (c) => {
 	return c.json(shops);
 });
 
-export { route as ShopRoute };
+export { route as shopRoute };

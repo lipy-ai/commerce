@@ -15,26 +15,30 @@ const route = new Hono<ServerContext>()
 	.get("/", zValidator("query", schema), async (c) => {
 		const q = c.req.valid("query");
 
-		const query = db.selectFrom("product as p");
+		let query = db
+			.selectFrom("product as p")
+			.leftJoin("category as c", "p.category", "c.id")
+			.orderBy("c.id asc");
 
 		if (q.category_id) {
-			query.where("p.category", "=", q.category_id);
+			query = query.where("p.category", "=", q.category_id);
 		}
 
 		if (q.shop_id) {
-			query.where("p.organization_id", "=", q.shop_id);
+			query = query.where("p.organization_id", "=", q.shop_id);
 		}
 
 		if (q.search) {
-			query.where("p.title", "=", q.search);
+			query = query.where("p.title", "like", `%${q.search}%`);
 		}
 
 		const data = await query
 			.select((eb) => [
 				"p.id",
-				"p.brand",
-				"p.category",
+				"p.title",
 				"p.in_stock",
+				"c.title as category_title",
+				"c.id as category_id",
 				jsonArrayFrom(
 					eb
 						.selectFrom("product_variant as pv")
@@ -57,7 +61,7 @@ const route = new Hono<ServerContext>()
 				.where("p.id", "=", q.id)
 				.select((eb) => [
 					"p.id",
-					"p.brand",
+					"p.title",
 					"p.category",
 					"p.in_stock",
 					jsonArrayFrom(

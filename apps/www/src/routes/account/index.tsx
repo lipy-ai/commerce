@@ -69,9 +69,6 @@ let moreInfo = [
 
 function RouteComponent() {
 	const { data } = authClient.useSession();
-	if (!data) {
-		moreInfo = moreInfo.filter((i) => i.title !== "Logout");
-	}
 
 	return (
 		<div>
@@ -152,7 +149,7 @@ function RouteComponent() {
 				</h1>
 				<Card className="p-4 shadow-none">
 					{moreInfo.map((item, index) => {
-						// if (!data && item.title === "Logout") return;
+						if (!data && item.title === "Logout") return;
 						return (
 							<div key={index}>
 								<Link className="flex flex-col gap-2" to={item.url}>

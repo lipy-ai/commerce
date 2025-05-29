@@ -27,7 +27,7 @@ export default function GoogleMapImage() {
 	const [address, setAddress] = useState("");
 	const [addressName, setAddressName] = useState("");
 	const [zoom, setZoom] = useState(15);
-	const autocompleteRef = useRef(null);
+	const autocompleteRef = useRef<any>(null);
 	const { isMobile } = useViewport();
 	const [fullAddress, setFullAddress] = useState({
 		address: "",

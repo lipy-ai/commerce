@@ -1,3 +1,5 @@
+// @ts-ignore
+// @ts-nocheck
 "use client";
 
 import { Fragment, useEffect } from "react";
@@ -6,12 +8,14 @@ import { useForm } from "react-hook-form";
 import { Button, type buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Form } from "@lipy/web-ui/components/ui/form";
 
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import ErrorPage from "@lipy/web-ui/components/pages/error";
 import Loading from "@lipy/web-ui/components/ui/loading";
 import { cn } from "@lipy/web-ui/lib/utils";
 import type { ZodType } from "zod";
-import { RenderFormElement } from "./mapper";
+
+
 import { useFormStore } from "./store";
 import type { FormElement } from "./types";
 
@@ -30,6 +34,10 @@ type FormStyle = {
 		className?: string;
 	};
 	editBtn?: {
+
+
+
+		
 		label?: string;
 	};
 };

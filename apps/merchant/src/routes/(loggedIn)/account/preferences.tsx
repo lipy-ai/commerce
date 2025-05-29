@@ -1,12 +1,6 @@
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
+
 import {
-	Avatar,
-	AvatarFallback,
-	AvatarImage,
-} from "@lipy/web-ui/components/ui/avatar";
-import { Badge } from "@lipy/web-ui/components/ui/badge";
-import {
-	Card,
 	CardDescription,
 	CardHeader,
 	CardTitle,
@@ -15,16 +9,8 @@ import {
 import { FormSwitch } from "@lipy/web-ui/components/forms/elements";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { Form } from "@lipy/web-ui/components/ui/form";
-import { Input } from "@lipy/web-ui/components/ui/input";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableRow,
-} from "@lipy/web-ui/components/ui/table";
-import { useViewport } from "@lipy/web-ui/contexts/viewport";
+
 import { createFileRoute } from "@tanstack/react-router";
-import { Bell, MoreVertical, Search } from "lucide-react";
 import { useForm } from "react-hook-form";
 
 export const Route = createFileRoute("/(loggedIn)/account/preferences")({
@@ -54,7 +40,7 @@ function RouteComponent() {
 	const onSubmit = async (body: any) => {
 		console.log(body);
 	};
-	const { isMobile } = useViewport();
+	// const { isMobile } = useViewport();
 
 	const form = useForm({
 		// resolver: zodResolver(),

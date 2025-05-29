@@ -3,7 +3,7 @@ import { apiQueryOptions, useAPIMutation } from "@lipy/lib/utils/queryClient";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { Trash } from "lucide-react";
-import { type FC, use } from "react";
+import type { FC } from "react";
 import { toast } from "sonner";
 import {
 	AlertDialog,

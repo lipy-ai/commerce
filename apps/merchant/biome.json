@@ -9,7 +9,8 @@
 		"ignoreUnknown": false,
 		"ignore": ["src/routeTree.gen.ts"],
 		"include": [
-			"src/**/*.{ts,tsx}",
+			"src/**/*.ts",
+			"src/**/*.tsx",
 			".vscode/*",
 			"index.html",
 			"vite.config.js"

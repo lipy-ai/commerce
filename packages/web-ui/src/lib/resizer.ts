@@ -93,7 +93,7 @@ export function resizeAndRotateImage(
 
 export function b64toByteArrays(
 	b64Data: string,
-	contentType = "image/jpeg",
+	// contentType = "image/jpeg",
 ): Uint8Array[] {
 	const sliceSize = 512;
 	const cleanedData = b64Data.replace(
@@ -115,7 +115,7 @@ export function b64toByteArrays(
 }
 
 export function b64toBlob(b64Data: string, contentType = "image/jpeg"): Blob {
-	const byteArrays = b64toByteArrays(b64Data, contentType);
+	const byteArrays = b64toByteArrays(b64Data);
 	return new Blob(byteArrays as any, {
 		type: contentType,
 		// lastModified: Date.now(),
@@ -127,7 +127,7 @@ export function b64toFile(
 	fileName: string,
 	contentType = "image/jpeg",
 ): File {
-	const byteArrays = b64toByteArrays(b64Data, contentType);
+	const byteArrays = b64toByteArrays(b64Data);
 	return new File(byteArrays as any, fileName, {
 		type: contentType,
 		lastModified: Date.now(),

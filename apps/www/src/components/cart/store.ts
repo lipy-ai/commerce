@@ -9,8 +9,9 @@ type ProductInCart = {
 	price: number | null;
 	max_price: number | null;
 };
+export type Operation = "increment" | "decrement" | "add";
 
-type CartStore = {
+export type CartStore = {
 	cart: ProductInCart[];
 	initialized: boolean;
 	updateCart: (
@@ -21,14 +22,14 @@ type CartStore = {
 			price: number | null;
 			max_price: number | null;
 		},
-		operation?: "increment" | "decrement",
+		operation?: Operation,
 	) => void;
 	setCartFromDB: (items: ProductInCart[]) => void;
 };
 
 export const useCartStore = create(
 	persist<CartStore>(
-		(set, get) => ({
+		(set, _get) => ({
 			cart: [],
 			initialized: false,
 			updateCart: (product, operation) => {

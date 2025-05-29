@@ -6,12 +6,27 @@ export interface InputProps
 	extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
 	size?: "lg" | "default";
 	prefixEl?: any;
+	prefixClassName?: string;
 	suffixEl?: any;
+	suffixClassName?: string;
+
 	noStyle?: boolean;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-	({ className, type, suffixEl, prefixEl, size, noStyle, ...props }, ref) => {
+	(
+		{
+			className,
+			prefixClassName,
+			type,
+			suffixEl,
+			prefixEl,
+			size,
+			noStyle,
+			...props
+		},
+		ref,
+	) => {
 		return (
 			<div
 				className={cn(
@@ -23,8 +38,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 				{prefixEl && (
 					<span
 						className={cn(
-							" flex h-9 items-center px-4 [&>svg]:w-4",
+							"flex h-9 items-center p-2 [&>svg]:w-5",
 							size === "lg" && "h-12",
+							prefixClassName,
 						)}
 					>
 						{prefixEl}
@@ -48,6 +64,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 							className={cn(
 								"text-muted-foreground flex h-9 items-center px-2 [&>svg]:w-4",
 								size === "lg" && "h-12",
+								prefixClassName,
 							)}
 						>
 							{suffixEl}

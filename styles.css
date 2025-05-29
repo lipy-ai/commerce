@@ -1,0 +1,5 @@
+@import "tailwindcss";
+@source "packages/web-ui/src/**/*.{ts,tsx}";
+@source "apps/www/src/**/*.{ts,tsx}";
+@source "apps/merchant/src/**/*.{ts,tsx}";
+@source "apps/admin/src/**/*.{ts,tsx}";

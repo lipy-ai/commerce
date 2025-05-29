@@ -1,3 +1,5 @@
+import { AppCartInitializer } from "@/components/cart/appCartInitializer";
+import { useCartStore } from "@/components/cart/store";
 import NavBar from "@/components/navBar";
 import NearByShops from "@/components/nearbyShops";
 import { SearchFilter } from "@/components/searchFilter";
@@ -41,22 +43,8 @@ export const dashboardNav = {
 	],
 };
 
-const mobileNav = [
-	{
-		label: "Shops Near me",
-		url: "/",
-		icon: Store,
-	},
-	{
-		label: "Cart",
-		url: "/account/profile",
-		icon: ShoppingCart,
-	},
-];
-
 function Home() {
 	const { scrollY } = useScroll();
-	const data = useViewport();
 
 	const [navBarVisible, setNavBarVisible] = useState(true);
 	useMotionValueEvent(scrollY, "change", (current) => {
@@ -66,6 +54,32 @@ function Home() {
 			setNavBarVisible(true);
 		}
 	});
+
+	const { cart } = useCartStore();
+
+	const mobileNav = [
+		{
+			label: "Shops Near me",
+			url: "/",
+			icon: Store,
+		},
+		{
+			label: "Cart",
+			url: "/cart",
+			icon: () => {
+				return (
+					<div className="relative inline-block">
+						<ShoppingCart className="w-6 h-6 text-gray-700" />
+						{cart.length > 0 && (
+							<span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center min-w-[20px]">
+								{cart.length > 99 ? "99+" : cart.length}
+							</span>
+						)}
+					</div>
+				);
+			},
+		},
+	];
 	return (
 		<>
 			<DashboardLayout
@@ -77,9 +91,7 @@ function Home() {
 					<div className="relative bg-gradient-to-b from-primary/50 to-primary/40">
 						<NavBar />
 					</div>
-					<pre className="whitespace-pre-wrap">
-						{JSON.stringify(data, null, 2)}
-					</pre>
+
 					<motion.div
 						className={cn(
 							navBarVisible
@@ -92,6 +104,7 @@ function Home() {
 					</motion.div>
 					<NearByShops />
 					<LocationComponent />
+					<AppCartInitializer />
 				</DashboardBody>
 			</DashboardLayout>
 		</>

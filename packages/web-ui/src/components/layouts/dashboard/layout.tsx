@@ -131,7 +131,7 @@ function ActiveLinks({
 					hidden: { y: 100 },
 					visible: { y: 0 },
 				}}
-				transition={{ duration: 0.3, ease: "easeInOut" }}
+				transition={{ duration: 0.8, ease: "easeInOut" }}
 			>
 				<div
 					className={cn("grid justify-center px-4")}

@@ -12,6 +12,8 @@ import { Card } from "@lipy/web-ui/components/ui/card";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { createFileRoute } from "@tanstack/react-router";
 
+import { apiClient } from "@lipy/lib/api";
+import { useAPIQuery } from "@lipy/lib/utils/queryClient";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { Frown } from "lucide-react";
@@ -23,43 +25,22 @@ export const Route = createFileRoute("/shop/$id/products/$productId")({
 
 function RouteComponent() {
 	const { productId } = Route.useParams();
-	const [product, setProduct] = useState(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(null);
 
-	useEffect(() => {
-		const fetchProductData = async () => {
-			setLoading(true);
-			try {
-				const response = await fetch(
-					`https://dummyjson.com/products/${productId}`,
-				);
-				const data = await response.json();
-				setProduct(data);
-			} catch (err) {
-				setError(error);
-			} finally {
-				setLoading(false);
-			}
-		};
+	const { data, isFetched, isFetching, error } = useAPIQuery(
+		apiClient.v1.products[":id"],
+		"$get",
+		{
+			param: {
+				id: productId,
+			},
+		},
+	);
 
-		fetchProductData();
-	}, []);
-
-	// Format price to show only two decimal places when needed
-	const originalPrice = (product) => {
-		const originalPrice = product.discountPercentage
-			? Math.round(product.price / (1 - product.discountPercentage / 100))
-			: null;
-		return originalPrice % 1 === 0 ? originalPrice : originalPrice.toFixed(2);
-	};
-	// console.log(product);
-
-	console.log(product);
+	console.log(data);
 
 	return (
 		<>
-			{loading && !error && (
+			{/* {loading && !error && (
 				<Spinner className="absolute top-1/2 left-1/2" size={"large"} />
 			)}
 			{error && (
@@ -119,6 +100,12 @@ function RouteComponent() {
 							</AccordionItem>
 						</Accordion>
 					</Card>
+				</div>
+			)} */}
+			{isFetching && <Spinner className="absolute top-1/2 left-1/2" />}
+			{isFetched && !error && data && (
+				<div>
+					<DashboardHeader title={data.title || ""} />
 				</div>
 			)}
 		</>

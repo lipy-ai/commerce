@@ -14,8 +14,7 @@ import { globalError } from "./lib/globalError";
 import { authMiddleware } from "./middlewares/auth";
 import { corsMiddleware } from "./middlewares/cors";
 import { globalMiddleware } from "./middlewares/global";
-import { productRoute } from "./routes/customer/products";
-import { ShopRoute } from "./routes/customer/shops";
+import { shopRoute } from "./routes/customer/shops";
 import { addressRoute } from "./routes/sharedRoutes/address";
 import { cartRoute } from "./routes/sharedRoutes/cart";
 import { productRoute } from "./routes/sharedRoutes/product";
@@ -52,7 +51,8 @@ export const routes = app
 	.route("/upload", uploadRouter)
 	.route("/address", addressRoute)
 	.route("/cart", cartRoute)
-	.route("/products", productRoute);
+	.route("/products", productRoute)
+	.route("/shops", shopRoute);
 
 // routes.basePath("/admin").route("/category", categoryRouter);
 

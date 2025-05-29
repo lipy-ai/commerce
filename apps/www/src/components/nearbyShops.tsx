@@ -142,7 +142,7 @@ export default function NearByShops() {
 	const [showFavorites, setShowFavorites] = useState(false);
 	const [shops, setShops] = useState([]);
 
-	const { data, isLoading, isFetched, isFetching } = useAPIQuery(
+	const { data, isFetched, isFetching } = useAPIQuery(
 		apiClient.v1.shops,
 		"$get",
 		{},
@@ -160,18 +160,21 @@ export default function NearByShops() {
 		<div>
 			<div className="px-4 pb-20">
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 py-4">
-					{shops.map((shop) => (
-						<Card key={shop.id} className="p-0">
-							<Link to={`/shop/${shop.id}`}>
-								{/* Image Container */}
-								<div className="relative h-48">
-									<img
-										src={shop.logo}
-										alt={shop.name}
-										className="w-full h-full object-cover"
-									/>
+					{isFetched &&
+						shops &&
+						shops.length > 0 &&
+						shops.map((shop) => (
+							<Card key={shop.id} className="p-0">
+								<Link to={`/shop/${shop.id}`}>
+									{/* Image Container */}
+									<div className="relative h-48">
+										<img
+											src={shop.logo}
+											alt={shop.name}
+											className="w-full h-full object-cover rounded-tl-lg rounded-tr-lg"
+										/>
 
-									{/* <div
+										{/* <div
 										className={`absolute bottom-3 left-3 text-white text-xs px-2 py-1 rounded flex items-center ${
 											shop.type === "grocery"
 												? "bg-green-500"
@@ -190,42 +193,42 @@ export default function NearByShops() {
 										{shop.type.charAt(0).toUpperCase() + shop.type.slice(1)}
 									</div> */}
 
-									{/* Discount Banner */}
+										{/* Discount Banner */}
 
-									<Badge
-										className="absolute bottom-3 right-3"
-										variant={"secondary"}
-									>
-										<div className="flex items-center">
-											<MapPin className="size-4 mr-1" />
-											<span>1 km</span>
-										</div>
-									</Badge>
-								</div>
+										<Badge
+											className="absolute bottom-3 right-3"
+											variant={"secondary"}
+										>
+											<div className="flex items-center">
+												<MapPin className="size-4 mr-1" />
+												<span>1 km</span>
+											</div>
+										</Badge>
+									</div>
 
-								{/* Content */}
-								<div className="p-4 -my-4">
-									<div className="flex items-center justify-between">
-										<h3 className="font-bold text-lg">{shop.name}</h3>
+									{/* Content */}
+									<div className="p-4 -my-4">
+										<div className="flex items-center justify-between">
+											<h3 className="font-bold text-lg">{shop.name}</h3>
 
-										<div className="flex items-center mt-1">
-											<div className="flex items-center bg-green-800 text-background px-2 rounded text-sm">
-												<span>4.6</span>
-												<Star className="h-3 w-3 ml-1 fill-white" />
+											<div className="flex items-center mt-1">
+												<div className="flex items-center bg-green-800 text-background px-2 rounded text-sm">
+													<span>4.6</span>
+													<Star className="h-3 w-3 ml-1 fill-white" />
+												</div>
 											</div>
 										</div>
-									</div>
 
-									<div className="mt-2 text-sm text-muted-foreground">
-										{/* {shop.categories.join(" • ")} */}
-										Books • Stationary
-									</div>
+										<div className="mt-2 text-sm text-muted-foreground">
+											{/* {shop.categories.join(" • ")} */}
+											Books • Stationary
+										</div>
 
-									<div className="flex items-center justify-between mt-3 text-sm" />
-								</div>
-							</Link>
-						</Card>
-					))}
+										<div className="flex items-center justify-between mt-3 text-sm" />
+									</div>
+								</Link>
+							</Card>
+						))}
 				</div>
 			</div>
 		</div>

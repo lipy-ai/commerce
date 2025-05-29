@@ -9,12 +9,7 @@ import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { cn } from "@lipy/web-ui/lib/utils";
-import {
-	Link,
-	createFileRoute,
-	useParams,
-	useRouter,
-} from "@tanstack/react-router";
+import { Link, createFileRoute, useRouter } from "@tanstack/react-router";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -34,8 +29,6 @@ const shopInfo = {
 };
 
 function RouteComponent() {
-	const [products, setProducts] = useState<any[]>([]);
-	const [isLoading, setIsLoading] = useState(false);
 	const [shopNameVisible, setShopNameVisible] = useState(false);
 	const { scrollY } = useScroll();
 
@@ -47,37 +40,44 @@ function RouteComponent() {
 		}
 	});
 
-	useEffect(() => {
-		const fetchCategories = async () => {
-			try {
-				setIsLoading(true);
-				const res = await fetch("https://dummyjson.com/products/categories");
-				const data: string[] = await res.json();
+	const { id } = Route.useParams();
 
-				// Fetch products for all categories
-				const productsData = await Promise.all(
-					data.map(async (category: string) => {
-						const res = await fetch(`${category.url}?limit=6`);
-						const json = await res.json();
-						return {
-							[category.name]: json.products, // key: category, value: product array
-						};
-					}),
-				);
-
-				// Result is array of objects; merge them into one array of objects if needed
-				setProducts(productsData);
-			} catch (error) {
-				console.error("Error fetching data:", error);
-			} finally {
-				setIsLoading(false);
-			}
-		};
-
-		fetchCategories();
-	}, []);
+	const { data, isFetched, isFetching } = useAPIQuery(
+		apiClient.v1.products,
+		"$get",
+		{
+			query: {
+				shop_id: id,
+			},
+		},
+	);
 
 	const router = useRouter();
+
+	const groupedProducts = [];
+
+	if (isFetched) {
+		const categoryMap = new Map();
+
+		for (const product of data) {
+			const { category_id, category_title } = product;
+
+			if (!categoryMap.has(category_id)) {
+				categoryMap.set(category_id, {
+					category_id,
+					category_title,
+					products: [],
+				});
+			}
+
+			categoryMap.get(category_id).products.push(product);
+		}
+
+		// Convert map to array
+		for (const group of categoryMap.values()) {
+			groupedProducts.push(group);
+		}
+	}
 
 	return (
 		<>
@@ -103,7 +103,7 @@ function RouteComponent() {
 
 			<Separator className="-my-4" />
 
-			{isLoading &&
+			{isFetching &&
 				[...Array(3)].map((_, i) => (
 					<div key={i} className="flex items-center gap-4 m-6">
 						<Skeleton className=" w-1/3 h-36" />
@@ -113,12 +113,12 @@ function RouteComponent() {
 				))}
 
 			<div className="mb-16">
-				{!isLoading &&
-					products &&
-					products.length > 0 &&
-					products.map((productGroup, idx) => {
-						const categoryName = Object.keys(productGroup)[0];
-						const productArray = Object.values(productGroup)[0];
+				{!isFetching &&
+					groupedProducts &&
+					groupedProducts.length > 0 &&
+					groupedProducts.map((productGroup, idx) => {
+						const categoryName = productGroup.category_title;
+						const productArray = productGroup.products;
 
 						return (
 							<div key={categoryName} className="my-10">
@@ -132,7 +132,7 @@ function RouteComponent() {
 											buttonVariants({ variant: "link", size: "sm" }),
 											"font-semibold text-sm",
 										)}
-										to={`/shop/${shopInfo.id}/products/category/${categoryName}`}
+										to={`/shop/${id}/products/category/${productGroup.category_id}`}
 									>
 										View All
 										<ChevronRight />
@@ -161,8 +161,7 @@ function RouteComponent() {
 											}}
 										>
 											<ProductCard
-												shopId={shopInfo.id}
-												product={product}
+												product={product.variants[0]}
 												className={{
 													classNameBox: "flex-shrink-0 w-36 pl-4",
 												}}
@@ -175,11 +174,7 @@ function RouteComponent() {
 					})}
 			</div>
 
-			{!isLoading && products.length === 0 && <EmptyPage />}
-
-			<div className="fixed bottom-0 p-4 w-full bg-accent">
-				<SearchBar placeholder={`Search in ${shopInfo.name}`} />
-			</div>
+			{!isFetching && groupedProducts.length === 0 && <EmptyPage />}
 		</>
 	);
 }

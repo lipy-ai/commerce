@@ -1,110 +1,223 @@
 import { apiClient } from "@lipy/lib/api";
 import { useAPIMutation } from "@lipy/lib/utils/queryClient";
 import { Button } from "@lipy/web-ui/components/ui/button";
-import { Minus, Plus } from "lucide-react";
+import { cn } from "@lipy/web-ui/lib/utils";
+import { Loader2, Minus, Plus, ShoppingCart } from "lucide-react";
+import { useCallback, useState } from "react";
 import { useCartStore } from "./store";
 
+type Operation = "increment" | "decrement" | "add";
+type LoadingState = {
+	isLoading: boolean;
+	operation: Operation | null;
+};
+
 export const AddToCart = ({
-	shopId,
 	product,
 	variant,
+	disabled = false,
 }: {
-	shopId: string;
 	product: any;
 	variant: "icon" | "primary" | "active";
+	disabled?: boolean;
 }) => {
-	const mutation = useAPIMutation(apiClient.v1.cart, "$patch", {});
-
-	const handleAddToCart = (
-		e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-	) => {
-		e.preventDefault(); // Prevent link from triggering
-		e.stopPropagation(); // Stop bubbling up to Link
-
-		const values = {
-			quantity: 1,
-			variant_id: 522820741255242,
-		};
-
-		mutation.mutateAsync({
-			json: values,
-		});
-		// addToCart({
-		// 	shopId,
-		// 	productId: product.id,
-		// 	quantity: product.minimumOrderQuantity,
-		// 	unit: null,
-		// 	name: product.title,
-		// 	price: product.price,
-		// 	originalPrice: product.price,
-		// });
-	};
-	const { addToCart, cart, updateProductQuantity } = useCartStore();
-
-	const updateQuantity = ({
-		operation,
-		e,
-	}: {
-		operation: "increment" | "decrement";
-		e: React.MouseEvent<HTMLButtonElement, MouseEvent>;
-	}) => {
-		e.preventDefault(); // Prevent link from triggering
-		e.stopPropagation(); // Stop bubbling up to Link
-		const quantityChange = product.minimumOrderQuantity;
-
-		updateProductQuantity(shopId, product.id, quantityChange, operation);
-	};
-
-	let ProductInCart = {};
-
-	cart.map((item) => {
-		if (item.shopId === shopId && item.productId === product.id) {
-			variant = "active";
-			ProductInCart = item;
-		}
+	const { cart, updateCart } = useCartStore();
+	const [loadingState, setLoadingState] = useState<LoadingState>({
+		isLoading: false,
+		operation: null,
 	});
 
-	switch (variant) {
+	console.log("product", product);
+
+	const mutation = useAPIMutation(apiClient.v1.cart, "$patch", {
+		onSuccess: () => {
+			if (loadingState.operation) {
+				updateCart(product, loadingState.operation);
+			}
+		},
+		onError: (error) => {
+			// Handle error appropriately - could show toast notification
+			console.error("Cart operation failed:", error);
+		},
+	});
+
+	const productInCart = cart.find(
+		(item) => item.id.toString() === product.id.toString(),
+	);
+
+	const setLoading = useCallback((operation: Operation | null) => {
+		setLoadingState({
+			isLoading: !!operation,
+			operation,
+		});
+	}, []);
+
+	const executeCartOperation = useCallback(
+		async (operation: Operation, quantity: number) => {
+			if (disabled || loadingState.isLoading) return;
+
+			setLoading(operation);
+
+			try {
+				await mutation.mutateAsync({
+					json: {
+						quantity,
+						variant_id: product.id,
+					},
+				});
+			} finally {
+				setLoading(null);
+			}
+		},
+		[disabled, loadingState.isLoading, mutation, product.id, setLoading],
+	);
+
+	const handleAddToCart = useCallback(
+		(e: React.MouseEvent<HTMLButtonElement>) => {
+			e.preventDefault();
+			e.stopPropagation();
+			executeCartOperation("add", 1);
+		},
+		[executeCartOperation],
+	);
+
+	const handleQuantityChange = useCallback(
+		(operation: "increment" | "decrement") =>
+			(e: React.MouseEvent<HTMLButtonElement>) => {
+				e.preventDefault();
+				e.stopPropagation();
+
+				if (!productInCart) return;
+
+				const newQuantity =
+					operation === "increment"
+						? productInCart.quantity + 1
+						: Math.max(0, productInCart.quantity - 1);
+
+				executeCartOperation(operation, newQuantity);
+			},
+		[executeCartOperation, productInCart],
+	);
+
+	// Determine the variant to render
+	const computedVariant = productInCart ? "active" : variant;
+	const isLoading = loadingState.isLoading;
+
+	const LoadingSpinner = ({
+		size = "default",
+	}: { size?: "sm" | "default" }) => (
+		<Loader2
+			className={cn("animate-spin", size === "sm" ? "h-3 w-3" : "h-4 w-4")}
+		/>
+	);
+
+	switch (computedVariant) {
 		case "icon":
 			return (
 				<Button
-					className="ring ring-primary text-primary font-bold text-2xl"
-					size={"icon"}
+					className={cn(
+						"ring-2 ring-primary text-primary font-bold transition-all duration-200",
+						"hover:bg-primary hover:text-white",
+						isLoading && "opacity-75",
+					)}
+					size="icon"
 					onClick={handleAddToCart}
+					disabled={disabled || isLoading}
 					type="button"
-					variant={"outline"}
+					variant="outline"
+					aria-label="Add to cart"
 				>
-					<Plus />
+					{isLoading ? <LoadingSpinner /> : <Plus className="h-5 w-5" />}
 				</Button>
 			);
+
 		case "primary":
 			return (
 				<Button
-					className="bg-primary text-white font-bold"
+					className={cn(
+						"bg-primary text-white font-semibold transition-all duration-200",
+						"hover:bg-primary/90 active:scale-95",
+						isLoading && "opacity-75",
+					)}
 					onClick={handleAddToCart}
+					disabled={disabled || isLoading}
+					aria-label="Add to cart"
 				>
-					Add to Cart
+					{isLoading ? (
+						<>
+							<LoadingSpinner />
+							<span className="ml-2">Adding...</span>
+						</>
+					) : (
+						<>
+							<ShoppingCart className="h-4 w-4 mr-2" />
+							Add to Cart
+						</>
+					)}
 				</Button>
 			);
-		case "active":
+
+		case "active": {
+			const currentQuantity = productInCart?.quantity || 0;
+			const isDecrementLoading =
+				isLoading && loadingState.operation === "decrement";
+			const isIncrementLoading =
+				isLoading && loadingState.operation === "increment";
+
 			return (
-				<div className="bg-primary flex items-center gap-1 rounded-lg">
+				<div className="bg-primary flex items-center  rounded-lg shadow-sm">
 					<Button
 						size="icon"
-						onClick={(e) => updateQuantity({ operation: "decrement", e })}
+						variant="ghost"
+						onClick={handleQuantityChange("decrement")}
+						disabled={disabled || isLoading}
+						className={cn(
+							"h-8 w-8 text-white hover:bg-white/20 transition-colors",
+							"disabled:opacity-50 disabled:cursor-not-allowed",
+						)}
+						aria-label="Decrease quantity"
 					>
-						<Minus />
+						{isDecrementLoading ? (
+							<LoadingSpinner size="sm" />
+						) : (
+							<Minus className="h-3 w-3" />
+						)}
 					</Button>
-					<span className="font-semibold text-white">
-						{ProductInCart?.quantity || product.minimumOrderQuantity}
-					</span>
+
+					<div className="min-w-[32px] flex items-center justify-center">
+						{isLoading &&
+						(loadingState.operation === "add" ||
+							(!isDecrementLoading && !isIncrementLoading)) ? (
+							<LoadingSpinner size="sm" />
+						) : (
+							<span className="font-semibold text-white text-sm px-1">
+								{currentQuantity}
+							</span>
+						)}
+					</div>
+
 					<Button
 						size="icon"
-						onClick={(e) => updateQuantity({ operation: "increment", e })}
+						variant="ghost"
+						onClick={handleQuantityChange("increment")}
+						disabled={disabled || isLoading}
+						className={cn(
+							"h-8 w-8 text-white hover:bg-white/20 transition-colors",
+							"disabled:opacity-50",
+						)}
+						aria-label="Increase quantity"
 					>
-						<Plus strokeWidth={1.5} />
+						{isIncrementLoading ? (
+							<LoadingSpinner size="sm" />
+						) : (
+							<Plus className="h-3 w-3" strokeWidth={2} />
+						)}
 					</Button>
 				</div>
 			);
+		}
+
+		default:
+			return null;
 	}
 };

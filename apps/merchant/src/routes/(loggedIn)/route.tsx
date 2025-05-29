@@ -1,6 +1,6 @@
 import { env } from "@envClient";
 import { getSsrSession } from "@lipy/lib/providers/auth";
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { getHeaders, getWebRequest } from "@tanstack/react-start/server";
 
@@ -14,35 +14,39 @@ import {
 	Home,
 	LayoutDashboard,
 	LogOut,
+	Settings,
 	Shirt,
 	ShoppingBag,
 	Users,
 } from "lucide-react";
+import { cache } from "react";
 
-export const authFn = createServerFn({ method: "GET" }).handler(async (d) => {
-	const request = getWebRequest();
-	const h = getHeaders();
+export const authFn = createServerFn({ method: "GET" }).handler(
+	cache(async (d) => {
+		const request = getWebRequest();
+		const h = getHeaders();
 
-	const res = await getSsrSession(request?.headers);
+		const res = await getSsrSession(request?.headers);
 
-	// if (!res?.session) {
-	//   const cb = h.referer || env.MERCHANT_URL;
+		if (!res?.session) {
+			const cb = h.referer || env.MERCHANT_URL;
 
-	//   redirect({
-	//     href: `${env.WEB_URL}/login?cb=${cb}` as any,
-	//     throw: true,
-	//   });
-	// }
+			redirect({
+				href: `${env.WEB_URL}/login?cb=${cb}` as any,
+				throw: true,
+			});
+		}
 
-	return res;
-});
+		return res;
+	}),
+);
 
 export const Route = createFileRoute("/(loggedIn)")({
 	component: RouteComponent,
-	loader: async () => {
-		const result = await authFn();
-		return result;
-	},
+	// loader: async () => {
+	// 	const result = await authFn();
+	// 	return result;
+	// },
 });
 
 export const dashboardNav = {
@@ -73,7 +77,7 @@ export const dashboardNav = {
 		{
 			label: "Account",
 			url: "/account",
-			icon: CircleUser,
+			icon: Settings,
 		},
 		{ label: "Sign out", url: "/logout", icon: LogOut },
 		// { label: "Help", url: "/help", icon: CircleHel },
@@ -110,8 +114,8 @@ const mobileNav = [
 ];
 
 function RouteComponent() {
-	const data = Route.useLoaderData();
-	console.log(data);
+	// const data = Route.useLoaderData();
+
 	return (
 		<main>
 			<DashboardLayout

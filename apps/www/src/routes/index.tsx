@@ -88,7 +88,10 @@ function Home() {
 				logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
 			>
 				<DashboardBody>
-					<div className="relative bg-gradient-to-b from-primary/50 to-primary/40">
+					<div
+						onClick={() => console.log("t")}
+						className="relative bg-gradient-to-b from-primary/50 to-primary/40"
+					>
 						<NavBar />
 					</div>
 

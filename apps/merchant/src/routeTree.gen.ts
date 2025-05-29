@@ -10,444 +10,532 @@
 
 // Import Routes
 
-import { Route as rootRoute } from "./routes/__root";
-import { Route as DemoRouteImport } from "./routes/demo/route";
-import { Route as loggedInRouteImport } from "./routes/(loggedIn)/route";
-import { Route as DemoIndexImport } from "./routes/demo/index";
-import { Route as loggedInIndexImport } from "./routes/(loggedIn)/index";
-import { Route as DemoTanstackMutationImport } from "./routes/demo/tanstackMutation";
-import { Route as DemoSsrImport } from "./routes/demo/ssr";
-import { Route as DemoDirectMutationImport } from "./routes/demo/directMutation";
-import { Route as DemoClientImport } from "./routes/demo/client";
-import { Route as loggedInAccountRouteImport } from "./routes/(loggedIn)/account/route";
-import { Route as loggedInProductIndexImport } from "./routes/(loggedIn)/product/index";
-import { Route as loggedInOrderIndexImport } from "./routes/(loggedIn)/order/index";
-import { Route as loggedInCustomerIndexImport } from "./routes/(loggedIn)/customer/index";
-import { Route as loggedInAccountIndexImport } from "./routes/(loggedIn)/account/index";
-import { Route as loggedInProductIdImport } from "./routes/(loggedIn)/product/$id";
-import { Route as loggedInOrderIdImport } from "./routes/(loggedIn)/order/$id";
-import { Route as loggedInAccountSecurityImport } from "./routes/(loggedIn)/account/security";
-import { Route as loggedInAccountPreferencesImport } from "./routes/(loggedIn)/account/preferences";
+import { Route as rootRoute } from './routes/__root'
+import { Route as DemoRouteImport } from './routes/demo/route'
+import { Route as loggedInRouteImport } from './routes/(loggedIn)/route'
+import { Route as DemoIndexImport } from './routes/demo/index'
+import { Route as loggedInIndexImport } from './routes/(loggedIn)/index'
+import { Route as DemoTanstackMutationImport } from './routes/demo/tanstackMutation'
+import { Route as DemoSsrImport } from './routes/demo/ssr'
+import { Route as DemoDirectMutationImport } from './routes/demo/directMutation'
+import { Route as DemoClientImport } from './routes/demo/client'
+import { Route as loggedInAccountRouteImport } from './routes/(loggedIn)/account/route'
+import { Route as loggedInStoreIndexImport } from './routes/(loggedIn)/store/index'
+import { Route as loggedInProductIndexImport } from './routes/(loggedIn)/product/index'
+import { Route as loggedInOrderIndexImport } from './routes/(loggedIn)/order/index'
+import { Route as loggedInCustomerIndexImport } from './routes/(loggedIn)/customer/index'
+import { Route as loggedInAccountIndexImport } from './routes/(loggedIn)/account/index'
+import { Route as loggedInStoreStaffImport } from './routes/(loggedIn)/store/staff'
+import { Route as loggedInProductIdImport } from './routes/(loggedIn)/product/$id'
+import { Route as loggedInOrderIdImport } from './routes/(loggedIn)/order/$id'
+import { Route as loggedInAccountSupportImport } from './routes/(loggedIn)/account/support'
+import { Route as loggedInAccountReferralImport } from './routes/(loggedIn)/account/referral'
+import { Route as loggedInAccountProfileImport } from './routes/(loggedIn)/account/profile'
+import { Route as loggedInAccountPreferencesImport } from './routes/(loggedIn)/account/preferences'
 
 // Create/Update Routes
 
 const DemoRouteRoute = DemoRouteImport.update({
-	id: "/demo",
-	path: "/demo",
-	getParentRoute: () => rootRoute,
-} as any);
+  id: '/demo',
+  path: '/demo',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const loggedInRouteRoute = loggedInRouteImport.update({
-	id: "/(loggedIn)",
-	getParentRoute: () => rootRoute,
-} as any);
+  id: '/(loggedIn)',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const DemoIndexRoute = DemoIndexImport.update({
-	id: "/",
-	path: "/",
-	getParentRoute: () => DemoRouteRoute,
-} as any);
+  id: '/',
+  path: '/',
+  getParentRoute: () => DemoRouteRoute,
+} as any)
 
 const loggedInIndexRoute = loggedInIndexImport.update({
-	id: "/",
-	path: "/",
-	getParentRoute: () => loggedInRouteRoute,
-} as any);
+  id: '/',
+  path: '/',
+  getParentRoute: () => loggedInRouteRoute,
+} as any)
 
 const DemoTanstackMutationRoute = DemoTanstackMutationImport.update({
-	id: "/tanstackMutation",
-	path: "/tanstackMutation",
-	getParentRoute: () => DemoRouteRoute,
-} as any);
+  id: '/tanstackMutation',
+  path: '/tanstackMutation',
+  getParentRoute: () => DemoRouteRoute,
+} as any)
 
 const DemoSsrRoute = DemoSsrImport.update({
-	id: "/ssr",
-	path: "/ssr",
-	getParentRoute: () => DemoRouteRoute,
-} as any);
+  id: '/ssr',
+  path: '/ssr',
+  getParentRoute: () => DemoRouteRoute,
+} as any)
 
 const DemoDirectMutationRoute = DemoDirectMutationImport.update({
-	id: "/directMutation",
-	path: "/directMutation",
-	getParentRoute: () => DemoRouteRoute,
-} as any);
+  id: '/directMutation',
+  path: '/directMutation',
+  getParentRoute: () => DemoRouteRoute,
+} as any)
 
 const DemoClientRoute = DemoClientImport.update({
-	id: "/client",
-	path: "/client",
-	getParentRoute: () => DemoRouteRoute,
-} as any);
+  id: '/client',
+  path: '/client',
+  getParentRoute: () => DemoRouteRoute,
+} as any)
 
 const loggedInAccountRouteRoute = loggedInAccountRouteImport.update({
-	id: "/account",
-	path: "/account",
-	getParentRoute: () => loggedInRouteRoute,
-} as any);
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => loggedInRouteRoute,
+} as any)
+
+const loggedInStoreIndexRoute = loggedInStoreIndexImport.update({
+  id: '/store/',
+  path: '/store/',
+  getParentRoute: () => loggedInRouteRoute,
+} as any)
 
 const loggedInProductIndexRoute = loggedInProductIndexImport.update({
-	id: "/product/",
-	path: "/product/",
-	getParentRoute: () => loggedInRouteRoute,
-} as any);
+  id: '/product/',
+  path: '/product/',
+  getParentRoute: () => loggedInRouteRoute,
+} as any)
 
 const loggedInOrderIndexRoute = loggedInOrderIndexImport.update({
-	id: "/order/",
-	path: "/order/",
-	getParentRoute: () => loggedInRouteRoute,
-} as any);
+  id: '/order/',
+  path: '/order/',
+  getParentRoute: () => loggedInRouteRoute,
+} as any)
 
 const loggedInCustomerIndexRoute = loggedInCustomerIndexImport.update({
-	id: "/customer/",
-	path: "/customer/",
-	getParentRoute: () => loggedInRouteRoute,
-} as any);
+  id: '/customer/',
+  path: '/customer/',
+  getParentRoute: () => loggedInRouteRoute,
+} as any)
 
 const loggedInAccountIndexRoute = loggedInAccountIndexImport.update({
-	id: "/",
-	path: "/",
-	getParentRoute: () => loggedInAccountRouteRoute,
-} as any);
+  id: '/',
+  path: '/',
+  getParentRoute: () => loggedInAccountRouteRoute,
+} as any)
+
+const loggedInStoreStaffRoute = loggedInStoreStaffImport.update({
+  id: '/store/staff',
+  path: '/store/staff',
+  getParentRoute: () => loggedInRouteRoute,
+} as any)
 
 const loggedInProductIdRoute = loggedInProductIdImport.update({
-	id: "/product/$id",
-	path: "/product/$id",
-	getParentRoute: () => loggedInRouteRoute,
-} as any);
+  id: '/product/$id',
+  path: '/product/$id',
+  getParentRoute: () => loggedInRouteRoute,
+} as any)
 
 const loggedInOrderIdRoute = loggedInOrderIdImport.update({
-	id: "/order/$id",
-	path: "/order/$id",
-	getParentRoute: () => loggedInRouteRoute,
-} as any);
+  id: '/order/$id',
+  path: '/order/$id',
+  getParentRoute: () => loggedInRouteRoute,
+} as any)
 
-const loggedInAccountSecurityRoute = loggedInAccountSecurityImport.update({
-	id: "/security",
-	path: "/security",
-	getParentRoute: () => loggedInAccountRouteRoute,
-} as any);
+const loggedInAccountSupportRoute = loggedInAccountSupportImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => loggedInAccountRouteRoute,
+} as any)
+
+const loggedInAccountReferralRoute = loggedInAccountReferralImport.update({
+  id: '/referral',
+  path: '/referral',
+  getParentRoute: () => loggedInAccountRouteRoute,
+} as any)
+
+const loggedInAccountProfileRoute = loggedInAccountProfileImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => loggedInAccountRouteRoute,
+} as any)
 
 const loggedInAccountPreferencesRoute = loggedInAccountPreferencesImport.update(
-	{
-		id: "/preferences",
-		path: "/preferences",
-		getParentRoute: () => loggedInAccountRouteRoute,
-	} as any,
-);
+  {
+    id: '/preferences',
+    path: '/preferences',
+    getParentRoute: () => loggedInAccountRouteRoute,
+  } as any,
+)
 
 // Populate the FileRoutesByPath interface
 
-declare module "@tanstack/react-router" {
-	interface FileRoutesByPath {
-		"/(loggedIn)": {
-			id: "/(loggedIn)";
-			path: "/";
-			fullPath: "/";
-			preLoaderRoute: typeof loggedInRouteImport;
-			parentRoute: typeof rootRoute;
-		};
-		"/demo": {
-			id: "/demo";
-			path: "/demo";
-			fullPath: "/demo";
-			preLoaderRoute: typeof DemoRouteImport;
-			parentRoute: typeof rootRoute;
-		};
-		"/(loggedIn)/account": {
-			id: "/(loggedIn)/account";
-			path: "/account";
-			fullPath: "/account";
-			preLoaderRoute: typeof loggedInAccountRouteImport;
-			parentRoute: typeof loggedInRouteImport;
-		};
-		"/demo/client": {
-			id: "/demo/client";
-			path: "/client";
-			fullPath: "/demo/client";
-			preLoaderRoute: typeof DemoClientImport;
-			parentRoute: typeof DemoRouteImport;
-		};
-		"/demo/directMutation": {
-			id: "/demo/directMutation";
-			path: "/directMutation";
-			fullPath: "/demo/directMutation";
-			preLoaderRoute: typeof DemoDirectMutationImport;
-			parentRoute: typeof DemoRouteImport;
-		};
-		"/demo/ssr": {
-			id: "/demo/ssr";
-			path: "/ssr";
-			fullPath: "/demo/ssr";
-			preLoaderRoute: typeof DemoSsrImport;
-			parentRoute: typeof DemoRouteImport;
-		};
-		"/demo/tanstackMutation": {
-			id: "/demo/tanstackMutation";
-			path: "/tanstackMutation";
-			fullPath: "/demo/tanstackMutation";
-			preLoaderRoute: typeof DemoTanstackMutationImport;
-			parentRoute: typeof DemoRouteImport;
-		};
-		"/(loggedIn)/": {
-			id: "/(loggedIn)/";
-			path: "/";
-			fullPath: "/";
-			preLoaderRoute: typeof loggedInIndexImport;
-			parentRoute: typeof loggedInRouteImport;
-		};
-		"/demo/": {
-			id: "/demo/";
-			path: "/";
-			fullPath: "/demo/";
-			preLoaderRoute: typeof DemoIndexImport;
-			parentRoute: typeof DemoRouteImport;
-		};
-		"/(loggedIn)/account/preferences": {
-			id: "/(loggedIn)/account/preferences";
-			path: "/preferences";
-			fullPath: "/account/preferences";
-			preLoaderRoute: typeof loggedInAccountPreferencesImport;
-			parentRoute: typeof loggedInAccountRouteImport;
-		};
-		"/(loggedIn)/account/security": {
-			id: "/(loggedIn)/account/security";
-			path: "/security";
-			fullPath: "/account/security";
-			preLoaderRoute: typeof loggedInAccountSecurityImport;
-			parentRoute: typeof loggedInAccountRouteImport;
-		};
-		"/(loggedIn)/order/$id": {
-			id: "/(loggedIn)/order/$id";
-			path: "/order/$id";
-			fullPath: "/order/$id";
-			preLoaderRoute: typeof loggedInOrderIdImport;
-			parentRoute: typeof loggedInRouteImport;
-		};
-		"/(loggedIn)/product/$id": {
-			id: "/(loggedIn)/product/$id";
-			path: "/product/$id";
-			fullPath: "/product/$id";
-			preLoaderRoute: typeof loggedInProductIdImport;
-			parentRoute: typeof loggedInRouteImport;
-		};
-		"/(loggedIn)/account/": {
-			id: "/(loggedIn)/account/";
-			path: "/";
-			fullPath: "/account/";
-			preLoaderRoute: typeof loggedInAccountIndexImport;
-			parentRoute: typeof loggedInAccountRouteImport;
-		};
-		"/(loggedIn)/customer/": {
-			id: "/(loggedIn)/customer/";
-			path: "/customer";
-			fullPath: "/customer";
-			preLoaderRoute: typeof loggedInCustomerIndexImport;
-			parentRoute: typeof loggedInRouteImport;
-		};
-		"/(loggedIn)/order/": {
-			id: "/(loggedIn)/order/";
-			path: "/order";
-			fullPath: "/order";
-			preLoaderRoute: typeof loggedInOrderIndexImport;
-			parentRoute: typeof loggedInRouteImport;
-		};
-		"/(loggedIn)/product/": {
-			id: "/(loggedIn)/product/";
-			path: "/product";
-			fullPath: "/product";
-			preLoaderRoute: typeof loggedInProductIndexImport;
-			parentRoute: typeof loggedInRouteImport;
-		};
-	}
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/(loggedIn)': {
+      id: '/(loggedIn)'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof loggedInRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/demo': {
+      id: '/demo'
+      path: '/demo'
+      fullPath: '/demo'
+      preLoaderRoute: typeof DemoRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/(loggedIn)/account': {
+      id: '/(loggedIn)/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof loggedInAccountRouteImport
+      parentRoute: typeof loggedInRouteImport
+    }
+    '/demo/client': {
+      id: '/demo/client'
+      path: '/client'
+      fullPath: '/demo/client'
+      preLoaderRoute: typeof DemoClientImport
+      parentRoute: typeof DemoRouteImport
+    }
+    '/demo/directMutation': {
+      id: '/demo/directMutation'
+      path: '/directMutation'
+      fullPath: '/demo/directMutation'
+      preLoaderRoute: typeof DemoDirectMutationImport
+      parentRoute: typeof DemoRouteImport
+    }
+    '/demo/ssr': {
+      id: '/demo/ssr'
+      path: '/ssr'
+      fullPath: '/demo/ssr'
+      preLoaderRoute: typeof DemoSsrImport
+      parentRoute: typeof DemoRouteImport
+    }
+    '/demo/tanstackMutation': {
+      id: '/demo/tanstackMutation'
+      path: '/tanstackMutation'
+      fullPath: '/demo/tanstackMutation'
+      preLoaderRoute: typeof DemoTanstackMutationImport
+      parentRoute: typeof DemoRouteImport
+    }
+    '/(loggedIn)/': {
+      id: '/(loggedIn)/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof loggedInIndexImport
+      parentRoute: typeof loggedInRouteImport
+    }
+    '/demo/': {
+      id: '/demo/'
+      path: '/'
+      fullPath: '/demo/'
+      preLoaderRoute: typeof DemoIndexImport
+      parentRoute: typeof DemoRouteImport
+    }
+    '/(loggedIn)/account/preferences': {
+      id: '/(loggedIn)/account/preferences'
+      path: '/preferences'
+      fullPath: '/account/preferences'
+      preLoaderRoute: typeof loggedInAccountPreferencesImport
+      parentRoute: typeof loggedInAccountRouteImport
+    }
+    '/(loggedIn)/account/profile': {
+      id: '/(loggedIn)/account/profile'
+      path: '/profile'
+      fullPath: '/account/profile'
+      preLoaderRoute: typeof loggedInAccountProfileImport
+      parentRoute: typeof loggedInAccountRouteImport
+    }
+    '/(loggedIn)/account/referral': {
+      id: '/(loggedIn)/account/referral'
+      path: '/referral'
+      fullPath: '/account/referral'
+      preLoaderRoute: typeof loggedInAccountReferralImport
+      parentRoute: typeof loggedInAccountRouteImport
+    }
+    '/(loggedIn)/account/support': {
+      id: '/(loggedIn)/account/support'
+      path: '/support'
+      fullPath: '/account/support'
+      preLoaderRoute: typeof loggedInAccountSupportImport
+      parentRoute: typeof loggedInAccountRouteImport
+    }
+    '/(loggedIn)/order/$id': {
+      id: '/(loggedIn)/order/$id'
+      path: '/order/$id'
+      fullPath: '/order/$id'
+      preLoaderRoute: typeof loggedInOrderIdImport
+      parentRoute: typeof loggedInRouteImport
+    }
+    '/(loggedIn)/product/$id': {
+      id: '/(loggedIn)/product/$id'
+      path: '/product/$id'
+      fullPath: '/product/$id'
+      preLoaderRoute: typeof loggedInProductIdImport
+      parentRoute: typeof loggedInRouteImport
+    }
+    '/(loggedIn)/store/staff': {
+      id: '/(loggedIn)/store/staff'
+      path: '/store/staff'
+      fullPath: '/store/staff'
+      preLoaderRoute: typeof loggedInStoreStaffImport
+      parentRoute: typeof loggedInRouteImport
+    }
+    '/(loggedIn)/account/': {
+      id: '/(loggedIn)/account/'
+      path: '/'
+      fullPath: '/account/'
+      preLoaderRoute: typeof loggedInAccountIndexImport
+      parentRoute: typeof loggedInAccountRouteImport
+    }
+    '/(loggedIn)/customer/': {
+      id: '/(loggedIn)/customer/'
+      path: '/customer'
+      fullPath: '/customer'
+      preLoaderRoute: typeof loggedInCustomerIndexImport
+      parentRoute: typeof loggedInRouteImport
+    }
+    '/(loggedIn)/order/': {
+      id: '/(loggedIn)/order/'
+      path: '/order'
+      fullPath: '/order'
+      preLoaderRoute: typeof loggedInOrderIndexImport
+      parentRoute: typeof loggedInRouteImport
+    }
+    '/(loggedIn)/product/': {
+      id: '/(loggedIn)/product/'
+      path: '/product'
+      fullPath: '/product'
+      preLoaderRoute: typeof loggedInProductIndexImport
+      parentRoute: typeof loggedInRouteImport
+    }
+    '/(loggedIn)/store/': {
+      id: '/(loggedIn)/store/'
+      path: '/store'
+      fullPath: '/store'
+      preLoaderRoute: typeof loggedInStoreIndexImport
+      parentRoute: typeof loggedInRouteImport
+    }
+  }
 }
 
 // Create and export the route tree
 
 interface loggedInAccountRouteRouteChildren {
-	loggedInAccountPreferencesRoute: typeof loggedInAccountPreferencesRoute;
-	loggedInAccountSecurityRoute: typeof loggedInAccountSecurityRoute;
-	loggedInAccountIndexRoute: typeof loggedInAccountIndexRoute;
+  loggedInAccountPreferencesRoute: typeof loggedInAccountPreferencesRoute
+  loggedInAccountProfileRoute: typeof loggedInAccountProfileRoute
+  loggedInAccountReferralRoute: typeof loggedInAccountReferralRoute
+  loggedInAccountSupportRoute: typeof loggedInAccountSupportRoute
+  loggedInAccountIndexRoute: typeof loggedInAccountIndexRoute
 }
 
 const loggedInAccountRouteRouteChildren: loggedInAccountRouteRouteChildren = {
-	loggedInAccountPreferencesRoute: loggedInAccountPreferencesRoute,
-	loggedInAccountSecurityRoute: loggedInAccountSecurityRoute,
-	loggedInAccountIndexRoute: loggedInAccountIndexRoute,
-};
+  loggedInAccountPreferencesRoute: loggedInAccountPreferencesRoute,
+  loggedInAccountProfileRoute: loggedInAccountProfileRoute,
+  loggedInAccountReferralRoute: loggedInAccountReferralRoute,
+  loggedInAccountSupportRoute: loggedInAccountSupportRoute,
+  loggedInAccountIndexRoute: loggedInAccountIndexRoute,
+}
 
 const loggedInAccountRouteRouteWithChildren =
-	loggedInAccountRouteRoute._addFileChildren(loggedInAccountRouteRouteChildren);
+  loggedInAccountRouteRoute._addFileChildren(loggedInAccountRouteRouteChildren)
 
 interface loggedInRouteRouteChildren {
-	loggedInAccountRouteRoute: typeof loggedInAccountRouteRouteWithChildren;
-	loggedInIndexRoute: typeof loggedInIndexRoute;
-	loggedInOrderIdRoute: typeof loggedInOrderIdRoute;
-	loggedInProductIdRoute: typeof loggedInProductIdRoute;
-	loggedInCustomerIndexRoute: typeof loggedInCustomerIndexRoute;
-	loggedInOrderIndexRoute: typeof loggedInOrderIndexRoute;
-	loggedInProductIndexRoute: typeof loggedInProductIndexRoute;
+  loggedInAccountRouteRoute: typeof loggedInAccountRouteRouteWithChildren
+  loggedInIndexRoute: typeof loggedInIndexRoute
+  loggedInOrderIdRoute: typeof loggedInOrderIdRoute
+  loggedInProductIdRoute: typeof loggedInProductIdRoute
+  loggedInStoreStaffRoute: typeof loggedInStoreStaffRoute
+  loggedInCustomerIndexRoute: typeof loggedInCustomerIndexRoute
+  loggedInOrderIndexRoute: typeof loggedInOrderIndexRoute
+  loggedInProductIndexRoute: typeof loggedInProductIndexRoute
+  loggedInStoreIndexRoute: typeof loggedInStoreIndexRoute
 }
 
 const loggedInRouteRouteChildren: loggedInRouteRouteChildren = {
-	loggedInAccountRouteRoute: loggedInAccountRouteRouteWithChildren,
-	loggedInIndexRoute: loggedInIndexRoute,
-	loggedInOrderIdRoute: loggedInOrderIdRoute,
-	loggedInProductIdRoute: loggedInProductIdRoute,
-	loggedInCustomerIndexRoute: loggedInCustomerIndexRoute,
-	loggedInOrderIndexRoute: loggedInOrderIndexRoute,
-	loggedInProductIndexRoute: loggedInProductIndexRoute,
-};
+  loggedInAccountRouteRoute: loggedInAccountRouteRouteWithChildren,
+  loggedInIndexRoute: loggedInIndexRoute,
+  loggedInOrderIdRoute: loggedInOrderIdRoute,
+  loggedInProductIdRoute: loggedInProductIdRoute,
+  loggedInStoreStaffRoute: loggedInStoreStaffRoute,
+  loggedInCustomerIndexRoute: loggedInCustomerIndexRoute,
+  loggedInOrderIndexRoute: loggedInOrderIndexRoute,
+  loggedInProductIndexRoute: loggedInProductIndexRoute,
+  loggedInStoreIndexRoute: loggedInStoreIndexRoute,
+}
 
 const loggedInRouteRouteWithChildren = loggedInRouteRoute._addFileChildren(
-	loggedInRouteRouteChildren,
-);
+  loggedInRouteRouteChildren,
+)
 
 interface DemoRouteRouteChildren {
-	DemoClientRoute: typeof DemoClientRoute;
-	DemoDirectMutationRoute: typeof DemoDirectMutationRoute;
-	DemoSsrRoute: typeof DemoSsrRoute;
-	DemoTanstackMutationRoute: typeof DemoTanstackMutationRoute;
-	DemoIndexRoute: typeof DemoIndexRoute;
+  DemoClientRoute: typeof DemoClientRoute
+  DemoDirectMutationRoute: typeof DemoDirectMutationRoute
+  DemoSsrRoute: typeof DemoSsrRoute
+  DemoTanstackMutationRoute: typeof DemoTanstackMutationRoute
+  DemoIndexRoute: typeof DemoIndexRoute
 }
 
 const DemoRouteRouteChildren: DemoRouteRouteChildren = {
-	DemoClientRoute: DemoClientRoute,
-	DemoDirectMutationRoute: DemoDirectMutationRoute,
-	DemoSsrRoute: DemoSsrRoute,
-	DemoTanstackMutationRoute: DemoTanstackMutationRoute,
-	DemoIndexRoute: DemoIndexRoute,
-};
+  DemoClientRoute: DemoClientRoute,
+  DemoDirectMutationRoute: DemoDirectMutationRoute,
+  DemoSsrRoute: DemoSsrRoute,
+  DemoTanstackMutationRoute: DemoTanstackMutationRoute,
+  DemoIndexRoute: DemoIndexRoute,
+}
 
 const DemoRouteRouteWithChildren = DemoRouteRoute._addFileChildren(
-	DemoRouteRouteChildren,
-);
+  DemoRouteRouteChildren,
+)
 
 export interface FileRoutesByFullPath {
-	"/": typeof loggedInIndexRoute;
-	"/demo": typeof DemoRouteRouteWithChildren;
-	"/account": typeof loggedInAccountRouteRouteWithChildren;
-	"/demo/client": typeof DemoClientRoute;
-	"/demo/directMutation": typeof DemoDirectMutationRoute;
-	"/demo/ssr": typeof DemoSsrRoute;
-	"/demo/tanstackMutation": typeof DemoTanstackMutationRoute;
-	"/demo/": typeof DemoIndexRoute;
-	"/account/preferences": typeof loggedInAccountPreferencesRoute;
-	"/account/security": typeof loggedInAccountSecurityRoute;
-	"/order/$id": typeof loggedInOrderIdRoute;
-	"/product/$id": typeof loggedInProductIdRoute;
-	"/account/": typeof loggedInAccountIndexRoute;
-	"/customer": typeof loggedInCustomerIndexRoute;
-	"/order": typeof loggedInOrderIndexRoute;
-	"/product": typeof loggedInProductIndexRoute;
+  '/': typeof loggedInIndexRoute
+  '/demo': typeof DemoRouteRouteWithChildren
+  '/account': typeof loggedInAccountRouteRouteWithChildren
+  '/demo/client': typeof DemoClientRoute
+  '/demo/directMutation': typeof DemoDirectMutationRoute
+  '/demo/ssr': typeof DemoSsrRoute
+  '/demo/tanstackMutation': typeof DemoTanstackMutationRoute
+  '/demo/': typeof DemoIndexRoute
+  '/account/preferences': typeof loggedInAccountPreferencesRoute
+  '/account/profile': typeof loggedInAccountProfileRoute
+  '/account/referral': typeof loggedInAccountReferralRoute
+  '/account/support': typeof loggedInAccountSupportRoute
+  '/order/$id': typeof loggedInOrderIdRoute
+  '/product/$id': typeof loggedInProductIdRoute
+  '/store/staff': typeof loggedInStoreStaffRoute
+  '/account/': typeof loggedInAccountIndexRoute
+  '/customer': typeof loggedInCustomerIndexRoute
+  '/order': typeof loggedInOrderIndexRoute
+  '/product': typeof loggedInProductIndexRoute
+  '/store': typeof loggedInStoreIndexRoute
 }
 
 export interface FileRoutesByTo {
-	"/demo/client": typeof DemoClientRoute;
-	"/demo/directMutation": typeof DemoDirectMutationRoute;
-	"/demo/ssr": typeof DemoSsrRoute;
-	"/demo/tanstackMutation": typeof DemoTanstackMutationRoute;
-	"/": typeof loggedInIndexRoute;
-	"/demo": typeof DemoIndexRoute;
-	"/account/preferences": typeof loggedInAccountPreferencesRoute;
-	"/account/security": typeof loggedInAccountSecurityRoute;
-	"/order/$id": typeof loggedInOrderIdRoute;
-	"/product/$id": typeof loggedInProductIdRoute;
-	"/account": typeof loggedInAccountIndexRoute;
-	"/customer": typeof loggedInCustomerIndexRoute;
-	"/order": typeof loggedInOrderIndexRoute;
-	"/product": typeof loggedInProductIndexRoute;
+  '/demo/client': typeof DemoClientRoute
+  '/demo/directMutation': typeof DemoDirectMutationRoute
+  '/demo/ssr': typeof DemoSsrRoute
+  '/demo/tanstackMutation': typeof DemoTanstackMutationRoute
+  '/': typeof loggedInIndexRoute
+  '/demo': typeof DemoIndexRoute
+  '/account/preferences': typeof loggedInAccountPreferencesRoute
+  '/account/profile': typeof loggedInAccountProfileRoute
+  '/account/referral': typeof loggedInAccountReferralRoute
+  '/account/support': typeof loggedInAccountSupportRoute
+  '/order/$id': typeof loggedInOrderIdRoute
+  '/product/$id': typeof loggedInProductIdRoute
+  '/store/staff': typeof loggedInStoreStaffRoute
+  '/account': typeof loggedInAccountIndexRoute
+  '/customer': typeof loggedInCustomerIndexRoute
+  '/order': typeof loggedInOrderIndexRoute
+  '/product': typeof loggedInProductIndexRoute
+  '/store': typeof loggedInStoreIndexRoute
 }
 
 export interface FileRoutesById {
-	__root__: typeof rootRoute;
-	"/(loggedIn)": typeof loggedInRouteRouteWithChildren;
-	"/demo": typeof DemoRouteRouteWithChildren;
-	"/(loggedIn)/account": typeof loggedInAccountRouteRouteWithChildren;
-	"/demo/client": typeof DemoClientRoute;
-	"/demo/directMutation": typeof DemoDirectMutationRoute;
-	"/demo/ssr": typeof DemoSsrRoute;
-	"/demo/tanstackMutation": typeof DemoTanstackMutationRoute;
-	"/(loggedIn)/": typeof loggedInIndexRoute;
-	"/demo/": typeof DemoIndexRoute;
-	"/(loggedIn)/account/preferences": typeof loggedInAccountPreferencesRoute;
-	"/(loggedIn)/account/security": typeof loggedInAccountSecurityRoute;
-	"/(loggedIn)/order/$id": typeof loggedInOrderIdRoute;
-	"/(loggedIn)/product/$id": typeof loggedInProductIdRoute;
-	"/(loggedIn)/account/": typeof loggedInAccountIndexRoute;
-	"/(loggedIn)/customer/": typeof loggedInCustomerIndexRoute;
-	"/(loggedIn)/order/": typeof loggedInOrderIndexRoute;
-	"/(loggedIn)/product/": typeof loggedInProductIndexRoute;
+  __root__: typeof rootRoute
+  '/(loggedIn)': typeof loggedInRouteRouteWithChildren
+  '/demo': typeof DemoRouteRouteWithChildren
+  '/(loggedIn)/account': typeof loggedInAccountRouteRouteWithChildren
+  '/demo/client': typeof DemoClientRoute
+  '/demo/directMutation': typeof DemoDirectMutationRoute
+  '/demo/ssr': typeof DemoSsrRoute
+  '/demo/tanstackMutation': typeof DemoTanstackMutationRoute
+  '/(loggedIn)/': typeof loggedInIndexRoute
+  '/demo/': typeof DemoIndexRoute
+  '/(loggedIn)/account/preferences': typeof loggedInAccountPreferencesRoute
+  '/(loggedIn)/account/profile': typeof loggedInAccountProfileRoute
+  '/(loggedIn)/account/referral': typeof loggedInAccountReferralRoute
+  '/(loggedIn)/account/support': typeof loggedInAccountSupportRoute
+  '/(loggedIn)/order/$id': typeof loggedInOrderIdRoute
+  '/(loggedIn)/product/$id': typeof loggedInProductIdRoute
+  '/(loggedIn)/store/staff': typeof loggedInStoreStaffRoute
+  '/(loggedIn)/account/': typeof loggedInAccountIndexRoute
+  '/(loggedIn)/customer/': typeof loggedInCustomerIndexRoute
+  '/(loggedIn)/order/': typeof loggedInOrderIndexRoute
+  '/(loggedIn)/product/': typeof loggedInProductIndexRoute
+  '/(loggedIn)/store/': typeof loggedInStoreIndexRoute
 }
 
 export interface FileRouteTypes {
-	fileRoutesByFullPath: FileRoutesByFullPath;
-	fullPaths:
-		| "/"
-		| "/demo"
-		| "/account"
-		| "/demo/client"
-		| "/demo/directMutation"
-		| "/demo/ssr"
-		| "/demo/tanstackMutation"
-		| "/demo/"
-		| "/account/preferences"
-		| "/account/security"
-		| "/order/$id"
-		| "/product/$id"
-		| "/account/"
-		| "/customer"
-		| "/order"
-		| "/product";
-	fileRoutesByTo: FileRoutesByTo;
-	to:
-		| "/demo/client"
-		| "/demo/directMutation"
-		| "/demo/ssr"
-		| "/demo/tanstackMutation"
-		| "/"
-		| "/demo"
-		| "/account/preferences"
-		| "/account/security"
-		| "/order/$id"
-		| "/product/$id"
-		| "/account"
-		| "/customer"
-		| "/order"
-		| "/product";
-	id:
-		| "__root__"
-		| "/(loggedIn)"
-		| "/demo"
-		| "/(loggedIn)/account"
-		| "/demo/client"
-		| "/demo/directMutation"
-		| "/demo/ssr"
-		| "/demo/tanstackMutation"
-		| "/(loggedIn)/"
-		| "/demo/"
-		| "/(loggedIn)/account/preferences"
-		| "/(loggedIn)/account/security"
-		| "/(loggedIn)/order/$id"
-		| "/(loggedIn)/product/$id"
-		| "/(loggedIn)/account/"
-		| "/(loggedIn)/customer/"
-		| "/(loggedIn)/order/"
-		| "/(loggedIn)/product/";
-	fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/'
+    | '/demo'
+    | '/account'
+    | '/demo/client'
+    | '/demo/directMutation'
+    | '/demo/ssr'
+    | '/demo/tanstackMutation'
+    | '/demo/'
+    | '/account/preferences'
+    | '/account/profile'
+    | '/account/referral'
+    | '/account/support'
+    | '/order/$id'
+    | '/product/$id'
+    | '/store/staff'
+    | '/account/'
+    | '/customer'
+    | '/order'
+    | '/product'
+    | '/store'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/demo/client'
+    | '/demo/directMutation'
+    | '/demo/ssr'
+    | '/demo/tanstackMutation'
+    | '/'
+    | '/demo'
+    | '/account/preferences'
+    | '/account/profile'
+    | '/account/referral'
+    | '/account/support'
+    | '/order/$id'
+    | '/product/$id'
+    | '/store/staff'
+    | '/account'
+    | '/customer'
+    | '/order'
+    | '/product'
+    | '/store'
+  id:
+    | '__root__'
+    | '/(loggedIn)'
+    | '/demo'
+    | '/(loggedIn)/account'
+    | '/demo/client'
+    | '/demo/directMutation'
+    | '/demo/ssr'
+    | '/demo/tanstackMutation'
+    | '/(loggedIn)/'
+    | '/demo/'
+    | '/(loggedIn)/account/preferences'
+    | '/(loggedIn)/account/profile'
+    | '/(loggedIn)/account/referral'
+    | '/(loggedIn)/account/support'
+    | '/(loggedIn)/order/$id'
+    | '/(loggedIn)/product/$id'
+    | '/(loggedIn)/store/staff'
+    | '/(loggedIn)/account/'
+    | '/(loggedIn)/customer/'
+    | '/(loggedIn)/order/'
+    | '/(loggedIn)/product/'
+    | '/(loggedIn)/store/'
+  fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-	loggedInRouteRoute: typeof loggedInRouteRouteWithChildren;
-	DemoRouteRoute: typeof DemoRouteRouteWithChildren;
+  loggedInRouteRoute: typeof loggedInRouteRouteWithChildren
+  DemoRouteRoute: typeof DemoRouteRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
-	loggedInRouteRoute: loggedInRouteRouteWithChildren,
-	DemoRouteRoute: DemoRouteRouteWithChildren,
-};
+  loggedInRouteRoute: loggedInRouteRouteWithChildren,
+  DemoRouteRoute: DemoRouteRouteWithChildren,
+}
 
 export const routeTree = rootRoute
-	._addFileChildren(rootRouteChildren)
-	._addFileTypes<FileRouteTypes>();
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
 
 /* ROUTE_MANIFEST_START
 {
@@ -466,9 +554,11 @@ export const routeTree = rootRoute
         "/(loggedIn)/",
         "/(loggedIn)/order/$id",
         "/(loggedIn)/product/$id",
+        "/(loggedIn)/store/staff",
         "/(loggedIn)/customer/",
         "/(loggedIn)/order/",
-        "/(loggedIn)/product/"
+        "/(loggedIn)/product/",
+        "/(loggedIn)/store/"
       ]
     },
     "/demo": {
@@ -486,7 +576,9 @@ export const routeTree = rootRoute
       "parent": "/(loggedIn)",
       "children": [
         "/(loggedIn)/account/preferences",
-        "/(loggedIn)/account/security",
+        "/(loggedIn)/account/profile",
+        "/(loggedIn)/account/referral",
+        "/(loggedIn)/account/support",
         "/(loggedIn)/account/"
       ]
     },
@@ -518,8 +610,16 @@ export const routeTree = rootRoute
       "filePath": "(loggedIn)/account/preferences.tsx",
       "parent": "/(loggedIn)/account"
     },
-    "/(loggedIn)/account/security": {
-      "filePath": "(loggedIn)/account/security.tsx",
+    "/(loggedIn)/account/profile": {
+      "filePath": "(loggedIn)/account/profile.tsx",
+      "parent": "/(loggedIn)/account"
+    },
+    "/(loggedIn)/account/referral": {
+      "filePath": "(loggedIn)/account/referral.tsx",
+      "parent": "/(loggedIn)/account"
+    },
+    "/(loggedIn)/account/support": {
+      "filePath": "(loggedIn)/account/support.tsx",
       "parent": "/(loggedIn)/account"
     },
     "/(loggedIn)/order/$id": {
@@ -528,6 +628,10 @@ export const routeTree = rootRoute
     },
     "/(loggedIn)/product/$id": {
       "filePath": "(loggedIn)/product/$id.tsx",
+      "parent": "/(loggedIn)"
+    },
+    "/(loggedIn)/store/staff": {
+      "filePath": "(loggedIn)/store/staff.tsx",
       "parent": "/(loggedIn)"
     },
     "/(loggedIn)/account/": {
@@ -544,6 +648,10 @@ export const routeTree = rootRoute
     },
     "/(loggedIn)/product/": {
       "filePath": "(loggedIn)/product/index.tsx",
+      "parent": "/(loggedIn)"
+    },
+    "/(loggedIn)/store/": {
+      "filePath": "(loggedIn)/store/index.tsx",
       "parent": "/(loggedIn)"
     }
   }

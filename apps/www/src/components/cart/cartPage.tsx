@@ -26,7 +26,7 @@ export const CartPage = () => {
 			<h1 className="text-2xl font-semibold">Your Cart</h1>
 
 			{cart.map((item) => (
-				<Card key={item.variantId + item.unit}>
+				<Card key={item.id + item.unit}>
 					<CardContent className="p-4 flex items-center justify-between gap-4">
 						<div className="flex-1">
 							<p className="text-base font-medium">{item.title}</p>
@@ -40,7 +40,7 @@ export const CartPage = () => {
 								variant="outline"
 								size="icon"
 								onClick={() =>
-									updateCart({ ...item, id: item.variantId }, "decrement")
+									updateCart({ ...item, id: item.id }, "decrement")
 								}
 							>
 								<Minus className="w-4 h-4" />
@@ -50,7 +50,7 @@ export const CartPage = () => {
 								variant="outline"
 								size="icon"
 								onClick={() =>
-									updateCart({ ...item, id: item.variantId }, "increment")
+									updateCart({ ...item, id: item.id }, "increment")
 								}
 							>
 								<Plus className="w-4 h-4" />

@@ -3,7 +3,7 @@ import { SES } from "@aws-sdk/client-ses";
 import type { SendEmailCommandInput } from "@aws-sdk/client-ses";
 
 const ses = new SES({
-	region: env.AWS_REGION,
+	region: env.AWS_SES_REGION,
 	credentials: {
 		accessKeyId: env.AWS_ACCESS_KEY,
 		secretAccessKey: env.AWS_SECRET_KEY,

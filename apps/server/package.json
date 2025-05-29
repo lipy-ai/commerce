@@ -11,7 +11,7 @@
 		"db:migrate": "bun run db:generate && bun run env drizzle-kit migrate",
 		"db:seed": "bun run env bun ./src/db/seed.ts",
 		"format": "biome format",
-		"lint": "biome lint",
+		"lint": "tsc && biome lint",
 		"check": "biome check"
 	},
 	"dependencies": {
@@ -38,8 +38,9 @@
 	},
 	"packageManager": "bun@1.1.2",
 	"devDependencies": {
-		"@antfu/eslint-config": "^4.11.0",
+		"@biomejs/biome": "^1.9.4",
 		"@types/bun": "latest",
+		"@types/node": "^22.15.24",
 		"@types/pg": "^8.11.11",
 		"drizzle-kit": "^0.30.6",
 		"drizzle-seed": "^0.3.1"

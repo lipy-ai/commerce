@@ -22,7 +22,7 @@ import {
 import { cache } from "react";
 
 export const authFn = createServerFn({ method: "GET" }).handler(
-	cache(async (d) => {
+	cache(async () => {
 		const request = getWebRequest();
 		const h = getHeaders();
 

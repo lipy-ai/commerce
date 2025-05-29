@@ -1,6 +1,6 @@
 // Import JSON data directly
 import { Check, ChevronsUpDown } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 
 import { Button } from "@lipy/web-ui/components/ui/button";
 import {
@@ -50,17 +50,17 @@ interface CountryProps {
 	emojiU: string;
 }
 
-interface StateProps {
-	id: number;
-	name: string;
-	country_id: number;
-	country_code: string;
-	country_name: string;
-	state_code: string;
-	type: string | null;
-	latitude: string;
-	longitude: string;
-}
+// interface StateProps {
+// 	id: number;
+// 	name: string;
+// 	country_id: number;
+// 	country_code: string;
+// 	country_name: string;
+// 	state_code: string;
+// 	type: string | null;
+// 	latitude: string;
+// 	longitude: string;
+// }
 
 interface LocationSelectorProps {
 	size: "default" | "lg";

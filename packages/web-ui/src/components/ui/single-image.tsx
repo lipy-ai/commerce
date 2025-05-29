@@ -8,7 +8,6 @@ import { toast } from "sonner";
 import CircularProgress from "./circular-progress";
 
 type SingleImageProps = {
-	fileType: Parameters<typeof useUpload>["0"]["type"];
 	url?: string;
 	alt?: string;
 	accept?: string;
@@ -33,9 +32,9 @@ const SingleImage = (props: SingleImageProps) => {
 	);
 };
 
-const Input = ({ fileType, onSuccess, accept }: SingleImageProps) => {
+const Input = ({  onSuccess, accept }: SingleImageProps) => {
 	const [file, setFile] = React.useState<File | null>(null);
-	const { status, progress, data } = useUpload({ file, type: fileType });
+	const { status, progress, data } = useUpload({ file });
 
 	React.useEffect(() => {
 		if (status === "success" && data.url) {

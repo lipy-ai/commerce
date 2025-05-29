@@ -1,4 +1,3 @@
-import { apiClient } from "@lipy/lib/api/index.js";
 import { authClient } from "@lipy/lib/providers/auth";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { toast } from "@lipy/web-ui/components/ui/sonner";

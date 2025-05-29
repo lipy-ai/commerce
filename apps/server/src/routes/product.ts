@@ -6,8 +6,8 @@ import { jsonArrayFrom } from "kysely/helpers/postgres";
 import { z } from "zod";
 
 const schema = z.object({
-	category_id: z.string().optional(),
-	shop_id: z.string().optional(),
+	categoryId: z.string().optional(),
+	shopId: z.string().optional(),
 	search: z.string().optional(),
 });
 
@@ -18,14 +18,14 @@ const route = new Hono<ServerContext>()
 		let query = db
 			.selectFrom("product as p")
 			.leftJoin("category as c", "p.category", "c.id")
-			.orderBy("c.id asc");
+			.orderBy("c.id");
 
-		if (q.category_id) {
-			query = query.where("p.category", "=", q.category_id);
+		if (q.categoryId) {
+			query = query.where("p.category", "=", q.categoryId);
 		}
 
-		if (q.shop_id) {
-			query = query.where("p.organization_id", "=", q.shop_id);
+		if (q.shopId) {
+			query = query.where("p.storeId", "=", q.shopId);
 		}
 
 		if (q.search) {
@@ -36,12 +36,11 @@ const route = new Hono<ServerContext>()
 			.select((eb) => [
 				"p.id",
 				"p.title",
-				"p.in_stock",
-				"c.title as category_title",
-				"c.id as category_id",
+				"c.title as categoryTitle",
+				"c.id as categoryId",
 				jsonArrayFrom(
 					eb
-						.selectFrom("product_variant as pv")
+						.selectFrom("productVariant as pv")
 						.selectAll()
 						.whereRef("pv.product", "=", "p.id"),
 				).as("variants"),
@@ -63,10 +62,9 @@ const route = new Hono<ServerContext>()
 					"p.id",
 					"p.title",
 					"p.category",
-					"p.in_stock",
 					jsonArrayFrom(
 						eb
-							.selectFrom("product_variant as pv")
+							.selectFrom("productVariant as pv")
 							.selectAll()
 							.whereRef("pv.product", "=", "p.id"),
 					).as("variants"),

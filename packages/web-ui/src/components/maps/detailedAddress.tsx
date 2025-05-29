@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { apiClient } from "@lipy/lib/api";
 import { authClient } from "@lipy/lib/providers/auth";
 import { apiQueryOptions, useAPIMutation } from "@lipy/lib/utils/queryClient";

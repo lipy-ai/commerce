@@ -1,14 +1,6 @@
 import { ScrollingTabs } from "@lipy/web-ui/components/scrollable-tabs";
 import SearchBar from "@lipy/web-ui/components/searchBar";
-import { Button } from "@lipy/web-ui/components/ui/button";
-import {
-	Cherry,
-	Filter,
-	Milk,
-	Salad,
-	ShoppingBasket,
-	Store,
-} from "lucide-react";
+import { Cherry, Milk, Salad, ShoppingBasket, Store } from "lucide-react";
 import { useState } from "react";
 
 const CATEGORIES = [
@@ -20,7 +12,7 @@ const CATEGORIES = [
 ];
 
 export function SearchFilter() {
-	const [activeCategory, setActiveCategory] = useState("all");
+	const [_, setActiveCategory] = useState("all");
 	return (
 		<div className="px-4 py-3 ">
 			<div className="relative mb-4 gap-2">

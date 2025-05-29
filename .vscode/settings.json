@@ -24,6 +24,18 @@
 		"editor.defaultFormatter": "biomejs.biome"
 	},
 	"editor.codeActionsOnSave": {
-		"source.organizeImports.biome": "explicit"
+		"source.organizeImports.biome": "explicit",
+		"quickfix.biome": "explicit"
 	}
+	// "tailwindCSS.experimental.configFile": {
+	// 	"packages/web-ui/src/style.css": [
+	// 		"apps/www/**",
+	// 		"apps/merchant/**",
+	// 		"apps/admin/**",
+	// 		"packages/lib/**"
+	// 	]
+	// }
+	// "prettier.enable": false,
+	// "eslint.enable": false
+	// "editor.formatOnSave": true
 }

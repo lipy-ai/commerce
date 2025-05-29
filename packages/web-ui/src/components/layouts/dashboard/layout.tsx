@@ -60,7 +60,7 @@ export const DashboardLayout = ({
 					</div>
 				)}
 
-				<div>{children}</div>
+				<div className="pb-18">{children}</div>
 
 				<ActiveLinks
 					isMobile
@@ -117,7 +117,6 @@ function ActiveLinks({
 		const diff = current - lastRef.current;
 		if (Math.abs(diff) > 30) {
 			setIsHidden(diff > 0);
-
 			lastRef.current = current;
 		}
 	});

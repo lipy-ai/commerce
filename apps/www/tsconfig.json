@@ -1,9 +1,5 @@
 {
-	"include": [
-		"**/*.ts",
-		"**/*.tsx",
-		"../../packages/web-ui/src/components/searchBar.tsx"
-	],
+	"include": ["**/*.ts", "**/*.tsx"],
 	"references": [{ "path": "../../apps/server" }],
 
 	"compilerOptions": {
@@ -34,6 +30,7 @@
 		"paths": {
 			"@/*": ["./src/*"],
 			"@envClient": ["../../env.client.ts"],
+
 			"@lipy/web-ui/*": ["../../packages/web-ui/src/*"],
 			"@lipy/lib/*": ["../../packages/lib/src/*"],
 			"@lipy/server/*": ["../server/src/*"]

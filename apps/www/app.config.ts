@@ -10,6 +10,8 @@ export default defineConfig({
 		appDirectory: "src",
 	},
 	server: {
+		minify: true,
+		sourceMap: process.env.NODE_ENV === "development",
 		routeRules: {
 			"/api/**": {
 				proxy: {

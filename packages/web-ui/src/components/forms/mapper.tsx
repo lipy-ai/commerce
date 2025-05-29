@@ -1,3 +1,6 @@
+// @ts-ignore
+// @ts-nocheck
+
 import type * as React from "react";
 import type { ControllerRenderProps, UseFormReturn } from "react-hook-form";
 

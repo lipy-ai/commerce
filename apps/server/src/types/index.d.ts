@@ -2,6 +2,7 @@ import type { auth } from "@/auth";
 import type { hasPermission } from "@/auth/permission";
 import type { Context, Env } from "hono";
 import type { routes } from "@/app";
+import { DBTypes } from "@/db";
 export * from "./auth";
 
 export type AppType = typeof routes;
@@ -9,7 +10,7 @@ export type AppType = typeof routes;
 export interface ServerContext extends Env {
   Variables: {
     user: typeof auth.$Infer.Session.user | null;
-    session: typeof auth.$Infer.Session.session | null;
+    session: typeof auth.$Infer.Session.session & {activeStoreId:string | null} | null;
     orgUser: Awaited<ReturnType<typeof hasPermission>> | null;
   };
 }

@@ -74,7 +74,7 @@ function RouteComponent() {
 						<h1 className="text-lg font-medium my-4 px-4">Staff List</h1>
 						<Table className="">
 							<TableBody>
-								{[...Array(1)].map((product, i) => (
+								{[...Array(1)].map((_product, i) => (
 									<TableRow key={i} className="">
 										<TableCell className="py-2 ">
 											<Avatar className="size-10">

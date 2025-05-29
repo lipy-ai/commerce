@@ -5,7 +5,7 @@ import { getDistanceFromLatLonInKm } from "./utils/distanceCalculator";
 import { useLocationStore } from "./utils/store";
 
 function LocationComponent() {
-	const [location, setLocation] = useState<{
+	const [_location, setLocation] = useState<{
 		lat: number | null;
 		lng: number | null;
 	}>({ lat: null, lng: null });
@@ -93,13 +93,13 @@ function LocationComponent() {
 								});
 							}
 						})
-						.catch((error) => {
+						.catch((_error) => {
 							setUnsupported(true);
 							setError("Location permission is off");
 						});
 				}
 			},
-			(err) => {
+			(_err) => {
 				setError("Location permission is off");
 			},
 		);

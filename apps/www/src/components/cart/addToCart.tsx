@@ -4,9 +4,8 @@ import { Button } from "@lipy/web-ui/components/ui/button";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Loader2, Minus, Plus, ShoppingCart } from "lucide-react";
 import { useCallback, useState } from "react";
-import { useCartStore } from "./store";
+import { useCartStore, type Operation } from "./store";
 
-type Operation = "increment" | "decrement" | "add";
 type LoadingState = {
 	isLoading: boolean;
 	operation: Operation | null;
@@ -62,7 +61,7 @@ export const AddToCart = ({
 				await mutation.mutateAsync({
 					json: {
 						quantity,
-						variant_id: product.id,
+						variantId: product.id,
 					},
 				});
 			} finally {

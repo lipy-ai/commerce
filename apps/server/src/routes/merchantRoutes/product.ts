@@ -18,19 +18,19 @@ const listZodValidator = zValidator("query", listZodSchema);
 
 route.get("/", listZodValidator, async (c) => {
 	const { limit, page } = c.req.valid("query");
-	const organizationId = c.var.session?.activeOrganizationId!;
+	const activeStoreId = c.var.session?.activeStoreId!;
 	const offset = limit * page;
 
 	const countPromise = db
 		.selectFrom("product")
-		.where("organization_id", "=", organizationId)
+		.where("storeId", "=", activeStoreId)
 		.select(sql<number>`count(*)`.as("total_count"))
 		.executeTakeFirst();
 
 	const resultsPromise = db
 		.selectFrom("product")
 		.selectAll()
-		.where("organization_id", "=", organizationId)
+		.where("storeId", "=", activeStoreId)
 		.limit(limit)
 		.offset(offset)
 		.execute();
@@ -57,12 +57,12 @@ route.get(
 	),
 	async (c) => {
 		const { id } = c.req.valid("param");
-		const organizationId = c.var.session?.activeOrganizationId!;
+		const activeStoreId = c.var.session?.activeStoreId!;
 
 		const result = await db
 			.selectFrom("product")
 			.where("id", "=", id)
-			.where("organization_id", "=", organizationId)
+			.where("storeId", "=", activeStoreId)
 			.executeTakeFirstOrThrow();
 		return c.json(result);
 	},
@@ -78,7 +78,7 @@ route.post(
 	),
 	async (c) => {
 		const { products } = c.req.valid("json");
-		const organizationId = c.var.session?.activeOrganizationId!;
+		const activeStoreId = c.var.session?.activeStoreId!;
 
 		const result = await db
 			.insertInto("product")
@@ -98,11 +98,11 @@ route.patch(
 	),
 	async (c) => {
 		const { id } = c.req.valid("param");
-		const organizationId = c.var.session?.activeOrganizationId!;
+		const activeStoreId = c.var.session?.activeStoreId!;
 		const result = await db
 			.updateTable("product")
 			.where("id", "=", id)
-			.where("organization_id", "=", organizationId)
+			.where("storeId", "=", activeStoreId)
 			.set({})
 			.executeTakeFirstOrThrow();
 		return c.json(result);
@@ -119,12 +119,12 @@ route.delete(
 	),
 	async (c) => {
 		const { id } = c.req.valid("param");
-		const organizationId = c.var.session?.activeOrganizationId!;
+		const activeStoreId = c.var.session?.activeStoreId!;
 
 		const result = await db
 			.deleteFrom("product")
 			.where("id", "=", id)
-			.where("organization_id", "=", organizationId)
+			.where("storeId", "=", activeStoreId)
 			.executeTakeFirstOrThrow();
 		return c.json(result);
 	},

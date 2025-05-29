@@ -1,5 +1,5 @@
 import { betterAuth, type BetterAuthOptions } from "better-auth";
-import { emailOTP, organization } from "better-auth/plugins";
+import { emailOTP } from "better-auth/plugins";
 
 import env from "../env";
 import { redis } from "../cache";
@@ -9,20 +9,6 @@ import { phoneNumber } from "better-auth/plugins";
 import { sendSMS } from "@/services/sns";
 import emailHarmony from "./plugins/emailValidator";
 import phoneHarmony from "./plugins/phoneValidator";
-
-const organizationPlugin = organization({
-  schema: {
-    organization: {
-      modelName: "lipy.org",
-    },
-    member: {
-      modelName: "lipy.org_member",
-    },
-    invitation: {
-      modelName: "lipy.org_invitation",
-    },
-  },
-});
 
 const emailOTPPlugin = emailOTP({
   otpLength: 6,
@@ -58,7 +44,7 @@ const socialProviders: BetterAuthOptions["socialProviders"] = {
   //   },
 };
 
-export const auth = betterAuth({
+export const auth:ReturnType<typeof betterAuth> = betterAuth({
   // database: drizzleAdapter(db, { provider: "pg" }),
   database: {
     db,
@@ -68,7 +54,6 @@ export const auth = betterAuth({
 
   socialProviders,
   plugins: [
-    organizationPlugin,
     emailOTPPlugin,
     phoneOTPPlugin,
     emailHarmony(),
@@ -119,18 +104,18 @@ export const auth = betterAuth({
     session: {
       create: {
         before: async (session) => {
-          const organization = await db
-            .selectFrom("org")
-            .innerJoin("org_member", "org_member.organization_id", "org.id")
-            .innerJoin("user", "user.id", "org_member.user_id")
+          const store = await db
+            .selectFrom("store")
+            .innerJoin("storeMember", "storeMember.storeId", "store.id")
+            .innerJoin("user", "user.id", "storeMember.userId")
             .where("user.id", "=", session.userId)
-            .select("org.id")
+            .select("store.id")
             .limit(1)
             .executeTakeFirst();
           return {
             data: {
               ...session,
-              activeOrganizationId: organization?.id || null,
+              activeStoreId: store?.id || null,
             },
           };
         },
@@ -138,13 +123,13 @@ export const auth = betterAuth({
     },
   },
   session: {
-    modelName: "lipy.auth_session",
-    fields: {
-      userId: "user_id",
-      sessionToken: "session_token",
-      createdAt: "created_at",
-      updatedAt: "updated_at",
-    },
+    modelName: "lipy.authSession",
+    // fields: {
+    //   userId: "user_id",
+    //   sessionToken: "session_token",
+    //   createdAt: "created_at",
+    //   updatedAt: "updated_at",
+    // },
     cookieCache: {
       enabled: true,
       maxAge: 5 * 60, // Cache duration in seconds
@@ -152,31 +137,21 @@ export const auth = betterAuth({
   },
   user: {
     modelName: "lipy.user",
-    fields: {
-      name: "name",
-      email: "email",
-      username: "username",
-      emailVerified: "email_verified",
-      image: "image",
-      createdAt: "created_at",
-      updatedAt: "updated_at",
-      normalizedEmail: "normalized_email",
-    },
+    // fields: {
+    //   name: "name",
+    //   email: "email",
+    //   username: "username",
+    //   emailVerified: "email_verified",
+    //   image: "image",
+    //   createdAt: "created_at",
+    //   updatedAt: "updated_at",
+    //   normalizedEmail: "normalized_email",
+    // },
     deleteUser: {
       enabled: true,
     },
     additionalFields: {
-      customer_id: {
-        type: "string",
-        required: false,
-        defaultValue: null,
-        input: false,
-      },
-      country: {
-        type: "string",
-        required: false,
-        defaultValue: null,
-      },
+
       onboarded: {
         type: "boolean",
         required: true,
@@ -187,31 +162,31 @@ export const auth = betterAuth({
   },
 
   account: {
-    modelName: "lipy.auth_account",
-    fields: {
-      accountId: "account_id",
-      providerId: "provider_id",
-      accessToken: "access_token",
-      refreshToken: "refresh_token",
-      idToken: "id_token",
-      accessTokenExpiresAt: "access_token_expires_at",
-      refreshTokenExpiresAt: "refresh_token_expires_at",
-      userId: "user_id",
-      type: "type",
-      provider: "provider",
-      providerAccountId: "provider_account_id",
-      createdAt: "created_at",
-      updatedAt: "updated_at",
-    },
+    modelName: "lipy.authAccount",
+    // fields: {
+    //   accountId: "account_id",
+    //   providerId: "provider_id",
+    //   accessToken: "access_token",
+    //   refreshToken: "refresh_token",
+    //   idToken: "id_token",
+    //   accessTokenExpiresAt: "access_token_expires_at",
+    //   refreshTokenExpiresAt: "refresh_token_expires_at",
+    //   userId: "user_id",
+    //   type: "type",
+    //   provider: "provider",
+    //   providerAccountId: "provider_account_id",
+    //   createdAt: "created_at",
+    //   updatedAt: "updated_at",
+    // },
   },
 
   verification: {
-    modelName: "lipy.auth_verification",
-    fields: {
-      expiresAt: "expires_at",
-      createdAt: "created_at",
-      updatedAt: "updated_at",
-    },
+    modelName: "lipy.authVerification",
+    // fields: {
+    //   expiresAt: "expires_at",
+    //   createdAt: "created_at",
+    //   updatedAt: "updated_at",
+    // },
   },
 });
 

@@ -8,7 +8,7 @@
 		"check-types": "tsc --noEmit",
 		"add:component": "bunx --bun shadcn@latest add",
 		"format": "biome format",
-		"lint": "biome lint",
+		"lint": "tsc && biome lint",
 		"check": "biome check"
 	},
 	"license": "ISC",

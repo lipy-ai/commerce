@@ -134,7 +134,6 @@ export const FormImage = ({ wrapperClassName, ...props }: SharedFormProps) => {
 			render={({ field }: { field: ControllerRenderProps }) => {
 				return (
 					<SingleImage
-						fileType={"image"}
 						className={wrapperClassName}
 						onSuccess={(data) => field.onChange(data)}
 					/>

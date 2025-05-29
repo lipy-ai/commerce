@@ -4,143 +4,139 @@ import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Card } from "@lipy/web-ui/components/ui/card";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { Link } from "@tanstack/react-router";
-import {
-	Coffee,
-	Heart,
-	MapPin,
-	ShoppingBag,
-	ShoppingCart,
-	Star,
-} from "lucide-react";
+import type { InferResponseType } from "hono/client";
+import { MapPin, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 
-// Sample data
-const SHOPS = [
-	{
-		id: "abcshop",
-		name: "Green Market Grocery",
-		image: "/assets/paper-bag-items.webp",
-		rating: 4.7,
-		reviews: 324,
-		categories: ["Grocery", "Organic"],
-		type: "grocery",
-		hours: "8:00 AM - 10:00 PM",
-		distance: "1.3 km",
-		discount: "10% OFF on all fruits",
-		isPromoted: true,
-		isOpen: true,
-		isBookmarked: false,
-	},
-	{
-		id: "2",
-		name: "Urban Style Retail",
-		image: "/assets/paper-bag-items.webp",
-		rating: 4.3,
-		reviews: 267,
-		categories: ["Clothing", "Accessories"],
-		type: "retail",
-		hours: "10:00 AM - 9:00 PM",
-		distance: "0.8 km",
-		discount: "15% OFF on new arrivals",
-		isPromoted: false,
-		isOpen: true,
-		isBookmarked: true,
-	},
-	{
-		id: "3",
-		name: "Morning Brew Cafe",
-		image: "/assets/paper-bag-items.webp",
-		rating: 4.5,
-		reviews: 418,
-		categories: ["Cafe", "Breakfast"],
-		type: "cafe",
-		hours: "7:00 AM - 8:00 PM",
-		distance: "1.7 km",
-		discount: "Buy 1 Get 1 on all coffees",
-		isPromoted: false,
-		isOpen: true,
-		isBookmarked: false,
-	},
-	{
-		id: "4",
-		name: "Value Mart Superstore",
-		image: "/assets/paper-bag-items.webp",
-		rating: 4.1,
-		reviews: 532,
-		categories: ["Grocery", "Electronics", "Home"],
-		type: "grocery",
-		hours: "9:00 AM - 11:00 PM",
-		distance: "2.4 km",
-		discount: "20% OFF home essentials",
-		isPromoted: true,
-		isOpen: false,
-		isBookmarked: false,
-	},
-	{
-		id: "5",
-		name: "Tech Gadget Store",
-		image: "/assets/paper-bag-items.webp",
-		rating: 4.4,
-		reviews: 186,
-		categories: ["Electronics", "Computers"],
-		type: "retail",
-		hours: "10:00 AM - 9:00 PM",
-		distance: "1.5 km",
-		discount: "Up to 30% OFF on accessories",
-		isPromoted: false,
-		isOpen: true,
-		isBookmarked: false,
-	},
-	{
-		id: "6",
-		name: "Cozy Corner Bookstore",
-		image: "/assets/paper-bag-items.webp",
-		rating: 4.6,
-		reviews: 378,
-		categories: ["Books", "Stationery"],
-		type: "retail",
-		hours: "9:00 AM - 8:00 PM",
-		distance: "3.1 km",
-		discount: "Flat 15% OFF on bestsellers",
-		isPromoted: false,
-		isOpen: true,
-		isBookmarked: true,
-	},
-	{
-		id: "7",
-		name: "Cozy Corner Bookstore",
-		image: "/assets/paper-bag-items.webp",
-		rating: 4.6,
-		reviews: 378,
-		categories: ["Books", "Stationery"],
-		type: "retail",
-		hours: "9:00 AM - 8:00 PM",
-		distance: "3.1 km",
-		discount: "Flat 15% OFF on bestsellers",
-		isPromoted: false,
-		isOpen: true,
-		isBookmarked: true,
-	},
-	{
-		id: "8",
-		name: "Cozy Corner Bookstore",
-		image: "/assets/paper-bag-items.webp",
-		rating: 4.6,
-		reviews: 378,
-		categories: ["Books", "Stationery"],
-		type: "retail",
-		hours: "9:00 AM - 8:00 PM",
-		distance: "3.1 km",
-		discount: "Flat 15% OFF on bestsellers",
-		isPromoted: false,
-		isOpen: true,
-		isBookmarked: true,
-	},
-];
+// // Sample data
+// const SHOPS = [
+// 	{
+// 		id: "abcshop",
+// 		name: "Green Market Grocery",
+// 		image: "/assets/paper-bag-items.webp",
+// 		rating: 4.7,
+// 		reviews: 324,
+// 		categories: ["Grocery", "Organic"],
+// 		type: "grocery",
+// 		hours: "8:00 AM - 10:00 PM",
+// 		distance: "1.3 km",
+// 		discount: "10% OFF on all fruits",
+// 		isPromoted: true,
+// 		isOpen: true,
+// 		isBookmarked: false,
+// 	},
+// 	{
+// 		id: "2",
+// 		name: "Urban Style Retail",
+// 		image: "/assets/paper-bag-items.webp",
+// 		rating: 4.3,
+// 		reviews: 267,
+// 		categories: ["Clothing", "Accessories"],
+// 		type: "retail",
+// 		hours: "10:00 AM - 9:00 PM",
+// 		distance: "0.8 km",
+// 		discount: "15% OFF on new arrivals",
+// 		isPromoted: false,
+// 		isOpen: true,
+// 		isBookmarked: true,
+// 	},
+// 	{
+// 		id: "3",
+// 		name: "Morning Brew Cafe",
+// 		image: "/assets/paper-bag-items.webp",
+// 		rating: 4.5,
+// 		reviews: 418,
+// 		categories: ["Cafe", "Breakfast"],
+// 		type: "cafe",
+// 		hours: "7:00 AM - 8:00 PM",
+// 		distance: "1.7 km",
+// 		discount: "Buy 1 Get 1 on all coffees",
+// 		isPromoted: false,
+// 		isOpen: true,
+// 		isBookmarked: false,
+// 	},
+// 	{
+// 		id: "4",
+// 		name: "Value Mart Superstore",
+// 		image: "/assets/paper-bag-items.webp",
+// 		rating: 4.1,
+// 		reviews: 532,
+// 		categories: ["Grocery", "Electronics", "Home"],
+// 		type: "grocery",
+// 		hours: "9:00 AM - 11:00 PM",
+// 		distance: "2.4 km",
+// 		discount: "20% OFF home essentials",
+// 		isPromoted: true,
+// 		isOpen: false,
+// 		isBookmarked: false,
+// 	},
+// 	{
+// 		id: "5",
+// 		name: "Tech Gadget Store",
+// 		image: "/assets/paper-bag-items.webp",
+// 		rating: 4.4,
+// 		reviews: 186,
+// 		categories: ["Electronics", "Computers"],
+// 		type: "retail",
+// 		hours: "10:00 AM - 9:00 PM",
+// 		distance: "1.5 km",
+// 		discount: "Up to 30% OFF on accessories",
+// 		isPromoted: false,
+// 		isOpen: true,
+// 		isBookmarked: false,
+// 	},
+// 	{
+// 		id: "6",
+// 		name: "Cozy Corner Bookstore",
+// 		image: "/assets/paper-bag-items.webp",
+// 		rating: 4.6,
+// 		reviews: 378,
+// 		categories: ["Books", "Stationery"],
+// 		type: "retail",
+// 		hours: "9:00 AM - 8:00 PM",
+// 		distance: "3.1 km",
+// 		discount: "Flat 15% OFF on bestsellers",
+// 		isPromoted: false,
+// 		isOpen: true,
+// 		isBookmarked: true,
+// 	},
+// 	{
+// 		id: "7",
+// 		name: "Cozy Corner Bookstore",
+// 		image: "/assets/paper-bag-items.webp",
+// 		rating: 4.6,
+// 		reviews: 378,
+// 		categories: ["Books", "Stationery"],
+// 		type: "retail",
+// 		hours: "9:00 AM - 8:00 PM",
+// 		distance: "3.1 km",
+// 		discount: "Flat 15% OFF on bestsellers",
+// 		isPromoted: false,
+// 		isOpen: true,
+// 		isBookmarked: true,
+// 	},
+// 	{
+// 		id: "8",
+// 		name: "Cozy Corner Bookstore",
+// 		image: "/assets/paper-bag-items.webp",
+// 		rating: 4.6,
+// 		reviews: 378,
+// 		categories: ["Books", "Stationery"],
+// 		type: "retail",
+// 		hours: "9:00 AM - 8:00 PM",
+// 		distance: "3.1 km",
+// 		discount: "Flat 15% OFF on bestsellers",
+// 		isPromoted: false,
+// 		isOpen: true,
+// 		isBookmarked: true,
+// 	},
+// ];
 
 export default function NearByShops() {
-	const [showFavorites, setShowFavorites] = useState(false);
-	const [shops, setShops] = useState([]);
+	// const [showFavorites, setShowFavorites] = useState(false);
+	const [shops, setShops] = useState<
+		InferResponseType<typeof apiClient.v1.shops.$get>
+	>([]);
 
 	const { data, isFetched, isFetching } = useAPIQuery(
 		apiClient.v1.shops,
@@ -149,7 +145,7 @@ export default function NearByShops() {
 	);
 
 	useEffect(() => {
-		if (isFetched) setShops(data);
+		if (isFetched) setShops(data || []);
 	}, [data, isFetched]);
 
 	if (isFetching) {
@@ -165,11 +161,11 @@ export default function NearByShops() {
 						shops.length > 0 &&
 						shops.map((shop) => (
 							<Card key={shop.id} className="p-0">
-								<Link to={`/shop/${shop.id}`}>
+								<Link to="/shop/$id" params={{ id: shop.id }}>
 									{/* Image Container */}
 									<div className="relative h-48">
 										<img
-											src={shop.logo}
+											src={shop.logo || ""}
 											alt={shop.name}
 											className="w-full h-full object-cover rounded-tl-lg rounded-tr-lg"
 										/>

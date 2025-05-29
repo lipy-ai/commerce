@@ -1,39 +1,20 @@
 // import { HorizontalNav } from "@lipy/web-ui/components/nav/horizontal";
 // import HorizontalNavSkeleton from "@lipy/web-ui/components/skeleton/horizontal";
 
-import {
-	Avatar,
-	AvatarFallback,
-	AvatarImage,
-} from "@lipy/web-ui/components/ui/avatar";
-import { Button } from "@lipy/web-ui/components/ui/button";
-import { User } from "lucide-react";
 
-import { authClient } from "@lipy/lib/providers/auth";
-import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
+
+// import { authClient } from "@lipy/lib/providers/auth";
+
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(loggedIn)/account")({
 	component: RouteComponent,
 });
 
-const navs = [
-	{
-		url: "/account",
-		label: "General",
-	},
-	{
-		url: "/account/security",
-		label: "Security",
-	},
-	{
-		url: "/account/preferences",
-		label: "Preferences",
-	},
-];
+
 
 function RouteComponent() {
-	const { data, isPending } = authClient.useSession();
+	// const { data, isPending } = authClient.useSession();
 
 	// if (isPending) {
 	//   return <HorizontalNavSkeleton />;

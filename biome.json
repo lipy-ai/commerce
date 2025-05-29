@@ -1,15 +1,6 @@
 {
 	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-	"files": {
-		"ignoreUnknown": false,
-		"ignore": ["src/routeTree.gen.ts", "**/*.css", "**/*.json"],
-		"include": [
-			"src/**/*.{ts,tsx}",
-			".vscode/*",
-			"index.html",
-			"vite.config.js"
-		]
-	},
+
 	"linter": {
 		"enabled": true,
 		"rules": {

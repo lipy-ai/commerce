@@ -1,23 +1,11 @@
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 
-import ImageCarousel from "@lipy/web-ui/components/custom-ui/imageCarousel";
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from "@lipy/web-ui/components/ui/accordion";
-import { Button } from "@lipy/web-ui/components/ui/button";
-import { Card } from "@lipy/web-ui/components/ui/card";
-import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/queryClient";
-import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
-import { Frown } from "lucide-react";
-import { useEffect, useState } from "react";
+
 
 export const Route = createFileRoute("/shop/$id/products/$productId")({
 	component: RouteComponent,

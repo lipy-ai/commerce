@@ -6,7 +6,7 @@ import {
 } from "@aws-sdk/client-sns";
 
 const sns = new SNSClient({
-	region: env.AWS_REGION,
+	region: env.AWS_SES_REGION,
 	credentials: {
 		accessKeyId: env.AWS_ACCESS_KEY,
 		secretAccessKey: env.AWS_SECRET_KEY,

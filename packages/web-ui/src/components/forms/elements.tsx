@@ -10,6 +10,7 @@ import {
 } from "../ui/form";
 import { Input, type InputProps } from "../ui/input";
 import { SingleImage } from "../ui/single-image";
+import { Switch } from "../ui/switch";
 import { Textarea } from "../ui/textarea";
 
 export const RequiredEl = <span className="text-destructive">*</span>;
@@ -21,7 +22,7 @@ export type SharedFormProps = {
 	required?: boolean;
 	static?: boolean;
 	size?: "lg" | "default";
-	className?: string;
+	wrapperClassName?: string;
 	tabular?: boolean;
 };
 
@@ -52,17 +53,14 @@ export const FormItemWrapper = ({
 	);
 };
 
-export const FormInput = ({
-	className,
-	...props
-}: InputProps & SharedFormProps) => {
+export const FormInput = ({ ...props }: InputProps & SharedFormProps) => {
 	const form = useForm();
 	return (
 		<FormField
 			control={form.control}
 			name={props.name}
 			render={({ field }: { field: ControllerRenderProps }) => (
-				<FormItemWrapper {...props} wrapperClassName={className}>
+				<FormItemWrapper {...props}>
 					{
 						<FormControl>
 							<Input {...props} {...field} />
@@ -74,8 +72,36 @@ export const FormInput = ({
 	);
 };
 
-export const FormTextarea = ({
+export const FormSwitch = ({
 	className,
+	thumbClassName,
+
+	...props
+}: Parameters<typeof Switch>[0] & SharedFormProps) => {
+	const form = useForm();
+	return (
+		<FormField
+			control={form.control}
+			name={props.name}
+			render={({ field }: { field: ControllerRenderProps }) => (
+				<FormItemWrapper {...props}>
+					{
+						<FormControl>
+							<Switch
+								className={className}
+								thumbClassName={thumbClassName}
+								checked={field.value}
+								onCheckedChange={field.onChange}
+							/>
+						</FormControl>
+					}
+				</FormItemWrapper>
+			)}
+		/>
+	);
+};
+
+export const FormTextarea = ({
 	...props
 }: React.ComponentProps<"textarea"> & SharedFormProps) => {
 	const form = useForm();
@@ -99,7 +125,7 @@ export const FormTextarea = ({
 	);
 };
 
-export const FormImage = ({ className, ...props }: SharedFormProps) => {
+export const FormImage = ({ wrapperClassName, ...props }: SharedFormProps) => {
 	const form = useForm();
 	return (
 		<FormField
@@ -109,7 +135,7 @@ export const FormImage = ({ className, ...props }: SharedFormProps) => {
 				return (
 					<SingleImage
 						fileType={"image"}
-						className={className}
+						className={wrapperClassName}
 						onSuccess={(data) => field.onChange(data)}
 					/>
 				);

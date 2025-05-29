@@ -2,57 +2,75 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 type ProductInCart = {
-	shopId: string;
-	productId: string;
+	id: string;
 	quantity: number;
 	unit: string | null;
-	name: string;
-	price: number;
-	originalPrice: number;
+	title: string;
+	price: number | null;
+	max_price: number | null;
 };
 
 type CartStore = {
 	cart: ProductInCart[];
-	addToCart: (product: ProductInCart) => void;
-	updateProductQuantity: (
-		shopId: string,
-		productId: string,
-		quantityChange: number,
-		operation: "increment" | "decrement",
+	initialized: boolean;
+	updateCart: (
+		product: {
+			id: string;
+			unit: string | null;
+			title: string;
+			price: number | null;
+			max_price: number | null;
+		},
+		operation?: "increment" | "decrement",
 	) => void;
+	setCartFromDB: (items: ProductInCart[]) => void;
 };
 
 export const useCartStore = create(
 	persist<CartStore>(
 		(set, get) => ({
 			cart: [],
-			addToCart: (product: ProductInCart) => {
-				const currentCart = get().cart;
-				set({ cart: [...currentCart, product] });
-			},
-			updateProductQuantity: (shopId, productId, quantityChange, operation) => {
+			initialized: false,
+			updateCart: (product, operation) => {
 				set((state) => {
-					const updatedCart = state.cart.map((item) => {
-						if (item.shopId === shopId && item.productId === productId) {
-							let newQuantity = item.quantity;
-							if (operation === "increment") {
-								newQuantity += quantityChange;
-							} else if (operation === "decrement") {
-								newQuantity -= quantityChange;
+					const existingItem = state.cart.find(
+						(item) => item.id === product.id,
+					);
+
+					let updatedCart: ProductInCart[];
+
+					if (existingItem) {
+						updatedCart = state.cart.map((item) => {
+							if (item.id === product.id) {
+								let newQuantity = item.quantity;
+
+								if (operation === "increment") newQuantity += 1;
+								else if (operation === "decrement") newQuantity -= 1;
+
+								return { ...item, quantity: newQuantity };
 							}
+							return item;
+						});
+					} else {
+						updatedCart = [
+							...state.cart,
+							{
+								id: product.id,
+								quantity: 1,
+								unit: product.unit,
+								title: product.title,
+								price: product.price,
+								max_price: product.max_price,
+							},
+						];
+					}
 
-							// If quantity becomes zero or negative, remove item in next step
-							return { ...item, quantity: newQuantity };
-						}
-						return item;
-					});
-
-					// Filter out items with quantity <= 0
 					const finalCart = updatedCart.filter((item) => item.quantity > 0);
 
 					return { cart: finalCart };
 				});
 			},
+			setCartFromDB: (items) => set({ cart: items, initialized: true }),
 		}),
 		{
 			name: "lipy-cart-state",

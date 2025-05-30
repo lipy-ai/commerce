@@ -44,7 +44,7 @@ const yourInfo = [
 	},
 ];
 
-let moreInfo = [
+const moreInfo = [
 	{
 		title: "Start your own shop",
 		icon: Store,

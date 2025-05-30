@@ -48,6 +48,7 @@ async function main() {
 				brand: faker.company.name(),
 				category: faker.helpers.arrayElement(catIds),
 				storeId: newOrg.id,
+				thumbnail: faker.image.urlPicsumPhotos(),
 				keywords: Array.from({ length: 3 }, () =>
 					faker.commerce.productAdjective(),
 				),

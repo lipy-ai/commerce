@@ -15,7 +15,6 @@ const route = new Hono<ServerContext>()
 	 * Gets All Shops
 	 */
 	.get("/", async (c) => {
-		const session = c.get("session");
 		const d = await db
 			.selectFrom("store")
 			.where("active", "=", true)

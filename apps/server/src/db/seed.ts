@@ -16,6 +16,7 @@ async function main() {
 			handle: faker.lorem.slug(),
 			logo: faker.image.urlLoremFlickr({ category: "business" }), // Simulated logo URL
 			createdAt: new Date(),
+			active: true,
 		})
 		.returningAll()
 		.execute();

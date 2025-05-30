@@ -5,7 +5,7 @@ import { Hono } from "hono";
 import { z } from "zod";
 
 const cartSchema = z.object({
-	variantId: z.number(),
+	variantId: z.string().uuid(),
 	quantity: z.number().min(0).int(),
 });
 
@@ -17,7 +17,7 @@ const route = new Hono<ServerContext>()
 			.where("userId", "=", session?.userId!)
 			.leftJoin("productVariant as pv", "pv.id", "c.variantId")
 			.leftJoin("product as p", "p.id", "pv.product")
-			
+			.leftJoin("store as s", "s.id", "pv.storeId")
 			.select([
 				"c.quantity",
 				"p.brand",
@@ -26,8 +26,10 @@ const route = new Hono<ServerContext>()
 				"pv.maxPrice as variantMaxPrice",
 				"pv.price as variantPrice",
 				"pv.title as varianTitle",
-				"pv.qty as variantStock",
+				"pv.stockQty as variantStock",
 				"pv.unit as variantUnit",
+				"s.id as storeId",
+				"s.name as storeName",
 			])
 			.execute();
 

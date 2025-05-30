@@ -1,8 +1,9 @@
-import { db } from "@/db";
+import { type DBTypes, db } from "@/db";
 import { ORDER_STATUS } from "@/db/schema";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
+import { HTTPException } from "hono/http-exception";
 import { z } from "zod";
 
 const paramSchema = z.object({
@@ -10,13 +11,11 @@ const paramSchema = z.object({
 });
 
 const orderSchema = z.object({
-	items: z.array(z.object({})),
-	taxes: z.object({}),
-	address: z.object({}),
-	delivery: z.object({}),
-	payment: z.object({}),
-	storeId: z.string().uuid(),
-	status: z.enum(ORDER_STATUS),
+	address: z.string(),
+	deliveryInstruction: z.string().nullable(),
+	storeInstruction: z
+		.array(z.object({ id: z.string().uuid(), instruction: z.string() }))
+		.nullable(),
 });
 
 const route = new Hono<ServerContext>()
@@ -24,8 +23,8 @@ const route = new Hono<ServerContext>()
 		const session = c.get("session");
 		const data = await db
 			.selectFrom("orders as o")
-			.where("o.userId", "=", session?.userId!)
-			.select(["o.id", "o.total", "o.status"])
+			.where("o.orderedBy", "=", session?.userId!)
+			.select(["o.id", "o.totalAmount", "o.status"])
 			.execute();
 
 		return c.json(data || []);
@@ -35,9 +34,9 @@ const route = new Hono<ServerContext>()
 		const { id } = c.req.valid("param");
 		const data = await db
 			.selectFrom("orders as o")
-			.where("o.userId", "=", session?.userId!)
+			.where("o.orderedBy", "=", session?.userId!)
 			.where("o.id", "=", id)
-			.select(["o.id", "o.total", "o.status"])
+			.selectAll()
 			.execute();
 
 		return c.json(data || []);
@@ -45,10 +44,116 @@ const route = new Hono<ServerContext>()
 	.post("/", zValidator("json", orderSchema), async (c) => {
 		const session = c.get("session");
 		const values = c.req.valid("json");
-		await db
-			.insertInto("orders")
-			.values({ id: crypto.randomUUID(), userId: session?.userId!, ...values })
+
+		const address = await db
+			.selectFrom("address")
+			.where("address.id", "=", values.address)
+			.where("address.userId", "=", session?.userId!)
+			.selectAll()
+			.executeTakeFirst();
+
+		if (!address)
+			throw new HTTPException(404, { message: "Address not found!" });
+
+		const cart = await db
+			.selectFrom("cart")
+			.where("cart.userId", "=", session?.userId!)
+			.leftJoin("productVariant as pv", "pv.id", "cart.variantId")
+			.leftJoin("product as p", "p.id", "pv.product")
+			.select((eb) => [
+				eb.fn.toJson("cart").as("cart"),
+				eb.fn.toJson("p").as("product"),
+				eb.fn.toJson("pv").as("variant"),
+			])
 			.execute();
+
+		const orders: DBTypes["orders"][] = [];
+
+		for (const c of cart) {
+			const item = {
+				id: c.product.id!,
+				title: c.product.title!,
+				quantity: c.cart.quantity!,
+				thumbnail: c.product.thumbnail!,
+				variant: {
+					id: c.variant.id!,
+					title: c.variant.title!,
+					maxPrice: c.variant.maxPrice!,
+					price: c.variant.price!,
+				},
+			} satisfies NonNullable<DBTypes["orders"]["items"]>[0];
+
+			const store = orders.find((s) => s?.storeId === c.variant.storeId);
+
+			if (store) {
+				store.items?.push(item);
+			} else {
+				orders.push({
+					id: crypto.randomUUID(),
+					status: "ordered",
+					address: address,
+					items: [item],
+					taxes: [],
+					discounts: [],
+					currency: "inr",
+					storeId: c.variant.storeId!,
+					orderedBy: session?.userId!,
+					paymentMethod: "cod",
+					orderedAt: new Date(),
+					itemTotalAmount: 0,
+					totalAmount: 0,
+					amountSaved: 0,
+					totalTaxAmount: 0,
+					totalDiscountAmount: 0,
+					maxItemTotalAmount: 0,
+					delivery: null,
+					deliveryInstruction: values.deliveryInstruction,
+					storeInstructions:
+						values.storeInstruction?.find((s) => s.id === c.variant.storeId)
+							?.instruction || null,
+					cancelledAt: null,
+					refundedAt: null,
+					deliveredAt: null,
+					deliveryPartnerAssignedAt: null,
+				} satisfies NonNullable<DBTypes["orders"]>);
+			}
+		}
+
+		for (let index = 0; index < orders.length; index++) {
+			const el = orders[index];
+
+			let itemTotalAmount = 0;
+			let maxItemTotalAmount = 0;
+			let totalTaxAmount = 0;
+			let totalDiscountAmount = 0;
+
+			if (!el?.items) return;
+			for (const t of el.items) {
+				itemTotalAmount = t.quantity * t.variant.price + itemTotalAmount;
+				maxItemTotalAmount =
+					t.quantity * t.variant.maxPrice + maxItemTotalAmount;
+			}
+			for (const t of el.taxes || []) {
+				totalTaxAmount = totalTaxAmount + t.amount;
+				itemTotalAmount = itemTotalAmount + t.amount;
+				maxItemTotalAmount = maxItemTotalAmount + t.amount;
+			}
+
+			for (const t of el.discounts || []) {
+				totalDiscountAmount = totalDiscountAmount + t.amount;
+				itemTotalAmount = itemTotalAmount - t.amount;
+				maxItemTotalAmount = maxItemTotalAmount - t.amount;
+			}
+
+			el.amountSaved = maxItemTotalAmount - itemTotalAmount;
+			el.totalAmount = maxItemTotalAmount - itemTotalAmount;
+			el.itemTotalAmount = itemTotalAmount;
+			el.maxItemTotalAmount = maxItemTotalAmount;
+			el.totalTaxAmount = totalTaxAmount;
+			el.totalDiscountAmount = totalDiscountAmount;
+		}
+
+		await db.insertInto("orders").values(orders).execute();
 
 		return c.json({ success: true });
 	})
@@ -59,7 +164,7 @@ const route = new Hono<ServerContext>()
 		await db
 			.updateTable("orders")
 			.where("id", "=", id)
-			.where("userId", "=", session?.userId!)
+			.where("orderedBy", "=", session?.userId!)
 			.set({ status: "cancelled" })
 			.execute();
 		return c.json({ success: true });

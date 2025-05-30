@@ -207,6 +207,7 @@ export const product = schema.table("product", {
 	summary: text("summary"),
 	content: text("content"),
 	brand: text("brand"),
+	thumbnail: text("thumbnail"),
 	category: uuid("category").references(() => category.id, {
 		onDelete: "set null",
 	}),
@@ -249,21 +250,68 @@ export const cart = schema.table("cart", {
 
 export const orders = schema.table("orders", {
 	id: uuid("id").primaryKey(),
-	userId: uuid("userId")
+	items: jsonb("items").array().$type<
+		Array<{
+			id: string;
+			title: string;
+			quantity: number;
+			thumbnail: string;
+			variant: {
+				id: string;
+				title: string;
+				maxPrice: number;
+				price: number;
+			};
+		}>
+	>(),
+	taxes: jsonb("taxes").array().$type<
+		Array<{
+			id: string;
+			name: string;
+			amount: number;
+		}>
+	>(),
+	discounts: jsonb("discounts").array().$type<
+		Array<{
+			id: string;
+			name: string;
+			amount: number;
+		}>
+	>(),
+	storeId: uuid("storeId")
+		.notNull()
+		.references(() => store.id, { onDelete: "cascade" }),
+
+	orderedBy: uuid("orderedBy")
 		.notNull()
 		.references(() => user.id, { onDelete: "cascade" }),
-	items: jsonb("items").array(),
-	taxes: jsonb("taxes"),
-	address: jsonb("address"),
-	total: bigint("total", { mode: "number" }).default(0),
-	delivery: jsonb("delivery"),
-	payment: jsonb("payment"),
-	storeId: uuid("storeId").references(() => store.id, {
-		onDelete: "cascade",
-	}),
+
+	currency: text("currency", { enum: ["inr"] }).notNull(),
+	delivery: jsonb("delivery").$type<{
+		trackingId?: string;
+		partnerName?: string;
+		partnerId?: string;
+	}>(),
+
+	address: jsonb("address").$type<typeof address.$inferSelect>(),
+	deliveryInstruction: text("deliveryInstruction"),
+	storeInstructions: text("storeInstructions"),
+	paymentMethod: text("paymentMethod", { enum: ["cod", "upi", "card"] }),
+
+	orderedAt: timestamp("orderedAt").notNull(),
+	cancelledAt: timestamp("cancelledAt"),
+	refundedAt: timestamp("refundedAt"),
+	deliveredAt: timestamp("deliveredAt"),
+	deliveryPartnerAssignedAt: timestamp("deliveryAgentAssignedAt"),
 	status: text("status", {
 		enum: ORDER_STATUS,
 	}),
+	totalTaxAmount: integer("totalTaxAmount").default(0),
+	totalDiscountAmount: integer("totalDiscountAmount").default(0),
+	maxItemTotalAmount: integer("maxItemTotalAmount").default(0),
+	itemTotalAmount: integer("itemTotalAmount").default(0),
+	totalAmount: integer("totalAmount").default(0),
+	amountSaved: integer("amountSaved").default(0),
 });
 
 export const dbTables = {

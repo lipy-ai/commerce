@@ -17,7 +17,7 @@ const route = new Hono<ServerContext>()
 			.where("userId", "=", session?.userId!)
 			.leftJoin("productVariant as pv", "pv.id", "c.variantId")
 			.leftJoin("product as p", "p.id", "pv.product")
-
+			.leftJoin("store as s", "s.id", "pv.storeId")
 			.select([
 				"c.quantity",
 				"p.brand",
@@ -28,6 +28,8 @@ const route = new Hono<ServerContext>()
 				"pv.title as varianTitle",
 				"pv.stockQty as variantStock",
 				"pv.unit as variantUnit",
+				"s.id as storeId",
+				"s.name as storeName",
 			])
 			.execute();
 

@@ -71,7 +71,7 @@ async function main() {
 					price: Math.round(
 						Number(faker.commerce.price({ min: 100, max: 1000, dec: 0 })),
 					),
-					qty: faker.number.int({ min: 1, max: 500 }),
+					stockQty: faker.number.int({ min: 1, max: 500 }),
 					unit: faker.helpers.arrayElement(["kg", "g", "lb", "oz", "pcs"]),
 					product: p.id,
 					storeId: newOrg.id,

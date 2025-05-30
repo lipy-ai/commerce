@@ -115,7 +115,7 @@ export const AddToCart = ({
 			return (
 				<Button
 					className={cn(
-						"text-primary border-primary border-2",
+						"text-primary border-primary border-2 ",
 						isLoading && "opacity-75",
 					)}
 					size="icon"
@@ -125,7 +125,7 @@ export const AddToCart = ({
 					variant="outline"
 					aria-label="Add to cart"
 				>
-					{isLoading ? <LoadingSpinner /> : <Plus className="size-3" />}
+					{isLoading ? <LoadingSpinner /> : <Plus className="size-3" strokeWidth={3} />}
 				</Button>
 			);
 

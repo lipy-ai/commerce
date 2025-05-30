@@ -138,8 +138,8 @@ function RouteComponent() {
 						</div>
 
 						<div className="p-4 flex items-center justify-between gap-2">
-							<div className="w-1/3 rounded-md border border-violet-600 p-1 bg-violet-200 text-violet-600 font-medium h-12">
-								Cash on delivery
+							<div className="w-1/4 rounded-md border border-violet-600 p-1 bg-violet-200 text-violet-600 font-medium h-12">
+								Pay on delivery
 							</div>
 
 							<div className="w-full border p-1 rounded-md flex items-center justify-between px-2 bg-emerald-200 border-emerald-600 h-12">

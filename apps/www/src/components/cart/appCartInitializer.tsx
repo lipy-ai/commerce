@@ -12,6 +12,8 @@ export const AppCartInitializer = () => {
 		enabled: !initialized,
 	});
 
+	console.log(data)
+
 	useEffect(() => {
 		if (!initialized && isFetched && data) {
 			const mappedCart = data.map((item: any) => ({
@@ -20,7 +22,7 @@ export const AppCartInitializer = () => {
 				unit: item.variant_unit,
 				title: item.variant_title,
 				price: item.variant_price,
-				max_price: item.variant_max_price,
+				maxPrice: item.variant_maxPrice,
 			}));
 
 			setCartFromDB(mappedCart);

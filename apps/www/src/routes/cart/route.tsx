@@ -24,12 +24,12 @@ function RouteComponent() {
 
 	const { deliveryLocation } = useLocationStore();
 
-	let total_max_price = 0;
-	let total_price = 0;
+	let totalMaxPrice = 0;
+	let totalPrice = 0;
 
 	for (const item of cart) {
-		total_max_price += (item.max_price || 0) * item.quantity;
-		total_price += (item.price || 0) * item.quantity;
+		totalMaxPrice += (item.maxPrice || 0) * item.quantity;
+		totalPrice += (item.price || 0) * item.quantity;
 	}
 
 	const billingDetails = [
@@ -40,9 +40,9 @@ function RouteComponent() {
 				return (
 					<div className="flex items-center gap-2">
 						<p className="text-muted-foreground line-through">
-							₹{total_max_price}
+							₹{totalMaxPrice}
 						</p>
-						<p>₹{total_price}</p>
+						<p>₹{totalPrice}</p>
 					</div>
 				);
 			},
@@ -52,6 +52,13 @@ function RouteComponent() {
 			title: "Delivery Charge",
 			value: () => {
 				return <div className="text-primary">Free</div>;
+			},
+		},
+		{
+			icon: ShoppingBag,
+			title: "Handling Charge",
+			value: () => {
+				return <div className="text-muted-foreground">₹0</div>;
 			},
 		},
 	];
@@ -105,7 +112,7 @@ function RouteComponent() {
 							<Separator className="-my-2" />
 							<div className="flex items-center justify-between">
 								<p className="text-lg font-semibold">Total</p>
-								<p className="text-lg font-semibold">₹{total_price}</p>
+								<p className="text-lg font-semibold">₹{totalPrice}</p>
 							</div>
 						</Card>
 					</div>
@@ -114,12 +121,12 @@ function RouteComponent() {
 						<div className="bg-accent rounded-lg">
 							<div className="flex items-center gap-2 pt-2 mb-4  px-4 justify-between">
 								<div className="flex items-center gap-2">
-									<Navigation className="fill-primary text-primary size-6" />
+									<Navigation className="fill-primary text-primary size-8" />
 									<div>
 										<p className="text-primary text-lg font-semibold">
 											Delivering to
 										</p>
-										<p className="text-muted-foreground line-clamp-1">
+										<p className="text-muted-foreground line-clamp-1 text-xs">
 											{deliveryLocation.address}
 										</p>
 									</div>
@@ -130,16 +137,19 @@ function RouteComponent() {
 							<Separator className="border-t border-dashed bg-transparent" />
 						</div>
 
-						<div className="p-4 flex items-center justify-between">
-							<div className="w-1/3">
-								<p className="text-sm font-medium text-muted-foreground">
-									Total Bill
-								</p>
-								<p className="text-lg font-semibold">₹{total_price}</p>
+						<div className="p-4 flex items-center justify-between gap-2">
+							<div className="w-1/4 rounded-md border border-violet-600 p-1 bg-violet-200 text-violet-600 font-medium h-12">
+								Pay on delivery
 							</div>
-							<div className="w-full">
-								<Button className="w-full">
-									Place Order
+
+							<div className="w-full border p-1 rounded-md flex items-center justify-between px-2 bg-emerald-200 border-emerald-600 h-12">
+								<div>
+									<p className="text-xs font-medium">Total Bill</p>
+									<p className="text-lg font-semibold">₹{totalPrice}</p>
+								</div>
+
+								<Button>
+									<p>Place Order</p>
 									<StepForward />
 								</Button>
 							</div>

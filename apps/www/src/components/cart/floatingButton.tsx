@@ -1,5 +1,4 @@
 import { Button } from "@lipy/web-ui/components/ui/button";
-import React from "react";
 
 const FloatingCartButton = () => {
 	return (

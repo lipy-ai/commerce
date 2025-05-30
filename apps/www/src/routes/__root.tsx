@@ -1,10 +1,8 @@
-import { AppCartInitializer } from "@/components/cart/appCartInitializer";
-import { useCartStore } from "@/components/cart/store";
+// import { useCartStore } from "@/components/cart/store";
 import { DefaultCatchBoundary } from "@/components/defaultCatchBoundry";
 import { NotFound } from "@/components/notFound";
 import { seo } from "@/utils/seo";
 import QueryProvider from "@lipy/lib/providers/queryProvider";
-import { PLATFORM, PWA_INSTALLED } from "@lipy/lib/utils/detect";
 import { getIsSsrMobile } from "@lipy/lib/utils/isServerMobile";
 
 import { Toaster, toast } from "@lipy/web-ui/components/ui/sonner";
@@ -100,7 +98,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 
 	const data = Route.useLoaderData();
 
-	const { cart } = useCartStore();
+	// const { cart } = useCartStore();
 
 	return (
 		<html className="bg-muted/30" lang="en">

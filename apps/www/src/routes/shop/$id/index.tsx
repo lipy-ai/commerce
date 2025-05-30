@@ -4,7 +4,6 @@ import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/queryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
-import SearchBar from "@lipy/web-ui/components/searchBar";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
@@ -12,7 +11,7 @@ import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute, useRouter } from "@tanstack/react-router";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { ChevronRight } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export const Route = createFileRoute("/shop/$id/")({
 	component: RouteComponent,
@@ -47,7 +46,7 @@ function RouteComponent() {
 		"$get",
 		{
 			query: {
-				shop_id: id,
+				shopId: id,
 			},
 		},
 	);
@@ -59,18 +58,18 @@ function RouteComponent() {
 	if (isFetched) {
 		const categoryMap = new Map();
 
-		for (const product of data) {
-			const { category_id, category_title } = product;
+		for (const product of data || []) {
+			const { categoryId, categoryTitle } = product;
 
-			if (!categoryMap.has(category_id)) {
-				categoryMap.set(category_id, {
-					category_id,
-					category_title,
+			if (!categoryMap.has(categoryId)) {
+				categoryMap.set(categoryId, {
+					categoryId,
+					categoryTitle,
 					products: [],
 				});
 			}
 
-			categoryMap.get(category_id).products.push(product);
+			categoryMap.get(categoryId).products.push(product);
 		}
 
 		// Convert map to array
@@ -116,8 +115,8 @@ function RouteComponent() {
 				{!isFetching &&
 					groupedProducts &&
 					groupedProducts.length > 0 &&
-					groupedProducts.map((productGroup, idx) => {
-						const categoryName = productGroup.category_title;
+					groupedProducts.map((productGroup, _idx) => {
+						const categoryName = productGroup.categoryTitle;
 						const productArray = productGroup.products;
 
 						return (
@@ -132,7 +131,8 @@ function RouteComponent() {
 											buttonVariants({ variant: "link", size: "sm" }),
 											"font-semibold text-sm",
 										)}
-										to={`/shop/${id}/products/category/${productGroup.category_id}`}
+										to={"/shop/$id/products/category/$categoryId"}
+										params={{ id: id, categoryId: productGroup.categoryId }}
 									>
 										View All
 										<ChevronRight />
@@ -143,7 +143,7 @@ function RouteComponent() {
 									className="flex overflow-x-auto flex-nowrap  scrollbar-hide w-full"
 									style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
 								>
-									{productArray?.map((product: any, index) => (
+									{productArray?.map((product: any) => (
 										<div
 											key={product.id}
 											onClick={() =>

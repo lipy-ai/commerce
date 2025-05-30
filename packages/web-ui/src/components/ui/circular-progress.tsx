@@ -7,7 +7,7 @@ interface Props {
 }
 
 const CircularProgress: FC<Props> = (props) => {
-	const { strokeWidth = 8, sqSize = 160, percentage } = props;
+	const { strokeWidth = 4, sqSize = 75, percentage } = props;
 	const radius = (sqSize - strokeWidth) / 3;
 	const viewBox = `0 0 ${sqSize} ${sqSize}`;
 	const dashArray = radius * Math.PI * 2;
@@ -16,6 +16,8 @@ const CircularProgress: FC<Props> = (props) => {
 
 	return (
 		<svg width={sqSize} height={sqSize} viewBox={viewBox}>
+			<title>Progress</title>
+
 			<circle
 				className="fill-none stroke-gray-200"
 				cx={sqSize / 2}
@@ -41,7 +43,7 @@ const CircularProgress: FC<Props> = (props) => {
 				y="50%"
 				dy=".3em"
 				textAnchor="middle"
-				className="text-3xl text-muted-foreground"
+				className="text-xs font-light text-muted-foreground"
 			>
 				{statusMessage}
 			</text>

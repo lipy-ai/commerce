@@ -1,93 +1,110 @@
-import FormRender, {
-  type FormSchema,
-} from "@lipy/web-ui/components/forms/renderer";
-import { createFileRoute } from "@tanstack/react-router";
-import { z } from "zod";
 import { authClient } from "@lipy/lib/providers/auth";
+import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
+import {
+	Avatar,
+	AvatarFallback,
+	AvatarImage,
+} from "@lipy/web-ui/components/ui/avatar";
+import { Button } from "@lipy/web-ui/components/ui/button";
+import { Label } from "@lipy/web-ui/components/ui/label";
+import { Link, createFileRoute } from "@tanstack/react-router";
+import {
+	Headset,
+	LogOut,
+	Settings2,
+	Share2,
+	Store,
+	Trash,
+	UserCircle,
+	Users,
+} from "lucide-react";
+
 export const Route = createFileRoute("/(loggedIn)/account/")({
-  component: RouteComponent,
+	component: RouteComponent,
 });
 
-const forms: FormSchema<any, any> = [
-  {
-    id: "general",
-    size: "default",
-    style: {
-      submitBtn: {
-        label: "Save Changes",
-        pos: {
-          horizontal: "left",
-        },
-      },
-      editBtn: {
-        label: "Edit Information",
-      },
-      labelPos: "left",
-    },
-    schema: z.object({
-      firstName: z.string(),
-      middleName: z.string(),
-      lastName: z.string(),
-      companyCountry: z.string(),
-    }),
-    values: {
-      firstName: "Kundan",
-      middleName: "Bhosale",
-      lastName: "Bhosale",
-      companyCountry: "IND",
-    },
-    elements: [
-      {
-        name: "image",
-        fieldType: "SingleImage",
-      },
-      [
-        {
-          name: "firstName",
-          fieldType: "Input",
-          placeholder: "John",
-          label: "First name",
-          required: true,
-        },
-        {
-          name: "middleName",
-          fieldType: "Input",
-          placeholder: "Jake",
-          label: "Middle name",
-          required: true,
-        },
-
-        {
-          name: "lastName",
-          fieldType: "Input",
-          placeholder: "Doe",
-          label: "Last name",
-          required: true,
-        },
-      ],
-      {
-        name: "companyCountry",
-        fieldType: "CountrySelector",
-        label: "Company Location",
-        required: true,
-      },
-    ],
-  },
-];
-
 function RouteComponent() {
-  const { data, isPending } = authClient.useSession();
+	const { data } = authClient.useSession();
+	return (
+		<div>
+			<DashboardHeader title="Settings" />
+			<div className="p-8 space-y-8 max-w-4xl">
+				<div className="flex gap-2">
+					<Avatar className="size-14">
+						<AvatarImage src={data?.user.image || ""} />
+						<AvatarFallback>{data?.user.name[0]}</AvatarFallback>
+					</Avatar>
+					<div>
+						<h1 className="font-medium text-lg"> {data?.user.name}</h1>
+						<p> {data?.user.email}</p>
+					</div>
+				</div>
+				<div className="bg-background border divide-y">
+					<Link to="/account/profile" className="p-4 flex gap-4 items-center">
+						<span>
+							<UserCircle />
+						</span>
+						<span>Profile</span>
+					</Link>
 
-  const handle = async (body: any) => {
-    console.log(body);
-    // await mutation.mutateAsync({ body }).then((r) => {
-    //   // r.
-    // })
-  };
-
-  return (
-    <div className="max-w-5xl">
-      <FormRender forms={forms} onSubmit={handle} />
-    </div>
-  );
+					<Link to="/store" className="p-4 flex gap-4 items-center">
+						<span>
+							<Store />
+						</span>
+						<span>My Store</span>
+					</Link>
+					<Link to="/store/staff" className="p-4 flex gap-4 items-center">
+						<span>
+							<Users />
+						</span>
+						<span>Store Staff</span>
+					</Link>
+					<Link
+						to="/account/preferences"
+						className="p-4 flex gap-4 items-center"
+					>
+						<span>
+							<Settings2 />
+						</span>
+						<span>Preferences</span>
+					</Link>
+				</div>
+				<div className="bg-background border divide-y">
+					<Link to="/account/referral" className="p-4 flex gap-4 items-center">
+						<span>
+							<Share2 />
+						</span>
+						<span>Refer and Earn</span>
+					</Link>
+					<Link to="/account/support" className="p-4 flex gap-4 items-center">
+						<span>
+							<Headset />
+						</span>
+						<span>Customer Support</span>
+					</Link>
+					<Link to="/" className="p-4 flex gap-4 items-center">
+						<span>
+							<LogOut />
+						</span>
+						<span>Logout</span>
+					</Link>
+				</div>
+				<div className="p-4 grid gap-4 lg:flex bg-destructive/10 border w-full">
+					<div className="flex-1">
+						<Label className="text-md font-medium">Delete Account</Label>
+						<p className="font-light">
+							This action is irreversible and will permanently deactivate your
+							account.
+						</p>
+					</div>
+					<div>
+						<Button variant={"destructive"}>
+							<Trash />
+							Delete Account
+						</Button>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 }

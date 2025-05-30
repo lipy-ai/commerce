@@ -4,7 +4,6 @@ import {
 	bigint,
 	bigserial,
 	boolean,
-	customType,
 	doublePrecision,
 	integer,
 	jsonb,
@@ -15,12 +14,6 @@ import {
 	uuid,
 } from "drizzle-orm/pg-core";
 
-// Create a custom type for PostGIS POINT
-const geographyPoint = customType<{ data: string }>({
-	dataType() {
-		return "geography(POINT, 4326)";
-	},
-});
 
 export const schema = pgSchema("lipy");
 
@@ -30,15 +23,15 @@ export const user = schema.table("user", {
 	id: uuid("id").primaryKey(),
 	name: text("name").notNull(),
 	email: text("email").notNull().unique(),
-	emailVerified: boolean("email_verified").notNull(),
+	emailVerified: boolean("emailVerified").notNull(),
 	image: text("image"),
-	createdAt: timestamp("created_at").notNull(),
-	updatedAt: timestamp("updated_at").notNull(),
-	customerId: text("customer_id"),
+	createdAt: timestamp("createdAt").notNull(),
+	updatedAt: timestamp("updatedAt").notNull(),
+	customerId: text("customerId"),
 	country: text("country"),
 	onboarded: boolean("onboarded").notNull().default(false),
 	address: text("address"),
-	normalizedEmail: text("normalized_email"),
+	normalizedEmail: text("normalizedEmail"),
 });
 
 export const address = schema.table("address", {
@@ -50,104 +43,105 @@ export const address = schema.table("address", {
 	city: text("city").notNull(),
 	state: text("state").notNull(),
 	country: text("country"),
-	postal_code: text("postal_code"),
+	postalCode: text("postalCode"),
 	phone: text("phone"),
 	lat: doublePrecision("lat"),
 	lng: doublePrecision("lng"),
-	user_id: uuid("user_id")
+	userId: uuid("userId")
 		.notNull()
 		.references(() => user.id, { onDelete: "cascade" }),
 });
 
-export const account = schema.table("auth_account", {
+export const account = schema.table("authAccount", {
 	id: uuid("id").primaryKey(),
-	accountId: text("account_id").notNull(),
-	providerId: text("provider_id").notNull(),
-	userId: uuid("user_id")
+	accountId: text("accountId").notNull(),
+	providerId: text("providerId").notNull(),
+	userId: uuid("userId")
 		.notNull()
 		.references(() => user.id, { onDelete: "cascade" }),
-	accessToken: text("access_token"),
-	refreshToken: text("refresh_token"),
-	idToken: text("id_token"),
-	accessTokenExpiresAt: timestamp("access_token_expires_at"),
-	refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
+	accessToken: text("accessToken"),
+	refreshToken: text("refreshToken"),
+	idToken: text("idToken"),
+	accessTokenExpiresAt: timestamp("accessTokenExpiresAt"),
+	refreshTokenExpiresAt: timestamp("refreshTokenExpiresAt"),
 	scope: text("scope"),
 	password: text("password"),
-	createdAt: timestamp("created_at").notNull(),
-	updatedAt: timestamp("updated_at").notNull(),
+	createdAt: timestamp("createdAt").notNull(),
+	updatedAt: timestamp("updatedAt").notNull(),
 });
 
-export const verification = schema.table("auth_verification", {
+export const verification = schema.table("authVerification", {
 	id: uuid("id").primaryKey(),
 	identifier: text("identifier").notNull(),
 	value: text("value").notNull(),
-	expiresAt: timestamp("expires_at").notNull(),
-	createdAt: timestamp("created_at"),
-	updatedAt: timestamp("updated_at"),
+	expiresAt: timestamp("expiresAt").notNull(),
+	createdAt: timestamp("createdAt"),
+	updatedAt: timestamp("updatedAt"),
 });
 
-export const session = schema.table("auth_session", {
+export const session = schema.table("authSession", {
 	id: uuid("id").primaryKey(),
-	userId: uuid("user_id")
+	userId: uuid("userId")
 		.notNull()
 		.references(() => user.id, { onDelete: "cascade" }),
-	sessionToken: text("session_token").notNull().unique(),
+	sessionToken: text("sessionToken").notNull().unique(),
+	activeStoreId:text("activeStoreId"),
 	expires: timestamp("expires").notNull(),
-	createdAt: timestamp("created_at").notNull(),
-	updatedAt: timestamp("updated_at").notNull(),
+	createdAt: timestamp("createdAt").notNull(),
+	updatedAt: timestamp("updatedAt").notNull(),
 });
 
-export const org = schema.table("org", {
+export const store = schema.table("store", {
 	id: uuid("id").primaryKey(),
 	name: text("name").notNull(),
-	slug: text("slug").unique(),
+	handle: text("handle").unique(),
 	logo: text("logo"),
-	createdAt: timestamp("created_at").notNull(),
+	description:text("description"),
+	createdAt: timestamp("createdAt").notNull(),
 	metadata: text("metadata"),
 });
 
-export const orgMember = schema.table("org_member", {
+export const storeMember = schema.table("storeMember", {
 	id: uuid("id").primaryKey(),
-	organizationId: uuid("organization_id")
+	storeId: uuid("storeId")
 		.notNull()
-		.references(() => org.id, { onDelete: "cascade" }),
-	userId: uuid("user_id")
+		.references(() => store.id, { onDelete: "cascade" }),
+	userId: uuid("userId")
 		.notNull()
 		.references(() => user.id, { onDelete: "cascade" }),
 	role: text("role").notNull(),
-	createdAt: timestamp("created_at").notNull(),
+	createdAt: timestamp("createdAt").notNull(),
 });
 
-export const orgInvitation = schema.table("org_invitation", {
+export const storeInvitation = schema.table("storeInvitation", {
 	id: uuid("id").primaryKey(),
-	organizationId: uuid("organization_id")
+	organizationId: uuid("storeId")
 		.notNull()
-		.references(() => org.id, { onDelete: "cascade" }),
+		.references(() => store.id, { onDelete: "cascade" }),
 	email: text("email").notNull(),
 	role: text("role"),
 	status: text("status").notNull(),
-	expiresAt: timestamp("expires_at").notNull(),
-	inviterId: uuid("inviter_id")
+	expiresAt: timestamp("expiresAt").notNull(),
+	inviterId: uuid("inviterId")
 		.notNull()
 		.references(() => user.id, { onDelete: "cascade" }),
 });
 
 export const upload = schema.table("upload", {
 	id: uuid("id").primaryKey(),
-	is_public: boolean("is_public").default(false),
-	content_type: text("content_type").notNull(),
-	content_length: bigint("content_length", { mode: "number" }).notNull(),
+	contentType: text("contentType").notNull(),
+	contentLength: bigint("contentLength", { mode: "number" }).notNull(),
 	name: text("name").notNull(),
 	path: text("path"),
 	url: text("url"),
-	uploaded_by: uuid("uploaded_by")
+	uploadedBy: uuid("uploadedBy")
 		.notNull()
 		.references(() => user.id, { onDelete: "cascade" }),
-	organization_id: uuid("organization_id").references(() => org.id, {
+	storeId: uuid("storeId").references(() => store.id, {
 		onDelete: "cascade",
 	}),
-	created_at: timestamp("created_at").notNull(),
-	updated_at: timestamp("updated_at").notNull(),
+	createdAt: timestamp("createdAt").notNull(),
+	updatedAt: timestamp("updatedAt").notNull(),
 });
 
 export const category = schema.table("category", {
@@ -156,7 +150,7 @@ export const category = schema.table("category", {
 	summary: text("summary"),
 	slug: text("slug").unique(),
 	image: text("image"),
-	organization_id: uuid("organization_id").references(() => org.id, {
+	storeId: uuid("storeId").references(() => store.id, {
 		onDelete: "cascade",
 	}),
 });
@@ -167,12 +161,12 @@ export const tags = schema.table("tag", {
 	summary: text("summary"),
 	slug: text("slug"),
 	image: text("image"),
-	organization_id: uuid("organization_id").references(() => org.id, {
+	storeId: uuid("storeId").references(() => store.id, {
 		onDelete: "cascade",
 	}),
 });
 
-export const globalProduct = schema.table("global_product", {
+export const globalProduct = schema.table("globalProduct", {
 	id: uuid("id")
 		.primaryKey()
 		.references((): AnyPgColumn => product.id, {
@@ -180,7 +174,7 @@ export const globalProduct = schema.table("global_product", {
 		}),
 });
 
-export const globalCategory = schema.table("global_category", {
+export const globalCategory = schema.table("globalCategory", {
 	id: uuid("id")
 		.primaryKey()
 		.references((): AnyPgColumn => category.id, {
@@ -188,7 +182,7 @@ export const globalCategory = schema.table("global_category", {
 		}),
 });
 
-export const globalTag = schema.table("global_tag", {
+export const globalTag = schema.table("globalTag", {
 	id: uuid("id")
 		.primaryKey()
 		.references((): AnyPgColumn => tags.id, {
@@ -205,22 +199,20 @@ export const product = schema.table("product", {
 	category: uuid("category").references(() => category.id, {
 		onDelete: "set null",
 	}),
-	organization_id: uuid("organization_id").references(() => org.id, {
+	storeId: uuid("storeId").references(() => store.id, {
 		onDelete: "cascade",
 	}),
-	global_product: uuid("global_product").references(() => globalProduct.id),
+	globalProduct: uuid("globalProduct").references(() => globalProduct.id),
 	keywords: text("keywords").array(),
-	default_price: integer("default_price"),
-	in_stock: boolean("in_stock").default(false),
 });
 
-export const productVariant = schema.table("product_variant", {
+export const productVariant = schema.table("productVariant", {
 	id: bigserial("id", { mode: "number" }).primaryKey(),
 	title: text("title").notNull(),
 	description: text("description"),
 	sku: text("sku"),
 	model: text("model"),
-	max_price: integer("max_price").default(0),
+	maxPrice: integer("maxPrice").default(0),
 	price: integer("price").default(0),
 	qty: integer("qty").default(1),
 	unit: text("unit"),
@@ -228,17 +220,17 @@ export const productVariant = schema.table("product_variant", {
 	product: uuid("product").references(() => product.id, {
 		onDelete: "cascade",
 	}),
-	organization_id: uuid("organization_id").references(() => org.id, {
+	storeId: uuid("storeId").references(() => store.id, {
 		onDelete: "cascade",
 	}),
 });
 
 export const cart = schema.table("cart", {
 	id: uuid("id").primaryKey(),
-	user_id: uuid("user_id").references(() => user.id, {
+	userId: uuid("userId").references(() => user.id, {
 		onDelete: "cascade",
 	}),
-	variant: bigint("variant_id", { mode: "number" }).references(
+	variantId: bigint("variantId", { mode: "number" }).references(
 		() => productVariant.id,
 		{
 			onDelete: "cascade",
@@ -249,7 +241,7 @@ export const cart = schema.table("cart", {
 
 export const orders = schema.table("orders", {
 	id: uuid("id").primaryKey(),
-	userId: uuid("user_id")
+	userId: uuid("userId")
 		.notNull()
 		.references(() => user.id, { onDelete: "cascade" }),
 	items: jsonb("items").array(),
@@ -258,7 +250,7 @@ export const orders = schema.table("orders", {
 	total: bigint("total", { mode: "number" }).default(0),
 	delivery: jsonb("delivery"),
 	payment: jsonb("payment"),
-	organization_id: uuid("organization_id").references(() => org.id, {
+	storeId: uuid("storeId").references(() => store.id, {
 		onDelete: "cascade",
 	}),
 	status: text("status", {
@@ -280,9 +272,9 @@ export const dbTables = {
 	account,
 	session,
 	verification,
-	org,
-	orgMember,
-	orgInvitation,
+	store,
+	storeMember,
+	storeInvitation,
 	product,
 	productVariant,
 	cart,

@@ -1,4 +1,4 @@
-import { apiClient } from "@lipy/lib/api/index.js";
+import { apiClient } from "@lipy/lib/api";
 import {
 	apiQueryOptions,
 	useAPIMutation,

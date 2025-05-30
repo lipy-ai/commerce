@@ -1,0 +1,1 @@
+ALTER TABLE "lipy"."cart" ALTER COLUMN "variantId" SET DATA TYPE uuid;

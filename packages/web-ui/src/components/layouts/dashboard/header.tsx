@@ -1,10 +1,9 @@
 "use client";
 
-import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, useRouter } from "@tanstack/react-router";
-import { ChevronLeft } from "lucide-react";
+import { ArrowLeft,} from "lucide-react";
 import type { ReactNode } from "react";
-import { buttonVariants } from "../../ui/button";
+
 
 export const DashboardHeader = ({
 	title,
@@ -29,9 +28,9 @@ export const DashboardHeader = ({
 					<Link
 						to={"/"}
 						onClick={onBack}
-						className={cn(buttonVariants({ size: "icon", variant: "outline" }))}
+						
 					>
-						<ChevronLeft className="stroke-2" />
+						<ArrowLeft className="stroke-2" />
 					</Link>
 					<h1 className="font-semibold text-xl leading-0 ">{title}</h1>
 					{titleChildren && titleChildren}

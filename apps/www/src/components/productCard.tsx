@@ -16,8 +16,10 @@ export default function ProductCard({
 }) {
 	const discountPercentage = discountCalculator(
 		product.price,
-		product.max_price,
+		product.maxPrice,
 	);
+
+
 
 	switch (variant) {
 		case "horizontal": {
@@ -54,7 +56,7 @@ export default function ProductCard({
 							<AddToCart product={product} variant={"icon"} />
 							<div className="flex items-center gap-2">
 								<p className="line-through text-muted-foreground">
-									₹{product.max_price * product.quantity}
+									₹{product.maxPrice * product.quantity}
 								</p>
 								<p className="font-semibold">
 									₹{product.price * product.quantity}
@@ -93,9 +95,9 @@ export default function ProductCard({
 					<p className="py-1 text-sm font-medium">{product.title}</p>
 
 					<span className="font-bold text-md pr-2"> ₹{product.price}</span>
-					{product.max_price && (
+					{product.maxPrice && (
 						<span className="text-xs line-through text-muted-foreground">
-							₹{product.max_price}
+							₹{product.maxPrice}
 						</span>
 					)}
 				</div>

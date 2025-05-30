@@ -60,7 +60,7 @@ async function main() {
 			.insertInto("productVariant")
 			.values(
 				Array.from({ length: 3 + Math.floor(Math.random() * 3) }).map(() => ({
-					id: faker.number.bigInt() as any,
+					id: crypto.randomUUID(),
 					title: faker.commerce.productName(),
 					description: faker.commerce.productDescription(),
 					sku: faker.string.alphanumeric(10),

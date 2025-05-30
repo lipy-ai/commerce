@@ -35,7 +35,7 @@ CREATE TABLE "lipy"."address" (
 CREATE TABLE "lipy"."cart" (
 	"id" uuid PRIMARY KEY NOT NULL,
 	"userId" uuid,
-	"variantId" bigint,
+	"variantId" uuid,
 	"quantity" smallint DEFAULT 1
 );
 --> statement-breakpoint

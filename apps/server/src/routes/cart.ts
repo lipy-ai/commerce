@@ -5,7 +5,7 @@ import { Hono } from "hono";
 import { z } from "zod";
 
 const cartSchema = z.object({
-	variantId: z.number(),
+	variantId: z.string().uuid(),
 	quantity: z.number().min(0).int(),
 });
 

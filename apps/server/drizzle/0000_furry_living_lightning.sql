@@ -87,14 +87,14 @@ CREATE TABLE "lipy"."product" (
 );
 --> statement-breakpoint
 CREATE TABLE "lipy"."productVariant" (
-	"id" bigserial PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
 	"title" text NOT NULL,
 	"description" text,
 	"sku" text,
 	"model" text,
 	"maxPrice" integer DEFAULT 0,
 	"price" integer DEFAULT 0,
-	"qty" integer DEFAULT 1,
+	"stockQty" integer DEFAULT 1,
 	"unit" text,
 	"metadata" jsonb,
 	"product" uuid,
@@ -120,6 +120,7 @@ CREATE TABLE "lipy"."store" (
 	"description" text,
 	"createdAt" timestamp NOT NULL,
 	"metadata" text,
+	"active" boolean DEFAULT false,
 	CONSTRAINT "store_handle_unique" UNIQUE("handle")
 );
 --> statement-breakpoint

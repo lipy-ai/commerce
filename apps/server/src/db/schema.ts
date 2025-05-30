@@ -2,7 +2,6 @@ import { sql } from "drizzle-orm";
 import {
 	type AnyPgColumn,
 	bigint,
-	bigserial,
 	boolean,
 	doublePrecision,
 	integer,
@@ -14,6 +13,17 @@ import {
 	uuid,
 } from "drizzle-orm/pg-core";
 
+export const ORDER_STATUS = [
+	"ordered",
+	"accepted",
+	"packed",
+	"out_for_delivery",
+	"delivered",
+	"return_requested",
+	"refunded",
+	"replaced",
+	"cancelled",
+] as const;
 
 export const schema = pgSchema("lipy");
 
@@ -85,7 +95,7 @@ export const session = schema.table("authSession", {
 		.notNull()
 		.references(() => user.id, { onDelete: "cascade" }),
 	sessionToken: text("sessionToken").notNull().unique(),
-	activeStoreId:text("activeStoreId"),
+	activeStoreId: text("activeStoreId"),
 	expires: timestamp("expires").notNull(),
 	createdAt: timestamp("createdAt").notNull(),
 	updatedAt: timestamp("updatedAt").notNull(),
@@ -96,9 +106,10 @@ export const store = schema.table("store", {
 	name: text("name").notNull(),
 	handle: text("handle").unique(),
 	logo: text("logo"),
-	description:text("description"),
+	description: text("description"),
 	createdAt: timestamp("createdAt").notNull(),
 	metadata: text("metadata"),
+	active: boolean("active").default(false),
 });
 
 export const storeMember = schema.table("storeMember", {
@@ -207,14 +218,14 @@ export const product = schema.table("product", {
 });
 
 export const productVariant = schema.table("productVariant", {
-	id: bigserial("id", { mode: "number" }).primaryKey(),
+	id: uuid("id").primaryKey(),
 	title: text("title").notNull(),
 	description: text("description"),
 	sku: text("sku"),
 	model: text("model"),
 	maxPrice: integer("maxPrice").default(0),
 	price: integer("price").default(0),
-	qty: integer("qty").default(1),
+	stockQty: integer("stockQty").default(1),
 	unit: text("unit"),
 	metadata: jsonb(),
 	product: uuid("product").references(() => product.id, {
@@ -230,12 +241,9 @@ export const cart = schema.table("cart", {
 	userId: uuid("userId").references(() => user.id, {
 		onDelete: "cascade",
 	}),
-	variantId: bigint("variantId", { mode: "number" }).references(
-		() => productVariant.id,
-		{
-			onDelete: "cascade",
-		},
-	),
+	variantId: uuid("variantId").references(() => productVariant.id, {
+		onDelete: "cascade",
+	}),
 	quantity: smallint("quantity").default(1),
 });
 
@@ -254,15 +262,7 @@ export const orders = schema.table("orders", {
 		onDelete: "cascade",
 	}),
 	status: text("status", {
-		enum: [
-			"ordered",
-			"accepted",
-			"packed",
-			"out_for_delivery",
-			"delivered",
-			"returned",
-			"refunded",
-		],
+		enum: ORDER_STATUS,
 	}),
 });
 

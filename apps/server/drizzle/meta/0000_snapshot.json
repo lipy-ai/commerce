@@ -1,5 +1,5 @@
 {
-  "id": "4e81b57f-d348-4b78-b424-39c129254303",
+  "id": "41c7c308-5e5c-4876-a17b-7244d2f64a17",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -234,7 +234,7 @@
         },
         "variantId": {
           "name": "variantId",
-          "type": "bigint",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },

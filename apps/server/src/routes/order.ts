@@ -65,4 +65,4 @@ const route = new Hono<ServerContext>()
 		return c.json({ success: true });
 	});
 
-export { route as productRoute };
+export { route as orderRoute };

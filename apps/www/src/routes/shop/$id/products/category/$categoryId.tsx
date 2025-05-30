@@ -23,14 +23,14 @@ function RouteComponent() {
 		"$get",
 		{
 			query: {
-				category_id: categoryId,
+				categoryId: categoryId,
 			},
 		},
 	);
 
 	useEffect(() => {
 		if (isFetched) {
-			setTitle(data[0]?.category_title);
+			setTitle(data?.[0]?.categoryTitle || "");
 		}
 	}, [isFetched]);
 

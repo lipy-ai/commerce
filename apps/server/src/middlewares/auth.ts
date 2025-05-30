@@ -8,6 +8,7 @@ export const authMiddleware: MiddlewareHandler<ServerContext> = async (
 ) => {
   const session = await auth.api.getSession({ headers: c.req.raw.headers });
 
+  
   if (!session) {
     c.set("user", null);
     c.set("session", null);
@@ -15,6 +16,6 @@ export const authMiddleware: MiddlewareHandler<ServerContext> = async (
   }
 
   c.set("user", session.user);
-  c.set("session", session.session);
+  c.set("session", session.session as ServerContext['Variables']['session']);
   return next();
 };

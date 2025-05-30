@@ -1,8 +1,5 @@
-import { CartPage } from "@/components/cart/cartPage";
 import { useCartStore } from "@/components/cart/store";
 import ProductCard from "@/components/productCard";
-import { apiClient } from "@lipy/lib/api";
-import { useAPIQuery } from "@lipy/lib/utils/queryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
@@ -31,8 +28,8 @@ function RouteComponent() {
 	let total_price = 0;
 
 	for (const item of cart) {
-		total_max_price += item.max_price * item.quantity;
-		total_price += item.price * item.quantity;
+		total_max_price += (item.max_price || 0) * item.quantity;
+		total_price += (item.price || 0) * item.quantity;
 	}
 
 	const billingDetails = [

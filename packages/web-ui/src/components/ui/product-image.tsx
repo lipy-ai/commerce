@@ -22,7 +22,6 @@ export default function ProductImage(props: Type) {
 						name={`${props.name}.${i}.url`}
 						render={({ field }) => (
 							<SingleImage
-								fileType={"product"}
 								{...field}
 								className="size-full"
 							/>

@@ -8,11 +8,16 @@ import {
 	DashboardLayout,
 } from "@lipy/web-ui/components/layouts/dashboard";
 import LocationComponent from "@lipy/web-ui/components/maps/deliveryAddress";
-import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
-import { CircleUser, LogOut, ShoppingCart, Store } from "lucide-react";
+import {
+	CircleUser,
+	LogOut,
+	type LucideIcon,
+	ShoppingCart,
+	Store,
+} from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/")({
@@ -62,6 +67,7 @@ function Home() {
 			label: "Shops Near me",
 			url: "/",
 			icon: Store,
+			mobile: true,
 		},
 		{
 			label: "Cart",
@@ -76,10 +82,12 @@ function Home() {
 							</span>
 						)}
 					</div>
-				);
+				) as any as LucideIcon;
 			},
-		},
+			mobile: true,
+		} as any,
 	];
+
 	return (
 		<>
 			<DashboardLayout
@@ -88,7 +96,10 @@ function Home() {
 				logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
 			>
 				<DashboardBody>
-					<div className="relative bg-gradient-to-b from-primary/50 to-primary/40">
+					<div
+						onClick={() => console.log("t")}
+						className="relative bg-gradient-to-b from-primary/50 to-primary/40"
+					>
 						<NavBar />
 					</div>
 

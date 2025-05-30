@@ -1,11 +1,11 @@
 {
-  "id": "1d9a4e9a-a5d7-452d-b8b9-70b4284de202",
+  "id": "8df552e3-4562-4422-94fd-b6b5c226c92c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "lipy.auth_account": {
-      "name": "auth_account",
+    "lipy.authAccount": {
+      "name": "authAccount",
       "schema": "lipy",
       "columns": {
         "id": {
@@ -14,50 +14,50 @@
           "primaryKey": true,
           "notNull": true
         },
-        "account_id": {
-          "name": "account_id",
+        "accountId": {
+          "name": "accountId",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "provider_id": {
-          "name": "provider_id",
+        "providerId": {
+          "name": "providerId",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "access_token": {
-          "name": "access_token",
+        "accessToken": {
+          "name": "accessToken",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "refresh_token": {
-          "name": "refresh_token",
+        "refreshToken": {
+          "name": "refreshToken",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "id_token": {
-          "name": "id_token",
+        "idToken": {
+          "name": "idToken",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "access_token_expires_at": {
-          "name": "access_token_expires_at",
+        "accessTokenExpiresAt": {
+          "name": "accessTokenExpiresAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         },
-        "refresh_token_expires_at": {
-          "name": "refresh_token_expires_at",
+        "refreshTokenExpiresAt": {
+          "name": "refreshTokenExpiresAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
@@ -74,14 +74,14 @@
           "primaryKey": false,
           "notNull": false
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true
@@ -89,13 +89,13 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "auth_account_user_id_user_id_fk": {
-          "name": "auth_account_user_id_user_id_fk",
-          "tableFrom": "auth_account",
+        "authAccount_userId_user_id_fk": {
+          "name": "authAccount_userId_user_id_fk",
+          "tableFrom": "authAccount",
           "tableTo": "user",
           "schemaTo": "lipy",
           "columnsFrom": [
-            "user_id"
+            "userId"
           ],
           "columnsTo": [
             "id"
@@ -162,8 +162,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "postal_code": {
-          "name": "postal_code",
+        "postalCode": {
+          "name": "postalCode",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -186,8 +186,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -195,13 +195,13 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "address_user_id_user_id_fk": {
-          "name": "address_user_id_user_id_fk",
+        "address_userId_user_id_fk": {
+          "name": "address_userId_user_id_fk",
           "tableFrom": "address",
           "tableTo": "user",
           "schemaTo": "lipy",
           "columnsFrom": [
-            "user_id"
+            "userId"
           ],
           "columnsTo": [
             "id"
@@ -226,14 +226,14 @@
           "primaryKey": true,
           "notNull": true
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
-        "variant_id": {
-          "name": "variant_id",
+        "variantId": {
+          "name": "variantId",
           "type": "bigint",
           "primaryKey": false,
           "notNull": false
@@ -248,13 +248,13 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "cart_user_id_user_id_fk": {
-          "name": "cart_user_id_user_id_fk",
+        "cart_userId_user_id_fk": {
+          "name": "cart_userId_user_id_fk",
           "tableFrom": "cart",
           "tableTo": "user",
           "schemaTo": "lipy",
           "columnsFrom": [
-            "user_id"
+            "userId"
           ],
           "columnsTo": [
             "id"
@@ -262,13 +262,13 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "cart_variant_id_product_variant_id_fk": {
-          "name": "cart_variant_id_product_variant_id_fk",
+        "cart_variantId_productVariant_id_fk": {
+          "name": "cart_variantId_productVariant_id_fk",
           "tableFrom": "cart",
-          "tableTo": "product_variant",
+          "tableTo": "productVariant",
           "schemaTo": "lipy",
           "columnsFrom": [
-            "variant_id"
+            "variantId"
           ],
           "columnsTo": [
             "id"
@@ -317,8 +317,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "organization_id": {
-          "name": "organization_id",
+        "storeId": {
+          "name": "storeId",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
@@ -326,13 +326,13 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "category_organization_id_org_id_fk": {
-          "name": "category_organization_id_org_id_fk",
+        "category_storeId_store_id_fk": {
+          "name": "category_storeId_store_id_fk",
           "tableFrom": "category",
-          "tableTo": "org",
+          "tableTo": "store",
           "schemaTo": "lipy",
           "columnsFrom": [
-            "organization_id"
+            "storeId"
           ],
           "columnsTo": [
             "id"
@@ -355,8 +355,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "lipy.global_category": {
-      "name": "global_category",
+    "lipy.globalCategory": {
+      "name": "globalCategory",
       "schema": "lipy",
       "columns": {
         "id": {
@@ -368,9 +368,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "global_category_id_category_id_fk": {
-          "name": "global_category_id_category_id_fk",
-          "tableFrom": "global_category",
+        "globalCategory_id_category_id_fk": {
+          "name": "globalCategory_id_category_id_fk",
+          "tableFrom": "globalCategory",
           "tableTo": "category",
           "schemaTo": "lipy",
           "columnsFrom": [
@@ -389,8 +389,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "lipy.global_product": {
-      "name": "global_product",
+    "lipy.globalProduct": {
+      "name": "globalProduct",
       "schema": "lipy",
       "columns": {
         "id": {
@@ -402,9 +402,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "global_product_id_product_id_fk": {
-          "name": "global_product_id_product_id_fk",
-          "tableFrom": "global_product",
+        "globalProduct_id_product_id_fk": {
+          "name": "globalProduct_id_product_id_fk",
+          "tableFrom": "globalProduct",
           "tableTo": "product",
           "schemaTo": "lipy",
           "columnsFrom": [
@@ -423,8 +423,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "lipy.global_tag": {
-      "name": "global_tag",
+    "lipy.globalTag": {
+      "name": "globalTag",
       "schema": "lipy",
       "columns": {
         "id": {
@@ -436,9 +436,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "global_tag_id_tag_id_fk": {
-          "name": "global_tag_id_tag_id_fk",
-          "tableFrom": "global_tag",
+        "globalTag_id_tag_id_fk": {
+          "name": "globalTag_id_tag_id_fk",
+          "tableFrom": "globalTag",
           "tableTo": "tag",
           "schemaTo": "lipy",
           "columnsFrom": [
@@ -467,8 +467,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -510,8 +510,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "organization_id": {
-          "name": "organization_id",
+        "storeId": {
+          "name": "storeId",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
@@ -525,13 +525,13 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "orders_user_id_user_id_fk": {
-          "name": "orders_user_id_user_id_fk",
+        "orders_userId_user_id_fk": {
+          "name": "orders_userId_user_id_fk",
           "tableFrom": "orders",
           "tableTo": "user",
           "schemaTo": "lipy",
           "columnsFrom": [
-            "user_id"
+            "userId"
           ],
           "columnsTo": [
             "id"
@@ -539,226 +539,13 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "orders_organization_id_org_id_fk": {
-          "name": "orders_organization_id_org_id_fk",
+        "orders_storeId_store_id_fk": {
+          "name": "orders_storeId_store_id_fk",
           "tableFrom": "orders",
-          "tableTo": "org",
+          "tableTo": "store",
           "schemaTo": "lipy",
           "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "lipy.org": {
-      "name": "org",
-      "schema": "lipy",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "slug": {
-          "name": "slug",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "logo": {
-          "name": "logo",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "metadata": {
-          "name": "metadata",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "org_slug_unique": {
-          "name": "org_slug_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "lipy.org_invitation": {
-      "name": "org_invitation",
-      "schema": "lipy",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "organization_id": {
-          "name": "organization_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "email": {
-          "name": "email",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "role": {
-          "name": "role",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "status": {
-          "name": "status",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "expires_at": {
-          "name": "expires_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "inviter_id": {
-          "name": "inviter_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "org_invitation_organization_id_org_id_fk": {
-          "name": "org_invitation_organization_id_org_id_fk",
-          "tableFrom": "org_invitation",
-          "tableTo": "org",
-          "schemaTo": "lipy",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "org_invitation_inviter_id_user_id_fk": {
-          "name": "org_invitation_inviter_id_user_id_fk",
-          "tableFrom": "org_invitation",
-          "tableTo": "user",
-          "schemaTo": "lipy",
-          "columnsFrom": [
-            "inviter_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "lipy.org_member": {
-      "name": "org_member",
-      "schema": "lipy",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "organization_id": {
-          "name": "organization_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "role": {
-          "name": "role",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "org_member_organization_id_org_id_fk": {
-          "name": "org_member_organization_id_org_id_fk",
-          "tableFrom": "org_member",
-          "tableTo": "org",
-          "schemaTo": "lipy",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "org_member_user_id_user_id_fk": {
-          "name": "org_member_user_id_user_id_fk",
-          "tableFrom": "org_member",
-          "tableTo": "user",
-          "schemaTo": "lipy",
-          "columnsFrom": [
-            "user_id"
+            "storeId"
           ],
           "columnsTo": [
             "id"
@@ -813,14 +600,14 @@
           "primaryKey": false,
           "notNull": false
         },
-        "organization_id": {
-          "name": "organization_id",
+        "storeId": {
+          "name": "storeId",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
-        "global_product": {
-          "name": "global_product",
+        "globalProduct": {
+          "name": "globalProduct",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
@@ -830,19 +617,6 @@
           "type": "text[]",
           "primaryKey": false,
           "notNull": false
-        },
-        "default_price": {
-          "name": "default_price",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "in_stock": {
-          "name": "in_stock",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
         }
       },
       "indexes": {},
@@ -861,13 +635,13 @@
           "onDelete": "set null",
           "onUpdate": "no action"
         },
-        "product_organization_id_org_id_fk": {
-          "name": "product_organization_id_org_id_fk",
+        "product_storeId_store_id_fk": {
+          "name": "product_storeId_store_id_fk",
           "tableFrom": "product",
-          "tableTo": "org",
+          "tableTo": "store",
           "schemaTo": "lipy",
           "columnsFrom": [
-            "organization_id"
+            "storeId"
           ],
           "columnsTo": [
             "id"
@@ -875,13 +649,13 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "product_global_product_global_product_id_fk": {
-          "name": "product_global_product_global_product_id_fk",
+        "product_globalProduct_globalProduct_id_fk": {
+          "name": "product_globalProduct_globalProduct_id_fk",
           "tableFrom": "product",
-          "tableTo": "global_product",
+          "tableTo": "globalProduct",
           "schemaTo": "lipy",
           "columnsFrom": [
-            "global_product"
+            "globalProduct"
           ],
           "columnsTo": [
             "id"
@@ -896,8 +670,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "lipy.product_variant": {
-      "name": "product_variant",
+    "lipy.productVariant": {
+      "name": "productVariant",
       "schema": "lipy",
       "columns": {
         "id": {
@@ -930,8 +704,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "max_price": {
-          "name": "max_price",
+        "maxPrice": {
+          "name": "maxPrice",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -969,8 +743,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "organization_id": {
-          "name": "organization_id",
+        "storeId": {
+          "name": "storeId",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
@@ -978,9 +752,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "product_variant_product_product_id_fk": {
-          "name": "product_variant_product_product_id_fk",
-          "tableFrom": "product_variant",
+        "productVariant_product_product_id_fk": {
+          "name": "productVariant_product_product_id_fk",
+          "tableFrom": "productVariant",
           "tableTo": "product",
           "schemaTo": "lipy",
           "columnsFrom": [
@@ -992,13 +766,13 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "product_variant_organization_id_org_id_fk": {
-          "name": "product_variant_organization_id_org_id_fk",
-          "tableFrom": "product_variant",
-          "tableTo": "org",
+        "productVariant_storeId_store_id_fk": {
+          "name": "productVariant_storeId_store_id_fk",
+          "tableFrom": "productVariant",
+          "tableTo": "store",
           "schemaTo": "lipy",
           "columnsFrom": [
-            "organization_id"
+            "storeId"
           ],
           "columnsTo": [
             "id"
@@ -1013,8 +787,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "lipy.auth_session": {
-      "name": "auth_session",
+    "lipy.authSession": {
+      "name": "authSession",
       "schema": "lipy",
       "columns": {
         "id": {
@@ -1023,17 +797,23 @@
           "primaryKey": true,
           "notNull": true
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "session_token": {
-          "name": "session_token",
+        "sessionToken": {
+          "name": "sessionToken",
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "activeStoreId": {
+          "name": "activeStoreId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "expires": {
           "name": "expires",
@@ -1041,14 +821,14 @@
           "primaryKey": false,
           "notNull": true
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true
@@ -1056,13 +836,13 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "auth_session_user_id_user_id_fk": {
-          "name": "auth_session_user_id_user_id_fk",
-          "tableFrom": "auth_session",
+        "authSession_userId_user_id_fk": {
+          "name": "authSession_userId_user_id_fk",
+          "tableFrom": "authSession",
           "tableTo": "user",
           "schemaTo": "lipy",
           "columnsFrom": [
-            "user_id"
+            "userId"
           ],
           "columnsTo": [
             "id"
@@ -1073,14 +853,233 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "auth_session_session_token_unique": {
-          "name": "auth_session_session_token_unique",
+        "authSession_sessionToken_unique": {
+          "name": "authSession_sessionToken_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "session_token"
+            "sessionToken"
           ]
         }
       },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "lipy.store": {
+      "name": "store",
+      "schema": "lipy",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "handle": {
+          "name": "handle",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "logo": {
+          "name": "logo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "metadata": {
+          "name": "metadata",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "store_handle_unique": {
+          "name": "store_handle_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "handle"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "lipy.storeInvitation": {
+      "name": "storeInvitation",
+      "schema": "lipy",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "storeId": {
+          "name": "storeId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expiresAt": {
+          "name": "expiresAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "inviterId": {
+          "name": "inviterId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "storeInvitation_storeId_store_id_fk": {
+          "name": "storeInvitation_storeId_store_id_fk",
+          "tableFrom": "storeInvitation",
+          "tableTo": "store",
+          "schemaTo": "lipy",
+          "columnsFrom": [
+            "storeId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "storeInvitation_inviterId_user_id_fk": {
+          "name": "storeInvitation_inviterId_user_id_fk",
+          "tableFrom": "storeInvitation",
+          "tableTo": "user",
+          "schemaTo": "lipy",
+          "columnsFrom": [
+            "inviterId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "lipy.storeMember": {
+      "name": "storeMember",
+      "schema": "lipy",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "storeId": {
+          "name": "storeId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "storeMember_storeId_store_id_fk": {
+          "name": "storeMember_storeId_store_id_fk",
+          "tableFrom": "storeMember",
+          "tableTo": "store",
+          "schemaTo": "lipy",
+          "columnsFrom": [
+            "storeId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "storeMember_userId_user_id_fk": {
+          "name": "storeMember_userId_user_id_fk",
+          "tableFrom": "storeMember",
+          "tableTo": "user",
+          "schemaTo": "lipy",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -1119,8 +1118,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "organization_id": {
-          "name": "organization_id",
+        "storeId": {
+          "name": "storeId",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
@@ -1128,13 +1127,13 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "tag_organization_id_org_id_fk": {
-          "name": "tag_organization_id_org_id_fk",
+        "tag_storeId_store_id_fk": {
+          "name": "tag_storeId_store_id_fk",
           "tableFrom": "tag",
-          "tableTo": "org",
+          "tableTo": "store",
           "schemaTo": "lipy",
           "columnsFrom": [
-            "organization_id"
+            "storeId"
           ],
           "columnsTo": [
             "id"
@@ -1159,21 +1158,14 @@
           "primaryKey": true,
           "notNull": true
         },
-        "is_public": {
-          "name": "is_public",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "content_type": {
-          "name": "content_type",
+        "contentType": {
+          "name": "contentType",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "content_length": {
-          "name": "content_length",
+        "contentLength": {
+          "name": "contentLength",
           "type": "bigint",
           "primaryKey": false,
           "notNull": true
@@ -1196,26 +1188,26 @@
           "primaryKey": false,
           "notNull": false
         },
-        "uploaded_by": {
-          "name": "uploaded_by",
+        "uploadedBy": {
+          "name": "uploadedBy",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "organization_id": {
-          "name": "organization_id",
+        "storeId": {
+          "name": "storeId",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true
@@ -1223,13 +1215,13 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "upload_uploaded_by_user_id_fk": {
-          "name": "upload_uploaded_by_user_id_fk",
+        "upload_uploadedBy_user_id_fk": {
+          "name": "upload_uploadedBy_user_id_fk",
           "tableFrom": "upload",
           "tableTo": "user",
           "schemaTo": "lipy",
           "columnsFrom": [
-            "uploaded_by"
+            "uploadedBy"
           ],
           "columnsTo": [
             "id"
@@ -1237,13 +1229,13 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "upload_organization_id_org_id_fk": {
-          "name": "upload_organization_id_org_id_fk",
+        "upload_storeId_store_id_fk": {
+          "name": "upload_storeId_store_id_fk",
           "tableFrom": "upload",
-          "tableTo": "org",
+          "tableTo": "store",
           "schemaTo": "lipy",
           "columnsFrom": [
-            "organization_id"
+            "storeId"
           ],
           "columnsTo": [
             "id"
@@ -1280,8 +1272,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "email_verified": {
-          "name": "email_verified",
+        "emailVerified": {
+          "name": "emailVerified",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true
@@ -1292,20 +1284,20 @@
           "primaryKey": false,
           "notNull": false
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true
         },
-        "customer_id": {
-          "name": "customer_id",
+        "customerId": {
+          "name": "customerId",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -1329,8 +1321,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "normalized_email": {
-          "name": "normalized_email",
+        "normalizedEmail": {
+          "name": "normalizedEmail",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -1352,8 +1344,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "lipy.auth_verification": {
-      "name": "auth_verification",
+    "lipy.authVerification": {
+      "name": "authVerification",
       "schema": "lipy",
       "columns": {
         "id": {
@@ -1374,20 +1366,20 @@
           "primaryKey": false,
           "notNull": true
         },
-        "expires_at": {
-          "name": "expires_at",
+        "expiresAt": {
+          "name": "expiresAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false

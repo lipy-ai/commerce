@@ -24,7 +24,7 @@ const route = new Hono<ServerContext>()
 		const address = await db
 			.selectFrom("address")
 			.selectAll()
-			.where("address.user_id", "=", session?.userId!)
+			.where("address.userId", "=", session?.userId!)
 			.execute();
 		return c.json(address);
 	})
@@ -37,7 +37,7 @@ const route = new Hono<ServerContext>()
 			const address = await db
 				.deleteFrom("address")
 				.where("id", "=", id)
-				.where("user_id", "=", session?.userId!)
+				.where("userId", "=", session?.userId!)
 				.returning(["id"])
 				.executeTakeFirst();
 			return c.json(address);
@@ -48,7 +48,7 @@ const route = new Hono<ServerContext>()
 		const values = c.req.valid("json");
 		const address = await db
 			.insertInto("address")
-			.values({ ...values, id: crypto.randomUUID(), user_id: session?.userId! })
+			.values({ ...values, id: crypto.randomUUID(), userId: session?.userId! })
 			.returning(["id"])
 			.executeTakeFirst();
 		return c.json(address);
@@ -64,7 +64,7 @@ const route = new Hono<ServerContext>()
 			const address = await db
 				.updateTable("address")
 				.where("id", "=", id)
-				.where("user_id", "=", session?.userId!)
+				.where("userId", "=", session?.userId!)
 				.set({
 					...values,
 				})

@@ -9,17 +9,13 @@ type UploadCallbacks = {
 	onError?: (id?: string) => void;
 };
 
-type FileType = Parameters<
-	typeof apiClient.v1.upload.presigned.$post
->["0"]["json"]["type"];
+
 
 export function useUpload(
 	{
 		file,
-		type,
 	}: {
 		file: File | null;
-		type: FileType;
 	},
 	callbacks: UploadCallbacks = {},
 ) {
@@ -36,7 +32,6 @@ export function useUpload(
 	const getPresignedUrl = async (file: File) => {
 		const response = await presignedMutation.mutateAsync({
 			json: {
-				type,
 				contentLength: file.size,
 				contentType: file.type,
 				filename: file.name,

@@ -1,4 +1,4 @@
-import { db } from "@/db";
+import { db, type DBTypes } from "@/db";
 import { zValidator } from "@/middlewares/validator";
 import { getPresignedUrl } from "@/services/s3";
 import type { ServerContext } from "@/types";
@@ -9,34 +9,19 @@ const presignedSchema = z.object({
 	contentLength: z.number().min(0),
 	contentType: z.string(),
 	filename: z.string(),
-	type: z.enum(["image", "product"]),
 });
 
 const route = new Hono<ServerContext>().post(
 	"/presigned",
 	zValidator("json", presignedSchema),
 	async (c) => {
-		const { contentLength, contentType, filename, type } = c.req.valid("json");
-		const organization_id = c.var.session?.activeOrganizationId!;
-		const user_id = c.var.session?.userId!;
-
-		let folder: string;
-
-		switch (type) {
-			case "image":
-				folder = "images";
-				break;
-			case "product":
-				folder = "product";
-				break;
-			default:
-				folder = "images";
-				break;
-		}
+		const { contentLength, contentType, filename } = c.req.valid("json");
+		const activeStoreId = c.var.session?.activeStoreId!;
+		const userId = c.var.session?.userId!;
 
 		const id = crypto.randomUUID();
 
-		const key = `uploads/${folder}/${id}.${filename.split(".").pop()}`;
+		const key = `uploads/${id}.${filename.split(".").pop()}`;
 		const presigned = await getPresignedUrl({
 			contentLength: contentLength,
 			contentType: contentType,
@@ -47,17 +32,17 @@ const route = new Hono<ServerContext>().post(
 
 		const values = {
 			id,
-			content_type: contentType,
-			content_length: contentLength,
+			contentType: contentType,
+			contentLength: contentLength,
 			name: filename,
 			path: key,
 			url: `https://${url.host}/${key}`,
-			uploaded_by: user_id,
-			organization_id,
-			presigned_url: url.toString(),
-			created_at: new Date(),
-			updated_at: new Date(),
-		};
+			uploadedBy: userId,
+			storeId: activeStoreId || null,
+			presigned_url: url.toString() ,
+			createdAt: new Date(),
+			updatedAt: new Date(),
+		} satisfies Partial<DBTypes['upload']> & {presigned_url:string};
 
 		const image = await db
 			.insertInto("upload")

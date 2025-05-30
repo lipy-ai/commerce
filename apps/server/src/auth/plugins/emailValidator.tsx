@@ -183,7 +183,7 @@ export const magicLinkSignIn: Matcher = ({ path }) =>
 	path === "/sign-in/magic-link";
 
 export interface UserWithNormalizedEmail extends User {
-	normalized_email?: string | null;
+	normalizedEmail?: string | null;
 }
 
 export interface EmailHarmonyOptions {
@@ -275,14 +275,14 @@ const emailHarmony = ({
 				const { email, phoneNumber } = user;
 				if (!email || phoneNumber) return { data: user as Required<User> };
 
-				const normalized_email = normalizer(email);
+				const normalizedEmail = normalizer(email);
 				/* v8 ignore next */
-				if (!normalized_email) return false;
+				if (!normalizedEmail) return false;
 
 				return {
 					data: {
 						...(user as Required<User>),
-						normalized_email,
+						normalizedEmail,
 					},
 				};
 			};
@@ -305,7 +305,7 @@ const emailHarmony = ({
 		schema: {
 			user: {
 				fields: {
-					normalized_email: {
+					normalizedEmail: {
 						type: "string",
 						required: false,
 						unique: true,
@@ -346,16 +346,16 @@ const emailHarmony = ({
 
 						if (typeof email !== "string") return;
 
-						const normalized_email = normalizer(email);
+						const normalizedEmail = normalizer(email);
 
-						if (normalized_email !== email) {
+						if (normalizedEmail !== email) {
 							const user =
 								await ctx.context.adapter.findOne<UserWithNormalizedEmail>({
 									model: "user",
 									where: [
 										{
-											field: "normalized_email",
-											value: normalized_email,
+											field: "normalizedEmail",
+											value: normalizedEmail,
 										},
 									],
 								});
@@ -370,7 +370,7 @@ const emailHarmony = ({
 											query: {
 												...ctx.query,
 												email: user.email,
-												normalized_email,
+												normalizedEmail,
 											},
 										},
 									}
@@ -380,7 +380,7 @@ const emailHarmony = ({
 											body: {
 												...(ctx.body as Context["body"]),
 												email: user.email,
-												normalized_email,
+												normalizedEmail,
 											},
 										},
 									};

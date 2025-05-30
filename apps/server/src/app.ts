@@ -6,6 +6,7 @@ import { trimTrailingSlash } from "hono/trailing-slash";
 
 import { logger } from "./lib/logger";
 
+import { HTTPException } from "hono/http-exception";
 import { secureHeaders } from "hono/secure-headers";
 import { auth } from "./auth";
 import { db, pingDatabase } from "./db";
@@ -41,6 +42,13 @@ await pingDatabase();
 app.use("*", authMiddleware);
 
 app.on(["POST", "GET"], "/api/auth/*", (c) => {
+	if (c.req.path === "/api/auth/error") {
+		throw new HTTPException(401, {
+			message: "Failed to authenticate",
+			cause: c.req.query("error"),
+		});
+	}
+
 	return auth.handler(c.req.raw);
 });
 

@@ -73,28 +73,6 @@ const route = new Hono<ServerContext>()
 
 			return c.json(data);
 		},
-	)
-	.get(
-		"/shop/:id",
-		zValidator("param", z.object({ id: z.string().uuid() })),
-		async (c) => {
-			const { id } = c.req.valid("param");
-
-			const d = await db
-				.selectFrom("product as p")
-				.leftJoin("productVariant as pv", "pv.product", "p.id")
-				.where("pv.storeId", "=", id)
-				.select((eb) => [
-					"p.id",
-					"p.title",
-					"p.category",
-					eb.fn.jsonAgg("pv").as("variants"),
-				])
-				.groupBy("p.id")
-				.execute();
-
-			return c.json(d || []);
-		},
 	);
 
 export { route as productRoute };

@@ -24,7 +24,7 @@ export const DashboardHeader = ({
 	return (
 		<div className="sticky top-0 z-10 bg-background">
 			<div className="flex justify-between gap-8 w-full p-4 items-center bg-accent/30 border-b">
-				<div className="flex items-center justify-center gap-4">
+				<div className="flex items-center justify-center gap-2">
 					<Link
 						to={"/"}
 						onClick={onBack}

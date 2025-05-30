@@ -114,7 +114,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 					<QueryProvider handleThrowOnError={handleThrowOnError}>
 						<NuqsAdapter>{children}</NuqsAdapter>
 						<Toaster />
-						{/* <AppCartInitializer /> */}
+					
+
 					</QueryProvider>
 					<TanStackRouterDevtools position="bottom-right" />
 					<Scripts />

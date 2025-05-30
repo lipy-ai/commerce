@@ -1,5 +1,5 @@
 {
-  "id": "41c7c308-5e5c-4876-a17b-7244d2f64a17",
+  "id": "4c30a53c-2526-4002-af05-572dc61bbede",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -467,12 +467,6 @@
           "primaryKey": true,
           "notNull": true
         },
-        "userId": {
-          "name": "userId",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
         "items": {
           "name": "items",
           "type": "jsonb[]",
@@ -481,6 +475,36 @@
         },
         "taxes": {
           "name": "taxes",
+          "type": "jsonb[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "discounts": {
+          "name": "discounts",
+          "type": "jsonb[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "storeId": {
+          "name": "storeId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "orderedBy": {
+          "name": "orderedBy",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "currency": {
+          "name": "currency",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "delivery": {
+          "name": "delivery",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
@@ -491,28 +515,51 @@
           "primaryKey": false,
           "notNull": false
         },
-        "total": {
-          "name": "total",
-          "type": "bigint",
-          "primaryKey": false,
-          "notNull": false,
-          "default": 0
-        },
-        "delivery": {
-          "name": "delivery",
-          "type": "jsonb",
+        "deliveryInstruction": {
+          "name": "deliveryInstruction",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "payment": {
-          "name": "payment",
-          "type": "jsonb",
+        "storeInstructions": {
+          "name": "storeInstructions",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "storeId": {
-          "name": "storeId",
-          "type": "uuid",
+        "paymentMethod": {
+          "name": "paymentMethod",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "orderedAt": {
+          "name": "orderedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cancelledAt": {
+          "name": "cancelledAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "refundedAt": {
+          "name": "refundedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deliveredAt": {
+          "name": "deliveredAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deliveryAgentAssignedAt": {
+          "name": "deliveryAgentAssignedAt",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         },
@@ -521,24 +568,52 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "totalTaxAmount": {
+          "name": "totalTaxAmount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "totalDiscountAmount": {
+          "name": "totalDiscountAmount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "maxItemTotalAmount": {
+          "name": "maxItemTotalAmount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "itemTotalAmount": {
+          "name": "itemTotalAmount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "totalAmount": {
+          "name": "totalAmount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "amountSaved": {
+          "name": "amountSaved",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "orders_userId_user_id_fk": {
-          "name": "orders_userId_user_id_fk",
-          "tableFrom": "orders",
-          "tableTo": "user",
-          "schemaTo": "lipy",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
         "orders_storeId_store_id_fk": {
           "name": "orders_storeId_store_id_fk",
           "tableFrom": "orders",
@@ -546,6 +621,20 @@
           "schemaTo": "lipy",
           "columnsFrom": [
             "storeId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "orders_orderedBy_user_id_fk": {
+          "name": "orders_orderedBy_user_id_fk",
+          "tableFrom": "orders",
+          "tableTo": "user",
+          "schemaTo": "lipy",
+          "columnsFrom": [
+            "orderedBy"
           ],
           "columnsTo": [
             "id"
@@ -590,6 +679,12 @@
         },
         "brand": {
           "name": "brand",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "thumbnail": {
+          "name": "thumbnail",
           "type": "text",
           "primaryKey": false,
           "notNull": false

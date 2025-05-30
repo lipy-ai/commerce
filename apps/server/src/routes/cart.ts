@@ -38,7 +38,6 @@ const route = new Hono<ServerContext>()
 	.patch("/", zValidator("json", cartSchema), async (c) => {
 		const session = c.get("session");
 		const values = c.req.valid("json");
-
 		if (Number(values.quantity) === 0) {
 			await db
 				.deleteFrom("cart")

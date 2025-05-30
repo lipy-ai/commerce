@@ -38,7 +38,6 @@ function createTableMap<T extends Record<string, PgTableWithColumns<any>>>(
 		const table = schemas[key];
 		if (!table || !table._) break;
 		const k = `${table._.name}` as `${(typeof table)["_"]["name"] & string}`;
-		console.log(key, k, table._.name);
 		result[k] && table && Object.assign(result[k], table);
 	}
 

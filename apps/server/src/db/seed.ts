@@ -60,7 +60,7 @@ async function main() {
 			.insertInto("productVariant")
 			.values(
 				Array.from({ length: 3 + Math.floor(Math.random() * 3) }).map(() => ({
-					id: faker.number.bigInt() as any,
+					id: crypto.randomUUID(),
 					title: faker.commerce.productName(),
 					description: faker.commerce.productDescription(),
 					sku: faker.string.alphanumeric(10),
@@ -71,7 +71,7 @@ async function main() {
 					price: Math.round(
 						Number(faker.commerce.price({ min: 100, max: 1000, dec: 0 })),
 					),
-					qty: faker.number.int({ min: 1, max: 500 }),
+					stockQty: faker.number.int({ min: 1, max: 500 }),
 					unit: faker.helpers.arrayElement(["kg", "g", "lb", "oz", "pcs"]),
 					product: p.id,
 					storeId: newOrg.id,

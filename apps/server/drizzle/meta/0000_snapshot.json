@@ -1,5 +1,5 @@
 {
-  "id": "8df552e3-4562-4422-94fd-b6b5c226c92c",
+  "id": "41c7c308-5e5c-4876-a17b-7244d2f64a17",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -234,7 +234,7 @@
         },
         "variantId": {
           "name": "variantId",
-          "type": "bigint",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -676,7 +676,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "bigserial",
+          "type": "uuid",
           "primaryKey": true,
           "notNull": true
         },
@@ -718,8 +718,8 @@
           "notNull": false,
           "default": 0
         },
-        "qty": {
-          "name": "qty",
+        "stockQty": {
+          "name": "stockQty",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -910,6 +910,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "active": {
+          "name": "active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
         }
       },
       "indexes": {},

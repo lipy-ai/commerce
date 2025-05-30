@@ -24,12 +24,12 @@ function RouteComponent() {
 
 	const { deliveryLocation } = useLocationStore();
 
-	let total_max_price = 0;
-	let total_price = 0;
+	let totalMaxPrice = 0;
+	let totalPrice = 0;
 
 	for (const item of cart) {
-		total_max_price += (item.max_price || 0) * item.quantity;
-		total_price += (item.price || 0) * item.quantity;
+		totalMaxPrice += (item.maxPrice || 0) * item.quantity;
+		totalPrice += (item.price || 0) * item.quantity;
 	}
 
 	const billingDetails = [
@@ -40,9 +40,9 @@ function RouteComponent() {
 				return (
 					<div className="flex items-center gap-2">
 						<p className="text-muted-foreground line-through">
-							₹{total_max_price}
+							₹{totalMaxPrice}
 						</p>
-						<p>₹{total_price}</p>
+						<p>₹{totalPrice}</p>
 					</div>
 				);
 			},
@@ -112,7 +112,7 @@ function RouteComponent() {
 							<Separator className="-my-2" />
 							<div className="flex items-center justify-between">
 								<p className="text-lg font-semibold">Total</p>
-								<p className="text-lg font-semibold">₹{total_price}</p>
+								<p className="text-lg font-semibold">₹{totalPrice}</p>
 							</div>
 						</Card>
 					</div>
@@ -145,7 +145,7 @@ function RouteComponent() {
 							<div className="w-full border p-1 rounded-md flex items-center justify-between px-2 bg-emerald-200 border-emerald-600 h-12">
 								<div>
 									<p className="text-xs font-medium">Total Bill</p>
-									<p className="text-lg font-semibold">₹{total_price}</p>
+									<p className="text-lg font-semibold">₹{totalPrice}</p>
 								</div>
 
 								<Button>

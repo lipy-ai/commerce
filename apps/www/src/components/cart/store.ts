@@ -7,7 +7,7 @@ type ProductInCart = {
 	unit: string | null;
 	title: string;
 	price: number | null;
-	max_price: number | null;
+	maxPrice: number | null;
 };
 export type Operation = "increment" | "decrement" | "add";
 
@@ -20,7 +20,7 @@ export type CartStore = {
 			unit: string | null;
 			title: string;
 			price: number | null;
-			max_price: number | null;
+			maxPrice: number | null;
 		},
 		operation?: Operation,
 	) => void;
@@ -61,7 +61,7 @@ export const useCartStore = create(
 								unit: product.unit,
 								title: product.title,
 								price: product.price,
-								max_price: product.max_price,
+								maxPrice: product.maxPrice,
 							},
 						];
 					}

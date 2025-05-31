@@ -4,7 +4,7 @@ import { Button } from "@lipy/web-ui/components/ui/button";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Loader2, Minus, Plus, ShoppingCart } from "lucide-react";
 import { useCallback, useState } from "react";
-import { useCartStore, type Operation } from "./store";
+import { type Operation, useCartStore } from "./store";
 
 type LoadingState = {
 	isLoading: boolean;
@@ -26,8 +26,6 @@ export const AddToCart = ({
 		operation: null,
 	});
 
-	console.log("product", product);
-
 	const mutation = useAPIMutation(apiClient.v1.cart, "$patch", {
 		onSuccess: () => {
 			if (loadingState.operation) {
@@ -40,9 +38,7 @@ export const AddToCart = ({
 		},
 	});
 
-	const productInCart = cart.find(
-		(item) => item.id.toString() === product.id.toString(),
-	);
+	const productInCart = cart.find((item) => item.id === product.id);
 
 	const setLoading = useCallback((operation: Operation | null) => {
 		setLoadingState({
@@ -125,7 +121,11 @@ export const AddToCart = ({
 					variant="outline"
 					aria-label="Add to cart"
 				>
-					{isLoading ? <LoadingSpinner /> : <Plus className="size-3" strokeWidth={3} />}
+					{isLoading ? (
+						<LoadingSpinner />
+					) : (
+						<Plus className="size-3" strokeWidth={3} />
+					)}
 				</Button>
 			);
 

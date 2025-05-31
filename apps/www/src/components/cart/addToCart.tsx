@@ -38,9 +38,7 @@ export const AddToCart = ({
 		},
 	});
 
-	const productInCart = cart.find(
-		(item) => item.id.toString() === product.id.toString(),
-	);
+	const productInCart = cart.find((item) => item.id === product.id);
 
 	const setLoading = useCallback((operation: Operation | null) => {
 		setLoadingState({

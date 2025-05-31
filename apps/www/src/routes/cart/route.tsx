@@ -8,13 +8,7 @@ import { Button } from "@lipy/web-ui/components/ui/button";
 import { Card } from "@lipy/web-ui/components/ui/card";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { createFileRoute } from "@tanstack/react-router";
-import {
-	Bike,
-	Navigation,
-	ReceiptText,
-	ShoppingBag,
-	StepForward,
-} from "lucide-react";
+import { Bike, Navigation, ReceiptText, ShoppingBag } from "lucide-react";
 
 export const Route = createFileRoute("/cart")({
 	component: RouteComponent,

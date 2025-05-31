@@ -1,11 +1,6 @@
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
-import {
-	Card,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@lipy/web-ui/components/ui/card";
+
 import {
 	Table,
 	TableBody,

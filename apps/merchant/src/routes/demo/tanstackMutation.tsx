@@ -48,7 +48,7 @@ function RouteComponent() {
 					line2: "string",
 					city: "string",
 					state: "string",
-					postal_code: "string",
+					postalCode: "string",
 					phone: "",
 					lat: 0,
 					lng: 0,

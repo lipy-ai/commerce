@@ -1,4 +1,5 @@
 import { useCartStore } from "@/components/cart/store";
+import PlaceOrder from "@/components/order/placeOrder";
 import ProductCard from "@/components/productCard";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
@@ -7,13 +8,7 @@ import { Button } from "@lipy/web-ui/components/ui/button";
 import { Card } from "@lipy/web-ui/components/ui/card";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { createFileRoute } from "@tanstack/react-router";
-import {
-	Bike,
-	Navigation,
-	ReceiptText,
-	ShoppingBag,
-	StepForward,
-} from "lucide-react";
+import { Bike, Navigation, ReceiptText, ShoppingBag } from "lucide-react";
 
 export const Route = createFileRoute("/cart")({
 	component: RouteComponent,
@@ -148,10 +143,7 @@ function RouteComponent() {
 									<p className="text-lg font-semibold">₹{totalPrice}</p>
 								</div>
 
-								<Button>
-									<p>Place Order</p>
-									<StepForward />
-								</Button>
+								<PlaceOrder />
 							</div>
 						</div>
 					</div>

@@ -2,11 +2,10 @@ import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/queryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { DeleteAddress } from "@lipy/web-ui/components/maps/deleteAdderess";
-import DetailedAddress from "@lipy/web-ui/components/maps/detailedAddress";
+import { DetailedAddress } from "@lipy/web-ui/components/maps/detailedAddress";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { Avatar, AvatarFallback } from "@lipy/web-ui/components/ui/avatar";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
-
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
@@ -41,6 +40,7 @@ function RouteComponent() {
 						<Skeleton className="h-28 w-5/6 " />
 					</div>
 				))}
+
 			{!isLoading && data && data?.length > 0 && (
 				<div className="mb-10">
 					{data.map((address) => (
@@ -69,6 +69,11 @@ function RouteComponent() {
 								<div>
 									<h2 className="text-lg font-semibold">{address.name}</h2>
 									<p className="text-muted-foreground">{address.line1}</p>
+									{address.phone && (
+										<p className="text-muted-foreground">
+											Phone No. : {address.phone}
+										</p>
+									)}
 								</div>
 							</div>
 

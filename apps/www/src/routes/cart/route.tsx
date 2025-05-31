@@ -1,4 +1,5 @@
 import { useCartStore } from "@/components/cart/store";
+import PlaceOrder from "@/components/order/placeOrder";
 import ProductCard from "@/components/productCard";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
@@ -148,10 +149,7 @@ function RouteComponent() {
 									<p className="text-lg font-semibold">₹{totalPrice}</p>
 								</div>
 
-								<Button>
-									<p>Place Order</p>
-									<StepForward />
-								</Button>
+								<PlaceOrder />
 							</div>
 						</div>
 					</div>

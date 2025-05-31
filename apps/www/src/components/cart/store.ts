@@ -29,7 +29,7 @@ export type CartStore = {
 
 export const useCartStore = create<CartStore>()(
 	persist(
-		(set, get) => ({
+		(set) => ({
 			cart: [],
 			initialized: false,
 			updateCart: (product, operation) => {

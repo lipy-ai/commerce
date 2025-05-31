@@ -12,8 +12,6 @@ export const AppCartInitializer = () => {
 		enabled: !initialized,
 	});
 
-	console.log(data)
-
 	useEffect(() => {
 		if (!initialized && isFetched && data) {
 			const mappedCart = data.map((item: any) => ({

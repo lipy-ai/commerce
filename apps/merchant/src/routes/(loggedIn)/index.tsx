@@ -1,4 +1,4 @@
-import { authClient } from "@lipy/lib/providers/auth";
+// import { authClient } from "@lipy/lib/providers/auth";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(loggedIn)/")({
@@ -6,7 +6,7 @@ export const Route = createFileRoute("/(loggedIn)/")({
 });
 
 function RouteComponent() {
-	const data = authClient.useSession();
+	// const data = authClient.useSession();
 	return (
 		<div>
 			Hello "/(loggedIn)/"!

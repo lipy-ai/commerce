@@ -117,11 +117,11 @@ function RouteComponent() {
 						</Card>
 					</div>
 
-					<div className="absolute fixed  bottom-0 border-t left-0 w-full rounded-tl-lg rounded-tr-lg bg-white shadow-md border-2">
+					<div className="fixed  bottom-0 border-t left-0 w-full rounded-tl-lg rounded-tr-lg bg-white shadow-md border-2">
 						<div className="bg-accent rounded-lg">
 							<div className="flex items-center gap-2 pt-2 mb-4  px-4 justify-between">
 								<div className="flex items-center gap-2">
-									<Navigation className="fill-primary text-primary size-8" />
+									<Navigation className="fill-primary text-primary size-6" />
 									<div>
 										<p className="text-primary text-lg font-semibold">
 											Delivering to

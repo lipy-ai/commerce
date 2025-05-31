@@ -27,9 +27,9 @@ export type CartStore = {
 	setCartFromDB: (items: ProductInCart[]) => void;
 };
 
-export const useCartStore = create(
-	persist<CartStore>(
-		(set, _get) => ({
+export const useCartStore = create<CartStore>()(
+	persist(
+		(set, get) => ({
 			cart: [],
 			initialized: false,
 			updateCart: (product, operation) => {
@@ -71,11 +71,17 @@ export const useCartStore = create(
 					return { cart: finalCart };
 				});
 			},
-			setCartFromDB: (items) => set({ cart: items, initialized: true }),
+			setCartFromDB: (items) =>
+				set({
+					cart: items,
+					initialized: true, // Will reset on app reload now
+				}),
 		}),
 		{
 			name: "lipy-cart-state",
 			storage: createJSONStorage(() => localStorage),
+			// Only persist the cart — not `initialized`
+			partialize: (state) => ({ cart: state.cart }),
 		},
 	),
 );

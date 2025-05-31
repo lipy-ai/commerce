@@ -1,254 +1,116 @@
-import { DataTableColumnHeader } from "@lipy/web-ui/components/table/column-header";
-import { DataTable } from "@lipy/web-ui/components/table/data-table";
-import { DataTableToolbar } from "@lipy/web-ui/components/table/toolbar";
-import { Checkbox } from "@lipy/web-ui/components/ui/checkbox";
-import { createFileRoute } from "@tanstack/react-router";
+import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
+import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 
-import React from "react";
-
-import { Badge } from "@lipy/web-ui/components/ui/badge";
-import { Button } from "@lipy/web-ui/components/ui/button";
 import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@lipy/web-ui/components/ui/dropdown-menu";
-import { useDataTable } from "@lipy/web-ui/hooks/use-data-table";
-import type { Column, ColumnDef } from "@tanstack/react-table";
-import {
-	CheckCircle,
-	CheckCircle2,
-	DollarSign,
-	MoreHorizontal,
-	Text,
-	XCircle,
-} from "lucide-react";
-// import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@lipy/web-ui/components/ui/table";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
+import { cn } from "@lipy/web-ui/lib/utils";
+import { Link, createFileRoute } from "@tanstack/react-router";
+import { Dot, Phone, Plus } from "lucide-react";
 
 export const Route = createFileRoute("/(loggedIn)/customer/")({
 	component: RouteComponent,
 });
 
-interface Project {
-	id: string;
-	title: string;
-	status: "active" | "inactive";
-	budget: number;
+function RouteComponent() {
+	const { isMobile } = useViewport();
+	return (
+		<div>
+			<DashboardHeader title="Customers">
+				<Button>
+					<Plus />
+					Create Customer
+				</Button>
+			</DashboardHeader>
+
+			<div className="lg:p-8 lg:space-y-8">
+				{/* <div className="p-4 lg:p-0">
+					<div className="border grid grid-cols-4 divide-x bg-background">
+						{data.map((d, i) => (
+							<div className="p-4" key={i}>
+								<h1 className="lg:text-xl font-semibold">{d.value}</h1>
+								<h2 className="lg:text-sm font-light text-xs">
+									{d.name} {!isMobile && "Customers"}
+								</h2>
+							</div>
+						))}
+					</div>
+				</div> */}
+				{isMobile ? <MobileView /> : <DesktopView />}
+			</div>
+		</div>
+	);
 }
 
-const data: Project[] = [
-	{
-		id: "1",
-		title: "Project Alpha",
-		status: "active",
-		budget: 50000,
-	},
-	{
-		id: "2",
-		title: "Project Beta",
-		status: "inactive",
-		budget: 75000,
-	},
-	{
-		id: "3",
-		title: "Project Gamma",
-		status: "active",
-		budget: 25000,
-	},
-	{
-		id: "4",
-		title: "Project Delta",
-		status: "active",
-		budget: 100000,
-	},
-	{
-		id: "5",
-		title: "Project Epsilon",
-		status: "inactive",
-		budget: 60000,
-	},
-	{
-		id: "6",
-		title: "Project Zeta",
-		status: "active",
-		budget: 30000,
-	},
-	{
-		id: "7",
-		title: "Project Eta",
-		status: "active",
-		budget: 85000,
-	},
-	{
-		id: "8",
-		title: "Project Theta",
-		status: "inactive",
-		budget: 40000,
-	},
-	{
-		id: "9",
-		title: "Project Iota",
-		status: "active",
-		budget: 95000,
-	},
-	{
-		id: "10",
-		title: "Project Kappa",
-		status: "inactive",
-		budget: 55000,
-	},
-	{
-		id: "11",
-		title: "Project Lambda",
-		status: "active",
-		budget: 47000,
-	},
-	{
-		id: "12",
-		title: "Project Mu",
-		status: "active",
-		budget: 62000,
-	},
-];
-
-function RouteComponent() {
-	// const [title] = useQueryState("title", parseAsString.withDefault(""));
-	// const [status] = useQueryState(
-	// 	"status",
-	// 	parseAsArrayOf(parseAsString).withDefault([]),
-	// );
-
-	const columns = React.useMemo<ColumnDef<Project>[]>(
-		() => [
-			{
-				id: "select",
-				header: ({ table }) => (
-					<Checkbox
-						checked={
-							table.getIsAllPageRowsSelected() ||
-							(table.getIsSomePageRowsSelected() && "indeterminate")
-						}
-						onCheckedChange={(value) =>
-							table.toggleAllPageRowsSelected(!!value)
-						}
-						aria-label="Select all"
-					/>
-				),
-				cell: ({ row }) => (
-					<Checkbox
-						checked={row.getIsSelected()}
-						onCheckedChange={(value) => row.toggleSelected(!!value)}
-						aria-label="Select row"
-					/>
-				),
-				size: 32,
-				enableSorting: false,
-				enableHiding: false,
-			},
-			{
-				id: "title",
-				accessorKey: "title",
-				header: ({ column }: { column: Column<Project, unknown> }) => (
-					<DataTableColumnHeader column={column} title="Title" />
-				),
-				cell: ({ cell }) => <div>{cell.getValue<Project["title"]>()}</div>,
-				meta: {
-					label: "Title",
-					placeholder: "Search titles...",
-					variant: "text",
-					icon: Text,
-				},
-				enableColumnFilter: true,
-			},
-			{
-				id: "status",
-				accessorKey: "status",
-				header: ({ column }: { column: Column<Project, unknown> }) => (
-					<DataTableColumnHeader column={column} title="Status" />
-				),
-				cell: ({ cell }) => {
-					const status = cell.getValue<Project["status"]>();
-					const Icon = status === "active" ? CheckCircle2 : XCircle;
-
-					return (
-						<Badge variant="outline" className="capitalize">
-							<Icon />
-							{status}
-						</Badge>
-					);
-				},
-				meta: {
-					label: "Status",
-					variant: "multiSelect",
-					options: [
-						{ label: "Active", value: "active", icon: CheckCircle },
-						{ label: "Inactive", value: "inactive", icon: XCircle },
-					],
-				},
-				enableColumnFilter: true,
-			},
-			{
-				id: "budget",
-				accessorKey: "budget",
-				header: ({ column }: { column: Column<Project, unknown> }) => (
-					<DataTableColumnHeader column={column} title="Budget" />
-				),
-				cell: ({ cell }) => {
-					const budget = cell.getValue<Project["budget"]>();
-
-					return (
-						<div className="flex items-center gap-1">
-							<DollarSign className="size-4" />
-							{budget.toLocaleString()}
-						</div>
-					);
-				},
-			},
-			{
-				id: "actions",
-				cell: function Cell() {
-					return (
-						<DropdownMenu>
-							<DropdownMenuTrigger asChild>
-								<Button variant="ghost" size="icon">
-									<MoreHorizontal className="h-4 w-4" />
-									<span className="sr-only">Open menu</span>
-								</Button>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent align="end">
-								<DropdownMenuItem>Edit</DropdownMenuItem>
-								<DropdownMenuItem variant="destructive">
-									Delete
-								</DropdownMenuItem>
-							</DropdownMenuContent>
-						</DropdownMenu>
-					);
-				},
-				size: 32,
-			},
-		],
-		[],
-	);
-
-	const { table } = useDataTable({
-		data,
-		columns,
-		pageCount: 2,
-		initialState: {
-			sorting: [{ id: "title", desc: true }],
-			columnPinning: { right: ["actions"] },
-		},
-		getRowId: (row) => row.id,
-	});
-
+function MobileView() {
 	return (
-		<div className="md:p-8">
-			<DataTable table={table}>
-				<DataTableToolbar table={table}>
-					<Button size={"sm"}>New Product</Button>
-				</DataTableToolbar>
-			</DataTable>
+		<div className="bg-background border divide-y">
+			{[...Array(40)].map((m) => (
+				<div className="flex p-4" key={m}>
+					<div className="flex gap-4">
+						<div className="">
+							<p className="font-medium inline-flex items-center truncate">
+								Kundan Bhosale <Dot />
+								<span className="font-light">932554253424</span>
+							</p>
+							<p className="line-clamp-1">
+								Bhagwan Pur, Chhapra - Rewa - Muzaffarpur Rd, Shrirampuri,
+								Muzaffarpur, Bhagwanpur, Bihar 842001, India
+							</p>
+						</div>
+
+						<Link
+							to="/"
+							className={cn(
+								buttonVariants({ variant: "outline", size: "icon" }),
+							)}
+						>
+							<Phone />
+						</Link>
+					</div>
+				</div>
+			))}
 		</div>
+	);
+}
+
+function DesktopView() {
+	return (
+		<Table className="bg-background border p-8">
+			<TableHeader>
+				<TableRow>
+					<TableHead className="w-52">Name</TableHead>
+					<TableHead className="">Address</TableHead>
+					<TableHead className="w-24">Orders</TableHead>
+					<TableHead className="w-24">Returns</TableHead>
+					<TableHead className="w-24">Refunds</TableHead>
+				</TableRow>
+			</TableHeader>
+			<TableBody>
+				{[...Array(40)].map((m) => (
+					<TableRow key={m}>
+						<TableCell>
+							<div>
+								<p className="font-medium"> Kundan Bhosale</p>
+								<p className="font-light">9325029914</p>
+							</div>
+						</TableCell>
+						<TableCell>
+							Bhagwan Pur, Chhapra - Rewa - Muzaffarpur Rd, Shrirampuri,
+							Muzaffarpur, Bhagwanpur, Bihar 842001, India
+						</TableCell>
+						<TableCell>100</TableCell>
+						<TableCell>0</TableCell>
+						<TableCell>0</TableCell>
+					</TableRow>
+				))}
+			</TableBody>
+		</Table>
 	);
 }

@@ -1,16 +1,18 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 // @ts-nocheck
 import { apiClient } from "@lipy/lib/api";
 import { authClient } from "@lipy/lib/providers/auth";
 import { apiQueryOptions, useAPIMutation } from "@lipy/lib/utils/queryClient";
+import { CustomRadioGroup } from "@lipy/web-ui/components/custom-ui/customRadioGroup";
+import { InputWithAnimatedLabel } from "@lipy/web-ui/components/custom-ui/inputWithAnimatedLabel";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { SquarePen, StepForward, X } from "lucide-react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import type { FormSchema } from "../forms/renderer";
-import FormRender from "../forms/renderer";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button, buttonVariants } from "../ui/button";
 import {
@@ -22,10 +24,23 @@ import {
 	DrawerTitle,
 	DrawerTrigger,
 } from "../ui/drawer";
-import { ScrollArea } from "../ui/scroll-area";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "../ui/form";
 import { Separator } from "../ui/separator";
 
-export default function DetailedAddress({
+const addressTypesItems = [
+	{ value: "home", label: "Home" },
+	{ value: "work", label: "Work" },
+	{ value: "other", label: "Other" },
+];
+
+export function DetailedAddress({
 	fullAddress,
 	label,
 }: {
@@ -38,76 +53,94 @@ export default function DetailedAddress({
 	if (label === "Edit") {
 		building = fullAddress.line1.split(",")[0];
 	}
-
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 
-	const forms: FormSchema<any, any> = [
-		{
-			id: "general",
-			size: "default",
-			style: {
-				submitBtn: {
-					label: "Save address",
-					pos: {
-						horizontal: "right",
-						vertical: "bottom",
-					},
-					className: "w-full",
-				},
-				editBtn: {
-					label: "Edit Information",
-				},
-				labelPos: "top",
-			},
-			schema: z.object({
-				yourName: z.string(),
-				phoneNumber: z.string().optional(),
-				building: z.string(),
-				tag: z.enum(["home", "work", "other"]),
-			}),
-			values: {
-				yourName: fullAddress.name || data?.user?.name || "",
-				phoneNumber: "",
-				tag: fullAddress.tag || "home",
-				building: building || "",
-			},
-			elements: [
-				{
-					name: "building",
-					fieldType: "Input",
-					placeholder: "",
-					label: "Flat/House No / Building Name",
-					required: true,
-				},
-				{
-					fieldType: "RadioGroup",
-					name: "tag",
-					label: "Address type",
-					options: [
-						{ label: "Home", value: "home" },
-						{ label: "Work", value: "work" },
-						{ label: "Other", value: "other" },
-					],
-				},
-				[
-					{
-						name: "yourName",
-						fieldType: "Input",
-						placeholder: "John",
-						label: "Your name",
-						required: true,
-					},
-					{
-						name: "phoneNumber",
-						fieldType: "Input",
-						label: "Phone number (optional)",
-						required: false,
-					},
-				],
-			],
+	const formSchema = z.object({
+		building: z.string().min(2, {
+			message: "Please fill your detailed address",
+		}),
+		addressType: z.enum(["home", "work", "other"]),
+		receiverName: z.string().optional(),
+		receiverPhone: z.string().optional(),
+	});
+
+	const form = useForm<z.infer<typeof formSchema>>({
+		resolver: zodResolver(formSchema),
+		defaultValues: {
+			building: building || "",
+			addressType: fullAddress.tag || "home",
+			receiverName: fullAddress.name || data?.user?.name || "",
+			receiverPhone: fullAddress.phone || "",
 		},
-	];
+	});
+
+	// const forms: FormSchema<any, any> = [
+	// 	{
+	// 		id: "general",
+	// 		size: "default",
+	// 		style: {
+	// 			submitBtn: {
+	// 				label: "Save address",
+	// 				pos: {
+	// 					horizontal: "right",
+	// 					vertical: "bottom",
+	// 				},
+	// 				className: "w-full",
+	// 			},
+	// 			editBtn: {
+	// 				label: "Edit Information",
+	// 			},
+	// 			labelPos: "top",
+	// 		},
+	// 		schema: z.object({
+	// 			yourName: z.string(),
+	// 			phoneNumber: z.string().optional(),
+	// 			building: z.string(),
+	// 			tag: z.enum(["home", "work", "other"]),
+	// 		}),
+	// 		values: {
+	// 			yourName: fullAddress.name || data?.user?.name || "",
+	// 			phoneNumber: "",
+	// 			tag: fullAddress.tag || "home",
+	// 			building: building || "",
+	// 		},
+	// 		elements: [
+	// 			{
+	// 				name: "building",
+	// 				fieldType: "Input",
+	// 				placeholder: "",
+	// 				label: "Flat/House No / Building Name",
+	// 				required: true,
+	// 			},
+	// 			{
+	// 				fieldType: "RadioGroup",
+	// 				name: "tag",
+	// 				label: "Address type",
+	// 				options: [
+	// 					{ label: "Home", value: "home" },
+	// 					{ label: "Work", value: "work" },
+	// 					{ label: "Other", value: "other" },
+	// 				],
+	// 			},
+	// 			[
+	// 				{
+	// 					name: "yourName",
+	// 					fieldType: "Input",
+	// 					placeholder: "John",
+	// 					label: "Your name",
+	// 					required: true,
+	// 				},
+	// 				{
+	// 					name: "phoneNumber",
+	// 					fieldType: "Input",
+	// 					label: "Phone number (optional)",
+	// 					required: false,
+	// 				},
+	// 			],
+	// 		],
+	// 	},
+	// ];
 
 	const mutation = useAPIMutation(apiClient.v1.address, "$post", {
 		onSuccess() {
@@ -117,18 +150,21 @@ export default function DetailedAddress({
 		},
 	});
 
-	const handleAddAddress = (values: any) => {
+	const handleAddAddress = (values: z.infer<typeof formSchema>) => {
 		toast.promise(
 			mutation.mutateAsync({
 				json: {
-					name: values.yourName || fullAddress.name,
+					name: values.receiverName || fullAddress.name,
 					country: fullAddress.country,
-					tag: values.tag,
+					tag: values.addressType,
 					line1: `${values.building}, ${fullAddress.address}`,
 					line2: "",
 					city: fullAddress.city,
 					state: fullAddress.state,
-					postal_code: fullAddress.postal_code,
+					postalCode: fullAddress.postalCode,
+					phone: values.receiverPhone,
+					lat: fullAddress.lat,
+					lng: fullAddress.lng,
 				},
 			}),
 			{
@@ -142,23 +178,30 @@ export default function DetailedAddress({
 		);
 	};
 
-	const handleEditAddress = (values) => {
+	const handleEditAddress = (values: z.infer<typeof formSchema>) => {
 		toast.promise(
 			apiClient.v1.address[":id"].$patch({
 				param: { id: fullAddress.id },
 				json: {
-					name: values.yourName || fullAddress.name,
+					name: values.receiverName || fullAddress.name,
 					country: fullAddress.country,
-					tag: values.tag,
+					tag: values.addressType,
 					line1: `${values.building}, ${fullAddress.line1.split(",").slice(1).join(",")}`,
 					line2: "",
 					city: fullAddress.city,
 					state: fullAddress.state,
-					postal_code: fullAddress.postal_code,
+					postalCode: fullAddress.postalCode,
+					phone: values.receiverPhone,
+					lat: fullAddress.lat,
+					lng: fullAddress.lng,
 				},
 			}),
 			{
 				success: () => {
+					queryClient.invalidateQueries({
+						queryKey: apiQueryOptions(apiClient.v1.address, "$get", {})
+							.queryKey,
+					});
 					navigate({ to: "/account/addresses", replace: true });
 					return "Address saved successfully";
 				},
@@ -203,46 +246,128 @@ export default function DetailedAddress({
 				</DrawerHeader>
 
 				<Separator />
-				<ScrollArea className="h-[50vh]">
-					<div className="p-4 mb-6">
-						<div className="text-sm rounded-md border p-2 bg-accent font-medium">
-							{label === "Edit" ? (
-								<p>{fullAddress.line1.split(",").slice(1).join(",")}</p>
-							) : label === "Add" ? (
-								<p>{fullAddress.address}</p>
+
+				<div className="p-4 mb-6">
+					<div className="text-sm rounded-md border p-2 bg-accent font-medium">
+						{label === "Edit" ? (
+							<p>{fullAddress.line1.split(",").slice(1).join(",")}</p>
+						) : label === "Add" ? (
+							<p>{fullAddress.address}</p>
+						) : (
+							<></>
+						)}
+						<div className="flex justify-end">
+							{label === "Add" ? (
+								<DrawerClose>
+									<Button size="sm" variant="outline" className="ml-auto">
+										Change
+									</Button>
+								</DrawerClose>
+							) : label === "Edit" ? (
+								<Link
+									className={cn(
+										buttonVariants({ variant: "outline", size: "sm" }),
+										"ml-auto",
+									)}
+									to="/account/addresses/new"
+									params={{ addressId: fullAddress.id }}
+								>
+									Change
+								</Link>
 							) : (
 								<></>
 							)}
-							<div className="flex justify-end">
-								{label === "Add" ? (
-									<DrawerClose>
-										<Button size="sm" variant="outline" className="ml-auto">
-											Change
-										</Button>
-									</DrawerClose>
-								) : label === "Edit" ? (
-									<Link
-										className={cn(
-											buttonVariants({ variant: "outline", size: "sm" }),
-											"ml-auto",
-										)}
-										to="/account/addresses/new"
-										params={{ addressId: fullAddress.id }}
-									>
-										Change
-									</Link>
-								) : (
-									<></>
-								)}
-							</div>
 						</div>
-
-						<FormRender
-							forms={forms}
-							onSubmit={label === "Edit" ? handleEditAddress : handleAddAddress}
-						/>
 					</div>
-				</ScrollArea>
+
+					<Form {...form}>
+						<form
+							onSubmit={form.handleSubmit(
+								label === "Add" ? handleAddAddress : handleEditAddress,
+							)}
+							className="space-y-6 my-4 w-full"
+						>
+							<FormField
+								control={form.control}
+								name="building"
+								render={({ field }) => (
+									<FormItem>
+										<FormControl>
+											<InputWithAnimatedLabel
+												title={"Flat No. / House No. / Building Name *"}
+												{...field}
+											/>
+										</FormControl>
+
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="addressType"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel className="text-muted-foreground font-semibold">
+											Address type
+										</FormLabel>
+										<FormControl>
+											<CustomRadioGroup {...field} items={addressTypesItems} />
+										</FormControl>
+
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormLabel className="text-muted-foreground font-semibold">
+								Receiver's Details
+							</FormLabel>
+							<FormField
+								control={form.control}
+								name="receiverName"
+								render={({ field }) => (
+									<FormItem>
+										<FormControl>
+											<InputWithAnimatedLabel
+												title={"Receiver's Name"}
+												{...field}
+											/>
+										</FormControl>
+
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="receiverPhone"
+								render={({ field }) => (
+									<FormItem>
+										<FormControl>
+											<InputWithAnimatedLabel
+												title={"Receiver's Phone"}
+												type=""
+												{...field}
+											/>
+										</FormControl>
+
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<Button
+								type="submit"
+								className="absolute bottom-2 right-4 left-4 font-semibold"
+								disabled={
+									form.formState.isSubmitting || !form.formState.isValid
+								}
+							>
+								Save Address
+							</Button>
+						</form>
+					</Form>
+				</div>
 			</DrawerContent>
 		</Drawer>
 	);

@@ -10,9 +10,9 @@ function RouteComponent() {
 	return (
 		<div>
 			Hello "/(loggedIn)/"!
-			<pre className="whitespace-pre-wrap max-w-md p-8">
+			{/* <pre className="whitespace-pre-wrap max-w-md p-8">
 				{JSON.stringify(data, null, 2)}
-			</pre>
+			</pre> */}
 		</div>
 	);
 }

@@ -1,5 +1,4 @@
 import { type DBTypes, db } from "@/db";
-import { ORDER_STATUS } from "@/db/schema";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";

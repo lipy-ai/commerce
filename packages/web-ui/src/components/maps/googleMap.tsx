@@ -11,13 +11,15 @@ import { LocateFixed, MapPinned } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import SearchBar from "../searchBar";
 import { Button } from "../ui/button";
-import DetailedAddress from "./detailedAddress";
+import { Spinner } from "../ui/spinner";
+import { DetailedAddress } from "./detailedAddress";
 import { getGeocodeFromLatLng } from "./utils/googlemap";
 
+const libraries: "places"[] = ["places"];
 export default function GoogleMapImage() {
 	const { isLoaded } = useJsApiLoader({
 		googleMapsApiKey: env.GOOGLE_MAP_API_KEY as string,
-		libraries: ["places", "geocoding"],
+		libraries: libraries,
 	});
 
 	const [mapCenter, setMapCenter] = useState({
@@ -34,24 +36,34 @@ export default function GoogleMapImage() {
 		city: "",
 		state: "",
 		country: "",
-		postal_code: "",
+		postalCode: "",
+		lat: 0,
+		lng: 0,
 	});
 
 	const fillFullAddress = (
 		addressComponents: google.maps.GeocoderAddressComponent[],
 		addCompLen: number,
 		placeAddress: string,
+		lat: number,
+		lng: number,
 	) => {
 		setFullAddress((prev) => ({
 			...prev,
 			address: placeAddress || "",
 		}));
 
+		setFullAddress((prev) => ({
+			...prev,
+			lat: lat,
+			lng: lng,
+		}));
+
 		if (addCompLen > 0) {
 			if (addressComponents[addCompLen - 1]?.types?.includes("postal_code")) {
 				setFullAddress((prev) => ({
 					...prev,
-					postal_code: addressComponents[addCompLen - 1]?.long_name || "",
+					postalCode: addressComponents[addCompLen - 1]?.long_name || "",
 				}));
 			}
 
@@ -89,17 +101,13 @@ export default function GoogleMapImage() {
 
 	const handlePlaceSelect = () => {
 		if (autocompleteRef.current) {
-			const formattedPredicion =
-				autocompleteRef.current?.gm_accessors_.place.Pt.formattedPrediction;
-
 			const place = autocompleteRef.current.getPlace();
 			if (place?.geometry?.location) {
 				const lat = place.geometry.location.lat();
 				const lng = place.geometry.location.lng();
 
 				setMapCenter({ lat, lng });
-				const placeAddress =
-					formattedPredicion || place.formatted_address || place.name;
+				const placeAddress = place.formatted_address || place.name;
 				setAddress(placeAddress);
 				setAddressName(place.name);
 				setZoom(18);
@@ -107,14 +115,14 @@ export default function GoogleMapImage() {
 				const addCompLen = place.address_components?.length || 0;
 				const addressComponents = place.address_components || [];
 
-				fillFullAddress(addressComponents, addCompLen, placeAddress);
+				fillFullAddress(addressComponents, addCompLen, placeAddress, lat, lng);
 			}
 		}
 	};
 
 	// Fetch initial address when the map loads
 	useEffect(() => {
-		if (isLoaded && mapCenter.lat && mapCenter.lng) {
+		if (isLoaded && mapCenter) {
 			getGeocodeFromLatLng(mapCenter.lat, mapCenter.lng).then(
 				({ formattedAddress, addressComponent }) => {
 					setAddress(formattedAddress);
@@ -123,6 +131,8 @@ export default function GoogleMapImage() {
 						addressComponent,
 						addressComponent?.length || 0,
 						formattedAddress,
+						mapCenter.lat,
+						mapCenter.lng,
 					);
 				},
 			);
@@ -130,9 +140,7 @@ export default function GoogleMapImage() {
 	}, [isLoaded, mapCenter]);
 
 	if (!isLoaded) {
-		return (
-			<div className="w-full h-96 bg-muted-foreground/20 animate-pulse rounded-lg my-4" />
-		);
+		return <Spinner className="absolute top-1/2 left-1/2" size={"large"} />;
 	}
 
 	return (
@@ -144,8 +152,10 @@ export default function GoogleMapImage() {
 					}}
 					onPlaceChanged={handlePlaceSelect}
 				>
-					<SearchBar placeholder="Search for address" />
+					<SearchBar placeholder={"Search for address"} />
 				</Autocomplete>
+
+				{/* <NativeAutocomplete onPlaceSelected={handlePlaceSelected} /> */}
 			</div>
 
 			<div className="relative flex-grow">

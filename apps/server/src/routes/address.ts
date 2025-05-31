@@ -15,7 +15,7 @@ const addressSchema = z.object({
 	lat: z.number(),
 	lng: z.number(),
 	phone: z.string().optional(),
-	postal_code: z.string().min(1),
+	postalCode: z.string().min(1),
 });
 
 const route = new Hono<ServerContext>()

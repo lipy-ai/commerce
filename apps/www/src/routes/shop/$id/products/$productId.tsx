@@ -6,7 +6,6 @@ import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/queryClient";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 
-
 export const Route = createFileRoute("/shop/$id/products/$productId")({
 	component: RouteComponent,
 });
@@ -23,8 +22,6 @@ function RouteComponent() {
 			},
 		},
 	);
-
-	console.log(data);
 
 	return (
 		<>

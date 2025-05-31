@@ -25,7 +25,7 @@ const route = new Hono<ServerContext>()
 				"p.id as productId",
 				"pv.maxPrice as variantMaxPrice",
 				"pv.price as variantPrice",
-				"pv.title as varianTitle",
+				"pv.title as variantTitle",
 				"pv.stockQty as variantStock",
 				"pv.unit as variantUnit",
 				"s.id as storeId",

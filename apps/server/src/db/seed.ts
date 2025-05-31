@@ -14,7 +14,7 @@ async function main() {
 			id: crypto.randomUUID(),
 			name: faker.company.name(),
 			handle: faker.lorem.slug(),
-			logo: faker.image.urlLoremFlickr({ category: "business" }), // Simulated logo URL
+			logo: faker.image.urlPicsumPhotos(), // Simulated logo URL
 			createdAt: new Date(),
 			active: true,
 		})

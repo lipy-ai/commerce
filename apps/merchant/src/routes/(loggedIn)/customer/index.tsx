@@ -54,7 +54,7 @@ function MobileView() {
 			{[...Array(40)].map((m) => (
 				<div className="flex p-4" key={m}>
 					<div className="flex gap-4">
-						<div className="">
+						<div className="text-base">
 							<p className="font-medium inline-flex items-center truncate">
 								Kundan Bhosale <Dot />
 								<span className="font-light">932554253424</span>

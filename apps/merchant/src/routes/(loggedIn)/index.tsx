@@ -1,4 +1,5 @@
 // import { authClient } from "@lipy/lib/providers/auth";
+import { formatAmount } from "@lipy/lib/utils/intl";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import {
 	Avatar,
@@ -96,7 +97,9 @@ function Orders() {
 							</div>
 
 							<div className="w-fit text-right">
-								<p className="font-semibold text-lg">$320</p>
+								<p className="font-semibold text-lg">
+									{formatAmount("inr", 320)}
+								</p>
 								<Badge>Delivery in 20 mins</Badge>
 							</div>
 							{/* 

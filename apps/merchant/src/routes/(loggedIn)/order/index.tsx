@@ -1,3 +1,4 @@
+import { formatAmount } from "@lipy/lib/utils/intl";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
@@ -67,7 +68,12 @@ function MobileView() {
 	return (
 		<div className="bg-background border divide-y">
 			{[...Array(40)].map((m) => (
-				<div className="flex p-4" key={m}>
+				<Link
+					to={"/order/$id"}
+					params={{ id: "id" }}
+					className="flex p-4"
+					key={m}
+				>
 					<div className="flex w-full gap-4 justify-between text-base">
 						<div className="flex-1">
 							<p className="text-xs font-light">#2564432</p>
@@ -78,7 +84,9 @@ function MobileView() {
 						</div>
 
 						<div className="w-fit text-right">
-							<p className="font-semibold text-lg">$320</p>
+							<p className="font-semibold text-lg">
+								{formatAmount("inr", 320)}
+							</p>
 							<Badge>Delivery in 20 mins</Badge>
 						</div>
 						{/* 
@@ -91,7 +99,7 @@ function MobileView() {
 							<ArrowRight />
 						</Link> */}
 					</div>
-				</div>
+				</Link>
 			))}
 		</div>
 	);
@@ -119,9 +127,8 @@ function DesktopView() {
 				{[...Array(40)].map((m) => (
 					<TableRow
 						key={m}
-						onClick={() =>
-							navigate({ to: "/customer/$id", params: { id: "id" } })
-						}
+						onClick={() => navigate({ to: "/order/$id", params: { id: "id" } })}
+						className="cursor-pointer focus:bg-accent"
 					>
 						<TableCell>2142</TableCell>
 						<TableCell>
@@ -145,7 +152,7 @@ function DesktopView() {
 								10 mins
 							</Badge>
 						</TableCell>
-						<TableCell>$100</TableCell>
+						<TableCell>{formatAmount("inr", 320)}</TableCell>
 						<TableCell>
 							<Link
 								to="/"

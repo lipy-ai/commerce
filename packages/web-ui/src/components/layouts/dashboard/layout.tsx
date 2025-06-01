@@ -125,12 +125,13 @@ function ActiveLinks({
 		return (
 			<motion.div
 				className="fixed bottom-0 w-screen z-50 bg-background border-t"
+				initial="visible"
 				animate={isHidden ? "hidden" : "visible"}
 				variants={{
 					hidden: { y: 100 },
 					visible: { y: 0 },
 				}}
-				transition={{ duration: 0.8, ease: "easeInOut" }}
+				transition={{ duration: 0.3, ease: "easeInOut" }}
 			>
 				<div
 					className={cn("grid justify-center px-4")}
@@ -222,15 +223,17 @@ function NavLink({
 			)}
 			<Link
 				className={cn(
-					"inline-flex items-center text-sm font-medium py-2 gap-2",
-					mobile && "flex-col text-[12px] font-light w-full",
+					"inline-flex items-center text-sm font-medium py-3 gap-2",
+					mobile && "flex-col font-normal w-full",
 				)}
 				to={nav.url}
 			>
 				<span className="flex justify-center items-center w-[30px]">
 					<nav.icon
 						className={cn(
-							"stroke-muted-foreground size-5",
+							"size-5",
+							mobile && "size-6 flex-col font-normal w-full stroke-1.5",
+
 							isActive && "stroke-primary-foreground",
 						)}
 					/>

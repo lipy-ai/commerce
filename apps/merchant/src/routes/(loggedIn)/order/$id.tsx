@@ -1,5 +1,4 @@
-// import { apiClient } from "@lipy/lib/api/index.js";
-// import { useAPIQuery } from "@lipy/lib/utils/queryClient.js";
+import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(loggedIn)/order/$id")({
@@ -8,5 +7,10 @@ export const Route = createFileRoute("/(loggedIn)/order/$id")({
 
 function RouteComponent() {
 	// const { data } = useAPIQuery(apiClient.v1.address, "$get", {});
-	return <div>Hello "/(loggedIn)/products/"!</div>;
+	return (
+		<div>
+			<DashboardHeader title="Edit Order" />
+			Hello "/(loggedIn)/products/"!
+		</div>
+	);
 }

@@ -25,10 +25,11 @@ export const Route = createFileRoute("/(loggedIn)/account/")({
 
 function RouteComponent() {
 	const { data } = authClient.useSession();
+
 	return (
 		<div>
 			<DashboardHeader title="Settings" />
-			<div className="p-8 space-y-8 max-w-4xl">
+			<div className="max-w-4xl px-4 py-8 lg:p-8 space-y-8 lg:text-base text-lg">
 				<div className="flex gap-2">
 					<Avatar className="size-14">
 						<AvatarImage src={data?.user.image || ""} />

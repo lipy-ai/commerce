@@ -1,7 +1,6 @@
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
-
 import {
 	Table,
 	TableBody,
@@ -12,7 +11,7 @@ import {
 } from "@lipy/web-ui/components/ui/table";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ArrowRight, Plus } from "lucide-react";
 
 export const Route = createFileRoute("/(loggedIn)/order/")({
@@ -39,7 +38,7 @@ function RouteComponent() {
 
 			<div className="lg:p-8 lg:space-y-8">
 				<div className="max-w-2xl">
-					<div className="grid grid-cols-4 gap-2 p-2">
+					<div className="grid grid-cols-4 gap-2 p-2 lg:p-0">
 						{data.map((d, i) => (
 							<Link
 								to="/"
@@ -99,6 +98,8 @@ function MobileView() {
 }
 
 function DesktopView() {
+	const navigate = useNavigate();
+
 	return (
 		<Table className="bg-background border p-8">
 			<TableHeader>
@@ -116,7 +117,12 @@ function DesktopView() {
 			</TableHeader>
 			<TableBody>
 				{[...Array(40)].map((m) => (
-					<TableRow key={m}>
+					<TableRow
+						key={m}
+						onClick={() =>
+							navigate({ to: "/customer/$id", params: { id: "id" } })
+						}
+					>
 						<TableCell>2142</TableCell>
 						<TableCell>
 							<div>

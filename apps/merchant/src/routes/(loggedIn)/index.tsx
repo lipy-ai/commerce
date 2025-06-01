@@ -6,7 +6,6 @@ import {
 	AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
-import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import { Shirt, ShoppingCart, SquareUser, Store } from "lucide-react";
@@ -32,7 +31,6 @@ const data = [
 	},
 ];
 function RouteComponent() {
-	const { isMobile } = useViewport();
 	return (
 		<div className="min-h-screen grid lg:grid-cols-12 divide-x">
 			<div className="col-span-8 py-4 divide-y">

@@ -40,7 +40,7 @@ export const DashboardLayout = ({
 	const { isInstallable, promptInstall } = usePWAInstall();
 	if (isMobile) {
 		return (
-			<div className="flex flex-col h-screen">
+			<div className="flex flex-col min-h-screen">
 				{isInstallable && (
 					<div
 						onClick={promptInstall}
@@ -115,7 +115,7 @@ function ActiveLinks({
 	const { scrollY } = useScroll();
 	useMotionValueEvent(scrollY, "change", (current) => {
 		const diff = current - lastRef.current;
-		if (Math.abs(diff) > 30) {
+		if (Math.abs(diff) > 100) {
 			setIsHidden(diff > 0);
 			lastRef.current = current;
 		}
@@ -131,7 +131,7 @@ function ActiveLinks({
 					hidden: { y: 100 },
 					visible: { y: 0 },
 				}}
-				transition={{ duration: 0.3, ease: "easeInOut" }}
+				transition={{ duration: 0.2, ease: "easeInOut" }}
 			>
 				<div
 					className={cn("grid justify-center px-4")}

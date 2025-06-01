@@ -49,7 +49,7 @@ const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
 				className={cn(
 					badgeVariants({ variant, size, dot }),
 					className,
-					"text-xs leading-3.5",
+					"text-sm lg:text-xs leading-tight",
 				)}
 				{...props}
 			>

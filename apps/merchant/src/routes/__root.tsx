@@ -1,6 +1,7 @@
 import { DefaultCatchBoundary, NotFound } from "@/router";
 import { seo } from "@/utils/seo";
 import { env } from "@envClient";
+import useGlobalVibration from "@lipy/lib/hooks/use-vibrate";
 import QueryProvider from "@lipy/lib/providers/queryProvider";
 import { getIsSsrMobile } from "@lipy/lib/utils/isServerMobile";
 import { Toaster, toast } from "@lipy/web-ui/components/ui/sonner";
@@ -16,7 +17,6 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { createServerFn } from "@tanstack/react-start";
 import { getHeader } from "@tanstack/react-start/server";
 import { NuqsAdapter } from "nuqs/adapters/react";
-
 import * as React from "react";
 
 export const isMobile = createServerFn({ method: "GET" }).handler(
@@ -94,6 +94,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 		toast.error(error?.message || "Something went wrong!");
 		return false;
 	}, []);
+	useGlobalVibration();
 
 	const data = Route.useLoaderData();
 	return (

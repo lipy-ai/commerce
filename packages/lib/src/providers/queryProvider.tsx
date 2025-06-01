@@ -1,5 +1,6 @@
 "use client";
 
+import { env } from "@envClient";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { type ReactNode, useState } from "react";
@@ -41,7 +42,7 @@ export default function QueryProvider({
 	return (
 		<QueryClientProvider client={queryClient}>
 			{children}
-			<ReactQueryDevtools initialIsOpen={false} />
+			{env.SHOW_DEV_TOOLS && <ReactQueryDevtools initialIsOpen={false} />}
 		</QueryClientProvider>
 	);
 }

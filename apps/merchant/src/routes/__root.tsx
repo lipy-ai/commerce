@@ -1,5 +1,6 @@
 import { DefaultCatchBoundary, NotFound } from "@/router";
 import { seo } from "@/utils/seo";
+import { env } from "@envClient";
 import QueryProvider from "@lipy/lib/providers/queryProvider";
 import { getIsSsrMobile } from "@lipy/lib/utils/isServerMobile";
 import { Toaster, toast } from "@lipy/web-ui/components/ui/sonner";
@@ -35,7 +36,7 @@ export const Route = createRootRoute({
 			},
 			{
 				name: "viewport",
-				content: "width=device-width, initial-scale=1",
+				content: "width=480, user-scalable=no", //"width=device-width, initial-scale=1",
 			},
 
 			...seo({
@@ -110,7 +111,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 						<NuqsAdapter>{children}</NuqsAdapter>
 						<Toaster />
 					</QueryProvider>
-					<TanStackRouterDevtools position="bottom-right" />
+					{env.SHOW_DEV_TOOLS && (
+						<TanStackRouterDevtools position="bottom-right" />
+					)}{" "}
 					<Scripts />
 				</ViewportProvider>
 			</body>

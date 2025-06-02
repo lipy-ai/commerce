@@ -96,10 +96,7 @@ function Home() {
 				logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
 			>
 				<DashboardBody>
-					<div
-						onClick={() => console.log("t")}
-						className="relative bg-gradient-to-b from-primary/50 to-primary/40"
-					>
+					<div className="relative bg-gradient-to-b from-primary/50 to-primary/40">
 						<NavBar />
 					</div>
 
@@ -117,6 +114,7 @@ function Home() {
 					<LocationComponent />
 					<AppCartInitializer />
 				</DashboardBody>
+				{/* Fixed div that always stays on screen bottom */}
 			</DashboardLayout>
 		</>
 	);

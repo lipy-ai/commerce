@@ -21,6 +21,7 @@ export const AppCartInitializer = () => {
 				title: item.variantTitle,
 				price: item.variantPrice,
 				maxPrice: item.variantMaxPrice,
+				thumbnail: item.thumbnail,
 			}));
 
 			setCartFromDB(mappedCart);

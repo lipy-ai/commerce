@@ -1,6 +1,6 @@
 import { apiClient } from "@lipy/lib/api";
 import { authClient } from "@lipy/lib/providers/auth";
-import { useAPIMutation } from "@lipy/lib/utils/queryClient";
+import { apiQueryOptions, useAPIMutation } from "@lipy/lib/utils/queryClient";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import {
 	Dialog,
@@ -11,21 +11,49 @@ import {
 } from "@lipy/web-ui/components/ui/dialog";
 import { Progress } from "@lipy/web-ui/components/ui/progress";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
+import { useQueryClient } from "@tanstack/react-query";
 import { StepForward } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useCartStore } from "../cart/store";
+import OrderSuccessful from "./orderSuccessful";
 
 function ProgressDialog({
 	showDialog,
 	setShowDialog,
+	setShowSuccessDialog,
 }: {
 	showDialog: boolean;
 	setShowDialog: (showDialog: boolean) => void;
+	setShowSuccessDialog: (showSuccessDialog: boolean) => void;
 }) {
 	const [progress, setProgress] = useState(0);
+
+	const queryClient = useQueryClient();
+
+	const { setInitialized } = useCartStore();
+
+	const clearCartMutation = useAPIMutation(apiClient.v1.cart, "$delete", {
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: apiQueryOptions(apiClient.v1.cart, "$get", {}).queryKey,
+			});
+		},
+	});
+
 	const mutation = useAPIMutation(apiClient.v1.order, "$post", {
 		onSuccess: () => {
 			setShowDialog(false);
-			console.log("order ho gaya hai");
+			setShowSuccessDialog(true);
+
+			clearCartMutation.mutateAsync({});
+
+			setInitialized(false);
+		},
+
+		onError: () => {
+			toast.error("Failed to place order", {
+				description: "Something went wrong while placing your order.",
+			});
 		},
 	});
 
@@ -80,6 +108,7 @@ function ProgressDialog({
 export default function PlaceOrder() {
 	const { data } = authClient.useSession();
 	const [showDialog, setShowDialog] = useState(false);
+	const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
 	const handlePlaceOrder = () => {
 		if (!data) {
@@ -108,7 +137,18 @@ export default function PlaceOrder() {
 			</Button>
 
 			{showDialog && (
-				<ProgressDialog showDialog={showDialog} setShowDialog={setShowDialog} />
+				<ProgressDialog
+					showDialog={showDialog}
+					setShowDialog={setShowDialog}
+					setShowSuccessDialog={setShowSuccessDialog}
+				/>
+			)}
+
+			{showSuccessDialog && (
+				<OrderSuccessful
+					showSuccessDialog={showSuccessDialog}
+					setShowSuccessDialog={setShowSuccessDialog}
+				/>
 			)}
 		</>
 	);

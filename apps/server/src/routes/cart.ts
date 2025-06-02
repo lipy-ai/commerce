@@ -23,6 +23,7 @@ const route = new Hono<ServerContext>()
 				"p.brand",
 				"c.variantId",
 				"p.id as productId",
+				"p.thumbnail",
 				"pv.maxPrice as variantMaxPrice",
 				"pv.price as variantPrice",
 				"pv.title as variantTitle",
@@ -69,6 +70,14 @@ const route = new Hono<ServerContext>()
 				.execute();
 		}
 
+		return c.json({ success: true });
+	})
+	.delete("/", async (c) => {
+		const session = c.get("session");
+		await db
+			.deleteFrom("cart")
+			.where("userId", "=", session?.userId!)
+			.execute();
 		return c.json({ success: true });
 	});
 

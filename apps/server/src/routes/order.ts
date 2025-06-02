@@ -23,7 +23,15 @@ const route = new Hono<ServerContext>()
 		const data = await db
 			.selectFrom("orders as o")
 			.where("o.orderedBy", "=", session?.userId!)
-			.select(["o.id", "o.totalAmount", "o.status"])
+			.leftJoin("store as s", "s.id", "o.storeId")
+			.select([
+				"o.id",
+				"o.itemTotalAmount",
+				"o.status",
+				"o.items",
+				"s.name as storeName",
+				"s.logo as storeLogo",
+			])
 			.execute();
 
 		return c.json(data || []);

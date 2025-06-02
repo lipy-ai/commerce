@@ -8,6 +8,7 @@ type ProductInCart = {
 	title: string;
 	price: number | null;
 	maxPrice: number | null;
+	thumbnail: string | null;
 };
 export type Operation = "increment" | "decrement" | "add";
 
@@ -21,10 +22,12 @@ export type CartStore = {
 			title: string;
 			price: number | null;
 			maxPrice: number | null;
+			thumbnail: string | null;
 		},
 		operation?: Operation,
 	) => void;
 	setCartFromDB: (items: ProductInCart[]) => void;
+	setInitialized: (value: boolean) => void;
 };
 
 export const useCartStore = create<CartStore>()(
@@ -62,6 +65,7 @@ export const useCartStore = create<CartStore>()(
 								title: product.title,
 								price: product.price,
 								maxPrice: product.maxPrice,
+								thumbnail: product.thumbnail,
 							},
 						];
 					}
@@ -76,6 +80,7 @@ export const useCartStore = create<CartStore>()(
 					cart: items,
 					initialized: true, // Will reset on app reload now
 				}),
+			setInitialized: (value) => set({ initialized: value }),
 		}),
 		{
 			name: "lipy-cart-state",

@@ -161,6 +161,7 @@ function RouteComponent() {
 											}}
 										>
 											<ProductCard
+												thumbnail={product.thumbnail}
 												product={product.variants[0]}
 												className={{
 													classNameBox: "flex-shrink-0 w-36 pl-4",

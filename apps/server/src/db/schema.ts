@@ -302,7 +302,7 @@ export const orders = schema.table("orders", {
 	cancelledAt: timestamp("cancelledAt"),
 	refundedAt: timestamp("refundedAt"),
 	deliveredAt: timestamp("deliveredAt"),
-	deliveryPartnerAssignedAt: timestamp("deliveryAgentAssignedAt"),
+	deliveryAgentAssignedAt: timestamp("deliveryAgentAssignedAt"),
 	status: text("status", {
 		enum: ORDER_STATUS,
 	}),

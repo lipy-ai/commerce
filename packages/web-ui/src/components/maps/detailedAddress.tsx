@@ -76,73 +76,6 @@ export function DetailedAddress({
 		},
 	});
 
-	// const forms: FormSchema<any, any> = [
-	// 	{
-	// 		id: "general",
-	// 		size: "default",
-	// 		style: {
-	// 			submitBtn: {
-	// 				label: "Save address",
-	// 				pos: {
-	// 					horizontal: "right",
-	// 					vertical: "bottom",
-	// 				},
-	// 				className: "w-full",
-	// 			},
-	// 			editBtn: {
-	// 				label: "Edit Information",
-	// 			},
-	// 			labelPos: "top",
-	// 		},
-	// 		schema: z.object({
-	// 			yourName: z.string(),
-	// 			phoneNumber: z.string().optional(),
-	// 			building: z.string(),
-	// 			tag: z.enum(["home", "work", "other"]),
-	// 		}),
-	// 		values: {
-	// 			yourName: fullAddress.name || data?.user?.name || "",
-	// 			phoneNumber: "",
-	// 			tag: fullAddress.tag || "home",
-	// 			building: building || "",
-	// 		},
-	// 		elements: [
-	// 			{
-	// 				name: "building",
-	// 				fieldType: "Input",
-	// 				placeholder: "",
-	// 				label: "Flat/House No / Building Name",
-	// 				required: true,
-	// 			},
-	// 			{
-	// 				fieldType: "RadioGroup",
-	// 				name: "tag",
-	// 				label: "Address type",
-	// 				options: [
-	// 					{ label: "Home", value: "home" },
-	// 					{ label: "Work", value: "work" },
-	// 					{ label: "Other", value: "other" },
-	// 				],
-	// 			},
-	// 			[
-	// 				{
-	// 					name: "yourName",
-	// 					fieldType: "Input",
-	// 					placeholder: "John",
-	// 					label: "Your name",
-	// 					required: true,
-	// 				},
-	// 				{
-	// 					name: "phoneNumber",
-	// 					fieldType: "Input",
-	// 					label: "Phone number (optional)",
-	// 					required: false,
-	// 				},
-	// 			],
-	// 		],
-	// 	},
-	// ];
-
 	const mutation = useAPIMutation(apiClient.v1.address, "$post", {
 		onSuccess() {
 			queryClient.invalidateQueries({
@@ -361,6 +294,7 @@ export function DetailedAddress({
 										</FormItem>
 									)}
 								/>
+
 								<Button
 									type="submit"
 									className="fixed bottom-2 right-4 left-4 font-semibold"

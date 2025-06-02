@@ -6,6 +6,7 @@ import QueryProvider from "@lipy/lib/providers/queryProvider";
 import { getIsSsrMobile } from "@lipy/lib/utils/isServerMobile";
 
 import { Toaster, toast } from "@lipy/web-ui/components/ui/sonner";
+import { ThemeProvider } from "@lipy/web-ui/components/ui/theme-provider";
 import { ViewportProvider } from "@lipy/web-ui/contexts/viewport";
 import appCss from "@lipy/web-ui/styles.css?url";
 import {
@@ -114,8 +115,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 					<QueryProvider handleThrowOnError={handleThrowOnError}>
 						<NuqsAdapter>{children}</NuqsAdapter>
 						<Toaster />
-					
-
 					</QueryProvider>
 					<TanStackRouterDevtools position="bottom-right" />
 					<Scripts />

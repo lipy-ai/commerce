@@ -2,7 +2,10 @@ import { FormImage, FormInput } from "@lipy/web-ui/components/forms/elements";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { Form } from "@lipy/web-ui/components/ui/form";
+import { Label } from "@lipy/web-ui/components/ui/label";
+import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { createFileRoute } from "@tanstack/react-router";
+import { Trash } from "lucide-react";
 import { useForm } from "react-hook-form";
 
 export const Route = createFileRoute("/(loggedIn)/account/profile")({
@@ -54,6 +57,27 @@ function RouteComponent() {
 					</div>
 				</div>
 			</form>
+
+			<div className="px-4 lg:px-8 max-w-4xl ">
+				<Separator className="my-8" />
+			</div>
+			<div className="max-w-4xl lg:p-8 ">
+				<div className="p-4 grid gap-4 lg:flex bg-destructive/10 border ">
+					<div className="flex-1">
+						<Label className="text-md font-medium">Delete Account</Label>
+						<p className="font-light">
+							This action is irreversible and will permanently deactivate your
+							account.
+						</p>
+					</div>
+					<div>
+						<Button variant={"destructive"}>
+							<Trash />
+							Delete Account
+						</Button>
+					</div>
+				</div>
+			</div>
 		</Form>
 	);
 }

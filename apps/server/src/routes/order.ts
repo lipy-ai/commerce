@@ -113,7 +113,7 @@ const route = new Hono<ServerContext>()
 					cancelledAt: null,
 					refundedAt: null,
 					deliveredAt: null,
-					deliveryPartnerAssignedAt: null,
+					deliveryAgentAssignedAt: null,
 				} satisfies NonNullable<DBTypes["orders"]>);
 			}
 		}

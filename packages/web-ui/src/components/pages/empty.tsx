@@ -6,6 +6,7 @@ export default function EmptyPage(props: {
 	icon?: LucideIcon;
 	title?: string;
 	label?: string;
+	children?: React.ReactNode;
 }) {
 	let Icon = Package2;
 	if (props.icon) Icon = props.icon;
@@ -18,6 +19,7 @@ export default function EmptyPage(props: {
 			<Label className="text-md font-light">
 				{props.label || "We couldn't find any records!"}
 			</Label>
+			{props.children}
 		</div>
 	);
 }

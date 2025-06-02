@@ -4,10 +4,11 @@ import ProductCard from "@/components/productCard";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
-import { Button } from "@lipy/web-ui/components/ui/button";
+import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Card } from "@lipy/web-ui/components/ui/card";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
-import { createFileRoute } from "@tanstack/react-router";
+import { cn } from "@lipy/web-ui/lib/utils";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { Bike, Navigation, ReceiptText, ShoppingBag } from "lucide-react";
 
 export const Route = createFileRoute("/cart")({
@@ -71,6 +72,7 @@ function RouteComponent() {
 								return (
 									<div key={product.id} className="my-2">
 										<ProductCard
+											thumbnail={product.thumbnail ?? undefined}
 											product={product}
 											variant={"horizontal"}
 											className={{
@@ -84,13 +86,13 @@ function RouteComponent() {
 
 						<Card className="p-4 shadow-none my-6 mb-44">
 							<p className="text-lg font-semibold">Billing Details</p>
-							<Separator className="-my-4 border-t border-dashed bg-transparent" />
+							<Separator className="-my-2 border-t border-dashed bg-transparent" />
 
 							{billingDetails.map((item) => {
 								return (
 									<div
 										key={item.title}
-										className=" flex items-center justify-between"
+										className=" flex items-center justify-between -my-1"
 									>
 										<div className="flex items-center gap-2">
 											<item.icon className="size-4" />
@@ -112,8 +114,8 @@ function RouteComponent() {
 						</Card>
 					</div>
 
-					<div className="fixed  bottom-0 border-t left-0 w-full rounded-tl-lg rounded-tr-lg bg-white shadow-md border-2">
-						<div className="bg-accent rounded-lg">
+					<div className="fixed  bottom-0 border-t left-0 w-full  bg-white shadow-md border-2 rounded-t-lg">
+						<div className="bg-accent rounded-t-lg">
 							<div className="flex items-center gap-2 pt-2 mb-4  px-4 justify-between">
 								<div className="flex items-center gap-2">
 									<Navigation className="fill-primary text-primary size-6" />
@@ -133,7 +135,7 @@ function RouteComponent() {
 						</div>
 
 						<div className="p-4 flex items-center justify-between gap-2">
-							<div className="w-1/4 rounded-md border border-violet-600 p-1 bg-violet-200 text-violet-600 font-medium h-12">
+							<div className="w-1/4 rounded-md border border-violet-600 p-1 bg-violet-200 text-violet-600 font-medium h-12 text-sm">
 								Pay on delivery
 							</div>
 
@@ -150,7 +152,17 @@ function RouteComponent() {
 				</div>
 			) : (
 				<div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-					<EmptyPage icon={ShoppingBag} title="Your Cart is Empty" label=" " />
+					<EmptyPage icon={ShoppingBag} title="Your Cart is Empty" label=" ">
+						<Link
+							className={cn(
+								buttonVariants({ size: "lg", className: "text-lg" }),
+								"my-6 ",
+							)}
+							to={"/"}
+						>
+							Browse Products
+						</Link>
+					</EmptyPage>
 				</div>
 			)}
 		</div>

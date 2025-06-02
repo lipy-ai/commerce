@@ -43,10 +43,7 @@ export const authFn = createServerFn({ method: "GET" }).handler(
 
 export const Route = createFileRoute("/(loggedIn)")({
 	component: RouteComponent,
-	// loader: async () => {
-	// 	const result = await authFn();
-	// 	return result;
-	// },
+	loader: async () => await authFn(),
 });
 
 export const dashboardNav = {

@@ -28,10 +28,10 @@ function RouteComponent() {
 
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
-				className="space-y-8 lg:p-8 max-w-4xl"
+				className="space-y-8 lg:p-4 max-w-4xl"
 			>
 				<div className="grid divide-y lg:gap-4">
-					<div className="bg-background lg:border">
+					<div className="bg-background">
 						<h1 className="text-lg font-medium px-4 p-4 flex gap-2 items-center">
 							General Information
 						</h1>

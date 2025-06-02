@@ -195,8 +195,10 @@ function ActiveLinks({
 		<motion.nav
 			className="flex flex-col justify-between h-screen sticky top-0 left-0 p-3 border-r z-10 bg-background"
 			onClick={handleNavClick}
-			initial={{ width: 70 }}
-			animate={{ width: open ? 250 : 70 }}
+			initial={{ width: "var(--sidebar-size)" }}
+			animate={{
+				width: open ? "var(--sidebar-max-size)" : "var(--sidebar-size)",
+			}}
 			transition={{ duration: 0.3 }}
 		>
 			<div className="space-y-8">
@@ -243,7 +245,7 @@ function NavLink({
 	return (
 		<div
 			className={cn(
-				"overflow-hidden border-b border-border/20 truncate rounded-md px-2 relative w-full",
+				"overflow-hidden border-b border-border/20 truncate rounded-md px-1.5 relative w-full",
 				open && "justify-start",
 				mobile && "px-0 justify-center rounded-none",
 				mobile
@@ -263,7 +265,7 @@ function NavLink({
 			)}
 			<Link
 				className={cn(
-					"inline-flex items-center text-sm font-medium py-3 gap-2",
+					"inline-flex items-center font-medium py-2 gap-2",
 					mobile && "flex-col font-normal w-full",
 				)}
 				to={nav.url}
@@ -271,8 +273,8 @@ function NavLink({
 				<span className="flex justify-center items-center w-[30px]">
 					<nav.icon
 						className={cn(
-							"size-4",
-							mobile && "size-5 flex-col font-normal w-full stroke-1.5",
+							"size-6",
+							mobile && "flex-col font-normal w-full stroke-1.5",
 
 							isActive && "stroke-primary-foreground",
 						)}

@@ -73,7 +73,7 @@ function RouteComponent() {
 					<Orders />
 				</div>
 			</div>
-			<div className="col-span-4 hidden lg:block">
+			<div className="col-span-4 hidden lg:block h-screen overflow-y-auto">
 				<Orders />
 			</div>
 		</div>

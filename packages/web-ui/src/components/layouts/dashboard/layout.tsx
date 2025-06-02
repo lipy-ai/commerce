@@ -273,7 +273,7 @@ function NavLink({
 				<span className="flex justify-center items-center w-[30px]">
 					<nav.icon
 						className={cn(
-							"size-6",
+							"size-5",
 							mobile && "flex-col font-normal w-full stroke-1.5",
 
 							isActive && "stroke-primary-foreground",

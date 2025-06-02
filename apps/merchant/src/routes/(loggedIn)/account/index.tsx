@@ -80,7 +80,7 @@ function RouteComponent() {
 				{data && (
 					<div className="flex items-center gap-4">
 						<Avatar className="size-12">
-							<AvatarImage src={data?.user.image || ""} alt="@shadcn" />
+							<AvatarImage src={data?.user.image || ""} alt="" />
 							<AvatarFallback>
 								<UserCircle2 width={40} height={75} strokeWidth={1.5} />
 							</AvatarFallback>
@@ -90,7 +90,7 @@ function RouteComponent() {
 							<h1 className="font-semibold text-xl">
 								{data?.user.name || "Hello, User"}
 							</h1>
-							<p className="text-muted-foreground text-xs">
+							<p className="text-muted-foreground text-base">
 								{data?.user.email || ""}
 							</p>
 						</div>

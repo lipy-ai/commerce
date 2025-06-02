@@ -13,10 +13,10 @@ export default function SettingsCard({
 }) {
 	return (
 		<>
-			<div className="rounded border px-2 shadow-none divide-y">
+			<div className="rounded border p-2 shadow-none divide-y">
 				{items.map((item, index) => (
 					<div key={index}>
-						<Link to={item.url} className="flex flex-col p-2">
+						<Link to={item.url} className="flex flex-col px-2 py-2.5">
 							<div className="flex items-center justify-between">
 								<div className="flex items-center gap-2">
 									<Avatar className="size-10">
@@ -25,7 +25,7 @@ export default function SettingsCard({
 										</AvatarFallback>
 									</Avatar>
 
-									<div className="">{item.title}</div>
+									<div className="font-medium">{item.title}</div>
 								</div>
 								<ChevronRight />
 							</div>

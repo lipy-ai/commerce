@@ -258,7 +258,7 @@ function NavLink({
 			{mobile && (
 				<span
 					className={cn(
-						"h-3 w-4/5 block bg-transparent rounded-b-2xl m-auto",
+						"h-2 w-4/5 block bg-transparent rounded-b-2xl m-auto",
 						isActive && "bg-primary",
 					)}
 				/>

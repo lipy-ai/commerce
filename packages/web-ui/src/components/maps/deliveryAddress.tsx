@@ -63,12 +63,10 @@ function LocationComponent() {
 								}
 								if (addressComp[i - 1]?.types?.includes("sublocality")) {
 									subLocality = addressComp[i - 1]?.long_name || "";
-
 									break;
 								}
 								if (addressComp[i - 1]?.types?.includes("neighborhood")) {
 									neighborhood = addressComp[i - 1]?.long_name || "";
-
 									break;
 								}
 								if (addressComp[i - 1]?.types?.includes("political")) {

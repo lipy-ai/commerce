@@ -52,9 +52,14 @@ function MobileView() {
 	return (
 		<div className="bg-background border divide-y">
 			{[...Array(40)].map((m) => (
-				<div className="flex p-4" key={m}>
+				<Link
+					to={"/customer/$id"}
+					params={{ id: "id" }}
+					className="flex p-4"
+					key={m}
+				>
 					<div className="flex gap-4">
-						<div className="">
+						<div className="text-base">
 							<p className="font-medium inline-flex items-center truncate">
 								Kundan Bhosale <Dot />
 								<span className="font-light">932554253424</span>
@@ -74,7 +79,7 @@ function MobileView() {
 							<Phone />
 						</Link>
 					</div>
-				</div>
+				</Link>
 			))}
 		</div>
 	);

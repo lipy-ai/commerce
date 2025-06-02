@@ -1,7 +1,7 @@
+import { formatAmount } from "@lipy/lib/utils/intl";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
-
 import {
 	Table,
 	TableBody,
@@ -12,7 +12,7 @@ import {
 } from "@lipy/web-ui/components/ui/table";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ArrowRight, Plus } from "lucide-react";
 
 export const Route = createFileRoute("/(loggedIn)/order/")({
@@ -20,10 +20,10 @@ export const Route = createFileRoute("/(loggedIn)/order/")({
 });
 
 const data = [
-	{ name: "Pending", value: 100 },
-	{ name: "Delivered", value: 100 },
-	{ name: "Returned", value: 100 },
-	{ name: "All", value: 100 },
+	{ name: "Pending", value: 100, className: "bg-chart-1" },
+	{ name: "Delivered", value: 100, className: "bg-chart-2" },
+	{ name: "Returned", value: 100, className: "bg-chart-3" },
+	{ name: "All", value: 100, className: "bg-chart-4" },
 ];
 
 function RouteComponent() {
@@ -38,19 +38,20 @@ function RouteComponent() {
 			</DashboardHeader>
 
 			<div className="lg:p-8 lg:space-y-8">
-				<div className="p-2 lg:p-0 max-w-2xl">
-					<div className="border grid grid-cols-4 divide-x rounded">
+				<div className="max-w-2xl">
+					<div className="grid grid-cols-4 gap-2 p-2 lg:p-0">
 						{data.map((d, i) => (
 							<Link
 								to="/"
 								className={cn(
-									"px-4 py-1 lg:p-4 hover:bg-primary/10",
-									i === 0 && "ring-2 ring-inset ring-primary bg-primary/10",
+									"p-4 text-base rounded",
+									d.className,
+									// i === 0 && "bg-chart-1 border-primary",
 								)}
 								key={i}
 							>
 								<h1 className="lg:text-xl font-semibold">{d.value}</h1>
-								<h2 className="lg:text-sm font-light text-xs">
+								<h2 className="font-light">
 									{d.name} {!isMobile && "Orders"}
 								</h2>
 							</Link>
@@ -67,8 +68,13 @@ function MobileView() {
 	return (
 		<div className="bg-background border divide-y">
 			{[...Array(40)].map((m) => (
-				<div className="flex p-4" key={m}>
-					<div className="flex w-full gap-4 justify-between">
+				<Link
+					to={"/order/$id"}
+					params={{ id: "id" }}
+					className="flex p-4"
+					key={m}
+				>
+					<div className="flex w-full gap-4 justify-between text-base">
 						<div className="flex-1">
 							<p className="text-xs font-light">#2564432</p>
 							<p className="font-medium inline-flex items-center truncate ">
@@ -78,7 +84,9 @@ function MobileView() {
 						</div>
 
 						<div className="w-fit text-right">
-							<p className="font-semibold text-lg">$320</p>
+							<p className="font-semibold text-lg">
+								{formatAmount("inr", 320)}
+							</p>
 							<Badge>Delivery in 20 mins</Badge>
 						</div>
 						{/* 
@@ -91,13 +99,15 @@ function MobileView() {
 							<ArrowRight />
 						</Link> */}
 					</div>
-				</div>
+				</Link>
 			))}
 		</div>
 	);
 }
 
 function DesktopView() {
+	const navigate = useNavigate();
+
 	return (
 		<Table className="bg-background border p-8">
 			<TableHeader>
@@ -115,7 +125,11 @@ function DesktopView() {
 			</TableHeader>
 			<TableBody>
 				{[...Array(40)].map((m) => (
-					<TableRow key={m}>
+					<TableRow
+						key={m}
+						onClick={() => navigate({ to: "/order/$id", params: { id: "id" } })}
+						className="cursor-pointer focus:bg-accent"
+					>
 						<TableCell>2142</TableCell>
 						<TableCell>
 							<div>
@@ -138,7 +152,7 @@ function DesktopView() {
 								10 mins
 							</Badge>
 						</TableCell>
-						<TableCell>$100</TableCell>
+						<TableCell>{formatAmount("inr", 320)}</TableCell>
 						<TableCell>
 							<Link
 								to="/"

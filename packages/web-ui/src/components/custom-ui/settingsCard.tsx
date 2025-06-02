@@ -4,7 +4,15 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Card } from "../ui/card";
 import { Separator } from "../ui/separator";
 
-export default function SettingsCard({ items }) {
+export default function SettingsCard({
+	items,
+}: {
+	items: {
+		title: string;
+		icon: any;
+		url: string;
+	}[];
+}) {
 	return (
 		<>
 			<Card className="p-4 shadow-none">

@@ -8,7 +8,7 @@ import {
 } from "@lipy/web-ui/components/ui/avatar";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Card } from "@lipy/web-ui/components/ui/card";
-import { useViewport } from "@lipy/web-ui/contexts/viewport";
+import { Label } from "@lipy/web-ui/components/ui/label";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import {
@@ -69,7 +69,6 @@ const moreInfo = [
 
 function RouteComponent() {
 	const { data } = authClient.useSession();
-	const { isMobile } = useViewport();
 
 	const filteredMoreInfo = data
 		? moreInfo
@@ -77,11 +76,11 @@ function RouteComponent() {
 	return (
 		<div>
 			<DashboardHeader title="Settings" />
-			<div className={cn(isMobile ? "p-4 " : "p-8", "max-w-4xl")}>
+			<div className={cn("p-4 lg:p-8 max-w-4xl space-y-8")}>
 				{data ? (
 					<div className="flex items-center gap-4">
 						<Avatar className="size-12">
-							<AvatarImage src={data?.user.image || ""} alt="@shadcn" />
+							<AvatarImage src={data?.user.image || ""} alt={data.user.name} />
 							<AvatarFallback>
 								<UserCircle2 width={40} height={75} strokeWidth={1.5} />
 							</AvatarFallback>
@@ -91,9 +90,7 @@ function RouteComponent() {
 							<h1 className="font-semibold text-xl">
 								{data?.user.name || "Hello, User"}
 							</h1>
-							<p className="text-muted-foreground text-xs">
-								{data?.user.email || ""}
-							</p>
+							<p className="text-muted-foreground">{data?.user.email || ""}</p>
 						</div>
 					</div>
 				) : (
@@ -117,19 +114,17 @@ function RouteComponent() {
 				)}
 
 				{data && (
-					<>
-						<h1 className="text-sm font-semibold pb-1 pt-4 text-muted-foreground">
-							Your Information
-						</h1>
+					<div className="space-y-2">
+						<Label>Your Information</Label>
 						<SettingsCard items={yourInfo} />
-					</>
+					</div>
 				)}
 
-				<h1 className="text-sm font-semibold pb-1 pt-4 text-muted-foreground">
-					{data ? "More" : "General"}
-				</h1>
+				<div className="space-y-2">
+					<Label>{data ? "More" : "General"}</Label>
 
-				<SettingsCard items={filteredMoreInfo} />
+					<SettingsCard items={filteredMoreInfo} />
+				</div>
 			</div>
 		</div>
 	);

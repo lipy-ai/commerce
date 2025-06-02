@@ -3,6 +3,7 @@
 @source "**/*.{ts,tsx}";
 
 @custom-variant dark (&:is(.dark *));
+
 :root {
 	--background: oklch(0.9818 0.0054 95.0986);
 	--foreground: oklch(0.3438 0.0269 95.7226);
@@ -181,12 +182,12 @@
 	}
 
 	body {
-		@apply text-foreground text-sm;
+		@apply text-foreground;
 	}
 	.lucide {
 		stroke-width: 1.5;
 	}
-	/* HTML: <div class="loader"></div> */
+
 	.loader {
 		@apply h-2 w-48 rounded-full my-4;
 		--c: no-repeat linear-gradient(var(--color-primary) 0 0);

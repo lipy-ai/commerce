@@ -25,6 +25,7 @@ export const DashboardLayout = ({
 	dashboardNav,
 	mobileNav,
 	logo,
+	...props
 }: {
 	children?: ReactNode;
 	dashboardNav: DashboardNavs;
@@ -67,6 +68,7 @@ export const DashboardLayout = ({
 					mobileNav={mobileNav}
 					dashboardNav={dashboardNav}
 					logo={logo}
+					{...props}
 				/>
 			</div>
 		);
@@ -79,7 +81,9 @@ export const DashboardLayout = ({
 				setOpen={setOpen}
 				dashboardNav={dashboardNav}
 				logo={logo}
+				{...props}
 			/>
+
 			<div
 				className="flex-1 flex flex-col overflow-x-auto h-screen overflow-y-auto"
 				onClick={() => open && setOpen(false)}
@@ -97,6 +101,7 @@ function ActiveLinks({
 	isMobile = false,
 	open = false,
 	setOpen,
+	...props
 }: {
 	dashboardNav: Record<
 		"primary" | "secondary",
@@ -107,6 +112,7 @@ function ActiveLinks({
 	isMobile?: boolean;
 	open?: boolean;
 	setOpen?: (o: boolean) => void;
+	activeOrder?: boolean;
 }) {
 	const matchRoute = useMatchRoute();
 	const [isHidden, setIsHidden] = useState(false);
@@ -124,22 +130,56 @@ function ActiveLinks({
 	if (isMobile && mobileNav) {
 		return (
 			<motion.div
-				className="fixed bottom-0 w-screen z-50 bg-background border-t"
+				className="fixed bottom-0 w-screen z-50"
 				initial="visible"
 				animate={isHidden ? "hidden" : "visible"}
 				variants={{
-					hidden: { y: 100 },
+					hidden: { y: 77 },
 					visible: { y: 0 },
 				}}
 				transition={{ duration: 0.2, ease: "easeInOut" }}
 			>
-				<div
-					className={cn("grid justify-center px-4")}
-					style={{ gridTemplateColumns: `repeat(${mobileNav.length}, 1fr)` }}
-				>
-					{mobileNav.map((n, i) => (
-						<NavLink key={i} nav={n} mobile matchRoute={matchRoute} />
-					))}
+				{props.activeOrder && (
+					<div className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white relative overflow-hidden rounded-t-lg">
+						{/* Animated background pulse */}
+						<div className="absolute inset-0 bg-white/10 animate-pulse" />
+
+						{/* Content */}
+						<div className="relative flex items-center justify-between px-4 py-2">
+							<div className="flex items-center space-x-3">
+								{/* Pulsing dot indicator */}
+								<div className="flex items-center">
+									<div className="w-2 h-2 bg-white rounded-full animate-ping" />
+									<div className="w-2 h-2 bg-white rounded-full absolute" />
+								</div>
+
+								<p className="text-sm text-green-100 font-medium">
+									Your have active orders
+								</p>
+							</div>
+
+							{/* Action button */}
+							<button
+								type="button"
+								className="bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full px-4 py-2 text-xs font-medium transition-all duration-200 hover:scale-105"
+							>
+								Track order status
+							</button>
+						</div>
+					</div>
+				)}
+				{/* Enhanced Active Order Banner */}
+
+				{/* Mobile Nav */}
+				<div className="bg-background border-t">
+					<div
+						className={cn("grid justify-center px-4")}
+						style={{ gridTemplateColumns: `repeat(${mobileNav.length}, 1fr)` }}
+					>
+						{mobileNav.map((n, i) => (
+							<NavLink key={i} nav={n} mobile matchRoute={matchRoute} />
+						))}
+					</div>
 				</div>
 			</motion.div>
 		);
@@ -216,7 +256,7 @@ function NavLink({
 			{mobile && (
 				<span
 					className={cn(
-						"h-1.5 w-4/5 block bg-transparent rounded-b-2xl m-auto",
+						"h-3 w-4/5 block bg-transparent rounded-b-2xl m-auto",
 						isActive && "bg-primary",
 					)}
 				/>
@@ -231,8 +271,8 @@ function NavLink({
 				<span className="flex justify-center items-center w-[30px]">
 					<nav.icon
 						className={cn(
-							"size-5",
-							mobile && "size-6 flex-col font-normal w-full stroke-1.5",
+							"size-4",
+							mobile && "size-5 flex-col font-normal w-full stroke-1.5",
 
 							isActive && "stroke-primary-foreground",
 						)}

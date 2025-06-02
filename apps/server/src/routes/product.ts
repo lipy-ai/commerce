@@ -36,6 +36,7 @@ const route = new Hono<ServerContext>()
 			.select((eb) => [
 				"p.id",
 				"p.title",
+				"p.thumbnail",
 				"c.title as categoryTitle",
 				"c.id as categoryId",
 				jsonArrayFrom(

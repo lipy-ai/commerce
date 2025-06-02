@@ -6,6 +6,7 @@ export default function ProductCard({
 	product,
 	className,
 	variant,
+	...props
 }: {
 	className?: {
 		classNameBox?: string;
@@ -13,13 +14,12 @@ export default function ProductCard({
 	};
 	product: any;
 	variant?: "default" | "horizontal";
+	thumbnail?: string;
 }) {
 	const discountPercentage = discountCalculator(
 		product.price,
 		product.maxPrice,
 	);
-
-
 
 	switch (variant) {
 		case "horizontal": {
@@ -35,7 +35,7 @@ export default function ProductCard({
 							<div className=" relative aspect-square">
 								<img
 									alt={""}
-									src={product.thumbnail || "/assets/paper-bag-items.webp"}
+									src={props?.thumbnail || "/assets/paper-bag-items.webp"}
 									className={cn(
 										"w-full h-full object-cover rounded-md bg-gray-200",
 										className?.classNameImg,
@@ -74,7 +74,7 @@ export default function ProductCard({
 					<div className=" relative aspect-square">
 						<img
 							alt={""}
-							src={product.thumbnail || "/assets/paper-bag-items.webp"}
+							src={props?.thumbnail || "/assets/paper-bag-items.webp"}
 							className={cn(
 								"w-full h-30 object-cover rounded-md bg-gray-200",
 								className?.classNameImg,

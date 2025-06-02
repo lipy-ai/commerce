@@ -69,6 +69,7 @@ function RouteComponent() {
 							}}
 						>
 							<ProductCard
+								thumbnail={product.thumbnail ?? undefined}
 								product={product.variants[0]}
 								className={{ classNameImg: "h-44" }}
 							/>

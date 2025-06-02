@@ -1,4 +1,5 @@
 import { authClient } from "@lipy/lib/providers/auth.tsx";
+import SettingsCard from "@lipy/web-ui/components/custom-ui/settingsCard";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import {
 	Avatar,
@@ -7,7 +8,7 @@ import {
 } from "@lipy/web-ui/components/ui/avatar";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Card } from "@lipy/web-ui/components/ui/card";
-import { Separator } from "@lipy/web-ui/components/ui/separator";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import {
@@ -68,11 +69,15 @@ const moreInfo = [
 
 function RouteComponent() {
 	const { data } = authClient.useSession();
+	const { isMobile } = useViewport();
 
+	const filteredMoreInfo = data
+		? moreInfo
+		: moreInfo.filter((item) => item.title !== "Logout");
 	return (
 		<div>
 			<DashboardHeader title="Settings" />
-			<div className="p-4">
+			<div className={cn(isMobile ? "p-4 " : "p-8", "max-w-4xl")}>
 				{data ? (
 					<div className="flex items-center gap-4">
 						<Avatar className="size-12">
@@ -116,62 +121,15 @@ function RouteComponent() {
 						<h1 className="text-sm font-semibold pb-1 pt-4 text-muted-foreground">
 							Your Information
 						</h1>
-						<Card className="p-4 shadow-none">
-							{yourInfo.map((item, index) => (
-								<div key={index}>
-									<Link to={item.url} className="flex flex-col gap-2">
-										<div className="flex items-center justify-between">
-											<div className="flex items-center gap-2">
-												<Avatar className="size-7">
-													<AvatarFallback>
-														<item.icon className="size-4 text-muted-foreground" />
-													</AvatarFallback>
-												</Avatar>
-
-												<div className="text-sm font-medium">{item.title}</div>
-											</div>
-											<ChevronRight />
-										</div>
-
-										{index !== yourInfo.length - 1 && (
-											<Separator className="-mb-4 border-t border-dashed bg-transparent" />
-										)}
-									</Link>
-								</div>
-							))}
-						</Card>
+						<SettingsCard items={yourInfo} />
 					</>
 				)}
 
 				<h1 className="text-sm font-semibold pb-1 pt-4 text-muted-foreground">
 					{data ? "More" : "General"}
 				</h1>
-				<Card className="p-4 shadow-none">
-					{moreInfo.map((item, index) => {
-						if (!data && item.title === "Logout") return;
-						return (
-							<div key={index}>
-								<Link className="flex flex-col gap-2" to={item.url}>
-									<div className="flex items-center justify-between">
-										<div className="flex items-center gap-2">
-											<Avatar className="size-7">
-												<AvatarFallback>
-													<item.icon className="size-4 text-muted-foreground" />
-												</AvatarFallback>
-											</Avatar>
-											<div className="text-sm font-medium">{item.title}</div>
-										</div>
-										<ChevronRight />
-									</div>
 
-									{index !== moreInfo.length - 1 && (
-										<Separator className="-mb-4 border-t border-dashed bg-transparent" />
-									)}
-								</Link>
-							</div>
-						);
-					})}
-				</Card>
+				<SettingsCard items={filteredMoreInfo} />
 			</div>
 		</div>
 	);

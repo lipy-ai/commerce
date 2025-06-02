@@ -5,106 +5,100 @@ import {
 	AvatarFallback,
 	AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
-import { Button } from "@lipy/web-ui/components/ui/button";
-import { Label } from "@lipy/web-ui/components/ui/label";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import {
 	Headset,
 	LogOut,
 	Settings2,
 	Share2,
 	Store,
-	Trash,
-	UserCircle,
+	UserCircle2,
 	Users,
 } from "lucide-react";
+
+import SettingsCard from "@lipy/web-ui/components/custom-ui/settingsCard";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
+import { cn } from "@lipy/web-ui/lib/utils";
 
 export const Route = createFileRoute("/(loggedIn)/account/")({
 	component: RouteComponent,
 });
 
+const generalInfo = [
+	{
+		title: "Profile",
+		icon: UserCircle2,
+		url: "/account/profile",
+	},
+	{
+		title: "My Store",
+		icon: Store,
+		url: "/store",
+	},
+	{
+		title: "Store Staff",
+		icon: Users,
+		url: "/store/staff",
+	},
+	{
+		title: "Preferences",
+		icon: Settings2,
+		url: "/account/settings",
+	},
+];
+
+const moreInfo = [
+	{
+		title: "Refer and Earn",
+		icon: Share2,
+		url: "/account/referral",
+	},
+	{
+		title: "Customer Support",
+		icon: Headset,
+		url: "/account/support",
+	},
+	{
+		title: "Logout",
+		icon: LogOut,
+		url: "/logout",
+	},
+];
+
 function RouteComponent() {
 	const { data } = authClient.useSession();
+	const { isMobile } = useViewport();
+
+	const filteredMoreInfo = data
+		? moreInfo
+		: moreInfo.filter((item) => item.title !== "Logout");
 
 	return (
 		<div>
 			<DashboardHeader title="Settings" />
-			<div className="max-w-4xl px-4 py-8 lg:p-8 space-y-8 lg:text-base text-lg">
-				<div className="flex gap-2">
-					<Avatar className="size-14">
-						<AvatarImage src={data?.user.image || ""} />
-						<AvatarFallback>{data?.user.name[0]}</AvatarFallback>
-					</Avatar>
-					<div>
-						<h1 className="font-medium text-lg"> {data?.user.name}</h1>
-						<p> {data?.user.email}</p>
-					</div>
-				</div>
-				<div className="bg-background border divide-y">
-					<Link to="/account/profile" className="p-4 flex gap-4 items-center">
-						<span>
-							<UserCircle />
-						</span>
-						<span>Profile</span>
-					</Link>
+			<div className={cn(isMobile ? "p-4 " : "p-8", " space-y-8 max-w-4xl")}>
+				{data && (
+					<div className="flex items-center gap-4">
+						<Avatar className="size-12">
+							<AvatarImage src={data?.user.image || ""} alt="@shadcn" />
+							<AvatarFallback>
+								<UserCircle2 width={40} height={75} strokeWidth={1.5} />
+							</AvatarFallback>
+						</Avatar>
 
-					<Link to="/store" className="p-4 flex gap-4 items-center">
-						<span>
-							<Store />
-						</span>
-						<span>My Store</span>
-					</Link>
-					<Link to="/store/staff" className="p-4 flex gap-4 items-center">
-						<span>
-							<Users />
-						</span>
-						<span>Store Staff</span>
-					</Link>
-					<Link
-						to="/account/preferences"
-						className="p-4 flex gap-4 items-center"
-					>
-						<span>
-							<Settings2 />
-						</span>
-						<span>Preferences</span>
-					</Link>
-				</div>
-				<div className="bg-background border divide-y">
-					<Link to="/account/referral" className="p-4 flex gap-4 items-center">
-						<span>
-							<Share2 />
-						</span>
-						<span>Refer and Earn</span>
-					</Link>
-					<Link to="/account/support" className="p-4 flex gap-4 items-center">
-						<span>
-							<Headset />
-						</span>
-						<span>Customer Support</span>
-					</Link>
-					<Link to="/" className="p-4 flex gap-4 items-center">
-						<span>
-							<LogOut />
-						</span>
-						<span>Logout</span>
-					</Link>
-				</div>
-				<div className="p-4 grid gap-4 lg:flex bg-destructive/10 border w-full">
-					<div className="flex-1">
-						<Label className="text-md font-medium">Delete Account</Label>
-						<p className="font-light">
-							This action is irreversible and will permanently deactivate your
-							account.
-						</p>
+						<div>
+							<h1 className="font-semibold text-xl">
+								{data?.user.name || "Hello, User"}
+							</h1>
+							<p className="text-muted-foreground text-xs">
+								{data?.user.email || ""}
+							</p>
+						</div>
 					</div>
-					<div>
-						<Button variant={"destructive"}>
-							<Trash />
-							Delete Account
-						</Button>
-					</div>
-				</div>
+				)}
+
+				<SettingsCard items={generalInfo} />
+				<SettingsCard items={filteredMoreInfo} />
 			</div>
 		</div>
 	);

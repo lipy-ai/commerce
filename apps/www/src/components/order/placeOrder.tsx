@@ -1,10 +1,85 @@
+import { apiClient } from "@lipy/lib/api";
 import { authClient } from "@lipy/lib/providers/auth";
+import { useAPIMutation } from "@lipy/lib/utils/queryClient";
 import { Button } from "@lipy/web-ui/components/ui/button";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+} from "@lipy/web-ui/components/ui/dialog";
+import { Progress } from "@lipy/web-ui/components/ui/progress";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { StepForward } from "lucide-react";
+import { useEffect, useState } from "react";
+
+function ProgressDialog({
+	showDialog,
+	setShowDialog,
+}: {
+	showDialog: boolean;
+	setShowDialog: (showDialog: boolean) => void;
+}) {
+	const [progress, setProgress] = useState(0);
+	const mutation = useAPIMutation(apiClient.v1.order, "$post", {
+		onSuccess: () => {
+			setShowDialog(false);
+			console.log("order ho gaya hai");
+		},
+	});
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setProgress((prev) => {
+				if (prev >= 100) {
+					clearInterval(interval);
+					return 100;
+				}
+				return prev + 1;
+			});
+		}, 100); // run for 10s
+
+		const timeout = setTimeout(() => {
+			mutation.mutateAsync({
+				json: {
+					address: "6b5748e4-c383-408f-a052-488636cfacf4",
+					deliveryInstruction: "Kaise bhi kar de deliver",
+					storeInstruction: null,
+				},
+			});
+		}, 10000);
+
+		// Cleanup
+		return () => {
+			clearInterval(interval);
+			clearTimeout(timeout);
+		};
+	}, []);
+
+	return (
+		<Dialog open={showDialog} onOpenChange={setShowDialog}>
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle />
+					<DialogDescription className="flex justify-start">
+						Placing order...
+					</DialogDescription>
+					<Progress value={progress} />
+				</DialogHeader>
+				<div className="flex justify-end mt-4">
+					<Button variant="outline" onClick={() => setShowDialog(false)}>
+						Cancel
+					</Button>
+				</div>
+			</DialogContent>
+		</Dialog>
+	);
+}
 
 export default function PlaceOrder() {
 	const { data } = authClient.useSession();
+	const [showDialog, setShowDialog] = useState(false);
 
 	const handlePlaceOrder = () => {
 		if (!data) {
@@ -20,14 +95,21 @@ export default function PlaceOrder() {
 					</Button>
 				),
 			});
-		} else console.log("chalo order karte hai");
+		} else {
+			setShowDialog(true);
+		}
 	};
+
 	return (
 		<>
 			<Button onClick={handlePlaceOrder}>
 				<p>Place Order</p>
 				<StepForward />
 			</Button>
+
+			{showDialog && (
+				<ProgressDialog showDialog={showDialog} setShowDialog={setShowDialog} />
+			)}
 		</>
 	);
 }

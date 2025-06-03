@@ -48,19 +48,26 @@ function MobileView() {
 					key={m}
 				>
 					<div className="flex w-full gap-4 justify-between text-base">
-						<div className="flex-1">
-							<p className="text-xs font-light">#2564432</p>
-							<p className="font-medium inline-flex items-center truncate ">
-								Kundan Bhosale
-							</p>
-							<p className="font-light">932554253424</p>
+						<div className="grid grid-cols-[75px_auto] gap-2">
+							<img
+								src="https://picsum.photos/200"
+								alt=""
+								className="aspect-square border rounded bg-accent"
+							/>
+							<div className="block break-words">
+								<p className="font-medium">Product Name</p>
+								<p className="font-light line-clamp-1">
+									Portronics Charge Clamp 2, Mobile Holder With Wireless
+									Charging - Black
+								</p>
+								<Badge>In Stock</Badge>
+							</div>
 						</div>
 
 						<div className="w-fit text-right">
 							<p className="font-semibold text-lg">
 								{formatAmount("inr", 320)}
 							</p>
-							<Badge>Delivery in 20 mins</Badge>
 						</div>
 						{/* 
 						<Link

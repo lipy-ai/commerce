@@ -2,6 +2,7 @@
 import { DefaultCatchBoundary } from "@/components/defaultCatchBoundry";
 import { NotFound } from "@/components/notFound";
 import { seo } from "@/utils/seo";
+import { handleEnvHosts } from "@envClient";
 import QueryProvider from "@lipy/lib/providers/queryProvider";
 import { getIsSsrMobile } from "@lipy/lib/utils/isServerMobile";
 
@@ -20,12 +21,14 @@ import { getHeader } from "@tanstack/react-start/server";
 import { NuqsAdapter } from "nuqs/adapters/react";
 import * as React from "react";
 
-export const isMobile = createServerFn({ method: "GET" }).handler(async () => {
-	const userAgent = getHeader("User-Agent");
+export const globalInit = createServerFn({ method: "GET" }).handler(
+	async () => {
+		const userAgent = getHeader("User-Agent");
 
-	const isSsrMobile = getIsSsrMobile(userAgent);
-	return { isSsrMobile, userAgent };
-});
+		const isSsrMobile = getIsSsrMobile(userAgent);
+		return { isSsrMobile, userAgent };
+	},
+);
 
 export const Route = createRootRoute({
 	head: () => ({
@@ -76,7 +79,8 @@ export const Route = createRootRoute({
 		);
 	},
 	loader: async () => {
-		return await isMobile();
+		const data = await globalInit();
+		return data;
 	},
 	notFoundComponent: () => <NotFound />,
 	component: RootComponent,

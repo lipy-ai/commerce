@@ -1,6 +1,6 @@
 import { env } from "@envClient";
 import { getSsrSession } from "@lipy/lib/providers/auth";
-import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { getHeaders, getWebRequest } from "@tanstack/react-start/server";
 
@@ -31,10 +31,11 @@ export const authFn = createServerFn({ method: "GET" }).handler(
 		if (!res?.session) {
 			const cb = h.referer || env.MERCHANT_URL;
 
-			redirect({
-				href: `${env.WEB_URL}/login?cb=${cb}` as any,
-				throw: true,
-			});
+			// redirect({
+			// 	href: `${env.WEB_URL}/login?cb=${btoa(cb)}` as any,
+			// 	throw: true,
+			// });
+			// console.log(process.env);
 		}
 
 		return res;

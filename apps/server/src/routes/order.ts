@@ -1,12 +1,14 @@
 import { type DBTypes, db } from "@/db";
+import { idGenerate } from "@/lib/generateId";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
+import type { Expression, SqlBool } from "kysely";
 import { z } from "zod";
 
 const paramSchema = z.object({
-	id: z.string().uuid(),
+	id: z.string(),
 });
 
 const orderSchema = z.object({
@@ -15,14 +17,42 @@ const orderSchema = z.object({
 	storeInstruction: z
 		.array(z.object({ id: z.string().uuid(), instruction: z.string() }))
 		.nullable(),
+	coupon: z.string().optional(),
+});
+
+const querySchema = z.object({
+	view: z.enum(["active", "all"]).default("all"),
 });
 
 const route = new Hono<ServerContext>()
-	.get("/", async (c) => {
+	.get("/", zValidator("query", querySchema), async (c) => {
 		const session = c.get("session");
+		const q = c.req.valid("query");
 		const data = await db
 			.selectFrom("orders as o")
 			.where("o.orderedBy", "=", session?.userId!)
+			.where((eb) => {
+				const ors: Expression<SqlBool>[] = [];
+
+				switch (q.view) {
+					case "active":
+						ors.push(
+							eb("o.status", "in", [
+								"ordered",
+								"accepted",
+								"out_for_delivery",
+								"packed",
+								"out_for_delivery",
+								"return_requested",
+							]),
+						);
+						break;
+					default:
+						break;
+				}
+
+				return eb.or(ors);
+			})
 			.leftJoin("store as s", "s.id", "o.storeId")
 			.select([
 				"o.id",
@@ -47,7 +77,7 @@ const route = new Hono<ServerContext>()
 		const data = await db
 			.selectFrom("orders as o")
 			.where("o.orderedBy", "=", session?.userId!)
-			.where("o.id", "=", id)
+			.where("o.pk", "=", id)
 			.selectAll()
 			.execute();
 
@@ -102,6 +132,7 @@ const route = new Hono<ServerContext>()
 			} else {
 				orders.push({
 					id: crypto.randomUUID(),
+					pk: idGenerate({ prefix: "ORD" }),
 					status: "ordered",
 					address: address,
 					items: [item],
@@ -167,7 +198,7 @@ const route = new Hono<ServerContext>()
 
 		await db.insertInto("orders").values(orders).execute();
 
-		return c.json({ success: true });
+		return c.json({ orders: orders.map((o) => o.pk) });
 	})
 	.post("/cancel/:id", zValidator("param", paramSchema), async (c) => {
 		const session = c.get("session");

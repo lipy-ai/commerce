@@ -30,9 +30,8 @@ export const authFn = createServerFn({ method: "GET" }).handler(
 
 		if (!res?.session) {
 			const cb = h.referer || env.MERCHANT_URL;
-
 			redirect({
-				href: `${env.WEB_URL}/login?cb=${cb}` as any,
+				href: `${env.WEB_URL}/login?cb=${btoa(cb)}` as any,
 				throw: true,
 			});
 		}

@@ -12,3 +12,26 @@ export const env = {
 	GOOGLE_MAP_API_KEY: e.VITE_GOOGLE_MAP_API_KEY,
 	SHOW_DEV_TOOLS: false,
 };
+
+if (!env.IN_PROD) {
+	for (const key of Object.keys(env)) {
+		const value = env[key as keyof typeof env];
+
+		if (
+			typeof value === "string" &&
+			value.startsWith("http") &&
+			value.includes("localhost")
+		) {
+			try {
+				const url = new URL(value);
+				url.hostname = import.meta.env.VITE_LOCAL_IP || "localhost";
+
+				(env as any)[key as keyof typeof env] = url
+					.toString()
+					.replace(/\/$/, "");
+			} catch (e) {
+				console.warn(`Invalid URL in env[${key}]:`, value);
+			}
+		}
+	}
+}

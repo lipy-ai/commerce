@@ -17,11 +17,12 @@ import { Route as IndexImport } from './routes/index'
 import { Route as ShopIndexImport } from './routes/shop/index'
 import { Route as AccountIndexImport } from './routes/account/index'
 import { Route as AccountProfileImport } from './routes/account/profile'
-import { Route as AccountOrdersImport } from './routes/account/orders'
 import { Route as authLogoutImport } from './routes/(auth)/logout'
 import { Route as authLoginImport } from './routes/(auth)/login'
 import { Route as ShopIdIndexImport } from './routes/shop/$id/index'
+import { Route as AccountOrdersIndexImport } from './routes/account/orders/index'
 import { Route as AccountAddressesIndexImport } from './routes/account/addresses/index'
+import { Route as AccountOrdersOrderIdImport } from './routes/account/orders/$orderId'
 import { Route as AccountAddressesNewImport } from './routes/account/addresses/new'
 import { Route as ShopIdProductsIndexImport } from './routes/shop/$id/products/index'
 import { Route as ShopIdProductsProductIdImport } from './routes/shop/$id/products/$productId'
@@ -65,12 +66,6 @@ const AccountProfileRoute = AccountProfileImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AccountOrdersRoute = AccountOrdersImport.update({
-  id: '/account/orders',
-  path: '/account/orders',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const authLogoutRoute = authLogoutImport.update({
   id: '/(auth)/logout',
   path: '/logout',
@@ -89,9 +84,21 @@ const ShopIdIndexRoute = ShopIdIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AccountOrdersIndexRoute = AccountOrdersIndexImport.update({
+  id: '/account/orders/',
+  path: '/account/orders/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const AccountAddressesIndexRoute = AccountAddressesIndexImport.update({
   id: '/account/addresses/',
   path: '/account/addresses/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AccountOrdersOrderIdRoute = AccountOrdersOrderIdImport.update({
+  id: '/account/orders/$orderId',
+  path: '/account/orders/$orderId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -159,13 +166,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authLogoutImport
       parentRoute: typeof rootRoute
     }
-    '/account/orders': {
-      id: '/account/orders'
-      path: '/account/orders'
-      fullPath: '/account/orders'
-      preLoaderRoute: typeof AccountOrdersImport
-      parentRoute: typeof rootRoute
-    }
     '/account/profile': {
       id: '/account/profile'
       path: '/account/profile'
@@ -194,11 +194,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountAddressesNewImport
       parentRoute: typeof rootRoute
     }
+    '/account/orders/$orderId': {
+      id: '/account/orders/$orderId'
+      path: '/account/orders/$orderId'
+      fullPath: '/account/orders/$orderId'
+      preLoaderRoute: typeof AccountOrdersOrderIdImport
+      parentRoute: typeof rootRoute
+    }
     '/account/addresses/': {
       id: '/account/addresses/'
       path: '/account/addresses'
       fullPath: '/account/addresses'
       preLoaderRoute: typeof AccountAddressesIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/account/orders/': {
+      id: '/account/orders/'
+      path: '/account/orders'
+      fullPath: '/account/orders'
+      preLoaderRoute: typeof AccountOrdersIndexImport
       parentRoute: typeof rootRoute
     }
     '/shop/$id/': {
@@ -240,12 +254,13 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRouteRoute
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
-  '/account/orders': typeof AccountOrdersRoute
   '/account/profile': typeof AccountProfileRoute
   '/account': typeof AccountIndexRoute
   '/shop': typeof ShopIndexRoute
   '/account/addresses/new': typeof AccountAddressesNewRoute
+  '/account/orders/$orderId': typeof AccountOrdersOrderIdRoute
   '/account/addresses': typeof AccountAddressesIndexRoute
+  '/account/orders': typeof AccountOrdersIndexRoute
   '/shop/$id': typeof ShopIdIndexRoute
   '/shop/$id/products/$productId': typeof ShopIdProductsProductIdRoute
   '/shop/$id/products': typeof ShopIdProductsIndexRoute
@@ -258,12 +273,13 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRouteRoute
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
-  '/account/orders': typeof AccountOrdersRoute
   '/account/profile': typeof AccountProfileRoute
   '/account': typeof AccountIndexRoute
   '/shop': typeof ShopIndexRoute
   '/account/addresses/new': typeof AccountAddressesNewRoute
+  '/account/orders/$orderId': typeof AccountOrdersOrderIdRoute
   '/account/addresses': typeof AccountAddressesIndexRoute
+  '/account/orders': typeof AccountOrdersIndexRoute
   '/shop/$id': typeof ShopIdIndexRoute
   '/shop/$id/products/$productId': typeof ShopIdProductsProductIdRoute
   '/shop/$id/products': typeof ShopIdProductsIndexRoute
@@ -277,12 +293,13 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRouteRoute
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/logout': typeof authLogoutRoute
-  '/account/orders': typeof AccountOrdersRoute
   '/account/profile': typeof AccountProfileRoute
   '/account/': typeof AccountIndexRoute
   '/shop/': typeof ShopIndexRoute
   '/account/addresses/new': typeof AccountAddressesNewRoute
+  '/account/orders/$orderId': typeof AccountOrdersOrderIdRoute
   '/account/addresses/': typeof AccountAddressesIndexRoute
+  '/account/orders/': typeof AccountOrdersIndexRoute
   '/shop/$id/': typeof ShopIdIndexRoute
   '/shop/$id/products/$productId': typeof ShopIdProductsProductIdRoute
   '/shop/$id/products/': typeof ShopIdProductsIndexRoute
@@ -297,12 +314,13 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/login'
     | '/logout'
-    | '/account/orders'
     | '/account/profile'
     | '/account'
     | '/shop'
     | '/account/addresses/new'
+    | '/account/orders/$orderId'
     | '/account/addresses'
+    | '/account/orders'
     | '/shop/$id'
     | '/shop/$id/products/$productId'
     | '/shop/$id/products'
@@ -314,12 +332,13 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/login'
     | '/logout'
-    | '/account/orders'
     | '/account/profile'
     | '/account'
     | '/shop'
     | '/account/addresses/new'
+    | '/account/orders/$orderId'
     | '/account/addresses'
+    | '/account/orders'
     | '/shop/$id'
     | '/shop/$id/products/$productId'
     | '/shop/$id/products'
@@ -331,12 +350,13 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/(auth)/login'
     | '/(auth)/logout'
-    | '/account/orders'
     | '/account/profile'
     | '/account/'
     | '/shop/'
     | '/account/addresses/new'
+    | '/account/orders/$orderId'
     | '/account/addresses/'
+    | '/account/orders/'
     | '/shop/$id/'
     | '/shop/$id/products/$productId'
     | '/shop/$id/products/'
@@ -350,12 +370,13 @@ export interface RootRouteChildren {
   CheckoutRouteRoute: typeof CheckoutRouteRoute
   authLoginRoute: typeof authLoginRoute
   authLogoutRoute: typeof authLogoutRoute
-  AccountOrdersRoute: typeof AccountOrdersRoute
   AccountProfileRoute: typeof AccountProfileRoute
   AccountIndexRoute: typeof AccountIndexRoute
   ShopIndexRoute: typeof ShopIndexRoute
   AccountAddressesNewRoute: typeof AccountAddressesNewRoute
+  AccountOrdersOrderIdRoute: typeof AccountOrdersOrderIdRoute
   AccountAddressesIndexRoute: typeof AccountAddressesIndexRoute
+  AccountOrdersIndexRoute: typeof AccountOrdersIndexRoute
   ShopIdIndexRoute: typeof ShopIdIndexRoute
   ShopIdProductsProductIdRoute: typeof ShopIdProductsProductIdRoute
   ShopIdProductsIndexRoute: typeof ShopIdProductsIndexRoute
@@ -368,12 +389,13 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRouteRoute: CheckoutRouteRoute,
   authLoginRoute: authLoginRoute,
   authLogoutRoute: authLogoutRoute,
-  AccountOrdersRoute: AccountOrdersRoute,
   AccountProfileRoute: AccountProfileRoute,
   AccountIndexRoute: AccountIndexRoute,
   ShopIndexRoute: ShopIndexRoute,
   AccountAddressesNewRoute: AccountAddressesNewRoute,
+  AccountOrdersOrderIdRoute: AccountOrdersOrderIdRoute,
   AccountAddressesIndexRoute: AccountAddressesIndexRoute,
+  AccountOrdersIndexRoute: AccountOrdersIndexRoute,
   ShopIdIndexRoute: ShopIdIndexRoute,
   ShopIdProductsProductIdRoute: ShopIdProductsProductIdRoute,
   ShopIdProductsIndexRoute: ShopIdProductsIndexRoute,
@@ -395,12 +417,13 @@ export const routeTree = rootRoute
         "/checkout",
         "/(auth)/login",
         "/(auth)/logout",
-        "/account/orders",
         "/account/profile",
         "/account/",
         "/shop/",
         "/account/addresses/new",
+        "/account/orders/$orderId",
         "/account/addresses/",
+        "/account/orders/",
         "/shop/$id/",
         "/shop/$id/products/$productId",
         "/shop/$id/products/",
@@ -422,9 +445,6 @@ export const routeTree = rootRoute
     "/(auth)/logout": {
       "filePath": "(auth)/logout.tsx"
     },
-    "/account/orders": {
-      "filePath": "account/orders.tsx"
-    },
     "/account/profile": {
       "filePath": "account/profile.tsx"
     },
@@ -437,8 +457,14 @@ export const routeTree = rootRoute
     "/account/addresses/new": {
       "filePath": "account/addresses/new.tsx"
     },
+    "/account/orders/$orderId": {
+      "filePath": "account/orders/$orderId.tsx"
+    },
     "/account/addresses/": {
       "filePath": "account/addresses/index.tsx"
+    },
+    "/account/orders/": {
+      "filePath": "account/orders/index.tsx"
     },
     "/shop/$id/": {
       "filePath": "shop/$id/index.tsx"

@@ -29,9 +29,11 @@ const route = new Hono<ServerContext>()
 				"o.itemTotalAmount",
 				"o.status",
 				"o.items",
+				"o.orderedAt",
 				"s.name as storeName",
 				"s.logo as storeLogo",
 			])
+			.orderBy("o.orderedAt", "desc")
 			.execute();
 
 		return c.json(data || []);
@@ -39,6 +41,8 @@ const route = new Hono<ServerContext>()
 	.get("/:id", zValidator("param", paramSchema), async (c) => {
 		const session = c.get("session");
 		const { id } = c.req.valid("param");
+
+		console.log(id);
 		const data = await db
 			.selectFrom("orders as o")
 			.where("o.orderedBy", "=", session?.userId!)

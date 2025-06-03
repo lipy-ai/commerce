@@ -52,6 +52,7 @@ type OrdersData = {
 	orderedAt: string;
 	itemTotalAmount: number | null;
 	storeLogo: string | null;
+	storeId: string | null;
 }[];
 
 type Order = OrdersData[number];
@@ -153,24 +154,28 @@ export default function MyOrderCard({ order }: MyOrderCardProps) {
 			| "replaced"
 			| "cancelled",
 	);
+
 	return (
 		<>
-			<Card className="shadow-none py-2">
+			<Card className="rounded-xl py-2 bg-white">
 				<CardContent className="p-0">
-					<div className="flex gap-2 items-center p-4">
-						<Avatar className="rounded-md size-12">
-							<AvatarImage src={order.storeLogo || ""} />
-							<AvatarFallback className="rounded-lg bg-indigo-500 text-white">
-								{order.storeName?.[0] ?? "S"}
-							</AvatarFallback>
-						</Avatar>
-						<div>
-							<p className="fomt-semibold line-clamp-1">{order.storeName}</p>
-							<p className="text-muted-foreground line-clamp-1">
-								{"Paschim Vihar, New Delhi"}
-							</p>
+					<Link to={"/shop/$id"} params={{ id: order.storeId as string }}>
+						<div className="flex gap-2 items-center p-4">
+							<Avatar className="rounded-md size-12">
+								<AvatarImage src={order.storeLogo || ""} />
+								<AvatarFallback className="rounded-lg bg-indigo-500 text-white">
+									{order.storeName?.[0] ?? "S"}
+								</AvatarFallback>
+							</Avatar>
+							<div>
+								<p className="fomt-semibold line-clamp-1">{order.storeName}</p>
+								<p className="text-muted-foreground line-clamp-1">
+									{"Paschim Vihar, New Delhi"}
+								</p>
+							</div>
 						</div>
-					</div>
+					</Link>
+
 					<Separator />
 					<div className="p-4">
 						<Link

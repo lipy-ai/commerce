@@ -32,7 +32,7 @@ function RouteComponent() {
 		<div>
 			<DashboardHeader title="My Staff" />
 
-			<div className="space-y-4 px-8 py-8 max-w-4xl">
+			<div className="space-y-4  max-w-4xl p-8">
 				<div>
 					<Card className="grid grid-cols-2 lg:grid-cols-4 divide-x">
 						<CardHeader>
@@ -70,27 +70,35 @@ function RouteComponent() {
 					<Button>New Member</Button>
 				</div>
 				<div className="grid divide-y lg:gap-4">
-					<div className="p-4 bg-background lg:border">
-						<h1 className="text-lg font-medium my-4 px-4">Staff List</h1>
+					<div className="bg-background lg:border">
+						<h1 className="text-lg font-medium my-4 ">Staff List</h1>
 						<Table className="">
 							<TableBody>
 								{[...Array(1)].map((_product, i) => (
-									<TableRow key={i} className="">
-										<TableCell className="py-2 ">
-											<Avatar className="size-10">
-												<AvatarImage />
-												<AvatarFallback>A</AvatarFallback>
-											</Avatar>
-										</TableCell>
-										<TableCell className="">
-											<div>
-												<p className="font-medium">Kundan Bhosale</p>
-												<p className="font-light">kundan@gmail.com</p>
-											</div>
-										</TableCell>
+									<TableRow
+										key={i}
+										className="flex items-center justify-between"
+									>
+										<div>
+											<TableCell className="py-2 ">
+												<Avatar className="size-10">
+													<AvatarImage />
+													<AvatarFallback>A</AvatarFallback>
+												</Avatar>
+											</TableCell>
+											<TableCell className="">
+												<div>
+													<p className="font-medium">Kundan Bhosale</p>
+													<p className="font-light line-clamp-1">
+														kundan@gmail.com
+													</p>
+												</div>
+											</TableCell>
+										</div>
 										<TableCell>
 											<Badge size={"large"}>Owner</Badge>
 										</TableCell>
+
 										<TableCell>
 											<Button className="" variant={"ghost"} size={"icon"}>
 												<MoreVertical />

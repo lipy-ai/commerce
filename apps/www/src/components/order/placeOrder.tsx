@@ -12,23 +12,23 @@ import {
 import { Progress } from "@lipy/web-ui/components/ui/progress";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import { StepForward } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useCartStore } from "../cart/store";
-import OrderSuccessful from "./orderSuccessful";
 
 function ProgressDialog({
 	showDialog,
 	setShowDialog,
-	setShowSuccessDialog,
 }: {
 	showDialog: boolean;
 	setShowDialog: (showDialog: boolean) => void;
-	setShowSuccessDialog: (showSuccessDialog: boolean) => void;
 }) {
 	const [progress, setProgress] = useState(0);
 
 	const queryClient = useQueryClient();
+
+	const navigate = useNavigate();
 
 	const { setInitialized } = useCartStore();
 
@@ -43,11 +43,14 @@ function ProgressDialog({
 	const mutation = useAPIMutation(apiClient.v1.order, "$post", {
 		onSuccess: () => {
 			setShowDialog(false);
-			setShowSuccessDialog(true);
 
 			clearCartMutation.mutateAsync({});
 
 			setInitialized(false);
+
+			navigate({
+				to: "/account/orders",
+			});
 		},
 
 		onError: () => {
@@ -108,7 +111,7 @@ function ProgressDialog({
 export default function PlaceOrder() {
 	const { data } = authClient.useSession();
 	const [showDialog, setShowDialog] = useState(false);
-	const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+	// const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
 	const handlePlaceOrder = () => {
 		if (!data) {
@@ -137,19 +140,15 @@ export default function PlaceOrder() {
 			</Button>
 
 			{showDialog && (
-				<ProgressDialog
-					showDialog={showDialog}
-					setShowDialog={setShowDialog}
-					setShowSuccessDialog={setShowSuccessDialog}
-				/>
+				<ProgressDialog showDialog={showDialog} setShowDialog={setShowDialog} />
 			)}
 
-			{showSuccessDialog && (
+			{/* {showSuccessDialog && (
 				<OrderSuccessful
 					showSuccessDialog={showSuccessDialog}
 					setShowSuccessDialog={setShowSuccessDialog}
 				/>
-			)}
+			)} */}
 		</>
 	);
 }

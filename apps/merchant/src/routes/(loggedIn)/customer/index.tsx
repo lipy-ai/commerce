@@ -1,4 +1,9 @@
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
+import {
+	Avatar,
+	AvatarFallback,
+	AvatarImage,
+} from "@lipy/web-ui/components/ui/avatar";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 
 import {
@@ -20,6 +25,7 @@ export const Route = createFileRoute("/(loggedIn)/customer/")({
 
 function RouteComponent() {
 	const { isMobile } = useViewport();
+
 	return (
 		<div>
 			<DashboardHeader title="Customers">
@@ -58,16 +64,22 @@ function MobileView() {
 					className="flex p-4"
 					key={m}
 				>
-					<div className="flex gap-4">
-						<div className="text-base">
-							<p className="font-medium inline-flex items-center truncate">
-								Kundan Bhosale <Dot />
-								<span className="font-light">932554253424</span>
-							</p>
-							<p className="line-clamp-1">
-								Bhagwan Pur, Chhapra - Rewa - Muzaffarpur Rd, Shrirampuri,
-								Muzaffarpur, Bhagwanpur, Bihar 842001, India
-							</p>
+					<div className="flex items-center justify-between gap-4">
+						<div className="flex items-center gap-4">
+							<Avatar className="size-10">
+								<AvatarImage />
+								<AvatarFallback>A</AvatarFallback>
+							</Avatar>
+							<div>
+								<p className="font-medium inline-flex items-center truncate text-base">
+									Kundan Bhosale <Dot />
+									<span className="font-light">932554253424</span>
+								</p>
+								<p className="line-clamp-1 text-sm text-muted-foreground">
+									Bhagwan Pur, Chhapra - Rewa - Muzaffarpur Rd, Shrirampuri,
+									Muzaffarpur, Bhagwanpur, Bihar 842001, India
+								</p>
+							</div>
 						</div>
 
 						<Link

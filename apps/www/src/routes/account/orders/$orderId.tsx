@@ -11,9 +11,12 @@ import {
 	AvatarFallback,
 	AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
+import { Button } from "@lipy/web-ui/components/ui/button";
 import { Label } from "@lipy/web-ui/components/ui/label";
+import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { createFileRoute } from "@tanstack/react-router";
+import { BanknoteArrowUp, CircleUser, MapPin } from "lucide-react";
 
 export const Route = createFileRoute("/account/orders/$orderId")({
 	component: RouteComponent,
@@ -32,24 +35,28 @@ function RouteComponent() {
 		},
 	);
 
-	let totalPrice = 0;
+	const totalPrice = data?.[0]?.itemTotalAmount ?? 0;
 	const deliveryCharges = 0;
-	let totalTaxAmount = 0;
-	let totalPayableAmount = 0;
-	if (isFetched && data?.[0]?.items) {
-		for (const item of data[0].items) {
-			totalPrice += item.variant.price * item.quantity;
-		}
-		totalTaxAmount = data[0].totalTaxAmount as number;
-
-		totalPayableAmount = totalPrice + deliveryCharges + totalTaxAmount;
-	}
+	const totalTaxAmount = data?.[0]?.totalTaxAmount ?? 0;
+	const totalPayableAmount = totalPrice + deliveryCharges + totalTaxAmount;
 
 	return (
 		<>
 			{isFetched && data && (
 				<div className="min-h-screen flex flex-col">
-					<DashboardHeader title="Order Details" />
+					<DashboardHeader
+						titleChildren={
+							<div>
+								<p className="font-semibold">Order Details</p>
+								<p className="text-muted-foreground text-xs">
+									{data[0]?.items?.length ?? 0} items |{" "}
+									{formatAmount(data[0]?.currency, totalPrice || 0)}{" "}
+								</p>
+							</div>
+						}
+					>
+						<Button size={"sm"}>REORDER</Button>
+					</DashboardHeader>
 					<div className="lg:grid lg:grid-cols-12 divide-x flex-1">
 						<div className="col-span-8 divide-y py-4 lg:p-4">
 							<div className="flex flex-col lg:flex-row gap-8 lg:gap-4 p-4 justify-between">
@@ -75,8 +82,8 @@ function RouteComponent() {
 								/>
 							</div>
 
-							<div className="p-4">
-								<h2 className="text-lg font-semibold">Items(s) ordered</h2>
+							<div className="p-4 border rounded-md m-2 bg-white">
+								<h2 className="text-lg font-semibold">Item(s) ordered</h2>
 								{data[0]?.items?.map((product, i) => (
 									<div key={i} className="flex gap-2 items-center p-4">
 										<img
@@ -108,8 +115,8 @@ function RouteComponent() {
 							</div>
 						</div>
 
-						<div className="col-span-4 space-y-4 py-4 lg:p-4 divide-y border-t">
-							<div className="space-y-4 p-4">
+						<div className="col-span-4 space-y-2  lg:p-4 divide-y ">
+							<div className="space-y-4 p-4 rounded-md m-2 border bg-white">
 								<h2 className="text-lg font-semibold">Bill Summary</h2>
 								<div className="space-y-4">
 									<div className="flex justify-between">
@@ -130,15 +137,55 @@ function RouteComponent() {
 											{formatAmount(data[0]?.currency, totalTaxAmount)}
 										</p>
 									</div>
+									<Separator className="border-t border-dashed bg-transparent my-2" />
+									<div className="flex justify-between items-center ">
+										<p className="font-semibold text-md">Total Payable</p>
+										<p className="font-semibold text-xl">
+											{formatAmount(data[0]?.currency, totalPayableAmount)}
+										</p>
+									</div>
 								</div>
 							</div>
-							<div className="flex justify-between items-center p-4">
-								<p className="font-semibold text-xl">Total Payable</p>
-								<p className="font-semibold text-3xl mb-2">
-									{formatAmount(data[0]?.currency, totalPayableAmount)}
-								</p>
+							<div className="p-4 space-y-4 border rounded-md m-2 bg-white">
+								{data[0]?.address?.name && data[0]?.address?.phone && (
+									<div>
+										<div className="flex items-start gap-4">
+											<CircleUser className="text-muted-foreground w-6 h-6" />
+											<div>
+												<p className="font-medium">Contact Info</p>
+												<p className="text-muted-foreground text-sm">
+													{data[0]?.address?.name} | {data[0]?.address?.phone}
+												</p>
+											</div>
+										</div>
+										<Separator className="border-t border-dashed bg-transparent my-2" />
+									</div>
+								)}
+
+								<div className="flex items-start gap-4">
+									<BanknoteArrowUp className="text-muted-foreground w-6 h-6" />
+									<div>
+										<p className="font-medium">Payment method</p>
+										<p className="text-muted-foreground text-sm">
+											{data[0]?.paymentMethod === "cod"
+												? "Cash on Delivery"
+												: "Unspecified"}
+										</p>
+									</div>
+								</div>
+								<Separator className="border-t border-dashed bg-transparent my-2" />
+								<div className="flex items-start gap-4">
+									<MapPin className="text-muted-foreground w-6 h-6" />
+									<div>
+										<p className="font-medium">Delivery Address</p>
+										<p className="text-muted-foreground text-sm">
+											{data[0]?.address?.line1}
+										</p>
+									</div>
+								</div>
 							</div>
-							<div className="space-y-4 p-4">
+
+							{/* <div className="space-y-4 p-4">
 								<Label>Contact Info</Label>
 								<div className="space-y-1">
 									<p className="">Kundan Mahadev Bhosale</p>
@@ -146,8 +193,8 @@ function RouteComponent() {
 										<span>+91 9325029116</span>
 									</p>
 								</div>
-							</div>
-							<div className="space-y-4 p-4">
+							</div> */}
+							{/* <div className="space-y-4 p-4">
 								<Label>Delivery Address</Label>
 								<div className="space-y-1">
 									<p className="">
@@ -158,7 +205,7 @@ function RouteComponent() {
 									<p>842001</p>
 									<p>Bihar, India</p>
 								</div>
-							</div>
+							</div> */}
 							<div className="space-y-4 p-4">
 								<Label>Delivery Partner</Label>
 
@@ -178,19 +225,6 @@ function RouteComponent() {
 									</p>
 								</div>
 							</div>
-
-							{/* <div className="space-y-2">
-						<Label>Billing Address</Label>
-						<div className="space-y-1">
-							<p className="">
-								Bhagwan Pur, Chhapra - Rewa - Muzaffarpur Rd, Shrirampuri,
-								Muzaffarpur
-							</p>
-							<p>Bhagwanpur</p>
-							<p>842001</p>
-							<p>Bihar, India</p>
-						</div>
-					</div> */}
 						</div>
 					</div>
 				</div>

@@ -19,13 +19,13 @@ import { getHeader } from "@tanstack/react-start/server";
 import { NuqsAdapter } from "nuqs/adapters/react";
 import * as React from "react";
 
-export const isMobile = createServerFn({ method: "GET" }).handler(
-	React.cache(async () => {
+export const globalInit = createServerFn({ method: "GET" }).handler(
+	async () => {
 		const userAgent = getHeader("User-Agent");
 
 		const isSsrMobile = getIsSsrMobile(userAgent);
-		return { isSsrMobile };
-	}),
+		return { isSsrMobile, userAgent };
+	},
 );
 
 export const Route = createRootRoute({
@@ -77,7 +77,10 @@ export const Route = createRootRoute({
 		);
 	},
 	notFoundComponent: () => <NotFound />,
-	loader: async () => await isMobile(),
+	loader: async () => {
+		const data = await globalInit();
+		return data;
+	},
 	component: RootComponent,
 });
 

@@ -250,6 +250,7 @@ export const cart = schema.table("cart", {
 
 export const orders = schema.table("orders", {
 	id: uuid("id").primaryKey(),
+	pk: text().unique(),
 	items: jsonb("items").array().$type<
 		Array<{
 			id: string;

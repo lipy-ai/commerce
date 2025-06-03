@@ -114,7 +114,6 @@ function Home() {
 					<LocationComponent />
 					<AppCartInitializer />
 				</DashboardBody>
-				{/* Fixed div that always stays on screen bottom */}
 			</DashboardLayout>
 		</>
 	);

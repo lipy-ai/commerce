@@ -53,19 +53,19 @@ function RouteComponent() {
 						</div>
 					</div>
 				</div>
-				<div className="grid grid-cols-3 gap-4 p-4">
+				<div className="grid grid-cols-3 gap-2 lg:gap-4 p-4">
 					{data.map((d, i) => (
 						<div
 							key={i}
 							className={cn(
-								"p-4 lg:p-6 flex flex-col gap-2 items-center rounded",
+								"px-2 py-4 lg:p-6 flex flex-col gap-2 items-center rounded text-center",
 								d.className,
 							)}
 						>
 							<div>
 								<d.icon className="size-8" />
 							</div>
-							<p>{d.name}</p>
+							<p className="text-sm lg:text-base">{d.name}</p>
 						</div>
 					))}
 				</div>
@@ -73,7 +73,7 @@ function RouteComponent() {
 					<Orders />
 				</div>
 			</div>
-			<div className="col-span-4 hidden lg:block">
+			<div className="col-span-4 hidden lg:block h-screen overflow-y-auto">
 				<Orders />
 			</div>
 		</div>

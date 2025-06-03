@@ -1,98 +1,149 @@
 import { formatAmount } from "@lipy/lib/utils/intl";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
-import { buttonVariants } from "@lipy/web-ui/components/ui/button";
-import { Input } from "@lipy/web-ui/components/ui/input";
+import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@lipy/web-ui/components/ui/table";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
-import { Link, createFileRoute } from "@tanstack/react-router";
-import { Plus, Search } from "lucide-react";
-// import { parseAsString, useQueryState } from "nuqs";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
+import { ArrowUpRight, Plus } from "lucide-react";
 
 export const Route = createFileRoute("/(loggedIn)/product/")({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-	// const [search, setSearch] = useQueryState("search", parseAsString);
 	const { isMobile } = useViewport();
 	return (
-		<div className="">
-			{/* <div className="sticky top-0 bg-accent p-4 border-b">
-				<Input prefixEl={<Search />} placeholder="Search by: ID, Title, SKU" />
-			</div> */}
-
-			<DashboardHeader title="Edit Product">
-				{!isMobile && (
-					<Input
-						prefixEl={<Search />}
-						placeholder="Search Products..."
-						className="w-1/4"
-					/>
-				)}
-				<Link
-					to="/product/$id"
-					params={{ id: "new" }}
-					className={cn(buttonVariants({}))}
-				>
+		<div>
+			<DashboardHeader title="Products">
+				<Button>
 					<Plus />
-					{isMobile ? "Product" : "New Product"}
-				</Link>
+					New Product
+				</Button>
 			</DashboardHeader>
 
-			{isMobile && (
-				<div className="p-4">
-					<Input
-						prefixEl={<Search />}
-						placeholder="Search Products..."
-						className="w-full"
-					/>
-				</div>
-			)}
-
-			<div className="lg:p-4">
-				<div className="w-full grid lg:grid-cols-3 border-x border-t">
-					{Array.from({ length: 100 }).map((_, index) => (
-						<Link
-							to={"/product/$id"}
-							params={{ id: "n" }}
-							key={index}
-							className="flex p-3 bg-background border-r border-b hover:bg-primary/10 cursor-pointer gap-4"
-						>
-							<div className="bg-accent">
-								<img
-									src="https://prd.place/400?padding=30"
-									alt="product"
-									className="size-12"
-								/>
-							</div>
-							<div className="w-full flex-1">
-								<div className="flex-1 flex text-sm gap-4">
-									<div className="flex-1">
-										<h1 className="font-medium text-sm leading-tight line-clamp-1">
-											While this is not a train smash, clean code is all about{" "}
-											{index + 1}
-										</h1>
-									</div>
-									<div>
-										<p className="space-x-1">
-											<span className="text-xl font-medium">
-												{formatAmount("INR", 14)}
-											</span>
-											<span className="line-through text-muted-foreground">
-												{formatAmount("INR", 20)}
-											</span>
-										</p>
-									</div>
-								</div>
-								<div className="flex justify-end">
-									<Badge variant={"destructive"}>No Stock</Badge>
-								</div>
-							</div>
-						</Link>
-					))}
-				</div>
+			<div className="lg:p-8 lg:space-y-8">
+				{isMobile ? <MobileView /> : <DesktopView />}
 			</div>
 		</div>
+	);
+}
+
+function MobileView() {
+	return (
+		<div className="bg-background border divide-y">
+			{[...Array(40)].map((m) => (
+				<Link
+					to={"/product/$id"}
+					params={{ id: "id" }}
+					className="flex p-4"
+					key={m}
+				>
+					<div className="flex w-full gap-4 justify-between text-base">
+						<div className="flex-1">
+							<p className="text-xs font-light">#2564432</p>
+							<p className="font-medium inline-flex items-center truncate ">
+								Kundan Bhosale
+							</p>
+							<p className="font-light">932554253424</p>
+						</div>
+
+						<div className="w-fit text-right">
+							<p className="font-semibold text-lg">
+								{formatAmount("inr", 320)}
+							</p>
+							<Badge>Delivery in 20 mins</Badge>
+						</div>
+						{/* 
+						<Link
+							to="/"
+							className={cn(
+								buttonVariants({ variant: "outline", size: "icon" }),
+							)}
+						>
+							<ArrowRight />
+						</Link> */}
+					</div>
+				</Link>
+			))}
+		</div>
+	);
+}
+
+function DesktopView() {
+	const navigate = useNavigate();
+
+	return (
+		<Table className="bg-background border p-8">
+			<TableHeader>
+				<TableRow>
+					<TableHead className="w-fit">#</TableHead>
+					<TableHead className="">Product</TableHead>
+
+					<TableHead className="w-32">Status</TableHead>
+					<TableHead className="w-32">Stock</TableHead>
+					<TableHead className="w-24">Amount</TableHead>
+
+					<TableHead className="w-10" />
+				</TableRow>
+			</TableHeader>
+			<TableBody>
+				{[...Array(40)].map((m) => (
+					<TableRow
+						key={m}
+						onClick={() =>
+							navigate({ to: "/product/$id", params: { id: "id" } })
+						}
+						className="cursor-pointer focus:bg-accent"
+					>
+						<TableCell>2142</TableCell>
+						<TableCell>
+							<div className="grid grid-cols-[50px_auto] gap-2">
+								<img
+									src="https://picsum.photos/200"
+									alt=""
+									className="size-12 border rounded bg-accent"
+								/>
+								<div className="block break-words">
+									<p className="font-medium">Product Name</p>
+									<p className="font-light">
+										Portronics Charge Clamp 2, Mobile Holder With Wireless
+										Charging - Black
+									</p>
+								</div>
+							</div>
+						</TableCell>
+
+						<TableCell>
+							<p>Active</p>
+						</TableCell>
+						<TableCell>
+							<Badge className="" variant={"success"}>
+								In Stock
+							</Badge>
+						</TableCell>
+						<TableCell>{formatAmount("inr", 320)}</TableCell>
+						<TableCell>
+							<Link
+								to="/"
+								className={cn(
+									buttonVariants({ size: "icon", variant: "ghost" }),
+								)}
+							>
+								<ArrowUpRight />
+							</Link>
+						</TableCell>
+					</TableRow>
+				))}
+			</TableBody>
+		</Table>
 	);
 }

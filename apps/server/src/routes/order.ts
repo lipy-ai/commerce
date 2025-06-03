@@ -32,6 +32,7 @@ const route = new Hono<ServerContext>()
 				"o.orderedAt",
 				"s.name as storeName",
 				"s.logo as storeLogo",
+				"s.id as storeId",
 			])
 			.orderBy("o.orderedAt", "desc")
 			.execute();

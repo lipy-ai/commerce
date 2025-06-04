@@ -2,6 +2,8 @@ const e = import.meta.env;
 
 export const env = {
 	IN_PROD: e.NODE_ENV === "production",
+	// biome-ignore lint/suspicious/noDoubleEquals: <explanation>
+	VITE_USE_IP: e.VITE_USE_IP == "true",
 	AUTH_URL: e.VITE_AUTH_URL,
 	MERCHANT_URL: e.VITE_MERCHANT_URL,
 	WEB_URL: e.VITE_WEB_URL,
@@ -13,7 +15,7 @@ export const env = {
 	SHOW_DEV_TOOLS: false,
 };
 
-if (!env.IN_PROD) {
+if (env.VITE_USE_IP) {
 	for (const key of Object.keys(env)) {
 		const value = env[key as keyof typeof env];
 
@@ -35,3 +37,5 @@ if (!env.IN_PROD) {
 		}
 	}
 }
+
+console.log(env);

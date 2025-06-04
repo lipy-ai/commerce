@@ -1,8 +1,9 @@
+import path from "node:path";
 /* eslint-disable node/no-process-env */
 import { config } from "dotenv";
 import { expand } from "dotenv-expand";
-import path from "node:path";
 import { z } from "zod";
+import { getServerIpAddress } from "./lib/serverIp";
 
 expand(
 	config({
@@ -28,6 +29,8 @@ const EnvSchema = z.object({
 	DATABASE_URL: z.string().url(),
 	// DATABASE_AUTH_TOKEN: z.string().optional(),
 	GOOGLE_CLIENT_ID: z.string(),
+	// biome-ignore lint/suspicious/noDoubleEquals: <explanation>
+	VITE_USE_IP: z.string().transform((t) => t == "true"),
 	GOOGLE_CLIENT_SECRET: z.string(),
 	BETTER_AUTH_SECRET: z.string(),
 	BETTER_AUTH_URL: z.string(),
@@ -69,5 +72,35 @@ if (error) {
 const rest = {
 	IN_PROD: env.NODE_ENV === "production",
 };
+console.log(env.VITE_USE_IP);
+if (env.VITE_USE_IP) {
+	const replaceIp = (value) => {
+		if (
+			typeof value === "string" &&
+			value.startsWith("http") &&
+			value.includes("localhost")
+		) {
+			try {
+				const url = new URL(value);
+				url.hostname = getServerIpAddress() || "localhost";
+
+				return url.toString().replace(/\/$/, "");
+			} catch (e) {
+				console.warn(`Invalid URL ${value}`);
+			}
+		}
+	};
+
+	for (const key of Object.keys(env)) {
+		const value = env[key];
+		let vals: any = null;
+		if (Array.isArray(value)) {
+			vals = value.map((m) => replaceIp(m));
+		} else {
+			vals = replaceIp(value);
+		}
+		vals && (env[key] = vals);
+	}
+}
 
 export default { ...env, ...rest }!;

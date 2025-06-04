@@ -23,7 +23,6 @@ const orderSchema = z.object({
 const querySchema = z.object({
 	view: z.enum(["active", "all"]).default("all"),
 });
-
 const route = new Hono<ServerContext>()
 	.get("/", zValidator("query", querySchema), async (c) => {
 		const session = c.get("session");

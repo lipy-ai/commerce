@@ -44,7 +44,6 @@ export const dashboardNav = {
 			icon: CircleUser,
 		},
 		{ label: "Sign out", url: "/logout", icon: LogOut },
-		// { label: "Help", url: "/help", icon: CircleHel },
 	],
 };
 

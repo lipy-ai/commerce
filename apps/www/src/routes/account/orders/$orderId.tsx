@@ -47,7 +47,7 @@ function RouteComponent() {
 					<DashboardHeader
 						titleChildren={
 							<div>
-								<p className="font-semibold">Order Details</p>
+								<p className="font-semibold">ORDER #{data[0].pk}</p>
 								<p className="text-muted-foreground text-xs">
 									{data[0]?.items?.length ?? 0} items |{" "}
 									{formatAmount(data[0]?.currency, totalPrice || 0)}{" "}
@@ -58,23 +58,7 @@ function RouteComponent() {
 						<Button size={"sm"}>REORDER</Button>
 					</DashboardHeader>
 					<div className="lg:grid lg:grid-cols-12 divide-x flex-1">
-						<div className="col-span-8 divide-y py-4 lg:p-4">
-							<div className="flex flex-col lg:flex-row gap-8 lg:gap-4 p-4 justify-between">
-								<div>
-									<div>
-										<h1 className="text-md text-muted-foreground">
-											Order ID : #{data[0].pk}
-										</h1>
-									</div>
-									<div className="flex gap-2">
-										<p>
-											Order Date:{" "}
-											<span className="font-medium">Feb 16 2025</span>
-										</p>
-										|<p className="text-primary">Delivery in 10 mins</p>
-									</div>
-								</div>
-							</div>
+						<div className="col-span-8 divide-y lg:p-4">
 							<div className="p-4 ">
 								<h2 className="text-lg font-semibold">Order status</h2>
 								<OrderStatusTimeline

@@ -154,8 +154,6 @@ export default function GoogleMapImage() {
 				>
 					<SearchBar placeholder={"Search for address"} />
 				</Autocomplete>
-
-				{/* <NativeAutocomplete onPlaceSelected={handlePlaceSelected} /> */}
 			</div>
 
 			<div className="relative flex-grow">

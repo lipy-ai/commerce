@@ -20,6 +20,7 @@ function RouteComponent() {
 		},
 	);
 
+	console.log(data);
 	return (
 		<>
 			<DashboardHeader title="My Orders" />
@@ -37,8 +38,6 @@ function RouteComponent() {
 				{isFetching && !data && (
 					<Spinner className="absolute top-1/2 left-1/2" />
 				)}
-
-				{isFetched && data?.length === 0 && <EmptyPage />}
 			</div>
 			{isFetched && data?.length === 0 && (
 				<EmptyPage

@@ -20,6 +20,7 @@ function RouteComponent() {
 		},
 	);
 
+	console.log(data);
 	return (
 		<>
 			<DashboardHeader title="My Orders" />

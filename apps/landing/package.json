@@ -1,0 +1,47 @@
+{
+	"name": "landing",
+	"private": true,
+	"type": "module",
+	"packageManager": "bun@1.1.21",
+	"scripts": {
+		"dev": "source ../../scripts/get_ip.sh && vinxi dev --port 3003 --host",
+		"build": "vinxi build",
+		"start": "vinxi start --port 3003 --host",
+		"test": "vitest run",
+		"format": "biome format",
+		"lint": "tsc && biome lint",
+		"check": "biome check"
+	},
+	"dependencies": {
+		"@lipy/server": "workspace:*",
+		"@lipy/lib": "workspace:*",
+		"@lipy/web-ui": "workspace:*",
+		"@tailwindcss/vite": "^4.0.6",
+		"@tanstack/react-router": "^1.114.3",
+		"@tanstack/react-router-devtools": "^1.114.3",
+		"@tanstack/router-plugin": "^1.114.3",
+		"lucide-react": "^0.488.0",
+		"react": "^19.0.0",
+		"react-dom": "^19.0.0",
+		"tailwindcss": "^4.0.6",
+		"use-debounce": "^10.0.4",
+		"vinxi": "^0.5.4"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.9.4",
+		"@testing-library/dom": "^10.4.0",
+		"@testing-library/react": "^16.2.0",
+		"@types/node": "^22.14.1",
+		"@types/react": "^19.0.8",
+		"@types/react-dom": "^19.0.3",
+		"@vitejs/plugin-basic-ssl": "^2.0.0",
+		"@vitejs/plugin-react": "^4.3.4",
+		"jsdom": "^26.0.0",
+		"typescript": "^5.7.2",
+		"vite": "^6.1.0",
+		"vite-plugin-pwa": "^1.0.0",
+		"vite-tsconfig-paths": "^5.1.4",
+		"vitest": "^3.0.5",
+		"web-vitals": "^4.2.4"
+	}
+}

@@ -1,5 +1,6 @@
 import { env } from "@envClient";
 import { apiClient } from "@lipy/lib/api";
+import { authClient } from "@lipy/lib/providers/auth";
 import { useAPIQuery } from "@lipy/lib/utils/queryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import SearchBar from "@lipy/web-ui/components/searchBar";
@@ -9,6 +10,7 @@ import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { Autocomplete, useJsApiLoader } from "@react-google-maps/api";
 import { createFileRoute } from "@tanstack/react-router";
+import { motion } from "framer-motion";
 import {
 	Building,
 	ChevronRight,
@@ -44,8 +46,18 @@ function RouteComponent() {
 		}
 	};
 
+	const handleSelectDeliveryAddress = async (id: string) => {
+		await authClient.updateUser({
+			address: id,
+		});
+	};
+
 	return (
-		<>
+		<motion.div
+			initial={{ opacity: 0, y: 1000 }}
+			animate={{ opacity: 1, y: 0 }}
+			transition={{ duration: 0.5 }}
+		>
 			<DashboardHeader title="Delivery Address" />
 			<div className="p-4 space-y-8 max-w-4xl lg:p-8 lg: rounded-sm lg:border">
 				{!isLoaded ? (
@@ -74,16 +86,21 @@ function RouteComponent() {
 				</Button>
 
 				<Separator className="mt-4" />
-				<div>
-					<p className="font-medium text-lg my-2 text-muted-foreground">
-						Saved Address
-					</p>
-					{isLoading && <Spinner />}
-					{!isLoading && data && data?.length > 0 && (
+
+				{isLoading && <Spinner />}
+				{!isLoading && data && data?.length > 0 && (
+					<div>
+						<p className="font-medium text-lg my-2 text-muted-foreground">
+							Saved Address
+						</p>
+
 						<div className="mb-10  space-y-4 divide-y">
 							{data.map((address) => (
 								<div key={address.id}>
-									<div className="flex  gap-2 py-2 cursor-pointer">
+									<div
+										className="flex  gap-2 py-2 cursor-pointer"
+										onClick={() => handleSelectDeliveryAddress(address.id)}
+									>
 										<Avatar className="rounded-md ">
 											<AvatarFallback>
 												{address.tag === "home" ? (
@@ -104,9 +121,9 @@ function RouteComponent() {
 								</div>
 							))}
 						</div>
-					)}
-				</div>
+					</div>
+				)}
 			</div>
-		</>
+		</motion.div>
 	);
 }

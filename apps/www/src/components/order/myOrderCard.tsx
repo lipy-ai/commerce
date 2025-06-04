@@ -188,7 +188,7 @@ export default function MyOrderCard({ order }: MyOrderCardProps) {
 								<div className="text-sm">
 									{displayItems.map((item, index) => (
 										<span key={item.id}>
-											{item.title}
+											{item.variant.title}
 											{item.quantity > 1 && ` (${item.quantity})`}
 											{index < displayItems.length - 1 && ", "}
 										</span>

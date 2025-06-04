@@ -67,11 +67,13 @@ function RouteComponent() {
 								</Avatar>
 
 								<div>
-									<h2 className="text-lg font-semibold">{address.name}</h2>
+									<h2 className="text-lg font-semibold">
+										{address.name || address.tag}
+									</h2>
 									<p className="text-muted-foreground">{address.line1}</p>
 									{address.phone && (
 										<p className="text-muted-foreground">
-											Phone No. : {address.phone}
+											Phone number : {address.phone}
 										</p>
 									)}
 								</div>

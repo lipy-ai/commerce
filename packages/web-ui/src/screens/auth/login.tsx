@@ -50,7 +50,7 @@ export function LoginScreen({
 
 	const [callbackURL] = useQueryState(
 		"cb",
-		parseAtobToString.withDefault(env.WEB_URL!),
+		parseAtobToString.withDefault(env.WEB_URL),
 	);
 
 	useEffect(() => {

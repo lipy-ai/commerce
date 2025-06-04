@@ -76,7 +76,7 @@ function MobileView() {
 				>
 					<div className="flex w-full gap-4 justify-between text-base">
 						<div className="flex-1">
-							<p className="text-xs font-light">#2564432</p>
+							<p className="text-xs font-light">#20250604-A2DN0E</p>
 							<p className="font-medium inline-flex items-center truncate ">
 								Kundan Bhosale
 							</p>
@@ -130,7 +130,7 @@ function DesktopView() {
 						onClick={() => navigate({ to: "/order/$id", params: { id: "id" } })}
 						className="cursor-pointer focus:bg-accent"
 					>
-						<TableCell>2142</TableCell>
+						<TableCell>ORD-20250604A2DN0E</TableCell>
 						<TableCell>
 							<div>
 								<p className="font-medium"> Kundan Bhosale</p>

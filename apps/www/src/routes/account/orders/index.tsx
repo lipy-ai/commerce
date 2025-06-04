@@ -2,6 +2,7 @@ import MyOrderCard from "@/components/order/myOrderCard";
 import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/queryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
+import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { createFileRoute } from "@tanstack/react-router";
 export const Route = createFileRoute("/account/orders/")({
@@ -13,10 +14,13 @@ function RouteComponent() {
 		apiClient.v1.order,
 		"$get",
 		{
-			query: {},
+			query: {
+				view: "all",
+			},
 		},
 	);
 
+	console.log(data);
 	return (
 		<>
 			<DashboardHeader title="My Orders" />
@@ -35,6 +39,12 @@ function RouteComponent() {
 					<Spinner className="absolute top-1/2 left-1/2" />
 				)}
 			</div>
+			{isFetched && data?.length === 0 && (
+				<EmptyPage
+					title={"You have no order records"}
+					label="Place order to start"
+				/>
+			)}
 		</>
 	);
 }

@@ -4,16 +4,12 @@ import { useEffect } from "react";
 import { useCartStore } from "./store";
 
 export const AppCartInitializer = () => {
-	const initialized = useCartStore((state) => state.initialized);
 	const setCartFromDB = useCartStore((state) => state.setCartFromDB);
 
-	const { data, isFetched } = useAPIQuery(apiClient.v1.cart, "$get", {
-		staleTime: Number.POSITIVE_INFINITY,
-		enabled: !initialized,
-	});
+	const { data, isFetched } = useAPIQuery(apiClient.v1.cart, "$get", {});
 
 	useEffect(() => {
-		if (!initialized && isFetched && data) {
+		if (isFetched && data) {
 			const mappedCart = data.map((item: any) => ({
 				id: item.variantId,
 				quantity: item.quantity,
@@ -26,7 +22,7 @@ export const AppCartInitializer = () => {
 
 			setCartFromDB(mappedCart);
 		}
-	}, [initialized, isFetched, data, setCartFromDB]);
+	}, [isFetched, data, setCartFromDB]);
 
 	return null;
 };

@@ -30,7 +30,11 @@ const EnvSchema = z.object({
 	// DATABASE_AUTH_TOKEN: z.string().optional(),
 	GOOGLE_CLIENT_ID: z.string(),
 	// biome-ignore lint/suspicious/noDoubleEquals: <explanation>
-	VITE_USE_IP: z.string().transform((t) => t == "true"),
+	VITE_USE_IP: z
+		.string()
+		.optional()
+		// biome-ignore lint/suspicious/noDoubleEquals: <explanation>
+		.transform((t) => t && t == "true"),
 	GOOGLE_CLIENT_SECRET: z.string(),
 	BETTER_AUTH_SECRET: z.string(),
 	BETTER_AUTH_URL: z.string(),
@@ -72,7 +76,6 @@ if (error) {
 const rest = {
 	IN_PROD: env.NODE_ENV === "production",
 };
-console.log(env.VITE_USE_IP);
 if (env.VITE_USE_IP) {
 	const replaceIp = (value) => {
 		if (

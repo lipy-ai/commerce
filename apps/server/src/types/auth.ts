@@ -1,3 +1,2 @@
-import type { AuthType } from "../auth";
-
+import type { AuthType } from "../auth/index";
 export type { AuthType };

@@ -38,14 +38,22 @@ function ProgressDialog({
 	});
 
 	const mutation = useAPIMutation(apiClient.v1.order, "$post", {
-		onSuccess: () => {
+		onSuccess: (data: {
+			orders: string[];
+		}) => {
 			setShowDialog(false);
 
 			clearCartMutation.mutateAsync({});
 
-			navigate({
-				to: "/account/orders",
-			});
+			if (data.orders.length > 1) {
+				navigate({
+					to: "/account/orders",
+				});
+			} else if (data.orders.length === 1) {
+				navigate({
+					to: `/account/orders/${data.orders[0]}`,
+				});
+			}
 		},
 
 		onError: () => {
@@ -106,7 +114,6 @@ function ProgressDialog({
 export default function PlaceOrder() {
 	const { data } = authClient.useSession();
 	const [showDialog, setShowDialog] = useState(false);
-	// const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
 	const handlePlaceOrder = () => {
 		if (!data) {
@@ -137,13 +144,6 @@ export default function PlaceOrder() {
 			{showDialog && (
 				<ProgressDialog showDialog={showDialog} setShowDialog={setShowDialog} />
 			)}
-
-			{/* {showSuccessDialog && (
-				<OrderSuccessful
-					showSuccessDialog={showSuccessDialog}
-					setShowSuccessDialog={setShowSuccessDialog}
-				/>
-			)} */}
 		</>
 	);
 }

@@ -1,5 +1,6 @@
 import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/queryClient";
+
 import {
 	Building,
 	ChevronRight,
@@ -7,7 +8,7 @@ import {
 	MapPinHouse,
 	Navigation,
 } from "lucide-react";
-import SearchBar from "../searchBar";
+
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
@@ -18,18 +19,21 @@ import { Spinner } from "../ui/spinner";
 export default function SetDeliveryLocation({
 	open,
 	onOpenChange,
+	handleOnly,
 }: {
-	open: boolean;
-	onOpenChange: (open: boolean) => void;
+	open?: boolean;
+	onOpenChange?: (open: boolean) => void;
+	handleOnly?: boolean;
 }) {
 	const { data, isLoading } = useAPIQuery(apiClient.v1.address, "$get", {});
+
 	return (
-		<Drawer open={open} onOpenChange={onOpenChange} handleOnly={true}>
+		<Drawer open={open} onOpenChange={onOpenChange} handleOnly={handleOnly}>
 			<DrawerContent className="p-4">
 				<DrawerHeader>
 					<DrawerTitle>Enter your address</DrawerTitle>
 				</DrawerHeader>
-				<SearchBar placeholder="Search for address" />
+
 				<Button
 					variant={"link"}
 					className="flex justify-between my-2 text-md font-medium"
@@ -41,11 +45,12 @@ export default function SetDeliveryLocation({
 
 					<ChevronRight className="text-muted-foreground" />
 				</Button>
+
 				<p className="font-medium text-lg my-2">Saved Address</p>
 				{isLoading && <Spinner />}
 				{!isLoading && data && data?.length > 0 && (
 					<Card className="mb-10 shadow-none p-2">
-						<ScrollArea className="h-[250px] w-full">
+						<ScrollArea className="overflow-y-auto">
 							{data.map((address) => (
 								<div key={address.id} className="border-b last:border-b-0">
 									<div className="flex  gap-2 py-2">

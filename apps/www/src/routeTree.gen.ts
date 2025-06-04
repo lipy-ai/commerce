@@ -24,6 +24,7 @@ import { Route as AccountOrdersIndexImport } from './routes/account/orders/index
 import { Route as AccountAddressesIndexImport } from './routes/account/addresses/index'
 import { Route as AccountOrdersOrderIdImport } from './routes/account/orders/$orderId'
 import { Route as AccountAddressesNewImport } from './routes/account/addresses/new'
+import { Route as AccountAddressesDeliveryAddressImport } from './routes/account/addresses/deliveryAddress'
 import { Route as ShopIdProductsIndexImport } from './routes/shop/$id/products/index'
 import { Route as ShopIdProductsProductIdImport } from './routes/shop/$id/products/$productId'
 import { Route as ShopIdProductsCategoryCategoryIdImport } from './routes/shop/$id/products/category/$categoryId'
@@ -108,6 +109,13 @@ const AccountAddressesNewRoute = AccountAddressesNewImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AccountAddressesDeliveryAddressRoute =
+  AccountAddressesDeliveryAddressImport.update({
+    id: '/account/addresses/deliveryAddress',
+    path: '/account/addresses/deliveryAddress',
+    getParentRoute: () => rootRoute,
+  } as any)
+
 const ShopIdProductsIndexRoute = ShopIdProductsIndexImport.update({
   id: '/shop/$id/products/',
   path: '/shop/$id/products/',
@@ -187,6 +195,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShopIndexImport
       parentRoute: typeof rootRoute
     }
+    '/account/addresses/deliveryAddress': {
+      id: '/account/addresses/deliveryAddress'
+      path: '/account/addresses/deliveryAddress'
+      fullPath: '/account/addresses/deliveryAddress'
+      preLoaderRoute: typeof AccountAddressesDeliveryAddressImport
+      parentRoute: typeof rootRoute
+    }
     '/account/addresses/new': {
       id: '/account/addresses/new'
       path: '/account/addresses/new'
@@ -257,6 +272,7 @@ export interface FileRoutesByFullPath {
   '/account/profile': typeof AccountProfileRoute
   '/account': typeof AccountIndexRoute
   '/shop': typeof ShopIndexRoute
+  '/account/addresses/deliveryAddress': typeof AccountAddressesDeliveryAddressRoute
   '/account/addresses/new': typeof AccountAddressesNewRoute
   '/account/orders/$orderId': typeof AccountOrdersOrderIdRoute
   '/account/addresses': typeof AccountAddressesIndexRoute
@@ -276,6 +292,7 @@ export interface FileRoutesByTo {
   '/account/profile': typeof AccountProfileRoute
   '/account': typeof AccountIndexRoute
   '/shop': typeof ShopIndexRoute
+  '/account/addresses/deliveryAddress': typeof AccountAddressesDeliveryAddressRoute
   '/account/addresses/new': typeof AccountAddressesNewRoute
   '/account/orders/$orderId': typeof AccountOrdersOrderIdRoute
   '/account/addresses': typeof AccountAddressesIndexRoute
@@ -296,6 +313,7 @@ export interface FileRoutesById {
   '/account/profile': typeof AccountProfileRoute
   '/account/': typeof AccountIndexRoute
   '/shop/': typeof ShopIndexRoute
+  '/account/addresses/deliveryAddress': typeof AccountAddressesDeliveryAddressRoute
   '/account/addresses/new': typeof AccountAddressesNewRoute
   '/account/orders/$orderId': typeof AccountOrdersOrderIdRoute
   '/account/addresses/': typeof AccountAddressesIndexRoute
@@ -317,6 +335,7 @@ export interface FileRouteTypes {
     | '/account/profile'
     | '/account'
     | '/shop'
+    | '/account/addresses/deliveryAddress'
     | '/account/addresses/new'
     | '/account/orders/$orderId'
     | '/account/addresses'
@@ -335,6 +354,7 @@ export interface FileRouteTypes {
     | '/account/profile'
     | '/account'
     | '/shop'
+    | '/account/addresses/deliveryAddress'
     | '/account/addresses/new'
     | '/account/orders/$orderId'
     | '/account/addresses'
@@ -353,6 +373,7 @@ export interface FileRouteTypes {
     | '/account/profile'
     | '/account/'
     | '/shop/'
+    | '/account/addresses/deliveryAddress'
     | '/account/addresses/new'
     | '/account/orders/$orderId'
     | '/account/addresses/'
@@ -373,6 +394,7 @@ export interface RootRouteChildren {
   AccountProfileRoute: typeof AccountProfileRoute
   AccountIndexRoute: typeof AccountIndexRoute
   ShopIndexRoute: typeof ShopIndexRoute
+  AccountAddressesDeliveryAddressRoute: typeof AccountAddressesDeliveryAddressRoute
   AccountAddressesNewRoute: typeof AccountAddressesNewRoute
   AccountOrdersOrderIdRoute: typeof AccountOrdersOrderIdRoute
   AccountAddressesIndexRoute: typeof AccountAddressesIndexRoute
@@ -392,6 +414,7 @@ const rootRouteChildren: RootRouteChildren = {
   AccountProfileRoute: AccountProfileRoute,
   AccountIndexRoute: AccountIndexRoute,
   ShopIndexRoute: ShopIndexRoute,
+  AccountAddressesDeliveryAddressRoute: AccountAddressesDeliveryAddressRoute,
   AccountAddressesNewRoute: AccountAddressesNewRoute,
   AccountOrdersOrderIdRoute: AccountOrdersOrderIdRoute,
   AccountAddressesIndexRoute: AccountAddressesIndexRoute,
@@ -420,6 +443,7 @@ export const routeTree = rootRoute
         "/account/profile",
         "/account/",
         "/shop/",
+        "/account/addresses/deliveryAddress",
         "/account/addresses/new",
         "/account/orders/$orderId",
         "/account/addresses/",
@@ -453,6 +477,9 @@ export const routeTree = rootRoute
     },
     "/shop/": {
       "filePath": "shop/index.tsx"
+    },
+    "/account/addresses/deliveryAddress": {
+      "filePath": "account/addresses/deliveryAddress.tsx"
     },
     "/account/addresses/new": {
       "filePath": "account/addresses/new.tsx"

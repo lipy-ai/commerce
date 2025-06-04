@@ -161,14 +161,14 @@ export default function NearByShops() {
 						shops.length > 0 &&
 						shops.map((shop) => (
 							<div key={shop.id}>
-								<Card className="p-0">
+								<Card className="p-0 rounded-xl">
 									<Link to="/shop/$id" params={{ id: shop.id }}>
 										{/* Image Container */}
 										<div className="relative h-48">
 											<img
 												src={shop.logo || ""}
 												alt={shop.name}
-												className="w-full h-full object-cover rounded-tl-lg rounded-tr-lg"
+												className="w-full h-full object-cover rounded-t-xl"
 											/>
 
 											{/* <div

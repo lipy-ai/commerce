@@ -42,7 +42,7 @@ function RouteComponent() {
 				))}
 
 			{!isLoading && data && data?.length > 0 && (
-				<div className="mb-10">
+				<div className="mb-10 max-w-4xl items-center lg:border-r">
 					{data.map((address) => (
 						<div
 							key={address.id}

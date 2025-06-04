@@ -102,15 +102,15 @@ function Orders() {
 								</p>
 								<Badge>Delivery in 20 mins</Badge>
 							</div>
-							{/* 
-						<Link
-							to="/"
-							className={cn(
-								buttonVariants({ variant: "outline", size: "icon" }),
-							)}
-						>
-							<ArrowRight />
-						</Link> */}
+
+							{/* <Link
+								to="/"
+								className={cn(
+									buttonVariants({ variant: "outline", size: "icon" }),
+								)}
+							>
+								<ArrowRight />
+							</Link> */}
 						</div>
 					</div>
 				))}

@@ -31,34 +31,26 @@ const route = new Hono<ServerContext>()
 		const data = await db
 			.selectFrom("orders as o")
 			.where("o.orderedBy", "=", session?.userId!)
-			.where((eb) => {
-				const ors: Expression<SqlBool>[] = [];
-
-				switch (q.view) {
-					case "active":
-						ors.push(
-							eb("o.status", "in", [
-								"ordered",
-								"accepted",
-								"out_for_delivery",
-								"packed",
-								"out_for_delivery",
-								"return_requested",
-							]),
-						);
-						break;
-					default:
-						break;
-				}
-
-				return eb.or(ors);
-			})
+			.$if(q.view === "active", (qb) =>
+				qb.where((eb) =>
+					eb.or([
+						eb("o.status", "in", [
+							"ordered",
+							"accepted",
+							"out_for_delivery",
+							"packed",
+							"return_requested",
+						]),
+					]),
+				),
+			)
 			.leftJoin("store as s", "s.id", "o.storeId")
 			.select([
 				"o.id",
 				"o.itemTotalAmount",
 				"o.status",
 				"o.items",
+				"o.pk as orderPrimaryId",
 				"o.orderedAt",
 				"s.name as storeName",
 				"s.logo as storeLogo",
@@ -73,7 +65,6 @@ const route = new Hono<ServerContext>()
 		const session = c.get("session");
 		const { id } = c.req.valid("param");
 
-		console.log(id);
 		const data = await db
 			.selectFrom("orders as o")
 			.where("o.orderedBy", "=", session?.userId!)

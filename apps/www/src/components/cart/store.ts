@@ -27,7 +27,6 @@ export type CartStore = {
 		operation?: Operation,
 	) => void;
 	setCartFromDB: (items: ProductInCart[]) => void;
-	setInitialized: (value: boolean) => void;
 };
 
 export const useCartStore = create<CartStore>()(
@@ -71,16 +70,13 @@ export const useCartStore = create<CartStore>()(
 					}
 
 					const finalCart = updatedCart.filter((item) => item.quantity > 0);
-
 					return { cart: finalCart };
 				});
 			},
 			setCartFromDB: (items) =>
 				set({
 					cart: items,
-					initialized: true, // Will reset on app reload now
 				}),
-			setInitialized: (value) => set({ initialized: value }),
 		}),
 		{
 			name: "lipy-cart-state",

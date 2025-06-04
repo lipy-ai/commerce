@@ -1,0 +1,85 @@
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
+import tailwindcss from "@tailwindcss/vite";
+import { defineConfig } from "@tanstack/react-start/config";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export default defineConfig({
+	tsr: {
+		appDirectory: "src",
+	},
+	server: {
+		// https: {
+		// 	domains: [
+		// 		"https://0f32-2409-40c2-3140-21d7-75a2-fa79-96d7-4ea1.ngrok-free.app",
+		// 	],
+		// },
+		minify: true,
+		sourceMap: process.env.NODE_ENV === "development",
+		routeRules: {
+			"/api/**": {
+				proxy: {
+					to: process.env.VITE_API_URL + "/api/**",
+					headers: {
+						"Content-Type": "application/json",
+					},
+				},
+			},
+		},
+	},
+	vite: {
+		plugins: [
+			tailwindcss(),
+
+			// VitePWA({
+			//   // strategies: "injectManifest",
+			//   // srcDir: "src",
+			//   // filename: "service-worker.js",
+			//   // registerType: "autoUpdate",
+			//   // injectManifest: {
+			//   //   injectionPoint: "self.__WB_MANIFEST",
+			//   // },
+			//   manifest: {
+			//     name: "Your Vinxi App",
+			//     short_name: "VinxiApp",
+			//     theme_color: "#ffffff",
+			//     icons: [
+			//       // Add your icons here
+			//     ],
+			//   },
+			// }),
+			//   visualizer(), // Generates a visual report
+		],
+
+		//  test: {
+		//    globals: true,
+		//    environment: "jsdom",
+		//  },
+
+		resolve: {
+			alias: [
+				{
+					find: "@lipy/web-ui",
+					replacement: path.resolve(__dirname, "../../packages/web-ui/src"),
+				},
+				{
+					find: "@envClient",
+					replacement: path.resolve(__dirname, "../../env.client.ts"),
+				},
+				{
+					find: "@lipy/lib",
+					replacement: path.resolve(__dirname, "../../packages/lib/src"),
+				},
+				{
+					find: "@lipy/server",
+					replacement: path.resolve(__dirname, "../server/src"),
+				},
+				{
+					find: "@",
+					replacement: path.resolve(__dirname, "./src"),
+				},
+			],
+		},
+	},
+});

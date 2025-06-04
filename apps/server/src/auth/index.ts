@@ -1,10 +1,9 @@
-import { type APIError, type BetterAuthOptions, betterAuth } from "better-auth";
+import { type BetterAuthOptions, betterAuth } from "better-auth";
 import { createAuthMiddleware, emailOTP } from "better-auth/plugins";
 
 import { sendTransactionalEmail } from "@/services/ses";
 import { sendSMS } from "@/services/sns";
 import { phoneNumber } from "better-auth/plugins";
-import { HTTPException } from "hono/http-exception";
 import { redis } from "../cache";
 import { db } from "../db";
 import env from "../env";
@@ -34,6 +33,30 @@ const phoneOTPPlugin = phoneNumber({
 	},
 });
 
+const afterAuthMiddleware = createAuthMiddleware(async (ctx) => {
+	// ctx.setCookie("my-cookie", "value");
+	// await ctx.setSignedCookie("my-signed-cookie", "value", ctx.context.secret, {
+	//     maxAge: 1000,
+	// });
+	// const cookie = ctx.getCookies("my-cookie");
+	// const signedCookie = await ctx.getSignedCookies("my-signed-cookie");
+	// const session_token = ctx.getCookie("lipy.session_token");
+	// const session_data = ctx.getCookie("lipy.session_data");
+	// const opts = {
+	// 	domain: "http://192.168.185.119:3000", // Set to your IP
+	// 	path: "/",
+	// 	httpOnly: false, // Set to true if you don't need client-side access
+	// 	secure: false, // Must be false for HTTP
+	// 	sameSite: "none", // Required for cross-domain
+	// } satisfies CookieOptions;
+	// if (session_token) {
+	// 	ctx.setCookie("lipy.session_token1", session_token, opts);
+	// }
+	// if (session_data) {
+	// 	ctx.setCookie("lipy.session_data1", session_data, opts);
+	// }
+});
+
 const socialProviders: BetterAuthOptions["socialProviders"] = {
 	google: {
 		clientId: env.GOOGLE_CLIENT_ID as string,
@@ -45,7 +68,7 @@ const socialProviders: BetterAuthOptions["socialProviders"] = {
 	//   },
 };
 
-export const auth: ReturnType<typeof betterAuth> = betterAuth({
+export const auth = betterAuth({
 	disabledPaths: ["/error"],
 	database: {
 		db,
@@ -57,25 +80,27 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 	plugins: [emailOTPPlugin, phoneOTPPlugin, emailHarmony(), phoneHarmony()],
 	hooks: {
 		// before: beforeAuthMiddleware,
-		// after: afterAuthMiddleware,
+		after: afterAuthMiddleware,
 	},
 	advanced: {
 		database: {
 			generateId: () => crypto.randomUUID(),
 		},
+		cookiePrefix: "lipy",
 		crossSubDomainCookies: {
 			enabled: true,
 			...(env.IN_PROD && {
 				domain: `.${env.BETTER_AUTH_URL.split(".").slice(1).join(".")}`,
-			}), // Domain with a leading period
+			}),
 		},
+
 		...(env.IN_PROD && {
 			useSecureCookies: true,
 		}),
 		...(env.IN_PROD && {
 			defaultCookieAttributes: {
-				secure: true,
-				httpOnly: true,
+				secure: env.IN_PROD,
+				httpOnly: env.IN_PROD,
 				sameSite: "none", // Allows CORS-based cookie sharing across subdomains
 				partitioned: true, // New browser standards will mandate this for foreign cookies
 			},
@@ -147,6 +172,9 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 			enabled: true,
 		},
 		additionalFields: {
+			address: {
+				type: "string",
+			},
 			onboarded: {
 				type: "boolean",
 				required: true,

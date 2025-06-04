@@ -37,5 +37,3 @@ if (env.VITE_USE_IP) {
 		}
 	}
 }
-
-console.log(env);

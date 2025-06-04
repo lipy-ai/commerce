@@ -63,7 +63,7 @@ function RouteComponent() {
 								<div>
 									<div>
 										<h1 className="text-md text-muted-foreground">
-											Order ID : #{data[0].id}
+											Order ID : #{data[0].pk}
 										</h1>
 									</div>
 									<div className="flex gap-2">
@@ -150,7 +150,7 @@ function RouteComponent() {
 								{data[0]?.address?.name && data[0]?.address?.phone && (
 									<div>
 										<div className="flex items-start gap-4">
-											<CircleUser className="text-muted-foreground w-6 h-6" />
+											<CircleUser className="text-muted-foreground " />
 											<div>
 												<p className="font-medium">Contact Info</p>
 												<p className="text-muted-foreground text-sm">
@@ -163,7 +163,7 @@ function RouteComponent() {
 								)}
 
 								<div className="flex items-start gap-4">
-									<BanknoteArrowUp className="text-muted-foreground w-6 h-6" />
+									<BanknoteArrowUp className="text-muted-foreground" />
 									<div>
 										<p className="font-medium">Payment method</p>
 										<p className="text-muted-foreground text-sm">
@@ -175,7 +175,7 @@ function RouteComponent() {
 								</div>
 								<Separator className="border-t border-dashed bg-transparent my-2" />
 								<div className="flex items-start gap-4">
-									<MapPin className="text-muted-foreground w-6 h-6" />
+									<MapPin className="text-muted-foreground" />
 									<div>
 										<p className="font-medium">Delivery Address</p>
 										<p className="text-muted-foreground text-sm">
@@ -185,27 +185,6 @@ function RouteComponent() {
 								</div>
 							</div>
 
-							{/* <div className="space-y-4 p-4">
-								<Label>Contact Info</Label>
-								<div className="space-y-1">
-									<p className="">Kundan Mahadev Bhosale</p>
-									<p className="">
-										<span>+91 9325029116</span>
-									</p>
-								</div>
-							</div> */}
-							{/* <div className="space-y-4 p-4">
-								<Label>Delivery Address</Label>
-								<div className="space-y-1">
-									<p className="">
-										Bhagwan Pur, Chhapra - Rewa - Muzaffarpur Rd, Shrirampuri,
-										Muzaffarpur
-									</p>
-									<p>Bhagwanpur</p>
-									<p>842001</p>
-									<p>Bihar, India</p>
-								</div>
-							</div> */}
 							<div className="space-y-4 p-4">
 								<Label>Delivery Partner</Label>
 

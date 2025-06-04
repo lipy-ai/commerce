@@ -15,7 +15,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { StepForward } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useCartStore } from "../cart/store";
 
 function ProgressDialog({
 	showDialog,
@@ -30,8 +29,6 @@ function ProgressDialog({
 
 	const navigate = useNavigate();
 
-	const { setInitialized } = useCartStore();
-
 	const clearCartMutation = useAPIMutation(apiClient.v1.cart, "$delete", {
 		onSuccess: () => {
 			queryClient.invalidateQueries({
@@ -45,8 +42,6 @@ function ProgressDialog({
 			setShowDialog(false);
 
 			clearCartMutation.mutateAsync({});
-
-			setInitialized(false);
 
 			navigate({
 				to: "/account/orders",

@@ -53,6 +53,7 @@ type OrdersData = {
 	itemTotalAmount: number | null;
 	storeLogo: string | null;
 	storeId: string | null;
+	orderPrimaryId: string | null;
 }[];
 
 type Order = OrdersData[number];
@@ -180,14 +181,14 @@ export default function MyOrderCard({ order }: MyOrderCardProps) {
 					<div className="p-4">
 						<Link
 							to={"/account/orders/$orderId"}
-							params={{ orderId: order.id }}
+							params={{ orderId: order.orderPrimaryId as string }}
 						>
 							<div className="flex justify-start gap-4">
 								<CustomAvatarGroup items={order.items ?? []} />
 								<div className="text-sm">
 									{displayItems.map((item, index) => (
 										<span key={item.id}>
-											{item.title}
+											{item.variant.title}
 											{item.quantity > 1 && ` (${item.quantity})`}
 											{index < displayItems.length - 1 && ", "}
 										</span>

@@ -155,7 +155,7 @@ function RouteComponent() {
 					<EmptyPage icon={ShoppingBag} title="Your Cart is Empty" label=" ">
 						<Link
 							className={cn(
-								buttonVariants({ size: "lg", className: "text-lg" }),
+								buttonVariants({ size: "default", className: "text-lg" }),
 								"my-6 ",
 							)}
 							to={"/"}

@@ -1,10 +1,9 @@
-import { type APIError, type BetterAuthOptions, betterAuth } from "better-auth";
-import { createAuthMiddleware, emailOTP } from "better-auth/plugins";
+import { betterAuth } from "better-auth";
+import { emailOTP } from "better-auth/plugins";
 
 import { sendTransactionalEmail } from "@/services/ses";
 import { sendSMS } from "@/services/sns";
 import { phoneNumber } from "better-auth/plugins";
-import { HTTPException } from "hono/http-exception";
 import { redis } from "../cache";
 import { db } from "../db";
 import env from "../env";
@@ -34,7 +33,7 @@ const phoneOTPPlugin = phoneNumber({
 	},
 });
 
-const socialProviders: BetterAuthOptions["socialProviders"] = {
+const socialProviders = {
 	google: {
 		clientId: env.GOOGLE_CLIENT_ID as string,
 		clientSecret: env.GOOGLE_CLIENT_SECRET as string,
@@ -44,8 +43,7 @@ const socialProviders: BetterAuthOptions["socialProviders"] = {
 	//     clientSecret: env.MICROSOFT_CLIENT_SECRET as string,
 	//   },
 };
-
-export const auth: ReturnType<typeof betterAuth> = betterAuth({
+export const auth = betterAuth({
 	disabledPaths: ["/error"],
 	database: {
 		db,
@@ -63,19 +61,21 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 		database: {
 			generateId: () => crypto.randomUUID(),
 		},
+		cookiePrefix: "lipy",
 		crossSubDomainCookies: {
 			enabled: true,
 			...(env.IN_PROD && {
 				domain: `.${env.BETTER_AUTH_URL.split(".").slice(1).join(".")}`,
-			}), // Domain with a leading period
+			}),
 		},
+
 		...(env.IN_PROD && {
 			useSecureCookies: true,
 		}),
 		...(env.IN_PROD && {
 			defaultCookieAttributes: {
-				secure: true,
-				httpOnly: true,
+				secure: env.IN_PROD,
+				httpOnly: env.IN_PROD,
 				sameSite: "none", // Allows CORS-based cookie sharing across subdomains
 				partitioned: true, // New browser standards will mandate this for foreign cookies
 			},
@@ -120,12 +120,7 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 	},
 	session: {
 		modelName: "lipy.authSession",
-		// fields: {
-		//   userId: "user_id",
-		//   sessionToken: "session_token",
-		//   createdAt: "created_at",
-		//   updatedAt: "updated_at",
-		// },
+
 		cookieCache: {
 			enabled: true,
 			maxAge: 5 * 60, // Cache duration in seconds
@@ -133,20 +128,14 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 	},
 	user: {
 		modelName: "lipy.user",
-		// fields: {
-		//   name: "name",
-		//   email: "email",
-		//   username: "username",
-		//   emailVerified: "email_verified",
-		//   image: "image",
-		//   createdAt: "created_at",
-		//   updatedAt: "updated_at",
-		//   normalizedEmail: "normalized_email",
-		// },
+
 		deleteUser: {
 			enabled: true,
 		},
 		additionalFields: {
+			address: {
+				type: "string",
+			},
 			onboarded: {
 				type: "boolean",
 				required: true,
@@ -158,30 +147,10 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
 
 	account: {
 		modelName: "lipy.authAccount",
-		// fields: {
-		//   accountId: "account_id",
-		//   providerId: "provider_id",
-		//   accessToken: "access_token",
-		//   refreshToken: "refresh_token",
-		//   idToken: "id_token",
-		//   accessTokenExpiresAt: "access_token_expires_at",
-		//   refreshTokenExpiresAt: "refresh_token_expires_at",
-		//   userId: "user_id",
-		//   type: "type",
-		//   provider: "provider",
-		//   providerAccountId: "provider_account_id",
-		//   createdAt: "created_at",
-		//   updatedAt: "updated_at",
-		// },
 	},
 
 	verification: {
 		modelName: "lipy.authVerification",
-		// fields: {
-		//   expiresAt: "expires_at",
-		//   createdAt: "created_at",
-		//   updatedAt: "updated_at",
-		// },
 	},
 });
 

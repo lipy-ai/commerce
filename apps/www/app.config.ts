@@ -10,6 +10,11 @@ export default defineConfig({
 		appDirectory: "src",
 	},
 	server: {
+		// https: {
+		// 	domains: [
+		// 		"https://0f32-2409-40c2-3140-21d7-75a2-fa79-96d7-4ea1.ngrok-free.app",
+		// 	],
+		// },
 		minify: true,
 		sourceMap: process.env.NODE_ENV === "development",
 		routeRules: {

@@ -89,12 +89,7 @@ function LocationComponent() {
 	}, []);
 
 	if (unsupported || error) {
-		return (
-			<SetLocation
-				error={error || "Location permission is off"}
-				onRetry={getLocation}
-			/>
-		);
+		return <SetLocation error={error || "Location permission is off"} />;
 	}
 
 	return;

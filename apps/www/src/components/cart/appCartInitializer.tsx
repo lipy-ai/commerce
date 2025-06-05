@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useCartStore } from "./store";
 
 export const AppCartInitializer = () => {
-	const setCartFromDB = useCartStore((state) => state.setCartFromDB);
+	const setCart = useCartStore((state) => state.setCart);
 
 	const { data, isFetched } = useAPIQuery(apiClient.v1.cart, "$get", {});
 
@@ -20,9 +20,9 @@ export const AppCartInitializer = () => {
 				thumbnail: item.thumbnail,
 			}));
 
-			setCartFromDB(mappedCart);
+			setCart(mappedCart);
 		}
-	}, [isFetched, data, setCartFromDB]);
+	}, [isFetched, data, setCart]);
 
 	return null;
 };

@@ -1,7 +1,7 @@
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { Link } from "@tanstack/react-router";
-import { ChevronDown, MapPin, UserRound } from "lucide-react";
+import { Building, ChevronDown, House, MapPin, UserRound } from "lucide-react";
 
 export default function NavBar() {
 	const { isMobile } = useViewport();
@@ -14,9 +14,16 @@ export default function NavBar() {
 				{deliveryLocation && (
 					<Link to={"/account/addresses/deliveryAddress"}>
 						<div className="text-lg font-bold flex items-center gap-2">
-							<MapPin className="size-5 fill-primary" />
+							{deliveryLocation.addressName === "home" ? (
+								<House className="size-5" />
+							) : deliveryLocation.addressName === "work" ? (
+								<Building className="size-5" />
+							) : (
+								<MapPin className="size-5" />
+							)}
 							<p className="truncate max-w-[250px] block">
-								{deliveryLocation.addressName || "Locating"}
+								{deliveryLocation.addressName.charAt(0).toUpperCase() +
+									deliveryLocation.addressName.slice(1) || "Locating"}
 							</p>
 							<ChevronDown className="size-5" />
 						</div>

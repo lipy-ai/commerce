@@ -8,6 +8,7 @@ import {
 	DashboardLayout,
 } from "@lipy/web-ui/components/layouts/dashboard";
 import LocationComponent from "@lipy/web-ui/components/maps/deliveryAddress";
+import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
@@ -61,6 +62,8 @@ function Home() {
 
 	const { cart } = useCartStore();
 
+	const { deliveryLocation, hasHydrated } = useLocationStore();
+
 	const mobileNav = [
 		{
 			label: "Shops Near me",
@@ -110,7 +113,11 @@ function Home() {
 						<SearchFilter />
 					</motion.div>
 					<NearByShops />
-					<LocationComponent />
+
+					{hasHydrated && deliveryLocation.address === "" && (
+						<LocationComponent />
+					)}
+
 					<AppCartInitializer />
 				</DashboardBody>
 			</DashboardLayout>

@@ -7,6 +7,7 @@ import {
 	Marker,
 	useJsApiLoader,
 } from "@react-google-maps/api";
+import { useNavigate } from "@tanstack/react-router";
 import { LocateFixed, MapPinned } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import SearchBar from "../searchBar";
@@ -14,9 +15,14 @@ import { Button } from "../ui/button";
 import { Spinner } from "../ui/spinner";
 import { DetailedAddress } from "./detailedAddress";
 import { getGeocodeFromLatLng } from "./utils/googlemap";
+import { useLocationStore } from "./utils/store";
 
 const libraries: "places"[] = ["places"];
-export default function GoogleMapImage() {
+export default function GoogleMapImage({
+	type,
+}: {
+	type: "deliveryAddress" | "saveAddress" | undefined;
+}) {
 	const { isLoaded } = useJsApiLoader({
 		googleMapsApiKey: env.GOOGLE_MAP_API_KEY as string,
 		libraries: libraries,
@@ -40,6 +46,9 @@ export default function GoogleMapImage() {
 		lat: 0,
 		lng: 0,
 	});
+
+	const { setDeliveryLocation } = useLocationStore();
+	const navigate = useNavigate();
 
 	const fillFullAddress = (
 		addressComponents: google.maps.GeocoderAddressComponent[],
@@ -224,7 +233,26 @@ export default function GoogleMapImage() {
 							</div>
 						</div>
 
-						<DetailedAddress fullAddress={fullAddress} label="Add" />
+						{type === "saveAddress" && (
+							<DetailedAddress fullAddress={fullAddress} label="Add" />
+						)}
+						{type === "deliveryAddress" && (
+							<Button
+								className="w-full font-semibold"
+								onClick={() => {
+									setDeliveryLocation({
+										address: fullAddress.address,
+										addressName,
+										lat: fullAddress.lat,
+										lng: fullAddress.lng,
+									});
+
+									navigate({ to: "/" });
+								}}
+							>
+								Confirm & Proceed
+							</Button>
+						)}
 					</div>
 				</div>
 			</div>

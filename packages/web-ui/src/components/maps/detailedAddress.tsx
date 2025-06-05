@@ -205,7 +205,7 @@ export function DetailedAddress({
 											"ml-auto",
 										)}
 										to="/account/addresses/new"
-										params={{ addressId: fullAddress.id }}
+										search={{ type: "saveAddress" }}
 									>
 										Change
 									</Link>

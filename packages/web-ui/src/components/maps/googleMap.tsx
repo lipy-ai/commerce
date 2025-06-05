@@ -60,10 +60,6 @@ export default function GoogleMapImage({
 		setFullAddress((prev) => ({
 			...prev,
 			address: placeAddress || "",
-		}));
-
-		setFullAddress((prev) => ({
-			...prev,
 			lat: lat,
 			lng: lng,
 		}));

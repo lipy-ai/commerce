@@ -11,7 +11,10 @@ type ScrollingTabsProps = {
 	handleTabChange: (tabId: string) => void;
 };
 
-export const ScrollingTabs = ({ tabs, handleTabChange }: ScrollingTabsProps) => {
+export const ScrollingTabs = ({
+	tabs,
+	handleTabChange,
+}: ScrollingTabsProps) => {
 	const [activeTab, setActiveTab] = useState(0);
 	const tabsRef = useRef<HTMLDivElement>(null);
 
@@ -58,11 +61,11 @@ export const ScrollingTabs = ({ tabs, handleTabChange }: ScrollingTabsProps) => 
 								onClick={() => onTabChange(index, tab.id)}
 								className={`relative flex flex-col items-center px-4 py-2 mx-2 min-w-16 cursor-pointer transition-all duration-300 ${
 									isActive
-										? "text-foreground-600 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[3px] after:bg-foreground after:rounded-full"
-										: "text-muted-foreground hover:text-muted-foreground"
+										? " after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[6px] after:bg-background after:rounded-t-full"
+										: "text-background hover:text-muted-foreground"
 								}`}
 							>
-								<Icon size={20} className={isActive ? "fill-primary/40" : ""} />
+								<Icon size={20} />
 								<span className="mt-1 text-sm whitespace-nowrap">
 									{tab.name}
 								</span>

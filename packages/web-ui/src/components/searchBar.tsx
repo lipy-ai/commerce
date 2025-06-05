@@ -8,7 +8,7 @@ export default function SearchBar({ placeholder }: { placeholder?: string }) {
 				placeholder={placeholder || "Search for shop, grocery, fruits...."}
 				size="lg"
 				prefixEl={<Search />}
-				className="bg-background rounded-xl font-semibold text-md"
+				className="bg-background rounded-xl font-semibold text-md text-black"
 			/>
 		</div>
 	);

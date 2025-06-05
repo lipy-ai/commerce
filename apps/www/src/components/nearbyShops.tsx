@@ -160,7 +160,199 @@ export default function NearByShops() {
 						shops &&
 						shops.length > 0 &&
 						shops.map((shop) => (
-							<div key={shop.id}>
+							<div key={shop.id} className="space-y-6">
+								<Card className="p-0 rounded-xl">
+									<Link to="/shop/$id" params={{ id: shop.id }}>
+										{/* Image Container */}
+										<div className="relative h-48">
+											<img
+												src={shop.logo || ""}
+												alt={shop.name}
+												className="w-full h-full object-cover rounded-t-xl"
+											/>
+
+											{/* <div
+										className={`absolute bottom-3 left-3 text-white text-xs px-2 py-1 rounded flex items-center ${
+											shop.type === "grocery"
+												? "bg-green-500"
+												: shop.type === "retail"
+													? "bg-purple-500"
+													: "bg-amber-500"
+										}`}
+									>
+										{shop.type === "grocery" ? (
+											<ShoppingCart className="h-3 w-3 mr-1" />
+										) : shop.type === "retail" ? (
+											<ShoppingBag className="h-3 w-3 mr-1" />
+										) : (
+											<Coffee className="h-3 w-3 mr-1" />
+										)}
+										{shop.type.charAt(0).toUpperCase() + shop.type.slice(1)}
+									</div> */}
+
+											{/* Discount Banner */}
+
+											<Badge
+												className="absolute bottom-3 right-3"
+												variant={"secondary"}
+											>
+												<div className="flex items-center">
+													<MapPin className="size-4 mr-1" />
+													<span>1 km</span>
+												</div>
+											</Badge>
+										</div>
+
+										{/* Content */}
+										<div className="p-4 -my-4">
+											<div className="flex items-center justify-between">
+												<h3 className="font-bold text-lg">{shop.name}</h3>
+
+												<div className="flex items-center mt-1">
+													<div className="flex items-center bg-green-800 text-background px-2 rounded text-sm">
+														<span>4.6</span>
+														<Star className="h-3 w-3 ml-1 fill-white" />
+													</div>
+												</div>
+											</div>
+
+											<div className="mt-2 text-sm text-muted-foreground">
+												{/* {shop.categories.join(" • ")} */}
+												Books • Stationary
+											</div>
+
+											<div className="flex items-center justify-between mt-3 text-sm" />
+										</div>
+									</Link>
+								</Card>
+								<Card className="p-0 rounded-xl">
+									<Link to="/shop/$id" params={{ id: shop.id }}>
+										{/* Image Container */}
+										<div className="relative h-48">
+											<img
+												src={shop.logo || ""}
+												alt={shop.name}
+												className="w-full h-full object-cover rounded-t-xl"
+											/>
+
+											{/* <div
+										className={`absolute bottom-3 left-3 text-white text-xs px-2 py-1 rounded flex items-center ${
+											shop.type === "grocery"
+												? "bg-green-500"
+												: shop.type === "retail"
+													? "bg-purple-500"
+													: "bg-amber-500"
+										}`}
+									>
+										{shop.type === "grocery" ? (
+											<ShoppingCart className="h-3 w-3 mr-1" />
+										) : shop.type === "retail" ? (
+											<ShoppingBag className="h-3 w-3 mr-1" />
+										) : (
+											<Coffee className="h-3 w-3 mr-1" />
+										)}
+										{shop.type.charAt(0).toUpperCase() + shop.type.slice(1)}
+									</div> */}
+
+											{/* Discount Banner */}
+
+											<Badge
+												className="absolute bottom-3 right-3"
+												variant={"secondary"}
+											>
+												<div className="flex items-center">
+													<MapPin className="size-4 mr-1" />
+													<span>1 km</span>
+												</div>
+											</Badge>
+										</div>
+
+										{/* Content */}
+										<div className="p-4 -my-4">
+											<div className="flex items-center justify-between">
+												<h3 className="font-bold text-lg">{shop.name}</h3>
+
+												<div className="flex items-center mt-1">
+													<div className="flex items-center bg-green-800 text-background px-2 rounded text-sm">
+														<span>4.6</span>
+														<Star className="h-3 w-3 ml-1 fill-white" />
+													</div>
+												</div>
+											</div>
+
+											<div className="mt-2 text-sm text-muted-foreground">
+												{/* {shop.categories.join(" • ")} */}
+												Books • Stationary
+											</div>
+
+											<div className="flex items-center justify-between mt-3 text-sm" />
+										</div>
+									</Link>
+								</Card>
+								<Card className="p-0 rounded-xl">
+									<Link to="/shop/$id" params={{ id: shop.id }}>
+										{/* Image Container */}
+										<div className="relative h-48">
+											<img
+												src={shop.logo || ""}
+												alt={shop.name}
+												className="w-full h-full object-cover rounded-t-xl"
+											/>
+
+											{/* <div
+										className={`absolute bottom-3 left-3 text-white text-xs px-2 py-1 rounded flex items-center ${
+											shop.type === "grocery"
+												? "bg-green-500"
+												: shop.type === "retail"
+													? "bg-purple-500"
+													: "bg-amber-500"
+										}`}
+									>
+										{shop.type === "grocery" ? (
+											<ShoppingCart className="h-3 w-3 mr-1" />
+										) : shop.type === "retail" ? (
+											<ShoppingBag className="h-3 w-3 mr-1" />
+										) : (
+											<Coffee className="h-3 w-3 mr-1" />
+										)}
+										{shop.type.charAt(0).toUpperCase() + shop.type.slice(1)}
+									</div> */}
+
+											{/* Discount Banner */}
+
+											<Badge
+												className="absolute bottom-3 right-3"
+												variant={"secondary"}
+											>
+												<div className="flex items-center">
+													<MapPin className="size-4 mr-1" />
+													<span>1 km</span>
+												</div>
+											</Badge>
+										</div>
+
+										{/* Content */}
+										<div className="p-4 -my-4">
+											<div className="flex items-center justify-between">
+												<h3 className="font-bold text-lg">{shop.name}</h3>
+
+												<div className="flex items-center mt-1">
+													<div className="flex items-center bg-green-800 text-background px-2 rounded text-sm">
+														<span>4.6</span>
+														<Star className="h-3 w-3 ml-1 fill-white" />
+													</div>
+												</div>
+											</div>
+
+											<div className="mt-2 text-sm text-muted-foreground">
+												{/* {shop.categories.join(" • ")} */}
+												Books • Stationary
+											</div>
+
+											<div className="flex items-center justify-between mt-3 text-sm" />
+										</div>
+									</Link>
+								</Card>
 								<Card className="p-0 rounded-xl">
 									<Link to="/shop/$id" params={{ id: shop.id }}>
 										{/* Image Container */}

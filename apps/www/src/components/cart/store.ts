@@ -26,14 +26,19 @@ export type CartStore = {
 		},
 		operation?: Operation,
 	) => void;
-	setCartFromDB: (items: ProductInCart[]) => void;
+	setCart: (items: ProductInCart[]) => void;
+	resetCart: () => void;
+};
+
+const defaultValues = {
+	cart: [],
+	initialized: false,
 };
 
 export const useCartStore = create<CartStore>()(
 	persist(
 		(set) => ({
-			cart: [],
-			initialized: false,
+			...defaultValues,
 			updateCart: (product, operation) => {
 				set((state) => {
 					const existingItem = state.cart.find(
@@ -73,10 +78,13 @@ export const useCartStore = create<CartStore>()(
 					return { cart: finalCart };
 				});
 			},
-			setCartFromDB: (items) =>
+			setCart: (items) =>
 				set({
 					cart: items,
+					initialized: true,
 				}),
+
+			resetCart: () => set({ cart: [], initialized: false }),
 		}),
 		{
 			name: "lipy-cart-state",

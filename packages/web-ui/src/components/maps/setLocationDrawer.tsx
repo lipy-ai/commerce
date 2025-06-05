@@ -1,6 +1,8 @@
+import { cn } from "@lipy/web-ui/lib/utils";
+import { Link } from "@tanstack/react-router";
 import { MapPin, MapPinOff } from "lucide-react";
 import { useState } from "react";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import {
 	Drawer,
 	DrawerContent,
@@ -10,25 +12,15 @@ import {
 	DrawerTitle,
 } from "../ui/drawer";
 import { Separator } from "../ui/separator";
-import SetDeliveryLocation from "./setdeliveryLocation";
 import { useLocationStore } from "./utils/store";
 
 export default function SetLocation({
 	error,
-	onRetry,
 }: {
 	error: string;
-	onRetry: () => void;
 }) {
 	const { deliveryLocation } = useLocationStore();
 	const [drawerOpen, setDrawerOpen] = useState(true);
-	const [locationDrawerOpen, setLocationDrawerOpen] = useState(false);
-
-	// When 2nd drawer opens, close the first
-	const handleOpenLocationDrawer = () => {
-		setDrawerOpen(false);
-		setLocationDrawerOpen(true);
-	};
 
 	return (
 		<>
@@ -42,8 +34,8 @@ export default function SetLocation({
 						</DrawerDescription>
 					</DrawerHeader>
 					<DrawerFooter>
-						<Button onClick={onRetry}>Continue</Button>
-						{deliveryLocation.lat && (
+						<Button onClick={() => window.location.reload()}>Retry</Button>
+						{deliveryLocation.address && (
 							<div onClick={() => setDrawerOpen(false)} className="my-2">
 								<div className="text-lg font-semibold my-2">
 									Select delivery location
@@ -63,21 +55,15 @@ export default function SetLocation({
 							</div>
 						)}
 
-						<Button
-							variant="outline"
-							className="w-full"
-							onClick={handleOpenLocationDrawer}
+						<Link
+							className={cn(buttonVariants({ variant: "outline" }))}
+							to={"/account/addresses/deliveryAddress"}
 						>
 							Search your location
-						</Button>
+						</Link>
 					</DrawerFooter>
 				</DrawerContent>
 			</Drawer>
-
-			<SetDeliveryLocation
-				open={locationDrawerOpen}
-				onOpenChange={(open) => setLocationDrawerOpen(open)}
-			/>
 		</>
 	);
 }

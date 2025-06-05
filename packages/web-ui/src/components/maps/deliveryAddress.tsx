@@ -1,18 +1,13 @@
 import { env } from "@envClient";
 import { useEffect, useState } from "react";
 import SetLocation from "./setLocationDrawer";
-import { getDistanceFromLatLonInKm } from "./utils/distanceCalculator";
 import { useLocationStore } from "./utils/store";
 
 function LocationComponent() {
-	const [_location, setLocation] = useState<{
-		lat: number | null;
-		lng: number | null;
-	}>({ lat: null, lng: null });
 	const [error, setError] = useState<string | null>(null);
 	const [unsupported, setUnsupported] = useState(false);
 
-	const { deliveryLocation, setDeliveryLocation } = useLocationStore();
+	const { setDeliveryLocation } = useLocationStore();
 
 	const getLocation = () => {
 		if (!navigator.geolocation) {
@@ -26,25 +21,11 @@ function LocationComponent() {
 				const lat = position.coords.latitude;
 				const lng = position.coords.longitude;
 
-				setLocation({
-					lat: lat,
-					lng: lng,
-				});
 				setError(null); // clear error
 
-				let distance = 10000;
-
-				if (deliveryLocation.lat && deliveryLocation.lng) {
-					distance = getDistanceFromLatLonInKm(
-						lat,
-						lng,
-						deliveryLocation.lat,
-						deliveryLocation.lng,
-					);
-				}
-
-				if (distance > 0.1) {
+				if (lat && lng) {
 					const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${env.GOOGLE_MAP_API_KEY}`;
+
 					fetch(geocodeUrl)
 						.then((response) => response.json())
 						.then((data) => {
@@ -108,12 +89,7 @@ function LocationComponent() {
 	}, []);
 
 	if (unsupported || error) {
-		return (
-			<SetLocation
-				error={error || "Location permission is off"}
-				onRetry={getLocation}
-			/>
-		);
+		return <SetLocation error={error || "Location permission is off"} />;
 	}
 
 	return;

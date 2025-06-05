@@ -16,10 +16,8 @@ import { useLocationStore } from "./utils/store";
 
 export default function SetLocation({
 	error,
-	onRetry,
 }: {
 	error: string;
-	onRetry: () => void;
 }) {
 	const { deliveryLocation } = useLocationStore();
 	const [drawerOpen, setDrawerOpen] = useState(true);
@@ -36,7 +34,7 @@ export default function SetLocation({
 						</DrawerDescription>
 					</DrawerHeader>
 					<DrawerFooter>
-						<Button onClick={() => window.location.reload()}>Continue</Button>
+						<Button onClick={() => window.location.reload()}>Retry</Button>
 						{deliveryLocation.address && (
 							<div onClick={() => setDrawerOpen(false)} className="my-2">
 								<div className="text-lg font-semibold my-2">

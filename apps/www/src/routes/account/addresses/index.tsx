@@ -27,6 +27,7 @@ function RouteComponent() {
 					<Link
 						className={cn(buttonVariants({ variant: "default" }))}
 						to="/account/addresses/new"
+						search={{ type: "saveAddress" }}
 					>
 						<CirclePlus />
 						Add New Address
@@ -101,6 +102,9 @@ function RouteComponent() {
 					<Link
 						className={cn(buttonVariants({ variant: "default" }), "w-full")}
 						to="/account/addresses/new"
+						search={{
+							type: "saveAddress",
+						}}
 					>
 						Add New Address
 					</Link>

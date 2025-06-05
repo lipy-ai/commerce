@@ -85,6 +85,9 @@ function RouteComponent() {
 				<Link
 					to="/account/addresses/new"
 					className="flex justify-between my-2 text-md font-medium w-full text-primary"
+					search={{
+						type: "deliveryAddress",
+					}}
 				>
 					<div className="flex items-center gap-2 ">
 						<Navigation className="fill-primary" />

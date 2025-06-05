@@ -1,15 +1,14 @@
 import { env } from "@envClient";
 import { apiClient } from "@lipy/lib/api";
-import { authClient } from "@lipy/lib/providers/auth";
 import { useAPIQuery } from "@lipy/lib/utils/queryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
+import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import SearchBar from "@lipy/web-ui/components/searchBar";
 import { Avatar, AvatarFallback } from "@lipy/web-ui/components/ui/avatar";
-import { Button } from "@lipy/web-ui/components/ui/button";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { Autocomplete, useJsApiLoader } from "@react-google-maps/api";
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
 	Building,
@@ -35,22 +34,32 @@ function RouteComponent() {
 
 	const { data, isLoading } = useAPIQuery(apiClient.v1.address, "$get", {});
 
+	const navigate = useNavigate();
+
 	const handlePlaceSelect = () => {
 		if (autocompleteRef.current) {
-			console.log(autocompleteRef.current);
-			// const place = autocompleteRef.current.getPlace();
-			// if (place?.geometry?.location) {
-			// 	const lat = place.geometry.location.lat();
-			// 	const lng = place.geometry.location.lng();
-			// }
+			const place = autocompleteRef.current.getPlace();
+
+			if (place?.geometry?.location) {
+				const lat = place.geometry.location.lat();
+				const lng = place.geometry.location.lng();
+
+				const address = place.formatted_address || (place.name as string);
+				const addressName = place.name as string;
+
+				setDeliveryLocation({
+					address,
+					addressName,
+					lat,
+					lng,
+				});
+
+				navigate({ to: "/" });
+			}
 		}
 	};
 
-	const handleSelectDeliveryAddress = async (id: string) => {
-		await authClient.updateUser({
-			address: id,
-		});
-	};
+	const { setDeliveryLocation } = useLocationStore();
 
 	return (
 		<motion.div
@@ -73,9 +82,9 @@ function RouteComponent() {
 					</Autocomplete>
 				)}
 
-				<Button
-					variant={"link"}
-					className="flex justify-between my-2 text-md font-medium w-full"
+				<Link
+					to="/account/addresses/new"
+					className="flex justify-between my-2 text-md font-medium w-full text-primary"
 				>
 					<div className="flex items-center gap-2 ">
 						<Navigation className="fill-primary" />
@@ -83,7 +92,7 @@ function RouteComponent() {
 					</div>
 
 					<ChevronRight className="text-muted-foreground" />
-				</Button>
+				</Link>
 
 				<Separator className="mt-4" />
 
@@ -91,16 +100,28 @@ function RouteComponent() {
 				{!isLoading && data && data?.length > 0 && (
 					<div>
 						<p className="font-medium text-lg my-2 text-muted-foreground">
-							Saved Address
+							Saved Addresses
 						</p>
 
 						<div className="mb-10  space-y-4 divide-y">
 							{data.map((address) => (
-								<div key={address.id}>
-									<div
-										className="flex  gap-2 py-2 cursor-pointer"
-										onClick={() => handleSelectDeliveryAddress(address.id)}
-									>
+								<div
+									key={address.id}
+									onClick={() => {
+										setDeliveryLocation({
+											id: address.id,
+											address: address.line1,
+											addressName: address.tag,
+											lat: address.lat as number,
+											lng: address.lng as number,
+										});
+
+										navigate({
+											to: "/",
+										});
+									}}
+								>
+									<div className="flex  gap-2 py-2 cursor-pointer">
 										<Avatar className="rounded-md ">
 											<AvatarFallback>
 												{address.tag === "home" ? (

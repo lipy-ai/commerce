@@ -176,7 +176,7 @@ function OptionsDrawer(props: {
 						>
 							<div className="flex items-center gap-4">
 								<Pencil className="size-4" />
-								<p className="font-medium text-xs">Edit address</p>
+								<p className="font-medium text-sm">Edit address</p>
 							</div>
 
 							<ChevronRight className="size-4" />
@@ -185,7 +185,7 @@ function OptionsDrawer(props: {
 						<div className="flex items-center justify-between">
 							<div className="flex items-center gap-4">
 								<MapPin className="size-4" />
-								<p className="font-medium text-xs">Set as delivery address</p>
+								<p className="font-medium text-sm">Set as delivery address</p>
 							</div>
 
 							<ChevronRight className="size-4" />
@@ -199,7 +199,7 @@ function OptionsDrawer(props: {
 						>
 							<div className="flex items-center gap-4">
 								<Trash className="size-4" />
-								<p className="font-medium text-xs">Delete address</p>
+								<p className="font-medium text-sm">Delete address</p>
 							</div>
 
 							<ChevronRight className="size-4" />

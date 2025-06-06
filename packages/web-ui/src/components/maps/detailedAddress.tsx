@@ -9,7 +9,7 @@ import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { StepForward, X } from "lucide-react";
+import { Loader2, StepForward, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -84,11 +84,29 @@ export function DetailedAddress({
 			queryClient.invalidateQueries({
 				queryKey: apiQueryOptions(apiClient.v1.address, "$get", {}).queryKey,
 			});
+
+			navigate({ to: "/account/addresses", replace: true });
+		},
+		onError() {
+			toast.error("Something went wrong while adding address");
 		},
 	});
 
-	const handleAddAddress = (values: z.infer<typeof formSchema>) => {
-		toast.promise(
+	const editMutation = useAPIMutation(apiClient.v1.address[":id"], "$patch", {
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: apiQueryOptions(apiClient.v1.address, "$get", {}).queryKey,
+			});
+			navigate({ to: "/account/addresses", replace: true });
+			onOpenChange?.(false);
+		},
+		onError: () => {
+			toast.error("Something went wrong while editing address");
+		},
+	});
+
+	const handleSubmit = (values: z.infer<typeof formSchema>) => {
+		if (label === "Add") {
 			mutation.mutateAsync({
 				json: {
 					name: values.receiverName || fullAddress.name,
@@ -103,21 +121,9 @@ export function DetailedAddress({
 					lat: fullAddress.lat,
 					lng: fullAddress.lng,
 				},
-			}),
-			{
-				success: () => {
-					navigate({ to: "/account/addresses", replace: true });
-					return "Address saved successfully";
-				},
-				error: "Something went wrong",
-				loading: "Saving your address",
-			},
-		);
-	};
-
-	const handleEditAddress = (values: z.infer<typeof formSchema>) => {
-		toast.promise(
-			apiClient.v1.address[":id"].$patch({
+			});
+		} else if (label === "Edit") {
+			editMutation.mutateAsync({
 				param: { id: fullAddress.id },
 				json: {
 					name: values.receiverName || fullAddress.name,
@@ -132,20 +138,8 @@ export function DetailedAddress({
 					lat: fullAddress.lat,
 					lng: fullAddress.lng,
 				},
-			}),
-			{
-				success: () => {
-					queryClient.invalidateQueries({
-						queryKey: apiQueryOptions(apiClient.v1.address, "$get", {})
-							.queryKey,
-					});
-					navigate({ to: "/account/addresses", replace: true });
-					return "Address saved successfully";
-				},
-				error: "Something went wrong",
-				loading: "Saving your address",
-			},
-		);
+			});
+		}
 	};
 
 	return (
@@ -212,9 +206,7 @@ export function DetailedAddress({
 
 						<Form {...form}>
 							<form
-								onSubmit={form.handleSubmit(
-									label === "Add" ? handleAddAddress : handleEditAddress,
-								)}
+								onSubmit={form.handleSubmit(handleSubmit)}
 								className="space-y-8 my-8 w-full"
 							>
 								<FormField
@@ -290,17 +282,25 @@ export function DetailedAddress({
 									)}
 								/>
 
-								<div className="bg-background  w-full p-2 fixed bottom-0 right-0 left-0">
-									<Button
-										type="submit"
-										className="font-semibold w-full"
-										disabled={
-											form.formState.isSubmitting || !form.formState.isValid
-										}
-									>
-										Save Address
-									</Button>
-								</div>
+								<Button
+									type="submit"
+									className="font-semibold w-full"
+									disabled={
+										form.formState.isSubmitting ||
+										!form.formState.isValid ||
+										form.formState.isSubmitSuccessful ||
+										!form.formState.isDirty
+									}
+								>
+									{form.formState.isSubmitting ? (
+										<>
+											<Loader2 className="h-4 w-4 animate-spin" />
+											Saving...
+										</>
+									) : (
+										"Save Address"
+									)}
+								</Button>
 							</form>
 						</Form>
 					</div>

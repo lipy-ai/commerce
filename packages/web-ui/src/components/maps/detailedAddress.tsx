@@ -9,11 +9,10 @@ import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { SquarePen, StepForward, X } from "lucide-react";
+import { StepForward, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button, buttonVariants } from "../ui/button";
 import {
 	Drawer,
@@ -44,12 +43,16 @@ const addressTypesItems = [
 export function DetailedAddress({
 	fullAddress,
 	label,
+	open,
+	onOpenChange,
 }: {
 	fullAddress: any;
 	label: "Edit" | "Add";
+	open?: boolean;
+	onOpenChange?: (open: boolean) => void;
 }) {
-	const { isMobile } = useViewport();
 	const { data } = authClient.useSession();
+	const { isMobile } = useViewport();
 	let building = "";
 	if (label === "Edit") {
 		building = fullAddress.line1.split(",")[0];
@@ -146,23 +149,15 @@ export function DetailedAddress({
 	};
 
 	return (
-		<Drawer>
+		<Drawer open={open} onOpenChange={onOpenChange}>
 			<DrawerTrigger
 				className={cn(isMobile && label === "Add" ? "w-full" : " ")}
 			>
-				{label === "Add" ? (
+				{label === "Add" && (
 					<Button className="font-semibold px-6 w-full">
 						Confirm this address
 						<StepForward className="ml-2 h-4 w-4" />
 					</Button>
-				) : label === "Edit" ? (
-					<Avatar className="w-8 h-8">
-						<AvatarFallback>
-							<SquarePen className="size-4  flex-shrink-0 text-muted-foreground" />
-						</AvatarFallback>
-					</Avatar>
-				) : (
-					<></>
 				)}
 			</DrawerTrigger>
 
@@ -295,15 +290,17 @@ export function DetailedAddress({
 									)}
 								/>
 
-								<Button
-									type="submit"
-									className="fixed bottom-2 right-4 left-4 font-semibold"
-									disabled={
-										form.formState.isSubmitting || !form.formState.isValid
-									}
-								>
-									Save Address
-								</Button>
+								<div className="bg-background  w-full p-2 fixed bottom-0 right-0 left-0">
+									<Button
+										type="submit"
+										className="font-semibold w-full"
+										disabled={
+											form.formState.isSubmitting || !form.formState.isValid
+										}
+									>
+										Save Address
+									</Button>
+								</div>
 							</form>
 						</Form>
 					</div>

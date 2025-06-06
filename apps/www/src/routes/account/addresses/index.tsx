@@ -6,11 +6,29 @@ import { DetailedAddress } from "@lipy/web-ui/components/maps/detailedAddress";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { Avatar, AvatarFallback } from "@lipy/web-ui/components/ui/avatar";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
+import {
+	Drawer,
+	DrawerContent,
+	DrawerDescription,
+	DrawerHeader,
+	DrawerTitle,
+} from "@lipy/web-ui/components/ui/drawer";
+import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { Building, CirclePlus, House, MapPinHouse } from "lucide-react";
+import {
+	Building,
+	ChevronRight,
+	CirclePlus,
+	House,
+	MapPin,
+	MapPinHouse,
+	Pencil,
+	Trash,
+} from "lucide-react";
+import { useState } from "react";
 
 export const Route = createFileRoute("/account/addresses/")({
 	component: RouteComponent,
@@ -19,6 +37,10 @@ export const Route = createFileRoute("/account/addresses/")({
 function RouteComponent() {
 	const { data, isLoading } = useAPIQuery(apiClient.v1.address, "$get", {});
 	const { isMobile } = useViewport();
+	const [optionsDrawerOpen, setOptionsDrawerOpen] = useState(false);
+	const [selectedAddress, setSelectedAddress] = useState<
+		NonNullable<typeof data>[0] | null
+	>(null);
 
 	return (
 		<>
@@ -43,7 +65,7 @@ function RouteComponent() {
 				))}
 
 			{!isLoading && data && data?.length > 0 && (
-				<div className="mb-10 max-w-4xl items-center lg:border-r">
+				<div className="mb-16 max-w-4xl items-center lg:border-r">
 					{data.map((address) => (
 						<div
 							key={address.id}
@@ -52,7 +74,12 @@ function RouteComponent() {
 									? " flex items-center justify-between"
 									: "flex flex-col space-y-2",
 								"p-4 border-b",
+								"",
 							)}
+							onClick={() => {
+								setOptionsDrawerOpen(true);
+								setSelectedAddress(address);
+							}}
 						>
 							<div className="flex  gap-2">
 								<Avatar className="rounded-md ">
@@ -82,7 +109,7 @@ function RouteComponent() {
 
 							<div className="flex gap-2 items-center pl-12">
 								<DetailedAddress fullAddress={address} label="Edit" />
-								<DeleteAddress addressId={address.id} />
+								{/* <DeleteAddress addressId={address.id} /> */}
 							</div>
 						</div>
 					))}
@@ -110,6 +137,93 @@ function RouteComponent() {
 					</Link>
 				</div>
 			)}
+
+			{optionsDrawerOpen && (
+				<OptionsDrawer
+					open={optionsDrawerOpen}
+					onOpenChange={setOptionsDrawerOpen}
+					address={selectedAddress}
+				/>
+			)}
 		</>
+	);
+}
+
+function OptionsDrawer(props: {
+	open: boolean;
+	onOpenChange: (open: boolean) => void;
+	address?: any;
+}) {
+	const [deleteAddressDialogOpen, setDeleteAddressDialogOpen] = useState(false);
+	const [detailedAddressDrawerOpen, setDetailedAddressDrawerOpen] =
+		useState(false);
+	return (
+		<div>
+			<Drawer open={props.open} onOpenChange={props.onOpenChange}>
+				<DrawerContent>
+					<DrawerHeader className="p-0 flex items-start mx-4">
+						<DrawerTitle className="font-medium text-base">
+							Select option
+						</DrawerTitle>
+						<DrawerDescription />
+					</DrawerHeader>
+					<div className="mx-4 my-2 bg-accent p-4 rounded-lg space-y-4">
+						<div
+							className="flex items-center justify-between"
+							onClick={() => {
+								setDetailedAddressDrawerOpen(true);
+							}}
+						>
+							<div className="flex items-center gap-4">
+								<Pencil className="size-4" />
+								<p className="font-medium text-xs">Edit address</p>
+							</div>
+
+							<ChevronRight className="size-4" />
+						</div>
+						<Separator className="border-t border-dashed bg-transparent" />
+						<div className="flex items-center justify-between">
+							<div className="flex items-center gap-4">
+								<MapPin className="size-4" />
+								<p className="font-medium text-xs">Set as delivery address</p>
+							</div>
+
+							<ChevronRight className="size-4" />
+						</div>
+						<Separator className="border-t border-dashed bg-transparent" />
+						<div
+							className="flex items-center justify-between"
+							onClick={() => {
+								setDeleteAddressDialogOpen(true);
+							}}
+						>
+							<div className="flex items-center gap-4">
+								<Trash className="size-4" />
+								<p className="font-medium text-xs">Delete address</p>
+							</div>
+
+							<ChevronRight className="size-4" />
+						</div>
+					</div>
+				</DrawerContent>
+			</Drawer>
+
+			{deleteAddressDialogOpen && (
+				<DeleteAddress
+					addressId={props.address.id}
+					open={deleteAddressDialogOpen}
+					onOpenChange={setDeleteAddressDialogOpen}
+				/>
+			)}
+
+			{detailedAddressDrawerOpen && (
+				<DetailedAddress
+					fullAddress={props.address}
+					open={detailedAddressDrawerOpen}
+					onOpenChange={setDetailedAddressDrawerOpen}
+					label="Edit"
+				/>
+			)}
+		</div>
 	);
 }

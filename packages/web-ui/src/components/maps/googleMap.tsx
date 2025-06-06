@@ -18,6 +18,7 @@ import { getGeocodeFromLatLng } from "./utils/googlemap";
 import { useLocationStore } from "./utils/store";
 
 const libraries: "places"[] = ["places"];
+
 export default function GoogleMapImage({
 	type,
 }: {

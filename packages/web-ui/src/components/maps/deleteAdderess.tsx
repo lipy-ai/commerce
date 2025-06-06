@@ -2,8 +2,6 @@ import { apiClient } from "@lipy/lib/api";
 import { apiQueryOptions, useAPIMutation } from "@lipy/lib/utils/queryClient";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { Trash } from "lucide-react";
-import type { FC } from "react";
 import { toast } from "sonner";
 import {
 	AlertDialog,
@@ -14,15 +12,15 @@ import {
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle,
-	AlertDialogTrigger,
 } from "../ui/alert-dialog";
-import { Avatar, AvatarFallback } from "../ui/avatar";
 
 interface DeleteAddressProps {
 	addressId: string;
+	open?: boolean;
+	onOpenChange?: (open: boolean) => void;
 }
 
-export const DeleteAddress: FC<DeleteAddressProps> = ({ addressId }) => {
+export const DeleteAddress = (props: DeleteAddressProps) => {
 	const navigator = useNavigate();
 	const queryClient = useQueryClient();
 
@@ -38,25 +36,28 @@ export const DeleteAddress: FC<DeleteAddressProps> = ({ addressId }) => {
 		},
 	);
 	const handleDeleteAddress = () => {
-		toast.promise(deleteMutation.mutateAsync({ param: { id: addressId } }), {
-			loading: "Deleting address...",
-			success: () => {
-				navigator({ to: "/account/addresses", replace: true });
-				return "Address deleted successfully";
+		toast.promise(
+			deleteMutation.mutateAsync({ param: { id: props.addressId } }),
+			{
+				loading: "Deleting address...",
+				success: () => {
+					navigator({ to: "/account/addresses", replace: true });
+					return "Address deleted successfully";
+				},
+				error: "Something went wrong",
 			},
-			error: "Something went wrong",
-		});
+		);
 	};
 
 	return (
-		<AlertDialog>
-			<AlertDialogTrigger asChild>
+		<AlertDialog open={props.open} onOpenChange={props.onOpenChange}>
+			{/* <AlertDialogTrigger asChild>
 				<Avatar className="w-8 h-8 cursor-pointer">
 					<AvatarFallback>
 						<Trash className="size-4 text-muted-foreground" />
 					</AvatarFallback>
 				</Avatar>
-			</AlertDialogTrigger>
+			</AlertDialogTrigger> */}
 			<AlertDialogContent>
 				<AlertDialogHeader>
 					<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>

@@ -131,6 +131,13 @@ export default function GoogleMapImage({
 		if (isLoaded && mapCenter) {
 			getGeocodeFromLatLng(mapCenter.lat, mapCenter.lng).then(
 				({ formattedAddress, addressComponent }) => {
+					if (formattedAddress.split(",")[0].includes("+")) {
+						formattedAddress = formattedAddress
+							.split(",")
+							.slice(1, formattedAddress.split(",").length)
+							.join(",");
+					}
+
 					setAddress(formattedAddress);
 					setAddressName(addressComponent?.[1]?.long_name || "");
 					fillFullAddress(
@@ -222,7 +229,8 @@ export default function GoogleMapImage({
 							<MapPinned className="size-8 text-primary mt-1 flex-shrink-0" />
 							<div className="overflow-hidden">
 								<h1 className="text-lg font-semibold truncate">
-									{addressName || "Loading address..."}
+									{/* {addressName || "Loading address..."} */}
+									{addressName || "Fetching address..."}
 								</h1>
 								<p className="text-sm text-muted-foreground line-clamp-2">
 									{address || "Please wait while we retrieve location details"}

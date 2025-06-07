@@ -148,8 +148,6 @@ function RouteComponent() {
 									</p>
 								</div>
 							</div>
-
-							<Separator className="border-t border-dashed bg-transparent" />
 						</div>
 
 						<div className="p-4 flex items-center justify-between gap-2">

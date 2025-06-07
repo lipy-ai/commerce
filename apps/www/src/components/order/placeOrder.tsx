@@ -1,6 +1,7 @@
 import { apiClient } from "@lipy/lib/api";
 import { authClient } from "@lipy/lib/providers/auth";
 import { apiQueryOptions, useAPIMutation } from "@lipy/lib/utils/queryClient";
+import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import {
 	Dialog,
@@ -28,6 +29,8 @@ function ProgressDialog({
 	const queryClient = useQueryClient();
 
 	const navigate = useNavigate();
+
+	const { deliveryLocation } = useLocationStore();
 
 	const clearCartMutation = useAPIMutation(apiClient.v1.cart, "$delete", {
 		onSuccess: () => {
@@ -62,6 +65,7 @@ function ProgressDialog({
 			});
 		},
 	});
+	const { id, userId, ...addressWithoutIdAndUserId } = deliveryLocation;
 
 	useEffect(() => {
 		const interval = setInterval(() => {
@@ -77,8 +81,8 @@ function ProgressDialog({
 		const timeout = setTimeout(() => {
 			mutation.mutateAsync({
 				json: {
-					address: "6b5748e4-c383-408f-a052-488636cfacf4",
-					deliveryInstruction: "Kaise bhi kar de deliver",
+					address: addressWithoutIdAndUserId,
+					deliveryInstruction: "",
 					storeInstruction: null,
 				},
 			});
@@ -111,9 +115,12 @@ function ProgressDialog({
 	);
 }
 
-export default function PlaceOrder() {
+export default function PlaceOrder({
+	setOpen,
+}: { setOpen: (open: boolean) => void }) {
 	const { data } = authClient.useSession();
 	const [showDialog, setShowDialog] = useState(false);
+	const { deliveryLocation } = useLocationStore();
 
 	const handlePlaceOrder = () => {
 		if (!data) {
@@ -130,7 +137,12 @@ export default function PlaceOrder() {
 				),
 			});
 		} else {
-			setShowDialog(true);
+			if (!deliveryLocation.id) {
+				toast("Please give delivery location details.");
+				setOpen(true);
+			} else {
+				setShowDialog(true);
+			}
 		}
 	};
 

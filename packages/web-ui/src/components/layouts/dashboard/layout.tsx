@@ -276,7 +276,7 @@ function NavLink({
 							"size-5",
 							mobile && "flex-col font-normal w-full stroke-1.5",
 
-							isActive && "fill-primary text-background",
+							isActive && "fill-primary/40",
 						)}
 					/>
 				</span>
@@ -290,11 +290,7 @@ function NavLink({
 						{nav.label}
 					</motion.span>
 				)}
-				{mobile && (
-					<span className={cn(isActive ? "text-primary" : "", " font-medium")}>
-						{nav.label}
-					</span>
-				)}
+				{mobile && <span className={" font-semibold"}>{nav.label}</span>}
 			</Link>
 		</div>
 	);

@@ -35,7 +35,7 @@ export default function SetLocation({
 					</DrawerHeader>
 					<DrawerFooter>
 						<Button onClick={() => window.location.reload()}>Retry</Button>
-						{deliveryLocation.address && (
+						{deliveryLocation.line1 && (
 							<div onClick={() => setDrawerOpen(false)} className="my-2">
 								<div className="text-lg font-semibold my-2">
 									Select delivery location
@@ -45,10 +45,10 @@ export default function SetLocation({
 									<MapPin />
 									<div>
 										<p className="text-md font-medium">
-											{deliveryLocation?.addressName}
+											{deliveryLocation?.tag}
 										</p>
 										<p className="text-muted-foreground line-clamp-1">
-											{deliveryLocation?.address}
+											{deliveryLocation?.line1}
 										</p>
 									</div>
 								</div>

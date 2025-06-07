@@ -46,7 +46,7 @@ export const dashboardNav = {
 };
 
 function Home() {
-	const { cart } = useCartStore();
+	const { cart, initialized } = useCartStore();
 
 	const { deliveryLocation, hasHydrated } = useLocationStore();
 
@@ -98,7 +98,7 @@ function Home() {
 						<LocationComponent />
 					)}
 
-					<AppCartInitializer />
+					{!initialized && <AppCartInitializer />}
 				</DashboardBody>
 			</DashboardLayout>
 		</>

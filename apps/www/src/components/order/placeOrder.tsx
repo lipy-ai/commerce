@@ -20,9 +20,11 @@ import { useEffect, useState } from "react";
 function ProgressDialog({
 	showDialog,
 	setShowDialog,
+	deliveryInstruction,
 }: {
 	showDialog: boolean;
 	setShowDialog: (showDialog: boolean) => void;
+	deliveryInstruction?: string;
 }) {
 	const [progress, setProgress] = useState(0);
 
@@ -82,7 +84,7 @@ function ProgressDialog({
 			mutation.mutateAsync({
 				json: {
 					address: addressWithoutIdAndUserId,
-					deliveryInstruction: "",
+					deliveryInstruction: deliveryInstruction || "",
 					storeInstruction: null,
 				},
 			});
@@ -117,7 +119,8 @@ function ProgressDialog({
 
 export default function PlaceOrder({
 	setOpen,
-}: { setOpen: (open: boolean) => void }) {
+	deliveryInstruction,
+}: { setOpen: (open: boolean) => void; deliveryInstruction?: string }) {
 	const { data } = authClient.useSession();
 	const [showDialog, setShowDialog] = useState(false);
 	const { deliveryLocation } = useLocationStore();
@@ -148,13 +151,17 @@ export default function PlaceOrder({
 
 	return (
 		<>
-			<Button onClick={handlePlaceOrder}>
+			<Button onClick={handlePlaceOrder} variant="green">
 				<p>Place Order</p>
 				<StepForward />
 			</Button>
 
 			{showDialog && (
-				<ProgressDialog showDialog={showDialog} setShowDialog={setShowDialog} />
+				<ProgressDialog
+					showDialog={showDialog}
+					setShowDialog={setShowDialog}
+					deliveryInstruction={deliveryInstruction}
+				/>
 			)}
 		</>
 	);

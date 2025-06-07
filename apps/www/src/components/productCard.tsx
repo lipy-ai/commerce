@@ -88,7 +88,11 @@ export default function ProductCard({
 						)}
 
 						<div className="absolute -bottom-1 -right-1">
-							<AddToCart product={product} variant={"icon"} />
+							<AddToCart
+								product={product}
+								variant={"icon"}
+								thumbnail={props.thumbnail}
+							/>
 						</div>
 					</div>
 

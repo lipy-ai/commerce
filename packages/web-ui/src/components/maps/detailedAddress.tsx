@@ -18,7 +18,6 @@ import {
 	Drawer,
 	DrawerClose,
 	DrawerContent,
-	DrawerDescription,
 	DrawerHeader,
 	DrawerTitle,
 	DrawerTrigger,
@@ -56,18 +55,15 @@ export function DetailedAddress({
 }) {
 	const { data } = authClient.useSession();
 	const { isMobile } = useViewport();
-	const { setDeliveryLocation, deliveryLocation } = useLocationStore();
-	let building = "";
-	if (label === "Edit") {
-		building = fullAddress.line1.split(",")[0];
-	}
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
+	const { setDeliveryLocation, deliveryLocation } = useLocationStore();
+
+	const buildingDefault =
+		label === "Edit" ? fullAddress.line1.split(",")[0] : "";
 
 	const formSchema = z.object({
-		building: z.string().min(2, {
-			message: "Please fill your detailed address",
-		}),
+		building: z.string().min(2, "Please fill your detailed address"),
 		addressType: z.enum(["home", "work", "other"]),
 		receiverName: z.string().optional(),
 		receiverPhone: z.string().optional(),
@@ -76,7 +72,7 @@ export function DetailedAddress({
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			building: building || "",
+			building: buildingDefault,
 			addressType: fullAddress.tag || "home",
 			receiverName: fullAddress.name || data?.user?.name || "",
 			receiverPhone: fullAddress.phone || "",
@@ -84,18 +80,14 @@ export function DetailedAddress({
 	});
 
 	const mutation = useAPIMutation(apiClient.v1.address, "$post", {
-		onSuccess() {
+		onSuccess: () => {
 			queryClient.invalidateQueries({
 				queryKey: apiQueryOptions(apiClient.v1.address, "$get", {}).queryKey,
 			});
-
 			navigate({ to: "/account/addresses", replace: true });
-
 			onOpenChange?.(false);
 		},
-		onError() {
-			toast.error("Something went wrong while adding address");
-		},
+		onError: () => toast.error("Something went wrong while adding address"),
 	});
 
 	const editMutation = useAPIMutation(apiClient.v1.address[":id"], "$patch", {
@@ -103,46 +95,38 @@ export function DetailedAddress({
 			queryClient.invalidateQueries({
 				queryKey: apiQueryOptions(apiClient.v1.address, "$get", {}).queryKey,
 			});
-
 			onOpenChange?.(false);
 		},
-		onError: () => {
-			toast.error("Something went wrong while editing address");
-		},
+		onError: () => toast.error("Something went wrong while editing address"),
 	});
 
 	const handleSubmit = async (values: z.infer<typeof formSchema>) => {
+		const basePayload = {
+			name: values.receiverName || fullAddress.name,
+			country: fullAddress.country,
+			tag: values.addressType,
+			line2: "",
+			city: fullAddress.city,
+			state: fullAddress.state,
+			postalCode: fullAddress.postalCode,
+			phone: values.receiverPhone,
+			lat: fullAddress.lat,
+			lng: fullAddress.lng,
+		};
+
 		if (!isDeliveryAddress && label === "Add") {
 			await mutation.mutateAsync({
 				json: {
-					name: values.receiverName || fullAddress.name,
-					country: fullAddress.country,
-					tag: values.addressType,
+					...basePayload,
 					line1: `${values.building},${fullAddress.line1}`,
-					line2: "",
-					city: fullAddress.city,
-					state: fullAddress.state,
-					postalCode: fullAddress.postalCode,
-					phone: values.receiverPhone,
-					lat: fullAddress.lat,
-					lng: fullAddress.lng,
 				},
 			});
 		} else if (label === "Edit") {
 			await editMutation.mutateAsync({
 				param: { id: fullAddress.id },
 				json: {
-					name: values.receiverName || fullAddress.name,
-					country: fullAddress.country,
-					tag: values.addressType,
+					...basePayload,
 					line1: `${values.building},${fullAddress.line1.split(",").slice(1).join(",")}`,
-					line2: "",
-					city: fullAddress.city,
-					state: fullAddress.state,
-					postalCode: fullAddress.postalCode,
-					phone: values.receiverPhone,
-					lat: fullAddress.lat,
-					lng: fullAddress.lng,
 				},
 			});
 		}
@@ -150,22 +134,19 @@ export function DetailedAddress({
 		if (isDeliveryAddress) {
 			setDeliveryLocation({
 				...deliveryLocation,
-				name: values.receiverName || fullAddress.name,
+				name: basePayload.name,
 				tag: values.addressType,
 				line1: `${values.building},${fullAddress.line1.split(",").slice(1).join(",")}`,
-				phone: values?.receiverPhone || "",
+				phone: basePayload.phone || "",
 				id: "unspecifiedId",
 			});
-
 			onOpenChange?.(false);
 		}
 	};
 
 	return (
 		<Drawer open={open} onOpenChange={onOpenChange}>
-			<DrawerTrigger
-				className={cn(isMobile && label === "Add" ? "w-full" : " ")}
-			>
+			<DrawerTrigger className={cn(isMobile && label === "Add" && "w-full")}>
 				{label === "Add" && (
 					<Button className="font-semibold px-6 w-full">
 						Confirm this address
@@ -181,7 +162,6 @@ export function DetailedAddress({
 							<DrawerTitle className="font-semibold text-lg">
 								Add address details
 							</DrawerTitle>
-							<DrawerDescription />
 							<DrawerClose>
 								<X className="h-5 w-5" />
 							</DrawerClose>
@@ -192,33 +172,28 @@ export function DetailedAddress({
 
 					<div className="p-4 mb-6">
 						<div className="text-sm rounded-md border p-2 bg-accent font-medium">
-							{label === "Edit" ? (
-								<p>{fullAddress.line1.split(",").slice(1).join(",")}</p>
-							) : label === "Add" ? (
-								<p>{fullAddress.line1}</p>
-							) : (
-								<></>
-							)}
+							<p>
+								{label === "Edit"
+									? fullAddress.line1.split(",").slice(1).join(",")
+									: fullAddress.line1}
+							</p>
 							<div className="flex justify-end">
 								{label === "Add" ? (
 									<DrawerClose>
-										<Button size="sm" variant="outline" className="ml-auto">
+										<Button variant="outline" size="sm">
 											Change
 										</Button>
 									</DrawerClose>
-								) : label === "Edit" ? (
+								) : (
 									<Link
-										className={cn(
-											buttonVariants({ variant: "outline", size: "sm" }),
-											"ml-auto",
-										)}
 										to="/account/addresses/new"
 										search={{ type: "saveAddress" }}
+										className={cn(
+											buttonVariants({ variant: "outline", size: "sm" }),
+										)}
 									>
 										Change
 									</Link>
-								) : (
-									<></>
 								)}
 							</div>
 						</div>
@@ -235,15 +210,15 @@ export function DetailedAddress({
 										<FormItem>
 											<FormControl>
 												<InputWithAnimatedLabel
-													title={"Flat No. / House No. / Building Name *"}
+													title="Flat No. / House No. / Building Name *"
 													{...field}
 												/>
 											</FormControl>
-
 											<FormMessage />
 										</FormItem>
 									)}
 								/>
+
 								<FormField
 									control={form.control}
 									name="addressType"
@@ -258,7 +233,6 @@ export function DetailedAddress({
 													items={addressTypesItems}
 												/>
 											</FormControl>
-
 											<FormMessage />
 										</FormItem>
 									)}
@@ -267,6 +241,7 @@ export function DetailedAddress({
 								<FormLabel className="text-muted-foreground font-semibold">
 									Receiver's Details
 								</FormLabel>
+
 								<FormField
 									control={form.control}
 									name="receiverName"
@@ -274,15 +249,15 @@ export function DetailedAddress({
 										<FormItem>
 											<FormControl>
 												<InputWithAnimatedLabel
-													title={"Receiver's Name"}
+													title="Receiver's Name"
 													{...field}
 												/>
 											</FormControl>
-
 											<FormMessage />
 										</FormItem>
 									)}
 								/>
+
 								<FormField
 									control={form.control}
 									name="receiverPhone"
@@ -290,12 +265,11 @@ export function DetailedAddress({
 										<FormItem>
 											<FormControl>
 												<InputWithAnimatedLabel
-													title={"Receiver's Phone"}
-													type=""
+													title="Receiver's Phone"
+													type="tel"
 													{...field}
 												/>
 											</FormControl>
-
 											<FormMessage />
 										</FormItem>
 									)}
@@ -311,17 +285,15 @@ export function DetailedAddress({
 										!form.formState.isDirty
 									}
 								>
-									{!isDeliveryAddress ? (
-										form.formState.isSubmitting ? (
-											<>
-												<Loader2 className="h-4 w-4 animate-spin mr-2" />
-												Saving...
-											</>
-										) : (
-											"Save Address"
-										)
-									) : (
+									{form.formState.isSubmitting ? (
+										<>
+											<Loader2 className="h-4 w-4 animate-spin mr-2" />
+											Saving...
+										</>
+									) : isDeliveryAddress ? (
 										"Save and continue"
+									) : (
+										"Save Address"
 									)}
 								</Button>
 							</form>

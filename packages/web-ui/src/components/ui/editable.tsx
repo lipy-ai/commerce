@@ -1,6 +1,5 @@
 "use client";
 
-import { VisuallyHiddenInput } from "@lipy/web-ui/components/visually-hidden-input";
 import {
 	composeEventHandlers,
 	useComposedRefs,
@@ -8,6 +7,7 @@ import {
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Slot } from "@radix-ui/react-slot";
 import * as React from "react";
+import { VisuallyHiddenInput } from "../custom-ui/visually-hidden-input";
 import type { InputProps } from "./input";
 
 const ROOT_NAME = "Editable";
@@ -370,7 +370,6 @@ const EditablePreview = React.forwardRef<HTMLDivElement, EditablePreviewProps>(
 
 		return (
 			<PreviewPrimitive
-				role="button"
 				aria-disabled={context.disabled || context.readOnly}
 				data-empty={!context.value ? "" : undefined}
 				data-disabled={context.disabled ? "" : undefined}

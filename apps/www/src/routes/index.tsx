@@ -84,17 +84,17 @@ function Home() {
 				logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
 			>
 				<DashboardBody>
-					<div className="bg-purple-950 text-background">
+					<div className="bg-gray-200">
 						<NavBar />
 					</div>
 
-					<div className="sticky top-0 z-20 bg-purple-950 text-background">
+					<div className="sticky top-0 z-20 bg-gray-200 border-b shadow-sm">
 						<SearchFilter />
 					</div>
 
 					<NearByShops />
 
-					{hasHydrated && deliveryLocation.address === "" && (
+					{hasHydrated && deliveryLocation.line1 === "" && (
 						<LocationComponent />
 					)}
 

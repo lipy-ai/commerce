@@ -1,10 +1,10 @@
-import { Input } from "@lipy/web-ui/components/ui/input";
 import { Search, X } from "lucide-react";
+import { CustomInput } from "./customInput";
 
 export default function SearchBar({ placeholder }: { placeholder?: string }) {
 	return (
 		<div>
-			<Input
+			<CustomInput
 				placeholder={placeholder || "Search for shop, grocery, fruits...."}
 				size="lg"
 				prefixEl={<Search />}

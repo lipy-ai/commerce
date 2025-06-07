@@ -47,7 +47,7 @@ function RouteComponent() {
 					<DashboardHeader
 						titleChildren={
 							<div>
-								<p className="font-semibold">ORDER #{data[0].pk}</p>
+								<p className="font-semibold">Order Details</p>
 								<p className="text-muted-foreground text-xs">
 									{data[0]?.items?.length ?? 0} items |{" "}
 									{formatAmount(data[0]?.currency, totalPrice || 0)}{" "}
@@ -59,6 +59,9 @@ function RouteComponent() {
 					</DashboardHeader>
 					<div className="lg:grid lg:grid-cols-12 divide-x flex-1">
 						<div className="col-span-8 divide-y lg:p-4">
+							<div className="p-4 text-muted-foreground">
+								Order ID: #{data[0]?.pk}
+							</div>
 							<div className="p-4 ">
 								<h2 className="text-lg font-semibold">Order status</h2>
 								<OrderStatusTimeline

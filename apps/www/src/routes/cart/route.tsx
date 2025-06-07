@@ -1,3 +1,4 @@
+import { DeliveryInstruction } from "@/components/cart/instructions";
 import { useCartStore } from "@/components/cart/store";
 import PlaceOrder from "@/components/order/placeOrder";
 import ProductCard from "@/components/productCard";
@@ -7,7 +8,7 @@ import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { DetailedAddress } from "@lipy/web-ui/components/maps/detailedAddress";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
-import { buttonVariants } from "@lipy/web-ui/components/ui/button";
+import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Card } from "@lipy/web-ui/components/ui/card";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
@@ -16,7 +17,10 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import {
 	Bike,
 	ChevronDown,
+	ChevronRight,
 	MapPinned,
+	MessageSquareText,
+	Plus,
 	ReceiptText,
 	ShoppingBag,
 } from "lucide-react";
@@ -31,6 +35,11 @@ function RouteComponent() {
 	const { deliveryLocation } = useLocationStore();
 	const [detailedAddressDrawerOpen, setDetailedAddressDrawerOpen] =
 		useState(false);
+	const [deliveryInstructionDrawerOpen, setDeliveryInstructionDrawerOpen] =
+		useState(false);
+
+	const [completeDeliveryInstruction, setCompleteDeliveryInstruction] =
+		useState("");
 
 	const {
 		data = [],
@@ -117,25 +126,34 @@ function RouteComponent() {
 
 			{isFetched && !isError && data.length > 0 && (
 				<div className="relative">
-					<div className="p-4">
-						<Card className="p-4 shadow-none">
-							<p className="text-lg font-semibold">Order Item(s)</p>
+					<div className="p-4 space-y-6 mb-44">
+						<Card className="p-4 shadow-none rounded-xl bg-white border-none">
+							<p className="text-base font-semibold">Order Item(s)</p>
 							<Separator className="-my-4 border-t border-dashed bg-transparent" />
 
 							{cart.map((product) => (
-								<div key={product.id} className="my-2">
+								<div key={product.id}>
 									<ProductCard
 										thumbnail={product.thumbnail ?? undefined}
 										product={product}
 										variant="horizontal"
-										className={{ classNameImg: "w-14 h-14" }}
+										className={{ classNameImg: "w-12 h-12" }}
 									/>
 								</div>
 							))}
+							<Separator className="-my-2 border-t border-dashed bg-transparent" />
+
+							<div className="flex items-center justify-between">
+								<p className="text-sm font-medium">Forgot something ?</p>
+								<Button variant="black" size="sm">
+									<Plus />
+									Add more items
+								</Button>
+							</div>
 						</Card>
 
-						<Card className="p-4 shadow-none my-6 mb-44">
-							<p className="text-lg font-semibold">Billing Details</p>
+						<Card className="p-4 shadow-none rounded-xl bg-white border-none">
+							<p className="text-base font-semibold">Billing Details</p>
 							<Separator className="-my-2 border-t border-dashed bg-transparent" />
 
 							{billingDetails.map(({ icon: Icon, title, value }) => (
@@ -144,34 +162,53 @@ function RouteComponent() {
 									className="flex items-center justify-between -my-1"
 								>
 									<div className="flex items-center gap-2">
-										<Icon className="size-4" />
-										<p className="font-semibold text-muted-foreground">
+										<Icon className="size-3" />
+										<p className="font-medium text-muted-foreground text-xs">
 											{title}
 										</p>
 									</div>
-									<div>{value}</div>
+									<div className="text-xs">{value}</div>
 								</div>
 							))}
 
 							<Separator className="-my-2" />
 							<div className="flex items-center justify-between">
-								<p className="text-lg font-semibold">Total</p>
-								<p className="text-lg font-semibold">₹{totalPrice}</p>
+								<p className="text-sm font-semibold">Total</p>
+								<p className="text-sm font-semibold">₹{totalPrice}</p>
+							</div>
+						</Card>
+
+						<Card className="p-4 shadow-none rounded-xl bg-white border-none">
+							<div
+								className="flex items-center justify-between"
+								onClick={() => setDeliveryInstructionDrawerOpen(true)}
+							>
+								<div className="flex items-center gap-4">
+									<MessageSquareText />
+									<div>
+										<p className="font-medium text-sm">Delivery Instruction</p>
+										<p className="text-muted-foreground text-xs">
+											We will inform the delivery partner.
+										</p>
+									</div>
+								</div>
+
+								<ChevronRight />
 							</div>
 						</Card>
 					</div>
 
 					{/* Bottom Checkout UI */}
-					<div className="fixed bottom-0 border-t left-0 w-full bg-white shadow-md border-2 rounded-t-lg">
+					<div className="fixed bottom-0 border-t left-0 w-full bg-white shadow-xl border-2 rounded-t-lg">
 						<div
 							className="bg-accent rounded-t-lg p-2 cursor-pointer"
 							onClick={() => setDetailedAddressDrawerOpen(true)}
 						>
 							<div className="flex items-center gap-2">
-								<MapPinned className="size-10 fill-primary/40" />
+								<MapPinned className="size-8 fill-primary/40" />
 								<div>
 									<div className="flex items-center gap-2">
-										<p className="text-lg font-semibold">
+										<p className="text-sm font-semibold">
 											Delivering to{" "}
 											{deliveryLocation?.tag?.charAt(0).toUpperCase() +
 												deliveryLocation?.tag?.slice(1)}
@@ -190,12 +227,15 @@ function RouteComponent() {
 								Pay on delivery
 							</div>
 
-							<div className="w-full border p-1 rounded-md flex items-center justify-between px-2 bg-emerald-200 border-emerald-600 h-12">
+							<div className="w-full border p-1 rounded-md flex items-center justify-between px-2 bg-orange-200 border-orange-600 h-12">
 								<div>
 									<p className="text-xs font-medium">Total Bill</p>
 									<p className="text-lg font-semibold">₹{totalPrice}</p>
 								</div>
-								<PlaceOrder setOpen={setDetailedAddressDrawerOpen} />
+								<PlaceOrder
+									setOpen={setDetailedAddressDrawerOpen}
+									deliveryInstruction={completeDeliveryInstruction}
+								/>
 							</div>
 						</div>
 					</div>
@@ -225,6 +265,14 @@ function RouteComponent() {
 					onOpenChange={setDetailedAddressDrawerOpen}
 					label={deliveryLocation?.id ? "Edit" : "Add"}
 					isDeliveryAddress
+				/>
+			)}
+
+			{deliveryInstructionDrawerOpen && (
+				<DeliveryInstruction
+					open={deliveryInstructionDrawerOpen}
+					onOpenChange={setDeliveryInstructionDrawerOpen}
+					setCompleteInstruction={setCompleteDeliveryInstruction}
 				/>
 			)}
 		</div>

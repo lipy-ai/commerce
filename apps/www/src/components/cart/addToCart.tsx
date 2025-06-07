@@ -1,9 +1,8 @@
 import { apiClient } from "@lipy/lib/api";
-import { apiQueryOptions, useAPIMutation } from "@lipy/lib/utils/queryClient";
+import { useAPIMutation } from "@lipy/lib/utils/queryClient";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { cn } from "@lipy/web-ui/lib/utils";
-import { useQueryClient } from "@tanstack/react-query";
 import { Loader2, Minus, Plus, ShoppingCart } from "lucide-react";
 import { useCallback, useState } from "react";
 import { type Operation, useCartStore } from "./store";
@@ -41,7 +40,7 @@ export const AddToCart = ({
 				updateCart(product, loadingState.operation);
 			}
 		},
-		onError: (error) => {
+		onError: () => {
 			toast.error("Something went wrong while adding to cart");
 		},
 	});

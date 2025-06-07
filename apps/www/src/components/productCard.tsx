@@ -31,7 +31,7 @@ export default function ProductCard({
 							className?.classNameBox,
 						)}
 					>
-						<div className="flex items-center gap-2">
+						<div className="flex items-start gap-2">
 							<div className=" relative aspect-square">
 								<img
 									alt={""}
@@ -44,10 +44,10 @@ export default function ProductCard({
 							</div>
 
 							<div>
-								<p className="text-sm font-medium line-clamp-2">
+								<p className="text-xs font-medium line-clamp-2">
 									{product.title}
 								</p>
-								<p className="text-muted-foreground">
+								<p className="text-muted-foreground text-xs">
 									{product.quantity} {product.unit}
 								</p>
 							</div>

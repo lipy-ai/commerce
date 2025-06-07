@@ -201,7 +201,7 @@ export function DetailedAddress({
 						<Form {...form}>
 							<form
 								onSubmit={form.handleSubmit(handleSubmit)}
-								className="space-y-8 my-8 w-full"
+								className="space-y-8 my-10 w-full"
 							>
 								<FormField
 									control={form.control}
@@ -275,27 +275,29 @@ export function DetailedAddress({
 									)}
 								/>
 
-								<Button
-									type="submit"
-									className="fixed bottom-2 right-4 left-4 font-semibold"
-									disabled={
-										form.formState.isSubmitting ||
-										!form.formState.isValid ||
-										form.formState.isSubmitSuccessful ||
-										!form.formState.isDirty
-									}
-								>
-									{form.formState.isSubmitting ? (
-										<>
-											<Loader2 className="h-4 w-4 animate-spin mr-2" />
-											Saving...
-										</>
-									) : isDeliveryAddress ? (
-										"Save and continue"
-									) : (
-										"Save Address"
-									)}
-								</Button>
+								<div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-t z-10">
+									<Button
+										type="submit"
+										className="w-full font-semibold"
+										disabled={
+											form.formState.isSubmitting ||
+											!form.formState.isValid ||
+											form.formState.isSubmitSuccessful ||
+											!form.formState.isDirty
+										}
+									>
+										{form.formState.isSubmitting ? (
+											<>
+												<Loader2 className="h-4 w-4 animate-spin mr-2" />
+												Saving...
+											</>
+										) : isDeliveryAddress ? (
+											"Save and continue"
+										) : (
+											"Save Address"
+										)}
+									</Button>
+								</div>
 							</form>
 						</Form>
 					</div>

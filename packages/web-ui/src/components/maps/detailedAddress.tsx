@@ -303,7 +303,7 @@ export function DetailedAddress({
 
 								<Button
 									type="submit"
-									className="font-semibold fixed bottom-2 left-4 right-4"
+									className="fixed bottom-2 right-4 left-4 font-semibold"
 									disabled={
 										form.formState.isSubmitting ||
 										!form.formState.isValid ||

@@ -18,7 +18,6 @@ function RouteComponent() {
 	//   console.log(queryClient.);
 	const updateMutation = useAPIMutation(apiClient.v1.address, "$post", {
 		onSuccess() {
-			console.log(apiQueryOptions(apiClient.v1.address, "$get", {}).queryKey);
 			queryClient.invalidateQueries({
 				queryKey: apiQueryOptions(apiClient.v1.address, "$get", {}).queryKey,
 			});

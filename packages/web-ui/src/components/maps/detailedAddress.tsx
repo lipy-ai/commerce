@@ -33,6 +33,7 @@ import {
 } from "../ui/form";
 import { ScrollArea } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
+import { useLocationStore } from "./utils/store";
 
 const addressTypesItems = [
 	{ value: "home", label: "Home" },
@@ -45,14 +46,17 @@ export function DetailedAddress({
 	label,
 	open,
 	onOpenChange,
+	isDeliveryAddress,
 }: {
 	fullAddress: any;
 	label: "Edit" | "Add";
 	open?: boolean;
 	onOpenChange?: (open: boolean) => void;
+	isDeliveryAddress?: boolean;
 }) {
 	const { data } = authClient.useSession();
 	const { isMobile } = useViewport();
+	const { setDeliveryLocation, deliveryLocation } = useLocationStore();
 	let building = "";
 	if (label === "Edit") {
 		building = fullAddress.line1.split(",")[0];
@@ -86,6 +90,8 @@ export function DetailedAddress({
 			});
 
 			navigate({ to: "/account/addresses", replace: true });
+
+			onOpenChange?.(false);
 		},
 		onError() {
 			toast.error("Something went wrong while adding address");
@@ -97,7 +103,7 @@ export function DetailedAddress({
 			queryClient.invalidateQueries({
 				queryKey: apiQueryOptions(apiClient.v1.address, "$get", {}).queryKey,
 			});
-			navigate({ to: "/account/addresses", replace: true });
+
 			onOpenChange?.(false);
 		},
 		onError: () => {
@@ -105,14 +111,14 @@ export function DetailedAddress({
 		},
 	});
 
-	const handleSubmit = (values: z.infer<typeof formSchema>) => {
-		if (label === "Add") {
-			mutation.mutateAsync({
+	const handleSubmit = async (values: z.infer<typeof formSchema>) => {
+		if (!isDeliveryAddress && label === "Add") {
+			await mutation.mutateAsync({
 				json: {
 					name: values.receiverName || fullAddress.name,
 					country: fullAddress.country,
 					tag: values.addressType,
-					line1: `${values.building}, ${fullAddress.address}`,
+					line1: `${values.building},${fullAddress.line1}`,
 					line2: "",
 					city: fullAddress.city,
 					state: fullAddress.state,
@@ -123,13 +129,13 @@ export function DetailedAddress({
 				},
 			});
 		} else if (label === "Edit") {
-			editMutation.mutateAsync({
+			await editMutation.mutateAsync({
 				param: { id: fullAddress.id },
 				json: {
 					name: values.receiverName || fullAddress.name,
 					country: fullAddress.country,
 					tag: values.addressType,
-					line1: `${values.building}, ${fullAddress.line1.split(",").slice(1).join(",")}`,
+					line1: `${values.building},${fullAddress.line1.split(",").slice(1).join(",")}`,
 					line2: "",
 					city: fullAddress.city,
 					state: fullAddress.state,
@@ -139,6 +145,19 @@ export function DetailedAddress({
 					lng: fullAddress.lng,
 				},
 			});
+		}
+
+		if (isDeliveryAddress) {
+			setDeliveryLocation({
+				...deliveryLocation,
+				name: values.receiverName || fullAddress.name,
+				tag: values.addressType,
+				line1: `${values.building},${fullAddress.line1.split(",").slice(1).join(",")}`,
+				phone: values?.receiverPhone || "",
+				id: "unspecifiedId",
+			});
+
+			onOpenChange?.(false);
 		}
 	};
 
@@ -176,7 +195,7 @@ export function DetailedAddress({
 							{label === "Edit" ? (
 								<p>{fullAddress.line1.split(",").slice(1).join(",")}</p>
 							) : label === "Add" ? (
-								<p>{fullAddress.address}</p>
+								<p>{fullAddress.line1}</p>
 							) : (
 								<></>
 							)}
@@ -284,7 +303,7 @@ export function DetailedAddress({
 
 								<Button
 									type="submit"
-									className="font-semibold w-full"
+									className="font-semibold fixed bottom-2 left-4 right-4"
 									disabled={
 										form.formState.isSubmitting ||
 										!form.formState.isValid ||
@@ -292,13 +311,17 @@ export function DetailedAddress({
 										!form.formState.isDirty
 									}
 								>
-									{form.formState.isSubmitting ? (
-										<>
-											<Loader2 className="h-4 w-4 animate-spin" />
-											Saving...
-										</>
+									{!isDeliveryAddress ? (
+										form.formState.isSubmitting ? (
+											<>
+												<Loader2 className="h-4 w-4 animate-spin mr-2" />
+												Saving...
+											</>
+										) : (
+											"Save Address"
+										)
 									) : (
-										"Save Address"
+										"Save and continue"
 									)}
 								</Button>
 							</form>

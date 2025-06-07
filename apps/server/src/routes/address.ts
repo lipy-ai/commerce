@@ -4,7 +4,7 @@ import type { ServerContext } from "@/types";
 import { Hono } from "hono";
 import { z } from "zod";
 
-const addressSchema = z.object({
+export const addressSchema = z.object({
 	name: z.string(),
 	tag: z.enum(["home", "work", "other"]),
 	line1: z.string().min(1),

@@ -1,13 +1,31 @@
 import { env } from "@envClient";
 import { useEffect, useState } from "react";
 import SetLocation from "./setLocationDrawer";
-import { useLocationStore } from "./utils/store";
+import { fillFullAddress } from "./utils/googlemap";
+import { defaultDeliveryLocationState, useLocationStore } from "./utils/store";
 
 function LocationComponent() {
 	const [error, setError] = useState<string | null>(null);
 	const [unsupported, setUnsupported] = useState(false);
 
-	const { setDeliveryLocation } = useLocationStore();
+	const { setDeliveryLocation, deliveryLocation } = useLocationStore();
+
+	const [fullAddress, setFullAddress] = useState({
+		line1: deliveryLocation.line1 || "",
+		city: deliveryLocation.city || "",
+		state: deliveryLocation.state || "",
+		country: deliveryLocation.country || "",
+		postalCode: deliveryLocation.postalCode || "",
+		lat: deliveryLocation.lat || 0,
+		lng: deliveryLocation.lng || 0,
+	});
+
+	useEffect(() => {
+		setDeliveryLocation({
+			...defaultDeliveryLocationState.deliveryLocation,
+			...fullAddress,
+		});
+	}, [fullAddress]);
 
 	const getLocation = () => {
 		if (!navigator.geolocation) {
@@ -32,44 +50,39 @@ function LocationComponent() {
 							const address = data.results[0]?.formatted_address;
 							const addressComp = data.results[0].address_components;
 
-							let addressName = "";
-							let locality = "";
-							let subLocality = "";
-							let neighborhood = "";
-							let baseAddress = "";
-							let i = addressComp?.length || 0;
-							while (i > 0) {
-								if (addressComp[i - 1]?.types?.includes("locality")) {
-									locality = addressComp[i - 1]?.long_name || "";
-								}
-								if (addressComp[i - 1]?.types?.includes("sublocality")) {
-									subLocality = addressComp[i - 1]?.long_name || "";
-									break;
-								}
-								if (addressComp[i - 1]?.types?.includes("neighborhood")) {
-									neighborhood = addressComp[i - 1]?.long_name || "";
-									break;
-								}
-								if (addressComp[i - 1]?.types?.includes("political")) {
-									baseAddress = addressComp[i - 1]?.long_name || "";
-								}
-								i--;
-							}
-							if (subLocality && locality) {
-								addressName = `${subLocality}, ${locality}`;
-							} else if (neighborhood && locality) {
-								addressName = `${neighborhood}, ${locality}`;
-							} else {
-								addressName = baseAddress;
-							}
+							// let addressName = "";
+							// let locality = "";
+							// let subLocality = "";
+							// let neighborhood = "";
+							// let baseAddress = "";
+							// let i = addressComp?.length || 0;
+							// while (i > 0) {
+							// 	if (addressComp[i - 1]?.types?.includes("locality")) {
+							// 		locality = addressComp[i - 1]?.long_name || "";
+							// 	}
+							// 	if (addressComp[i - 1]?.types?.includes("sublocality")) {
+							// 		subLocality = addressComp[i - 1]?.long_name || "";
+							// 		break;
+							// 	}
+							// 	if (addressComp[i - 1]?.types?.includes("neighborhood")) {
+							// 		neighborhood = addressComp[i - 1]?.long_name || "";
+							// 		break;
+							// 	}
+							// 	if (addressComp[i - 1]?.types?.includes("political")) {
+							// 		baseAddress = addressComp[i - 1]?.long_name || "";
+							// 	}
+							// 	i--;
+							// }
+							// if (subLocality && locality) {
+							// 	addressName = `${subLocality}, ${locality}`;
+							// } else if (neighborhood && locality) {
+							// 	addressName = `${neighborhood}, ${locality}`;
+							// } else {
+							// 	addressName = baseAddress;
+							// }
 
 							if (address) {
-								setDeliveryLocation({
-									lat: lat,
-									lng: lng,
-									address: address,
-									addressName: addressName,
-								});
+								fillFullAddress(addressComp, address, lat, lng, setFullAddress);
 							}
 						})
 						.catch((_error) => {

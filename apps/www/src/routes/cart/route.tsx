@@ -2,14 +2,22 @@ import { useCartStore } from "@/components/cart/store";
 import PlaceOrder from "@/components/order/placeOrder";
 import ProductCard from "@/components/productCard";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
+import { DetailedAddress } from "@lipy/web-ui/components/maps/detailedAddress";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
-import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
+import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Card } from "@lipy/web-ui/components/ui/card";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { Bike, Navigation, ReceiptText, ShoppingBag } from "lucide-react";
+import {
+	Bike,
+	ChevronDown,
+	MapPinned,
+	ReceiptText,
+	ShoppingBag,
+} from "lucide-react";
+import { useState } from "react";
 
 export const Route = createFileRoute("/cart")({
 	component: RouteComponent,
@@ -19,6 +27,8 @@ function RouteComponent() {
 	const { cart } = useCartStore();
 
 	const { deliveryLocation } = useLocationStore();
+	const [detailedAddressDrawerOpen, setDetailedAddressDrawerOpen] =
+		useState(false);
 
 	let totalMaxPrice = 0;
 	let totalPrice = 0;
@@ -115,22 +125,30 @@ function RouteComponent() {
 					</div>
 
 					<div className="fixed  bottom-0 border-t left-0 w-full  bg-white shadow-md border-2 rounded-t-lg">
-						<div className="bg-accent rounded-t-lg">
-							<div className="flex items-center gap-2 pt-2 mb-4  px-4 justify-between">
-								<div className="flex items-center gap-2">
-									<Navigation className="fill-primary text-primary size-6" />
-									<div>
-										<p className="text-primary text-lg font-semibold">
-											Delivering to
+						<div
+							className="bg-accent rounded-t-lg p-2"
+							onClick={() => {
+								setDetailedAddressDrawerOpen(true);
+							}}
+						>
+							<div className="flex items-center gap-2">
+								<MapPinned className="size-10 fill-primary/40" />
+								<div>
+									<div className="flex items-center gap-2">
+										<p className="text-lg font-semibold">
+											Delivering to{" "}
+											{(deliveryLocation?.tag ?? "").charAt(0).toUpperCase() +
+												(deliveryLocation?.tag ?? "").slice(1)}
 										</p>
-										<p className="text-muted-foreground line-clamp-1 text-xs">
-											{deliveryLocation.address}
-										</p>
+										<ChevronDown className="size-5" />
 									</div>
-								</div>
 
-								<Button variant={"outline"}>Change</Button>
+									<p className=" line-clamp-1 text-xs">
+										{deliveryLocation.line1}
+									</p>
+								</div>
 							</div>
+
 							<Separator className="border-t border-dashed bg-transparent" />
 						</div>
 
@@ -145,7 +163,7 @@ function RouteComponent() {
 									<p className="text-lg font-semibold">₹{totalPrice}</p>
 								</div>
 
-								<PlaceOrder />
+								<PlaceOrder setOpen={setDetailedAddressDrawerOpen} />
 							</div>
 						</div>
 					</div>
@@ -164,6 +182,16 @@ function RouteComponent() {
 						</Link>
 					</EmptyPage>
 				</div>
+			)}
+
+			{detailedAddressDrawerOpen && (
+				<DetailedAddress
+					fullAddress={deliveryLocation}
+					open={detailedAddressDrawerOpen}
+					onOpenChange={setDetailedAddressDrawerOpen}
+					label={deliveryLocation.id ? "Edit" : "Add"}
+					isDeliveryAddress={true}
+				/>
 			)}
 		</div>
 	);

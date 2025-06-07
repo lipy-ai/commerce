@@ -61,8 +61,8 @@ export const ScrollingTabs = ({
 								onClick={() => onTabChange(index, tab.id)}
 								className={`relative flex flex-col items-center px-4 py-2 mx-2 min-w-16 cursor-pointer transition-all duration-300 ${
 									isActive
-										? " after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[6px] after:bg-background after:rounded-t-full"
-										: "text-background hover:text-muted-foreground"
+										? " after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[6px] after:bg-foreground after:rounded-t-full"
+										: "text-muted-foreground hover:text-muted-foreground"
 								}`}
 							>
 								<Icon size={20} />

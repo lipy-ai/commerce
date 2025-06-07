@@ -1,12 +1,20 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-type DeliveryLocation = {
-	address: string;
-	addressName: string;
+export type DeliveryLocation = {
 	lat: number;
 	lng: number;
-	id?: string | null;
+	id: string;
+	phone?: string | undefined;
+	tag: "home" | "work" | "other";
+	city: string;
+	state: string;
+	country: string;
+	postalCode: string;
+	line1: string;
+	line2: string;
+	userId: string;
+	name: string;
 };
 type LocationStore = {
 	deliveryLocation: DeliveryLocation;
@@ -15,21 +23,31 @@ type LocationStore = {
 	setHasHydrated: (state: boolean) => void;
 };
 
-const defaultState = {
+export const defaultDeliveryLocationState: LocationStore = {
 	deliveryLocation: {
-		address: "",
-		addressName: "",
 		lat: 0,
 		lng: 0,
-		id: null,
+		id: "",
+		phone: undefined,
+		tag: "home",
+		city: "",
+		state: "",
+		country: "",
+		postalCode: "",
+		line1: "",
+		line2: "",
+		userId: "",
+		name: "",
 	},
 	hasHydrated: false,
+	setDeliveryLocation: () => {},
+	setHasHydrated: () => {},
 };
 
 export const useLocationStore = create<LocationStore>()(
 	persist(
 		(set) => ({
-			...defaultState,
+			...defaultDeliveryLocationState,
 			setDeliveryLocation: (deliveryLocation) =>
 				set({ deliveryLocation: deliveryLocation }),
 			setHasHydrated: (state) => set({ hasHydrated: state }),

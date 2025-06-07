@@ -10,11 +10,11 @@ import {
 import { useNavigate } from "@tanstack/react-router";
 import { LocateFixed, MapPinned } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import SearchBar from "../searchBar";
+import SearchBar from "../custom-ui/searchBar";
 import { Button } from "../ui/button";
 import { Spinner } from "../ui/spinner";
 import { DetailedAddress } from "./detailedAddress";
-import { getGeocodeFromLatLng } from "./utils/googlemap";
+import { fillFullAddress, getGeocodeFromLatLng } from "./utils/googlemap";
 import { useLocationStore } from "./utils/store";
 
 const libraries: "places"[] = ["places"];
@@ -39,7 +39,7 @@ export default function GoogleMapImage({
 	const autocompleteRef = useRef<any>(null);
 	const { isMobile } = useViewport();
 	const [fullAddress, setFullAddress] = useState({
-		address: "",
+		line1: "",
 		city: "",
 		state: "",
 		country: "",
@@ -50,60 +50,6 @@ export default function GoogleMapImage({
 
 	const { setDeliveryLocation } = useLocationStore();
 	const navigate = useNavigate();
-
-	const fillFullAddress = (
-		addressComponents: google.maps.GeocoderAddressComponent[],
-		addCompLen: number,
-		placeAddress: string,
-		lat: number,
-		lng: number,
-	) => {
-		setFullAddress((prev) => ({
-			...prev,
-			address: placeAddress || "",
-			lat: lat,
-			lng: lng,
-		}));
-
-		if (addCompLen > 0) {
-			if (addressComponents[addCompLen - 1]?.types?.includes("postal_code")) {
-				setFullAddress((prev) => ({
-					...prev,
-					postalCode: addressComponents[addCompLen - 1]?.long_name || "",
-				}));
-			}
-
-			if (addressComponents[addCompLen - 2]?.types?.includes("country")) {
-				setFullAddress((prev) => ({
-					...prev,
-					country: addressComponents[addCompLen - 2]?.long_name || "",
-				}));
-			}
-
-			if (
-				addressComponents[addCompLen - 3]?.types?.includes(
-					"administrative_area_level_1",
-				)
-			) {
-				setFullAddress((prev) => ({
-					...prev,
-					state: addressComponents[addCompLen - 3]?.long_name || "",
-				}));
-			}
-			let i = addCompLen;
-
-			while (i >= 4) {
-				if (addressComponents[i - 4]?.types?.includes("locality")) {
-					setFullAddress((prev) => ({
-						...prev,
-						city: addressComponents[i - 4]?.long_name || "",
-					}));
-					break;
-				}
-				i--;
-			}
-		}
-	};
 
 	const handlePlaceSelect = () => {
 		if (autocompleteRef.current) {
@@ -118,10 +64,15 @@ export default function GoogleMapImage({
 				setAddressName(place.name);
 				setZoom(18);
 
-				const addCompLen = place.address_components?.length || 0;
 				const addressComponents = place.address_components || [];
 
-				fillFullAddress(addressComponents, addCompLen, placeAddress, lat, lng);
+				fillFullAddress(
+					addressComponents,
+					placeAddress,
+					lat,
+					lng,
+					setFullAddress,
+				);
 			}
 		}
 	};
@@ -142,10 +93,10 @@ export default function GoogleMapImage({
 					setAddressName(addressComponent?.[1]?.long_name || "");
 					fillFullAddress(
 						addressComponent,
-						addressComponent?.length || 0,
 						formattedAddress,
 						mapCenter.lat,
 						mapCenter.lng,
+						setFullAddress,
 					);
 				},
 			);
@@ -246,10 +197,13 @@ export default function GoogleMapImage({
 								className="w-full font-semibold"
 								onClick={() => {
 									setDeliveryLocation({
-										address: fullAddress.address,
-										addressName,
-										lat: fullAddress.lat,
-										lng: fullAddress.lng,
+										...fullAddress,
+										id: "",
+										userId: "",
+										phone: "",
+										line2: "",
+										name: "",
+										tag: "home",
 									});
 
 									navigate({ to: "/" });

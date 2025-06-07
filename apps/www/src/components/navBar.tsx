@@ -14,22 +14,22 @@ export default function NavBar() {
 				{deliveryLocation && (
 					<Link to={"/account/addresses/deliveryAddress"}>
 						<div className="text-lg font-bold flex items-center gap-2">
-							{deliveryLocation.addressName === "home" ? (
+							{deliveryLocation?.tag === "home" ? (
 								<House className="size-5" />
-							) : deliveryLocation.addressName === "work" ? (
+							) : deliveryLocation?.tag === "work" ? (
 								<Building className="size-5" />
 							) : (
 								<MapPin className="size-5" />
 							)}
 							<p className="truncate max-w-[250px] block">
-								{deliveryLocation.addressName.charAt(0).toUpperCase() +
-									deliveryLocation.addressName.slice(1) || "Locating"}
+								{(deliveryLocation?.tag ?? "").charAt(0).toUpperCase() +
+									(deliveryLocation?.tag ?? "").slice(1) || "Locating"}
 							</p>
 							<ChevronDown className="size-5" />
 						</div>
 						<p className="text-sm">
 							<span className="truncate max-w-[250px] block">
-								{deliveryLocation.address}
+								{deliveryLocation.line1}
 							</span>
 						</p>
 					</Link>

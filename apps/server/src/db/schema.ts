@@ -1,3 +1,4 @@
+import type { addressSchema } from "@/routes/address";
 import { sql } from "drizzle-orm";
 import {
 	type AnyPgColumn,
@@ -12,6 +13,7 @@ import {
 	timestamp,
 	uuid,
 } from "drizzle-orm/pg-core";
+import type { z } from "zod";
 
 export const ORDER_STATUS = [
 	"ordered",
@@ -294,7 +296,8 @@ export const orders = schema.table("orders", {
 		partnerId?: string;
 	}>(),
 
-	address: jsonb("address").$type<typeof address.$inferSelect>(),
+	// address: jsonb("address").$type<typeof address.$inferSelect>(),
+	address: jsonb("address").$type<z.infer<typeof addressSchema>>(),
 	deliveryInstruction: text("deliveryInstruction"),
 	storeInstructions: text("storeInstructions"),
 	paymentMethod: text("paymentMethod", { enum: ["cod", "upi", "card"] }),

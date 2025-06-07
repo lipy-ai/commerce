@@ -4,15 +4,15 @@ import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
-import type { Expression, SqlBool } from "kysely";
 import { z } from "zod";
+import { addressSchema } from "./address";
 
 const paramSchema = z.object({
 	id: z.string(),
 });
 
 const orderSchema = z.object({
-	address: z.string(),
+	address: addressSchema,
 	deliveryInstruction: z.string().nullable(),
 	storeInstruction: z
 		.array(z.object({ id: z.string().uuid(), instruction: z.string() }))
@@ -77,14 +77,14 @@ const route = new Hono<ServerContext>()
 		const session = c.get("session");
 		const values = c.req.valid("json");
 
-		const address = await db
-			.selectFrom("address")
-			.where("address.id", "=", values.address)
-			.where("address.userId", "=", session?.userId!)
-			.selectAll()
-			.executeTakeFirst();
+		// const address = await db
+		// 	.selectFrom("address")
+		// 	.where("address.id", "=", values.address)
+		// 	.where("address.userId", "=", session?.userId!)
+		// 	.selectAll()
+		// 	.executeTakeFirst();
 
-		if (!address)
+		if (!values.address)
 			throw new HTTPException(404, { message: "Address not found!" });
 
 		const cart = await db
@@ -124,7 +124,7 @@ const route = new Hono<ServerContext>()
 					id: crypto.randomUUID(),
 					pk: idGenerate({ prefix: "ORD" }),
 					status: "ordered",
-					address: address,
+					address: values.address,
 					items: [item],
 					taxes: [],
 					discounts: [],

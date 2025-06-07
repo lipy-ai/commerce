@@ -1,5 +1,5 @@
-import { ScrollingTabs } from "@lipy/web-ui/components/scrollable-tabs";
-import SearchBar from "@lipy/web-ui/components/searchBar";
+import { ScrollingTabs } from "@lipy/web-ui/components/custom-ui/scrollable-tabs";
+import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
 import { Cherry, Milk, Salad, ShoppingBasket, Store } from "lucide-react";
 import { useState } from "react";
 

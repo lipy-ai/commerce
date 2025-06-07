@@ -9,7 +9,6 @@ export interface InputProps
 	prefixClassName?: string;
 	suffixEl?: any;
 	suffixClassName?: string;
-	onClear?: () => void;
 
 	noStyle?: boolean;
 }
@@ -24,73 +23,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 			prefixEl,
 			size,
 			noStyle,
-			onClear,
-			onChange,
 			...props
 		},
 		ref,
 	) => {
-		const [hasValue, setHasValue] = React.useState(
-			Boolean(props.value || props.defaultValue),
-		);
-		const inputRef = React.useRef<HTMLInputElement>(null);
-		const combinedRef = React.useMemo(() => {
-			if (typeof ref === "function") {
-				return (node: HTMLInputElement) => {
-					inputRef.current = node;
-					ref(node);
-				};
-			}
-			if (ref) {
-				return (node: HTMLInputElement) => {
-					inputRef.current = node;
-					ref.current = node;
-				};
-			}
-			return inputRef;
-		}, [ref]);
-
-		const handleClear = () => {
-			if (inputRef.current) {
-				// Clear the input value
-				inputRef.current.value = "";
-				setHasValue(false);
-
-				// Create a synthetic React change event
-				const event = {
-					target: inputRef.current,
-					currentTarget: inputRef.current,
-					bubbles: true,
-					cancelable: true,
-					type: "input",
-					nativeEvent: new Event("input"),
-					isDefaultPrevented: () => false,
-					isPropagationStopped: () => false,
-					persist: () => {},
-				} as React.ChangeEvent<HTMLInputElement>;
-
-				// Call onChange if provided
-				if (onChange) {
-					onChange(event);
-				}
-
-				// Call onClear callback if provided
-				if (onClear) {
-					onClear();
-				}
-
-				// Focus the input after clearing
-				inputRef.current.focus();
-			}
-		};
-
-		const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-			setHasValue(Boolean(e.target.value));
-			if (onChange) {
-				onChange(e);
-			}
-		};
-
 		return (
 			<div
 				className={cn(
@@ -119,20 +55,19 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 						size === "lg" && "h-12",
 						noStyle && "h-fit w-fit",
 					)}
-					ref={combinedRef}
-					onChange={handleChange}
+					ref={ref}
 					{...props}
 				/>
 
 				<span className="text-sm">
-					{suffixEl && hasValue && (
+					{suffixEl && (
 						<span
 							className={cn(
-								"text-muted-foreground flex h-12 md:h-10 items-center px-2 [&>svg]:w-4 cursor-pointer hover:text-foreground transition-colors",
+								"text-muted-foreground flex h-12 md:h-10 items-center px-2 [&>svg]:w-4",
 								size === "lg" && "h-12",
 								prefixClassName,
 							)}
-							onClick={handleClear}
+							onClick={() => {}}
 						>
 							{suffixEl}
 						</span>

@@ -85,11 +85,11 @@ function RouteComponent() {
 								<Avatar className="rounded-md ">
 									<AvatarFallback>
 										{address.tag === "home" ? (
-											<House className="text-muted-foreground flex-shrink-0" />
+											<House className=" flex-shrink-0 text-foreground fill-primary/40" />
 										) : address.tag === "work" ? (
-											<Building className="text-muted-foreground  flex-shrink-0" />
+											<Building className=" flex-shrink-0 text-foreground fill-primary/40" />
 										) : (
-											<MapPinHouse className="size-6 text-muted-foreground flex-shrink-0" />
+											<MapPinHouse className="size-6 flex-shrink-0 text-foreground fill-primary/40" />
 										)}
 									</AvatarFallback>
 								</Avatar>
@@ -100,16 +100,11 @@ function RouteComponent() {
 									</h2>
 									<p className="text-muted-foreground">{address.line1}</p>
 									{address.phone && (
-										<p className="text-muted-foreground">
+										<p className="text-foreground/90">
 											Phone number : {address.phone}
 										</p>
 									)}
 								</div>
-							</div>
-
-							<div className="flex gap-2 items-center pl-12">
-								<DetailedAddress fullAddress={address} label="Edit" />
-								{/* <DeleteAddress addressId={address.id} /> */}
 							</div>
 						</div>
 					))}

@@ -27,8 +27,9 @@
 			"purpose": "maskable"
 		}
 	],
+
 	"start_url": "/",
-	"display": "fullscreen",
+	"display": "standalone",
 	"background_color": "#FFFFFF",
 	"theme_color": "#FFFFFF",
 	"orientation": "portrait"

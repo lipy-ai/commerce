@@ -1,43 +1,31 @@
 import ProductCard from "@/components/productCard"; // Fixed the path
-import ShopShortDetails from "@/components/shop/shopShortDetails";
+import ShopHeroPage from "@/components/shop/shopHeroSection";
 import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/queryClient";
-import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute, useRouter } from "@tanstack/react-router";
-import { motion, useMotionValueEvent, useScroll } from "framer-motion";
-import { ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { motion } from "framer-motion";
+import { ChevronRight, Heart } from "lucide-react";
 
 export const Route = createFileRoute("/shop/$id/")({
 	component: RouteComponent,
 });
 
-const shopInfo = {
-	id: "abcshop",
-	name: "Tasty Bites Restaurant",
-	address: "123 Main Street, Downtown, City",
-	rating: 4.7,
-	reviews: 328,
-	isOpen: true,
-	deliveryTime: "25-35",
-};
-
 function RouteComponent() {
-	const [shopNameVisible, setShopNameVisible] = useState(false);
-	const { scrollY } = useScroll();
+	// const [shopNameVisible, setShopNameVisible] = useState(false);
+	// const { scrollY } = useScroll();
 
-	useMotionValueEvent(scrollY, "change", (current) => {
-		if (current > 30) {
-			setShopNameVisible(true);
-		} else {
-			setShopNameVisible(false);
-		}
-	});
+	// useMotionValueEvent(scrollY, "change", (current) => {
+	// 	if (current > 100) {
+	// 		setShopNameVisible(true);
+	// 	} else {
+	// 		setShopNameVisible(false);
+	// 	}
+	// });
 
 	const { id } = Route.useParams();
 
@@ -79,8 +67,13 @@ function RouteComponent() {
 	}
 
 	return (
-		<>
-			<DashboardHeader
+		<motion.div
+			initial={{ opacity: 0, x: 200 }}
+			animate={{ opacity: 1, x: 0 }}
+			transition={{ duration: 0.5, ease: "easeInOut" }}
+			exit={{ opacity: 0, x: -200 }}
+		>
+			{/* <DashboardHeader
 				titleChildren={
 					<motion.div
 						variants={{
@@ -91,14 +84,16 @@ function RouteComponent() {
 						transition={{ duration: 0.3, ease: "easeInOut" }}
 						className="text-xl font-semibold line-clamp-1"
 					>
-						{shopNameVisible ? shopInfo.name : ""}
+						{"Grihasthi Kirana"}
 					</motion.div>
 				}
-			/>
+			/> */}
 
-			<div className="mb-4">
+			{/* <div className="mb-4">
 				<ShopShortDetails shopInfo={shopInfo} />
-			</div>
+			</div> */}
+
+			<ShopHeroPage />
 
 			<Separator className="-my-4" />
 
@@ -148,14 +143,14 @@ function RouteComponent() {
 											key={product.id}
 											onClick={() =>
 												router.navigate({
-													to: `/shop/${shopInfo.id}/products/${product.id}`,
+													to: `/shop/${id}/products/${product.id}`,
 												})
 											}
 											onKeyDown={(e) => {
 												if (e.key === "Enter" || e.key === " ") {
 													e.preventDefault();
 													router.navigate({
-														to: `/shop/${shopInfo.id}/products/${product.id}`,
+														to: `/shop/${id}/products/${product.id}`,
 													});
 												}
 											}}
@@ -176,6 +171,18 @@ function RouteComponent() {
 			</div>
 
 			{!isFetching && groupedProducts.length === 0 && <EmptyPage />}
-		</>
+
+			<Separator />
+			<div className="px-2 pt-12 pb-28 bg-accent space-y-4">
+				<h1 className="text-5xl text-muted-foreground/40 font-bold">
+					Empowering local shops
+					<Heart className="inline-block ml-2 size-10 fill-red-400 text-red-400" />
+				</h1>
+				<Separator />
+				<h3 className="text-muted-foreground/40 text-lg font-bold">
+					connecting with love by LIPY
+				</h3>
+			</div>
+		</motion.div>
 	);
 }

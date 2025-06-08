@@ -14,6 +14,7 @@ import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute } from "@tanstack/react-router";
+import { motion } from "framer-motion";
 import {
 	Bike,
 	ChevronDown,
@@ -114,9 +115,13 @@ function RouteComponent() {
 	];
 
 	return (
-		<div>
+		<motion.div
+			initial={{ opacity: 0, x: 200 }}
+			animate={{ opacity: 1, x: 0 }}
+			transition={{ duration: 0.5, ease: "easeInOut" }}
+			exit={{ opacity: 0, x: -200 }}
+		>
 			<DashboardHeader title="Cart" />
-
 			{isFetching &&
 				Array.from({ length: 5 }).map((_, i) => (
 					<div key={i} className="my-2 flex flex-col items-center">
@@ -275,6 +280,6 @@ function RouteComponent() {
 					setCompleteInstruction={setCompleteDeliveryInstruction}
 				/>
 			)}
-		</div>
+		</motion.div>
 	);
 }

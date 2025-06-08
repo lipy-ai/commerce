@@ -22,8 +22,10 @@ export default function NavBar() {
 								<MapPin className="size-5" />
 							)}
 							<p className="truncate max-w-[250px] block">
-								{(deliveryLocation?.tag ?? "").charAt(0).toUpperCase() +
-									(deliveryLocation?.tag ?? "").slice(1) || "Locating"}
+								{deliveryLocation?.line1 === ""
+									? "Locating"
+									: (deliveryLocation?.tag ?? "").charAt(0).toUpperCase() +
+										(deliveryLocation?.tag ?? "").slice(1)}
 							</p>
 							<ChevronDown className="size-5" />
 						</div>

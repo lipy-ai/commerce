@@ -15,7 +15,7 @@ function RouteComponent() {
 	const { cart } = useCartStore();
 
 	return (
-		<div>
+		<div className="max-w-4xl">
 			<Outlet />
 			<AnimatePresence>
 				{cart.length > 0 && (

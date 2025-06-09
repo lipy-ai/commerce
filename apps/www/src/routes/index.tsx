@@ -2,8 +2,6 @@ import { AppCartInitializer } from "@/components/cart/appCartInitializer";
 import { useCartStore } from "@/components/cart/store";
 import NavBar from "@/components/navBar";
 import NearByShops from "@/components/nearbyShops";
-import { SearchFilter } from "@/components/searchFilter";
-import { Noise } from "@/components/shop/shopHeroSection";
 import {
 	DashboardBody,
 	DashboardLayout,
@@ -86,12 +84,7 @@ function Home() {
 			>
 				<DashboardBody>
 					<div className="bg-emerald-700 text-background">
-						<Noise />
 						<NavBar />
-					</div>
-
-					<div className="sticky top-0 z-20 bg-emerald-700 border-b shadow-sm text-background">
-						<SearchFilter />
 					</div>
 
 					<NearByShops />

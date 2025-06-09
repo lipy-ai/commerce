@@ -100,7 +100,7 @@ const getCategoryIcons = (category: string) => {
 	return categoryIcons[normalizedCategory] || categoryIcons.default;
 };
 
-export default function ShopHeroPage() {
+export const ShopHeroPage = () => {
 	const category = getCategoryColors(shopInfo.category);
 	const icons = getCategoryIcons(shopInfo.category);
 
@@ -183,7 +183,7 @@ export default function ShopHeroPage() {
 			</section>
 		</>
 	);
-}
+};
 
 const CategoryBackgroundIcons = ({
 	icons,
@@ -227,7 +227,7 @@ const CategoryBackgroundIcons = ({
 	);
 };
 
-const Noise = () => {
+export const Noise = () => {
 	return (
 		<div
 			className="absolute inset-0 w-full h-full scale-[1.2] transform opacity-10 [mask-image:radial-gradient(#fff,transparent,75%)]"

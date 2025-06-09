@@ -15,7 +15,7 @@ function RouteComponent() {
 	const { cart } = useCartStore();
 
 	return (
-		<div className="max-w-4xl">
+		<div className="max-w-4xl [view-transition-name:main-content]">
 			<Outlet />
 			<AnimatePresence>
 				{cart.length > 0 && (
@@ -32,9 +32,10 @@ function RouteComponent() {
 							<Link
 								to="/cart"
 								className={cn(
-									buttonVariants({ variant: "green", size: "lg" }),
+									buttonVariants({ variant: "emerald", size: "lg" }),
 									"gap-4",
 								)}
+								viewTransition={{ types: ["slide-left"] }}
 							>
 								<div className="flex flex-col items-center">
 									<p className="font-semibold text-base">View Cart</p>

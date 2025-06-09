@@ -26,7 +26,7 @@ const buttonVariants = cva(
 				green:
 					"bg-green-600 text-white shadow-xs hover:bg-green-700 focus-visible:ring-green-500/20 dark:bg-green-600 dark:hover:bg-green-700",
 				emerald:
-					"bg-emerald-600 text-white shadow-xs hover:bg-emerald-700 focus-visible:ring-emerald-500/20 dark:bg-emerald-600 dark:hover:bg-emerald-700",
+					"bg-emerald-700 text-white shadow-xs hover:bg-emerald-800 focus-visible:ring-emerald-500/20 dark:bg-emerald-600 dark:hover:bg-emerald-700",
 				black:
 					"bg-black text-white shadow-xs hover:bg-gray-800 focus-visible:ring-gray-500/20 dark:bg-gray-900 dark:hover:bg-gray-800",
 				orange:

@@ -12,6 +12,7 @@ import {
 	AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
 import { Button } from "@lipy/web-ui/components/ui/button";
+import { Card } from "@lipy/web-ui/components/ui/card";
 import { Label } from "@lipy/web-ui/components/ui/label";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
@@ -69,7 +70,7 @@ function RouteComponent() {
 								/>
 							</div>
 
-							<div className="p-4 border rounded-md m-2 bg-white">
+							<Card className="p-4 border m-4 shadow-none rounded-xl bg-white border-none">
 								<h2 className="text-lg font-semibold">Item(s) ordered</h2>
 								{data[0]?.items?.map((product, i) => (
 									<div key={i} className="flex gap-2 items-center p-4">
@@ -99,11 +100,11 @@ function RouteComponent() {
 										</div>
 									</div>
 								))}
-							</div>
+							</Card>
 						</div>
 
 						<div className="col-span-4 space-y-2  lg:p-4 divide-y ">
-							<div className="space-y-4 p-4 rounded-md m-2 border bg-white">
+							<Card className="space-y-4  p-4 border m-4 shadow-none rounded-xl bg-white border-none">
 								<h2 className="text-lg font-semibold">Bill Summary</h2>
 								<div className="space-y-4">
 									<div className="flex justify-between">
@@ -132,37 +133,40 @@ function RouteComponent() {
 										</p>
 									</div>
 								</div>
-							</div>
-							<div className="p-4 space-y-4 border rounded-md m-2 bg-white">
+							</Card>
+							<Card className="p-4 border m-4 shadow-none rounded-xl bg-white border-none">
 								{data[0]?.address?.name && data[0]?.address?.phone && (
 									<div>
 										<div className="flex items-start gap-4">
 											<CircleUser className="text-muted-foreground " />
 											<div>
-												<p className="font-medium">Contact Info</p>
+												<p className="font-medium">Receiver's Info</p>
 												<p className="text-muted-foreground text-sm">
 													{data[0]?.address?.name} | {data[0]?.address?.phone}
 												</p>
 											</div>
 										</div>
-										<Separator className="border-t border-dashed bg-transparent my-2" />
+										<Separator className="border-t border-dashed bg-transparent  mt-3 -mb-3" />
 									</div>
 								)}
 
-								<div className="flex items-start gap-4">
-									<BanknoteArrowUp className="text-muted-foreground" />
-									<div>
-										<p className="font-medium">Payment method</p>
-										<p className="text-muted-foreground text-sm">
-											{data[0]?.paymentMethod === "cod"
-												? "Cash on Delivery"
-												: "Unspecified"}
-										</p>
+								<div>
+									<div className="flex items-start gap-4">
+										<BanknoteArrowUp className="text-muted-foreground" />
+										<div>
+											<p className="font-medium">Payment method</p>
+											<p className="text-muted-foreground text-sm">
+												{data[0]?.paymentMethod === "cod"
+													? "Cash on Delivery"
+													: "Unspecified"}
+											</p>
+										</div>
 									</div>
+									<Separator className="border-t border-dashed bg-transparent mt-3 -mb-3" />
 								</div>
-								<Separator className="border-t border-dashed bg-transparent my-2" />
+
 								<div className="flex items-start gap-4">
-									<MapPin className="text-muted-foreground" />
+									<MapPin className="text-muted-foreground flex-shrink-0" />
 									<div>
 										<p className="font-medium">Delivery Address</p>
 										<p className="text-muted-foreground text-sm">
@@ -170,7 +174,7 @@ function RouteComponent() {
 										</p>
 									</div>
 								</div>
-							</div>
+							</Card>
 
 							<div className="space-y-4 p-4">
 								<Label>Delivery Partner</Label>

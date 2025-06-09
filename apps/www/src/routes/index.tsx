@@ -3,6 +3,7 @@ import { useCartStore } from "@/components/cart/store";
 import NavBar from "@/components/navBar";
 import NearByShops from "@/components/nearbyShops";
 import { SearchFilter } from "@/components/searchFilter";
+import { Noise } from "@/components/shop/shopHeroSection";
 import {
 	DashboardBody,
 	DashboardLayout,
@@ -84,11 +85,12 @@ function Home() {
 				logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
 			>
 				<DashboardBody>
-					<div className="bg-gray-200">
+					<div className="bg-emerald-700 text-background">
+						<Noise />
 						<NavBar />
 					</div>
 
-					<div className="sticky top-0 z-20 bg-gray-200 border-b shadow-sm">
+					<div className="sticky top-0 z-20 bg-emerald-700 border-b shadow-sm text-background">
 						<SearchFilter />
 					</div>
 

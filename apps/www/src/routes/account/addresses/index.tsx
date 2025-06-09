@@ -122,7 +122,10 @@ function RouteComponent() {
 			{isMobile && (
 				<div className="fixed bottom-0 w-full p-4 bg-background">
 					<Link
-						className={cn(buttonVariants({ variant: "default" }), "w-full")}
+						className={cn(
+							buttonVariants({ variant: "default" }),
+							"w-full font-semibold",
+						)}
 						to="/account/addresses/new"
 						search={{
 							type: "saveAddress",

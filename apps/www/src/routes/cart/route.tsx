@@ -8,13 +8,13 @@ import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { DetailedAddress } from "@lipy/web-ui/components/maps/detailedAddress";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
+import { Avatar, AvatarFallback } from "@lipy/web-ui/components/ui/avatar";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Card } from "@lipy/web-ui/components/ui/card";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { motion } from "framer-motion";
 import {
 	Bike,
 	ChevronDown,
@@ -115,12 +115,7 @@ function RouteComponent() {
 	];
 
 	return (
-		<motion.div
-			initial={{ opacity: 0, x: 200 }}
-			animate={{ opacity: 1, x: 0 }}
-			transition={{ duration: 0.5, ease: "easeInOut" }}
-			exit={{ opacity: 0, x: -200 }}
-		>
+		<div>
 			<DashboardHeader title="Cart" />
 			{isFetching &&
 				Array.from({ length: 5 }).map((_, i) => (
@@ -206,11 +201,16 @@ function RouteComponent() {
 					{/* Bottom Checkout UI */}
 					<div className="fixed bottom-0 border-t left-0 w-full bg-white shadow-xl border-2 rounded-t-lg">
 						<div
-							className="bg-accent rounded-t-lg p-2 cursor-pointer"
+							className="bg-accent/40 rounded-t-lg p-2 cursor-pointer"
 							onClick={() => setDetailedAddressDrawerOpen(true)}
 						>
 							<div className="flex items-center gap-2">
-								<MapPinned className="size-8 fill-primary/40" />
+								<Avatar className="rounded-md">
+									<AvatarFallback>
+										<MapPinned className="size-6 fill-primary/40" />
+									</AvatarFallback>
+								</Avatar>
+
 								<div>
 									<div className="flex items-center gap-2">
 										<p className="text-sm font-semibold">
@@ -227,7 +227,7 @@ function RouteComponent() {
 							</div>
 						</div>
 
-						<div className="p-4 flex items-center justify-between gap-2">
+						{/* <div className="p-4 flex items-center justify-between gap-2">
 							<div className="w-1/4 rounded-md border border-violet-600 p-1 bg-violet-200 text-violet-600 font-medium h-12 text-sm flex items-center justify-center">
 								Pay on delivery
 							</div>
@@ -242,6 +242,12 @@ function RouteComponent() {
 									deliveryInstruction={completeDeliveryInstruction}
 								/>
 							</div>
+						</div> */}
+						<div className="px-4 py-2">
+							<PlaceOrder
+								setOpen={setDetailedAddressDrawerOpen}
+								deliveryInstruction={completeDeliveryInstruction}
+							/>
 						</div>
 					</div>
 				</div>
@@ -280,6 +286,6 @@ function RouteComponent() {
 					setCompleteInstruction={setCompleteDeliveryInstruction}
 				/>
 			)}
-		</motion.div>
+		</div>
 	);
 }

@@ -37,7 +37,7 @@ export default function NavBar() {
 					</Link>
 				)}
 
-				<Link to="/account">
+				<Link to="/account" viewTransition={{ types: ["slide-left"] }}>
 					<div className="py-1 px-2 rounded-full bg-black">
 						<UserRound className="size-6 fill-background" />
 					</div>

@@ -154,7 +154,7 @@ export default function NearByShops() {
 
 	return (
 		<div>
-			<div className="px-4 pb-20">
+			<div className="px-4 pb-20 ">
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 py-4">
 					{isFetched &&
 						shops &&
@@ -162,7 +162,11 @@ export default function NearByShops() {
 						shops.map((shop) => (
 							<div key={shop.id} className="space-y-6">
 								<Card className="p-0 rounded-xl">
-									<Link to="/shop/$id" params={{ id: shop.id }}>
+									<Link
+										to="/shop/$id"
+										params={{ id: shop.id }}
+										viewTransition={{ types: ["warp"] }}
+									>
 										{/* Image Container */}
 										<div className="relative h-48">
 											<img

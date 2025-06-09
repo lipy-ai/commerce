@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { ChevronRight } from "lucide-react";
 import { Avatar, AvatarFallback } from "../ui/avatar";
+import { Card } from "../ui/card";
+import { Separator } from "../ui/separator";
 
 export default function SettingsCard({
 	items,
@@ -13,13 +15,13 @@ export default function SettingsCard({
 }) {
 	return (
 		<>
-			<div className="rounded border p-2 shadow-none divide-y">
+			<Card className="p-4 shadow-none rounded-xl bg-white border-none">
 				{items.map((item, index) => (
 					<div key={index}>
-						<Link to={item.url} className="flex flex-col px-2 py-2.5">
+						<Link to={item.url} className="flex flex-col">
 							<div className="flex items-center justify-between">
 								<div className="flex items-center gap-2">
-									<Avatar className="size-10">
+									<Avatar className="size-9">
 										<AvatarFallback>
 											<item.icon className="size-5 text-muted-foreground" />
 										</AvatarFallback>
@@ -30,13 +32,13 @@ export default function SettingsCard({
 								<ChevronRight />
 							</div>
 
-							{/* {index !== items.length - 1 && (
-								<Separator className="-mb-4 border-t border-dashed bg-transparent" />
-							)} */}
+							{index !== items.length - 1 && (
+								<Separator className="mt-3 -mb-3 border-t border-dashed bg-transparent " />
+							)}
 						</Link>
 					</div>
 				))}
-			</div>
+			</Card>
 		</>
 	);
 }

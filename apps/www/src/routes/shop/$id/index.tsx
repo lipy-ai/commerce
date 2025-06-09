@@ -8,7 +8,6 @@ import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute, useRouter } from "@tanstack/react-router";
-import { motion } from "framer-motion";
 import { ChevronRight, Heart } from "lucide-react";
 
 export const Route = createFileRoute("/shop/$id/")({
@@ -67,12 +66,7 @@ function RouteComponent() {
 	}
 
 	return (
-		<motion.div
-			initial={{ opacity: 0, x: 200 }}
-			animate={{ opacity: 1, x: 0 }}
-			transition={{ duration: 0.5, ease: "easeInOut" }}
-			exit={{ opacity: 0, x: -200 }}
-		>
+		<div>
 			{/* <DashboardHeader
 				titleChildren={
 					<motion.div
@@ -183,6 +177,6 @@ function RouteComponent() {
 					connecting with love by LIPY
 				</h3>
 			</div>
-		</motion.div>
+		</div>
 	);
 }

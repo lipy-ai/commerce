@@ -14,7 +14,7 @@ import { Progress } from "@lipy/web-ui/components/ui/progress";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { StepForward } from "lucide-react";
+import { Triangle } from "lucide-react";
 import { useEffect, useState } from "react";
 
 function ProgressDialog({
@@ -151,9 +151,17 @@ export default function PlaceOrder({
 
 	return (
 		<>
-			<Button onClick={handlePlaceOrder} variant="green">
-				<p>Place Order</p>
-				<StepForward />
+			<Button
+				onClick={handlePlaceOrder}
+				variant="emerald"
+				className="w-full flex flex-col items-center justify-center gap-0"
+				size="lg"
+			>
+				<p className="font-medium text-lg">
+					Place order
+					<Triangle className="inline size-4 ml-2 fill-white rotate-90" />
+				</p>
+				<p className="text-xs text-background/80">( Pay on delivery )</p>
 			</Button>
 
 			{showDialog && (

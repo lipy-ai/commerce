@@ -1,7 +1,5 @@
-import {
-	type OrderStatus,
-	OrderStatusTimeline,
-} from "@/components/order/orderTimeLine";
+import { StatusBadge } from "@/components/order/myOrderCard";
+import type { OrderStatus } from "@/components/order/orderTimeLine";
 import { apiClient } from "@lipy/lib/api";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import { useAPIQuery } from "@lipy/lib/utils/queryClient";
@@ -12,12 +10,18 @@ import {
 	AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
 import { Button } from "@lipy/web-ui/components/ui/button";
-import { Card } from "@lipy/web-ui/components/ui/card";
-import { Label } from "@lipy/web-ui/components/ui/label";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { createFileRoute } from "@tanstack/react-router";
-import { BanknoteArrowUp, CircleUser, MapPin } from "lucide-react";
+import { format } from "date-fns";
+import {
+	BanknoteArrowUp,
+	Building,
+	CircleUser,
+	House,
+	MapPin,
+	MapPinHouse,
+} from "lucide-react";
 
 export const Route = createFileRoute("/account/orders/$orderId")({
 	component: RouteComponent,
@@ -41,6 +45,8 @@ function RouteComponent() {
 	const totalTaxAmount = data?.[0]?.totalTaxAmount ?? 0;
 	const totalPayableAmount = totalPrice + deliveryCharges + totalTaxAmount;
 
+	console.log("Order Details Data:", data);
+
 	return (
 		<>
 			{isFetched && data && (
@@ -56,21 +62,92 @@ function RouteComponent() {
 							</div>
 						}
 					>
-						<Button size={"sm"}>REORDER</Button>
+						{data?.[0]?.status === "delivered" && (
+							<Button size={"sm"}>REORDER</Button>
+						)}
 					</DashboardHeader>
 					<div className="lg:grid lg:grid-cols-12 divide-x flex-1">
-						<div className="col-span-8 divide-y lg:p-4">
-							<div className="p-4 text-muted-foreground">
-								Order ID: #{data[0]?.pk}
-							</div>
-							<div className="p-4 ">
-								<h2 className="text-lg font-semibold">Order status</h2>
-								<OrderStatusTimeline
-									currentStatus={data[0]?.status as OrderStatus}
-								/>
+						<div className="col-span-8  lg:p-4 ">
+							<div className="bg-white p-4">
+								<div className="flex items-center justify-between">
+									<h2 className="font-bold text-base ">{data[0]?.pk}</h2>
+									<StatusBadge
+										status={data[0]?.status as OrderStatus}
+										size={20}
+									/>
+								</div>
+								{data[0]?.deliveredAt ? (
+									<p className="text-xs text-muted-foreground">
+										Delivered on {format(new Date(data[0]?.deliveredAt), "Pp")}
+									</p>
+								) : data[0]?.cancelledAt ? (
+									<p className="text-xs text-muted-foreground">
+										Cancelled on {format(new Date(data[0]?.cancelledAt), "Pp")}
+									</p>
+								) : data[0]?.refundedAt ? (
+									<p className="text-xs text-muted-foreground">
+										Refunded on {format(new Date(data[0]?.refundedAt), "Pp")}
+									</p>
+								) : (
+									<p className="text-xs text-muted-foreground">
+										Ordered on {format(new Date(data[0]?.orderedAt), "Pp")}
+									</p>
+								)}
 							</div>
 
-							<Card className="p-4 border m-4 shadow-none rounded-xl bg-white border-none">
+							<div className="bg-white p-4 my-4 ">
+								<div className="relative space-y-6">
+									<div className="absolute left-5 top-10 w-0.5 h-10 border-l border-dashed border-foreground" />
+									<div className="flex items-center gap-2 pr-2">
+										<Avatar className="size-10">
+											<AvatarImage
+												src={data[0]?.logo || "https://picsum.photos/200"}
+												alt=""
+											/>
+											<AvatarFallback className="rounded-lg bg-indigo-500 text-white">
+												S
+											</AvatarFallback>
+										</Avatar>
+
+										<div>
+											<p className="font-medium line-clamp-1">
+												{data[0]?.name || "Unknown Store"}
+											</p>
+											<p className="text-muted-foreground text-xs line-clamp-1">
+												Paschim Vihar , Delhi
+											</p>
+										</div>
+									</div>
+
+									<div className=" flex items-center gap-2 ">
+										<Avatar className="size-10">
+											<AvatarFallback>
+												{data[0]?.address?.tag === "home" ? (
+													<House className="flex-shrink-0 size-5" />
+												) : data[0]?.address?.tag === "work" ? (
+													<Building className="  flex-shrink-0 size-5" />
+												) : (
+													<MapPinHouse className="size-5  flex-shrink-0 " />
+												)}
+											</AvatarFallback>
+										</Avatar>
+
+										<div>
+											<p className="font-medium line-clamp-1">
+												{data[0]?.address?.tag
+													? data[0].address.tag.charAt(0).toUpperCase() +
+														data[0].address.tag.slice(1)
+													: "Other"}
+											</p>
+											<p className="text-muted-foreground text-xs line-clamp-1">
+												{data[0]?.address?.line1 || "No address provided"}
+											</p>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div className="p-4  bg-white">
 								<h2 className="text-lg font-semibold">Item(s) ordered</h2>
 								{data[0]?.items?.map((product, i) => (
 									<div key={i} className="flex gap-2 items-center p-4">
@@ -100,11 +177,11 @@ function RouteComponent() {
 										</div>
 									</div>
 								))}
-							</Card>
+							</div>
 						</div>
 
-						<div className="col-span-4 space-y-2  lg:p-4 divide-y ">
-							<Card className="space-y-4  p-4 border m-4 shadow-none rounded-xl bg-white border-none">
+						<div className="col-span-4 space-y-2  lg:p-4  ">
+							<div className="space-y-4  p-4  my-4 bg-white ">
 								<h2 className="text-lg font-semibold">Bill Summary</h2>
 								<div className="space-y-4">
 									<div className="flex justify-between">
@@ -133,12 +210,12 @@ function RouteComponent() {
 										</p>
 									</div>
 								</div>
-							</Card>
-							<Card className="p-4 border m-4 shadow-none rounded-xl bg-white border-none">
+							</div>
+							<div className="p-4 my-4  bg-white space-y-4">
 								{data[0]?.address?.name && data[0]?.address?.phone && (
 									<div>
 										<div className="flex items-start gap-4">
-											<CircleUser className="text-muted-foreground " />
+											<CircleUser className="text-muted-foreground flex-shrink-0" />
 											<div>
 												<p className="font-medium">Receiver's Info</p>
 												<p className="text-muted-foreground text-sm">
@@ -152,7 +229,7 @@ function RouteComponent() {
 
 								<div>
 									<div className="flex items-start gap-4">
-										<BanknoteArrowUp className="text-muted-foreground" />
+										<BanknoteArrowUp className="text-muted-foreground flex-shrink-0" />
 										<div>
 											<p className="font-medium">Payment method</p>
 											<p className="text-muted-foreground text-sm">
@@ -173,26 +250,6 @@ function RouteComponent() {
 											{data[0]?.address?.line1}
 										</p>
 									</div>
-								</div>
-							</Card>
-
-							<div className="space-y-4 p-4">
-								<Label>Delivery Partner</Label>
-
-								<div className="space-y-4">
-									<div className="flex gap-2">
-										<Avatar className="size-12">
-											<AvatarImage src="https://picsum.photos/200" alt="" />
-											<AvatarFallback>A</AvatarFallback>
-										</Avatar>
-										<div>
-											<p className="font-medium">Kundan Bhosale</p>
-											<p className="text-sm">+91 3567866754</p>
-										</div>
-									</div>
-									<p className="font-light text-sm">
-										Delivery partner was assigned on 12 Feb 2025
-									</p>
 								</div>
 							</div>
 						</div>

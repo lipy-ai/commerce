@@ -1,27 +1,35 @@
-import CustomAvatarGroup from "@lipy/web-ui/components/custom-ui/customAvatarGroup";
+import { formatAmount } from "@lipy/lib/utils/intl";
 import {
 	Avatar,
 	AvatarFallback,
 	AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
+import { Button } from "@lipy/web-ui/components/ui/button";
 import { Card, CardContent } from "@lipy/web-ui/components/ui/card";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
+import { cn } from "@lipy/web-ui/lib/utils";
 import { Link } from "@tanstack/react-router";
 import { format } from "date-fns";
 import {
+	ArrowRight,
+	Building,
 	CheckCircle,
 	CheckCircle2,
 	DollarSign,
 	HelpCircle,
+	House,
+	MapPinHouse,
 	Package,
 	RefreshCw,
 	RotateCcw,
 	ShoppingCart,
+	Store,
 	Truck,
 	XCircle,
 } from "lucide-react";
 
-type OrdersData = {
+interface Order {
+	storeId: string | null;
 	storeName: string | null;
 	status:
 		| "ordered"
@@ -34,6 +42,19 @@ type OrdersData = {
 		| "replaced"
 		| "cancelled"
 		| null;
+	address: {
+		name: string;
+		state: string;
+		country: string;
+		tag: "home" | "work" | "other";
+		line1: string;
+		line2: string;
+		city: string;
+		postalCode: string;
+		lat: number;
+		lng: number;
+		phone?: string | undefined;
+	} | null;
 	id: string;
 	items:
 		| {
@@ -51,21 +72,114 @@ type OrdersData = {
 		| null;
 	orderedAt: string;
 	itemTotalAmount: number | null;
-	storeLogo: string | null;
-	storeId: string | null;
 	orderPrimaryId: string | null;
-}[];
+	storeLogo: string | null;
+}
 
-type Order = OrdersData[number];
+export function MyOrderCard({ order }: { order: Order }) {
+	return (
+		<>
+			<Card className="p-1 rounded-lg bg-white border-none shadow-sm">
+				<CardContent className="p-2">
+					<Link
+						to="/account/orders/$orderId"
+						params={{ orderId: order.orderPrimaryId as string }}
+						className="space-y-4"
+					>
+						<div className="flex items-start justify-between gap-4">
+							<StatusBadge
+								status={order.status}
+								className="font-semibold text-base"
+								size={24}
+							>
+								<p className="text-xs text-muted-foreground">
+									Ordered on {format(order.orderedAt, "Pp")}
+								</p>
+							</StatusBadge>
+							<ArrowRight />
+						</div>
+						<Separator />
+						<div className="flex items-center justify-between gap-2 divide-x divide-foreground">
+							<div className="flex-1 flex items-center gap-2 pr-2">
+								<Store className="flex-shrink-0 size-5" />
 
-type MyOrderCardProps = {
-	order: Order;
-};
+								<div>
+									<p className="font-medium line-clamp-1">
+										{order.storeName || "Unknown Store"}
+									</p>
+									<p className="text-muted-foreground text-xs line-clamp-1">
+										Paschim Vihar , Delhi
+									</p>
+								</div>
+							</div>
 
-export default function MyOrderCard({ order }: MyOrderCardProps) {
-	const displayItems = (order?.items ?? []).slice(0, 2);
-	const remainingItems = Math.max(0, (order?.items ?? []).length - 2);
+							<div className="flex-1 flex items-center gap-2 ">
+								{order?.address?.tag === "home" ? (
+									<House className="flex-shrink-0 size-5" />
+								) : order?.address?.tag === "work" ? (
+									<Building className="  flex-shrink-0 size-5" />
+								) : (
+									<MapPinHouse className="size-5  flex-shrink-0 " />
+								)}
 
+								<div>
+									<p className="font-medium line-clamp-1">
+										{(order?.address?.tag &&
+											order?.address?.tag.charAt(0).toUpperCase() +
+												order?.address?.tag.slice(1)) ||
+											"Other"}
+									</p>
+									<p className="text-muted-foreground text-xs line-clamp-1">
+										{order?.address?.line1 || "No address provided"}
+									</p>
+								</div>
+							</div>
+						</div>
+
+						{order.items && order.items.length > 0 && (
+							// The selected code with types
+							<div className="grid grid-cols-5 gap-2">
+								{order.items.map((item, index) => (
+									<Avatar key={index} className="rounded-md size-12">
+										<AvatarImage src={item.thumbnail || ""} />
+										<AvatarFallback className="rounded-lg bg-indigo-500 text-white">
+											{item.variant.title?.[0] ?? "I"}
+										</AvatarFallback>
+									</Avatar>
+								))}
+							</div>
+						)}
+
+						<Separator />
+						<div className="flex items-center justify-between">
+							<p className="font-medium text-sm">
+								Total Amount :{" "}
+								{formatAmount("inr", order.itemTotalAmount as number)}{" "}
+							</p>
+							{order.status === "delivered" && (
+								<Button variant={"green"} size="sm" className="font-semibold">
+									Reorder
+								</Button>
+							)}
+						</div>
+					</Link>
+				</CardContent>
+			</Card>
+		</>
+	);
+}
+
+export const StatusBadge = ({
+	status,
+	children,
+	className,
+	size = 14,
+}: {
+	status: any;
+	children?: React.ReactNode;
+	className?: string;
+	size?: number;
+}) => {
 	const getStatusConfig = (
 		status:
 			| "ordered"
@@ -144,7 +258,7 @@ export default function MyOrderCard({ order }: MyOrderCardProps) {
 		);
 	};
 	const statusConfig = getStatusConfig(
-		order.status as
+		status as
 			| "ordered"
 			| "accepted"
 			| "packed"
@@ -157,70 +271,14 @@ export default function MyOrderCard({ order }: MyOrderCardProps) {
 	);
 
 	return (
-		<>
-			<Card className="rounded-xl py-2 bg-white">
-				<CardContent className="p-0">
-					<Link to={"/shop/$id"} params={{ id: order.storeId as string }}>
-						<div className="flex gap-2 items-center p-4">
-							<Avatar className="rounded-md size-12">
-								<AvatarImage src={order.storeLogo || ""} />
-								<AvatarFallback className="rounded-lg bg-indigo-500 text-white">
-									{order.storeName?.[0] ?? "S"}
-								</AvatarFallback>
-							</Avatar>
-							<div>
-								<p className="fomt-semibold line-clamp-1">{order.storeName}</p>
-								<p className="text-muted-foreground line-clamp-1">
-									{"Paschim Vihar, New Delhi"}
-								</p>
-							</div>
-						</div>
-					</Link>
-
-					<Separator />
-					<div className="p-4">
-						<Link
-							to={"/account/orders/$orderId"}
-							params={{ orderId: order.orderPrimaryId as string }}
-						>
-							<div className="flex justify-start gap-4">
-								<CustomAvatarGroup items={order.items ?? []} />
-								<div className="text-sm">
-									{displayItems.map((item, index) => (
-										<span key={item.id}>
-											{item.variant.title}
-											{item.quantity > 1 && ` (${item.quantity})`}
-											{index < displayItems.length - 1 && ", "}
-										</span>
-									))}
-									{remainingItems > 0 && (
-										<span className="text-sm">
-											{displayItems.length > 0 && ", "}+{remainingItems} more
-										</span>
-									)}
-								</div>
-							</div>
-							<Separator className="border-t border-dashed bg-transparent my-4" />
-
-							<div className="flex justify-between">
-								<p className="text-muted-foreground">
-									Ordered on {format(order.orderedAt, "PPp")}
-								</p>
-								<p className="font-medium">₹{order.itemTotalAmount}</p>
-							</div>
-							<Separator className="border-t border-dashed bg-transparent my-4" />
-							<div className="flex items-center gap-2">
-								{statusConfig.icon && (
-									<statusConfig.icon className={statusConfig.color} size={16} />
-								)}
-								<p className={`${statusConfig.color} font-medium`}>
-									{statusConfig.label}
-								</p>
-							</div>
-						</Link>
-					</div>
-				</CardContent>
-			</Card>
-		</>
+		<div className="flex items-center gap-2">
+			{statusConfig.icon && (
+				<statusConfig.icon className={statusConfig.color} size={size} />
+			)}
+			<div>
+				<p className={cn("font-medium", className)}>{statusConfig.label}</p>
+				{children}
+			</div>
+		</div>
 	);
-}
+};

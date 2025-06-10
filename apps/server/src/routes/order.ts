@@ -54,6 +54,7 @@ const route = new Hono<ServerContext>()
 				"s.name as storeName",
 				"s.logo as storeLogo",
 				"s.id as storeId",
+				"o.address",
 			])
 			.orderBy("o.orderedAt", "desc")
 			.execute();
@@ -68,6 +69,7 @@ const route = new Hono<ServerContext>()
 			.selectFrom("orders as o")
 			.where("o.orderedBy", "=", session?.userId!)
 			.where("o.pk", "=", id)
+			.leftJoin("store as s", "s.id", "o.storeId")
 			.selectAll()
 			.execute();
 

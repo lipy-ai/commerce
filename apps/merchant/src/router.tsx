@@ -1,3 +1,5 @@
+import { buttonVariants } from "@lipy/web-ui/components/ui/button";
+import { cn } from "@lipy/web-ui/lib/utils";
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 import {
 	ErrorComponent,
@@ -55,27 +57,18 @@ export function DefaultCatchBoundary({ error }: ErrorComponentProps) {
 					onClick={() => {
 						router.invalidate();
 					}}
-					className={
-						"px-2 py-1 bg-gray-600 dark:bg-gray-700 rounded text-white uppercase font-extrabold"
-					}
+					className={cn(buttonVariants())}
 				>
-					Try Again
+					Retry
 				</button>
 				{isRoot ? (
-					<Link
-						to="/"
-						className={
-							"px-2 py-1 bg-gray-600 dark:bg-gray-700 rounded text-white uppercase font-extrabold"
-						}
-					>
+					<Link to="/" className={buttonVariants()}>
 						Home
 					</Link>
 				) : (
 					<Link
 						to="/"
-						className={
-							"px-2 py-1 bg-gray-600 dark:bg-gray-700 rounded text-white uppercase font-extrabold"
-						}
+						className={cn(buttonVariants({ variant: "secondary" }))}
 						onClick={(e) => {
 							e.preventDefault();
 							window.history.back();

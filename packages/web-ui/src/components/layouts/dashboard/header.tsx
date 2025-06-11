@@ -22,9 +22,10 @@ export const DashboardHeader = ({
 		router.history.back();
 		return false;
 	};
+
 	return (
-		<div className="sticky top-0 z-10 bg-background ">
-			<div className="flex justify-between gap-8 w-full px-3 py-2 items-center bg-accent/30 border-b">
+		<div className="sticky top-0 z-10 bg-background">
+			<div className="flex justify-between gap-8 w-full p-3 items-center bg-accent/30 border-b h-14">
 				<div className="flex items-center justify-center gap-2">
 					{!hideBackBtn && (
 						<Link to={"/"} onClick={onBack}>

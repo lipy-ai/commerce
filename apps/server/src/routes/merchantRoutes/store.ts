@@ -4,23 +4,31 @@ import type { ServerContext } from "@/types";
 import { Hono } from "hono";
 import { z } from "zod";
 
-const cartSchema = z.object({
-    variant_id: z.number(),
-    quantity: z.number().min(0).int(),
+const updateSchema = z.object({
+	name: z.string(),
+	handle: z.string(),
+	description: z.string(),
+	email: z.string(),
+	phone: z.string(),
 });
 
-const route = new Hono<ServerContext>()
-    .get("/", async (c) => {
-        const session = c.get("session");
-        
-        return c.json( []);
-    })
-    .patch("/", zValidator("json", cartSchema), async (c) => {
-        const session = c.get("session");
-        const values = c.req.valid("json");
+const route = new Hono<ServerContext>().patch(
+	"/",
+	zValidator("json", updateSchema),
+	async (c) => {
+		const session = c.get("session");
+		const values = c.req.valid("json");
 
+		await db
+			.updateTable("store")
+			.where("store.id", "=", session?.activeStoreId!)
+			.set({
+				...values,
+			})
+			.execute();
 
-        return c.json({ success: true });
-    });
+		return c.json({ success: true });
+	},
+);
 
-export { route as cartRoute };
+export { route as merchantStoreRoute };

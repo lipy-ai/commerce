@@ -4,7 +4,7 @@
 	"type": "module",
 	"packageManager": "bun@1.1.21",
 	"scripts": {
-		"dev": "vinxi dev --port 3000 --host\"",
+		"dev": "vinxi dev --port 3000 --host",
 		"build": "vinxi build",
 		"start": "vinxi start --port 3000 --host",
 		"test": "vitest run",

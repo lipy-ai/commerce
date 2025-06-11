@@ -3,9 +3,9 @@ import { DefaultCatchBoundary } from "@/components/defaultCatchBoundry";
 import NavBar from "@/components/navBar";
 import { NotFound } from "@/components/notFound";
 import { seo } from "@/utils/seo";
+import useGlobalVibration from "@lipy/lib/hooks/use-vibrate";
 import QueryProvider from "@lipy/lib/providers/queryProvider";
 import { getIsSsrMobile } from "@lipy/lib/utils/isServerMobile";
-
 import { Toaster, toast } from "@lipy/web-ui/components/ui/sonner";
 import { ViewportProvider } from "@lipy/web-ui/contexts/viewport";
 import appCss from "@lipy/web-ui/styles.css?url";
@@ -95,6 +95,8 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+	useGlobalVibration();
+
 	const handleThrowOnError = React.useCallback((error: Error) => {
 		toast.error(error?.message || "Something went wrong!");
 		return false;

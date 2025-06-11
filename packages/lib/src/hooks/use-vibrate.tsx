@@ -8,8 +8,6 @@ const useGlobalVibration = () => {
 			// Traverse up in case the click was on a nested span or icon inside button or a
 			const clickable = target.closest("button, a[href]");
 
-			console.log(clickable, navigator.vibrate);
-
 			if (clickable && navigator.vibrate) {
 				navigator.vibrate(15); // subtle haptic
 			}

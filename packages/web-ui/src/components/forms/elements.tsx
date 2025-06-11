@@ -1,5 +1,8 @@
 import { cn } from "@lipy/web-ui/lib/utils";
-import { type ControllerRenderProps, useForm } from "react-hook-form";
+import type { ReactNode } from "@tanstack/react-router";
+import { Loader2 } from "lucide-react";
+import { type ControllerRenderProps, useFormContext } from "react-hook-form";
+import { Button } from "../ui/button";
 import {
 	FormControl,
 	FormDescription,
@@ -9,7 +12,7 @@ import {
 	FormMessage,
 } from "../ui/form";
 import { Input, type InputProps } from "../ui/input";
-import { SingleImage } from "../ui/single-image";
+import { SingleImage, type SingleImageProps } from "../ui/single-image";
 import { Switch } from "../ui/switch";
 import { Textarea } from "../ui/textarea";
 
@@ -53,19 +56,54 @@ export const FormItemWrapper = ({
 	);
 };
 
+export const FormButton = ({
+	children,
+	className,
+	...props
+}: React.ComponentProps<typeof Button> & {
+	children: ReactNode;
+}) => {
+	const form = useFormContext();
+
+	return (
+		<Button
+			{...props}
+			className={cn(className, "relative")}
+			disabled={!form.formState.isDirty || form.formState.isSubmitting}
+		>
+			{form.formState.isSubmitting ? (
+				<div className="absolute size-full flex justify-center items-center">
+					<Loader2 className="animate-spin" />
+				</div>
+			) : form.formState.isSubmitted && !form.formState.isSubmitSuccessful ? (
+				<div className="absolute size-full flex justify-center items-center">
+					Retry
+				</div>
+			) : null}
+			<div
+				className={cn(
+					(form.formState.isSubmitting ||
+						(form.formState.isSubmitted &&
+							!form.formState.isSubmitSuccessful)) &&
+						"invisible",
+				)}
+			>
+				{children}
+			</div>
+		</Button>
+	);
+};
 export const FormInput = ({ ...props }: InputProps & SharedFormProps) => {
-	const form = useForm();
+	const form = useFormContext();
 	return (
 		<FormField
 			control={form.control}
 			name={props.name}
 			render={({ field }: { field: ControllerRenderProps }) => (
 				<FormItemWrapper {...props}>
-					{
-						<FormControl>
-							<Input {...props} {...field} />
-						</FormControl>
-					}
+					<FormControl>
+						<Input {...props} {...field} />
+					</FormControl>
 				</FormItemWrapper>
 			)}
 		/>
@@ -78,7 +116,7 @@ export const FormSwitch = ({
 
 	...props
 }: Parameters<typeof Switch>[0] & SharedFormProps) => {
-	const form = useForm();
+	const form = useFormContext();
 	return (
 		<FormField
 			control={form.control}
@@ -104,7 +142,7 @@ export const FormSwitch = ({
 export const FormTextarea = ({
 	...props
 }: React.ComponentProps<"textarea"> & SharedFormProps) => {
-	const form = useForm();
+	const form = useFormContext();
 
 	return (
 		<FormField
@@ -125,8 +163,13 @@ export const FormTextarea = ({
 	);
 };
 
-export const FormImage = ({ wrapperClassName, ...props }: SharedFormProps) => {
-	const form = useForm();
+export const FormImage = ({
+	wrapperClassName,
+	alt,
+	referrerPolicy,
+	...props
+}: SharedFormProps & Pick<SingleImageProps, "alt" | "referrerPolicy">) => {
+	const form = useFormContext();
 	return (
 		<FormField
 			control={form.control}
@@ -134,6 +177,9 @@ export const FormImage = ({ wrapperClassName, ...props }: SharedFormProps) => {
 			render={({ field }: { field: ControllerRenderProps }) => {
 				return (
 					<SingleImage
+						referrerPolicy={referrerPolicy}
+						url={field.value}
+						alt={alt}
 						className={wrapperClassName}
 						onSuccess={(data) => field.onChange(data)}
 					/>

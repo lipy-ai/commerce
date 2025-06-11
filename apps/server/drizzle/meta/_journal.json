@@ -15,6 +15,13 @@
       "when": 1748959368821,
       "tag": "0001_large_pandemic",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1749641832701,
+      "tag": "0002_quick_living_lightning",
+      "breakpoints": true
     }
   ]
 }

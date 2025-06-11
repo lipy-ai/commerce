@@ -89,7 +89,7 @@ function RouteComponent() {
 			transition={{ duration: 0.5 }}
 		>
 			<DashboardHeader title="Delivery Address" />
-			<div className="p-4 space-y-8 max-w-4xl lg:p-8 lg: rounded-sm lg:border">
+			<div className="p-4 space-y-8 lg:p-8 lg: rounded-sm  m-auto max-w-screen-xl md:border-r md:border-l min-h-screen">
 				{!isLoaded ? (
 					<Spinner />
 				) : (
@@ -143,10 +143,9 @@ function RouteComponent() {
 								</p>
 							</div>
 						</div>
+						<Separator className="mt-4" />
 					</div>
 				)}
-
-				<Separator className="-mt-2" />
 
 				{!isLoading && data && data?.length > 0 && (
 					<div>

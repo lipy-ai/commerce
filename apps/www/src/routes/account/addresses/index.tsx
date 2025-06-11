@@ -43,7 +43,7 @@ function RouteComponent() {
 	>(null);
 
 	return (
-		<>
+		<div>
 			<DashboardHeader title="Addresses">
 				{!isMobile && (
 					<Link
@@ -65,7 +65,7 @@ function RouteComponent() {
 				))}
 
 			{!isLoading && data && data?.length > 0 && (
-				<div className="mb-16 max-w-4xl items-center lg:border-r">
+				<div className="mb-16  items-center lg:border-r">
 					{data.map((address) => (
 						<div
 							key={address.id}
@@ -143,7 +143,7 @@ function RouteComponent() {
 					address={selectedAddress}
 				/>
 			)}
-		</>
+		</div>
 	);
 }
 

@@ -8,6 +8,7 @@ import {
 } from "@lipy/web-ui/components/layouts/dashboard";
 import LocationComponent from "@lipy/web-ui/components/maps/deliveryAddress";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { createFileRoute } from "@tanstack/react-router";
 import {
 	CircleUser,
@@ -48,6 +49,7 @@ function Home() {
 	const { cart, initialized } = useCartStore();
 
 	const { deliveryLocation, hasHydrated } = useLocationStore();
+	const { isMobile } = useViewport();
 
 	const mobileNav = [
 		{
@@ -81,11 +83,10 @@ function Home() {
 				dashboardNav={dashboardNav}
 				mobileNav={mobileNav}
 				logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
+				isVisibleDashboarNav={false}
 			>
 				<DashboardBody>
-					<div className="bg-emerald-700 text-background">
-						<NavBar />
-					</div>
+					{isMobile && <NavBar />}
 
 					<NearByShops />
 

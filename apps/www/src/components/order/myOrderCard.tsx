@@ -138,9 +138,12 @@ export function MyOrderCard({ order }: { order: Order }) {
 
 						{order.items && order.items.length > 0 && (
 							// The selected code with types
-							<div className="grid grid-cols-5 gap-2">
+							<div className="grid md:grid-cols-5 lg:grid-cols-8 gap-2">
 								{order.items.map((item, index) => (
-									<Avatar key={index} className="rounded-md size-12">
+									<Avatar
+										key={index}
+										className="rounded-md md:size-12 lg:size-20"
+									>
 										<AvatarImage src={item.thumbnail || ""} />
 										<AvatarFallback className="rounded-lg bg-indigo-500 text-white">
 											{item.variant.title?.[0] ?? "I"}

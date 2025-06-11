@@ -25,6 +25,7 @@ export const DashboardLayout = ({
 	dashboardNav,
 	mobileNav,
 	logo,
+	isVisibleDashboarNav = true,
 	...props
 }: {
 	children?: ReactNode;
@@ -35,6 +36,7 @@ export const DashboardLayout = ({
 		full: string;
 		alt: string;
 	};
+	isVisibleDashboarNav?: boolean;
 }) => {
 	const [open, setOpen] = useState(false);
 	const { isMobile } = useViewport();
@@ -76,13 +78,15 @@ export const DashboardLayout = ({
 
 	return (
 		<div className="flex min-h-screen">
-			<ActiveLinks
-				open={open}
-				setOpen={setOpen}
-				dashboardNav={dashboardNav}
-				logo={logo}
-				{...props}
-			/>
+			{isVisibleDashboarNav && (
+				<ActiveLinks
+					open={open}
+					setOpen={setOpen}
+					dashboardNav={dashboardNav}
+					logo={logo}
+					{...props}
+				/>
+			)}
 
 			<div
 				className="flex-1 flex flex-col overflow-x-auto h-screen overflow-y-auto"

@@ -59,9 +59,28 @@ export const address = schema.table("address", {
 	phone: text("phone"),
 	lat: doublePrecision("lat"),
 	lng: doublePrecision("lng"),
+});
+
+export const userAddress = schema.table("userAddress", {
+	id: uuid("id")
+		.primaryKey()
+		.references(() => address.id, {
+			onDelete: "cascade",
+		}),
 	userId: uuid("userId")
 		.notNull()
 		.references(() => user.id, { onDelete: "cascade" }),
+});
+
+export const storeAddress = schema.table("storeAddress", {
+	id: uuid("id")
+		.primaryKey()
+		.references(() => address.id, {
+			onDelete: "cascade",
+		}),
+	storeId: uuid("storeId")
+		.notNull()
+		.references(() => store.id, { onDelete: "cascade" }),
 });
 
 export const account = schema.table("authAccount", {
@@ -111,6 +130,8 @@ export const store = schema.table("store", {
 	description: text("description"),
 	createdAt: timestamp("createdAt").notNull(),
 	metadata: text("metadata"),
+	email: text("email"),
+	phone: text("phone"),
 	active: boolean("active").default(false),
 });
 
@@ -321,6 +342,8 @@ export const orders = schema.table("orders", {
 export const dbTables = {
 	user,
 	address,
+	userAddress,
+	storeAddress,
 	account,
 	session,
 	verification,

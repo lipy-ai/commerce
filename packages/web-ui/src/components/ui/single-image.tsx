@@ -7,10 +7,11 @@ import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import CircularProgress from "./circular-progress";
 
-type SingleImageProps = {
+export type SingleImageProps = {
 	url?: string;
 	alt?: string;
 	accept?: string;
+	referrerPolicy?: HTMLImageElement["referrerPolicy"];
 	className?: string;
 	onSuccess?: (data: ReturnType<typeof useUpload>["data"]) => void;
 };
@@ -24,7 +25,11 @@ const SingleImage = (props: SingleImageProps) => {
 			)}
 		>
 			{props.url ? (
-				<img src={props.url} alt={props.alt} />
+				<img
+					src={props.url}
+					alt={props.alt}
+					referrerPolicy={(props.referrerPolicy as any) || undefined}
+				/>
 			) : (
 				<Input {...props} />
 			)}
@@ -32,7 +37,7 @@ const SingleImage = (props: SingleImageProps) => {
 	);
 };
 
-const Input = ({  onSuccess, accept }: SingleImageProps) => {
+const Input = ({ onSuccess, accept }: SingleImageProps) => {
 	const [file, setFile] = React.useState<File | null>(null);
 	const { status, progress, data } = useUpload({ file });
 

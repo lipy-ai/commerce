@@ -1,11 +1,14 @@
-import { FormImage, FormInput } from "@lipy/web-ui/components/forms/elements";
+import { authClient } from "@lipy/lib/providers/auth";
+import {
+	FormButton,
+	FormImage,
+	FormInput,
+} from "@lipy/web-ui/components/forms/elements";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
-import { Button } from "@lipy/web-ui/components/ui/button";
 import { Form } from "@lipy/web-ui/components/ui/form";
-import { Label } from "@lipy/web-ui/components/ui/label";
-import { Separator } from "@lipy/web-ui/components/ui/separator";
+import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { createFileRoute } from "@tanstack/react-router";
-import { Trash } from "lucide-react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 export const Route = createFileRoute("/(loggedIn)/account/profile")({
@@ -13,13 +16,34 @@ export const Route = createFileRoute("/(loggedIn)/account/profile")({
 });
 
 function RouteComponent() {
+	const { data } = authClient.useSession();
+
+	const defaultValues = {
+		image: data?.user.image,
+		name: data?.user.name,
+		email: data?.user.email,
+	};
+
 	const form = useForm({
 		// resolver: zodResolver(),
-		defaultValues: {},
+		defaultValues,
 	});
 
-	const onSubmit = async (body: any) => {
-		console.log(body);
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		data?.user && form.reset({ ...data?.user });
+	}, [data]);
+
+	const onSubmit = async (data: typeof defaultValues) => {
+		toast.promise(
+			authClient.updateUser({ name: data.name }).then((r) => {
+				if (r.error) throw r.error;
+				return r.data;
+			}),
+			{
+				error: "Failed to update profile.",
+			},
+		);
 	};
 
 	return (
@@ -37,31 +61,34 @@ function RouteComponent() {
 						</h1>
 						<div className="p-4">
 							<FormImage
-								name="name"
-								label="Name"
+								name="image"
+								label="Image"
 								wrapperClassName="size-20 mb-4"
+								alt="Profile image"
+								referrerPolicy="no-referrer"
 							/>
-							<FormInput name="handle" label="Handle" placeholder="John Doe" />
+							<FormInput name="name" label="Name" placeholder="John Doe" />
 							<FormInput
 								type="email"
 								name="email"
 								label="Email"
+								disabled
 								placeholder="jhon@example.com"
 							/>
 						</div>
 						<div className="p-4">
-							<Button className="" disabled={!form.formState.isDirty}>
+							<FormButton className="" disabled={!form.formState.isDirty}>
 								Save Changes
-							</Button>
+							</FormButton>
 						</div>
 					</div>
 				</div>
 			</form>
 
-			<div className="px-4 lg:px-8 max-w-4xl ">
+			{/* <div className="px-4 lg:px-8 max-w-4xl ">
 				<Separator className="my-8" />
-			</div>
-			<div className="max-w-4xl lg:p-8 ">
+			</div> */}
+			{/* <div className="max-w-4xl lg:p-8 ">
 				<div className="p-4 grid gap-4 lg:flex bg-destructive/10 border ">
 					<div className="flex-1">
 						<Label className="text-md font-medium">Delete Account</Label>
@@ -77,7 +104,7 @@ function RouteComponent() {
 						</Button>
 					</div>
 				</div>
-			</div>
+			</div> */}
 		</Form>
 	);
 }

@@ -13,6 +13,7 @@ import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Card } from "@lipy/web-ui/components/ui/card";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import {
@@ -34,6 +35,7 @@ export const Route = createFileRoute("/cart")({
 function RouteComponent() {
 	const { cart, setCart, resetCart } = useCartStore();
 	const { deliveryLocation } = useLocationStore();
+	const { isMobile } = useViewport();
 	const [detailedAddressDrawerOpen, setDetailedAddressDrawerOpen] =
 		useState(false);
 	const [deliveryInstructionDrawerOpen, setDeliveryInstructionDrawerOpen] =
@@ -116,16 +118,20 @@ function RouteComponent() {
 
 	return (
 		<div>
-			<DashboardHeader title="Cart" />
-			{isFetching &&
-				Array.from({ length: 5 }).map((_, i) => (
-					<div key={i} className="my-2 flex flex-col items-center">
-						<Skeleton className="h-28 w-5/6" />
-					</div>
-				))}
+			{isMobile && <DashboardHeader title="Cart" />}
+
+			{isFetching && (
+				<div className="relative m-auto max-w-screen-lg">
+					{Array.from({ length: 5 }).map((_, i) => (
+						<div key={i} className="my-2 flex flex-col items-center">
+							<Skeleton className="h-28 w-5/6" />
+						</div>
+					))}
+				</div>
+			)}
 
 			{isFetched && !isError && data.length > 0 && (
-				<div className="relative">
+				<div className="relative m-auto max-w-screen-lg">
 					<div className="p-4 space-y-6 mb-44">
 						<Card className="p-4 shadow-none rounded-xl bg-white border-none">
 							<p className="text-base font-semibold">Order Item(s)</p>
@@ -199,7 +205,7 @@ function RouteComponent() {
 					</div>
 
 					{/* Bottom Checkout UI */}
-					<div className="fixed bottom-0 border-t left-0 w-full bg-white shadow-xl border-2 rounded-t-lg">
+					<div className="fixed bottom-0 border-t  w-full bg-white shadow-xl border-2 rounded-t-lg max-w-screen-lg">
 						<div
 							className="bg-accent/40 rounded-t-lg p-2 cursor-pointer"
 							onClick={() => setDetailedAddressDrawerOpen(true)}
@@ -227,22 +233,6 @@ function RouteComponent() {
 							</div>
 						</div>
 
-						{/* <div className="p-4 flex items-center justify-between gap-2">
-							<div className="w-1/4 rounded-md border border-violet-600 p-1 bg-violet-200 text-violet-600 font-medium h-12 text-sm flex items-center justify-center">
-								Pay on delivery
-							</div>
-
-							<div className="w-full border p-1 rounded-md flex items-center justify-between px-2 bg-orange-200 border-orange-600 h-12">
-								<div>
-									<p className="text-xs font-medium">Total Bill</p>
-									<p className="text-lg font-semibold">₹{totalPrice}</p>
-								</div>
-								<PlaceOrder
-									setOpen={setDetailedAddressDrawerOpen}
-									deliveryInstruction={completeDeliveryInstruction}
-								/>
-							</div>
-						</div> */}
 						<div className="px-4 py-2">
 							<PlaceOrder
 								setOpen={setDetailedAddressDrawerOpen}

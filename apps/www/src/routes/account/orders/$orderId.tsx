@@ -45,8 +45,6 @@ function RouteComponent() {
 	const totalTaxAmount = data?.[0]?.totalTaxAmount ?? 0;
 	const totalPayableAmount = totalPrice + deliveryCharges + totalTaxAmount;
 
-	console.log("Order Details Data:", data);
-
 	return (
 		<>
 			{isFetched && data && (
@@ -66,8 +64,9 @@ function RouteComponent() {
 							<Button size={"sm"}>REORDER</Button>
 						)}
 					</DashboardHeader>
+
 					<div className="lg:grid lg:grid-cols-12 divide-x flex-1">
-						<div className="col-span-8  lg:p-4 ">
+						<div className="col-span-7  lg:p-4 ">
 							<div className="bg-white p-4">
 								<div className="flex items-center justify-between">
 									<h2 className="font-bold text-base ">{data[0]?.pk}</h2>
@@ -180,7 +179,7 @@ function RouteComponent() {
 							</div>
 						</div>
 
-						<div className="col-span-4 space-y-2  lg:p-4  ">
+						<div className="col-span-5 space-y-2  lg:p-4  ">
 							<div className="space-y-4  p-4  my-4 bg-white ">
 								<h2 className="text-lg font-semibold">Bill Summary</h2>
 								<div className="space-y-4">

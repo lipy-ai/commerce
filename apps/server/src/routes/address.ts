@@ -22,9 +22,10 @@ const route = new Hono<ServerContext>()
 	.get("/", async (c) => {
 		const session = c.get("session");
 		const address = await db
-			.selectFrom("address")
-			.selectAll()
-			.where("address.userId", "=", session?.userId!)
+			.selectFrom("userAddress")
+			.where("userAddress.userId", "=", session?.userId!)
+			.rightJoin("address", "address.id", "userAddress.id")
+			.selectAll(["address"])
 			.execute();
 		return c.json(address);
 	})
@@ -35,7 +36,7 @@ const route = new Hono<ServerContext>()
 			const session = c.get("session");
 			const { id } = c.req.valid("param");
 			const address = await db
-				.deleteFrom("address")
+				.deleteFrom("userAddress")
 				.where("id", "=", id)
 				.where("userId", "=", session?.userId!)
 				.returning(["id"])
@@ -46,11 +47,30 @@ const route = new Hono<ServerContext>()
 	.post("/", zValidator("json", addressSchema), async (c) => {
 		const session = c.get("session");
 		const values = c.req.valid("json");
-		const address = await db
-			.insertInto("address")
-			.values({ ...values, id: crypto.randomUUID(), userId: session?.userId! })
-			.returning(["id"])
-			.executeTakeFirst();
+
+		const address = await db.transaction().execute(async (trx) => {
+			const userAddress = await trx
+				.insertInto("userAddress")
+				.values({
+					id: crypto.randomUUID(),
+					userId: session?.userId!,
+				})
+				.returning(["id"])
+				.executeTakeFirst();
+
+			if (!userAddress) throw Error("Failed to create userAddress");
+
+			const address = await trx
+				.insertInto("address")
+				.values({
+					id: userAddress.id,
+					...values,
+				})
+				.returning(["id"])
+				.executeTakeFirst();
+			return address;
+		});
+
 		return c.json(address);
 	})
 	.patch(
@@ -61,10 +81,12 @@ const route = new Hono<ServerContext>()
 			const session = c.get("session");
 			const values = c.req.valid("json");
 			const { id } = c.req.valid("param");
+
 			const address = await db
 				.updateTable("address")
 				.where("id", "=", id)
-				.where("userId", "=", session?.userId!)
+				.rightJoin("userAddress", "address.id", "userAddress.id")
+				.where("userAddress.userId", "=", session?.userId!)
 				.set({
 					...values,
 				})

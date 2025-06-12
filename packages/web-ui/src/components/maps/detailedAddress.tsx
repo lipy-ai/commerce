@@ -5,23 +5,16 @@ import { authClient } from "@lipy/lib/providers/auth";
 import { apiQueryOptions, useAPIMutation } from "@lipy/lib/utils/queryClient";
 import { CustomRadioGroup } from "@lipy/web-ui/components/custom-ui/customRadioGroup";
 import { InputWithAnimatedLabel } from "@lipy/web-ui/components/custom-ui/inputWithAnimatedLabel";
-import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Loader2, StepForward, X } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { DrawerDailogSwitcher } from "../custom-ui/drawerDialogSwitcher";
 import { Button, buttonVariants } from "../ui/button";
-import {
-	Drawer,
-	DrawerClose,
-	DrawerContent,
-	DrawerHeader,
-	DrawerTitle,
-	DrawerTrigger,
-} from "../ui/drawer";
+
 import {
 	Form,
 	FormControl,
@@ -33,7 +26,6 @@ import {
 import { ScrollArea } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
 import { useLocationStore } from "./utils/store";
-
 const addressTypesItems = [
 	{ value: "home", label: "Home" },
 	{ value: "work", label: "Work" },
@@ -54,7 +46,6 @@ export function DetailedAddress({
 	isDeliveryAddress?: boolean;
 }) {
 	const { data } = authClient.useSession();
-	const { isMobile } = useViewport();
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 	const { setDeliveryLocation, deliveryLocation } = useLocationStore();
@@ -145,164 +136,300 @@ export function DetailedAddress({
 	};
 
 	return (
-		<Drawer open={open} onOpenChange={onOpenChange}>
-			<DrawerTrigger className={cn(isMobile && label === "Add" && "w-full")}>
-				{label === "Add" && (
-					<Button className="font-semibold px-6 w-full">
-						Confirm this address
-						<StepForward className="ml-2 h-4 w-4" />
-					</Button>
-				)}
-			</DrawerTrigger>
+		// <Drawer open={open} onOpenChange={onOpenChange}>
+		// 	<DrawerTrigger className={cn(isMobile && label === "Add" && "w-full")}>
+		// 		{label === "Add" && (
+		// 			<Button className="font-semibold px-6 w-full">
+		// 				Confirm this address
+		// 				<StepForward className="ml-2 h-4 w-4" />
+		// 			</Button>
+		// 		)}
+		// 	</DrawerTrigger>
 
-			<DrawerContent>
-				<ScrollArea className="overflow-y-auto">
-					<DrawerHeader className="p-4">
-						<div className="flex items-center justify-between">
-							<DrawerTitle className="font-semibold text-lg">
-								Add address details
-							</DrawerTitle>
-							<DrawerClose>
-								<X className="h-5 w-5" />
-							</DrawerClose>
-						</div>
-					</DrawerHeader>
+		// 	<DrawerContent>
+		// 		<ScrollArea className="overflow-y-auto">
+		// 			<DrawerHeader className="p-4">
+		// 				<div className="flex items-center justify-between">
+		// 					<DrawerTitle className="font-semibold text-lg">
+		// 						Add address details
+		// 					</DrawerTitle>
+		// 				</div>
+		// 			</DrawerHeader>
 
-					<Separator />
+		// 			<Separator />
 
-					<div className="p-4 mb-6">
-						<div className="text-sm rounded-md border p-2 bg-accent font-medium">
-							<p>
-								{label === "Edit"
-									? fullAddress.line1.split(",").slice(1).join(",")
-									: fullAddress.line1}
-							</p>
-							<div className="flex justify-end">
-								{label === "Add" ? (
-									<DrawerClose>
-										<Button variant="outline" size="sm">
-											Change
-										</Button>
-									</DrawerClose>
-								) : (
-									<Link
-										to="/account/addresses/new"
-										search={{ type: "saveAddress" }}
-										className={cn(
-											buttonVariants({ variant: "outline", size: "sm" }),
-										)}
-									>
-										Change
-									</Link>
-								)}
-							</div>
-						</div>
+		// 			<div className="p-4 mb-6">
+		// 				<div className="text-sm rounded-md border p-2 bg-accent font-medium">
+		// 					<p>
+		// 						{label === "Edit"
+		// 							? fullAddress.line1.split(",").slice(1).join(",")
+		// 							: fullAddress.line1}
+		// 					</p>
+		// 					<div className="flex justify-end">
+		// 						{label === "Add" ? (
+		// 							<DrawerClose>
+		// 								<Button variant="outline" size="sm">
+		// 									Change
+		// 								</Button>
+		// 							</DrawerClose>
+		// 						) : (
+		// 							<Link
+		// 								to="/account/addresses/new"
+		// 								search={{ type: "saveAddress" }}
+		// 								className={cn(
+		// 									buttonVariants({ variant: "outline", size: "sm" }),
+		// 								)}
+		// 							>
+		// 								Change
+		// 							</Link>
+		// 						)}
+		// 					</div>
+		// 				</div>
 
-						<Form {...form}>
-							<form
-								onSubmit={form.handleSubmit(handleSubmit)}
-								className="space-y-8 my-10 w-full"
-							>
-								<FormField
-									control={form.control}
-									name="building"
-									render={({ field }) => (
-										<FormItem>
-											<FormControl>
-												<InputWithAnimatedLabel
-													title="Flat No. / House No. / Building Name *"
-													{...field}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
+		// 				<Form {...form}>
+		// 					<form
+		// 						onSubmit={form.handleSubmit(handleSubmit)}
+		// 						className="space-y-8 my-10 w-full"
+		// 					>
+		// 						<FormField
+		// 							control={form.control}
+		// 							name="building"
+		// 							render={({ field }) => (
+		// 								<FormItem>
+		// 									<FormControl>
+		// 										<InputWithAnimatedLabel
+		// 											title="Flat No. / House No. / Building Name *"
+		// 											{...field}
+		// 										/>
+		// 									</FormControl>
+		// 									<FormMessage />
+		// 								</FormItem>
+		// 							)}
+		// 						/>
 
-								<FormField
-									control={form.control}
-									name="addressType"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel className="text-muted-foreground font-semibold">
-												Address type
-											</FormLabel>
-											<FormControl>
-												<CustomRadioGroup
-													{...field}
-													items={addressTypesItems}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
+		// 						<FormField
+		// 							control={form.control}
+		// 							name="addressType"
+		// 							render={({ field }) => (
+		// 								<FormItem>
+		// 									<FormLabel className="text-muted-foreground font-semibold">
+		// 										Address type
+		// 									</FormLabel>
+		// 									<FormControl>
+		// 										<CustomRadioGroup
+		// 											{...field}
+		// 											items={addressTypesItems}
+		// 										/>
+		// 									</FormControl>
+		// 									<FormMessage />
+		// 								</FormItem>
+		// 							)}
+		// 						/>
 
-								<FormLabel className="text-muted-foreground font-semibold">
-									Receiver's Details
-								</FormLabel>
+		// 						<FormLabel className="text-muted-foreground font-semibold">
+		// 							Receiver's Details
+		// 						</FormLabel>
 
-								<FormField
-									control={form.control}
-									name="receiverName"
-									render={({ field }) => (
-										<FormItem>
-											<FormControl>
-												<InputWithAnimatedLabel
-													title="Receiver's Name"
-													{...field}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
+		// 						<FormField
+		// 							control={form.control}
+		// 							name="receiverName"
+		// 							render={({ field }) => (
+		// 								<FormItem>
+		// 									<FormControl>
+		// 										<InputWithAnimatedLabel
+		// 											title="Receiver's Name"
+		// 											{...field}
+		// 										/>
+		// 									</FormControl>
+		// 									<FormMessage />
+		// 								</FormItem>
+		// 							)}
+		// 						/>
 
-								<FormField
-									control={form.control}
-									name="receiverPhone"
-									render={({ field }) => (
-										<FormItem>
-											<FormControl>
-												<InputWithAnimatedLabel
-													title="Receiver's Phone"
-													type="tel"
-													{...field}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
+		// 						<FormField
+		// 							control={form.control}
+		// 							name="receiverPhone"
+		// 							render={({ field }) => (
+		// 								<FormItem>
+		// 									<FormControl>
+		// 										<InputWithAnimatedLabel
+		// 											title="Receiver's Phone"
+		// 											type="tel"
+		// 											{...field}
+		// 										/>
+		// 									</FormControl>
+		// 									<FormMessage />
+		// 								</FormItem>
+		// 							)}
+		// 						/>
 
-								<div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-t z-10">
-									<Button
-										type="submit"
-										className="w-full font-semibold"
-										disabled={
-											form.formState.isSubmitting ||
-											!form.formState.isValid ||
-											form.formState.isSubmitSuccessful ||
-											!form.formState.isDirty
-										}
-									>
-										{form.formState.isSubmitting ? (
-											<>
-												<Loader2 className="h-4 w-4 animate-spin mr-2" />
-												Saving...
-											</>
-										) : isDeliveryAddress ? (
-											"Save and continue"
-										) : (
-											"Save Address"
-										)}
-									</Button>
-								</div>
-							</form>
-						</Form>
+		// 						<div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-t z-10">
+		// 							<Button
+		// 								type="submit"
+		// 								className="w-full font-semibold"
+		// 								disabled={
+		// 									form.formState.isSubmitting ||
+		// 									!form.formState.isValid ||
+		// 									form.formState.isSubmitSuccessful ||
+		// 									!form.formState.isDirty
+		// 								}
+		// 							>
+		// 								{form.formState.isSubmitting ? (
+		// 									<>
+		// 										<Loader2 className="h-4 w-4 animate-spin mr-2" />
+		// 										Saving...
+		// 									</>
+		// 								) : isDeliveryAddress ? (
+		// 									"Save and continue"
+		// 								) : (
+		// 									"Save Address"
+		// 								)}
+		// 							</Button>
+		// 						</div>
+		// 					</form>
+		// 				</Form>
+		// 			</div>
+		// 		</ScrollArea>
+		// 	</DrawerContent>
+		// </Drawer>
+
+		<DrawerDailogSwitcher open={open} onOpenChange={onOpenChange}>
+			<ScrollArea className="overflow-y-auto">
+				<div className="p-4">
+					<div className="flex items-center justify-between">
+						<div className="font-semibold text-lg">Add address details</div>
 					</div>
-				</ScrollArea>
-			</DrawerContent>
-		</Drawer>
+				</div>
+
+				<Separator />
+
+				<div className="p-4 mb-6">
+					<div className="text-sm rounded-md border p-2 bg-accent font-medium">
+						<p>
+							{label === "Edit"
+								? fullAddress.line1.split(",").slice(1).join(",")
+								: fullAddress.line1}
+						</p>
+						<div className="flex justify-end">
+							{label === "Add" ? (
+								<Button variant="outline" size="sm">
+									Change
+								</Button>
+							) : (
+								<Link
+									to="/account/addresses/new"
+									search={{ type: "saveAddress" }}
+									className={cn(
+										buttonVariants({ variant: "outline", size: "sm" }),
+									)}
+								>
+									Change
+								</Link>
+							)}
+						</div>
+					</div>
+
+					<Form {...form}>
+						<form
+							onSubmit={form.handleSubmit(handleSubmit)}
+							className="space-y-8 my-10 w-full"
+						>
+							<FormField
+								control={form.control}
+								name="building"
+								render={({ field }) => (
+									<FormItem>
+										<FormControl>
+											<InputWithAnimatedLabel
+												title="Flat No. / House No. / Building Name *"
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="addressType"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel className="text-muted-foreground font-semibold">
+											Address type
+										</FormLabel>
+										<FormControl>
+											<CustomRadioGroup {...field} items={addressTypesItems} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormLabel className="text-muted-foreground font-semibold">
+								Receiver's Details
+							</FormLabel>
+
+							<FormField
+								control={form.control}
+								name="receiverName"
+								render={({ field }) => (
+									<FormItem>
+										<FormControl>
+											<InputWithAnimatedLabel
+												title="Receiver's Name (optional)"
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="receiverPhone"
+								render={({ field }) => (
+									<FormItem>
+										<FormControl>
+											<InputWithAnimatedLabel
+												title="Receiver's Phone (optional)"
+												type="tel"
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-t z-10">
+								<Button
+									type="submit"
+									className="w-full font-semibold"
+									disabled={
+										form.formState.isSubmitting ||
+										!form.formState.isValid ||
+										form.formState.isSubmitSuccessful ||
+										!form.formState.isDirty
+									}
+								>
+									{form.formState.isSubmitting ? (
+										<>
+											<Loader2 className="h-4 w-4 animate-spin mr-2" />
+											Saving...
+										</>
+									) : isDeliveryAddress ? (
+										"Save and continue"
+									) : (
+										"Save Address"
+									)}
+								</Button>
+							</div>
+						</form>
+					</Form>
+				</div>
+			</ScrollArea>
+		</DrawerDailogSwitcher>
 	);
 }

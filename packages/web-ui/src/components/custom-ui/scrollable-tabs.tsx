@@ -1,3 +1,4 @@
+import { cn } from "@lipy/web-ui/lib/utils";
 import { useEffect, useRef, useState } from "react";
 
 type Tab = {
@@ -9,70 +10,81 @@ type Tab = {
 type ScrollingTabsProps = {
 	tabs: Tab[];
 	handleTabChange: (tabId: string) => void;
+	className?: string;
 };
 
 export const ScrollingTabs = ({
 	tabs,
 	handleTabChange,
+	className,
 }: ScrollingTabsProps) => {
 	const [activeTab, setActiveTab] = useState(0);
 	const tabsRef = useRef<HTMLDivElement>(null);
 
-	// Handle tab change
 	const onTabChange = (index: number, id: string) => {
 		setActiveTab(index);
 		handleTabChange(id);
 	};
 
-	// Handle showing arrows (not implemented, but hook is in place)
 	useEffect(() => {
-		if (!tabsRef.current) return;
-
 		const checkForArrows = () => {
-			// const container = tabsRef.current;
-			// You can add logic here to determine whether arrows should show
+			// Optional: logic for showing arrows if needed later
 		};
 
-		checkForArrows();
-		tabsRef.current.addEventListener("scroll", checkForArrows);
+		const tabsEl = tabsRef.current;
+		if (!tabsEl) return;
+
+		tabsEl.addEventListener("scroll", checkForArrows);
 		window.addEventListener("resize", checkForArrows);
+		checkForArrows();
 
 		return () => {
-			tabsRef.current?.removeEventListener("scroll", checkForArrows);
+			tabsEl.removeEventListener("scroll", checkForArrows);
 			window.removeEventListener("resize", checkForArrows);
 		};
 	}, []);
 
 	return (
-		<div className="flex flex-col w-full">
-			<div className="relative flex items-center">
-				<div
-					ref={tabsRef}
-					className="flex overflow-x-auto scrollbar-hide w-full"
-					style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-				>
-					{tabs.map((tab, index) => {
-						const Icon = tab.icon;
-						const isActive = activeTab === index;
+		<div className="w-full">
+			<div ref={tabsRef} className="flex overflow-x-auto scrollbar-hide">
+				{tabs.map((tab, index) => {
+					const Icon = tab.icon;
+					const isActive = activeTab === index;
 
-						return (
-							<div
-								key={tab.id}
-								onClick={() => onTabChange(index, tab.id)}
-								className={`relative flex flex-col items-center px-4 py-2 mx-2 min-w-16 cursor-pointer transition-all duration-300 ${
+					return (
+						<div
+							key={tab.id}
+							onClick={() => onTabChange(index, tab.id)}
+							className={cn(
+								"group relative flex flex-col lg:flex-row items-center px-4 py-2 lg:py-4  mx-2 min-w-16 cursor-pointer transition-all duration-300",
+								isActive
+									? "after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1.5 after:bg-background lg:after:bg-primary after:rounded-t-full text-primary"
+									: "text-background hover:text-background/80",
+								className,
+							)}
+						>
+							<Icon
+								size={20}
+								className={cn(
 									isActive
-										? " after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[6px] after:bg-background after:rounded-t-full "
-										: "text-background hover:text-background/80"
-								}`}
+										? "lg:text-primary text-background"
+										: "lg:text-muted-foreground",
+									"lg:size-6",
+								)}
+							/>
+							<span
+								className={cn(
+									"mt-1 lg:mt-0 lg:ml-2 sm:text-sm lg:text-xl font-medium whitespace-nowrap",
+									isActive
+										? "lg:text-primary text-background"
+										: "lg:text-muted-foreground",
+								)}
 							>
-								<Icon size={20} />
-								<span className="mt-1 text-sm font-medium whitespace-nowrap">
-									{tab.name}
-								</span>
-							</div>
-						);
-					})}
-				</div>
+								{tab.name}
+							</span>
+						</div>
+					);
+				})}
 			</div>
 		</div>
 	);

@@ -87,7 +87,6 @@ function Home() {
 			>
 				<DashboardBody>
 					{isMobile && <NavBar />}
-
 					<NearByShops />
 
 					{hasHydrated && deliveryLocation.line1 === "" && (

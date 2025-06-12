@@ -244,19 +244,17 @@ function RouteComponent() {
 			)}
 
 			{isFetched && !isError && data.length === 0 && (
-				<div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-					<EmptyPage icon={ShoppingBag} title="Your Cart is Empty" label=" ">
-						<Link
-							className={cn(
-								buttonVariants({ size: "default", className: "text-lg" }),
-								"my-6",
-							)}
-							to="/"
-						>
-							Browse Products
-						</Link>
-					</EmptyPage>
-				</div>
+				<EmptyPage icon={ShoppingBag} title="Your Cart is Empty" label=" ">
+					<Link
+						className={cn(
+							buttonVariants({ size: "default", className: "text-lg" }),
+							"my-6",
+						)}
+						to="/"
+					>
+						Browse Products
+					</Link>
+				</EmptyPage>
 			)}
 
 			{detailedAddressDrawerOpen && (

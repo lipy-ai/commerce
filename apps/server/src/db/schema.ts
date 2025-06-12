@@ -143,7 +143,9 @@ export const storeMember = schema.table("storeMember", {
 	userId: uuid("userId")
 		.notNull()
 		.references(() => user.id, { onDelete: "cascade" }),
-	role: text("role").notNull(),
+	role: text("role", {
+		enum: ["owner", "admin", "delivery", "staff"],
+	}).notNull(),
 	createdAt: timestamp("createdAt").notNull(),
 });
 

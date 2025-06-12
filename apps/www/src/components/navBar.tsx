@@ -3,7 +3,7 @@ import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 import {
 	Building,
 	ChevronDown,
@@ -22,6 +22,7 @@ export default function NavBar() {
 	const { deliveryLocation } = useLocationStore();
 	const [_, setActiveCategory] = useState("all");
 	const { cart } = useCartStore();
+	const { pathname } = useLocation();
 
 	const CATEGORIES = [
 		{ id: "all", name: "All Stores", icon: Store },
@@ -83,14 +84,14 @@ export default function NavBar() {
 	}
 
 	return (
-		<div className="p-6 sticky top-0 z-50 shadow-sm bg-background">
+		<div className="p-6 sticky top-0 z-50  bg-background bg-gradient-to-b from-primary/20 to-transparent backdrop-blur-md shadow-sm px-16">
 			<div className="flex items-center  gap-8">
 				<Link to="/" className="overflow-hidden">
 					<img
 						src={"/logo/logo.png"} // Replace with your logo path
 						alt={"lipy-logo"}
 						width={100}
-						height={100}
+						height={200}
 						className="rounded-md"
 					/>
 				</Link>
@@ -131,6 +132,15 @@ export default function NavBar() {
 					<p className="font-medium text-base">{cart.length} items</p>
 				</Link>
 			</div>
+			{pathname === "/" && (
+				<div className="mt-8 -mb-6 ">
+					<ScrollingTabs
+						tabs={CATEGORIES}
+						handleTabChange={setActiveCategory}
+						className="text-foreground hover:text-foreground/80 active:text-foreground/90"
+					/>
+				</div>
+			)}
 		</div>
 	);
 }

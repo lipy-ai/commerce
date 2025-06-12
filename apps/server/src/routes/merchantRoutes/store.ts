@@ -18,7 +18,7 @@ const route = new Hono<ServerContext>().patch(
 	async (c) => {
 		const session = c.get("session");
 		const values = c.req.valid("json");
-
+		console.log({ id: session?.activeStoreId });
 		await db
 			.updateTable("store")
 			.where("store.id", "=", session?.activeStoreId!)

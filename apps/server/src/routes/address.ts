@@ -47,27 +47,27 @@ const route = new Hono<ServerContext>()
 	.post("/", zValidator("json", addressSchema), async (c) => {
 		const session = c.get("session");
 		const values = c.req.valid("json");
-
 		const address = await db.transaction().execute(async (trx) => {
-			const userAddress = await trx
-				.insertInto("userAddress")
+			const address = await trx
+				.insertInto("address")
 				.values({
 					id: crypto.randomUUID(),
+					...values,
+				})
+				.returning(["id"])
+				.executeTakeFirst();
+
+			if (!address) throw Error("Failed to create address");
+
+			await trx
+				.insertInto("userAddress")
+				.values({
+					id: address.id,
 					userId: session?.userId!,
 				})
 				.returning(["id"])
 				.executeTakeFirst();
 
-			if (!userAddress) throw Error("Failed to create userAddress");
-
-			const address = await trx
-				.insertInto("address")
-				.values({
-					id: userAddress.id,
-					...values,
-				})
-				.returning(["id"])
-				.executeTakeFirst();
 			return address;
 		});
 

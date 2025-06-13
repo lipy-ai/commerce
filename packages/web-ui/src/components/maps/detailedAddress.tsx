@@ -50,9 +50,6 @@ export function DetailedAddress({
 	const queryClient = useQueryClient();
 	const { setDeliveryLocation, deliveryLocation } = useLocationStore();
 
-	const buildingDefault =
-		label === "Edit" ? fullAddress.line1.split(",")[0] : "";
-
 	const formSchema = z.object({
 		building: z.string().min(2, "Please fill your detailed address"),
 		addressType: z.enum(["home", "work", "other"]),
@@ -63,7 +60,7 @@ export function DetailedAddress({
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			building: buildingDefault,
+			building: fullAddress.metadata?.building || "",
 			addressType: fullAddress.tag || "home",
 			receiverName: fullAddress.name || data?.user?.name || "",
 			receiverPhone: fullAddress.phone || "",
@@ -103,13 +100,16 @@ export function DetailedAddress({
 			phone: values.receiverPhone,
 			lat: fullAddress.lat,
 			lng: fullAddress.lng,
+			line1: fullAddress.line1,
+			metadata: {
+				building: values.building,
+			},
 		};
 
 		if (!isDeliveryAddress && label === "Add") {
 			await mutation.mutateAsync({
 				json: {
 					...basePayload,
-					line1: `${values.building},${fullAddress.line1}`,
 				},
 			});
 		} else if (!isDeliveryAddress && label === "Edit") {
@@ -117,7 +117,6 @@ export function DetailedAddress({
 				param: { id: fullAddress.id },
 				json: {
 					...basePayload,
-					line1: `${values.building},${fullAddress.line1.split(",").slice(1).join(",")}`,
 				},
 			});
 		}
@@ -127,171 +126,17 @@ export function DetailedAddress({
 				...deliveryLocation,
 				name: basePayload.name,
 				tag: values.addressType,
-				line1: `${values.building},${fullAddress.line1.split(",").slice(1).join(",")}`,
+				line1: fullAddress.line1,
 				phone: basePayload.phone || "",
+				metadata: {
+					building: values.building,
+				},
 			});
 			onOpenChange?.(false);
 		}
 	};
 
 	return (
-		// <Drawer open={open} onOpenChange={onOpenChange}>
-		// 	<DrawerTrigger className={cn(isMobile && label === "Add" && "w-full")}>
-		// 		{label === "Add" && (
-		// 			<Button className="font-semibold px-6 w-full">
-		// 				Confirm this address
-		// 				<StepForward className="ml-2 h-4 w-4" />
-		// 			</Button>
-		// 		)}
-		// 	</DrawerTrigger>
-
-		// 	<DrawerContent>
-		// 		<ScrollArea className="overflow-y-auto">
-		// 			<DrawerHeader className="p-4">
-		// 				<div className="flex items-center justify-between">
-		// 					<DrawerTitle className="font-semibold text-lg">
-		// 						Add address details
-		// 					</DrawerTitle>
-		// 				</div>
-		// 			</DrawerHeader>
-
-		// 			<Separator />
-
-		// 			<div className="p-4 mb-6">
-		// 				<div className="text-sm rounded-md border p-2 bg-accent font-medium">
-		// 					<p>
-		// 						{label === "Edit"
-		// 							? fullAddress.line1.split(",").slice(1).join(",")
-		// 							: fullAddress.line1}
-		// 					</p>
-		// 					<div className="flex justify-end">
-		// 						{label === "Add" ? (
-		// 							<DrawerClose>
-		// 								<Button variant="outline" size="sm">
-		// 									Change
-		// 								</Button>
-		// 							</DrawerClose>
-		// 						) : (
-		// 							<Link
-		// 								to="/account/addresses/new"
-		// 								search={{ type: "saveAddress" }}
-		// 								className={cn(
-		// 									buttonVariants({ variant: "outline", size: "sm" }),
-		// 								)}
-		// 							>
-		// 								Change
-		// 							</Link>
-		// 						)}
-		// 					</div>
-		// 				</div>
-
-		// 				<Form {...form}>
-		// 					<form
-		// 						onSubmit={form.handleSubmit(handleSubmit)}
-		// 						className="space-y-8 my-10 w-full"
-		// 					>
-		// 						<FormField
-		// 							control={form.control}
-		// 							name="building"
-		// 							render={({ field }) => (
-		// 								<FormItem>
-		// 									<FormControl>
-		// 										<InputWithAnimatedLabel
-		// 											title="Flat No. / House No. / Building Name *"
-		// 											{...field}
-		// 										/>
-		// 									</FormControl>
-		// 									<FormMessage />
-		// 								</FormItem>
-		// 							)}
-		// 						/>
-
-		// 						<FormField
-		// 							control={form.control}
-		// 							name="addressType"
-		// 							render={({ field }) => (
-		// 								<FormItem>
-		// 									<FormLabel className="text-muted-foreground font-semibold">
-		// 										Address type
-		// 									</FormLabel>
-		// 									<FormControl>
-		// 										<CustomRadioGroup
-		// 											{...field}
-		// 											items={addressTypesItems}
-		// 										/>
-		// 									</FormControl>
-		// 									<FormMessage />
-		// 								</FormItem>
-		// 							)}
-		// 						/>
-
-		// 						<FormLabel className="text-muted-foreground font-semibold">
-		// 							Receiver's Details
-		// 						</FormLabel>
-
-		// 						<FormField
-		// 							control={form.control}
-		// 							name="receiverName"
-		// 							render={({ field }) => (
-		// 								<FormItem>
-		// 									<FormControl>
-		// 										<InputWithAnimatedLabel
-		// 											title="Receiver's Name"
-		// 											{...field}
-		// 										/>
-		// 									</FormControl>
-		// 									<FormMessage />
-		// 								</FormItem>
-		// 							)}
-		// 						/>
-
-		// 						<FormField
-		// 							control={form.control}
-		// 							name="receiverPhone"
-		// 							render={({ field }) => (
-		// 								<FormItem>
-		// 									<FormControl>
-		// 										<InputWithAnimatedLabel
-		// 											title="Receiver's Phone"
-		// 											type="tel"
-		// 											{...field}
-		// 										/>
-		// 									</FormControl>
-		// 									<FormMessage />
-		// 								</FormItem>
-		// 							)}
-		// 						/>
-
-		// 						<div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-t z-10">
-		// 							<Button
-		// 								type="submit"
-		// 								className="w-full font-semibold"
-		// 								disabled={
-		// 									form.formState.isSubmitting ||
-		// 									!form.formState.isValid ||
-		// 									form.formState.isSubmitSuccessful ||
-		// 									!form.formState.isDirty
-		// 								}
-		// 							>
-		// 								{form.formState.isSubmitting ? (
-		// 									<>
-		// 										<Loader2 className="h-4 w-4 animate-spin mr-2" />
-		// 										Saving...
-		// 									</>
-		// 								) : isDeliveryAddress ? (
-		// 									"Save and continue"
-		// 								) : (
-		// 									"Save Address"
-		// 								)}
-		// 							</Button>
-		// 						</div>
-		// 					</form>
-		// 				</Form>
-		// 			</div>
-		// 		</ScrollArea>
-		// 	</DrawerContent>
-		// </Drawer>
-
 		<DrawerDailogSwitcher open={open} onOpenChange={onOpenChange}>
 			<ScrollArea className="overflow-y-auto">
 				<div className="p-4">

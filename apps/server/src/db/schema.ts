@@ -59,6 +59,9 @@ export const address = schema.table("address", {
 	phone: text("phone"),
 	lat: doublePrecision("lat"),
 	lng: doublePrecision("lng"),
+	metadata: jsonb("metadata").$type<{
+		building: string;
+	}>(),
 });
 
 export const userAddress = schema.table("userAddress", {

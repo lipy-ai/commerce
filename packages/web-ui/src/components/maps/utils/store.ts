@@ -25,6 +25,7 @@ export const defaultDeliveryLocationState: LocationStore = {
 		line2: "",
 		name: "",
 		id: "",
+		metadata: { building: "" },
 	},
 	hasHydrated: false,
 	setDeliveryLocation: () => {},

@@ -14,6 +14,7 @@ import {
 	Outlet,
 	Scripts,
 	createRootRoute,
+	useLocation,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { createServerFn } from "@tanstack/react-start";
@@ -103,7 +104,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 	}, []);
 
 	const data = Route.useLoaderData();
-
+	const { pathname } = useLocation();
 	return (
 		<html className="bg-muted/30" lang="en">
 			<head>
@@ -116,8 +117,12 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			>
 				<ViewportProvider isMobile={data?.isSsrMobile}>
 					<QueryProvider handleThrowOnError={handleThrowOnError}>
-						{!data?.isSsrMobile && <NavBar />}
-						<NuqsAdapter>{children}</NuqsAdapter>
+						<NuqsAdapter>
+							{!data?.isSsrMobile &&
+								pathname !== "/login" &&
+								pathname !== "/logout" && <NavBar />}
+							{children}
+						</NuqsAdapter>
 						<Toaster />
 					</QueryProvider>
 					<TanStackRouterDevtools position="bottom-right" />

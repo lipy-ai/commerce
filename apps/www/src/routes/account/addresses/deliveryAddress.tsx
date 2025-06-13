@@ -5,10 +5,9 @@ import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { fillFullAddress } from "@lipy/web-ui/components/maps/utils/googlemap";
 import {
-	defaultDeliveryLocationState,
+	type DeliveryLocation,
 	useLocationStore,
 } from "@lipy/web-ui/components/maps/utils/store";
-import type { DeliveryLocation } from "@lipy/web-ui/components/maps/utils/store";
 import { Avatar, AvatarFallback } from "@lipy/web-ui/components/ui/avatar";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
@@ -22,65 +21,76 @@ import {
 	MapPinHouse,
 	Navigation,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useRef } from "react";
 
 export const Route = createFileRoute("/account/addresses/deliveryAddress")({
 	component: RouteComponent,
 });
 
 const libraries: "places"[] = ["places"];
+
 function RouteComponent() {
 	const { isLoaded } = useJsApiLoader({
-		googleMapsApiKey: env.GOOGLE_MAP_API_KEY as string,
-		libraries: libraries,
+		googleMapsApiKey: env.GOOGLE_MAP_API_KEY ?? "",
+		libraries,
 	});
 
 	const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
-
-	const { data, isLoading } = useAPIQuery(apiClient.v1.address, "$get", {});
-
 	const navigate = useNavigate();
 
-	const { setDeliveryLocation, deliveryLocation } = useLocationStore();
-	const [fullAddress, setFullAddress] = useState({
-		line1: deliveryLocation.line1 || "",
-		city: deliveryLocation.city || "",
-		state: deliveryLocation.state || "",
-		country: deliveryLocation.country || "",
-		postalCode: deliveryLocation.postalCode || "",
-		lat: deliveryLocation.lat || 0,
-		lng: deliveryLocation.lng || 0,
-	});
+	const { data, isFetching } = useAPIQuery(apiClient.v1.address, "$get", {});
+	const { setDeliveryLocation, deliveryLocation, hasHydrated } =
+		useLocationStore();
 
-	useEffect(() => {
-		setDeliveryLocation({
-			...defaultDeliveryLocationState.deliveryLocation,
-			...fullAddress,
-		});
-	}, [fullAddress]);
+	const handlePlaceSelect = useCallback(() => {
+		const place = autocompleteRef.current?.getPlace();
+		if (!place?.geometry?.location) return;
 
-	const handlePlaceSelect = () => {
-		if (autocompleteRef.current) {
-			const place = autocompleteRef.current.getPlace();
+		const lat = place.geometry.location.lat();
+		const lng = place.geometry.location.lng();
+		const address = place.formatted_address || place.name || "";
 
-			if (place?.geometry?.location) {
-				const lat = place.geometry.location.lat();
-				const lng = place.geometry.location.lng();
-
-				const address = place.formatted_address || (place.name as string);
-
-				fillFullAddress(
-					place.address_components || [],
-					address,
-					lat,
-					lng,
-					setFullAddress,
-				);
-
+		fillFullAddress(
+			place.address_components || [],
+			address,
+			lat,
+			lng,
+			(addr) => {
+				setDeliveryLocation({ ...deliveryLocation, ...addr });
 				navigate({ to: "/" });
-			}
+			},
+		);
+	}, [deliveryLocation, setDeliveryLocation, navigate]);
+
+	const handleAddressSelect = useCallback(
+		(address: DeliveryLocation) => {
+			setDeliveryLocation(address);
+			navigate({ to: "/" });
+		},
+		[setDeliveryLocation, navigate],
+	);
+
+	const handleAutocompleteLoad = useCallback(
+		(autocomplete: google.maps.places.Autocomplete) => {
+			autocompleteRef.current = autocomplete;
+		},
+		[],
+	);
+
+	const getAddressIcon = (tag: string) => {
+		switch (tag) {
+			case "home":
+				return <House className="text-foreground fill-primary/40" />;
+			case "work":
+				return <Building className="text-foreground fill-primary/40" />;
+			default:
+				return (
+					<MapPinHouse className="size-6 text-foreground fill-primary/40" />
+				);
 		}
 	};
+
+	if (!isLoaded || isFetching) return <Spinner />;
 
 	return (
 		<motion.div
@@ -89,98 +99,71 @@ function RouteComponent() {
 			transition={{ duration: 0.5 }}
 		>
 			<DashboardHeader title="Delivery Address" />
-			<div className="p-4 space-y-8 max-w-4xl lg:p-8 lg: rounded-sm lg:border">
-				{!isLoaded ? (
-					<Spinner />
-				) : (
-					<Autocomplete
-						onLoad={(autocomplete) => {
-							autocompleteRef.current = autocomplete;
-						}}
-						onPlaceChanged={handlePlaceSelect}
-					>
-						<SearchBar placeholder={"Search for address"} />
-					</Autocomplete>
-				)}
+
+			<div className="p-4 space-y-8 lg:p-8 m-auto max-w-screen-xl md:border-x min-h-screen">
+				<Autocomplete
+					onLoad={handleAutocompleteLoad}
+					onPlaceChanged={handlePlaceSelect}
+				>
+					<SearchBar placeholder="Search for address" />
+				</Autocomplete>
 
 				<Link
 					to="/account/addresses/new"
-					className="flex justify-between my-2 text-md font-medium w-full text-primary"
-					search={{
-						type: "deliveryAddress",
-					}}
+					className="flex justify-between text-md font-medium w-full text-primary"
+					search={{ type: "deliveryAddress" }}
 				>
-					<div className="flex items-center gap-2 ">
+					<div className="flex items-center gap-2">
 						<Navigation className="fill-primary" />
 						Use my current location
 					</div>
-
 					<ChevronRight className="text-muted-foreground" />
 				</Link>
 
 				<Separator className="mt-4" />
 
-				{isLoading && <Spinner />}
-				{deliveryLocation.line1 !== "" && (
-					<div>
+				{hasHydrated && deliveryLocation.line1 && (
+					<section>
 						<p className="font-medium text-base my-2 text-muted-foreground">
 							Current address
 						</p>
-						<div className="flex  gap-2  cursor-pointer">
-							<Avatar className="rounded-md ">
+						<div className="flex gap-2 cursor-pointer">
+							<Avatar className="rounded-md">
 								<AvatarFallback>
-									<MapPinHouse className="size-6 flex-shrink-0 text-foreground fill-primary/40" />
+									<MapPinHouse className="size-6 text-foreground fill-primary/40" />
 								</AvatarFallback>
 							</Avatar>
-
 							<div>
-								<h2 className="text-md font-semibold">
-									{deliveryLocation?.tag.charAt(0).toUpperCase() +
-										deliveryLocation?.tag.slice(1) || "Other"}
+								<h2 className="text-md font-semibold capitalize">
+									{deliveryLocation.tag || "Other"}
 								</h2>
 								<p className="text-muted-foreground">
 									{deliveryLocation.line1}
 								</p>
 							</div>
 						</div>
-					</div>
+						<Separator className="mt-4" />
+					</section>
 				)}
 
-				<Separator className="-mt-2" />
-
-				{!isLoading && data && data?.length > 0 && (
-					<div>
+				{data && data?.length > 0 && (
+					<section>
 						<p className="font-medium text-base my-2 text-muted-foreground">
 							Saved addresses
 						</p>
-
-						<div className="mb-10  space-y-4 divide-y">
+						<div className="mb-10 space-y-4 divide-y">
 							{data.map((address) => (
 								<div
 									key={address.id}
-									onClick={() => {
-										setDeliveryLocation({
-											...(address as DeliveryLocation),
-										});
-
-										navigate({
-											to: "/",
-										});
-									}}
+									className="cursor-pointer py-2"
+									onClick={() => handleAddressSelect(address)}
 								>
-									<div className="flex  gap-2 py-2 cursor-pointer">
-										<Avatar className="rounded-md ">
+									<div className="flex gap-2">
+										<Avatar className="rounded-md">
 											<AvatarFallback>
-												{address.tag === "home" ? (
-													<House className="flex-shrink-0 text-foreground fill-primary/40" />
-												) : address.tag === "work" ? (
-													<Building className="  flex-shrink-0 text-foreground fill-primary/40" />
-												) : (
-													<MapPinHouse className="size-6  flex-shrink-0 text-foreground fill-primary/40" />
-												)}
+												{getAddressIcon(address.tag)}
 											</AvatarFallback>
 										</Avatar>
-
 										<div>
 											<h2 className="text-md font-semibold">{address.name}</h2>
 											<p className="text-muted-foreground">{address.line1}</p>
@@ -189,7 +172,7 @@ function RouteComponent() {
 								</div>
 							))}
 						</div>
-					</div>
+					</section>
 				)}
 			</div>
 		</motion.div>

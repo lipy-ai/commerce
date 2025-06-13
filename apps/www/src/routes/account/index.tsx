@@ -8,6 +8,7 @@ import {
 } from "@lipy/web-ui/components/ui/avatar";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Card } from "@lipy/web-ui/components/ui/card";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import {
@@ -22,7 +23,7 @@ import {
 } from "lucide-react";
 
 export const Route = createFileRoute("/account/")({
-	component: RouteComponent,
+	component: AccountPage,
 });
 
 const yourInfo = [
@@ -66,16 +67,18 @@ const moreInfo = [
 	},
 ];
 
-function RouteComponent() {
+export function AccountPage() {
 	const { data } = authClient.useSession();
+	const { isMobile } = useViewport();
 
 	const filteredMoreInfo = data
 		? moreInfo
 		: moreInfo.filter((item) => item.title !== "Logout");
 	return (
 		<div>
-			<DashboardHeader title="Settings" />
-			<div className={cn("p-4 lg:p-8 max-w-4xl space-y-8")}>
+			{isMobile && <DashboardHeader title="Settings" />}
+
+			<div className={cn("p-4 lg:p-8  space-y-8 m-auto max-w-screen-lg ")}>
 				{data ? (
 					<div className="flex items-center gap-4">
 						<Avatar className="size-12">

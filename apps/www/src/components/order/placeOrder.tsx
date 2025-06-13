@@ -150,7 +150,7 @@ export default function PlaceOrder({
 				),
 			});
 		} else {
-			if (!deliveryLocation.id) {
+			if (!deliveryLocation?.metadata?.building) {
 				toast("Please give delivery location details.");
 				setOpen(true);
 			} else {

@@ -8,20 +8,14 @@ import {
 	type DeliveryLocation,
 	useLocationStore,
 } from "@lipy/web-ui/components/maps/utils/store";
-import { Avatar, AvatarFallback } from "@lipy/web-ui/components/ui/avatar";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { Autocomplete, useJsApiLoader } from "@react-google-maps/api";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import {
-	Building,
-	ChevronRight,
-	House,
-	MapPinHouse,
-	Navigation,
-} from "lucide-react";
+import { ChevronRight, Navigation } from "lucide-react";
 import { useCallback, useRef } from "react";
+import { AddressComponent } from ".";
 
 export const Route = createFileRoute("/account/addresses/deliveryAddress")({
 	component: RouteComponent,
@@ -77,19 +71,6 @@ function RouteComponent() {
 		[],
 	);
 
-	const getAddressIcon = (tag: string) => {
-		switch (tag) {
-			case "home":
-				return <House className="text-foreground fill-primary/40" />;
-			case "work":
-				return <Building className="text-foreground fill-primary/40" />;
-			default:
-				return (
-					<MapPinHouse className="size-6 text-foreground fill-primary/40" />
-				);
-		}
-	};
-
 	if (!isLoaded || isFetching) return <Spinner />;
 
 	return (
@@ -127,21 +108,8 @@ function RouteComponent() {
 						<p className="font-medium text-base my-2 text-muted-foreground">
 							Current address
 						</p>
-						<div className="flex gap-2 cursor-pointer">
-							<Avatar className="rounded-md">
-								<AvatarFallback>
-									<MapPinHouse className="size-6 text-foreground fill-primary/40" />
-								</AvatarFallback>
-							</Avatar>
-							<div>
-								<h2 className="text-md font-semibold capitalize">
-									{deliveryLocation.tag || "Other"}
-								</h2>
-								<p className="text-muted-foreground">
-									{deliveryLocation.line1}
-								</p>
-							</div>
-						</div>
+
+						<AddressComponent address={deliveryLocation} />
 						<Separator className="mt-4" />
 					</section>
 				)}
@@ -151,24 +119,14 @@ function RouteComponent() {
 						<p className="font-medium text-base my-2 text-muted-foreground">
 							Saved addresses
 						</p>
-						<div className="mb-10 space-y-4 divide-y">
+						<div className="mb-10  divide-y">
 							{data.map((address) => (
 								<div
 									key={address.id}
 									className="cursor-pointer py-2"
 									onClick={() => handleAddressSelect(address)}
 								>
-									<div className="flex gap-2">
-										<Avatar className="rounded-md">
-											<AvatarFallback>
-												{getAddressIcon(address.tag)}
-											</AvatarFallback>
-										</Avatar>
-										<div>
-											<h2 className="text-md font-semibold">{address.name}</h2>
-											<p className="text-muted-foreground">{address.line1}</p>
-										</div>
-									</div>
+									<AddressComponent address={address} />
 								</div>
 							))}
 						</div>

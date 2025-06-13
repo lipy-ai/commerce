@@ -16,6 +16,11 @@ export const addressSchema = z.object({
 	lng: z.number(),
 	phone: z.string().optional(),
 	postalCode: z.string().min(1),
+	metadata: z
+		.object({
+			building: z.string().min(1),
+		})
+		.optional(),
 });
 
 const route = new Hono<ServerContext>()

@@ -126,7 +126,7 @@ export const store = schema.table("store", {
 	id: uuid("id").primaryKey(),
 	name: text("name").notNull(),
 	handle: text("handle").unique(),
-	logo: text("logo"),
+	image: text("image"),
 	description: text("description"),
 	createdAt: timestamp("createdAt").notNull(),
 	metadata: text("metadata"),

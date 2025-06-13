@@ -1,12 +1,13 @@
 import { Link } from "@tanstack/react-router";
 import { ChevronRight } from "lucide-react";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import { Card } from "../ui/card";
-import { Separator } from "../ui/separator";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 export default function SettingsCard({
+	title,
 	items,
 }: {
+	title: string;
 	items: {
 		title: string;
 		icon: any;
@@ -15,29 +16,30 @@ export default function SettingsCard({
 }) {
 	return (
 		<>
-			<Card className="p-4 shadow-none rounded-xl bg-white border-none">
-				{items.map((item, index) => (
-					<div key={index}>
-						<Link to={item.url} className="flex flex-col">
-							<div className="flex items-center justify-between">
-								<div className="flex items-center gap-2">
-									<Avatar className="size-9">
-										<AvatarFallback>
-											<item.icon className="size-5 text-muted-foreground" />
-										</AvatarFallback>
-									</Avatar>
+			<Card className="">
+				<CardHeader>
+					<CardTitle>{title}</CardTitle>
+				</CardHeader>
+				<CardContent className="divide-y py-2  divide-dashed">
+					{items.map((item, index) => (
+						<div key={index} className="py-3">
+							<Link to={item.url} className="flex flex-col">
+								<div className="flex items-center justify-between">
+									<div className="flex items-center gap-2">
+										<Avatar className="size-9">
+											<AvatarFallback>
+												<item.icon className="size-5 text-muted-foreground" />
+											</AvatarFallback>
+										</Avatar>
 
-									<div className="font-medium">{item.title}</div>
+										<div className="font-medium">{item.title}</div>
+									</div>
+									<ChevronRight />
 								</div>
-								<ChevronRight />
-							</div>
-
-							{index !== items.length - 1 && (
-								<Separator className="mt-3 -mb-3 border-t border-dashed bg-transparent " />
-							)}
-						</Link>
-					</div>
-				))}
+							</Link>
+						</div>
+					))}
+				</CardContent>
 			</Card>
 		</>
 	);

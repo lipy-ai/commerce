@@ -86,7 +86,7 @@ export function LoginScreen({
 
 	if (verifyEmail) {
 		return (
-			<Card className="py-10 relative shadow-none border-0">
+			<Card className="py-10  relative shadow-none border-0">
 				{pending && (
 					<div className="absolute h-full w-full m-auto bg-background z-50 flex justify-center items-center">
 						<Loading />
@@ -103,7 +103,7 @@ export function LoginScreen({
 						We&apos;ve sent you an OTP on {verifyEmail}.
 					</CardDescription>
 				</CardHeader>
-				<CardContent className="flex flex-col items-center justify-center gap-4 space-y-8">
+				<CardContent className="bg-transparent flex flex-col items-center justify-center gap-4 space-y-8">
 					<InputOTP
 						maxLength={6}
 						onComplete={(c) =>
@@ -169,6 +169,7 @@ export function LoginScreen({
 									height={75}
 									className="rounded-md"
 								/>
+								ß
 							</Link>
 						</div>
 						<CardHeader className="text-center">
@@ -178,7 +179,8 @@ export function LoginScreen({
 								India's Local Commerce App
 							</CardTitle>
 						</CardHeader>
-						<CardContent>
+						ß
+						<CardContent className="bg-transparent">
 							<form onSubmit={handleForm}>
 								<div className="grid gap-6">
 									<div className="grid gap-6">

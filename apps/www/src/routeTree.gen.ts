@@ -13,9 +13,9 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as ShopRouteImport } from './routes/shop/route'
 import { Route as CheckoutRouteImport } from './routes/checkout/route'
-import { Route as CartRouteImport } from './routes/cart/route'
 import { Route as IndexImport } from './routes/index'
 import { Route as ShopIndexImport } from './routes/shop/index'
+import { Route as CartIndexImport } from './routes/cart/index'
 import { Route as AccountIndexImport } from './routes/account/index'
 import { Route as AccountProfileImport } from './routes/account/profile'
 import { Route as authLogoutImport } from './routes/(auth)/logout'
@@ -44,12 +44,6 @@ const CheckoutRouteRoute = CheckoutRouteImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const CartRouteRoute = CartRouteImport.update({
-  id: '/cart',
-  path: '/cart',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
@@ -60,6 +54,12 @@ const ShopIndexRoute = ShopIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => ShopRouteRoute,
+} as any)
+
+const CartIndexRoute = CartIndexImport.update({
+  id: '/cart/',
+  path: '/cart/',
+  getParentRoute: () => rootRoute,
 } as any)
 
 const AccountIndexRoute = AccountIndexImport.update({
@@ -153,13 +153,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/cart': {
-      id: '/cart'
-      path: '/cart'
-      fullPath: '/cart'
-      preLoaderRoute: typeof CartRouteImport
-      parentRoute: typeof rootRoute
-    }
     '/checkout': {
       id: '/checkout'
       path: '/checkout'
@@ -200,6 +193,13 @@ declare module '@tanstack/react-router' {
       path: '/account'
       fullPath: '/account'
       preLoaderRoute: typeof AccountIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/cart/': {
+      id: '/cart/'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartIndexImport
       parentRoute: typeof rootRoute
     }
     '/shop/': {
@@ -299,13 +299,13 @@ const ShopRouteRouteWithChildren = ShopRouteRoute._addFileChildren(
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/cart': typeof CartRouteRoute
   '/checkout': typeof CheckoutRouteRoute
   '/shop': typeof ShopRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
   '/account/profile': typeof AccountProfileRoute
   '/account': typeof AccountIndexRoute
+  '/cart': typeof CartIndexRoute
   '/shop/': typeof ShopIndexRoute
   '/account/addresses/deliveryAddress': typeof AccountAddressesDeliveryAddressRoute
   '/account/addresses/new': typeof AccountAddressesNewRoute
@@ -320,12 +320,12 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/cart': typeof CartRouteRoute
   '/checkout': typeof CheckoutRouteRoute
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
   '/account/profile': typeof AccountProfileRoute
   '/account': typeof AccountIndexRoute
+  '/cart': typeof CartIndexRoute
   '/shop': typeof ShopIndexRoute
   '/account/addresses/deliveryAddress': typeof AccountAddressesDeliveryAddressRoute
   '/account/addresses/new': typeof AccountAddressesNewRoute
@@ -341,13 +341,13 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/cart': typeof CartRouteRoute
   '/checkout': typeof CheckoutRouteRoute
   '/shop': typeof ShopRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/logout': typeof authLogoutRoute
   '/account/profile': typeof AccountProfileRoute
   '/account/': typeof AccountIndexRoute
+  '/cart/': typeof CartIndexRoute
   '/shop/': typeof ShopIndexRoute
   '/account/addresses/deliveryAddress': typeof AccountAddressesDeliveryAddressRoute
   '/account/addresses/new': typeof AccountAddressesNewRoute
@@ -364,13 +364,13 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/cart'
     | '/checkout'
     | '/shop'
     | '/login'
     | '/logout'
     | '/account/profile'
     | '/account'
+    | '/cart'
     | '/shop/'
     | '/account/addresses/deliveryAddress'
     | '/account/addresses/new'
@@ -384,12 +384,12 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/cart'
     | '/checkout'
     | '/login'
     | '/logout'
     | '/account/profile'
     | '/account'
+    | '/cart'
     | '/shop'
     | '/account/addresses/deliveryAddress'
     | '/account/addresses/new'
@@ -403,13 +403,13 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/cart'
     | '/checkout'
     | '/shop'
     | '/(auth)/login'
     | '/(auth)/logout'
     | '/account/profile'
     | '/account/'
+    | '/cart/'
     | '/shop/'
     | '/account/addresses/deliveryAddress'
     | '/account/addresses/new'
@@ -425,13 +425,13 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CartRouteRoute: typeof CartRouteRoute
   CheckoutRouteRoute: typeof CheckoutRouteRoute
   ShopRouteRoute: typeof ShopRouteRouteWithChildren
   authLoginRoute: typeof authLoginRoute
   authLogoutRoute: typeof authLogoutRoute
   AccountProfileRoute: typeof AccountProfileRoute
   AccountIndexRoute: typeof AccountIndexRoute
+  CartIndexRoute: typeof CartIndexRoute
   AccountAddressesDeliveryAddressRoute: typeof AccountAddressesDeliveryAddressRoute
   AccountAddressesNewRoute: typeof AccountAddressesNewRoute
   AccountOrdersOrderIdRoute: typeof AccountOrdersOrderIdRoute
@@ -441,13 +441,13 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CartRouteRoute: CartRouteRoute,
   CheckoutRouteRoute: CheckoutRouteRoute,
   ShopRouteRoute: ShopRouteRouteWithChildren,
   authLoginRoute: authLoginRoute,
   authLogoutRoute: authLogoutRoute,
   AccountProfileRoute: AccountProfileRoute,
   AccountIndexRoute: AccountIndexRoute,
+  CartIndexRoute: CartIndexRoute,
   AccountAddressesDeliveryAddressRoute: AccountAddressesDeliveryAddressRoute,
   AccountAddressesNewRoute: AccountAddressesNewRoute,
   AccountOrdersOrderIdRoute: AccountOrdersOrderIdRoute,
@@ -466,13 +466,13 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/cart",
         "/checkout",
         "/shop",
         "/(auth)/login",
         "/(auth)/logout",
         "/account/profile",
         "/account/",
+        "/cart/",
         "/account/addresses/deliveryAddress",
         "/account/addresses/new",
         "/account/orders/$orderId",
@@ -482,9 +482,6 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.tsx"
-    },
-    "/cart": {
-      "filePath": "cart/route.tsx"
     },
     "/checkout": {
       "filePath": "checkout/route.tsx"
@@ -510,6 +507,9 @@ export const routeTree = rootRoute
     },
     "/account/": {
       "filePath": "account/index.tsx"
+    },
+    "/cart/": {
+      "filePath": "cart/index.tsx"
     },
     "/shop/": {
       "filePath": "shop/index.tsx",

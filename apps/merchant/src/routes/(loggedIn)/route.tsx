@@ -1,13 +1,13 @@
 import { env } from "@envClient";
-import { getSsrSession } from "@lipy/lib/providers/auth";
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
-import { getHeaders, getWebRequest } from "@tanstack/react-start/server";
 
+import { apiClient } from "@lipy/lib/api";
+import { useAPIQuery } from "@lipy/lib/utils/queryClient";
 import {
 	DashboardBody,
 	DashboardLayout,
 } from "@lipy/web-ui/components/layouts/dashboard";
+import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 //
 import {
 	CircleUser,
@@ -19,30 +19,10 @@ import {
 	ShoppingBag,
 	Users,
 } from "lucide-react";
-import { cache } from "react";
-
-export const authFn = createServerFn({ method: "GET" }).handler(
-	cache(async () => {
-		const request = getWebRequest();
-		const h = getHeaders();
-
-		const res = await getSsrSession(request?.headers);
-
-		if (!res?.session) {
-			const cb = h.referer || env.MERCHANT_URL;
-			redirect({
-				href: `${env.WEB_URL}/login?cb=${btoa(cb)}` as any,
-				throw: true,
-			});
-		}
-
-		return res;
-	}),
-);
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/(loggedIn)")({
 	component: RouteComponent,
-	loader: async () => await authFn(),
 });
 
 export const dashboardNav = {
@@ -110,7 +90,15 @@ const mobileNav = [
 ];
 
 function RouteComponent() {
-	// const data = Route.useLoaderData();
+	const { isLoading } = useAPIQuery(apiClient.v1.merchant.store, "$get", {});
+
+	useEffect(() => {
+		if (isLoading) return;
+		const cb = window?.location.origin || env.MERCHANT_URL;
+		redirect({
+			href: `${env.WEB_URL}/login?cb=${btoa(cb)}` as any,
+		});
+	}, [isLoading]);
 
 	return (
 		<main>
@@ -120,7 +108,13 @@ function RouteComponent() {
 				logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
 			>
 				<DashboardBody>
-					<Outlet />
+					{isLoading ? (
+						<div className="p-4 flex h-screen flex-1">
+							<Skeleton className="flex-1" />
+						</div>
+					) : (
+						<Outlet />
+					)}
 				</DashboardBody>
 			</DashboardLayout>
 		</main>

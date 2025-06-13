@@ -10,15 +10,22 @@ const updateSchema = z.object({
 	description: z.string(),
 	email: z.string(),
 	phone: z.string(),
+	image: z.string(),
 });
 
-const route = new Hono<ServerContext>().patch(
-	"/",
-	zValidator("json", updateSchema),
-	async (c) => {
+const route = new Hono<ServerContext>()
+	.get("/", async (c) => {
+		const session = c.get("session");
+		const result = await db
+			.selectFrom("store")
+			.where("store.id", "=", session?.activeStoreId!)
+			.selectAll()
+			.executeTakeFirstOrThrow();
+		return c.json(result);
+	})
+	.patch("/", zValidator("json", updateSchema), async (c) => {
 		const session = c.get("session");
 		const values = c.req.valid("json");
-		console.log({ id: session?.activeStoreId });
 		await db
 			.updateTable("store")
 			.where("store.id", "=", session?.activeStoreId!)
@@ -28,7 +35,6 @@ const route = new Hono<ServerContext>().patch(
 			.execute();
 
 		return c.json({ success: true });
-	},
-);
+	});
 
 export { route as merchantStoreRoute };

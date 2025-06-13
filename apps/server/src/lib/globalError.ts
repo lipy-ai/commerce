@@ -1,10 +1,11 @@
 import type { ErrorResponse, ServerContext } from "@/types";
 import type { ErrorHandler } from "hono";
 import { HTTPException } from "hono/http-exception";
+import { logger } from "./logger";
 
 export const globalError: ErrorHandler<ServerContext> = (err, c) => {
 	const cause = process.env.NODE_ENV === "production" ? undefined : err.stack;
-	console.log(cause);
+	logger.error(cause);
 	if (err instanceof HTTPException) {
 		const errResponse =
 			err.res ??

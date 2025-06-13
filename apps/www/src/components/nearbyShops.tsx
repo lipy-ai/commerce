@@ -1,7 +1,6 @@
 import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/queryClient";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
-import { Card } from "@lipy/web-ui/components/ui/card";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { Link } from "@tanstack/react-router";
 import type { InferResponseType } from "hono/client";
@@ -163,7 +162,7 @@ export default function NearByShops() {
 						shops.length > 0 &&
 						shops.map((shop) => (
 							<div key={shop.id} className="space-y-6">
-								<Card className="p-0 rounded-xl">
+								<div className="bg-white border p-0 rounded-xl">
 									<Link
 										to="/shop/$id"
 										params={{ id: shop.id }}
@@ -230,7 +229,7 @@ export default function NearByShops() {
 											<div className="flex items-center justify-between mt-3 text-sm" />
 										</div>
 									</Link>
-								</Card>
+								</div>
 							</div>
 						))}
 				</div>

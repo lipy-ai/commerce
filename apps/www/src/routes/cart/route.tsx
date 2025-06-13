@@ -10,7 +10,13 @@ import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { Avatar, AvatarFallback } from "@lipy/web-ui/components/ui/avatar";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
-import { Card } from "@lipy/web-ui/components/ui/card";
+import {
+	Card,
+	CardContent,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@lipy/web-ui/components/ui/card";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
@@ -60,7 +66,7 @@ function RouteComponent() {
 			cacheTime: 0,
 		},
 	);
-
+	console.log(data);
 	// Reset cart once on mount
 	useEffect(() => {
 		resetCart();
@@ -131,60 +137,63 @@ function RouteComponent() {
 			)}
 
 			{isFetched && !isError && data.length > 0 && (
-				<div className="relative m-auto max-w-screen-lg">
-					<div className="p-4 space-y-6 mb-44">
-						<Card className="p-4 shadow-none rounded-xl bg-white border-none">
-							<p className="text-base font-semibold">Order Item(s)</p>
-							<Separator className="-my-4 border-t border-dashed bg-transparent" />
-
-							{cart.map((product) => (
-								<div key={product.id}>
-									<ProductCard
-										thumbnail={product.thumbnail ?? undefined}
-										product={product}
-										variant="horizontal"
-										className={{ classNameImg: "w-12 h-12" }}
-									/>
-								</div>
-							))}
-							<Separator className="-my-2 border-t border-dashed bg-transparent" />
-
-							<div className="flex items-center justify-between">
-								<p className="text-sm font-medium">Forgot something ?</p>
+				<div className="relative">
+					<div className="p-4 space-y-6 mb-4 gap-4">
+						<Card className="">
+							<CardHeader>
+								<CardTitle>Order Item(s)</CardTitle>
+							</CardHeader>
+							<CardContent className="divide-y py-0 divide-dashed">
+								{cart.map((product) => (
+									<div key={product.id} className=" py-4">
+										<ProductCard
+											thumbnail={product.thumbnail ?? undefined}
+											product={product}
+											variant="horizontal"
+											className={{ classNameImg: "w-12 h-12" }}
+										/>
+									</div>
+								))}
+								{/* <Separator className="-my-2 border-t border-dashed bg-transparent" /> */}
+							</CardContent>
+							<CardFooter className="justify-between bg-white p-4 rounded">
+								{/* <div className="flex items-center justify-between"> */}
+								<p className="font-medium">Forgot something ?</p>
 								<Button variant="black" size="sm">
 									<Plus />
 									Add more items
 								</Button>
-							</div>
+								{/* </div> */}
+							</CardFooter>
 						</Card>
-
-						<Card className="p-4 shadow-none rounded-xl bg-white border-none">
-							<p className="text-base font-semibold">Billing Details</p>
-							<Separator className="-my-2 border-t border-dashed bg-transparent" />
-
-							{billingDetails.map(({ icon: Icon, title, value }) => (
-								<div
-									key={title}
-									className="flex items-center justify-between -my-1"
-								>
-									<div className="flex items-center gap-2">
-										<Icon className="size-3" />
-										<p className="font-medium text-muted-foreground text-xs">
-											{title}
-										</p>
+						<Separator />
+						<Card className="">
+							<CardHeader>
+								<CardTitle>Billing Details</CardTitle>
+							</CardHeader>
+							<CardContent className="divide-y py-2 divide-dashed">
+								{billingDetails.map(({ icon: Icon, title, value }) => (
+									<div
+										key={title}
+										className="flex items-center justify-between py-2"
+									>
+										<div className="flex items-center gap-2">
+											<Icon className="size-4" />
+											<p className="font-medium text-muted-foreground">
+												{title}
+											</p>
+										</div>
+										<div className="">{value}</div>
 									</div>
-									<div className="text-xs">{value}</div>
-								</div>
-							))}
-
-							<Separator className="-my-2" />
-							<div className="flex items-center justify-between">
-								<p className="text-sm font-semibold">Total</p>
-								<p className="text-sm font-semibold">₹{totalPrice}</p>
-							</div>
+								))}
+							</CardContent>
+							<CardFooter className="justify-between p-4 bg-white rounded">
+								<p className="text-lg font-semibold">Total Payable</p>
+								<p className="text-lg font-semibold">₹{totalPrice}</p>
+							</CardFooter>
 						</Card>
 
-						<Card className="p-4 shadow-none rounded-xl bg-white border-none">
+						<div className="p-4 mb-42 shadow-none rounded-xl bg-white border-none">
 							<div
 								className="flex items-center justify-between"
 								onClick={() => setDeliveryInstructionDrawerOpen(true)}
@@ -201,7 +210,7 @@ function RouteComponent() {
 
 								<ChevronRight />
 							</div>
-						</Card>
+						</div>
 					</div>
 
 					{/* Bottom Checkout UI */}

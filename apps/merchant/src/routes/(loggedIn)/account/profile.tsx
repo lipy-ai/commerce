@@ -35,15 +35,14 @@ function RouteComponent() {
 	}, [data]);
 
 	const onSubmit = async (data: typeof defaultValues) => {
-		toast.promise(
-			authClient.updateUser({ name: data.name }).then((r) => {
-				if (r.error) throw r.error;
-				return r.data;
-			}),
-			{
-				error: "Failed to update profile.",
-			},
-		);
+		await authClient.updateUser({ name: data.name }).then((r) => {
+			if (r.error) {
+				toast.error("Failed to update user");
+				throw r.error;
+			}
+
+			return r.data;
+		});
 	};
 
 	return (
@@ -77,9 +76,7 @@ function RouteComponent() {
 							/>
 						</div>
 						<div className="p-4">
-							<FormButton className="" disabled={!form.formState.isDirty}>
-								Save Changes
-							</FormButton>
+							<FormButton className="">Save Changes</FormButton>
 						</div>
 					</div>
 				</div>

@@ -43,7 +43,7 @@ const generalInfo = [
 	{
 		title: "Preferences",
 		icon: Settings2,
-		url: "/account/settings",
+		url: "/account/preferences",
 	},
 ];
 
@@ -97,8 +97,8 @@ function RouteComponent() {
 					</div>
 				)}
 
-				<SettingsCard items={generalInfo} />
-				<SettingsCard items={filteredMoreInfo} />
+				<SettingsCard title="General Information" items={generalInfo} />
+				<SettingsCard title="More Information" items={filteredMoreInfo} />
 			</div>
 		</div>
 	);

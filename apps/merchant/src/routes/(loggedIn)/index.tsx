@@ -1,5 +1,7 @@
 // import { authClient } from "@lipy/lib/providers/auth";
+import { apiClient } from "@lipy/lib/api";
 import { formatAmount } from "@lipy/lib/utils/intl";
+import { useAPIQuery } from "@lipy/lib/utils/queryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import {
 	Avatar,
@@ -14,7 +16,7 @@ import { Shirt, ShoppingCart, SquareUser, Store } from "lucide-react";
 export const Route = createFileRoute("/(loggedIn)/")({
 	component: RouteComponent,
 });
-const data = [
+const btns = [
 	{
 		name: "Checkout",
 		icon: ShoppingCart,
@@ -32,6 +34,7 @@ const data = [
 	},
 ];
 function RouteComponent() {
+	const { data } = useAPIQuery(apiClient.v1.merchant.store, "$get", {});
 	return (
 		<div className="min-h-screen grid lg:grid-cols-12 divide-x">
 			<div className="col-span-8 py-4 divide-y">
@@ -41,7 +44,10 @@ function RouteComponent() {
 							<AvatarImage
 								alt=""
 								className="object-cover"
-								src="https://cdn.logojoy.com/wp-content/uploads/2018/05/18143901/8102.png"
+								src={
+									data?.image ||
+									"https://cdn.logojoy.com/wp-content/uploads/2018/05/18143901/8102.png"
+								}
 							/>
 							<AvatarFallback className="bg-primary text-primary-foreground">
 								<Store />
@@ -49,12 +55,12 @@ function RouteComponent() {
 						</Avatar>
 						<div>
 							<p>Welcome to,</p>
-							<h1 className="text-2xl">Hiravati Kirana Store.</h1>
+							<h1 className="text-2xl">{data?.name || "Store"}</h1>
 						</div>
 					</div>
 				</div>
 				<div className="grid grid-cols-3 gap-2 lg:gap-4 p-4">
-					{data.map((d, i) => (
+					{btns.map((d, i) => (
 						<div
 							key={i}
 							className={cn(

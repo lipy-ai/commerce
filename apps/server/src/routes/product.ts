@@ -14,7 +14,6 @@ const schema = z.object({
 const route = new Hono<ServerContext>()
 	.get("/", zValidator("query", schema), async (c) => {
 		const q = c.req.valid("query");
-
 		let query = db
 			.selectFrom("product as p")
 			.leftJoin("category as c", "p.category", "c.id")

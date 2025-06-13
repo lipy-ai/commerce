@@ -70,7 +70,7 @@ function RouteComponent() {
 					<Button>New Member</Button>
 				</div>
 				<div className="grid divide-y lg:gap-4">
-					<div className="bg-background lg:border">
+					<div className="bg-background">
 						<h1 className="text-lg font-medium my-4 ">Staff List</h1>
 						<Table className="">
 							<TableBody>

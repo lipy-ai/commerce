@@ -53,18 +53,18 @@ function RouteComponent() {
 
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
-				className="space-y-8 lg:p-4 max-w-4xl"
+				className="space-y-8 p-4 max-w-4xl"
 			>
-				<div className="grid divide-y lg:gap-4">
-					<div className="bg-background lg:border">
-						<h1 className="text-lg font-medium px-4 p-4 flex gap-2 items-center">
+				<div className="grid lg:gap-4">
+					<div className="bg-background">
+						<h1 className="text-lg font-medium py-4 flex gap-2 items-center">
 							Notifications
 						</h1>
 						<div className="divide-y border-y">
 							{Object.keys(notification).map((k) => {
 								const v = notification[k as keyof typeof notification];
 								return (
-									<div key={k} className="flex items-center px-4 gap-4">
+									<div key={k} className="flex items-center gap-4">
 										<CardHeader className="flex-1 p-0">
 											<CardTitle className="text-base">{v.name}</CardTitle>
 											<CardDescription>{v.desc}</CardDescription>
@@ -76,7 +76,7 @@ function RouteComponent() {
 								);
 							})}
 						</div>
-						<div className="p-4">
+						<div className="py-4">
 							<Button className="" disabled={!form.formState.isDirty}>
 								Save Changes
 							</Button>

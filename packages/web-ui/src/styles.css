@@ -10,7 +10,7 @@
 	--sidebar-max-size: 250px;
 	--background: rgb(250, 249, 245);
 	--foreground: rgb(61, 57, 41);
-	--card: rgb(250, 249, 245);
+	--card: rgb(255, 255, 255);
 	--card-foreground: rgb(20, 20, 19);
 	--popover: rgb(255, 255, 255);
 	--popover-foreground: rgb(40, 38, 27);
@@ -24,7 +24,7 @@
 	--accent-foreground: rgb(40, 38, 27);
 	--destructive: rgb(20, 20, 19);
 	--destructive-foreground: rgb(255, 255, 255);
-	--border: rgb(218, 217, 212);
+	--border: rgb(230, 229, 224);
 	--input: rgb(180, 178, 167);
 	--ring: rgb(32, 127, 222);
 	--chart-1: rgb(176, 87, 48);

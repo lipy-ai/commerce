@@ -8,7 +8,6 @@ import {
 } from "@lipy/web-ui/components/ui/avatar";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Card } from "@lipy/web-ui/components/ui/card";
-import { Label } from "@lipy/web-ui/components/ui/label";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute } from "@tanstack/react-router";
@@ -118,15 +117,15 @@ export function AccountPage() {
 
 				{data && (
 					<div className="space-y-2">
-						<Label>Your Information</Label>
-						<SettingsCard items={yourInfo} />
+						<SettingsCard title="Your Information" items={yourInfo} />
 					</div>
 				)}
 
 				<div className="space-y-2">
-					<Label>{data ? "More" : "General"}</Label>
-
-					<SettingsCard items={filteredMoreInfo} />
+					<SettingsCard
+						title={data ? "More" : "General"}
+						items={filteredMoreInfo}
+					/>
 				</div>
 			</div>
 		</div>

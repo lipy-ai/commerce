@@ -73,7 +73,7 @@ interface Order {
 	orderedAt: string;
 	itemTotalAmount: number | null;
 	orderPrimaryId: string | null;
-	storeImage: string | null;
+	storeLogo: string | null;
 }
 
 export function MyOrderCard({ order }: { order: Order }) {

@@ -1,6 +1,6 @@
 import { cn } from "@lipy/web-ui/lib/utils";
 import type { ReactNode } from "@tanstack/react-router";
-import { Loader2 } from "lucide-react";
+import { IterationCcw, Loader2 } from "lucide-react";
 import { type ControllerRenderProps, useFormContext } from "react-hook-form";
 import { Button } from "../ui/button";
 import {
@@ -40,10 +40,12 @@ export const FormItemWrapper = ({
 	children: React.ReactNode;
 }) => {
 	return (
-		<FormItem className={cn("w-full", wrapperClassName)}>
-			<div className="">
+		<FormItem className={cn("w-full gap-1 mb-3", wrapperClassName)}>
+			<div>
 				<div className="flex items-start py-2">
-					<FormLabel className="font-normal text-muted-foreground break-all">
+					<FormLabel
+						className={cn("font-normal text-muted-foreground break-all")}
+					>
 						{label}
 						{required ? RequiredEl : ""}
 					</FormLabel>
@@ -64,7 +66,6 @@ export const FormButton = ({
 	children: ReactNode;
 }) => {
 	const form = useFormContext();
-
 	return (
 		<Button
 			{...props}
@@ -76,8 +77,8 @@ export const FormButton = ({
 					<Loader2 className="animate-spin" />
 				</div>
 			) : form.formState.isSubmitted && !form.formState.isSubmitSuccessful ? (
-				<div className="absolute size-full flex justify-center items-center">
-					Retry
+				<div className="absolute size-full flex justify-center items-center gap-2">
+					<IterationCcw /> <span>Try Again</span>
 				</div>
 			) : null}
 			<div

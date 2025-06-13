@@ -169,7 +169,6 @@ export function LoginScreen({
 									height={75}
 									className="rounded-md"
 								/>
-								ß
 							</Link>
 						</div>
 						<CardHeader className="text-center">
@@ -179,7 +178,7 @@ export function LoginScreen({
 								India's Local Commerce App
 							</CardTitle>
 						</CardHeader>
-						ß
+
 						<CardContent className="bg-transparent">
 							<form onSubmit={handleForm}>
 								<div className="grid gap-6">

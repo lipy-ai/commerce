@@ -58,7 +58,13 @@ export default function NavBar() {
 							</div>
 							<p className="text-sm">
 								<span className="truncate max-w-[250px] block">
-									{deliveryLocation.line1}
+									{[
+										deliveryLocation?.name,
+										deliveryLocation?.metadata?.building,
+										deliveryLocation?.line1,
+									]
+										.filter(Boolean)
+										.join(", ")}
 								</span>
 							</p>
 						</Link>
@@ -114,11 +120,19 @@ export default function NavBar() {
 							</p>
 							<ChevronDown />
 						</div>
-						<p className="text-base">
-							<span className="truncate max-w-[400px] block">
-								{deliveryLocation.line1}
-							</span>
-						</p>
+						{deliveryLocation.line1 !== "" && (
+							<p className="text-base">
+								<span className="truncate max-w-[400px] block">
+									{[
+										deliveryLocation?.name,
+										deliveryLocation?.metadata?.building,
+										deliveryLocation?.line1,
+									]
+										.filter(Boolean)
+										.join(", ")}
+								</span>
+							</p>
+						)}
 					</Link>
 				)}
 				<div className="w-full">
@@ -133,7 +147,7 @@ export default function NavBar() {
 				</Link>
 			</div>
 			{pathname === "/" && (
-				<div className="mt-8 -mb-6 ">
+				<div className="mt-4 -mb-6 ">
 					<ScrollingTabs
 						tabs={CATEGORIES}
 						handleTabChange={setActiveCategory}

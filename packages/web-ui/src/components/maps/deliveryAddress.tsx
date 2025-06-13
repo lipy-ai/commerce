@@ -52,7 +52,10 @@ function LocationComponent() {
 					fetch(geocodeUrl)
 						.then((response) => response.json())
 						.then((data) => {
-							const address = data.results[0]?.formatted_address;
+							let address = data.results[0]?.formatted_address;
+							if (address.split(",")[0].includes("+")) {
+								address = address.split(",").slice(1).join(",");
+							}
 							const addressComp = data.results[0].address_components;
 
 							// let addressName = "";
@@ -120,7 +123,7 @@ function LocationComponent() {
 						<div className="text-lg font-semibold">
 							{error || "Location permission is off"}
 						</div>
-						<div className="text-muted-foreground text-xs">
+						<div className="text-muted-foreground text-sm">
 							Please allow location permission for better experience.
 						</div>
 					</div>

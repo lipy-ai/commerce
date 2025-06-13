@@ -66,7 +66,6 @@ function ProgressDialog({
 			});
 		},
 	});
-	const { id, userId, ...addressWithoutIdAndUserId } = deliveryLocation;
 
 	useEffect(() => {
 		const interval = setInterval(() => {
@@ -82,7 +81,19 @@ function ProgressDialog({
 		const timeout = setTimeout(() => {
 			mutation.mutateAsync({
 				json: {
-					address: addressWithoutIdAndUserId,
+					address: {
+						lat: deliveryLocation.lat as number,
+						lng: deliveryLocation.lng as number,
+						phone: deliveryLocation.phone as string,
+						tag: deliveryLocation.tag,
+						city: deliveryLocation.city,
+						state: deliveryLocation.state,
+						country: deliveryLocation.country as string,
+						postalCode: deliveryLocation.postalCode as string,
+						line1: deliveryLocation.line1,
+						line2: deliveryLocation.line2 as string,
+						name: deliveryLocation.name,
+					},
 					deliveryInstruction: deliveryInstruction || "",
 					storeInstruction: null,
 				},

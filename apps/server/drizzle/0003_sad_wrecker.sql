@@ -1,0 +1,1 @@
+ALTER TABLE "lipy"."store" RENAME COLUMN "logo" TO "image";

@@ -26,7 +26,7 @@ function RouteComponent() {
 		<>
 			<DashboardHeader title="My Orders" />
 
-			<div className="my-4 space-y-2">
+			<div className="my-4 space-y-2 max-w-screen-lg m-auto ">
 				{isFetched &&
 					data &&
 					data.length > 0 &&

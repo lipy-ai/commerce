@@ -1,5 +1,6 @@
 // import { useCartStore } from "@/components/cart/store";
 import { DefaultCatchBoundary } from "@/components/defaultCatchBoundry";
+import NavBar from "@/components/navBar";
 import { NotFound } from "@/components/notFound";
 import { seo } from "@/utils/seo";
 import useGlobalVibration from "@lipy/lib/hooks/use-vibrate";
@@ -115,6 +116,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			>
 				<ViewportProvider isMobile={data?.isSsrMobile}>
 					<QueryProvider handleThrowOnError={handleThrowOnError}>
+						{!data?.isSsrMobile && <NavBar />}
 						<NuqsAdapter>{children}</NuqsAdapter>
 						<Toaster />
 					</QueryProvider>

@@ -1,12 +1,17 @@
 import { env } from "@envClient";
+import { cn } from "@lipy/web-ui/lib/utils";
+import { Link } from "@tanstack/react-router";
+import { MapPinOff } from "lucide-react";
 import { useEffect, useState } from "react";
-import SetLocation from "./setLocationDrawer";
+import { DrawerDailogSwitcher } from "../custom-ui/drawerDialogSwitcher";
+import { Button, buttonVariants } from "../ui/button";
 import { fillFullAddress } from "./utils/googlemap";
 import { defaultDeliveryLocationState, useLocationStore } from "./utils/store";
 
 function LocationComponent() {
 	const [error, setError] = useState<string | null>(null);
 	const [unsupported, setUnsupported] = useState(false);
+	const [drawerOpen, setDrawerOpen] = useState(true);
 
 	const { setDeliveryLocation, deliveryLocation } = useLocationStore();
 
@@ -102,7 +107,37 @@ function LocationComponent() {
 	}, []);
 
 	if (unsupported || error) {
-		return <SetLocation error={error || "Location permission is off"} />;
+		// return <SetLocation error={error || "Location permission is off"} />;
+		return (
+			<DrawerDailogSwitcher
+				open={drawerOpen}
+				onOpenChange={setDrawerOpen}
+				handleInteractOutside={false}
+			>
+				<div className="space-y-4 flex flex-col items-center justify-center">
+					<div className="flex flex-col items-center justify-center">
+						<MapPinOff className="size-16" />
+						<div className="text-lg font-semibold">
+							{error || "Location permission is off"}
+						</div>
+						<div className="text-muted-foreground text-xs">
+							Please allow location permission for better experience.
+						</div>
+					</div>
+
+					<Button onClick={() => window.location.reload()} className="w-full">
+						Retry
+					</Button>
+
+					<Link
+						className={cn(buttonVariants({ variant: "outline" }), "w-full")}
+						to={"/account/addresses/deliveryAddress"}
+					>
+						Search your location
+					</Link>
+				</div>
+			</DrawerDailogSwitcher>
+		);
 	}
 
 	return;

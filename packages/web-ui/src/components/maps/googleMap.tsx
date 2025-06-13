@@ -8,7 +8,7 @@ import {
 	useJsApiLoader,
 } from "@react-google-maps/api";
 import { useNavigate } from "@tanstack/react-router";
-import { LocateFixed, MapPinned } from "lucide-react";
+import { LocateFixed, MapPinned, StepForward } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import SearchBar from "../custom-ui/searchBar";
 import { Button } from "../ui/button";
@@ -47,6 +47,7 @@ export default function GoogleMapImage({
 		lat: 0,
 		lng: 0,
 	});
+	const [isConfirm, setIsConfirm] = useState(false);
 
 	const { setDeliveryLocation } = useLocationStore();
 	const navigate = useNavigate();
@@ -124,7 +125,10 @@ export default function GoogleMapImage({
 				<GoogleMap
 					zoom={zoom}
 					center={mapCenter}
-					mapContainerStyle={{ width: "100%", height: "calc(100vh - 220px)" }}
+					mapContainerStyle={{
+						width: "100%",
+						height: isMobile ? "calc(100vh - 220px)" : "100vh",
+					}}
 					options={{
 						zoomControl: false,
 						streetViewControl: false,
@@ -146,7 +150,7 @@ export default function GoogleMapImage({
 					/>
 				</GoogleMap>
 
-				<div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 z-10">
+				<div className="absolute bottom-18 left-1/2 transform -translate-x-1/2 z-10">
 					<Button
 						className="text-primary border-primary font-semibold shadow-md hover:bg-primary/10"
 						variant="outline"
@@ -165,54 +169,71 @@ export default function GoogleMapImage({
 
 			<div
 				className={cn(
-					"border-t  bg-background w-full p-4 shadow-md",
-					isMobile ? "fixed bottom-0 left-0 right-0 z-20" : "mt-auto",
+					"border-t  bg-background w-full p-4 shadow-md z-20  ",
+					isMobile ? "fixed bottom-0 left-0 right-0" : "absolute bottom-0 ",
 				)}
 			>
-				<div className="max-w-7xl mx-auto">
-					<div
-						className={cn(
-							"flex items-center gap-4",
-							isMobile ? "flex-col" : "flex-row justify-between",
-						)}
-					>
-						<div className="flex items-start gap-3 w-full lg:w-auto">
-							<MapPinned className="size-8 text-primary mt-1 flex-shrink-0" />
-							<div className="overflow-hidden">
-								<h1 className="text-lg font-semibold truncate">
-									{/* {addressName || "Loading address..."} */}
-									{addressName || "Fetching address..."}
-								</h1>
-								<p className="text-sm text-muted-foreground line-clamp-2">
-									{address || "Please wait while we retrieve location details"}
-								</p>
-							</div>
+				<div
+					className={cn(
+						"flex items-center gap-4",
+						isMobile ? "flex-col" : "flex-row justify-between",
+					)}
+				>
+					<div className="flex items-start gap-3 w-full lg:w-auto">
+						<MapPinned className="size-8 text-primary mt-1 flex-shrink-0" />
+						<div className="overflow-hidden">
+							<h1 className="text-lg font-semibold truncate">
+								{/* {addressName || "Loading address..."} */}
+								{addressName || "Fetching address..."}
+							</h1>
+							<p className="text-sm text-muted-foreground line-clamp-2">
+								{address || "Please wait while we retrieve location details"}
+							</p>
 						</div>
+					</div>
 
-						{type === "saveAddress" && (
-							<DetailedAddress fullAddress={fullAddress} label="Add" />
-						)}
-						{type === "deliveryAddress" && (
+					{type === "saveAddress" && (
+						// <DetailedAddress fullAddress={fullAddress} label="Add" />
+
+						<div className={cn(isMobile && "w-full")}>
 							<Button
-								className="w-full font-semibold"
+								className="font-semibold px-6 w-full"
 								onClick={() => {
-									setDeliveryLocation({
-										...fullAddress,
-										id: "",
-										userId: "",
-										phone: "",
-										line2: "",
-										name: "",
-										tag: "home",
-									});
-
-									navigate({ to: "/" });
+									setIsConfirm(true);
 								}}
 							>
-								Confirm & Proceed
+								Confirm this address
+								<StepForward className="ml-2 h-4 w-4" />
 							</Button>
-						)}
-					</div>
+						</div>
+					)}
+					{type === "deliveryAddress" && (
+						<Button
+							className="w-full font-semibold"
+							onClick={() => {
+								setDeliveryLocation({
+									...fullAddress,
+									phone: "",
+									line2: "",
+									name: "",
+									tag: "home",
+									id: "",
+								});
+
+								navigate({ to: "/" });
+							}}
+						>
+							Confirm & Proceed
+						</Button>
+					)}
+					{isConfirm && (
+						<DetailedAddress
+							fullAddress={fullAddress}
+							label="Add"
+							open={isConfirm}
+							onOpenChange={setIsConfirm}
+						/>
+					)}
 				</div>
 			</div>
 		</div>

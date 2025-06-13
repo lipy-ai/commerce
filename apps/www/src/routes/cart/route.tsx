@@ -262,7 +262,7 @@ function RouteComponent() {
 					fullAddress={deliveryLocation}
 					open={detailedAddressDrawerOpen}
 					onOpenChange={setDetailedAddressDrawerOpen}
-					label={deliveryLocation?.id ? "Edit" : "Add"}
+					label={"Edit"}
 					isDeliveryAddress
 				/>
 			)}

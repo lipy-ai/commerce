@@ -52,7 +52,7 @@ const route = new Hono<ServerContext>()
 				"o.pk as orderPrimaryId",
 				"o.orderedAt",
 				"s.name as storeName",
-				"s.logo as storeLogo",
+				"s.image as storeImage",
 				"s.id as storeId",
 				"o.address",
 			])

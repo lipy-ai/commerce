@@ -152,6 +152,8 @@ export default function NearByShops() {
 		return <Spinner className="absolute top-1/2 left-1/2" />;
 	}
 
+	// console.log("shops", shops);
+
 	return (
 		<div>
 			<div className="m-auto max-w-screen-2xl md:mt-6 p-4">
@@ -170,7 +172,7 @@ export default function NearByShops() {
 										{/* Image Container */}
 										<div className="relative h-48">
 											<img
-												src={shop.logo || ""}
+												src={shop.image || "/assets/paper-bag-items.webp"}
 												alt={shop.name}
 												className="w-full h-full object-cover rounded-t-xl"
 											/>

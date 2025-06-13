@@ -213,12 +213,11 @@ export default function GoogleMapImage({
 							onClick={() => {
 								setDeliveryLocation({
 									...fullAddress,
-									id: "",
-									userId: "",
 									phone: "",
 									line2: "",
 									name: "",
 									tag: "home",
+									id: "",
 								});
 
 								navigate({ to: "/" });

@@ -2,17 +2,20 @@ import { cn } from "@lipy/web-ui/lib/utils";
 import { type VariantProps, cva } from "class-variance-authority";
 import { Loader2 } from "lucide-react";
 
-const spinnerVariants = cva("flex-col items-center justify-center", {
-	variants: {
-		show: {
-			true: "flex",
-			false: "hidden",
+const spinnerVariants = cva(
+	"absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center",
+	{
+		variants: {
+			show: {
+				true: "flex",
+				false: "hidden",
+			},
+		},
+		defaultVariants: {
+			show: true,
 		},
 	},
-	defaultVariants: {
-		show: true,
-	},
-});
+);
 
 const loaderVariants = cva("animate-spin text-primary", {
 	variants: {
@@ -41,8 +44,8 @@ export function Spinner({
 	className,
 }: SpinnerContentProps) {
 	return (
-		<span className={spinnerVariants({ show })}>
-			<Loader2 className={cn(loaderVariants({ size }), className)} />
+		<span className={cn(spinnerVariants({ show }), className)}>
+			<Loader2 className={cn(loaderVariants({ size }))} />
 			{children}
 		</span>
 	);

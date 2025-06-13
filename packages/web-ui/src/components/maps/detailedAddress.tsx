@@ -112,7 +112,7 @@ export function DetailedAddress({
 					line1: `${values.building},${fullAddress.line1}`,
 				},
 			});
-		} else if (label === "Edit") {
+		} else if (!isDeliveryAddress && label === "Edit") {
 			await editMutation.mutateAsync({
 				param: { id: fullAddress.id },
 				json: {
@@ -129,7 +129,6 @@ export function DetailedAddress({
 				tag: values.addressType,
 				line1: `${values.building},${fullAddress.line1.split(",").slice(1).join(",")}`,
 				phone: basePayload.phone || "",
-				id: "unspecifiedId",
 			});
 			onOpenChange?.(false);
 		}

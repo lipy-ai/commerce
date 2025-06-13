@@ -100,7 +100,7 @@ function RouteComponent() {
 									<div className="flex items-center gap-2 pr-2">
 										<Avatar className="size-10">
 											<AvatarImage
-												src={data[0]?.logo || "https://picsum.photos/200"}
+												src={data[0]?.image || "https://picsum.photos/200"}
 												alt=""
 											/>
 											<AvatarFallback className="rounded-lg bg-indigo-500 text-white">

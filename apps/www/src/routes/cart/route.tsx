@@ -3,6 +3,7 @@ import { useCartStore } from "@/components/cart/store";
 import PlaceOrder from "@/components/order/placeOrder";
 import ProductCard from "@/components/productCard";
 import { apiClient } from "@lipy/lib/api";
+import { formatAmount } from "@lipy/lib/utils/intl";
 import { useAPIQuery } from "@lipy/lib/utils/queryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { DetailedAddress } from "@lipy/web-ui/components/maps/detailedAddress";
@@ -99,14 +100,18 @@ function RouteComponent() {
 		);
 	}, [cart]);
 
+	const totalDiscount = totalMaxPrice - totalPrice;
+
 	const billingDetails = [
 		{
 			icon: ReceiptText,
 			title: "Subtotal",
 			value: (
 				<div className="flex items-center gap-2">
-					<p className="text-muted-foreground line-through">₹{totalMaxPrice}</p>
-					<p>₹{totalPrice}</p>
+					<p className="text-muted-foreground line-through">
+						{formatAmount("inr", totalMaxPrice)}
+					</p>
+					<p>{formatAmount("inr", totalPrice)}</p>
 				</div>
 			),
 		},
@@ -118,7 +123,9 @@ function RouteComponent() {
 		{
 			icon: ShoppingBag,
 			title: "Handling Charge",
-			value: <div className="text-muted-foreground">₹0</div>,
+			value: (
+				<div className="text-muted-foreground">{formatAmount("inr", 0)}</div>
+			),
 		},
 	];
 
@@ -187,9 +194,18 @@ function RouteComponent() {
 									</div>
 								))}
 							</CardContent>
-							<CardFooter className="justify-between p-4 bg-white rounded">
-								<p className="text-lg font-semibold">Total Payable</p>
-								<p className="text-lg font-semibold">₹{totalPrice}</p>
+							<CardFooter className=" bg-white rounded w-full flex flex-col">
+								<div className=" flex items-center justify-between w-full p-4">
+									<p className="text-lg font-semibold">Total Payable</p>
+									<p className="text-lg font-semibold">₹{totalPrice}</p>
+								</div>
+
+								{totalDiscount > 0 && (
+									<div className="bg-blue-50 text-blue-600 text-sm font-medium w-full rounded-b p-4">
+										Yayy, you are saving {formatAmount("inr", totalDiscount)} on
+										this order
+									</div>
+								)}
 							</CardFooter>
 						</Card>
 
@@ -236,7 +252,13 @@ function RouteComponent() {
 										<ChevronDown className="size-5" />
 									</div>
 									<p className="line-clamp-1 text-xs">
-										{deliveryLocation?.line1}
+										{[
+											deliveryLocation?.name,
+											deliveryLocation?.metadata?.building,
+											deliveryLocation?.line1,
+										]
+											.filter(Boolean)
+											.join(", ")}
 									</p>
 								</div>
 							</div>

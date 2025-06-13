@@ -5,7 +5,7 @@ import {
 	AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
 import { Button } from "@lipy/web-ui/components/ui/button";
-import { Card, CardContent } from "@lipy/web-ui/components/ui/card";
+import { Card, CardContent, CardFooter } from "@lipy/web-ui/components/ui/card";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link } from "@tanstack/react-router";
@@ -138,7 +138,7 @@ export function MyOrderCard({ order }: { order: Order }) {
 
 						{order.items && order.items.length > 0 && (
 							// The selected code with types
-							<div className="grid md:grid-cols-5 lg:grid-cols-8 gap-2">
+							<div className="grid grid-cols-6 lg:grid-cols-8 gap-2">
 								{order.items.map((item, index) => (
 									<Avatar
 										key={index}
@@ -154,17 +154,21 @@ export function MyOrderCard({ order }: { order: Order }) {
 						)}
 
 						<Separator />
-						<div className="flex items-center justify-between">
+						<CardFooter className="flex items-center justify-between w-full">
 							<p className="font-medium text-sm">
 								Total Amount :{" "}
 								{formatAmount("inr", order.itemTotalAmount as number)}{" "}
 							</p>
 							{order.status === "delivered" && (
-								<Button variant={"green"} size="sm" className="font-semibold">
+								<Button
+									variant={"green"}
+									size="sm"
+									className="font-semibold -my-2"
+								>
 									Reorder
 								</Button>
 							)}
-						</div>
+						</CardFooter>
 					</Link>
 				</CardContent>
 			</Card>

@@ -1,0 +1,1 @@
+ALTER TABLE "lipy"."address" ADD COLUMN "metadata" jsonb;

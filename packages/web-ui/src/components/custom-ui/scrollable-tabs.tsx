@@ -69,12 +69,12 @@ export const ScrollingTabs = ({
 									isActive
 										? "lg:text-primary text-background"
 										: "lg:text-muted-foreground",
-									"lg:size-6",
+									"lg:size-5",
 								)}
 							/>
 							<span
 								className={cn(
-									"mt-1 lg:mt-0 lg:ml-2 sm:text-sm lg:text-xl font-medium whitespace-nowrap",
+									"mt-1 lg:mt-0 lg:ml-2 sm:text-sm lg:text-lg font-medium whitespace-nowrap",
 									isActive
 										? "lg:text-primary text-background"
 										: "lg:text-muted-foreground",

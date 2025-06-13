@@ -4,6 +4,7 @@ import { DrawerDailogSwitcher } from "@lipy/web-ui/components/custom-ui/drawerDi
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { DeleteAddress } from "@lipy/web-ui/components/maps/deleteAdderess";
 import { DetailedAddress } from "@lipy/web-ui/components/maps/detailedAddress";
+import type { DeliveryLocation } from "@lipy/web-ui/components/maps/utils/store";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { Avatar, AvatarFallback } from "@lipy/web-ui/components/ui/avatar";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
@@ -30,12 +31,23 @@ export const Route = createFileRoute("/account/addresses/")({
 });
 
 function RouteComponent() {
-	const { data, isLoading } = useAPIQuery(apiClient.v1.address, "$get", {});
+	const { data, isFetching, isFetched } = useAPIQuery(
+		apiClient.v1.address,
+		"$get",
+		{},
+	);
 	const { isMobile } = useViewport();
 	const [optionsDrawerOpen, setOptionsDrawerOpen] = useState(false);
 	const [selectedAddress, setSelectedAddress] = useState<
 		NonNullable<typeof data>[0] | null
 	>(null);
+
+	if (isFetching)
+		return [...Array(5)].map((_, i) => (
+			<div key={i} className="my-2 flex flex-col items-center">
+				<Skeleton className="h-28 w-5/6 " />
+			</div>
+		));
 
 	return (
 		<div>
@@ -52,61 +64,23 @@ function RouteComponent() {
 				)}
 			</DashboardHeader>
 
-			{isLoading &&
-				[...Array(5)].map((_, i) => (
-					<div key={i} className="my-2 flex flex-col items-center">
-						<Skeleton className="h-28 w-5/6 " />
-					</div>
-				))}
-
-			{!isLoading && data && data?.length > 0 && (
-				<div className="mb-16  items-center lg:border-r">
+			{isFetched && data && data?.length > 0 && (
+				<div className="mb-16  divide-y p-4 ">
 					{data.map((address) => (
 						<div
 							key={address.id}
-							className={cn(
-								!isMobile
-									? " flex items-center justify-between"
-									: "flex flex-col space-y-2",
-								"p-4 border-b",
-								"",
-							)}
 							onClick={() => {
 								setOptionsDrawerOpen(true);
 								setSelectedAddress(address);
 							}}
 						>
-							<div className="flex  gap-2">
-								<Avatar className="rounded-md ">
-									<AvatarFallback>
-										{address.tag === "home" ? (
-											<House className=" flex-shrink-0 text-foreground fill-primary/40" />
-										) : address.tag === "work" ? (
-											<Building className=" flex-shrink-0 text-foreground fill-primary/40" />
-										) : (
-											<MapPinHouse className="size-6 flex-shrink-0 text-foreground fill-primary/40" />
-										)}
-									</AvatarFallback>
-								</Avatar>
-
-								<div>
-									<h2 className="text-lg font-semibold">
-										{address.name || address.tag}
-									</h2>
-									<p className="text-muted-foreground">{address.line1}</p>
-									{address.phone && (
-										<p className="text-foreground/90">
-											Phone number : {address.phone}
-										</p>
-									)}
-								</div>
-							</div>
+							<AddressComponent address={address} />
 						</div>
 					))}
 				</div>
 			)}
 
-			{!isLoading && data?.length === 0 && (
+			{isFetched && data?.length === 0 && (
 				<EmptyPage
 					icon={MapPinHouse}
 					title="You have no saved addresses"
@@ -142,6 +116,42 @@ function RouteComponent() {
 	);
 }
 
+export function AddressComponent({
+	address,
+}: {
+	address: DeliveryLocation;
+}) {
+	return (
+		<div className="flex  gap-2 py-4 ">
+			<Avatar className="rounded-md ">
+				<AvatarFallback>
+					{address.tag === "home" ? (
+						<House className=" flex-shrink-0 text-foreground fill-primary/40" />
+					) : address.tag === "work" ? (
+						<Building className=" flex-shrink-0 text-foreground fill-primary/40" />
+					) : (
+						<MapPinHouse className="size-6 flex-shrink-0 text-foreground fill-primary/40" />
+					)}
+				</AvatarFallback>
+			</Avatar>
+
+			<div>
+				<h2 className="text-lg font-semibold">
+					{address.tag.charAt(0).toUpperCase() + address.tag.slice(1)}
+				</h2>
+				<p className="text-muted-foreground">
+					{[address?.name, address?.metadata?.building, address?.line1]
+						.filter(Boolean)
+						.join(", ")}
+				</p>
+				{address.phone && (
+					<p className="text-foreground/90">Phone number : {address.phone}</p>
+				)}
+			</div>
+		</div>
+	);
+}
+
 function OptionsDrawer(props: {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
@@ -152,55 +162,6 @@ function OptionsDrawer(props: {
 		useState(false);
 	return (
 		<div>
-			{/* <Drawer open={props.open} onOpenChange={props.onOpenChange}>
-				<DrawerContent>
-					<DrawerHeader className="p-0 flex items-start mx-4">
-						<DrawerTitle className="font-medium text-base">
-							Select option
-						</DrawerTitle>
-						<DrawerDescription />
-					</DrawerHeader>
-					<div className="mx-4 my-2 bg-accent p-4 rounded-lg space-y-4">
-						<div
-							className="flex items-center justify-between"
-							onClick={() => {
-								setDetailedAddressDrawerOpen(true);
-							}}
-						>
-							<div className="flex items-center gap-4">
-								<Pencil className="size-4" />
-								<p className="font-medium text-sm">Edit address</p>
-							</div>
-
-							<ChevronRight className="size-4" />
-						</div>
-						<Separator className="border-t border-dashed bg-transparent" />
-						<div className="flex items-center justify-between">
-							<div className="flex items-center gap-4">
-								<MapPin className="size-4" />
-								<p className="font-medium text-sm">Set as delivery address</p>
-							</div>
-
-							<ChevronRight className="size-4" />
-						</div>
-						<Separator className="border-t border-dashed bg-transparent" />
-						<div
-							className="flex items-center justify-between"
-							onClick={() => {
-								setDeleteAddressDialogOpen(true);
-							}}
-						>
-							<div className="flex items-center gap-4">
-								<Trash className="size-4" />
-								<p className="font-medium text-sm">Delete address</p>
-							</div>
-
-							<ChevronRight className="size-4" />
-						</div>
-					</div>
-				</DrawerContent>
-			</Drawer> */}
-
 			<DrawerDailogSwitcher open={props.open} onOpenChange={props.onOpenChange}>
 				<div className="p-0 flex items-start mx-4">
 					<p className="font-medium text-base">Select option</p>

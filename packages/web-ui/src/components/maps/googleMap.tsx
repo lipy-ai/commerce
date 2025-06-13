@@ -84,10 +84,7 @@ export default function GoogleMapImage({
 			getGeocodeFromLatLng(mapCenter.lat, mapCenter.lng).then(
 				({ formattedAddress, addressComponent }) => {
 					if (formattedAddress.split(",")[0].includes("+")) {
-						formattedAddress = formattedAddress
-							.split(",")
-							.slice(1, formattedAddress.split(",").length)
-							.join(",");
+						formattedAddress = formattedAddress.split(",").slice(1).join(",");
 					}
 
 					setAddress(formattedAddress);
@@ -218,6 +215,7 @@ export default function GoogleMapImage({
 									name: "",
 									tag: "home",
 									id: "",
+									metadata: { building: "" },
 								});
 
 								navigate({ to: "/" });

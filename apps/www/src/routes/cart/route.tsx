@@ -137,7 +137,7 @@ function RouteComponent() {
 			)}
 
 			{isFetched && !isError && data.length > 0 && (
-				<div className="relative">
+				<div className="relative max-w-screen-lg m-auto">
 					<div className="p-4 space-y-6 mb-4 gap-4">
 						<Card className="">
 							<CardHeader>

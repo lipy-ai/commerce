@@ -1,6 +1,6 @@
 import { env } from "@envClient";
 import { apiClient } from "@lipy/lib/api";
-import { useAPIMutation } from "@lipy/lib/utils/queryClient";
+import { useAPIMutation, useAPIQuery } from "@lipy/lib/utils/queryClient";
 import {
 	FormButton,
 	FormImage,
@@ -8,40 +8,60 @@ import {
 	FormTextarea,
 } from "@lipy/web-ui/components/forms/elements";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
+import VerticalListSkeleton from "@lipy/web-ui/components/layouts/skeletons/verticalListSkeleton";
 import { Form } from "@lipy/web-ui/components/ui/form";
-import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-
 export const Route = createFileRoute("/(loggedIn)/store/")({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
+	const { data, isLoading } = useAPIQuery(
+		apiClient.v1.merchant.store,
+		"$get",
+		{},
+	);
+
 	const defaultValues = {
-		image: "",
-		name: "",
-		handle: "",
-		description: "",
-		email: "",
-		phone: "",
+		image: data?.image || "",
+		name: data?.name || "",
+		handle: data?.handle || "",
+		description: data?.description || "",
+		email: data?.email || "",
+		phone: data?.phone || "",
 	};
+
 	const form = useForm({
 		defaultValues,
 	});
+
 	const updateMutation = useAPIMutation(apiClient.v1.merchant.store, "$patch", {
-		onSuccess() {
-			// queryClient.invalidateQueries({
-			// 	queryKey: apiQueryOptions(apiClient.v1.address, "$get", {}).queryKey,
-			// });
-		},
+		form,
 	});
 
 	const onSubmit = async (json: typeof defaultValues) => {
-		toast.promise(updateMutation.mutateAsync({ json }), {
-			error: "Failed to update store details.",
-		});
+		await updateMutation.mutateAsync({ json });
 	};
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		if (data) {
+			form.reset(defaultValues);
+		}
+	}, [data, form]);
+
+	if (isLoading) {
+		return (
+			<div>
+				<DashboardHeader />
+				<div className="p-4 lg:p-8 max-w-4xl">
+					<VerticalListSkeleton count={8} />
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<Form {...form}>

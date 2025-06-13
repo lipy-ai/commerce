@@ -4,11 +4,14 @@ import {
 	FormTextarea,
 } from "@lipy/web-ui/components/forms/elements";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
-import {
-	AnnotatedLayout,
-	AnnotatedSection,
-} from "@lipy/web-ui/components/ui/annotated";
+
 import { Button } from "@lipy/web-ui/components/ui/button";
+import {
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
+} from "@lipy/web-ui/components/ui/card";
 import { Form } from "@lipy/web-ui/components/ui/form";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { createFileRoute } from "@tanstack/react-router";
@@ -61,20 +64,20 @@ function RouteComponent() {
 				)}
 				{saveBtn}
 			</DashboardHeader>
-			<form onSubmit={form.handleSubmit(onSubmit)}>
-				<div className="">
-					<div>
-						<AnnotatedLayout>
-							<AnnotatedSection
-								title="General Information"
-								desc="Basic information about the product"
-							>
+			<form onSubmit={form.handleSubmit(onSubmit)} className="p-4 lg:p-8">
+				<div className="max-w-2xl space-y-8">
+					<Card>
+						<CardHeader>
+							<CardTitle>General Information</CardTitle>
+						</CardHeader>
+						<CardContent>
+							<div>
+								<FormImage name="thumbnail" wrapperClassName="size-20" />
 								<FormInput
 									name="title"
 									label="Title"
 									placeholder="Product Title"
 								/>
-
 								<FormInput
 									name="category"
 									label="Category"
@@ -85,55 +88,52 @@ function RouteComponent() {
 									label="Summary"
 									placeholder="Brief summary about this product..."
 								/>
-							</AnnotatedSection>
-							<AnnotatedSection
-								title="Inventory Information"
-								desc="Inventory information about the product"
-							>
-								<div className="grid grid-cols-12 gap-x-8">
-									<FormInput
-										label="Price"
-										name="price"
-										type="number"
-										placeholder="0.00"
-										className="col-span-6"
-										prefixEl={<span>₹</span>}
-									/>
-									<FormInput
-										name="stock_quantity"
-										label="Stock Quantity"
-										placeholder=""
-										type="number"
-										min={0}
-										className="col-span-6"
-									/>
-									<FormInput
-										name="sku"
-										label="SKU"
-										placeholder=""
-										className="col-span-6 md:col-span-3"
-									/>
+							</div>
+						</CardContent>
+					</Card>
 
-									<FormInput
-										name="brand"
-										label="Brand"
-										placeholder="Samsung"
-										className="col-span-6 md:col-span-3"
-									/>
-									<FormInput
-										name="model_id"
-										label="Model ID"
-										placeholder="Samsung"
-										className="col-span-6 md:col-span-3"
-									/>
-								</div>
-							</AnnotatedSection>
+					<Card>
+						<CardHeader>
+							<CardTitle>Variations</CardTitle>
+						</CardHeader>
+						<CardContent>
+							<FormInput
+								label="Price"
+								name="price"
+								type="number"
+								placeholder="0.00"
+								className="col-span-6"
+								prefixEl={<span>₹</span>}
+							/>
+							<FormInput
+								name="stock_quantity"
+								label="Stock Quantity"
+								placeholder=""
+								type="number"
+								min={0}
+								className="col-span-6"
+							/>
+							<FormInput
+								name="sku"
+								label="SKU"
+								placeholder=""
+								className="col-span-6 md:col-span-3"
+							/>
 
-							<AnnotatedSection title="Product Images">
-								<FormImage name="thumbnail" wrapperClassName="size-20" />
-							</AnnotatedSection>
-						</AnnotatedLayout>
-					</div>
+							<FormInput
+								name="brand"
+								label="Brand"
+								placeholder="Samsung"
+								className="col-span-6 md:col-span-3"
+							/>
+							<FormInput
+								name="model_id"
+								label="Model ID"
+								placeholder="Samsung"
+								className="col-span-6 md:col-span-3"
+							/>
+						</CardContent>
+					</Card>
 				</div>
 			</form>
 		</Form>

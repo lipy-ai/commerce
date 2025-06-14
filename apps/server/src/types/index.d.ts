@@ -21,7 +21,6 @@ export type SuccessResponse<T = void> = {
 	success: true;
 	message: string;
 } & (T extends void ? {} : { data: T });
-ß;
 
 export type ErrorResponse = {
 	success: false;

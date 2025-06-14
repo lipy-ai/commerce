@@ -1,6 +1,6 @@
 import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/queryClient";
-import { DrawerDailogSwitcher } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
+import { DrawerDialogSwitcher } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { DeleteAddress } from "@lipy/web-ui/components/maps/deleteAdderess";
 import { DetailedAddress } from "@lipy/web-ui/components/maps/detailedAddress";
@@ -162,7 +162,7 @@ function OptionsDrawer(props: {
 		useState(false);
 	return (
 		<div>
-			<DrawerDailogSwitcher open={props.open} onOpenChange={props.onOpenChange}>
+			<DrawerDialogSwitcher open={props.open} onOpenChange={props.onOpenChange}>
 				<div className="p-0 flex items-start mx-4">
 					<p className="font-medium text-base">Select option</p>
 				</div>
@@ -204,7 +204,7 @@ function OptionsDrawer(props: {
 						<ChevronRight className="size-4" />
 					</div>
 				</div>
-			</DrawerDailogSwitcher>
+			</DrawerDialogSwitcher>
 			{deleteAddressDialogOpen && (
 				<DeleteAddress
 					addressId={props.address.id}

@@ -12,7 +12,7 @@ import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { DrawerDailogSwitcher } from "../custom-ui/drawerDialogSwitcher";
+import { DrawerDialogSwitcher } from "../custom-ui/drawerDialogSwitcher";
 import { Button, buttonVariants } from "../ui/button";
 
 import {
@@ -137,7 +137,7 @@ export function DetailedAddress({
 	};
 
 	return (
-		<DrawerDailogSwitcher open={open} onOpenChange={onOpenChange}>
+		<DrawerDialogSwitcher open={open} onOpenChange={onOpenChange}>
 			<ScrollArea className="overflow-y-auto">
 				<div className="p-4">
 					<div className="flex items-center justify-between">
@@ -274,6 +274,6 @@ export function DetailedAddress({
 					</Form>
 				</div>
 			</ScrollArea>
-		</DrawerDailogSwitcher>
+		</DrawerDialogSwitcher>
 	);
 }

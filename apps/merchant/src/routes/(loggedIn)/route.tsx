@@ -1,5 +1,5 @@
 import { env } from "@envClient";
-import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
 
 import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/queryClient";
@@ -90,15 +90,18 @@ const mobileNav = [
 ];
 
 function RouteComponent() {
-	const { isLoading } = useAPIQuery(apiClient.v1.merchant.store, "$get", {});
+	const { data, isLoading } = useAPIQuery(
+		apiClient.v1.merchant.store,
+		"$get",
+		{},
+	);
 
 	useEffect(() => {
-		if (isLoading) return;
+		if (isLoading || data) return;
+		console.log(data);
 		const cb = window?.location.origin || env.MERCHANT_URL;
-		redirect({
-			href: `${env.WEB_URL}/login?cb=${btoa(cb)}` as any,
-		});
-	}, [isLoading]);
+		window.location.href = `${env.WEB_URL}/login?cb=${btoa(cb)}`;
+	}, [isLoading, data]);
 
 	return (
 		<main>

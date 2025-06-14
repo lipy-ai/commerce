@@ -53,6 +53,7 @@ export function LoginScreen({
 		parseAtobToString.withDefault(env.WEB_URL),
 	);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (data?.user?.id && callbackURL) {
 			window.location.href = callbackURL;

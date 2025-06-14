@@ -3,7 +3,7 @@ import { cn } from "@lipy/web-ui/lib/utils";
 import { Link } from "@tanstack/react-router";
 import { MapPinOff } from "lucide-react";
 import { useEffect, useState } from "react";
-import { DrawerDailogSwitcher } from "../custom-ui/drawerDialogSwitcher";
+import { DrawerDialogSwitcher } from "../custom-ui/drawerDialogSwitcher";
 import { Button, buttonVariants } from "../ui/button";
 import { fillFullAddress } from "./utils/googlemap";
 import { defaultDeliveryLocationState, useLocationStore } from "./utils/store";
@@ -112,7 +112,7 @@ function LocationComponent() {
 	if (unsupported || error) {
 		// return <SetLocation error={error || "Location permission is off"} />;
 		return (
-			<DrawerDailogSwitcher
+			<DrawerDialogSwitcher
 				open={drawerOpen}
 				onOpenChange={setDrawerOpen}
 				handleInteractOutside={false}
@@ -139,7 +139,7 @@ function LocationComponent() {
 						Search your location
 					</Link>
 				</div>
-			</DrawerDailogSwitcher>
+			</DrawerDialogSwitcher>
 		);
 	}
 

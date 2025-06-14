@@ -38,7 +38,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 				{prefixEl && (
 					<span
 						className={cn(
-							"flex h-12 md:h-10 items-center p-2 [&>svg]:w-5",
+							"flex h-12 md:h-10 items-center p-2 [&>svg]:w-5 text-muted-foreground text-base",
 							size === "lg" && "h-12",
 							prefixClassName,
 						)}
@@ -50,8 +50,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 					type={type}
 					className={cn(
 						"placeholder:text-muted-foreground flex-1 flex h-12 md:h-10 shadow-none w-full bg-transparent py-1 text-base outline-none transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:cursor-not-allowed disabled:opacity-50",
-						!suffixEl && "pr-3",
-						!prefixEl && "pl-3",
+						!suffixEl && "pr-2",
+						!prefixEl && "pl-2",
 						size === "lg" && "h-12",
 						noStyle && "h-fit w-fit",
 					)}

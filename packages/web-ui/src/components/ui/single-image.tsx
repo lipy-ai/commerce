@@ -20,7 +20,7 @@ const SingleImage = (props: SingleImageProps) => {
 	return (
 		<div
 			className={cn(
-				"rounded-md relative bg-muted/40 border flex justify-center items-center cursor-pointer pointer-events-auto hover:bg-muted aspect-square",
+				"rounded-md relative bg-muted/40 border border-input flex justify-center items-center cursor-pointer pointer-events-auto hover:bg-muted aspect-square",
 				props.className,
 			)}
 		>

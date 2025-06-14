@@ -1,50 +1,39 @@
 import {
+	DrawerDialogClose,
+	DrawerDialogDescription,
+	DrawerDialogFooter,
+	DrawerDialogHeader,
+	DrawerDialogSwitcher,
+	DrawerDialogTitle,
+} from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
+import {
+	FormButton,
 	FormImage,
 	FormInput,
 	FormTextarea,
 } from "@lipy/web-ui/components/forms/elements";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 
-import { Button } from "@lipy/web-ui/components/ui/button";
 import {
 	Card,
 	CardContent,
 	CardHeader,
 	CardTitle,
 } from "@lipy/web-ui/components/ui/card";
+
 import { Form } from "@lipy/web-ui/components/ui/form";
-import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { createFileRoute } from "@tanstack/react-router";
-import { ExternalLink, Share2, Trash } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 export const Route = createFileRoute("/(loggedIn)/product/$id")({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-	const onSubmit = async (body: any) => {
-		console.log(body);
-		// await mutation.mutateAsync({ body }).then((r) => {
-		//   // r.
-		// })
-	};
-	const { isMobile } = useViewport();
-
-	const form = useForm({
-		// resolver: zodResolver(),
-		defaultValues: {},
-	});
-
-	const saveBtn = (
-		<Button size={isMobile ? "sm" : "default"}>
-			{isMobile ? "Save Changes" : "Save Changes"}
-		</Button>
-	);
-
 	return (
-		<Form {...form}>
+		<>
 			<DashboardHeader title="Edit Product">
-				{!isMobile && (
+				{/* {!isMobile && (
 					<>
 						<Button size={"icon"} variant={"outline"} type="button">
 							<ExternalLink />
@@ -62,41 +51,75 @@ function RouteComponent() {
 						</Button>
 					</>
 				)}
-				{saveBtn}
+				{saveBtn} */}
 			</DashboardHeader>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="p-4 lg:p-8">
-				<div className="max-w-2xl space-y-8">
-					<Card>
-						<CardHeader>
-							<CardTitle>General Information</CardTitle>
-						</CardHeader>
-						<CardContent>
-							<div>
-								<FormImage name="thumbnail" wrapperClassName="size-20" />
-								<FormInput
-									name="title"
-									label="Title"
-									placeholder="Product Title"
-								/>
-								<FormInput
-									name="category"
-									label="Category"
-									placeholder="Electronics"
-								/>
-								<FormTextarea
-									name="summary"
-									label="Summary"
-									placeholder="Brief summary about this product..."
-								/>
-							</div>
-						</CardContent>
-					</Card>
+			<div className="p-4 lg:p-8">
+				<BasicProductDetails />
+			</div>
+		</>
+	);
+}
 
-					<Card>
-						<CardHeader>
-							<CardTitle>Variations</CardTitle>
-						</CardHeader>
-						<CardContent>
+export function BasicProductDetails() {
+	const [open, onOpenChange] = useState(false);
+
+	const onSubmit = async (body: any) => {
+		console.log(body);
+		// await mutation.mutateAsync({ body }).then((r) => {
+		//   // r.
+		// })
+	};
+
+	const form = useForm({
+		// resolver: zodResolver(),
+		defaultValues: {},
+	});
+
+	return (
+		<div>
+			<Card className="">
+				<CardHeader>
+					<CardTitle>Product Details</CardTitle>
+				</CardHeader>
+				<CardContent>
+					<div className="flex gap-4">
+						<img
+							src="https://media.istockphoto.com/id/471720606/photo/fresh-green-pea-pods-and-seeds-isolated-on-white.webp?a=1&b=1&s=612x612&w=0&k=20&c=LqY-JK30etpiCY-nLSl2Y0vesw4eCF325Fz8_YQPCE8="
+							alt=""
+							className="size-24 aspect-square object-cover bg-accent border rounded"
+						/>
+						<CardTitle>Green Peas</CardTitle>
+					</div>
+				</CardContent>
+			</Card>
+			<DrawerDialogSwitcher
+				className="sm:max-w-2xl"
+				open={open}
+				onOpenChange={onOpenChange}
+			>
+				<DrawerDialogHeader>
+					<DrawerDialogTitle>Basic Information</DrawerDialogTitle>
+					<DrawerDialogDescription>Basic Information</DrawerDialogDescription>
+				</DrawerDialogHeader>
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(onSubmit)} className="">
+						<div className="space-y-8">
+							<FormImage name="thumbnail" wrapperClassName="size-20" />
+							<FormInput
+								name="title"
+								label="Title"
+								placeholder="Product Title"
+							/>
+							<FormInput
+								name="category"
+								label="Category"
+								placeholder="Electronics"
+							/>
+							<FormTextarea
+								name="summary"
+								label="Summary"
+								placeholder="Brief summary about this product..."
+							/>
 							<FormInput
 								label="Price"
 								name="price"
@@ -132,10 +155,14 @@ function RouteComponent() {
 								placeholder="Samsung"
 								className="col-span-6 md:col-span-3"
 							/>
-						</CardContent>
-					</Card>
-				</div>
-			</form>
-		</Form>
+						</div>
+						<DrawerDialogFooter>
+							<DrawerDialogClose />
+							<FormButton>Save Changes</FormButton>
+						</DrawerDialogFooter>
+					</form>
+				</Form>
+			</DrawerDialogSwitcher>
+		</div>
 	);
 }

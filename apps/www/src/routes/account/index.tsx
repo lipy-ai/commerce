@@ -9,6 +9,7 @@ import {
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Card } from "@lipy/web-ui/components/ui/card";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
+import { shareContent } from "@lipy/web-ui/lib/share";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import {
@@ -44,26 +45,41 @@ const yourInfo = [
 	},
 ];
 
-const moreInfo = [
+const moreInfo: {
+	title: string;
+	icon: any;
+	url?: string;
+	type?: "link" | "button";
+	handleFunction?: () => Promise<string>;
+}[] = [
 	{
 		title: "Start your own shop",
 		icon: Store,
 		url: "/",
+		type: "link",
 	},
 	{
 		title: "Share the app",
 		icon: Share2,
-		url: "/",
+		type: "button",
+		handleFunction: () =>
+			shareContent({
+				title: "Lipy Commerce",
+				text: "Hey, Check out this app!",
+				url: "https://app.lipy.in",
+			}),
 	},
 	{
 		title: "General Info",
 		icon: Info,
 		url: "/",
+		type: "link",
 	},
 	{
 		title: "Logout",
 		icon: LogOut,
 		url: "/logout",
+		type: "link",
 	},
 ];
 

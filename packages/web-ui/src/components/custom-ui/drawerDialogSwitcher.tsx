@@ -1,4 +1,5 @@
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
+import { cn } from "@lipy/web-ui/lib/utils";
 import type { ReactNode } from "@tanstack/react-router";
 import { Button } from "../ui/button";
 import {
@@ -39,7 +40,7 @@ const DrawerDialogSwitcher = ({
 			<Drawer
 				open={open}
 				onOpenChange={onOpenChange}
-				handleOnly={!handleInteractOutside}
+				dismissible={handleInteractOutside}
 			>
 				<DrawerContent className={className}>{children}</DrawerContent>
 			</Drawer>
@@ -48,7 +49,7 @@ const DrawerDialogSwitcher = ({
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent
-				className={className}
+				className={cn(!handleInteractOutside && "[&>button]:hidden", className)}
 				onInteractOutside={(e) => {
 					if (!handleInteractOutside) {
 						e.preventDefault();

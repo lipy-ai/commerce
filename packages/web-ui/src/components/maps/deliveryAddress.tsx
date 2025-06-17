@@ -3,7 +3,13 @@ import { cn } from "@lipy/web-ui/lib/utils";
 import { Link } from "@tanstack/react-router";
 import { MapPinOff } from "lucide-react";
 import { useEffect, useState } from "react";
-import { DrawerDialogSwitcher } from "../custom-ui/drawerDialogSwitcher";
+import {
+	DrawerDialogDescription,
+	DrawerDialogFooter,
+	DrawerDialogHeader,
+	DrawerDialogSwitcher,
+	DrawerDialogTitle,
+} from "../custom-ui/drawerDialogSwitcher";
 import { Button, buttonVariants } from "../ui/button";
 import { fillFullAddress } from "./utils/googlemap";
 import { defaultDeliveryLocationState, useLocationStore } from "./utils/store";
@@ -90,7 +96,14 @@ function LocationComponent() {
 							// }
 
 							if (address) {
-								fillFullAddress(addressComp, address, lat, lng, setFullAddress);
+								const prsedAddress = fillFullAddress(
+									addressComp,
+									address,
+									lat,
+									lng,
+								);
+
+								setFullAddress(prsedAddress);
 							}
 						})
 						.catch((_error) => {
@@ -110,35 +123,34 @@ function LocationComponent() {
 	}, []);
 
 	if (unsupported || error) {
-		// return <SetLocation error={error || "Location permission is off"} />;
 		return (
 			<DrawerDialogSwitcher
 				open={drawerOpen}
 				onOpenChange={setDrawerOpen}
 				handleInteractOutside={false}
 			>
-				<div className="space-y-4 flex flex-col items-center justify-center">
-					<div className="flex flex-col items-center justify-center">
-						<MapPinOff className="size-16" />
-						<div className="text-lg font-semibold">
-							{error || "Location permission is off"}
-						</div>
-						<div className="text-muted-foreground text-sm">
-							Please allow location permission for better experience.
-						</div>
+				<DrawerDialogHeader className="mx-auto">
+					<div className="mx-auto rounded-xl p-4 border my-8 ">
+						<MapPinOff className="size-20 " />
 					</div>
 
-					<Button onClick={() => window.location.reload()} className="w-full">
-						Retry
-					</Button>
+					<DrawerDialogTitle className="mx-auto text-2xl text-center font-semibold">
+						{error || "Location permission is off"}
+					</DrawerDialogTitle>
+					<DrawerDialogDescription className="mx-auto text-base text-center">
+						Please allow location permission for better experience.
+					</DrawerDialogDescription>
+				</DrawerDialogHeader>
+				<DrawerDialogFooter className="space-y-2">
+					<Button onClick={() => window.location.reload()}>Retry</Button>
 
 					<Link
-						className={cn(buttonVariants({ variant: "outline" }), "w-full")}
+						className={cn(buttonVariants({ variant: "outline" }))}
 						to={"/account/addresses/deliveryAddress"}
 					>
 						Search your location
 					</Link>
-				</div>
+				</DrawerDialogFooter>
 			</DrawerDialogSwitcher>
 		);
 	}

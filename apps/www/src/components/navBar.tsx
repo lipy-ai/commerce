@@ -59,7 +59,6 @@ export default function NavBar() {
 							<p className="text-sm">
 								<span className="truncate max-w-[250px] block">
 									{[
-										deliveryLocation?.name,
 										deliveryLocation?.metadata?.building,
 										deliveryLocation?.line1,
 									]

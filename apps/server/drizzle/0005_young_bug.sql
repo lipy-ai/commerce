@@ -1,1 +1,0 @@
-ALTER TABLE "lipy"."address" DROP COLUMN "metadata";

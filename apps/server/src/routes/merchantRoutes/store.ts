@@ -18,9 +18,13 @@ const storeSchema = z.object({
 const route = new Hono<ServerContext>()
 	.get("/", async (c) => {
 		const session = c.get("session");
+		console.log(session);
+		if (!session?.activeStoreId) {
+			throw new HTTPException(404, { message: "No active store found!" });
+		}
 		const result = await db
 			.selectFrom("store")
-			.where("store.id", "=", session?.activeOrganizationId!)
+			.where("id", "=", session?.activeStoreId!)
 			.selectAll()
 			.executeTakeFirstOrThrow();
 		return c.json(result);
@@ -65,11 +69,14 @@ const route = new Hono<ServerContext>()
 		const values = c.req.valid("json");
 		await db
 			.updateTable("store")
+<<<<<<< HEAD
 			.where("store.id", "=", session?.activeOrganizationId!)
-			.set({
-				...values,
-			})
-			.execute();
+=======
+		.where("id", "=", session?.activeStoreId!)
+>>>>>>> f652621 (updates)
+			.set(
+				...values,)
+			.execute()
 
 		return c.json({ success: true });
 	});

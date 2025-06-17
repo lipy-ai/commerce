@@ -172,7 +172,7 @@ export const AddToCart = ({
 			return (
 				<div className="bg-primary flex items-center  rounded-lg shadow-sm">
 					<Button
-						size="icon"
+						size="icon-sm"
 						variant="ghost"
 						onClick={handleQuantityChange("decrement")}
 						disabled={disabled || isLoading}
@@ -189,7 +189,7 @@ export const AddToCart = ({
 						)}
 					</Button>
 
-					<div className="min-w-[32px] flex items-center justify-center">
+					<div className="min-w-[2px] flex items-center justify-center">
 						{isLoading &&
 						(loadingState.operation === "add" ||
 							(!isDecrementLoading && !isIncrementLoading)) ? (
@@ -202,7 +202,7 @@ export const AddToCart = ({
 					</div>
 
 					<Button
-						size="icon"
+						size="icon-sm"
 						variant="ghost"
 						onClick={handleQuantityChange("increment")}
 						disabled={disabled || isLoading}

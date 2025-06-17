@@ -44,17 +44,22 @@ function RouteComponent() {
 		const lng = place.geometry.location.lng();
 		const address = place.formatted_address || place.name || "";
 
-		fillFullAddress(
+		const parsedAddress = fillFullAddress(
 			place.address_components || [],
 			address,
 			lat,
 			lng,
-			(addr) => {
-				setDeliveryLocation({ ...deliveryLocation, ...addr });
-				navigate({ to: "/" });
-			},
 		);
-	}, [deliveryLocation, setDeliveryLocation, navigate]);
+
+		setDeliveryLocation({
+			...deliveryLocation,
+			...parsedAddress,
+			metadata: { building: "" },
+			tag: "other",
+			id: "",
+		});
+		navigate({ to: "/" });
+	}, [setDeliveryLocation, navigate]);
 
 	const handleAddressSelect = useCallback(
 		(address: DeliveryLocation) => {

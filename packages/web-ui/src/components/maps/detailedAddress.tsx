@@ -2,7 +2,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 // @ts-nocheck
 import { apiClient } from "@lipy/lib/api";
 import { authClient } from "@lipy/lib/providers/auth";
-import { apiQueryOptions, useAPIMutation } from "@lipy/lib/utils/queryClient";
+import {
+	apiQueryOptions,
+	useAPIMutation,
+} from "@lipy/lib/utils/useQueryClient";
 import { CustomRadioGroup } from "@lipy/web-ui/components/custom-ui/customRadioGroup";
 import { InputWithAnimatedLabel } from "@lipy/web-ui/components/custom-ui/inputWithAnimatedLabel";
 import { cn } from "@lipy/web-ui/lib/utils";

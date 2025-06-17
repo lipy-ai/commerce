@@ -1,5 +1,5 @@
 import { apiClient } from "@lipy/lib/api";
-import { useAPIQuery } from "@lipy/lib/utils/queryClient";
+import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { Link } from "@tanstack/react-router";

@@ -5,24 +5,22 @@ import { type VariantProps, cva } from "class-variance-authority";
 import * as React from "react";
 
 const badgeVariants = cva(
-	"inline-flex items-center rounded-full text-xs font-medium ring-1 ring-inset transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+	"inline-flex items-center rounded text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
 	{
 		variants: {
 			variant: {
-				default: "bg-surface-200/10 text-foreground-light ring-surface-200",
-				warning: "bg-warning/10 text-warning-600 ring-warning/30",
-				success: "bg-brand/10 text-brand-600 ring-brand/30",
-				destructive:
-					"bg-destructive/10 text-destructive-600 ring-destructive/30",
-				brand: "bg-brand/10 text-brand-600 ring-brand/30",
-				secondary:
-					"bg-secondary/10 text-secondary-foreground ring-secondary/30",
-				outline: "bg-background text-foreground-light ring-border",
+				default: "bg-primary/40 text-primary ring-primary",
+				warning: "bg-amber-400 ring-amber-400",
+				success: "bg-emerald-600/20 text-emerald-700",
+				destructive: "bg-rose-700 ring-rose-700 text-primary-foreground",
+				secondary: "bg-secondary text-secondary-foreground",
+				outline:
+					"bg-background ring ring-inset text-foreground-light ring-border",
 			},
 			size: {
-				small: "px-2 py-0.5 text-xs",
-				default: "px-2.5 py-0.5 text-sm",
-				large: "px-3 py-1 text-sm",
+				small: "p-1 text-xs",
+				default: "p-1 text-sm",
+				large: "p-1 text-sm",
 			},
 			dot: {
 				true: "pl-1.5",

@@ -3,7 +3,7 @@ import {
 	apiQueryOptions,
 	useAPIMutation,
 	useAPIQuery,
-} from "@lipy/lib/utils/queryClient.js";
+} from "@lipy/lib/utils/useQueryClient";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { useQueryClient } from "@tanstack/react-query";

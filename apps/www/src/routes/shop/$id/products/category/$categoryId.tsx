@@ -1,6 +1,6 @@
 import ProductCard from "@/components/productCard";
 import { apiClient } from "@lipy/lib/api";
-import { useAPIQuery } from "@lipy/lib/utils/queryClient";
+import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { createFileRoute, useRouter } from "@tanstack/react-router";

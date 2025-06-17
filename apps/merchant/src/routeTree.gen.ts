@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as ErrorImport } from './routes/error'
 import { Route as DemoRouteImport } from './routes/demo/route'
 import { Route as loggedInRouteImport } from './routes/(loggedIn)/route'
 import { Route as DemoIndexImport } from './routes/demo/index'
@@ -37,6 +38,12 @@ import { Route as loggedInAccountProfileImport } from './routes/(loggedIn)/accou
 import { Route as loggedInAccountPreferencesImport } from './routes/(loggedIn)/account/preferences'
 
 // Create/Update Routes
+
+const ErrorRoute = ErrorImport.update({
+  id: '/error',
+  path: '/error',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const DemoRouteRoute = DemoRouteImport.update({
   id: '/demo',
@@ -199,6 +206,13 @@ declare module '@tanstack/react-router' {
       path: '/demo'
       fullPath: '/demo'
       preLoaderRoute: typeof DemoRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/error': {
+      id: '/error'
+      path: '/error'
+      fullPath: '/error'
+      preLoaderRoute: typeof ErrorImport
       parentRoute: typeof rootRoute
     }
     '/(loggedIn)/account': {
@@ -445,6 +459,7 @@ const DemoRouteRouteWithChildren = DemoRouteRoute._addFileChildren(
 export interface FileRoutesByFullPath {
   '/': typeof loggedInIndexRoute
   '/demo': typeof DemoRouteRouteWithChildren
+  '/error': typeof ErrorRoute
   '/account': typeof loggedInAccountRouteRouteWithChildren
   '/store': typeof loggedInStoreRouteRouteWithChildren
   '/demo/client': typeof DemoClientRoute
@@ -469,6 +484,7 @@ export interface FileRoutesByFullPath {
 }
 
 export interface FileRoutesByTo {
+  '/error': typeof ErrorRoute
   '/demo/client': typeof DemoClientRoute
   '/demo/directMutation': typeof DemoDirectMutationRoute
   '/demo/ssr': typeof DemoSsrRoute
@@ -495,6 +511,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/(loggedIn)': typeof loggedInRouteRouteWithChildren
   '/demo': typeof DemoRouteRouteWithChildren
+  '/error': typeof ErrorRoute
   '/(loggedIn)/account': typeof loggedInAccountRouteRouteWithChildren
   '/(loggedIn)/store': typeof loggedInStoreRouteRouteWithChildren
   '/demo/client': typeof DemoClientRoute
@@ -524,6 +541,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/demo'
+    | '/error'
     | '/account'
     | '/store'
     | '/demo/client'
@@ -547,6 +565,7 @@ export interface FileRouteTypes {
     | '/store/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/error'
     | '/demo/client'
     | '/demo/directMutation'
     | '/demo/ssr'
@@ -571,6 +590,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/(loggedIn)'
     | '/demo'
+    | '/error'
     | '/(loggedIn)/account'
     | '/(loggedIn)/store'
     | '/demo/client'
@@ -599,11 +619,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   loggedInRouteRoute: typeof loggedInRouteRouteWithChildren
   DemoRouteRoute: typeof DemoRouteRouteWithChildren
+  ErrorRoute: typeof ErrorRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   loggedInRouteRoute: loggedInRouteRouteWithChildren,
   DemoRouteRoute: DemoRouteRouteWithChildren,
+  ErrorRoute: ErrorRoute,
 }
 
 export const routeTree = rootRoute
@@ -617,7 +639,8 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/(loggedIn)",
-        "/demo"
+        "/demo",
+        "/error"
       ]
     },
     "/(loggedIn)": {
@@ -644,6 +667,9 @@ export const routeTree = rootRoute
         "/demo/tanstackMutation",
         "/demo/"
       ]
+    },
+    "/error": {
+      "filePath": "error.tsx"
     },
     "/(loggedIn)/account": {
       "filePath": "(loggedIn)/account/route.tsx",

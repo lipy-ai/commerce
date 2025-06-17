@@ -10,6 +10,7 @@ import {
 	useQuery as useRQQuery,
 	useSuspenseQuery as useRQSuspenseQuery,
 } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import type { UseFormReturn } from "react-hook-form";
 
 import type { InferResponseType } from "hono/client";
@@ -201,7 +202,6 @@ export const apiMutationOptions = <
 				// 		keepDirty: false,
 				// 	},
 				// );
-
 				return (await res.json()) as TResponse;
 			}
 			const errorData = (await res
@@ -271,7 +271,8 @@ export const useAPIQuery = <
 	InferSelectReturnType<TResponse, Options["select"]>,
 	TError
 > => {
-	return useRQQuery(
+	const navigate = useNavigate({});
+	const q = useRQQuery(
 		apiQueryOptions<T, M, Params, Options, TResponse, TError>(
 			endpoint,
 			method,
@@ -279,6 +280,19 @@ export const useAPIQuery = <
 			options,
 		),
 	);
+
+	if (q.error) {
+		navigate({
+			to: "/error" as any,
+			search: {
+				s: encodeURI(
+					JSON.stringify({ message: (q.error as any).data.error.message }),
+				),
+			} as any,
+		});
+	}
+
+	return q;
 };
 
 export const useAPISuspenseQuery = <

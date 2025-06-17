@@ -3,7 +3,7 @@ import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { apiClient } from "@lipy/lib/api";
-import { useAPIQuery } from "@lipy/lib/utils/queryClient";
+import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 
 export const Route = createFileRoute("/shop/$id/products/$productId")({

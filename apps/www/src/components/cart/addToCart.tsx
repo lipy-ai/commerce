@@ -1,5 +1,5 @@
 import { apiClient } from "@lipy/lib/api";
-import { useAPIMutation } from "@lipy/lib/utils/queryClient";
+import { useAPIMutation } from "@lipy/lib/utils/useQueryClient";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { cn } from "@lipy/web-ui/lib/utils";

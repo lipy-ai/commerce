@@ -1,6 +1,9 @@
 import { apiClient } from "@lipy/lib/api";
 import { authClient } from "@lipy/lib/providers/auth";
-import { apiQueryOptions, useAPIMutation } from "@lipy/lib/utils/queryClient";
+import {
+	apiQueryOptions,
+	useAPIMutation,
+} from "@lipy/lib/utils/useQueryClient";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import {

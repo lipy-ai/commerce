@@ -131,11 +131,11 @@ function LocationComponent() {
 				className="[&>button]:hidden"
 			>
 				<DrawerDialogHeader className="mx-auto">
-					<div className="mx-auto rounded-xl p-4 border my-8 ">
-						<MapPinOff className="size-20 " />
+					<div className="mx-auto rounded-xl p-4 border my-6 ">
+						<MapPinOff className="size-16 " />
 					</div>
 
-					<DrawerDialogTitle className="mx-auto text-2xl text-center font-semibold">
+					<DrawerDialogTitle className="mx-auto text-xl text-center font-semibold">
 						{error || "Location permission is off"}
 					</DrawerDialogTitle>
 					<DrawerDialogDescription className="mx-auto text-base text-center">

@@ -11,7 +11,9 @@ export default function SettingsCard({
 	items: {
 		title: string;
 		icon: any;
-		url: string;
+		url?: string;
+		type?: "link" | "button";
+		handleFunction?: () => void;
 	}[];
 }) {
 	return (
@@ -23,7 +25,15 @@ export default function SettingsCard({
 				<CardContent className="divide-y py-2  divide-dashed">
 					{items.map((item, index) => (
 						<div key={index} className="py-3">
-							<Link to={item.url} className="flex flex-col">
+							<Link
+								to={item?.url}
+								className="flex flex-col"
+								onClick={() => {
+									if (item.type === "button" && item.handleFunction) {
+										item.handleFunction();
+									}
+								}}
+							>
 								<div className="flex items-center justify-between">
 									<div className="flex items-center gap-2">
 										<Avatar className="size-9">

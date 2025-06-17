@@ -151,7 +151,7 @@ function RouteComponent() {
 									<CardTitle>Order Items(s)</CardTitle>
 									<p className="text-muted-foreground">{cart.length} items</p>
 								</CardHeader>
-								<div className="divide-y divide-dashed px-4">
+								<div className="px-4">
 									{cart.map((product) => (
 										<div key={product.id} className=" py-4">
 											<ProductCard
@@ -176,10 +176,10 @@ function RouteComponent() {
 
 						<Card className="">
 							<CardContent className="p-0 divide-y">
-								<CardHeader className="p-4">
+								<CardHeader className="p-4 ">
 									<CardTitle>Billing Details</CardTitle>
 								</CardHeader>
-								<div className="divide-y divide-dashed p-4">
+								<div className="p-4">
 									{billingDetails.map(({ icon: Icon, title, value }) => (
 										<div
 											key={title}
@@ -187,9 +187,7 @@ function RouteComponent() {
 										>
 											<div className="flex items-center gap-2">
 												<Icon className="size-4" />
-												<p className="font-medium text-muted-foreground">
-													{title}
-												</p>
+												<p>{title}</p>
 											</div>
 											<div className="">{value}</div>
 										</div>
@@ -228,7 +226,7 @@ function RouteComponent() {
 					{/* Bottom Checkout UI */}
 					<div className="fixed bottom-0 border-t  w-full bg-white shadow-xl border-2 rounded-t-lg max-w-screen-lg">
 						<div
-							className="bg-accent/40 rounded-t-lg p-2 cursor-pointer"
+							className="bg-accent/40 rounded-t-xl p-2 cursor-pointer"
 							onClick={() => setDetailedAddressDrawerOpen(true)}
 						>
 							<div className="flex items-center gap-2">

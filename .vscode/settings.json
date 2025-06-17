@@ -26,7 +26,8 @@
 	"editor.codeActionsOnSave": {
 		"source.organizeImports.biome": "explicit",
 		"quickfix.biome": "explicit"
-	}
+	},
+	"postman.settings.dotenv-detection-notification-visibility": false
 	// "tailwindCSS.experimental.configFile": {
 	// 	"packages/web-ui/src/style.css": [
 	// 		"apps/www/**",

@@ -4,28 +4,16 @@ import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/queryClient";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
-import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute, useRouter } from "@tanstack/react-router";
-import { ChevronRight, Heart } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 export const Route = createFileRoute("/shop/$id/")({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-	// const [shopNameVisible, setShopNameVisible] = useState(false);
-	// const { scrollY } = useScroll();
-
-	// useMotionValueEvent(scrollY, "change", (current) => {
-	// 	if (current > 100) {
-	// 		setShopNameVisible(true);
-	// 	} else {
-	// 		setShopNameVisible(false);
-	// 	}
-	// });
-
 	const { id } = Route.useParams();
 
 	const { data, isFetched, isFetching } = useAPIQuery(
@@ -66,30 +54,8 @@ function RouteComponent() {
 	}
 
 	return (
-		<div>
-			{/* <DashboardHeader
-				titleChildren={
-					<motion.div
-						variants={{
-							visible: { opacity: 1, y: 0 },
-							hidden: { opacity: 0, y: 50 },
-						}}
-						animate={shopNameVisible ? "visible" : "hidden"}
-						transition={{ duration: 0.3, ease: "easeInOut" }}
-						className="text-xl font-semibold line-clamp-1"
-					>
-						{"Grihasthi Kirana"}
-					</motion.div>
-				}
-			/> */}
-
-			{/* <div className="mb-4">
-				<ShopShortDetails shopInfo={shopInfo} />
-			</div> */}
-
+		<div className="relative">
 			<ShopHeroPage />
-
-			<Separator className="-my-4" />
 
 			{isFetching &&
 				[...Array(3)].map((_, i) => (
@@ -164,19 +130,23 @@ function RouteComponent() {
 					})}
 			</div>
 
-			{!isFetching && groupedProducts.length === 0 && <EmptyPage />}
+			{!isFetching && groupedProducts.length === 0 && (
+				<div className="my-32">
+					<EmptyPage />
+				</div>
+			)}
 
-			<Separator />
-			<div className="px-2 pt-12 pb-28 bg-accent space-y-4">
+			{/* <Separator /> */}
+			{/* <div className="px-2 pt-12 pb-28 bg-accent space-y-4 absolute bottom-0 left-0 right-0">
 				<h1 className="text-5xl text-muted-foreground/40 font-bold">
 					Empowering local shops
 					<Heart className="inline-block ml-2 size-10 fill-red-400 text-red-400" />
 				</h1>
-				<Separator />
+				<Separator className="bg-muted-foreground/40" />
 				<h3 className="text-muted-foreground/40 text-lg font-bold">
 					connecting with love by LIPY
 				</h3>
-			</div>
+			</div> */}
 		</div>
 	);
 }

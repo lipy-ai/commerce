@@ -69,6 +69,8 @@ function RouteComponent() {
 	const { data } = authClient.useSession();
 	const { isMobile } = useViewport();
 
+	console.log(data);
+
 	const filteredMoreInfo = data
 		? moreInfo
 		: moreInfo.filter((item) => item.title !== "Logout");

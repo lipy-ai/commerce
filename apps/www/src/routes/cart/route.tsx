@@ -18,7 +18,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@lipy/web-ui/components/ui/card";
-import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
@@ -100,7 +99,7 @@ function RouteComponent() {
 		);
 	}, [cart]);
 
-	const totalDiscount = totalMaxPrice - totalPrice;
+	// const totalDiscount = totalMaxPrice - totalPrice;
 
 	const billingDetails = [
 		{
@@ -147,66 +146,63 @@ function RouteComponent() {
 				<div className="relative max-w-screen-lg m-auto">
 					<div className="p-4 space-y-6 mb-4 gap-4">
 						<Card className="">
-							<CardHeader>
-								<CardTitle>Order Item(s)</CardTitle>
-							</CardHeader>
-							<CardContent className="divide-y py-0 divide-dashed">
-								{cart.map((product) => (
-									<div key={product.id} className=" py-4">
-										<ProductCard
-											thumbnail={product.thumbnail ?? undefined}
-											product={product}
-											variant="horizontal"
-											className={{ classNameImg: "w-12 h-12" }}
-										/>
-									</div>
-								))}
-								{/* <Separator className="-my-2 border-t border-dashed bg-transparent" /> */}
-							</CardContent>
-							<CardFooter className="justify-between bg-white p-4 rounded">
-								{/* <div className="flex items-center justify-between"> */}
-								<p className="font-medium">Forgot something ?</p>
-								<Button variant="black" size="sm">
-									<Plus />
-									Add more items
-								</Button>
-								{/* </div> */}
-							</CardFooter>
-						</Card>
-						<Separator />
-						<Card className="">
-							<CardHeader>
-								<CardTitle>Billing Details</CardTitle>
-							</CardHeader>
-							<CardContent className="divide-y py-2 divide-dashed">
-								{billingDetails.map(({ icon: Icon, title, value }) => (
-									<div
-										key={title}
-										className="flex items-center justify-between py-2"
-									>
-										<div className="flex items-center gap-2">
-											<Icon className="size-4" />
-											<p className="font-medium text-muted-foreground">
-												{title}
-											</p>
+							<CardContent className="divide-y  p-0">
+								<CardHeader className="p-4 flex items-center justify-between">
+									<CardTitle>Order Items(s)</CardTitle>
+									<p className="text-muted-foreground">{cart.length} items</p>
+								</CardHeader>
+								<div className="divide-y divide-dashed px-4">
+									{cart.map((product) => (
+										<div key={product.id} className=" py-4">
+											<ProductCard
+												thumbnail={product.thumbnail ?? undefined}
+												product={product}
+												variant="horizontal"
+												className={{ classNameImg: "w-12 h-12" }}
+											/>
 										</div>
-										<div className="">{value}</div>
-									</div>
-								))}
-							</CardContent>
-							<CardFooter className=" bg-white rounded w-full flex flex-col">
-								<div className=" flex items-center justify-between w-full p-4">
-									<p className="text-lg font-semibold">Total Payable</p>
-									<p className="text-lg font-semibold">₹{totalPrice}</p>
+									))}
 								</div>
 
-								{totalDiscount > 0 && (
-									<div className="bg-blue-50 text-blue-600 text-sm font-medium w-full rounded-b p-4">
-										Yayy, you are saving {formatAmount("inr", totalDiscount)} on
-										this order
+								<CardFooter className="justify-between p-4">
+									<p className="font-medium">Forgot something ?</p>
+									<Button variant="black" size="sm">
+										<Plus />
+										Add more items
+									</Button>
+								</CardFooter>
+							</CardContent>
+						</Card>
+
+						<Card className="">
+							<CardContent className="p-0 divide-y">
+								<CardHeader className="p-4">
+									<CardTitle>Billing Details</CardTitle>
+								</CardHeader>
+								<div className="divide-y divide-dashed p-4">
+									{billingDetails.map(({ icon: Icon, title, value }) => (
+										<div
+											key={title}
+											className="flex items-center justify-between py-2"
+										>
+											<div className="flex items-center gap-2">
+												<Icon className="size-4" />
+												<p className="font-medium text-muted-foreground">
+													{title}
+												</p>
+											</div>
+											<div className="">{value}</div>
+										</div>
+									))}
+								</div>
+
+								<CardFooter className="p-4">
+									<div className=" flex items-center justify-between w-full">
+										<p className="text-lg font-semibold">Total Payable</p>
+										<p className="text-lg font-semibold">₹{totalPrice}</p>
 									</div>
-								)}
-							</CardFooter>
+								</CardFooter>
+							</CardContent>
 						</Card>
 
 						<div className="p-4 mb-42 shadow-none rounded-xl bg-white border-none">

@@ -28,7 +28,7 @@ export const ScrollingTabs = ({
 
 	useEffect(() => {
 		const checkForArrows = () => {
-			// Optional: logic for showing arrows if needed later
+			// Optional: Add future logic for scroll indicators
 		};
 
 		const tabsEl = tabsRef.current;
@@ -46,7 +46,11 @@ export const ScrollingTabs = ({
 
 	return (
 		<div className="w-full">
-			<div ref={tabsRef} className="flex overflow-x-auto scrollbar-hide">
+			<div
+				ref={tabsRef}
+				className="flex overflow-x-auto scrollbar-hide snap-x scroll-pl-4 scroll-smooth"
+				style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+			>
 				{tabs.map((tab, index) => {
 					const Icon = tab.icon;
 					const isActive = activeTab === index;
@@ -56,7 +60,7 @@ export const ScrollingTabs = ({
 							key={tab.id}
 							onClick={() => onTabChange(index, tab.id)}
 							className={cn(
-								"group relative flex flex-col lg:flex-row items-center px-4 py-2 lg:py-4  mx-2 min-w-16 cursor-pointer transition-all duration-300",
+								"group snap-start flex-shrink-0 relative flex flex-col lg:flex-row items-center px-4 py-2 lg:py-4 mx-2 min-w-16 cursor-pointer transition-all duration-300",
 								isActive
 									? "after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1.5 after:bg-background lg:after:bg-primary after:rounded-t-full text-primary"
 									: "text-background hover:text-background/80",
@@ -67,17 +71,17 @@ export const ScrollingTabs = ({
 								size={20}
 								className={cn(
 									isActive
-										? "lg:text-primary text-background"
-										: "lg:text-muted-foreground",
+										? "text-background lg:text-primary"
+										: "text-background lg:text-muted-foreground",
 									"lg:size-5",
 								)}
 							/>
 							<span
 								className={cn(
-									"mt-1 lg:mt-0 lg:ml-2 sm:text-sm lg:text-lg font-medium whitespace-nowrap",
+									"mt-1 lg:mt-0 lg:ml-2 text-sm lg:text-lg font-medium whitespace-nowrap",
 									isActive
-										? "lg:text-primary text-background"
-										: "lg:text-muted-foreground",
+										? "text-background lg:text-primary"
+										: "text-background lg:text-muted-foreground",
 								)}
 							>
 								{tab.name}

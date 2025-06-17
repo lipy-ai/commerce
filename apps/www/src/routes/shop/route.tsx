@@ -15,7 +15,7 @@ function RouteComponent() {
 	const { isMobile } = useViewport();
 
 	return (
-		<div className="m-auto max-w-screen-xl [view-transition-name:main-content]">
+		<div className=" [view-transition-name:main-content]">
 			<Outlet />
 			{isMobile && (
 				<AnimatePresence>

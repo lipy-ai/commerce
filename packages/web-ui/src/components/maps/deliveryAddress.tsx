@@ -128,6 +128,7 @@ function LocationComponent() {
 				open={drawerOpen}
 				onOpenChange={setDrawerOpen}
 				handleInteractOutside={false}
+				className="[&>button]:hidden"
 			>
 				<DrawerDialogHeader className="mx-auto">
 					<div className="mx-auto rounded-xl p-4 border my-8 ">
@@ -141,7 +142,7 @@ function LocationComponent() {
 						Please allow location permission for better experience.
 					</DrawerDialogDescription>
 				</DrawerDialogHeader>
-				<DrawerDialogFooter className="space-y-2">
+				<DrawerDialogFooter>
 					<Button onClick={() => window.location.reload()}>Retry</Button>
 
 					<Link

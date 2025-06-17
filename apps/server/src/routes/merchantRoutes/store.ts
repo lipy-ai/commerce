@@ -24,13 +24,11 @@ const route = new Hono<ServerContext>()
 		}
 		const result = await db
 			.selectFrom("store")
-<<<<<<< HEAD
+
 			.where("id", "=", session?.activeStoreId!)
-=======
-		.where("store.id", "=", session?.activeOrganizationId!)
->>>>>>> e341302 (merchant side basic setup)
+
 			.selectAll()
-			.executeTakeFirstOrThrow()
+			.executeTakeFirstOrThrow();
 		return c.json(result);
 	})
 	.post("/", zValidator("json", storeSchema), async (c) => {

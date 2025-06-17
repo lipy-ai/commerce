@@ -2,6 +2,7 @@
 import { ShopSetupStatus } from "@/components/shopSetupStatus";
 import { authClient } from "@lipy/lib/providers/auth";
 import { formatAmount } from "@lipy/lib/utils/intl";
+
 import {
 	Avatar,
 	AvatarFallback,

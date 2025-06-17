@@ -25,44 +25,45 @@ export const getGeocodeFromLatLng = (
 	});
 };
 
+type AddressType = {
+	line1: string;
+	city: string;
+	state: string;
+	country: string;
+	postalCode: string;
+	lat: number;
+	lng: number;
+};
+
 export const fillFullAddress = (
 	addressComponents: google.maps.GeocoderAddressComponent[],
 	placeAddress: string,
 	lat: number,
 	lng: number,
-	setFullAddress: React.Dispatch<
-		React.SetStateAction<{
-			line1: string;
-			city: string;
-			state: string;
-			country: string;
-			postalCode: string;
-			lat: number;
-			lng: number;
-		}>
-	>,
-) => {
+): AddressType => {
 	const addCompLen = addressComponents?.length || 0;
-	setFullAddress((prev) => ({
-		...prev,
-		line1: placeAddress || "",
-		lat: lat,
-		lng: lng,
-	}));
+
+	const modifiedAddress = placeAddress.split(",")[0].includes("+")
+		? placeAddress.split(",").slice(1).join(",")
+		: placeAddress;
+	const fullAddress: AddressType = {
+		line1: modifiedAddress || "",
+		city: "",
+		state: "",
+		country: "",
+		postalCode: "",
+		lat,
+		lng,
+	};
 
 	if (addCompLen > 0) {
 		if (addressComponents[addCompLen - 1]?.types?.includes("postal_code")) {
-			setFullAddress((prev) => ({
-				...prev,
-				postalCode: addressComponents[addCompLen - 1]?.long_name || "",
-			}));
+			fullAddress.postalCode =
+				addressComponents[addCompLen - 1]?.long_name || "";
 		}
 
 		if (addressComponents[addCompLen - 2]?.types?.includes("country")) {
-			setFullAddress((prev) => ({
-				...prev,
-				country: addressComponents[addCompLen - 2]?.long_name || "",
-			}));
+			fullAddress.country = addressComponents[addCompLen - 2]?.long_name || "";
 		}
 
 		if (
@@ -70,23 +71,18 @@ export const fillFullAddress = (
 				"administrative_area_level_1",
 			)
 		) {
-			setFullAddress((prev) => ({
-				...prev,
-				state: addressComponents[addCompLen - 3]?.long_name || "",
-			}));
+			fullAddress.state = addressComponents[addCompLen - 3]?.long_name || "";
 		}
-		let i = addCompLen;
 
+		let i = addCompLen;
 		while (i >= 4) {
 			if (addressComponents[i - 4]?.types?.includes("locality")) {
-				setFullAddress((prev) => ({
-					...prev,
-					city: addressComponents[i - 4]?.long_name || "",
-				}));
-
+				fullAddress.city = addressComponents[i - 4]?.long_name || "";
 				break;
 			}
 			i--;
 		}
 	}
+
+	return fullAddress;
 };

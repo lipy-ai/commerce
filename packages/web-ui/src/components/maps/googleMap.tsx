@@ -67,13 +67,14 @@ export default function GoogleMapImage({
 
 				const addressComponents = place.address_components || [];
 
-				fillFullAddress(
+				const parsedAddress = fillFullAddress(
 					addressComponents,
 					placeAddress,
 					lat,
 					lng,
-					setFullAddress,
 				);
+
+				setFullAddress(parsedAddress);
 			}
 		}
 	};
@@ -89,13 +90,13 @@ export default function GoogleMapImage({
 
 					setAddress(formattedAddress);
 					setAddressName(addressComponent?.[1]?.long_name || "");
-					fillFullAddress(
+					const parsedAddress = fillFullAddress(
 						addressComponent,
 						formattedAddress,
 						mapCenter.lat,
 						mapCenter.lng,
-						setFullAddress,
 					);
+					setFullAddress(parsedAddress);
 				},
 			);
 		}

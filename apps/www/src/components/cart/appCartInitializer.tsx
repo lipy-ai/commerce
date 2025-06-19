@@ -1,5 +1,5 @@
 import { apiClient } from "@lipy/lib/api";
-import { useAPIQuery } from "@lipy/lib/utils/queryClient";
+import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { useEffect } from "react";
 import { useCartStore } from "./store";
 

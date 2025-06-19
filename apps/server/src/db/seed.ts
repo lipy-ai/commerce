@@ -1,13 +1,8 @@
 import { logger } from "@/lib/logger";
 import { faker } from "@faker-js/faker";
-import { db, dbClient } from ".";
+import { type DBTypes, db, dbClient } from ".";
 
-async function main() {
-	await db.deleteFrom("productVariant").execute();
-	await db.deleteFrom("product").execute();
-	await db.deleteFrom("category").execute();
-	await db.deleteFrom("store").execute();
-
+const create = async (user: DBTypes["user"]) => {
 	const [newOrg] = await db
 		.insertInto("store")
 		.values({
@@ -19,6 +14,17 @@ async function main() {
 			active: true,
 		})
 		.returningAll()
+		.execute();
+
+	await db
+		.insertInto("storeMember")
+		.values({
+			id: crypto.randomUUID(),
+			storeId: newOrg.id,
+			userId: user.id,
+			role: "owner",
+			createdAt: new Date(),
+		})
 		.execute();
 
 	const categories = await db
@@ -81,6 +87,23 @@ async function main() {
 			)
 			.returningAll()
 			.execute();
+	}
+};
+
+async function main() {
+	await db.deleteFrom("productVariant").execute();
+	await db.deleteFrom("product").execute();
+	await db.deleteFrom("category").execute();
+	await db.deleteFrom("store").execute();
+
+	const users = await db
+		.selectFrom("user")
+		.where("email", "in", ["kundanmbhosale@gmail.com"])
+		.selectAll()
+		.execute();
+
+	for (const user of users) {
+		await create(user);
 	}
 }
 

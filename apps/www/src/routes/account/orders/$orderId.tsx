@@ -2,7 +2,7 @@ import { StatusBadge } from "@/components/order/myOrderCard";
 import type { OrderStatus } from "@/components/order/orderTimeLine";
 import { apiClient } from "@lipy/lib/api";
 import { formatAmount } from "@lipy/lib/utils/intl";
-import { useAPIQuery } from "@lipy/lib/utils/queryClient";
+import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import {
 	Avatar,

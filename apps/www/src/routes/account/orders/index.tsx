@@ -1,6 +1,6 @@
 import { MyOrderCard } from "@/components/order/myOrderCard";
 import { apiClient } from "@lipy/lib/api";
-import { useAPIQuery } from "@lipy/lib/utils/queryClient";
+import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";

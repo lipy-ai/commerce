@@ -1,5 +1,8 @@
 import { apiClient } from "@lipy/lib/api";
-import { apiQueryOptions, useAPIMutation } from "@lipy/lib/utils/queryClient";
+import {
+	apiQueryOptions,
+	useAPIMutation,
+} from "@lipy/lib/utils/useQueryClient";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";

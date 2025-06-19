@@ -15,6 +15,7 @@ import { Input, type InputProps } from "../ui/input";
 import { SingleImage, type SingleImageProps } from "../ui/single-image";
 import { Switch } from "../ui/switch";
 import { Textarea } from "../ui/textarea";
+import { SearchInput } from "./searchInput";
 
 export const RequiredEl = <span className="text-destructive">*</span>;
 
@@ -134,6 +135,32 @@ export const FormSwitch = ({
 							/>
 						</FormControl>
 					}
+				</FormItemWrapper>
+			)}
+		/>
+	);
+};
+export const FormSelect = (
+	props: React.ComponentProps<"input"> &
+		SharedFormProps & { type: Parameters<typeof SearchInput>[0]["type"] },
+) => {
+	const form = useFormContext();
+
+	return (
+		<FormField
+			control={form.control}
+			name={props.name}
+			render={({ field }: { field: ControllerRenderProps }) => (
+				<FormItemWrapper {...props}>
+					<FormControl>
+						<SearchInput
+							placeholder={props.placeholder || ""}
+							type={props.type}
+							value={field.value}
+							onChange={field.onChange}
+							name={field.name}
+						/>
+					</FormControl>
 				</FormItemWrapper>
 			)}
 		/>

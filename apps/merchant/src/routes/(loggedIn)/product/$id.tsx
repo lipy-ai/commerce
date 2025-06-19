@@ -11,6 +11,7 @@ import {
 	FormButton,
 	FormImage,
 	FormInput,
+	FormSelect,
 	FormTextarea,
 } from "@lipy/web-ui/components/forms/elements";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
@@ -114,6 +115,12 @@ export function Variations() {
 								placeholder="0.00"
 								className="col-span-6"
 								prefixEl={<span>₹</span>}
+							/>
+							<FormSelect
+								label="Product"
+								placeholder="Select"
+								name="category"
+								type="products"
 							/>
 						</div>
 						<DrawerDialogFooter>

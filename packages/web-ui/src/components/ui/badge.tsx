@@ -18,7 +18,7 @@ const badgeVariants = cva(
 					"bg-background ring ring-inset text-foreground-light ring-border",
 			},
 			size: {
-				small: "p-1 text-xs",
+				small: "py-0.5 px-1 text-xs",
 				default: "p-1 text-sm",
 				large: "p-1 text-sm",
 			},

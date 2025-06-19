@@ -1,6 +1,10 @@
 import { env } from "@envClient";
 import { apiClient } from "@lipy/lib/api";
-import { apiQueryOptions, useAPIMutation, useAPIQuery } from "@lipy/lib/utils/queryClient";
+import {
+	apiQueryOptions,
+	useAPIMutation,
+	useAPIQuery,
+} from "@lipy/lib/utils/useQueryClient";
 import {
 	FormButton,
 	FormImage,
@@ -10,17 +14,20 @@ import {
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import VerticalListSkeleton from "@lipy/web-ui/components/layouts/skeletons/verticalListSkeleton";
 import { Form } from "@lipy/web-ui/components/ui/form";
+import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useQueryClient } from "@tanstack/react-query";
 export const Route = createFileRoute("/(loggedIn)/store/")({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-
-	const {data , isLoading} = useAPIQuery(apiClient.v1.merchant.store, "$get", {})
+	const { data, isLoading } = useAPIQuery(
+		apiClient.v1.merchant.store,
+		"$get",
+		{},
+	);
 	const queryClient = useQueryClient();
 
 	const defaultValues = {
@@ -40,9 +47,9 @@ function RouteComponent() {
 		form,
 		onSuccess() {
 			queryClient.invalidateQueries({
-					queryKey: apiQueryOptions(apiClient.v1.merchant.store, "$get", {}).queryKey,
-				});
-			
+				queryKey: apiQueryOptions(apiClient.v1.merchant.store, "$get", {})
+					.queryKey,
+			});
 		},
 	});
 

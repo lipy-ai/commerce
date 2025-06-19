@@ -2,14 +2,12 @@ import { env } from "@envClient";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { apiClient } from "../api";
-import { useAPIMutation } from "../utils/queryClient";
+import { useAPIMutation } from "../utils/useQueryClient";
 type UploadCallbacks = {
 	onRemove?: (id?: string) => void;
 	onSuccess?: (id?: string) => void;
 	onError?: (id?: string) => void;
 };
-
-
 
 export function useUpload(
 	{

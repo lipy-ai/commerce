@@ -17,6 +17,7 @@ import { corsMiddleware } from "./middlewares/cors";
 import { globalMiddleware } from "./middlewares/global";
 import { addressRoute } from "./routes/address";
 import { cartRoute } from "./routes/cart";
+import { merchantComboboxRoute } from "./routes/merchantRoutes/combobox";
 import { merchantProductRoute } from "./routes/merchantRoutes/product";
 import { merchantStoreRoute } from "./routes/merchantRoutes/store";
 import { orderRoute } from "./routes/order";
@@ -66,7 +67,8 @@ export const routes = app
 	.route("/shops", shopRoute)
 	.route("/order", orderRoute)
 	.route("/merchant/store", merchantStoreRoute)
-	.route("/merchant/product", merchantProductRoute);
+	.route("/merchant/product", merchantProductRoute)
+	.route("/merchant/combobox", merchantComboboxRoute);
 
 // routes.basePath("/admin").route("/category", categoryRouter);
 

@@ -71,8 +71,8 @@ const buttonVariants = cva(
 					"bg-gray-100 text-gray-800 shadow-xs hover:bg-gray-200 dark:bg-gray-800/30 dark:text-gray-300 dark:hover:bg-gray-800/50",
 			},
 			size: {
-				xs: "h-6 rounded px-2 text-xs gap-1 has-[>svg]:px-1.5",
-				sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
+				xs: "h-6 rounded px-2 text-xs gap-1 has-[>svg]:px-1.5 [&_svg:not([class*='size-'])]:size-3",
+				sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 [&_svg:not([class*='size-'])]:size-4",
 				default: "h-10 px-4 py-2 has-[>svg]:px-3",
 				lg: "h-12 rounded-md px-6 has-[>svg]:px-4",
 				xl: "h-14 rounded-lg px-8 text-base has-[>svg]:px-6",

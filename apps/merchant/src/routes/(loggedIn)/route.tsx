@@ -102,8 +102,6 @@ function RouteComponent() {
 
 	if (!isPending && !activeOrg) return <ShopCreateForm />;
 
-	console.log(pathname);
-
 	return (
 		<DashboardLayout
 			dashboardNav={dashboardNav}
@@ -118,10 +116,10 @@ function RouteComponent() {
 							{pathname.endsWith("/")
 								? "Dashboard"
 								: pathname.endsWith("/store")
-									? "My Store" :
-									pathname.endsWith("/store/staff") ?
-									"My staff"
-									: ""}
+									? "My Store"
+									: pathname.endsWith("/store/staff")
+										? "My staff"
+										: ""}
 						</p>
 						<div>
 							<Button variant={"ghost"} className="font-medium">

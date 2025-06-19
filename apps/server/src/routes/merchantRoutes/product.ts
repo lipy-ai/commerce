@@ -7,10 +7,7 @@ import { z } from "zod";
 
 const listZodSchema = z.object({
 	limit: z.coerce.number().max(50),
-	page: z.coerce
-		.number()
-		.min(1)
-		.transform((t) => t - 1),
+	page: z.coerce.number().min(1),
 });
 
 const listZodValidator = zValidator("query", listZodSchema);
@@ -19,7 +16,7 @@ const route = new Hono<ServerContext>()
 	.get("/", listZodValidator, async (c) => {
 		const { limit, page } = c.req.valid("query");
 		const activeStoreId = c.var.session?.activeStoreId!;
-		const offset = limit * page;
+		const offset = limit * (page - 1);
 
 		const countPromise = db
 			.selectFrom("product")
@@ -44,7 +41,7 @@ const route = new Hono<ServerContext>()
 
 		const totalPages = Math.ceil(totalCount / limit);
 
-		return c.json({ items, page, limit, totalPages });
+		return c.json({ items, page, limit, totalPages, totalResults: totalCount });
 	})
 	.get(
 		"/:id",

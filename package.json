@@ -1,56 +1,53 @@
 {
-  "name": "lipy-commerce",
-  "private": true,
-  "license": "GNU",
-  "author": {
-    "name": "kundanbhosale",
-    "url": "https://x.com/kundanmbhosale"
-  },
-  "scripts": {
-    "env": "dotenv --",
-    "build": "bun run env turbo run build",
-    "start": "bun run env turbo run start",
-    "dev": "bun run env turbo run dev",
-    "lint": "turbo run lint",
-    "format": "biome format \"**/*.{ts,tsx}\"  --write",
-    "check-types": "turbo run check-types",
-    "prepare": "husky"
-  },
-  "devDependencies": {
-    "@commitlint/cli": "^19.8.0",
-    "@commitlint/config-conventional": "^19.8.0",
-    "@vitejs/plugin-react": "^4.4.0",
-    "husky": "^9.1.7",
-    "prettier": "^3.5.3",
-    "turbo": "^2.5.0",
-    "typescript": "5.8.2",
-    "vite-tsconfig-paths": "^5.1.4"
-  },
-  "engines": {
-    "node": ">=18"
-  },
-  "packageManager": "bun@1.1.21",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
-  "dependencies": {
-    "@lottiefiles/dotlottie-react": "^0.13.5",
-    "@radix-ui/react-accordion": "^1.2.11",
-    "@radix-ui/react-alert-dialog": "^1.1.13",
-    "@radix-ui/react-progress": "^1.1.7",
-    "@react-google-maps/api": "^2.20.6",
-    "@tanstack/react-router": "^1.116.0",
-    "@tanstack/react-start": "^1.116.1",
-    "@vis.gl/react-google-maps": "^1.5.2",
-    "dotenv-cli": "^8.0.0",
-    "embla-carousel-react": "^8.6.0",
-    "lint-staged": "^15.5.1",
-    "lucide-react": "^0.492.0",
-    "nuqs": "^2.4.3",
-    "react-checkmark": "^2.1.1",
-    "react-google-maps": "^9.4.5",
-    "vaul": "^1.1.2",
-    "vinxi": "^0.5.4"
-  }
+	"name": "lipy-commerce",
+	"private": true,
+	"license": "GNU",
+	"author": {
+		"name": "kundanbhosale",
+		"url": "https://x.com/kundanmbhosale"
+	},
+	"scripts": {
+		"env": "dotenv --",
+		"build": "bun run env turbo run build",
+		"start": "bun run env turbo run start",
+		"dev": "docker compose up -d && bun run env turbo run dev",
+		"lint": "turbo run lint",
+		"format": "biome format \"**/*.{ts,tsx}\"  --write",
+		"check-types": "turbo run check-types",
+		"prepare": "husky"
+	},
+	"devDependencies": {
+		"@commitlint/cli": "^19.8.0",
+		"@commitlint/config-conventional": "^19.8.0",
+		"@vitejs/plugin-react": "^4.4.0",
+		"husky": "^9.1.7",
+		"prettier": "^3.5.3",
+		"turbo": "^2.5.0",
+		"typescript": "5.8.2",
+		"vite-tsconfig-paths": "^5.1.4"
+	},
+	"engines": {
+		"node": ">=18"
+	},
+	"packageManager": "bun@1.1.21",
+	"workspaces": ["apps/*", "packages/*"],
+	"dependencies": {
+		"@lottiefiles/dotlottie-react": "^0.13.5",
+		"@radix-ui/react-accordion": "^1.2.11",
+		"@radix-ui/react-alert-dialog": "^1.1.13",
+		"@radix-ui/react-progress": "^1.1.7",
+		"@react-google-maps/api": "^2.20.6",
+		"@tanstack/react-router": "^1.116.0",
+		"@tanstack/react-start": "^1.116.1",
+		"@vis.gl/react-google-maps": "^1.5.2",
+		"dotenv-cli": "^8.0.0",
+		"embla-carousel-react": "^8.6.0",
+		"lint-staged": "^15.5.1",
+		"lucide-react": "^0.492.0",
+		"nuqs": "^2.4.3",
+		"react-checkmark": "^2.1.1",
+		"react-google-maps": "^9.4.5",
+		"vaul": "^1.1.2",
+		"vinxi": "^0.5.4"
+	}
 }

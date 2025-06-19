@@ -102,8 +102,6 @@ function RouteComponent() {
 
 	if (!isPending && !activeOrg) return <ShopCreateForm />;
 
-	console.log(pathname);
-
 	return (
 		<DashboardLayout
 			dashboardNav={dashboardNav}

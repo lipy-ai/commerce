@@ -7,7 +7,7 @@ import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, useMatchRoute } from "@tanstack/react-router";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
-import { ArrowDownToLine, type LucideIcon } from "lucide-react";
+import { ArrowDownToLine, type LucideIcon, Store } from "lucide-react";
 import { type ReactNode, useRef, useState } from "react";
 
 export type DashboardNavs = Record<
@@ -37,8 +37,9 @@ export const DashboardLayout = ({
 		alt: string;
 	};
 	isVisibleDashboarNav?: boolean;
+	activeOrgData?: any;
 }) => {
-	const [open, setOpen] = useState(false);
+	const [open, setOpen] = useState(true);
 	const { isMobile } = useViewport();
 	const { isInstallable, promptInstall } = usePWAInstall();
 	if (isMobile) {
@@ -90,7 +91,7 @@ export const DashboardLayout = ({
 
 			<div
 				className="flex-1 flex flex-col overflow-x-auto h-screen overflow-y-auto"
-				onClick={() => open && setOpen(false)}
+				// onClick={() => open && setOpen(false)}
 			>
 				{children}
 			</div>
@@ -117,6 +118,7 @@ function ActiveLinks({
 	open?: boolean;
 	setOpen?: (o: boolean) => void;
 	activeOrder?: boolean;
+	activeOrgData?: any;
 }) {
 	const matchRoute = useMatchRoute();
 	const [isHidden, setIsHidden] = useState(false);
@@ -206,7 +208,7 @@ function ActiveLinks({
 			transition={{ duration: 0.3 }}
 		>
 			<div className="space-y-8">
-				<div className="flex justify-start items-center">
+				{/* <div className="flex justify-start items-center">
 					<Link to="/" className="overflow-hidden size-[50px]">
 						<img
 							key={String(open)}
@@ -217,7 +219,12 @@ function ActiveLinks({
 							className="rounded-md"
 						/>
 					</Link>
+				</div> */}
+				<div className="flex items-center gap-2 pt-4">
+					<Store className="fill-primary/40" />
+					<p className="text-lg font-medium">{props.activeOrgData.name}</p>
 				</div>
+
 				<div className="space-y-2">
 					{dashboardNav.primary.map((n, i) => (
 						<NavLink key={i} nav={n} open={open} matchRoute={matchRoute} />
@@ -255,7 +262,7 @@ function NavLink({
 				mobile
 					? isActive && ""
 					: isActive
-						? "bg-primary text-primary-foreground"
+						? "bg-accent font-semibold"
 						: "hover:bg-accent",
 			)}
 		>
@@ -280,13 +287,15 @@ function NavLink({
 							"size-5",
 							mobile && "flex-col font-normal w-full stroke-1.5",
 
-							isActive && "fill-primary/40",
+							isActive && "fill-foreground/40",
 						)}
 					/>
 				</span>
 				{!mobile && (
 					<motion.span
-						className="flex justify-between gap-2 w-full items-center flex-1 font-medium"
+						className={
+							"flex justify-between gap-2 w-full items-center flex-1 font-medium"
+						}
 						initial={{ opacity: 0 }}
 						animate={{ opacity: open ? 1 : 0 }}
 						transition={{ duration: 0.2 }}

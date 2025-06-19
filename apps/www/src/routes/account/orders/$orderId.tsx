@@ -210,27 +210,26 @@ function RouteComponent() {
 									</div>
 								</div>
 							</div>
-							<div className="p-4 my-4  bg-white space-y-4">
+							<div className="bg-white  divide-y divide-dashed p-4 my-4">
 								{data[0]?.address?.name && data[0]?.address?.phone && (
 									<div>
-										<div className="flex items-start gap-4">
+										<div className="flex items-start gap-4 p-2">
 											<CircleUser className="text-muted-foreground flex-shrink-0" />
 											<div>
-												<p className="font-medium">Receiver's Info</p>
+												<p className="font-medium text-base">Receiver's Info</p>
 												<p className="text-muted-foreground text-sm">
 													{data[0]?.address?.name} | {data[0]?.address?.phone}
 												</p>
 											</div>
 										</div>
-										<Separator className="border-t border-dashed bg-transparent  mt-3 -mb-3" />
 									</div>
 								)}
 
 								<div>
-									<div className="flex items-start gap-4">
+									<div className="flex items-start gap-4 p-2">
 										<BanknoteArrowUp className="text-muted-foreground flex-shrink-0" />
 										<div>
-											<p className="font-medium">Payment method</p>
+											<p className="font-medium text-base">Payment method</p>
 											<p className="text-muted-foreground text-sm">
 												{data[0]?.paymentMethod === "cod"
 													? "Cash on Delivery"
@@ -238,13 +237,12 @@ function RouteComponent() {
 											</p>
 										</div>
 									</div>
-									<Separator className="border-t border-dashed bg-transparent mt-3 -mb-3" />
 								</div>
 
-								<div className="flex items-start gap-4">
+								<div className="flex items-start gap-4 p-2">
 									<MapPin className="text-muted-foreground flex-shrink-0" />
 									<div>
-										<p className="font-medium">Delivery Address</p>
+										<p className="font-medium text-base">Delivery Address</p>
 										<p className="text-muted-foreground text-sm">
 											{data[0]?.address?.line1}
 										</p>

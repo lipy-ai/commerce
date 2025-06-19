@@ -149,7 +149,9 @@ function RouteComponent() {
 							<CardContent className="divide-y  p-0">
 								<CardHeader className="p-4 flex items-center justify-between">
 									<CardTitle>Order Items(s)</CardTitle>
-									<p className="text-muted-foreground">{cart.length} items</p>
+									{cart.length > 0 && (
+										<p className="text-muted-foreground">{cart.length} items</p>
+									)}
 								</CardHeader>
 								<div className="px-4">
 									{cart.map((product) => (

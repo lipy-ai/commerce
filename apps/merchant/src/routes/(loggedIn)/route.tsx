@@ -1,25 +1,29 @@
-import { env } from "@envClient";
-import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { Outlet, createFileRoute, useLocation } from "@tanstack/react-router";
 
-import { apiClient } from "@lipy/lib/api";
-import { useAPIQuery } from "@lipy/lib/utils/queryClient";
+import { authClient } from "@lipy/lib/providers/auth";
+
 import {
 	DashboardBody,
 	DashboardLayout,
 } from "@lipy/web-ui/components/layouts/dashboard";
-import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
+
+import { Spinner } from "@lipy/web-ui/components/ui/spinner";
+
+import { ShopCreateForm } from "@/components/shopCreateForm";
+import { Button } from "@lipy/web-ui/components/ui/button";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
 //
 import {
 	CircleUser,
 	Home,
 	LayoutDashboard,
 	LogOut,
+	LucideMessageCircleQuestion,
 	Settings,
 	Shirt,
 	ShoppingBag,
 	Users,
 } from "lucide-react";
-import { useEffect } from "react";
 
 export const Route = createFileRoute("/(loggedIn)")({
 	component: RouteComponent,
@@ -90,36 +94,46 @@ const mobileNav = [
 ];
 
 function RouteComponent() {
-	const { data, isLoading } = useAPIQuery(
-		apiClient.v1.merchant.store,
-		"$get",
-		{},
-	);
+	const { isMobile } = useViewport();
+	const { pathname } = useLocation();
+	const { data: activeOrg, isPending } = authClient.useActiveOrganization();
 
-	useEffect(() => {
-		if (isLoading || data) return;
-		console.log(data);
-		const cb = window?.location.origin || env.MERCHANT_URL;
-		window.location.href = `${env.WEB_URL}/login?cb=${btoa(cb)}`;
-	}, [isLoading, data]);
+	if (isPending) return <Spinner />;
+
+	if (!isPending && !activeOrg) return <ShopCreateForm />;
+
+	console.log(pathname);
 
 	return (
-		<main>
-			<DashboardLayout
-				dashboardNav={dashboardNav}
-				mobileNav={mobileNav}
-				logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
-			>
-				<DashboardBody>
-					{isLoading ? (
-						<div className="p-4 flex h-screen flex-1">
-							<Skeleton className="flex-1" />
+		<DashboardLayout
+			dashboardNav={dashboardNav}
+			mobileNav={mobileNav}
+			logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
+			activeOrgData={activeOrg}
+		>
+			<DashboardBody>
+				{!isMobile && (
+					<div className="sticky top-0 z-10  gap-8 w-full p-3 px-4 bg-background border-b h-14 flex items-center justify-between">
+						<p className="text-xl font-medium ">
+							{pathname.endsWith("/")
+								? "Dashboard"
+								: pathname.endsWith("/store")
+									? "My Store" :
+									pathname.endsWith("/store/staff") ?
+									"My staff"
+									: ""}
+						</p>
+						<div>
+							<Button variant={"ghost"} className="font-medium">
+								<LucideMessageCircleQuestion />
+								Help
+							</Button>
 						</div>
-					) : (
-						<Outlet />
-					)}
-				</DashboardBody>
-			</DashboardLayout>
-		</main>
+					</div>
+				)}
+
+				<Outlet />
+			</DashboardBody>
+		</DashboardLayout>
 	);
 }

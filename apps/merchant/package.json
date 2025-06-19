@@ -13,8 +13,9 @@
 		"check": "biome check"
 	},
 	"dependencies": {
-		"@lipy/server": "workspace:*",
+		"@bprogress/core": "^1.3.4",
 		"@lipy/lib": "workspace:*",
+		"@lipy/server": "workspace:*",
 		"@lipy/web-ui": "workspace:*",
 		"@tailwindcss/vite": "^4.0.6",
 		"@tanstack/react-router": "^1.117.1",

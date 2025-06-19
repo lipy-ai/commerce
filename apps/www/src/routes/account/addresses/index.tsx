@@ -1,5 +1,5 @@
 import { apiClient } from "@lipy/lib/api";
-import { useAPIQuery } from "@lipy/lib/utils/queryClient";
+import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { DrawerDialogSwitcher } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { DeleteAddress } from "@lipy/web-ui/components/maps/deleteAdderess";

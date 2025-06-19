@@ -4,7 +4,7 @@ import PlaceOrder from "@/components/order/placeOrder";
 import ProductCard from "@/components/productCard";
 import { apiClient } from "@lipy/lib/api";
 import { formatAmount } from "@lipy/lib/utils/intl";
-import { useAPIQuery } from "@lipy/lib/utils/queryClient";
+import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { DetailedAddress } from "@lipy/web-ui/components/maps/detailedAddress";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";

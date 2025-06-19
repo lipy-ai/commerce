@@ -122,7 +122,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
 	return (
 		<div
 			data-slot="card-title"
-			className={cn("leading-none font-medium text-base", className)}
+			className={cn("font-medium text-base leading-8", className)}
 			{...props}
 		/>
 	);
@@ -155,7 +155,7 @@ function CardContent({ className, ...props }: React.ComponentProps<"div">) {
 	return (
 		<div
 			data-slot="card-content"
-			className={cn("p-6 rounded bg-card", className)}
+			className={cn("p-6 rounded border border-border/50 bg-card", className)}
 			{...props}
 		/>
 	);

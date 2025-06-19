@@ -4,6 +4,7 @@ import { emailOTP } from "better-auth/plugins";
 import { sendTransactionalEmail } from "@/services/ses";
 import { sendSMS } from "@/services/sns";
 import { phoneNumber } from "better-auth/plugins";
+import { organization } from "better-auth/plugins";
 import { redis } from "../cache";
 import { db } from "../db";
 import env from "../env";
@@ -43,7 +44,42 @@ const socialProviders = {
 	//     clientSecret: env.MICROSOFT_CLIENT_SECRET as string,
 	//   },
 };
-export const auth = betterAuth({
+
+const organizationsPlugin = organization({
+	schema: {
+		organization: {
+			modelName: "lipy.store",
+			fields: {
+				name: "name",
+				slug: "handle",
+				logo: "image",
+				metadata: "metadata",
+				createdAt: "createdAt",
+			},
+		},
+		member: {
+			modelName: "lipy.storeMember",
+			fields: {
+				userId: "userId",
+				organizationId: "storeId",
+				role: "role",
+				createdAt: "createdAt",
+			},
+		},
+		invitation: {
+			modelName: "lipy.storeInvitation",
+			fields: {
+				organizationId: "storeId",
+				email: "email",
+				role: "role",
+				status: "status",
+				expiresAt: "expiresAt",
+				inviterId: "inviterId",
+			},
+		},
+	},
+});
+export const auth : any= betterAuth({
 	disabledPaths: ["/error"],
 	database: {
 		db,
@@ -52,7 +88,13 @@ export const auth = betterAuth({
 	},
 
 	socialProviders,
-	plugins: [emailOTPPlugin, phoneOTPPlugin, emailHarmony(), phoneHarmony()],
+	plugins: [
+		emailOTPPlugin,
+		phoneOTPPlugin,
+		organizationsPlugin,
+		emailHarmony(),
+		phoneHarmony(),
+	],
 	hooks: {
 		// before: beforeAuthMiddleware,
 		// after: afterAuthMiddleware,
@@ -105,9 +147,11 @@ export const auth = betterAuth({
 						.innerJoin("storeMember", "storeMember.storeId", "store.id")
 						.innerJoin("user", "user.id", "storeMember.userId")
 						.where("user.id", "=", session.userId)
+						.where("store.active", "=", true)
 						.select("store.id")
 						.limit(1)
 						.executeTakeFirst();
+
 					return {
 						data: {
 							...session,

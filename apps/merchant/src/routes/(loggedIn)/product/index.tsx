@@ -1,5 +1,5 @@
 import { formatAmount } from "@lipy/lib/utils/intl";
-import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
+import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 import {
@@ -23,12 +23,16 @@ function RouteComponent() {
 	const { isMobile } = useViewport();
 	return (
 		<div>
-			<DashboardHeader title="Products">
+			{/* <DashboardHeader title="Products">
+				
+			</DashboardHeader> */}
+			<div className="flex items-center justify-between lg:px-8 lg:pt-8">
+				<SearchBar placeholder="Search products" />
 				<Button>
 					<Plus />
 					New Product
 				</Button>
-			</DashboardHeader>
+			</div>
 
 			<div className="lg:p-8 lg:space-y-8">
 				{isMobile ? <MobileView /> : <DesktopView />}

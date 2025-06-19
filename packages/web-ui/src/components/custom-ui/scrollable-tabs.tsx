@@ -60,7 +60,7 @@ export const ScrollingTabs = ({
 							key={tab.id}
 							onClick={() => onTabChange(index, tab.id)}
 							className={cn(
-								"group snap-start flex-shrink-0 relative flex flex-col lg:flex-row items-center px-4 py-2 lg:py-4 mx-2 min-w-16 cursor-pointer transition-all duration-300",
+								"group snap-start flex-shrink-0 relative flex flex-col lg:flex-row items-center px-2 py-2 lg:py-4 mx-2 min-w-16 cursor-pointer transition-all duration-300",
 								isActive
 									? "after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1.5 after:bg-background lg:after:bg-primary after:rounded-t-full text-primary"
 									: "text-background hover:text-background/80",

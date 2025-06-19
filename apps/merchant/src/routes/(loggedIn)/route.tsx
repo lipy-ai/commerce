@@ -1,24 +1,20 @@
-import { Outlet, createFileRoute, useLocation } from "@tanstack/react-router";
-
+import { ShopCreateForm } from "@/components/shopCreateForm";
 import { authClient } from "@lipy/lib/providers/auth";
-
 import {
 	DashboardBody,
 	DashboardLayout,
 } from "@lipy/web-ui/components/layouts/dashboard";
-
-import { Spinner } from "@lipy/web-ui/components/ui/spinner";
-
-import { ShopCreateForm } from "@/components/shopCreateForm";
 import { Button } from "@lipy/web-ui/components/ui/button";
+import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
-//
+import { Outlet, createFileRoute, useLocation } from "@tanstack/react-router";
+
 import {
 	CircleUser,
 	Home,
 	LayoutDashboard,
 	LogOut,
-	LucideMessageCircleQuestion,
+	MessageCircleQuestion,
 	Settings,
 	Shirt,
 	ShoppingBag,
@@ -29,6 +25,7 @@ export const Route = createFileRoute("/(loggedIn)")({
 	component: RouteComponent,
 });
 
+// Navigation configuration
 export const dashboardNav = {
 	primary: [
 		{
@@ -40,7 +37,6 @@ export const dashboardNav = {
 			label: "Products",
 			url: "/product",
 			icon: Shirt,
-			mobile: true,
 		},
 		{
 			label: "Orders",
@@ -59,8 +55,11 @@ export const dashboardNav = {
 			url: "/account",
 			icon: Settings,
 		},
-		{ label: "Sign out", url: "/logout", icon: LogOut },
-		// { label: "Help", url: "/help", icon: CircleHel },
+		{
+			label: "Sign out",
+			url: "/logout",
+			icon: LogOut,
+		},
 	],
 };
 
@@ -85,7 +84,6 @@ const mobileNav = [
 		url: "/customer",
 		icon: Users,
 	},
-
 	{
 		label: "Account",
 		url: "/account",
@@ -93,43 +91,74 @@ const mobileNav = [
 	},
 ];
 
+// Helper function to get page title based on pathname
+const getPageTitle = (pathname: string): string => {
+	const pathMap: Record<string, string> = {
+		"/": "Dashboard",
+		"/store": "My Store",
+		"/store/staff": "My Staff",
+		"/product": "Products",
+		"/order": "Orders",
+		"/customer": "Customers",
+		"/account": "Account",
+	};
+
+	// Remove trailing slash for comparison
+	const normalizedPath =
+		pathname.endsWith("/") && pathname !== "/"
+			? pathname.slice(0, -1)
+			: pathname;
+
+	return pathMap[normalizedPath] || "Dashboard";
+};
+
 function RouteComponent() {
 	const { isMobile } = useViewport();
 	const { pathname } = useLocation();
-	const { data: activeOrg, isPending } = authClient.useActiveOrganization();
 
-	if (isPending) return <Spinner />;
+	const { data: activeOrg, isPending: activeOrgPending } =
+		authClient.useActiveOrganization();
+	const { data: organizations, isPending: orgPending } =
+		authClient.useListOrganizations();
 
-	if (!isPending && !activeOrg) return <ShopCreateForm />;
+	// Show loading spinner while data is being fetched
+	if (activeOrgPending || orgPending) {
+		return <Spinner />;
+	}
+
+	// Handle organization setup
+	if (!activeOrg) {
+		if (organizations && organizations.length > 0) {
+			// Set the first organization as active
+			authClient.organization.setActive({
+				organizationId: organizations[0].id,
+			});
+			return <Spinner />; // Show spinner while setting active org
+		}
+		return <ShopCreateForm />;
+	}
 
 	return (
 		<DashboardLayout
 			dashboardNav={dashboardNav}
 			mobileNav={mobileNav}
-			logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
+			logo={{
+				icon: "/logo/ico.svg",
+				full: "/logo/ico.svg",
+				alt: "Logo",
+			}}
 			activeOrgData={activeOrg}
 		>
 			<DashboardBody>
 				{!isMobile && (
-					<div className="sticky top-0 z-10  gap-8 w-full p-3 px-4 bg-background border-b h-14 flex items-center justify-between">
-						<p className="text-xl font-medium ">
-							{pathname.endsWith("/")
-								? "Dashboard"
-								: pathname.endsWith("/store")
-									? "My Store"
-									: pathname.endsWith("/store/staff")
-										? "My staff"
-										: ""}
-						</p>
-						<div>
-							<Button variant={"ghost"} className="font-medium">
-								<LucideMessageCircleQuestion />
-								Help
-							</Button>
-						</div>
-					</div>
+					<header className="sticky top-0 z-10 w-full p-3 px-4 bg-background border-b h-14 flex items-center justify-between">
+						<h1 className="text-xl font-medium">{getPageTitle(pathname)}</h1>
+						<Button variant="ghost" className="font-medium">
+							<MessageCircleQuestion className="w-4 h-4 mr-2" />
+							Help
+						</Button>
+					</header>
 				)}
-
 				<Outlet />
 			</DashboardBody>
 		</DashboardLayout>

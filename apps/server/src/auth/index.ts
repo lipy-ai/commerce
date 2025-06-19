@@ -47,6 +47,11 @@ const socialProviders = {
 
 const organizationsPlugin = organization({
 	schema: {
+		session: {
+			fields: {
+				activeOrganizationId: "activeStoreId",
+			},
+		},
 		organization: {
 			modelName: "lipy.store",
 			fields: {
@@ -79,7 +84,7 @@ const organizationsPlugin = organization({
 		},
 	},
 });
-export const auth : any= betterAuth({
+export const auth: any = betterAuth({
 	disabledPaths: ["/error"],
 	database: {
 		db,

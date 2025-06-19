@@ -1,6 +1,6 @@
 import { env } from "@envClient";
 import { apiClient } from "@lipy/lib/api";
-import { useAPIQuery } from "@lipy/lib/utils/queryClient";
+import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { fillFullAddress } from "@lipy/web-ui/components/maps/utils/googlemap";

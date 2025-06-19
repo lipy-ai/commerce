@@ -1,7 +1,7 @@
 import ProductCard from "@/components/productCard"; // Fixed the path
 import { ShopHeroPage } from "@/components/shop/shopHeroSection";
 import { apiClient } from "@lipy/lib/api";
-import { useAPIQuery } from "@lipy/lib/utils/queryClient";
+import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";

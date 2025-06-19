@@ -64,7 +64,7 @@ export const DashboardLayout = ({
 					</div>
 				)}
 
-				<div className="pb-18 flex-1 flex flex-col">{children}</div>
+				<div className="flex-1 flex flex-col">{children}</div>
 
 				<ActiveLinks
 					isMobile

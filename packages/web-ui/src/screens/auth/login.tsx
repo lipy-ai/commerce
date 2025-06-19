@@ -1,6 +1,7 @@
 "use client";
 import { env } from "@envClient";
 import { authClient, signIn } from "@lipy/lib/providers/auth";
+import { parseAtobToString } from "@lipy/lib/utils/parsers";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import {
 	Card,
@@ -20,18 +21,9 @@ import Loading from "@lipy/web-ui/components/ui/loading";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
-import { createParser, parseAsString, useQueryState } from "nuqs";
+import { parseAsString, useQueryState } from "nuqs";
 import { type FormEvent, useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
-
-const parseAtobToString = createParser({
-	parse(queryValue) {
-		return atob(queryValue);
-	},
-	serialize(value) {
-		return String(value);
-	},
-});
 
 export function LoginScreen({
 	className,
@@ -104,7 +96,7 @@ export function LoginScreen({
 						We&apos;ve sent you an OTP on {verifyEmail}.
 					</CardDescription>
 				</CardHeader>
-				<CardContent className="bg-transparent flex flex-col items-center justify-center gap-4 space-y-8">
+				<CardContent className="border-none bg-transparent flex flex-col items-center justify-center gap-4 space-y-8">
 					<InputOTP
 						maxLength={6}
 						onComplete={(c) =>
@@ -157,7 +149,7 @@ export function LoginScreen({
 					width={800}
 				/>
 			</div>
-			<Card className="flex w-full max-w-sm flex-col gap-6 mx-auto mt-auto md:m-auto py-8 shadow-none border-0 bg-transparent relative z-10">
+			<Card className="border-none flex w-full max-w-sm flex-col gap-6 mx-auto mt-auto md:m-auto py-8 shadow-none border-0 bg-transparent relative z-10">
 				<div className="flex items-center gap-2 self-center font-medium" />
 				<div className={cn("flex flex-col gap-6", className)} {...props}>
 					<div className="space-y-4">
@@ -180,7 +172,7 @@ export function LoginScreen({
 							</CardTitle>
 						</CardHeader>
 
-						<CardContent className="bg-transparent">
+						<CardContent className="border-none  bg-transparent">
 							<form onSubmit={handleForm}>
 								<div className="grid gap-6">
 									<div className="grid gap-6">

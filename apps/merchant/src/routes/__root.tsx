@@ -46,6 +46,10 @@ export const Route = createRootRoute({
 			}),
 		],
 		links: [
+			{
+				rel: "stylesheet",
+				href: "https://unpkg.com/@bprogress/core/dist/index.css",
+			},
 			{ rel: "stylesheet", href: appCss },
 
 			{
@@ -107,7 +111,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			</head>
 			<body
 				suppressHydrationWarning
-				className="m-auto outline-1 outline-border shadow min-h-screen flex flex-col "
+				className="m-auto outline-1 outline-border shadow min-h-screen flex flex-col"
 				style={{ maxWidth: "1920px" }}
 			>
 				<ViewportProvider isMobile={data?.isSsrMobile}>
@@ -117,7 +121,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 					</QueryProvider>
 					{env.SHOW_DEV_TOOLS && (
 						<TanStackRouterDevtools position="bottom-right" />
-					)}{" "}
+					)}
 					<Scripts />
 				</ViewportProvider>
 			</body>

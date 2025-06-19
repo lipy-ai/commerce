@@ -1,40 +1,46 @@
+import { authClient } from "@lipy/lib/providers/auth";
 import { Avatar, AvatarFallback } from "@lipy/web-ui/components/ui/avatar";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link } from "@tanstack/react-router";
 import { Check } from "lucide-react";
 
+const setupSteps = [
+	{
+		name: "shopDetailsComplete",
+		completed: true,
+		title: "Fill necessary information about your shop",
+		description: "These information will help you run your shop smoothly.",
+		action: (
+			<Link
+				className={cn(
+					buttonVariants({ variant: "link" }),
+					"p-0 underline text-sm lg:text-lg",
+				)}
+				to="/store"
+			>
+				Complete store details
+			</Link>
+		),
+	},
+	{
+		name: "productAdded",
+		completed: false,
+		title: "List products at your shop",
+		description: "Add products in your shop.",
+		action: (
+			<Link className={cn(buttonVariants(), "font-medium")} to="/product">
+				Add products
+			</Link>
+		),
+	},
+];
+
 export const ShopSetupStatus = () => {
-	const setupSteps = [
-		{
-			name: "shopDetailsComplete",
-			completed: true,
-			title: "Fill necessary information about your shop",
-			description: "These information will help you run your shop smoothly.",
-			action: (
-				<Link
-					className={cn(
-						buttonVariants({ variant: "link" }),
-						"p-0 underline text-sm lg:text-lg",
-					)}
-					to="/store"
-				>
-					Complete store details
-				</Link>
-			),
-		},
-		{
-			name: "productAdded",
-			completed: false,
-			title: "List products at your shop",
-			description: "Add products in your shop.",
-			action: (
-				<Link className={cn(buttonVariants(), "font-medium")} to="/product">
-					Add products
-				</Link>
-			),
-		},
-	];
+	const { data: organizations } = authClient.useListOrganizations();
+
+	console.log(organizations);
+
 	return (
 		<div className="h-full bg-white border-l border-r lg:mx-40 p-4 lg:p-12 space-y-8 lg:space-y-12">
 			<div className="space-y-3 lg:space-y-4">

@@ -1,6 +1,6 @@
 import { env } from "@envClient";
 import { apiClient } from "@lipy/lib/api";
-import { useAPIMutation, useAPIQuery } from "@lipy/lib/utils/queryClient";
+import { apiQueryOptions, useAPIMutation, useAPIQuery } from "@lipy/lib/utils/queryClient";
 import {
 	FormButton,
 	FormImage,
@@ -13,16 +13,15 @@ import { Form } from "@lipy/web-ui/components/ui/form";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useQueryClient } from "@tanstack/react-query";
 export const Route = createFileRoute("/(loggedIn)/store/")({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-	const { data, isLoading } = useAPIQuery(
-		apiClient.v1.merchant.store,
-		"$get",
-		{},
-	);
+
+	const {data , isLoading} = useAPIQuery(apiClient.v1.merchant.store, "$get", {})
+	const queryClient = useQueryClient();
 
 	const defaultValues = {
 		image: data?.image || "",
@@ -39,6 +38,12 @@ function RouteComponent() {
 
 	const updateMutation = useAPIMutation(apiClient.v1.merchant.store, "$patch", {
 		form,
+		onSuccess() {
+			queryClient.invalidateQueries({
+					queryKey: apiQueryOptions(apiClient.v1.merchant.store, "$get", {}).queryKey,
+				});
+			
+		},
 	});
 
 	const onSubmit = async (json: typeof defaultValues) => {
@@ -65,7 +70,7 @@ function RouteComponent() {
 
 	return (
 		<Form {...form}>
-			<DashboardHeader title="My Store" />
+			{/* <DashboardHeader title="My Store" /> */}
 
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}

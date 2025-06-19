@@ -71,14 +71,9 @@ const route = new Hono<ServerContext>()
 		const values = c.req.valid("json");
 		await db
 			.updateTable("store")
-<<<<<<< HEAD
-			.where("store.id", "=", session?.activeOrganizationId!)
-=======
-		.where("id", "=", session?.activeStoreId!)
->>>>>>> f652621 (updates)
-			.set(
-				...values,)
-			.execute()
+			.where("id", "=", session?.activeStoreId!)
+			.set(values)
+			.execute();
 
 		return c.json({ success: true });
 	});

@@ -1,4 +1,3 @@
-import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import {
 	Avatar,
 	AvatarFallback,
@@ -30,7 +29,7 @@ export const Route = createFileRoute("/(loggedIn)/store/staff")({
 function RouteComponent() {
 	return (
 		<div>
-			<DashboardHeader title="My Staff" />
+			{/* <DashboardHeader title="My Staff" /> */}
 
 			<div className="space-y-4  max-w-4xl p-8">
 				<div>

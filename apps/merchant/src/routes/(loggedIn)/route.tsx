@@ -121,6 +121,9 @@ function RouteComponent() {
 	const { data: organizations, isPending: orgPending } =
 		authClient.useListOrganizations();
 
+	const { data: session } = authClient.useSession();
+	console.log(session);
+
 	// Show loading spinner while data is being fetched
 	if (activeOrgPending || orgPending) {
 		return <Spinner />;

@@ -1,8 +1,7 @@
-import { betterAuth } from "better-auth";
-import { emailOTP } from "better-auth/plugins";
-
 import { sendTransactionalEmail } from "@/services/ses";
 import { sendSMS } from "@/services/sns";
+import { betterAuth } from "better-auth";
+import { emailOTP } from "better-auth/plugins";
 import { phoneNumber } from "better-auth/plugins";
 import { organization } from "better-auth/plugins";
 import { redis } from "../cache";
@@ -47,11 +46,6 @@ const socialProviders = {
 
 const organizationsPlugin = organization({
 	schema: {
-		session: {
-			fields: {
-				activeOrganizationId: "activeStoreId",
-			},
-		},
 		organization: {
 			modelName: "lipy.store",
 			fields: {
@@ -71,6 +65,7 @@ const organizationsPlugin = organization({
 				createdAt: "createdAt",
 			},
 		},
+
 		invitation: {
 			modelName: "lipy.storeInvitation",
 			fields: {
@@ -80,6 +75,12 @@ const organizationsPlugin = organization({
 				status: "status",
 				expiresAt: "expiresAt",
 				inviterId: "inviterId",
+			},
+		},
+
+		session: {
+			fields: {
+				activeOrganizationId: "activeStoreId",
 			},
 		},
 	},
@@ -152,7 +153,6 @@ export const auth: any = betterAuth({
 						.innerJoin("storeMember", "storeMember.storeId", "store.id")
 						.innerJoin("user", "user.id", "storeMember.userId")
 						.where("user.id", "=", session.userId)
-						.where("store.active", "=", true)
 						.select("store.id")
 						.limit(1)
 						.executeTakeFirst();
@@ -160,7 +160,7 @@ export const auth: any = betterAuth({
 					return {
 						data: {
 							...session,
-							activeStoreId: store?.id || null,
+							activeOrganizationId: store?.id || null,
 						},
 					};
 				},

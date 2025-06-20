@@ -44,24 +44,23 @@ export const ShopCreateForm = () => {
 		// 		slug: handle,
 		// 	});
 
-		const { data: orgData, error: orgError } =
-			await authClient.organization.create({
-				name: values.shopName,
-				slug: values.handle,
-			});
+		const { error: orgError } = await authClient.organization.create({
+			name: values.shopName,
+			slug: values.handle,
+		});
 
 		if (orgError) {
 			toast.error(orgError.message);
 			return;
 		}
 
-		const { error } = await authClient.organization.setActive({
-			organizationId: orgData?.id,
-		});
+		// const { error } = await authClient.organization.setActive({
+		// 	organizationId: orgData?.id,
+		// });
 
-		if (!error) {
-			toast.success("Organization created successfully");
-		}
+		// if (!error) {
+		// 	toast.success("Organization created successfully");
+		// }
 	};
 
 	return (
@@ -119,7 +118,7 @@ export const ShopCreateForm = () => {
 										!form.formState.isDirty
 									}
 								>
-								Submit
+									Submit
 								</FormButton>
 							</div>
 						</CardContent>

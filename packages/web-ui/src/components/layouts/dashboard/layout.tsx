@@ -7,7 +7,7 @@ import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, useMatchRoute } from "@tanstack/react-router";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
-import { ArrowDownToLine, type LucideIcon, Store } from "lucide-react";
+import { ArrowDownToLine, type LucideIcon } from "lucide-react";
 import { type ReactNode, useRef, useState } from "react";
 
 export type DashboardNavs = Record<
@@ -207,9 +207,9 @@ function ActiveLinks({
 			}}
 			transition={{ duration: 0.3 }}
 		>
-			<div className="space-y-8">
-				{/* <div className="flex justify-start items-center">
-					<Link to="/" className="overflow-hidden size-[50px]">
+			<div className="space-y-6 divide-y">
+				<div className="flex  items-center gap-2 pb-1">
+					<Link to="/" className="overflow-hidden size-[40px]">
 						<img
 							key={String(open)}
 							src={!open ? logo.icon : logo.full}
@@ -219,10 +219,11 @@ function ActiveLinks({
 							className="rounded-md"
 						/>
 					</Link>
-				</div> */}
-				<div className="flex items-center gap-2 pt-4">
-					<Store className="fill-primary/40" />
-					<p className="text-lg font-medium">{props.activeOrgData.name}</p>
+					{open && (
+						<p className="text-base font-medium truncate">
+							{props.activeOrgData.name}
+						</p>
+					)}
 				</div>
 
 				<div className="space-y-2">

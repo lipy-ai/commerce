@@ -77,7 +77,7 @@ function RouteComponent() {
 
 	return (
 		<Form {...form}>
-			{/* <DashboardHeader title="My Store" /> */}
+			<DashboardHeader title="My Store" />
 
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
@@ -108,8 +108,10 @@ function RouteComponent() {
 								placeholder="Tell us about your shop..."
 							/>
 
-							<FormInput name="email" label="Email" />
-							<FormInput name="phone" label="Phone Number" />
+							<div className="grid lg:grid-cols-2 lg:gap-4">
+								<FormInput name="email" label="Email" />
+								<FormInput name="phone" label="Phone Number" />
+							</div>
 						</div>
 						<div className="p-4">
 							<FormButton>Save Changes</FormButton>

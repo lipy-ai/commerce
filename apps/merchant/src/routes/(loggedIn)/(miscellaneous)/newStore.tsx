@@ -2,18 +2,29 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { authClient } from "@lipy/lib/providers/auth";
 import { FormButton, FormInput } from "@lipy/web-ui/components/forms/elements";
 import {
-	Card,
-	CardContent,
-	CardHeader,
-	CardTitle,
-} from "@lipy/web-ui/components/ui/card";
+	AlertDialog,
+	AlertDialogContent,
+	AlertDialogHeader,
+	AlertDialogTitle,
+} from "@lipy/web-ui/components/ui/alert-dialog";
+
 import { Form } from "@lipy/web-ui/components/ui/form";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-export const ShopCreateForm = () => {
+export const Route = createFileRoute("/(loggedIn)/(miscellaneous)/newStore")({
+	component: RouteComponent,
+});
+
+function RouteComponent() {
+	const navigate = useNavigate();
+	const { data, refetch } = authClient.useSession();
+	console.log("Session ", data);
+
+	if (data?.session.activeOrganizationId) navigate({ to: "/" });
 	const formSchema = z.object({
 		shopName: z
 			.string()
@@ -40,52 +51,49 @@ export const ShopCreateForm = () => {
 	});
 
 	const onSubmit = async (values: z.infer<typeof formSchema>) => {
-		// const { data } = await authClient.organization.checkSlug({
-		// 		slug: handle,
-		// 	});
-
-		const { error: orgError } = await authClient.organization.create({
-			name: values.shopName,
-			slug: values.handle,
-		});
+		const { data: org, error: orgError } = await authClient.organization.create(
+			{
+				name: values.shopName,
+				slug: values.handle,
+			},
+		);
 
 		if (orgError) {
 			toast.error(orgError.message);
 			return;
 		}
 
-		// const { error } = await authClient.organization.setActive({
-		// 	organizationId: orgData?.id,
-		// });
+		const { error } = await authClient.organization.setActive({
+			organizationId: org.id,
+		});
 
-		// if (!error) {
-		// 	toast.success("Organization created successfully");
-		// }
+		if (!error) {
+			refetch();
+			navigate({ to: "/" });
+			toast.success("Organization created successfully");
+		}
 	};
 
 	return (
-		<div className="bg-primary min-h-screen py-20 px-4 lg:p-20">
-			<Form {...form}>
-				<form
-					onSubmit={form.handleSubmit(onSubmit)}
-					className="space-y-8 lg:p-4 max-w-screen-sm mx-auto"
-				>
-					<Card className="rounded-4xl">
-						<CardContent className="p-6 lg:p-12 space-y-8">
-							<CardHeader className="space-y-6">
-								<Link to="/">
-									<img
-										src="/logo/logo.png"
-										alt="lipy-img"
-										width={100}
-										height={100}
-										className="object-cover rounded-md"
-									/>
-								</Link>
-								<CardTitle className="text-xl lg:text-3xl font-semibold">
-									Fill business details{" "}
-								</CardTitle>
-							</CardHeader>
+		<div className="bg-primary min-h-screen">
+			<AlertDialog open={true}>
+				<AlertDialogContent>
+					<AlertDialogHeader className="space-y-12">
+						<Link to="/">
+							<img
+								src="/logo/logo.png"
+								alt="lipy-img"
+								width={100}
+								height={100}
+								className="object-cover rounded-md"
+							/>
+						</Link>
+						<AlertDialogTitle className="text-xl lg:text-2xl">
+							Fill business details{" "}
+						</AlertDialogTitle>
+					</AlertDialogHeader>
+					<Form {...form}>
+						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
 							<div>
 								<FormInput
 									name="shopName"
@@ -100,18 +108,11 @@ export const ShopCreateForm = () => {
 									placeholder="lipy-general-store"
 									className="text-2xl lg:p-2"
 									required
-									// suffixEl={
-									// 	checkingHandle ? (
-									// 		<Loader className="animate-spin h-5 w-5" />
-									// 	) : isHandleAvailable === true ? (
-									// 		<Check className="text-emerald-500 h-5 w-5" />
-									// 	) : null
-									// }
 								/>
 							</div>
 							<div className="w-full">
 								<FormButton
-									className="w-full lg:text-xl"
+									className="w-full lg:text-base"
 									disabled={
 										form.formState.isSubmitting ||
 										!form.formState.isValid ||
@@ -121,10 +122,10 @@ export const ShopCreateForm = () => {
 									Submit
 								</FormButton>
 							</div>
-						</CardContent>
-					</Card>
-				</form>
-			</Form>
+						</form>
+					</Form>
+				</AlertDialogContent>
+			</AlertDialog>
 		</div>
 	);
-};
+}

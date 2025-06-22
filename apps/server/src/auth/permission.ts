@@ -85,3 +85,39 @@
 // 	}
 // 	return data;
 // };
+
+// import { createAccessControl } from "better-auth/plugins/access";
+// import {
+// 	adminAc,
+// 	defaultStatements,
+// 	memberAc,
+// 	ownerAc,
+// } from "better-auth/plugins/organization/access";
+
+// const statement = {
+// 	...defaultStatements,
+// } as const;
+
+// const ac = createAccessControl(statement);
+
+// // const member = ac.newRole({
+// //     project: ["create"],
+// // });
+
+// const admin = ac.newRole({
+// 	...adminAc.statements,
+// });
+
+// const owner = ac.newRole({
+// 	...ownerAc.statements,
+// });
+
+// const staff = ac.newRole({
+// 	...memberAc.statements,
+// });
+
+// const deliveryAgent = ac.newRole({
+// 	...memberAc.statements,
+// });
+
+// export { ac, statement, admin, owner, staff, deliveryAgent };

@@ -20,7 +20,6 @@ import { Route as DemoTanstackMutationImport } from './routes/demo/tanstackMutat
 import { Route as DemoSsrImport } from './routes/demo/ssr'
 import { Route as DemoDirectMutationImport } from './routes/demo/directMutation'
 import { Route as DemoClientImport } from './routes/demo/client'
-import { Route as loggedInStoreRouteImport } from './routes/(loggedIn)/store/route'
 import { Route as loggedInAccountRouteImport } from './routes/(loggedIn)/account/route'
 import { Route as loggedInStoreIndexImport } from './routes/(loggedIn)/store/index'
 import { Route as loggedInProductIndexImport } from './routes/(loggedIn)/product/index'
@@ -36,6 +35,7 @@ import { Route as loggedInAccountSupportImport } from './routes/(loggedIn)/accou
 import { Route as loggedInAccountReferralImport } from './routes/(loggedIn)/account/referral'
 import { Route as loggedInAccountProfileImport } from './routes/(loggedIn)/account/profile'
 import { Route as loggedInAccountPreferencesImport } from './routes/(loggedIn)/account/preferences'
+import { Route as loggedInmiscellaneousNewStoreImport } from './routes/(loggedIn)/(miscellaneous)/newStore'
 
 // Create/Update Routes
 
@@ -92,12 +92,6 @@ const DemoClientRoute = DemoClientImport.update({
   getParentRoute: () => DemoRouteRoute,
 } as any)
 
-const loggedInStoreRouteRoute = loggedInStoreRouteImport.update({
-  id: '/store',
-  path: '/store',
-  getParentRoute: () => loggedInRouteRoute,
-} as any)
-
 const loggedInAccountRouteRoute = loggedInAccountRouteImport.update({
   id: '/account',
   path: '/account',
@@ -105,9 +99,9 @@ const loggedInAccountRouteRoute = loggedInAccountRouteImport.update({
 } as any)
 
 const loggedInStoreIndexRoute = loggedInStoreIndexImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => loggedInStoreRouteRoute,
+  id: '/store/',
+  path: '/store/',
+  getParentRoute: () => loggedInRouteRoute,
 } as any)
 
 const loggedInProductIndexRoute = loggedInProductIndexImport.update({
@@ -135,9 +129,9 @@ const loggedInAccountIndexRoute = loggedInAccountIndexImport.update({
 } as any)
 
 const loggedInStoreStaffRoute = loggedInStoreStaffImport.update({
-  id: '/staff',
-  path: '/staff',
-  getParentRoute: () => loggedInStoreRouteRoute,
+  id: '/store/staff',
+  path: '/store/staff',
+  getParentRoute: () => loggedInRouteRoute,
 } as any)
 
 const loggedInProductCreateRoute = loggedInProductCreateImport.update({
@@ -190,6 +184,13 @@ const loggedInAccountPreferencesRoute = loggedInAccountPreferencesImport.update(
   } as any,
 )
 
+const loggedInmiscellaneousNewStoreRoute =
+  loggedInmiscellaneousNewStoreImport.update({
+    id: '/(miscellaneous)/newStore',
+    path: '/newStore',
+    getParentRoute: () => loggedInRouteRoute,
+  } as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -220,13 +221,6 @@ declare module '@tanstack/react-router' {
       path: '/account'
       fullPath: '/account'
       preLoaderRoute: typeof loggedInAccountRouteImport
-      parentRoute: typeof loggedInRouteImport
-    }
-    '/(loggedIn)/store': {
-      id: '/(loggedIn)/store'
-      path: '/store'
-      fullPath: '/store'
-      preLoaderRoute: typeof loggedInStoreRouteImport
       parentRoute: typeof loggedInRouteImport
     }
     '/demo/client': {
@@ -270,6 +264,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/demo/'
       preLoaderRoute: typeof DemoIndexImport
       parentRoute: typeof DemoRouteImport
+    }
+    '/(loggedIn)/(miscellaneous)/newStore': {
+      id: '/(loggedIn)/(miscellaneous)/newStore'
+      path: '/newStore'
+      fullPath: '/newStore'
+      preLoaderRoute: typeof loggedInmiscellaneousNewStoreImport
+      parentRoute: typeof loggedInRouteImport
     }
     '/(loggedIn)/account/preferences': {
       id: '/(loggedIn)/account/preferences'
@@ -329,10 +330,10 @@ declare module '@tanstack/react-router' {
     }
     '/(loggedIn)/store/staff': {
       id: '/(loggedIn)/store/staff'
-      path: '/staff'
+      path: '/store/staff'
       fullPath: '/store/staff'
       preLoaderRoute: typeof loggedInStoreStaffImport
-      parentRoute: typeof loggedInStoreRouteImport
+      parentRoute: typeof loggedInRouteImport
     }
     '/(loggedIn)/account/': {
       id: '/(loggedIn)/account/'
@@ -364,10 +365,10 @@ declare module '@tanstack/react-router' {
     }
     '/(loggedIn)/store/': {
       id: '/(loggedIn)/store/'
-      path: '/'
-      fullPath: '/store/'
+      path: '/store'
+      fullPath: '/store'
       preLoaderRoute: typeof loggedInStoreIndexImport
-      parentRoute: typeof loggedInStoreRouteImport
+      parentRoute: typeof loggedInRouteImport
     }
   }
 }
@@ -393,43 +394,34 @@ const loggedInAccountRouteRouteChildren: loggedInAccountRouteRouteChildren = {
 const loggedInAccountRouteRouteWithChildren =
   loggedInAccountRouteRoute._addFileChildren(loggedInAccountRouteRouteChildren)
 
-interface loggedInStoreRouteRouteChildren {
-  loggedInStoreStaffRoute: typeof loggedInStoreStaffRoute
-  loggedInStoreIndexRoute: typeof loggedInStoreIndexRoute
-}
-
-const loggedInStoreRouteRouteChildren: loggedInStoreRouteRouteChildren = {
-  loggedInStoreStaffRoute: loggedInStoreStaffRoute,
-  loggedInStoreIndexRoute: loggedInStoreIndexRoute,
-}
-
-const loggedInStoreRouteRouteWithChildren =
-  loggedInStoreRouteRoute._addFileChildren(loggedInStoreRouteRouteChildren)
-
 interface loggedInRouteRouteChildren {
   loggedInAccountRouteRoute: typeof loggedInAccountRouteRouteWithChildren
-  loggedInStoreRouteRoute: typeof loggedInStoreRouteRouteWithChildren
   loggedInIndexRoute: typeof loggedInIndexRoute
+  loggedInmiscellaneousNewStoreRoute: typeof loggedInmiscellaneousNewStoreRoute
   loggedInCustomerIdRoute: typeof loggedInCustomerIdRoute
   loggedInOrderIdRoute: typeof loggedInOrderIdRoute
   loggedInProductIdRoute: typeof loggedInProductIdRoute
   loggedInProductCreateRoute: typeof loggedInProductCreateRoute
+  loggedInStoreStaffRoute: typeof loggedInStoreStaffRoute
   loggedInCustomerIndexRoute: typeof loggedInCustomerIndexRoute
   loggedInOrderIndexRoute: typeof loggedInOrderIndexRoute
   loggedInProductIndexRoute: typeof loggedInProductIndexRoute
+  loggedInStoreIndexRoute: typeof loggedInStoreIndexRoute
 }
 
 const loggedInRouteRouteChildren: loggedInRouteRouteChildren = {
   loggedInAccountRouteRoute: loggedInAccountRouteRouteWithChildren,
-  loggedInStoreRouteRoute: loggedInStoreRouteRouteWithChildren,
   loggedInIndexRoute: loggedInIndexRoute,
+  loggedInmiscellaneousNewStoreRoute: loggedInmiscellaneousNewStoreRoute,
   loggedInCustomerIdRoute: loggedInCustomerIdRoute,
   loggedInOrderIdRoute: loggedInOrderIdRoute,
   loggedInProductIdRoute: loggedInProductIdRoute,
   loggedInProductCreateRoute: loggedInProductCreateRoute,
+  loggedInStoreStaffRoute: loggedInStoreStaffRoute,
   loggedInCustomerIndexRoute: loggedInCustomerIndexRoute,
   loggedInOrderIndexRoute: loggedInOrderIndexRoute,
   loggedInProductIndexRoute: loggedInProductIndexRoute,
+  loggedInStoreIndexRoute: loggedInStoreIndexRoute,
 }
 
 const loggedInRouteRouteWithChildren = loggedInRouteRoute._addFileChildren(
@@ -461,12 +453,12 @@ export interface FileRoutesByFullPath {
   '/demo': typeof DemoRouteRouteWithChildren
   '/error': typeof ErrorRoute
   '/account': typeof loggedInAccountRouteRouteWithChildren
-  '/store': typeof loggedInStoreRouteRouteWithChildren
   '/demo/client': typeof DemoClientRoute
   '/demo/directMutation': typeof DemoDirectMutationRoute
   '/demo/ssr': typeof DemoSsrRoute
   '/demo/tanstackMutation': typeof DemoTanstackMutationRoute
   '/demo/': typeof DemoIndexRoute
+  '/newStore': typeof loggedInmiscellaneousNewStoreRoute
   '/account/preferences': typeof loggedInAccountPreferencesRoute
   '/account/profile': typeof loggedInAccountProfileRoute
   '/account/referral': typeof loggedInAccountReferralRoute
@@ -480,7 +472,7 @@ export interface FileRoutesByFullPath {
   '/customer': typeof loggedInCustomerIndexRoute
   '/order': typeof loggedInOrderIndexRoute
   '/product': typeof loggedInProductIndexRoute
-  '/store/': typeof loggedInStoreIndexRoute
+  '/store': typeof loggedInStoreIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -491,6 +483,7 @@ export interface FileRoutesByTo {
   '/demo/tanstackMutation': typeof DemoTanstackMutationRoute
   '/': typeof loggedInIndexRoute
   '/demo': typeof DemoIndexRoute
+  '/newStore': typeof loggedInmiscellaneousNewStoreRoute
   '/account/preferences': typeof loggedInAccountPreferencesRoute
   '/account/profile': typeof loggedInAccountProfileRoute
   '/account/referral': typeof loggedInAccountReferralRoute
@@ -513,13 +506,13 @@ export interface FileRoutesById {
   '/demo': typeof DemoRouteRouteWithChildren
   '/error': typeof ErrorRoute
   '/(loggedIn)/account': typeof loggedInAccountRouteRouteWithChildren
-  '/(loggedIn)/store': typeof loggedInStoreRouteRouteWithChildren
   '/demo/client': typeof DemoClientRoute
   '/demo/directMutation': typeof DemoDirectMutationRoute
   '/demo/ssr': typeof DemoSsrRoute
   '/demo/tanstackMutation': typeof DemoTanstackMutationRoute
   '/(loggedIn)/': typeof loggedInIndexRoute
   '/demo/': typeof DemoIndexRoute
+  '/(loggedIn)/(miscellaneous)/newStore': typeof loggedInmiscellaneousNewStoreRoute
   '/(loggedIn)/account/preferences': typeof loggedInAccountPreferencesRoute
   '/(loggedIn)/account/profile': typeof loggedInAccountProfileRoute
   '/(loggedIn)/account/referral': typeof loggedInAccountReferralRoute
@@ -543,12 +536,12 @@ export interface FileRouteTypes {
     | '/demo'
     | '/error'
     | '/account'
-    | '/store'
     | '/demo/client'
     | '/demo/directMutation'
     | '/demo/ssr'
     | '/demo/tanstackMutation'
     | '/demo/'
+    | '/newStore'
     | '/account/preferences'
     | '/account/profile'
     | '/account/referral'
@@ -562,7 +555,7 @@ export interface FileRouteTypes {
     | '/customer'
     | '/order'
     | '/product'
-    | '/store/'
+    | '/store'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/error'
@@ -572,6 +565,7 @@ export interface FileRouteTypes {
     | '/demo/tanstackMutation'
     | '/'
     | '/demo'
+    | '/newStore'
     | '/account/preferences'
     | '/account/profile'
     | '/account/referral'
@@ -592,13 +586,13 @@ export interface FileRouteTypes {
     | '/demo'
     | '/error'
     | '/(loggedIn)/account'
-    | '/(loggedIn)/store'
     | '/demo/client'
     | '/demo/directMutation'
     | '/demo/ssr'
     | '/demo/tanstackMutation'
     | '/(loggedIn)/'
     | '/demo/'
+    | '/(loggedIn)/(miscellaneous)/newStore'
     | '/(loggedIn)/account/preferences'
     | '/(loggedIn)/account/profile'
     | '/(loggedIn)/account/referral'
@@ -647,15 +641,17 @@ export const routeTree = rootRoute
       "filePath": "(loggedIn)/route.tsx",
       "children": [
         "/(loggedIn)/account",
-        "/(loggedIn)/store",
         "/(loggedIn)/",
+        "/(loggedIn)/(miscellaneous)/newStore",
         "/(loggedIn)/customer/$id",
         "/(loggedIn)/order/$id",
         "/(loggedIn)/product/$id",
         "/(loggedIn)/product/create",
+        "/(loggedIn)/store/staff",
         "/(loggedIn)/customer/",
         "/(loggedIn)/order/",
-        "/(loggedIn)/product/"
+        "/(loggedIn)/product/",
+        "/(loggedIn)/store/"
       ]
     },
     "/demo": {
@@ -682,14 +678,6 @@ export const routeTree = rootRoute
         "/(loggedIn)/account/"
       ]
     },
-    "/(loggedIn)/store": {
-      "filePath": "(loggedIn)/store/route.tsx",
-      "parent": "/(loggedIn)",
-      "children": [
-        "/(loggedIn)/store/staff",
-        "/(loggedIn)/store/"
-      ]
-    },
     "/demo/client": {
       "filePath": "demo/client.tsx",
       "parent": "/demo"
@@ -713,6 +701,10 @@ export const routeTree = rootRoute
     "/demo/": {
       "filePath": "demo/index.tsx",
       "parent": "/demo"
+    },
+    "/(loggedIn)/(miscellaneous)/newStore": {
+      "filePath": "(loggedIn)/(miscellaneous)/newStore.tsx",
+      "parent": "/(loggedIn)"
     },
     "/(loggedIn)/account/preferences": {
       "filePath": "(loggedIn)/account/preferences.tsx",
@@ -748,7 +740,7 @@ export const routeTree = rootRoute
     },
     "/(loggedIn)/store/staff": {
       "filePath": "(loggedIn)/store/staff.tsx",
-      "parent": "/(loggedIn)/store"
+      "parent": "/(loggedIn)"
     },
     "/(loggedIn)/account/": {
       "filePath": "(loggedIn)/account/index.tsx",
@@ -768,7 +760,7 @@ export const routeTree = rootRoute
     },
     "/(loggedIn)/store/": {
       "filePath": "(loggedIn)/store/index.tsx",
-      "parent": "/(loggedIn)/store"
+      "parent": "/(loggedIn)"
     }
   }
 }

@@ -7,7 +7,7 @@ import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, useMatchRoute } from "@tanstack/react-router";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
-import { ArrowDownToLine, type LucideIcon, Store } from "lucide-react";
+import { ArrowDownToLine, type LucideIcon } from "lucide-react";
 import { type ReactNode, useRef, useState } from "react";
 
 export type DashboardNavs = Record<
@@ -207,9 +207,9 @@ function ActiveLinks({
 			}}
 			transition={{ duration: 0.3 }}
 		>
-			<div className="space-y-8">
-				{/* <div className="flex justify-start items-center">
-					<Link to="/" className="overflow-hidden size-[50px]">
+			<div className="space-y-6 ">
+				<div className="flex  items-center gap-2 pb-1">
+					<Link to="/" className="overflow-hidden size-[40px]">
 						<img
 							key={String(open)}
 							src={!open ? logo.icon : logo.full}
@@ -219,10 +219,11 @@ function ActiveLinks({
 							className="rounded-md"
 						/>
 					</Link>
-				</div> */}
-				<div className="flex items-center gap-2 pt-4">
-					<Store className="fill-primary/40" />
-					<p className="text-lg font-medium">{props.activeOrgData.name}</p>
+					{open && (
+						<p className="text-base font-medium truncate">
+							{props?.activeOrgData?.name}
+						</p>
+					)}
 				</div>
 
 				<div className="space-y-2">
@@ -254,17 +255,19 @@ function NavLink({
 	const isActive = !!matchRoute({ to: nav.url, fuzzy: true });
 
 	return (
-		<div
+		<Link
 			className={cn(
-				"overflow-hidden border-b border-border/20 truncate rounded-md px-1.5 relative w-full",
-				open && "justify-start",
-				mobile && "px-0 justify-center rounded-none",
+				"overflow-hidden border-b border-border/20 truncate rounded-md px-1.5 relative w-full inline-flex items-center font-medium py-2 gap-2",
+				open && "justify-center",
+				mobile &&
+					"px-0 justify-center rounded-none flex-col font-normal w-full",
 				mobile
 					? isActive && ""
 					: isActive
 						? "bg-accent font-semibold"
 						: "hover:bg-accent",
 			)}
+			to={nav.url}
 		>
 			{/* {mobile && (
 				<span
@@ -274,37 +277,37 @@ function NavLink({
 					)}
 				/>
 			)} */}
-			<Link
+			{/* <Link
 				className={cn(
 					"inline-flex items-center font-medium py-2 gap-2",
 					mobile && "flex-col font-normal w-full",
 				)}
-				to={nav.url}
-			>
-				<span className="flex justify-center items-center w-[30px]">
-					<nav.icon
-						className={cn(
-							"size-5",
-							mobile && "flex-col font-normal w-full stroke-1.5",
+				
+			> */}
+			<span className="flex justify-center items-center w-[30px]">
+				<nav.icon
+					className={cn(
+						"size-5",
+						mobile && "flex-col font-normal w-full stroke-1.5",
 
-							isActive && "fill-foreground/40",
-						)}
-					/>
-				</span>
-				{!mobile && (
-					<motion.span
-						className={
-							"flex justify-between gap-2 w-full items-center flex-1 font-medium"
-						}
-						initial={{ opacity: 0 }}
-						animate={{ opacity: open ? 1 : 0 }}
-						transition={{ duration: 0.2 }}
-					>
-						{nav.label}
-					</motion.span>
-				)}
-				{mobile && <span className={" font-semibold"}>{nav.label}</span>}
-			</Link>
-		</div>
+						isActive && "fill-primary/40",
+					)}
+				/>
+			</span>
+			{!mobile && (
+				<motion.span
+					className={
+						"flex justify-between gap-2 w-full items-center flex-1 font-medium"
+					}
+					initial={{ opacity: 0 }}
+					animate={{ opacity: open ? 1 : 0 }}
+					transition={{ duration: 0.2 }}
+				>
+					{nav.label}
+				</motion.span>
+			)}
+			{mobile && <span className={" font-semibold"}>{nav.label}</span>}
+			{/* </Link> */}
+		</Link>
 	);
 }

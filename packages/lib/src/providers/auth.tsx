@@ -1,4 +1,11 @@
 import { env } from "@envClient";
+// import {
+// 	ac,
+// 	admin,
+// 	deliveryAgent,
+// 	owner,
+// 	staff,
+// } from "@lipy/server/auth/permission";
 import type { AuthType } from "@lipy/server/types";
 import {
 	emailOTPClient,
@@ -11,6 +18,15 @@ export const authClient = createAuthClient({
 	baseURL: env.API_URL,
 	plugins: [
 		inferAdditionalFields<AuthType>(),
+		// organizationClient({
+		// 	ac,
+		// 	roles: {
+		// 		owner,
+		// 		admin,
+		// 		staff,
+		// 		deliveryAgent,
+		// 	},
+		// }),
 		organizationClient(),
 		emailOTPClient(),
 	],

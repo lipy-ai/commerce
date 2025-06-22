@@ -1,20 +1,22 @@
-import { ShopCreateForm } from "@/components/shopCreateForm";
 import { authClient } from "@lipy/lib/providers/auth";
 import {
 	DashboardBody,
 	DashboardLayout,
 } from "@lipy/web-ui/components/layouts/dashboard";
-import { Button } from "@lipy/web-ui/components/ui/button";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
-import { useViewport } from "@lipy/web-ui/contexts/viewport";
-import { Outlet, createFileRoute, useLocation } from "@tanstack/react-router";
+import {
+	Outlet,
+	createFileRoute,
+	useLocation,
+	useNavigate,
+} from "@tanstack/react-router";
 
+import ErrorPage from "@lipy/web-ui/components/pages/error";
 import {
 	CircleUser,
 	Home,
 	LayoutDashboard,
 	LogOut,
-	MessageCircleQuestion,
 	Settings,
 	Shirt,
 	ShoppingBag,
@@ -91,51 +93,34 @@ const mobileNav = [
 	},
 ];
 
-// Helper function to get page title based on pathname
-const getPageTitle = (pathname: string): string => {
-	const pathMap: Record<string, string> = {
-		"/": "Dashboard",
-		"/store": "My Store",
-		"/store/staff": "My Staff",
-		"/product": "Products",
-		"/order": "Orders",
-		"/customer": "Customers",
-		"/account": "Account",
-	};
-
-	// Remove trailing slash for comparison
-	const normalizedPath =
-		pathname.endsWith("/") && pathname !== "/"
-			? pathname.slice(0, -1)
-			: pathname;
-
-	return pathMap[normalizedPath] || "Dashboard";
-};
-
 function RouteComponent() {
-	const { isMobile } = useViewport();
+	const navigate = useNavigate();
 	const { pathname } = useLocation();
 
-	const { data: activeOrg, isPending: activeOrgPending } =
-		authClient.useActiveOrganization();
-	const { data: organizations, isPending: orgPending } =
-		authClient.useListOrganizations();
+	const {
+		data: activeOrg,
+		isPending: activeOrgPending,
+		error,
+		refetch,
+		isRefetching,
+	} = authClient.useActiveOrganization();
 
-	// Show loading spinner while data is being fetched
-	if (activeOrgPending || orgPending) {
+	if (activeOrgPending || isRefetching) {
 		return <Spinner />;
 	}
 
-	// Handle organization setup
-	if (!activeOrg) {
-		if (organizations && organizations.length > 0) {
-			// Set the first organization as active
-			authClient.organization.setActive({
-				organizationId: organizations[0].id,
-			});
-			return <Spinner />; // Show spinner while setting active org
-		}
-		return <ShopCreateForm />;
+	if (error) {
+		return (
+			<ErrorPage
+				title={`Error : ${error.status}`}
+				message={error.message || error.statusText || "Something went wrong"}
+				reset={refetch}
+			/>
+		);
+	}
+
+	if (!activeOrgPending && !activeOrg) {
+		navigate({ to: "/newStore" });
 	}
 
 	return (
@@ -148,17 +133,9 @@ function RouteComponent() {
 				alt: "Logo",
 			}}
 			activeOrgData={activeOrg}
+			isVisibleDashboarNav={pathname !== "/newStore"}
 		>
 			<DashboardBody>
-				{!isMobile && (
-					<header className="sticky top-0 z-10 w-full p-3 px-4 bg-background border-b h-14 flex items-center justify-between">
-						<h1 className="text-xl font-medium">{getPageTitle(pathname)}</h1>
-						<Button variant="ghost" className="font-medium">
-							<MessageCircleQuestion className="w-4 h-4 mr-2" />
-							Help
-						</Button>
-					</header>
-				)}
 				<Outlet />
 			</DashboardBody>
 		</DashboardLayout>

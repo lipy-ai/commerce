@@ -1,12 +1,14 @@
-import { sendTransactionalEmail } from "@/services/ses";
-import { sendSMS } from "@/services/sns";
 import { betterAuth } from "better-auth";
 import { emailOTP } from "better-auth/plugins";
+
+import { sendTransactionalEmail } from "@/services/ses";
+import { sendSMS } from "@/services/sns";
 import { phoneNumber } from "better-auth/plugins";
 import { organization } from "better-auth/plugins";
 import { redis } from "../cache";
 import { db } from "../db";
 import env from "../env";
+// import { ac, admin, deliveryAgent, owner, staff } from "./permission";
 import emailHarmony from "./plugins/emailValidator";
 import phoneHarmony from "./plugins/phoneValidator";
 
@@ -46,6 +48,12 @@ const socialProviders = {
 
 const organizationsPlugin = organization({
 	schema: {
+		session: {
+			fields: {
+				activeOrganizationId: "activeStoreId",
+			},
+		},
+
 		organization: {
 			modelName: "lipy.store",
 			fields: {
@@ -65,7 +73,6 @@ const organizationsPlugin = organization({
 				createdAt: "createdAt",
 			},
 		},
-
 		invitation: {
 			modelName: "lipy.storeInvitation",
 			fields: {
@@ -78,13 +85,25 @@ const organizationsPlugin = organization({
 			},
 		},
 
-		session: {
-			fields: {
-				activeOrganizationId: "activeStoreId",
-			},
-		},
+		// ac,
+		// roles: {
+		// 	owner,
+		// 	admin,
+		// 	staff,
+		// 	deliveryAgent,
+		// },
+	},
+
+	async sendInvitationEmail(data) {
+		const inviteLink = `${env.BETTER_AUTH_URL}/accept-invitation/${data.id}`;
+		await sendTransactionalEmail({
+			to: [data.email],
+			subject: `Invitation to join ${data.organization.name}`,
+			html: `You have been invited to join ${data.organization.name} as ${data.role}. Click the link to join: ${inviteLink}`,
+		});
 	},
 });
+
 export const auth: any = betterAuth({
 	disabledPaths: ["/error"],
 	database: {
@@ -160,7 +179,20 @@ export const auth: any = betterAuth({
 					return {
 						data: {
 							...session,
+							activeStoreId: store?.id || null,
 							activeOrganizationId: store?.id || null,
+						},
+					};
+				},
+			},
+			update: {
+				before: async (session) => {
+					return {
+						data: {
+							...session,
+							...((session as any)?.activeOrganizationId && {
+								activeStoreId: (session as any).activeOrganizationId,
+							}),
 						},
 					};
 				},

@@ -19,6 +19,7 @@ import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ArrowUpRight, Plus } from "lucide-react";
 import { z } from "zod";
 
+import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Card, CardHeader, CardTitle } from "@lipy/web-ui/components/ui/card";
 import type { InferResponseType } from "hono/client";
 
@@ -48,13 +49,12 @@ function RouteComponent() {
 			{/* <DashboardHeader title="Products">
 				
 			</DashboardHeader> */}
-			<div className="flex items-center justify-between lg:px-8 lg:pt-8">
-				<SearchBar placeholder="Search products" />
+			<DashboardHeader title="Products">
 				<Button>
 					<Plus />
 					New Product
 				</Button>
-			</div>
+			</DashboardHeader>
 
 			<div className="lg:p-8 lg:space-y-8">
 				{isLoading ? null : !data || data.items.length === 0 ? (
@@ -65,6 +65,10 @@ function RouteComponent() {
 					</Card>
 				) : (
 					<>
+						<div className="p-4 lg:p-0">
+							<SearchBar placeholder="Search products" />
+						</div>
+
 						{isMobile ? (
 							<MobileView items={data.items} />
 						) : (

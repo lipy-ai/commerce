@@ -47,6 +47,7 @@
 		"nuqs": "^2.4.3",
 		"react-checkmark": "^2.1.1",
 		"react-google-maps": "^9.4.5",
+		"resend": "^4.6.0",
 		"vaul": "^1.1.2",
 		"vinxi": "^0.5.4"
 	}

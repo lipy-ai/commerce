@@ -8,6 +8,7 @@ import {
 } from "@lipy/web-ui/components/ui/avatar";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Card } from "@lipy/web-ui/components/ui/card";
+import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { shareContent } from "@lipy/web-ui/lib/share";
 import { cn } from "@lipy/web-ui/lib/utils";
@@ -84,8 +85,10 @@ const moreInfo: {
 ];
 
 export function AccountPage() {
-	const { data } = authClient.useSession();
+	const { data, isPending } = authClient.useSession();
 	const { isMobile } = useViewport();
+
+	if (isPending) return <Spinner />;
 
 	const filteredMoreInfo = data
 		? moreInfo

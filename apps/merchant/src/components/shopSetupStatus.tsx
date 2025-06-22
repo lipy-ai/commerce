@@ -1,4 +1,3 @@
-import { authClient } from "@lipy/lib/providers/auth";
 import { Avatar, AvatarFallback } from "@lipy/web-ui/components/ui/avatar";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { cn } from "@lipy/web-ui/lib/utils";
@@ -37,10 +36,6 @@ const setupSteps = [
 ];
 
 export const ShopSetupStatus = () => {
-	const { data: organizations } = authClient.useListOrganizations();
-
-	console.log(organizations);
-
 	return (
 		<div className="h-full bg-white border-l border-r lg:mx-40 p-4 lg:p-12 space-y-8 lg:space-y-12">
 			<div className="space-y-3 lg:space-y-4">

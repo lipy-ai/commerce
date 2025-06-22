@@ -79,8 +79,8 @@ interface Order {
 export function MyOrderCard({ order }: { order: Order }) {
 	return (
 		<>
-			<Card className="p-1 rounded-lg bg-white border-none shadow-sm">
-				<CardContent className="p-2">
+			<Card>
+				<CardContent>
 					<Link
 						to="/account/orders/$orderId"
 						params={{ orderId: order.orderPrimaryId as string }}

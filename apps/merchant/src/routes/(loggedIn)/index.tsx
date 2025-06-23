@@ -2,6 +2,7 @@
 import { ShopSetupStatus } from "@/components/shopSetupStatus";
 import { authClient } from "@lipy/lib/providers/auth";
 import { formatAmount } from "@lipy/lib/utils/intl";
+import ErrorPage from "@lipy/web-ui/components/pages/error";
 
 import {
 	Avatar,
@@ -9,7 +10,9 @@ import {
 	AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
+import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { cn } from "@lipy/web-ui/lib/utils";
+import { useNavigate } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { Shirt, ShoppingCart, SquareUser, Store } from "lucide-react";
 import { useState } from "react";
@@ -35,9 +38,35 @@ const btns = [
 	},
 ];
 function RouteComponent() {
-	const { data: activeOrg } = authClient.useActiveOrganization();
-
 	const [storeFullySet] = useState(false);
+
+	const navigate = useNavigate();
+
+	const {
+		data: activeOrg,
+		isPending: activeOrgPending,
+		error,
+		refetch,
+		isRefetching,
+	} = authClient.useActiveOrganization();
+
+	if (activeOrgPending || isRefetching) {
+		return <Spinner />;
+	}
+
+	if (error) {
+		return (
+			<ErrorPage
+				title={`Error : ${error.status}`}
+				message={error.message || error.statusText || "Something went wrong"}
+				reset={refetch}
+			/>
+		);
+	}
+
+	if (!activeOrgPending && !activeOrg) {
+		navigate({ to: "/newStore" });
+	}
 
 	return (
 		<div className="h-full">

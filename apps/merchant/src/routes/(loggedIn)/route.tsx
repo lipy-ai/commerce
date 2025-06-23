@@ -1,17 +1,9 @@
-import { authClient } from "@lipy/lib/providers/auth";
 import {
 	DashboardBody,
 	DashboardLayout,
 } from "@lipy/web-ui/components/layouts/dashboard";
-import { Spinner } from "@lipy/web-ui/components/ui/spinner";
-import {
-	Outlet,
-	createFileRoute,
-	useLocation,
-	useNavigate,
-} from "@tanstack/react-router";
+import { Outlet, createFileRoute, useLocation } from "@tanstack/react-router";
 
-import ErrorPage from "@lipy/web-ui/components/pages/error";
 import {
 	CircleUser,
 	Home,
@@ -94,34 +86,7 @@ const mobileNav = [
 ];
 
 function RouteComponent() {
-	const navigate = useNavigate();
 	const { pathname } = useLocation();
-
-	const {
-		data: activeOrg,
-		isPending: activeOrgPending,
-		error,
-		refetch,
-		isRefetching,
-	} = authClient.useActiveOrganization();
-
-	if (activeOrgPending || isRefetching) {
-		return <Spinner />;
-	}
-
-	if (error) {
-		return (
-			<ErrorPage
-				title={`Error : ${error.status}`}
-				message={error.message || error.statusText || "Something went wrong"}
-				reset={refetch}
-			/>
-		);
-	}
-
-	if (!activeOrgPending && !activeOrg) {
-		navigate({ to: "/newStore" });
-	}
 
 	return (
 		<DashboardLayout
@@ -132,8 +97,13 @@ function RouteComponent() {
 				full: "/logo/ico.svg",
 				alt: "Logo",
 			}}
-			activeOrgData={activeOrg}
-			isVisibleDashboarNav={pathname !== "/newStore"}
+			// activeOrgData={activeOrg}
+			isVisibleDashboarNav={
+				!(
+					pathname.includes("/newStore") ||
+					pathname.includes("/accept-invitation")
+				)
+			}
 		>
 			<DashboardBody>
 				<Outlet />

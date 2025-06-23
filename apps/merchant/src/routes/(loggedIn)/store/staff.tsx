@@ -52,6 +52,7 @@ import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { MoreVertical, Plus, SendHorizonal, X } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -62,8 +63,10 @@ export const Route = createFileRoute("/(loggedIn)/store/staff")({
 function RouteComponent() {
 	const { isMobile } = useViewport();
 	const { data: store } = authClient.useActiveOrganization();
-	console.log(store);
 
+	const invitations = store?.invitations.filter(
+		(i) => i.status === "pending" || i.status === "rejected",
+	);
 	return (
 		<div>
 			<DashboardHeader title="My Staff">
@@ -71,41 +74,6 @@ function RouteComponent() {
 			</DashboardHeader>
 
 			<div className="lg:p-8">
-				{/* <div>
-					<Card className="grid grid-cols-2 lg:grid-cols-4 divide-x">
-						<CardHeader>
-							<CardTitle>{store?.members.length || 0}</CardTitle>
-							<CardDescription>
-								<h2>Total Members</h2>
-							</CardDescription>
-						</CardHeader>
-						<CardHeader>
-							<CardTitle>20</CardTitle>
-							<CardDescription>
-								<h2>Delivery Agents</h2>
-							</CardDescription>
-						</CardHeader>
-						<CardHeader>
-							<CardTitle>20</CardTitle>
-							<CardDescription>
-								<h2>In-house Staff</h2>
-							</CardDescription>
-						</CardHeader>
-						<CardHeader>
-							<CardTitle>20</CardTitle>
-							<CardDescription>
-								<h2>Admins</h2>
-							</CardDescription>
-						</CardHeader>
-					</Card>
-				</div>
-				<div className="flex gap-4 ">
-					<Input
-						prefixEl={<Search />}
-						placeholder="Search Staff"
-						className="flex-1"
-					/>
-				</div> */}
 				<div className="space-y-10 mb-8 mt-4 lg:mt-0">
 					{isMobile ? (
 						<MobileViewMember />
@@ -133,7 +101,8 @@ function RouteComponent() {
 														<AvatarFallback>A</AvatarFallback>
 													</Avatar>
 													<p className="font-medium text-base">
-														{member.user.name}
+														{member.user.name ||
+															member.user.email.split("@")[0]}
 													</p>
 												</TableCell>
 												<TableCell className="">
@@ -159,67 +128,71 @@ function RouteComponent() {
 								</Table>
 							</div>
 
-							<div>
-								<h1 className="text-lg font-medium my-4 ">Invitations</h1>
-								<Table className="border">
-									<TableHeader>
-										<TableRow className="bg-accent/40">
-											<TableHead>Email</TableHead>
+							{invitations && invitations.length > 0 && (
+								<div>
+									<h1 className="text-lg font-medium my-4 ">Invitations</h1>
+									<Table className="border">
+										<TableHeader>
+											<TableRow className="bg-accent/40">
+												<TableHead>Email</TableHead>
 
-											<TableHead>Role</TableHead>
-											<TableHead>Status</TableHead>
-											<TableHead>Invited by</TableHead>
-											<TableHead>Cancel</TableHead>
-										</TableRow>
-									</TableHeader>
-									<TableBody className="bg-white">
-										{store?.invitations.map((invitee, index) => {
-											const inviter = store.members.find(
-												(member) => member.user.id === invitee.inviterId,
-											);
-											if (invitee.status !== "pending") return null;
+												<TableHead>Role</TableHead>
+												<TableHead>Status</TableHead>
+												<TableHead>Invited by</TableHead>
+												<TableHead>Cancel</TableHead>
+											</TableRow>
+										</TableHeader>
+										<TableBody className="bg-white">
+											{invitations.map((invitee, index) => {
+												const inviter = store?.members.find(
+													(member) => member.user.id === invitee.inviterId,
+												);
 
-											return (
-												<TableRow key={index}>
-													<TableCell>
-														<p className="line-clamp-1 font-normal text-base">
-															{invitee.email}
-														</p>
-													</TableCell>
+												return (
+													<TableRow key={index}>
+														<TableCell>
+															<p className="line-clamp-1 font-normal text-base">
+																{invitee.email}
+															</p>
+														</TableCell>
 
-													<TableCell>
-														<Badge size={"large"} variant={"accent"}>
-															{invitee.role.toUpperCase()}
-														</Badge>
-													</TableCell>
+														<TableCell>
+															<Badge size={"large"} variant={"accent"}>
+																{invitee.role.toUpperCase()}
+															</Badge>
+														</TableCell>
 
-													<TableCell>
-														<Badge variant={"status"}>
-															{invitee.status.charAt(0).toUpperCase() +
-																invitee.status.slice(1)}
-														</Badge>
-													</TableCell>
-													<TableCell className="flex items-center gap-2">
-														<Avatar className="size-6">
-															<AvatarImage src={inviter?.user.image} />
-															<AvatarFallback>A</AvatarFallback>
-														</Avatar>
+														<TableCell>
+															<Badge variant={"status"}>
+																{invitee.status.charAt(0).toUpperCase() +
+																	invitee.status.slice(1)}
+															</Badge>
+														</TableCell>
+														<TableCell className="flex items-center gap-2">
+															<Avatar className="size-6">
+																<AvatarImage src={inviter?.user.image} />
+																<AvatarFallback>A</AvatarFallback>
+															</Avatar>
 
-														<p>
-															{inviter?.user.name ||
-																inviter?.user.email ||
-																"Unknown"}
-														</p>
-													</TableCell>
-													<TableCell>
-														<CancelInvitation invitationId={invitee.id} />
-													</TableCell>
-												</TableRow>
-											);
-										})}
-									</TableBody>
-								</Table>
-							</div>
+															<p>
+																{inviter?.user.name ||
+																	inviter?.user.email ||
+																	"Unknown"}
+															</p>
+														</TableCell>
+														<TableCell>
+															<CancelInvitation
+																invitationId={invitee.id}
+																status={invitee.status}
+															/>
+														</TableCell>
+													</TableRow>
+												);
+											})}
+										</TableBody>
+									</Table>
+								</div>
+							)}
 						</>
 					)}
 				</div>
@@ -229,9 +202,10 @@ function RouteComponent() {
 }
 
 function InviteMember() {
+	const [dialogOpen, setDialogOpen] = useState(false);
 	const formSchema = z.object({
 		email: z.string().email(),
-		role: z.enum(["admin", "member"]),
+		role: z.enum(["admin", "member", "owner"]),
 	});
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -252,6 +226,7 @@ function InviteMember() {
 		}
 		if (data) {
 			toast.success("Invitation sent successfully");
+			setDialogOpen(false);
 		}
 	}
 
@@ -264,10 +239,14 @@ function InviteMember() {
 			label: "Member",
 			value: "member",
 		},
+		{
+			label: "Owner",
+			value: "owner",
+		},
 	];
 	return (
-		<Dialog>
-			<DialogTrigger>
+		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+			<DialogTrigger onClick={() => setDialogOpen(true)}>
 				<Button>
 					<Plus />
 					New Member
@@ -381,9 +360,11 @@ const StaffOptions = ({
 const CancelInvitation = ({
 	invitationId,
 	type,
+	status,
 }: {
 	invitationId: string;
 	type?: "text" | "icon";
+	status?: "pending" | "accepted" | "rejected" | "canceled";
 }) => {
 	const handleCancelInvite = async () => {
 		toast.promise(
@@ -418,6 +399,7 @@ const CancelInvitation = ({
 					onClick={() => {
 						handleCancelInvite();
 					}}
+					disabled={status !== "pending"}
 				>
 					Cancel Invitation
 				</Button>
@@ -428,6 +410,7 @@ const CancelInvitation = ({
 					onClick={() => {
 						handleCancelInvite();
 					}}
+					disabled={status !== "pending"}
 				>
 					<X />
 				</Button>
@@ -438,6 +421,9 @@ const CancelInvitation = ({
 
 const MobileViewMember = () => {
 	const { data: store } = authClient.useActiveOrganization();
+	const invitations = store?.invitations.filter(
+		(i) => i.status === "pending" || i.status === "rejected",
+	);
 	return (
 		<div className="space-y-4">
 			<div className="bg-white p-4 space-y-4">
@@ -472,56 +458,61 @@ const MobileViewMember = () => {
 					))}
 				</div>
 			</div>
-			<div className="bg-white p-4 space-y-4">
-				<h1 className="text-base font-medium  ">Invitations</h1>
-				<div className="divide-y divide-dashed space-y-4 ">
-					{store?.invitations.map((invitee, index) => {
-						const inviter = store.members.find(
-							(member) => member.user.id === invitee.inviterId,
-						);
+			{invitations && invitations.length > 0 && (
+				<div className="bg-white p-4 space-y-4">
+					<h1 className="text-base font-medium  ">Invitations</h1>
+					<div className="divide-y divide-dashed space-y-4 ">
+						{invitations.map((invitee, index) => {
+							const inviter = store?.members.find(
+								(member) => member.user.id === invitee.inviterId,
+							);
 
-						if (invitee.status !== "pending") return null;
-						return (
-							<div key={index} className="pb-4">
-								<div className="flex justify-between items-start">
-									<div className="flex items-center gap-2">
-										<Avatar className="size-10">
-											<AvatarFallback>
-												{invitee.email.slice(0, 2).toUpperCase()}
-											</AvatarFallback>
-										</Avatar>
-										<div>
-											<p className="line-clamp-1 ">{invitee.email}</p>
+							return (
+								<div key={index} className="pb-4">
+									<div className="flex justify-between items-start">
+										<div className="flex items-center gap-2">
+											<Avatar className="size-10">
+												<AvatarFallback>
+													{invitee.email.slice(0, 2).toUpperCase()}
+												</AvatarFallback>
+											</Avatar>
+											<div>
+												<p className="line-clamp-1 ">{invitee.email}</p>
 
-											<ul className="text-muted-foreground text-xs">
-												<li>
-													Role :{" "}
-													{invitee.role.charAt(0).toUpperCase() +
-														invitee.role.slice(1)}
-												</li>
-												<li>
-													Invited By :{" "}
-													{inviter?.user.name ||
-														inviter?.user.email ||
-														"Unknown"}
-												</li>
-											</ul>
+												<ul className="text-muted-foreground text-xs">
+													<li>
+														Role :{" "}
+														{invitee.role.charAt(0).toUpperCase() +
+															invitee.role.slice(1)}
+													</li>
+													<li>
+														Invited By :{" "}
+														{inviter?.user.name ||
+															inviter?.user.email ||
+															"Unknown"}
+													</li>
+												</ul>
+											</div>
+										</div>
+										<div className="flex flex-col items-end gap-1">
+											<Badge size="small" variant="status">
+												{invitee.status.charAt(0).toUpperCase() +
+													invitee.status.slice(1)}
+											</Badge>
+
+											<CancelInvitation
+												invitationId={invitee.id}
+												type={"text"}
+												status={invitee.status}
+											/>
 										</div>
 									</div>
-									<div className="flex flex-col items-end gap-1">
-										<Badge size="small" variant="status">
-											{invitee.status.charAt(0).toUpperCase() +
-												invitee.status.slice(1)}
-										</Badge>
-
-										<CancelInvitation invitationId={invitee.id} type={"text"} />
-									</div>
 								</div>
-							</div>
-						);
-					})}
+							);
+						})}
+					</div>
 				</div>
-			</div>
+			)}
 		</div>
 	);
 };

@@ -8,15 +8,14 @@ import {
 } from "@lipy/lib/utils/useQueryClient";
 import { CustomRadioGroup } from "@lipy/web-ui/components/custom-ui/customRadioGroup";
 import { InputWithAnimatedLabel } from "@lipy/web-ui/components/custom-ui/inputWithAnimatedLabel";
-import { cn } from "@lipy/web-ui/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useRouter } from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { DrawerDialogSwitcher } from "../custom-ui/drawerDialogSwitcher";
-import { Button, buttonVariants } from "../ui/button";
+import { Button } from "../ui/button";
 
 import {
 	Form,
@@ -49,9 +48,13 @@ export function DetailedAddress({
 	isDeliveryAddress?: boolean;
 }) {
 	const { data } = authClient.useSession();
-	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 	const { setDeliveryLocation, deliveryLocation } = useLocationStore();
+	const router = useRouter();
+	const onBack = () => {
+		router.history.back();
+		return false;
+	};
 
 	const formSchema = z.object({
 		building: z.string().min(2, "Please fill your detailed address"),
@@ -75,8 +78,9 @@ export function DetailedAddress({
 			queryClient.invalidateQueries({
 				queryKey: apiQueryOptions(apiClient.v1.address, "$get", {}).queryKey,
 			});
-			navigate({ to: "/account/addresses", replace: true });
+
 			onOpenChange?.(false);
+			onBack();
 		},
 		onError: () => toast.error("Something went wrong while adding address"),
 	});
@@ -157,23 +161,6 @@ export function DetailedAddress({
 								? fullAddress.line1.split(",").slice(1).join(",")
 								: fullAddress.line1}
 						</p>
-						<div className="flex justify-end">
-							{label === "Add" ? (
-								<Button variant="outline" size="sm">
-									Change
-								</Button>
-							) : (
-								<Link
-									to="/account/addresses/new"
-									search={{ type: "saveAddress" }}
-									className={cn(
-										buttonVariants({ variant: "outline", size: "sm" }),
-									)}
-								>
-									Change
-								</Link>
-							)}
-						</div>
 					</div>
 
 					<Form {...form}>

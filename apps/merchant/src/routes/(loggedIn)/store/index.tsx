@@ -5,11 +5,11 @@ import {
 	useAPIMutation,
 	useAPIQuery,
 } from "@lipy/lib/utils/useQueryClient";
-// import {
-// 	DrawerDialogHeader,
-// 	DrawerDialogSwitcher,
-// 	DrawerDialogTitle,
-// } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
+import {
+	DrawerDialogHeader,
+	DrawerDialogSwitcher,
+	DrawerDialogTitle,
+} from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
 import {
 	FormButton,
 	FormImage,
@@ -18,19 +18,19 @@ import {
 } from "@lipy/web-ui/components/forms/elements";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import VerticalListSkeleton from "@lipy/web-ui/components/layouts/skeletons/verticalListSkeleton";
-// import GoogleMaps from "@lipy/web-ui/components/maps/googleMap";
+import GoogleMaps from "@lipy/web-ui/components/maps/googleMap";
 import { Form } from "@lipy/web-ui/components/ui/form";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 export const Route = createFileRoute("/(loggedIn)/store/")({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-	// const [isOpenMap, setIsOpenMap] = useState(false);
+	const [isOpenMap, setIsOpenMap] = useState(false);
 	const { data, isLoading } = useAPIQuery(
 		apiClient.v1.merchant.store,
 		"$get",
@@ -91,7 +91,7 @@ function RouteComponent() {
 
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
-				className="space-y-8 p-4 lg:p-8 max-w-4xl"
+				className="space-y-8 p-4 lg:p-8 max-w-4xl mb-28"
 			>
 				<div className="grid divide-y lg:gap-4">
 					<div className="bg-background">
@@ -122,12 +122,12 @@ function RouteComponent() {
 								<FormInput name="email" label="Email" />
 								<FormInput name="phone" label="Phone Number" />
 							</div>
-							{/* <FormInput
+							<FormInput
 								name="address"
 								label="Address"
 								className="cursor-pointer hover:bg-accent"
 								onClick={() => setIsOpenMap(true)}
-							/> */}
+							/>
 						</div>
 						<div className="p-4">
 							<FormButton>Save Changes</FormButton>
@@ -137,7 +137,7 @@ function RouteComponent() {
 				</div>
 			</form>
 
-			{/* <DrawerDialogSwitcher
+			<DrawerDialogSwitcher
 				open={isOpenMap}
 				onOpenChange={setIsOpenMap}
 				className="p-0 lg:min-w-4xl"
@@ -145,8 +145,8 @@ function RouteComponent() {
 				<DrawerDialogHeader className="p-4">
 					<DrawerDialogTitle>Save your store address</DrawerDialogTitle>
 				</DrawerDialogHeader>
-				<GoogleMaps type={"saveAddress"} />
-			</DrawerDialogSwitcher> */}
+				<GoogleMaps type={"saveAddress"} useCase="merchant" />
+			</DrawerDialogSwitcher>
 		</Form>
 	);
 }

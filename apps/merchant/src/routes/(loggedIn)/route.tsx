@@ -97,7 +97,6 @@ function RouteComponent() {
 				full: "/logo/ico.svg",
 				alt: "Logo",
 			}}
-			// activeOrgData={activeOrg}
 			isVisibleDashboarNav={
 				!(
 					pathname.includes("/newStore") ||

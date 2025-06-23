@@ -12,8 +12,8 @@ export default function EmptyPage(props: {
 	if (props.icon) Icon = props.icon;
 	return (
 		<div className="flex w-full flex-1 flex-col items-center justify-center text-center">
-			<Icon className="mb-2 size-20 opacity-70" strokeWidth={1.1} />
-			<p className="text-xl font-medium">
+			<Icon className="mb-2 size-24 lg:size-28 opacity-70" strokeWidth={1.1} />
+			<p className="text-xl lg:text-3xl font-medium">
 				{props.title || "Feels Light & Empty"}
 			</p>
 			<Label className="text-md font-light">

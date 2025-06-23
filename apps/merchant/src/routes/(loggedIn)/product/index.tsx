@@ -67,8 +67,11 @@ function RouteComponent() {
 							title="Add products to your store"
 							label=" "
 						>
-							<div className="mt-4">
-								<Button>
+							<div className="mt-2 space-y-4">
+								<p className="text-muted-foreground text-base">
+									List products you wish to sell in easy steps.
+								</p>
+								<Button size="lg">
 									<Plus />
 									New Product
 								</Button>

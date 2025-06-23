@@ -54,6 +54,7 @@ const DrawerDialogSwitcher = ({
 						e.preventDefault();
 					}
 				}}
+				style={{ scrollbarWidth: "none" }}
 			>
 				{children}
 			</DialogContent>

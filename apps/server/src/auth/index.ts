@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
 import { emailOTP } from "better-auth/plugins";
 
-import { sendTransactionalEmail } from "@/services/ses";
+import { plunkSendEmail, sendTransactionalEmail } from "@/services/ses";
 import { sendSMS } from "@/services/sns";
 import { phoneNumber } from "better-auth/plugins";
 import { organization } from "better-auth/plugins";
@@ -15,12 +15,18 @@ import phoneHarmony from "./plugins/phoneValidator";
 const emailOTPPlugin = emailOTP({
 	otpLength: 6,
 	sendVerificationOTP: async ({ email, otp }) => {
-		const data = await sendTransactionalEmail({
-			to: [email],
+		// const data = await sendTransactionalEmail({
+		// 	to: [email],
+		// 	subject: "Login OTP - Lipy",
+		// 	html: `Hello,<br/>Login to Lipy using this OTP:<br/><br/><b>${otp}</b>`,
+		// });
+		// console.log(data);
+
+		await plunkSendEmail({
+			to: email,
 			subject: "Login OTP - Lipy",
-			html: `Hello,<br/>Login to Lipy using this OTP:<br/><br/><b>${otp}</b>`,
+			body: `Hello,<br/>Login to Lipy using this OTP:<br/><br/><b>${otp}</b>`,
 		});
-		console.log(data);
 	},
 });
 
@@ -95,11 +101,17 @@ const organizationsPlugin = organization({
 	},
 
 	async sendInvitationEmail(data) {
-		const inviteLink = `${env.BETTER_AUTH_URL}/accept-invitation/${data.id}`;
-		await sendTransactionalEmail({
-			to: [data.email],
+		const inviteLink = `${env.VITE_MERCHANT_URL}/accept-invitation/${data.id}`;
+		// await sendTransactionalEmail({
+		// 	to: [data.email],
+		// 	subject: `Invitation to join ${data.organization.name}`,
+		// 	html: `You have been invited to join ${data.organization.name} as ${data.role}. Click the link to join: ${inviteLink}`,
+		// });
+
+		await plunkSendEmail({
+			to: data.email,
 			subject: `Invitation to join ${data.organization.name}`,
-			html: `You have been invited to join ${data.organization.name} as ${data.role}. Click the link to join: ${inviteLink}`,
+			body: `You have been invited to join ${data.organization.name} as ${data.role}. Click the link to join: ${inviteLink}`,
 		});
 	},
 });

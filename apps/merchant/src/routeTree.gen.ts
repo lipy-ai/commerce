@@ -36,6 +36,7 @@ import { Route as loggedInAccountReferralImport } from './routes/(loggedIn)/acco
 import { Route as loggedInAccountProfileImport } from './routes/(loggedIn)/account/profile'
 import { Route as loggedInAccountPreferencesImport } from './routes/(loggedIn)/account/preferences'
 import { Route as loggedInmiscellaneousNewStoreImport } from './routes/(loggedIn)/(miscellaneous)/newStore'
+import { Route as loggedInmiscellaneousAcceptInvitationInvitationIdIndexImport } from './routes/(loggedIn)/(miscellaneous)/accept-invitation/$invitationId/index'
 
 // Create/Update Routes
 
@@ -188,6 +189,13 @@ const loggedInmiscellaneousNewStoreRoute =
   loggedInmiscellaneousNewStoreImport.update({
     id: '/(miscellaneous)/newStore',
     path: '/newStore',
+    getParentRoute: () => loggedInRouteRoute,
+  } as any)
+
+const loggedInmiscellaneousAcceptInvitationInvitationIdIndexRoute =
+  loggedInmiscellaneousAcceptInvitationInvitationIdIndexImport.update({
+    id: '/(miscellaneous)/accept-invitation/$invitationId/',
+    path: '/accept-invitation/$invitationId/',
     getParentRoute: () => loggedInRouteRoute,
   } as any)
 
@@ -370,6 +378,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof loggedInStoreIndexImport
       parentRoute: typeof loggedInRouteImport
     }
+    '/(loggedIn)/(miscellaneous)/accept-invitation/$invitationId/': {
+      id: '/(loggedIn)/(miscellaneous)/accept-invitation/$invitationId/'
+      path: '/accept-invitation/$invitationId'
+      fullPath: '/accept-invitation/$invitationId'
+      preLoaderRoute: typeof loggedInmiscellaneousAcceptInvitationInvitationIdIndexImport
+      parentRoute: typeof loggedInRouteImport
+    }
   }
 }
 
@@ -407,6 +422,7 @@ interface loggedInRouteRouteChildren {
   loggedInOrderIndexRoute: typeof loggedInOrderIndexRoute
   loggedInProductIndexRoute: typeof loggedInProductIndexRoute
   loggedInStoreIndexRoute: typeof loggedInStoreIndexRoute
+  loggedInmiscellaneousAcceptInvitationInvitationIdIndexRoute: typeof loggedInmiscellaneousAcceptInvitationInvitationIdIndexRoute
 }
 
 const loggedInRouteRouteChildren: loggedInRouteRouteChildren = {
@@ -422,6 +438,8 @@ const loggedInRouteRouteChildren: loggedInRouteRouteChildren = {
   loggedInOrderIndexRoute: loggedInOrderIndexRoute,
   loggedInProductIndexRoute: loggedInProductIndexRoute,
   loggedInStoreIndexRoute: loggedInStoreIndexRoute,
+  loggedInmiscellaneousAcceptInvitationInvitationIdIndexRoute:
+    loggedInmiscellaneousAcceptInvitationInvitationIdIndexRoute,
 }
 
 const loggedInRouteRouteWithChildren = loggedInRouteRoute._addFileChildren(
@@ -473,6 +491,7 @@ export interface FileRoutesByFullPath {
   '/order': typeof loggedInOrderIndexRoute
   '/product': typeof loggedInProductIndexRoute
   '/store': typeof loggedInStoreIndexRoute
+  '/accept-invitation/$invitationId': typeof loggedInmiscellaneousAcceptInvitationInvitationIdIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -498,6 +517,7 @@ export interface FileRoutesByTo {
   '/order': typeof loggedInOrderIndexRoute
   '/product': typeof loggedInProductIndexRoute
   '/store': typeof loggedInStoreIndexRoute
+  '/accept-invitation/$invitationId': typeof loggedInmiscellaneousAcceptInvitationInvitationIdIndexRoute
 }
 
 export interface FileRoutesById {
@@ -527,6 +547,7 @@ export interface FileRoutesById {
   '/(loggedIn)/order/': typeof loggedInOrderIndexRoute
   '/(loggedIn)/product/': typeof loggedInProductIndexRoute
   '/(loggedIn)/store/': typeof loggedInStoreIndexRoute
+  '/(loggedIn)/(miscellaneous)/accept-invitation/$invitationId/': typeof loggedInmiscellaneousAcceptInvitationInvitationIdIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -556,6 +577,7 @@ export interface FileRouteTypes {
     | '/order'
     | '/product'
     | '/store'
+    | '/accept-invitation/$invitationId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/error'
@@ -580,6 +602,7 @@ export interface FileRouteTypes {
     | '/order'
     | '/product'
     | '/store'
+    | '/accept-invitation/$invitationId'
   id:
     | '__root__'
     | '/(loggedIn)'
@@ -607,6 +630,7 @@ export interface FileRouteTypes {
     | '/(loggedIn)/order/'
     | '/(loggedIn)/product/'
     | '/(loggedIn)/store/'
+    | '/(loggedIn)/(miscellaneous)/accept-invitation/$invitationId/'
   fileRoutesById: FileRoutesById
 }
 
@@ -651,7 +675,8 @@ export const routeTree = rootRoute
         "/(loggedIn)/customer/",
         "/(loggedIn)/order/",
         "/(loggedIn)/product/",
-        "/(loggedIn)/store/"
+        "/(loggedIn)/store/",
+        "/(loggedIn)/(miscellaneous)/accept-invitation/$invitationId/"
       ]
     },
     "/demo": {
@@ -760,6 +785,10 @@ export const routeTree = rootRoute
     },
     "/(loggedIn)/store/": {
       "filePath": "(loggedIn)/store/index.tsx",
+      "parent": "/(loggedIn)"
+    },
+    "/(loggedIn)/(miscellaneous)/accept-invitation/$invitationId/": {
+      "filePath": "(loggedIn)/(miscellaneous)/accept-invitation/$invitationId/index.tsx",
       "parent": "/(loggedIn)"
     }
   }

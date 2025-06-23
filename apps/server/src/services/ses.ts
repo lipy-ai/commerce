@@ -55,16 +55,3 @@ export const sendTransactionalEmail = async (props: {
 
 	return await ses.sendEmail(params);
 };
-
-const resend = new Resend(env.RESEND_API_KEY);
-
-export const sendResendEmail = async (props: {
-	subject: string;
-	html: string;
-	to: string[];
-}) => {
-	const { data, error } = await resend.emails.send({
-		from: "Lipy <rishabhraj.891@gmail.com>",
-		...props,
-	});
-};

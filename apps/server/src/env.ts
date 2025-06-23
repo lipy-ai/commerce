@@ -45,7 +45,6 @@ const EnvSchema = z.object({
 	AWS_S3_BUCKET: z.string(),
 	AWS_ACCESS_KEY: z.string(),
 	AWS_SECRET_KEY: z.string(),
-	RESEND_API_KEY: z.string(),
 	PLUNK_SECRET_KEY: z.string(),
 	REPLY_EMAIL: z.string(),
 	VITE_MERCHANT_URL: z.string(),

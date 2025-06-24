@@ -27,8 +27,12 @@ import { toast } from "sonner";
 
 export function LoginScreen({
 	className,
+	callbackUrl,
 	...props
-}: React.ComponentPropsWithoutRef<"div">) {
+}: {
+	className?: string;
+	callbackUrl?: string;
+}) {
 	const { data, isPending } = authClient.useSession();
 	const navigate = useNavigate();
 
@@ -42,7 +46,7 @@ export function LoginScreen({
 
 	const [callbackURL] = useQueryState(
 		"cb",
-		parseAtobToString.withDefault(env.WEB_URL),
+		parseAtobToString.withDefault(callbackUrl || env.WEB_URL),
 	);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>

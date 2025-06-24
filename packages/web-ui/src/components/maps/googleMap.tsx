@@ -105,11 +105,11 @@ export default function GoogleMapImage({
 	}, [isLoaded, mapCenter]);
 
 	if (!isLoaded) {
-		return <Spinner className="absolute top-1/2 left-1/2" size={"large"} />;
+		return <Spinner />;
 	}
 
 	return (
-		<div className="">
+		<div className="relative">
 			<div className="p-2 lg:p-4">
 				<Autocomplete
 					onLoad={(autocomplete) => {
@@ -150,7 +150,7 @@ export default function GoogleMapImage({
 					/>
 				</GoogleMap>
 				{useCase === "customer" && (
-					<div className="absolute bottom-18 left-1/2 transform -translate-x-1/2 z-10">
+					<div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 z-10">
 						<Button
 							className="text-primary border-primary font-semibold shadow-md hover:bg-primary/10"
 							variant="outline"
@@ -170,19 +170,16 @@ export default function GoogleMapImage({
 
 			<div
 				className={cn(
-					"border-t  bg-background w-full p-4 shadow-md z-20  ",
-					isMobile || useCase === "merchant"
-						? "fixed bottom-0 left-0 right-0"
-						: "absolute bottom-0 ",
+					"border-t  bg-background  p-4 shadow-md z-20 fixed lg:absolute bottom-0 right-0  w-full",
 				)}
 			>
 				<div
 					className={cn(
-						"flex items-center gap-4",
-						isMobile ? "flex-col" : "flex-row justify-between",
+						"flex items-center gap-4 ",
+						isMobile ? "flex-col w-full" : "flex-row justify-between",
 					)}
 				>
-					<div className="flex items-start gap-3 w-full lg:w-auto">
+					<div className="flex items-start gap-3 ">
 						<MapPinned className="size-8 text-primary mt-1 flex-shrink-0" />
 						<div className="overflow-hidden">
 							<h1 className="text-lg font-semibold truncate">
@@ -198,7 +195,7 @@ export default function GoogleMapImage({
 					{type === "saveAddress" && (
 						// <DetailedAddress fullAddress={fullAddress} label="Add" />
 
-						<div className={cn(isMobile && "w-full")}>
+						<div className="w-full lg:w-fit">
 							<Button
 								className="font-semibold px-6 w-full"
 								onClick={() => {
@@ -214,7 +211,7 @@ export default function GoogleMapImage({
 					)}
 					{useCase === "customer" && type === "deliveryAddress" && (
 						<Button
-							className="w-full font-semibold"
+							className="font-semibold w-full lg:w-fit"
 							onClick={() => {
 								setDeliveryLocation({
 									...fullAddress,

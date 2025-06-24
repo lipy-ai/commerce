@@ -56,9 +56,10 @@ export function SearchInput({
 		<Button
 			ref={ref}
 			variant="outline"
-			className="w-full"
+			className="w-full text-base"
 			onClick={() => setOpen(true)}
 			disabled={disabled}
+			type="button"
 		>
 			{selected ? (
 				<>

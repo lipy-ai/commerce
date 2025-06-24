@@ -96,10 +96,19 @@ function RouteComponent() {
 	const { pathname } = useLocation();
 	const navigate = useNavigate();
 	const { data, isPending } = authClient.useSession();
+
 	if (isPending) return <Spinner />;
 
 	if (!data) {
-		navigate({ to: "/login" });
+		// Encode current path as base64 for safe URL transmission
+		const encodedCallback = btoa(window.location.href);
+
+		navigate({
+			to: "/login",
+			search: { cb: encodedCallback },
+			replace: true,
+		});
+		return null;
 	}
 
 	if (

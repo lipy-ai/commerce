@@ -27,12 +27,8 @@ import { toast } from "sonner";
 
 export function LoginScreen({
 	className,
-	callbackUrl,
 	...props
-}: {
-	className?: string;
-	callbackUrl?: string;
-}) {
+}: React.ComponentPropsWithoutRef<"div">) {
 	const { data, isPending } = authClient.useSession();
 	const navigate = useNavigate();
 
@@ -46,7 +42,7 @@ export function LoginScreen({
 
 	const [callbackURL] = useQueryState(
 		"cb",
-		parseAtobToString.withDefault(callbackUrl || env.WEB_URL),
+		parseAtobToString.withDefault(env.WEB_URL),
 	);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -58,9 +54,9 @@ export function LoginScreen({
 
 	const handler = (p: Parameters<typeof signIn>) => {
 		trans(async () => {
-			await signIn(p[0], { ...p[1], callbackURL }, () =>
-				navigate({ to: "/", replace: true }),
-			)
+			await signIn(p[0], { ...p[1], callbackURL }, (v: string) => {
+				navigate({ to: v, replace: true });
+			})
 				.then(() => {
 					setOtp("");
 					if (p[0] === "otp" && p[1]?.email) {

@@ -19,6 +19,7 @@ import { Button } from "@lipy/web-ui/components/ui/button";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner"; // optional for loading state
 import { Link, createFileRoute } from "@tanstack/react-router";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export const Route = createFileRoute(
@@ -37,6 +38,7 @@ function RouteComponent() {
 	>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [acceptingInvite, setAcceptingInvite] = useState(false);
 
 	const { data: session } = authClient.useSession();
 
@@ -61,12 +63,14 @@ function RouteComponent() {
 	}, [invitationId]);
 
 	const handleAccept = async () => {
+		setAcceptingInvite(true);
 		const { data, error } = await authClient.organization.acceptInvitation({
 			invitationId,
 		});
 
 		if (error) {
 			toast.error(error.message || error.statusText || "Something went wrong");
+
 			return;
 		}
 
@@ -77,6 +81,7 @@ function RouteComponent() {
 			authClient.organization.setActive({
 				organizationId: data.invitation.organizationId,
 			});
+			setAcceptingInvite(false);
 			navigate({ to: "/" });
 		}
 	};
@@ -93,7 +98,7 @@ function RouteComponent() {
 
 		if (data) {
 			toast("Invitation rejected");
-			navigate({ to: "/" });
+			navigate({ to: "/", replace: true });
 		}
 	};
 
@@ -189,7 +194,11 @@ function RouteComponent() {
 							className="w-full sm:w-auto"
 							onClick={handleAccept}
 						>
-							Accept Invitation
+							{acceptingInvite ? (
+								<Loader2 className="animate-spin" />
+							) : (
+								"Accept Invitation"
+							)}
 						</Button>
 					</AlertDialogAction>
 				</AlertDialogFooter>

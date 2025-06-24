@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
 import { emailOTP } from "better-auth/plugins";
 
-import { plunkSendEmail, sendTransactionalEmail } from "@/services/ses";
+import { plunkSendEmail } from "@/services/ses";
 import { sendSMS } from "@/services/sns";
 import { phoneNumber } from "better-auth/plugins";
 import { organization } from "better-auth/plugins";
@@ -15,13 +15,6 @@ import phoneHarmony from "./plugins/phoneValidator";
 const emailOTPPlugin = emailOTP({
 	otpLength: 6,
 	sendVerificationOTP: async ({ email, otp }) => {
-		// const data = await sendTransactionalEmail({
-		// 	to: [email],
-		// 	subject: "Login OTP - Lipy",
-		// 	html: `Hello,<br/>Login to Lipy using this OTP:<br/><br/><b>${otp}</b>`,
-		// });
-		// console.log(data);
-
 		await plunkSendEmail({
 			to: email,
 			subject: "Login OTP - Lipy",
@@ -34,10 +27,18 @@ const phoneOTPPlugin = phoneNumber({
 	otpLength: 6,
 	sendOTP: async ({ phoneNumber, code }, _request) => {
 		const data = await sendSMS({
-			phoneNumber,
+			phoneNumber: phoneNumber,
 			message: `Login in to Lipy using this OTP: ${code}`,
 		});
-		console.log(data);
+	},
+	signUpOnVerification: {
+		getTempEmail: (phoneNumber) => {
+			return `${phoneNumber}@example.com`;
+		},
+		//optionally, you can also pass `getTempName` function to generate a temporary name for the user
+		getTempName: (phoneNumber) => {
+			return phoneNumber; //by default, it will use the phone number as the name
+		},
 	},
 });
 
@@ -130,7 +131,7 @@ export const auth: any = betterAuth({
 		phoneOTPPlugin,
 		organizationsPlugin,
 		emailHarmony(),
-		phoneHarmony(),
+		phoneHarmony({ defaultCountry: "IN" }),
 	],
 	hooks: {
 		// before: beforeAuthMiddleware,
@@ -203,6 +204,7 @@ export const auth: any = betterAuth({
 						data: {
 							...session,
 							...((session as any)?.activeOrganizationId && {
+								activeOrganizationId: undefined,
 								activeStoreId: (session as any).activeOrganizationId,
 							}),
 						},

@@ -1,6 +1,7 @@
 import { logger } from "@/lib/logger";
 import { faker } from "@faker-js/faker";
 import { type DBTypes, db, dbClient } from ".";
+import { PRODUCT_TYPE } from "./schema";
 
 const create = async (user: DBTypes["user"]) => {
 	const [newOrg] = await db
@@ -49,15 +50,22 @@ const create = async (user: DBTypes["user"]) => {
 			Array.from({ length: 20 }).map(() => ({
 				id: crypto.randomUUID(),
 				title: faker.commerce.productName(),
+				type: faker.helpers.arrayElement(PRODUCT_TYPE),
 				summary: faker.commerce.productDescription(),
-				content: faker.lorem.paragraphs({ min: 1, max: 3 }),
-				brand: faker.company.name(),
+				price: Number(faker.commerce.price()),
+				maxPrice: Number(faker.commerce.price()),
 				category: faker.helpers.arrayElement(catIds),
 				storeId: newOrg.id,
 				thumbnail: faker.image.urlPicsumPhotos(),
-				keywords: Array.from({ length: 3 }, () =>
-					faker.commerce.productAdjective(),
-				),
+				highlights: Array.from({ length: 5 }, () => ({
+					label: faker.commerce.productAdjective(),
+					value: faker.commerce.productAdjective(),
+				})),
+				information: Array.from({ length: 5 }, () => ({
+					label: faker.commerce.productAdjective(),
+					value: faker.commerce.productAdjective(),
+				})),
+				images: Array.from({ length: 5 }, () => faker.image.urlPicsumPhotos()),
 			})),
 		)
 		.returningAll()

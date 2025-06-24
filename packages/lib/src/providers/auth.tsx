@@ -8,9 +8,9 @@ import { env } from "@envClient";
 // } from "@lipy/server/auth/permission";
 import type { AuthType } from "@lipy/server/types";
 import {
-	emailOTPClient,
 	inferAdditionalFields,
 	organizationClient,
+	phoneNumberClient,
 } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 
@@ -28,7 +28,7 @@ export const authClient = createAuthClient({
 		// 	},
 		// }),
 		organizationClient(),
-		emailOTPClient(),
+		phoneNumberClient(),
 	],
 });
 
@@ -45,45 +45,43 @@ export const getSsrSession = async (headers?: Headers) => {
 };
 
 export const signIn = async (
-	type: "google" | "microsoft" | "otp" | "signin-otp",
-	opts?: { email?: string; callbackURL?: string; otp?: string },
+	type: "google" | "microsoft" | "verify-otp" | "send-otp",
+	opts?: { phoneNumber?: string; callbackURL?: string; otp?: string },
 	routeCb?: (v: string) => void,
 ) => {
 	const callbackURL = opts?.callbackURL || window.location.origin;
 	switch (type) {
-		case "otp":
-			return await authClient.emailOtp
-				.sendVerificationOtp({
-					email: opts!.email!,
-					type: "sign-in",
-					// callbackURL: opts!.callbackURL,
+		case "send-otp":
+			return await authClient.phoneNumber
+				.sendOtp({
+					phoneNumber: opts?.phoneNumber!,
 				})
 				.then((r) => {
-					if (r.data?.success === false) {
-						throw new Error("Failed to send login OTP");
+					if (!r.data?.message) {
+						throw new Error("Failed to signin");
 					}
 					return true;
 				})
 				.catch((e) => {
 					throw e;
 				});
-		case "signin-otp":
-			return await authClient.signIn
-				.emailOtp({
-					email: opts?.email!,
-					otp: opts?.otp!,
+		case "verify-otp":
+			return await authClient.phoneNumber
+				.verify({
+					phoneNumber: opts!.phoneNumber!,
+					code: opts?.otp!,
 				})
 				.then((r) => {
-					// console.log({ r });
-					if (!r.data?.user) {
-						throw new Error("Failed to signin");
+					if (r.data?.status === false) {
+						throw new Error("Failed to send login OTP");
 					}
-					routeCb?.(callbackURL);
-					return;
+
+					return routeCb?.(callbackURL);
 				})
 				.catch((e) => {
 					throw e;
 				});
+
 		case "google":
 			return await authClient.signIn
 				.social({

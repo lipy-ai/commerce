@@ -76,7 +76,11 @@ export default function NavBar() {
 					</Link>
 				</div>
 
-				<SearchBar />
+				<SearchBar
+					placeholder="Search for shop, grocery, fruits..."
+					defaultValue=""
+					onSearch={() => {}}
+				/>
 
 				<div className="-mx-4 -mb-4">
 					<ScrollingTabs
@@ -135,7 +139,11 @@ export default function NavBar() {
 					</Link>
 				)}
 				<div className="w-full">
-					<SearchBar />
+					<SearchBar
+						placeholder="Search for shop, grocery, fruits..."
+						defaultValue=""
+						onSearch={() => {}}
+					/>
 				</div>
 				<Link to="/account/orders">
 					<CircleUserRound className="size-8" />

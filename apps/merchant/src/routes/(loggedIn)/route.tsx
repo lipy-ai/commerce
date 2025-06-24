@@ -9,7 +9,6 @@ import {
 	createFileRoute,
 	useLocation,
 	useNavigate,
-	useRouter,
 } from "@tanstack/react-router";
 
 import {

@@ -1,1 +1,0 @@
-ALTER TABLE "lipy"."store" DROP COLUMN "address";

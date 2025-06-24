@@ -94,13 +94,16 @@ CREATE TABLE "lipy"."product" (
 	"id" uuid PRIMARY KEY NOT NULL,
 	"title" text,
 	"summary" text,
-	"content" text,
-	"brand" text,
+	"price" numeric(10, 2),
+	"maxPrice" numeric(10, 2),
 	"thumbnail" text,
-	"category" uuid,
+	"images" text[],
+	"type" text,
+	"category" uuid NOT NULL,
 	"storeId" uuid,
-	"globalProduct" uuid,
-	"keywords" text[]
+	"highlights" jsonb[],
+	"information" jsonb[],
+	"globalProduct" uuid
 );
 --> statement-breakpoint
 CREATE TABLE "lipy"."productVariant" (
@@ -194,6 +197,8 @@ CREATE TABLE "lipy"."user" (
 	"name" text NOT NULL,
 	"email" text NOT NULL,
 	"emailVerified" boolean NOT NULL,
+	"phoneNumber" text,
+	"phoneNumberVerified" boolean,
 	"image" text,
 	"createdAt" timestamp NOT NULL,
 	"updatedAt" timestamp NOT NULL,

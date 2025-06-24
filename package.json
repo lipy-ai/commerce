@@ -11,6 +11,7 @@
 		"build": "bun run env turbo run build",
 		"start": "bun run env turbo run start",
 		"dev": "bun run env turbo run dev",
+		"docker-dev": "docker compose up -d && bun run dev",
 		"lint": "turbo run lint",
 		"format": "biome format \"**/*.{ts,tsx}\"  --write",
 		"check-types": "turbo run check-types",

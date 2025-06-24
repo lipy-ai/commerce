@@ -29,6 +29,7 @@ const SingleImage = (props: SingleImageProps) => {
 					src={props.url}
 					alt={props.alt}
 					referrerPolicy={(props.referrerPolicy as any) || undefined}
+					className="object-cover overflow-hidden size-full"
 				/>
 			) : (
 				<Input {...props} />

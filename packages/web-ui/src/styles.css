@@ -60,6 +60,7 @@
 	--shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
 	--bprogress-color: var(--primary);
 	--bprogress-height: 4px;
+	--bprogress-box-shadow: none;
 }
 
 .dark {

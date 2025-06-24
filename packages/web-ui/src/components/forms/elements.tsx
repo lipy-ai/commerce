@@ -206,10 +206,10 @@ export const FormImage = ({
 				return (
 					<SingleImage
 						referrerPolicy={referrerPolicy}
-						url={field.value}
+						url={field.value || ""}
 						alt={alt}
 						className={wrapperClassName}
-						onSuccess={(data) => field.onChange(data)}
+						onSuccess={(data) => field.onChange(data || undefined)}
 					/>
 				);
 			}}

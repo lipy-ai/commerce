@@ -7,6 +7,7 @@ import {
 	doublePrecision,
 	integer,
 	jsonb,
+	numeric,
 	pgSchema,
 	smallint,
 	text,
@@ -27,6 +28,14 @@ export const ORDER_STATUS = [
 	"cancelled",
 ] as const;
 
+export const PRODUCT_TYPE = [
+	"grocery",
+	"medicine",
+	"food",
+	"vegetable",
+	"fruits",
+] as const;
+
 export const schema = pgSchema("lipy");
 
 export const enableUuidExtension = sql`CREATE EXTENSION IF NOT EXISTS "postgis";`;
@@ -36,6 +45,8 @@ export const user = schema.table("user", {
 	name: text("name").notNull(),
 	email: text("email").notNull().unique(),
 	emailVerified: boolean("emailVerified").notNull(),
+	phoneNumber: text("phoneNumber"),
+	phoneNumberVerified: boolean("phoneNumberVerified"),
 	image: text("image"),
 	createdAt: timestamp("createdAt").notNull(),
 	updatedAt: timestamp("updatedAt").notNull(),
@@ -233,17 +244,26 @@ export const product = schema.table("product", {
 	id: uuid("id").primaryKey(),
 	title: text("title"),
 	summary: text("summary"),
-	content: text("content"),
-	brand: text("brand"),
+	price: numeric("price", { precision: 10, scale: 2, mode: "number" }),
+	maxPrice: numeric("maxPrice", { precision: 10, scale: 2, mode: "number" }),
 	thumbnail: text("thumbnail"),
-	category: uuid("category").references(() => category.id, {
-		onDelete: "set null",
-	}),
+	images: text("images").array(),
+	type: text("type", { enum: PRODUCT_TYPE }),
+	category: uuid("category")
+		.references(() => category.id, {
+			onDelete: "set null",
+		})
+		.notNull(),
 	storeId: uuid("storeId").references(() => store.id, {
 		onDelete: "cascade",
 	}),
+	highlights: jsonb("highlights")
+		.array()
+		.$type<{ label: string; value: string }[]>(),
+	information: jsonb("information")
+		.array()
+		.$type<{ label: string; value: string }[]>(),
 	globalProduct: uuid("globalProduct").references(() => globalProduct.id),
-	keywords: text("keywords").array(),
 });
 
 export const productVariant = schema.table("productVariant", {

@@ -25,21 +25,19 @@ export const DashboardLayout = ({
 	dashboardNav,
 	mobileNav,
 	logo,
-	isVisibleDashboarNav = true,
+
 	...props
 }: {
 	children?: ReactNode;
-	dashboardNav: DashboardNavs;
-	mobileNav: DashboardNavs["primary"];
+	dashboardNav?: DashboardNavs;
+	mobileNav?: DashboardNavs["primary"];
 	logo: {
 		icon: string;
 		full: string;
 		alt: string;
 	};
-	isVisibleDashboarNav?: boolean;
-	activeOrgData?: any;
 }) => {
-	const [open, setOpen] = useState(true);
+	const [open, setOpen] = useState(false);
 	const { isMobile } = useViewport();
 	const { isInstallable, promptInstall } = usePWAInstall();
 	if (isMobile) {
@@ -65,7 +63,6 @@ export const DashboardLayout = ({
 				)}
 
 				<div className="flex-1 flex flex-col">{children}</div>
-
 				<ActiveLinks
 					isMobile
 					mobileNav={mobileNav}
@@ -79,15 +76,13 @@ export const DashboardLayout = ({
 
 	return (
 		<div className="flex min-h-screen">
-			{isVisibleDashboarNav && (
-				<ActiveLinks
-					open={open}
-					setOpen={setOpen}
-					dashboardNav={dashboardNav}
-					logo={logo}
-					{...props}
-				/>
-			)}
+			<ActiveLinks
+				open={open}
+				setOpen={setOpen}
+				dashboardNav={dashboardNav}
+				logo={logo}
+				{...props}
+			/>
 
 			<div
 				className="flex-1 flex flex-col overflow-x-auto h-screen overflow-y-auto"
@@ -108,7 +103,7 @@ function ActiveLinks({
 	setOpen,
 	...props
 }: {
-	dashboardNav: Record<
+	dashboardNav?: Record<
 		"primary" | "secondary",
 		Array<{ label: string; url: string; icon: LucideIcon }>
 	>;
@@ -118,7 +113,6 @@ function ActiveLinks({
 	open?: boolean;
 	setOpen?: (o: boolean) => void;
 	activeOrder?: boolean;
-	activeOrgData?: any;
 }) {
 	const matchRoute = useMatchRoute();
 	const [isHidden, setIsHidden] = useState(false);
@@ -197,48 +191,49 @@ function ActiveLinks({
 		}
 	};
 
-	return (
-		<motion.nav
-			className="flex flex-col justify-between h-screen sticky top-0 left-0 p-3 border-r z-10 bg-background"
-			onClick={handleNavClick}
-			initial={{ width: "var(--sidebar-size)" }}
-			animate={{
-				width: open ? "var(--sidebar-max-size)" : "var(--sidebar-size)",
-			}}
-			transition={{ duration: 0.3 }}
-		>
-			<div className="space-y-6 ">
-				<div className="flex  items-center gap-2 pb-1">
-					<Link to="/" className="overflow-hidden size-[40px]">
-						<img
-							key={String(open)}
-							src={!open ? logo.icon : logo.full}
-							alt={logo.alt}
-							width={50}
-							height={50}
-							className="rounded-md"
-						/>
-					</Link>
-					{open && (
-						<p className="text-base font-medium truncate">
-							{props?.activeOrgData?.name}
-						</p>
-					)}
-				</div>
+	if (!isMobile && dashboardNav)
+		return (
+			<motion.nav
+				className="flex flex-col justify-between h-screen sticky top-0 left-0 p-3 border-r z-10 bg-background"
+				onClick={handleNavClick}
+				initial={{ width: "var(--sidebar-size)" }}
+				animate={{
+					width: open ? "var(--sidebar-max-size)" : "var(--sidebar-size)",
+				}}
+				transition={{ duration: 0.3 }}
+			>
+				<div className="space-y-8">
+					<div className="flex justify-start items-center">
+						<Link to="/" className="overflow-hidden size-[50px]">
+							<img
+								key={String(open)}
+								src={!open ? logo.icon : logo.full}
+								alt={logo.alt}
+								width={50}
+								height={50}
+								className="rounded-md"
+							/>
+						</Link>
+					</div>
+					{/* <div className="flex items-center gap-2 pt-4">
+					<Store className="fill-primary/40" />
+					<p className="text-lg font-medium">{props?.activeStoreData?.name}</p>
+				</div> */}
 
+					<div className="space-y-2">
+						{dashboardNav?.primary.map((n, i) => (
+							<NavLink key={i} nav={n} open={open} matchRoute={matchRoute} />
+						))}
+					</div>
+				</div>
 				<div className="space-y-2">
-					{dashboardNav.primary.map((n, i) => (
+					{dashboardNav?.secondary.map((n, i) => (
 						<NavLink key={i} nav={n} open={open} matchRoute={matchRoute} />
 					))}
 				</div>
-			</div>
-			<div className="space-y-2">
-				{dashboardNav.secondary.map((n, i) => (
-					<NavLink key={i} nav={n} open={open} matchRoute={matchRoute} />
-				))}
-			</div>
-		</motion.nav>
-	);
+			</motion.nav>
+		);
+	return null;
 }
 
 function NavLink({

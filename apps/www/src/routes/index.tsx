@@ -11,8 +11,8 @@ import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { createFileRoute } from "@tanstack/react-router";
 import {
-	CircleUser,
-	LogOut,
+	// CircleUser,
+	// LogOut,
 	type LucideIcon,
 	ShoppingCart,
 	Store,
@@ -21,29 +21,6 @@ import {
 export const Route = createFileRoute("/")({
 	component: Home,
 });
-
-export const dashboardNav = {
-	primary: [
-		{
-			label: "Shops Near me",
-			url: "/",
-			icon: Store,
-		},
-		{
-			label: "Cart",
-			url: "/account/profile",
-			icon: ShoppingCart,
-		},
-	],
-	secondary: [
-		{
-			label: "Account",
-			url: "/account",
-			icon: CircleUser,
-		},
-		{ label: "Sign out", url: "/logout", icon: LogOut },
-	],
-};
 
 function Home() {
 	const { cart, initialized } = useCartStore();
@@ -80,10 +57,8 @@ function Home() {
 	return (
 		<>
 			<DashboardLayout
-				dashboardNav={dashboardNav}
 				mobileNav={mobileNav}
 				logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
-				isVisibleDashboarNav={false}
 			>
 				<DashboardBody>
 					{isMobile && <NavBar />}

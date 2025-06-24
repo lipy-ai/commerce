@@ -2,9 +2,11 @@ import { apiClient } from "@lipy/lib/api";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
+import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Pagination } from "@lipy/web-ui/components/pages/pagination";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
-import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
+import { buttonVariants } from "@lipy/web-ui/components/ui/button";
+import { Card, CardHeader, CardTitle } from "@lipy/web-ui/components/ui/card";
 import {
 	Table,
 	TableBody,
@@ -16,18 +18,15 @@ import {
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { ArrowUpRight, Plus, Shirt } from "lucide-react";
-import { z } from "zod";
-
-import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
-import EmptyPage from "@lipy/web-ui/components/pages/empty";
-import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import type { InferResponseType } from "hono/client";
+import { ArrowUpRight, PlusCircle } from "lucide-react";
+import { z } from "zod";
 
 export const Route = createFileRoute("/(loggedIn)/product/")({
 	component: RouteComponent,
 	validateSearch: z.object({
 		page: z.coerce.number().int().min(1).catch(1),
+		q: z.string().default(""),
 	}),
 });
 
@@ -35,46 +34,43 @@ type Response = InferResponseType<typeof apiClient.v1.merchant.product.$get>;
 
 function RouteComponent() {
 	const { isMobile } = useViewport();
-	const { page } = Route.useSearch();
+	const { page, q } = Route.useSearch();
 
 	const { data, isLoading } = useAPIQuery(
 		apiClient.v1.merchant.product,
 		"$get",
 		{
-			query: { page: String(page), limit: String(10) },
+			query: { page: String(page), limit: String(10), q },
 		},
+		{ placeholderData: (p) => p },
 	);
 
 	return (
 		<div>
-			{/* <DashboardHeader title="Products">
-				
-			</DashboardHeader> */}
 			<DashboardHeader title="Products">
-				<Button>
-					<Plus />
+				<Link
+					to="/product/create"
+					className={cn(buttonVariants({ size: "sm" }))}
+				>
+					<PlusCircle />
 					New Product
-				</Button>
+				</Link>
 			</DashboardHeader>
 
 			<div className="lg:p-8 lg:space-y-8">
-				{isLoading ? (
-					<Spinner />
-				) : !data || data.items.length === 0 ? (
-					<div className="h-[calc(100vh-120px)] flex flex-col  justify-center">
-						<EmptyPage
-							icon={Shirt}
-							title="Add products to your store"
-							label=" "
-						>
-							<div className="mt-4">
-								<Button>
-									<Plus />
-									New Product
-								</Button>
-							</div>
-						</EmptyPage>
-					</div>
+				<SearchBar
+					placeholder="Search Products..."
+					defaultValue={q}
+					onSearch={(s) => {
+						console.log(s);
+					}}
+				/>
+				{isLoading ? null : !data || data.items.length === 0 ? (
+					<Card>
+						<CardHeader>
+							<CardTitle>No Products Found...</CardTitle>
+						</CardHeader>
+					</Card>
 				) : (
 					<>
 						<div className="p-4 lg:p-0">

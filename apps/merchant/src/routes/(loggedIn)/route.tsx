@@ -1,16 +1,15 @@
-import { authClient } from "@lipy/lib/providers/auth";
+import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
+
 import {
 	DashboardBody,
 	DashboardLayout,
 } from "@lipy/web-ui/components/layouts/dashboard";
-import { Spinner } from "@lipy/web-ui/components/ui/spinner";
-import {
-	Outlet,
-	createFileRoute,
-	useLocation,
-	useNavigate,
-} from "@tanstack/react-router";
 
+import { apiClient } from "@lipy/lib/api";
+import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
+
+import { env } from "@envClient";
+import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import {
 	CircleUser,
 	Home,
@@ -21,6 +20,7 @@ import {
 	ShoppingBag,
 	Users,
 } from "lucide-react";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/(loggedIn)")({
 	component: RouteComponent,
@@ -93,43 +93,31 @@ const mobileNav = [
 ];
 
 function RouteComponent() {
-	const { pathname } = useLocation();
-	const navigate = useNavigate();
-	const { data, isPending } = authClient.useSession();
+	const store = useAPIQuery(apiClient.v1.merchant.store, "$get", {});
+	// const org = authClient.useActiveOrganization();
 
-	if (isPending) return <Spinner />;
-
-	if (!data) {
-		// Encode current path as base64 for safe URL transmission
-		const encodedCallback = btoa(window.location.href);
-
-		navigate({
-			to: "/login",
-			search: { cb: encodedCallback },
-			replace: true,
-		});
-		return null;
-	}
-
-	if (
-		pathname.includes("/accept-invitation") ||
-		pathname.includes("/newStore")
-	) {
-		return <Outlet />;
-	}
+	useEffect(() => {
+		if (!store.isLoading && !store.data) {
+			redirect({
+				href: `${env.WEB_URL}/login?cb=${encodeURI(window.location.href)}`,
+			});
+		}
+	}, [store]);
 
 	return (
 		<DashboardLayout
 			dashboardNav={dashboardNav}
 			mobileNav={mobileNav}
-			logo={{
-				icon: "/logo/ico.svg",
-				full: "/logo/ico.svg",
-				alt: "Logo",
-			}}
+			logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
 		>
 			<DashboardBody>
-				<Outlet />
+				{store.isLoading ? (
+					<div className="flex flex-col flex-1">
+						<Skeleton className="flex-1 m-8" />
+					</div>
+				) : (
+					<Outlet />
+				)}
 			</DashboardBody>
 		</DashboardLayout>
 	);

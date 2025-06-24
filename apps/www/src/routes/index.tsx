@@ -11,11 +11,13 @@ import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { createFileRoute } from "@tanstack/react-router";
 import {
+	HomeIcon,
 	// CircleUser,
 	// LogOut,
 	type LucideIcon,
 	ShoppingCart,
 	Store,
+	UserCircle,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -30,9 +32,22 @@ function Home() {
 
 	const mobileNav = [
 		{
-			label: "Shops Near me",
+			label: "Home",
 			url: "/",
+			icon: HomeIcon,
+			mobile: true,
+		},
+
+		{
+			label: "Shops",
+			url: "/shops",
 			icon: Store,
+			mobile: true,
+		},
+		{
+			label: "Account",
+			url: "/account",
+			icon: UserCircle,
 			mobile: true,
 		},
 		{

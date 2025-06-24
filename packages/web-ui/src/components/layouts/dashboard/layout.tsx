@@ -25,7 +25,6 @@ export const DashboardLayout = ({
 	dashboardNav,
 	mobileNav,
 	logo,
-
 	...props
 }: {
 	children?: ReactNode;
@@ -62,7 +61,8 @@ export const DashboardLayout = ({
 					</div>
 				)}
 
-				<div className="flex-1 flex flex-col">{children}</div>
+				<div className="pb-18">{children}</div>
+
 				<ActiveLinks
 					isMobile
 					mobileNav={mobileNav}
@@ -86,7 +86,7 @@ export const DashboardLayout = ({
 
 			<div
 				className="flex-1 flex flex-col overflow-x-auto h-screen overflow-y-auto"
-				// onClick={() => open && setOpen(false)}
+				onClick={() => open && setOpen(false)}
 			>
 				{children}
 			</div>
@@ -191,7 +191,7 @@ function ActiveLinks({
 		}
 	};
 
-	if (!isMobile && dashboardNav)
+	if (dashboardNav)
 		return (
 			<motion.nav
 				className="flex flex-col justify-between h-screen sticky top-0 left-0 p-3 border-r z-10 bg-background"
@@ -215,11 +215,6 @@ function ActiveLinks({
 							/>
 						</Link>
 					</div>
-					{/* <div className="flex items-center gap-2 pt-4">
-					<Store className="fill-primary/40" />
-					<p className="text-lg font-medium">{props?.activeStoreData?.name}</p>
-				</div> */}
-
 					<div className="space-y-2">
 						{dashboardNav?.primary.map((n, i) => (
 							<NavLink key={i} nav={n} open={open} matchRoute={matchRoute} />
@@ -250,59 +245,55 @@ function NavLink({
 	const isActive = !!matchRoute({ to: nav.url, fuzzy: true });
 
 	return (
-		<Link
+		<div
 			className={cn(
-				"overflow-hidden border-b border-border/20 truncate rounded-md px-1.5 relative w-full inline-flex items-center font-medium py-2 gap-2",
-				open && "justify-center",
-				mobile &&
-					"px-0 justify-center rounded-none flex-col font-normal w-full",
+				"overflow-hidden border-b border-border/20 truncate rounded-md px-1.5 relative w-full",
+				open && "justify-start",
+				mobile && "px-0 justify-center rounded-none",
 				mobile
-					? isActive && ""
+					? isActive && "text-primary [&_svg]:stroke-primary"
 					: isActive
-						? "bg-accent font-semibold"
+						? "bg-primary text-primary-foreground"
 						: "hover:bg-accent",
 			)}
-			to={nav.url}
 		>
-			{/* {mobile && (
+			{mobile && (
 				<span
 					className={cn(
 						"h-2 w-4/5 block bg-transparent rounded-b-2xl m-auto",
 						isActive && "bg-primary",
 					)}
 				/>
-			)} */}
-			{/* <Link
+			)}
+			<Link
 				className={cn(
 					"inline-flex items-center font-medium py-2 gap-2",
 					mobile && "flex-col font-normal w-full",
 				)}
-				
-			> */}
-			<span className="flex justify-center items-center w-[30px]">
-				<nav.icon
-					className={cn(
-						"size-5",
-						mobile && "flex-col font-normal w-full stroke-1.5",
+				to={nav.url}
+			>
+				<span className="flex justify-center items-center w-[30px]">
+					<nav.icon
+						className={cn(
+							"size-5",
+							mobile && "flex-col font-normal w-full stroke-1.5",
 
-						isActive && "fill-primary/40",
-					)}
-				/>
-			</span>
-			{!mobile && (
-				<motion.span
-					className={
-						"flex justify-between gap-2 w-full items-center flex-1 font-medium"
-					}
-					initial={{ opacity: 0 }}
-					animate={{ opacity: open ? 1 : 0 }}
-					transition={{ duration: 0.2 }}
-				>
-					{nav.label}
-				</motion.span>
-			)}
-			{mobile && <span className={" font-semibold"}>{nav.label}</span>}
-			{/* </Link> */}
-		</Link>
+							isActive && "stroke-primary-foreground",
+						)}
+					/>
+				</span>
+				{!mobile && (
+					<motion.span
+						className="flex justify-between gap-2 w-full items-center flex-1 font-medium"
+						initial={{ opacity: 0 }}
+						animate={{ opacity: open ? 1 : 0 }}
+						transition={{ duration: 0.2 }}
+					>
+						{nav.label}
+					</motion.span>
+				)}
+				{mobile && <span>{nav.label}</span>}
+			</Link>
+		</div>
 	);
 }

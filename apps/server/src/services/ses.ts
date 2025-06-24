@@ -1,7 +1,6 @@
 import env from "@/env";
 import { SES } from "@aws-sdk/client-ses";
 import type { SendEmailCommandInput } from "@aws-sdk/client-ses";
-import { Resend } from "resend";
 
 const ses = new SES({
 	region: env.AWS_SES_REGION,

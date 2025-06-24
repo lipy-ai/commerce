@@ -58,13 +58,6 @@ function RouteComponent() {
 			</DashboardHeader>
 
 			<div className="lg:p-8 lg:space-y-8">
-				<SearchBar
-					placeholder="Search Products..."
-					defaultValue={q}
-					onSearch={(s) => {
-						console.log(s);
-					}}
-				/>
 				{isLoading ? null : !data || data.items.length === 0 ? (
 					<Card>
 						<CardHeader>

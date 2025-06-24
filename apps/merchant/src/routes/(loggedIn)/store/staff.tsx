@@ -427,40 +427,43 @@ const MobileViewMember = () => {
 
 	return (
 		<div className="space-y-4">
-			<div className="bg-white p-4 space-y-4">
-				<h1 className="text-base font-medium  ">Staff List</h1>
-				<div className="divide-y divide-dashed space-y-4">
-					{store?.members.map((member, index) => (
-						<div key={index} className="pb-4">
-							<div className="flex items-center justify-between gap-4">
-								<div className="flex items-center gap-3 flex-1">
-									<Avatar className="size-10">
-										<AvatarImage src={member.user.image || ""} />
-										<AvatarFallback>
-											{member.user.name?.[0]?.toUpperCase() || "A"}
-										</AvatarFallback>
-									</Avatar>
+			{store?.members && store.members.length > 0 && (
+				<div className="bg-white p-4 space-y-4">
+					<h1 className="text-base font-medium  ">Staff List</h1>
+					<div className="divide-y divide-dashed space-y-4">
+						{store?.members.map((member, index) => (
+							<div key={index} className="pb-4">
+								<div className="flex items-center justify-between gap-4">
+									<div className="flex items-center gap-3 flex-1">
+										<Avatar className="size-10">
+											<AvatarImage src={member.user.image || ""} />
+											<AvatarFallback>
+												{member.user.name?.[0]?.toUpperCase() || "A"}
+											</AvatarFallback>
+										</Avatar>
 
-									<div className="min-w-0">
-										<p className="truncate font-medium">
-											{member.user.name || member.user.email.split("@")[0]}
-										</p>
-										<p className="text-muted-foreground text-xs truncate">
-											{member.user.email}
-										</p>
+										<div className="min-w-0">
+											<p className="truncate font-medium">
+												{member.user.name || member.user.email.split("@")[0]}
+											</p>
+											<p className="text-muted-foreground text-xs truncate">
+												{member.user.email}
+											</p>
+										</div>
 									</div>
+
+									<Badge variant="success" size="small" className="shrink-0">
+										{member.role.charAt(0).toUpperCase() + member.role.slice(1)}
+									</Badge>
+
+									<StaffOptions memberId={member.id} />
 								</div>
-
-								<Badge variant="success" size="small" className="shrink-0">
-									{member.role.charAt(0).toUpperCase() + member.role.slice(1)}
-								</Badge>
-
-								<StaffOptions memberId={member.id} />
 							</div>
-						</div>
-					))}
+						))}
+					</div>
 				</div>
-			</div>
+			)}
+
 			{invitations && invitations.length > 0 && (
 				<div className="bg-white p-4 space-y-4">
 					<h1 className="text-base font-medium  ">Invitations</h1>

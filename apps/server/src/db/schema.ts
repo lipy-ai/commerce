@@ -144,6 +144,7 @@ export const store = schema.table("store", {
 	description: text("description"),
 	createdAt: timestamp("createdAt").notNull(),
 	metadata: text("metadata"),
+	address: jsonb("address").$type<z.infer<typeof addressSchema>>(),
 	email: text("email"),
 	phone: text("phone"),
 	active: boolean("active").default(false),

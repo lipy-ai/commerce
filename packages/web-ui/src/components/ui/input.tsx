@@ -43,9 +43,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 				{prefixEl && (
 					<span
 						className={cn(
-							"inline-flex items-center px-2.5 [&>svg]:w-5 absolute appearance-none",
+							"inline-flex items-center px-2.5 [&>svg]:w-5 absolute appearance-none size-10",
 							"text-base leading-0 align-middle ",
-							size === "lg" && "text-lg",
+							size === "lg" && "text-lg size-12",
 
 							prefixClassName,
 						)}
@@ -59,8 +59,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 						"focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
 						"aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
 						"placeholder:text-muted-foreground flex-1 flex h-full shadow-none w-full bg-transparent py-1 text-base outline-none transition-colors file:border-0 file:bg-transparent file:text-base file:font-medium disabled:cursor-not-allowed disabled:opacity-50",
-						!suffixEl && size === "lg" ? "pl-11" : "pl-9",
-						!prefixEl && size === "lg" ? "pr-11" : "pr-9",
+						!suffixEl && size === "lg" ? "pl-11" : "pl-10",
+						!prefixEl && size === "lg" ? "pr-11" : "pr-10",
 						size === "lg" && "text-lg",
 						noStyle && "h-fit w-fit",
 						inputClassName,
@@ -69,12 +69,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 					{...props}
 				/>
 
-				<span className="text-sm">
+				<span className="text-sm ">
 					{suffixEl && (
 						<span
 							className={cn(
-								"inline-flex items-center px-2.5 [&>svg]:w-5 absolute appearance-none",
-								size === "lg" && "h-14 text-lg",
+								"inline-flex items-center px-1 [&>svg]:w-5 absolute appearance-none right-0 top-0 h-full w-fit",
+								size === "lg" && "text-lg",
 								prefixClassName,
 							)}
 							onClick={() => {}}

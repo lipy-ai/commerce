@@ -1,4 +1,4 @@
-import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 
 import {
 	DashboardBody,
@@ -8,6 +8,7 @@ import {
 import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 
+import { env } from "@envClient";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import {
 	CircleUser,
@@ -92,15 +93,16 @@ const mobileNav = [
 ];
 
 function RouteComponent() {
-	const navigate = Route.useNavigate();
 	const store = useAPIQuery(apiClient.v1.merchant.store, "$get", {});
 	// const org = authClient.useActiveOrganization();
 
 	useEffect(() => {
 		if (!store.isLoading && !store.data) {
-			navigate({ to: "/store/create", replace: true });
+			redirect({
+				href: `${env.WEB_URL}/login?cb=${encodeURI(window.location.href)}`,
+			});
 		}
-	}, [store, navigate]);
+	}, [store]);
 
 	return (
 		<DashboardLayout

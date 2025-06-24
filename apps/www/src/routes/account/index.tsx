@@ -1,3 +1,4 @@
+import { env } from "@envClient";
 import { authClient } from "@lipy/lib/providers/auth.tsx";
 import SettingsCard from "@lipy/web-ui/components/custom-ui/settingsCard";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
@@ -67,7 +68,7 @@ const moreInfo: {
 			shareContent({
 				title: "Lipy Commerce",
 				text: "Hey, Check out this app!",
-				url: "https://app.lipy.in",
+				url: env.WEB_URL,
 			}),
 	},
 	{

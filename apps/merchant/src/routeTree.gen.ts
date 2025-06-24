@@ -20,6 +20,8 @@ import { Route as DemoTanstackMutationImport } from './routes/demo/tanstackMutat
 import { Route as DemoSsrImport } from './routes/demo/ssr'
 import { Route as DemoDirectMutationImport } from './routes/demo/directMutation'
 import { Route as DemoClientImport } from './routes/demo/client'
+import { Route as authLogoutImport } from './routes/(auth)/logout'
+import { Route as authLoginImport } from './routes/(auth)/login'
 import { Route as loggedInAccountRouteImport } from './routes/(loggedIn)/account/route'
 import { Route as loggedInStoreIndexImport } from './routes/(loggedIn)/store/index'
 import { Route as loggedInProductIndexImport } from './routes/(loggedIn)/product/index'
@@ -91,6 +93,18 @@ const DemoClientRoute = DemoClientImport.update({
   id: '/client',
   path: '/client',
   getParentRoute: () => DemoRouteRoute,
+} as any)
+
+const authLogoutRoute = authLogoutImport.update({
+  id: '/(auth)/logout',
+  path: '/logout',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const authLoginRoute = authLoginImport.update({
+  id: '/(auth)/login',
+  path: '/login',
+  getParentRoute: () => rootRoute,
 } as any)
 
 const loggedInAccountRouteRoute = loggedInAccountRouteImport.update({
@@ -230,6 +244,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/account'
       preLoaderRoute: typeof loggedInAccountRouteImport
       parentRoute: typeof loggedInRouteImport
+    }
+    '/(auth)/login': {
+      id: '/(auth)/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof authLoginImport
+      parentRoute: typeof rootRoute
+    }
+    '/(auth)/logout': {
+      id: '/(auth)/logout'
+      path: '/logout'
+      fullPath: '/logout'
+      preLoaderRoute: typeof authLogoutImport
+      parentRoute: typeof rootRoute
     }
     '/demo/client': {
       id: '/demo/client'
@@ -471,6 +499,8 @@ export interface FileRoutesByFullPath {
   '/demo': typeof DemoRouteRouteWithChildren
   '/error': typeof ErrorRoute
   '/account': typeof loggedInAccountRouteRouteWithChildren
+  '/login': typeof authLoginRoute
+  '/logout': typeof authLogoutRoute
   '/demo/client': typeof DemoClientRoute
   '/demo/directMutation': typeof DemoDirectMutationRoute
   '/demo/ssr': typeof DemoSsrRoute
@@ -496,6 +526,8 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/error': typeof ErrorRoute
+  '/login': typeof authLoginRoute
+  '/logout': typeof authLogoutRoute
   '/demo/client': typeof DemoClientRoute
   '/demo/directMutation': typeof DemoDirectMutationRoute
   '/demo/ssr': typeof DemoSsrRoute
@@ -526,6 +558,8 @@ export interface FileRoutesById {
   '/demo': typeof DemoRouteRouteWithChildren
   '/error': typeof ErrorRoute
   '/(loggedIn)/account': typeof loggedInAccountRouteRouteWithChildren
+  '/(auth)/login': typeof authLoginRoute
+  '/(auth)/logout': typeof authLogoutRoute
   '/demo/client': typeof DemoClientRoute
   '/demo/directMutation': typeof DemoDirectMutationRoute
   '/demo/ssr': typeof DemoSsrRoute
@@ -557,6 +591,8 @@ export interface FileRouteTypes {
     | '/demo'
     | '/error'
     | '/account'
+    | '/login'
+    | '/logout'
     | '/demo/client'
     | '/demo/directMutation'
     | '/demo/ssr'
@@ -581,6 +617,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/error'
+    | '/login'
+    | '/logout'
     | '/demo/client'
     | '/demo/directMutation'
     | '/demo/ssr'
@@ -609,6 +647,8 @@ export interface FileRouteTypes {
     | '/demo'
     | '/error'
     | '/(loggedIn)/account'
+    | '/(auth)/login'
+    | '/(auth)/logout'
     | '/demo/client'
     | '/demo/directMutation'
     | '/demo/ssr'
@@ -638,12 +678,16 @@ export interface RootRouteChildren {
   loggedInRouteRoute: typeof loggedInRouteRouteWithChildren
   DemoRouteRoute: typeof DemoRouteRouteWithChildren
   ErrorRoute: typeof ErrorRoute
+  authLoginRoute: typeof authLoginRoute
+  authLogoutRoute: typeof authLogoutRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   loggedInRouteRoute: loggedInRouteRouteWithChildren,
   DemoRouteRoute: DemoRouteRouteWithChildren,
   ErrorRoute: ErrorRoute,
+  authLoginRoute: authLoginRoute,
+  authLogoutRoute: authLogoutRoute,
 }
 
 export const routeTree = rootRoute
@@ -658,7 +702,9 @@ export const routeTree = rootRoute
       "children": [
         "/(loggedIn)",
         "/demo",
-        "/error"
+        "/error",
+        "/(auth)/login",
+        "/(auth)/logout"
       ]
     },
     "/(loggedIn)": {
@@ -702,6 +748,12 @@ export const routeTree = rootRoute
         "/(loggedIn)/account/support",
         "/(loggedIn)/account/"
       ]
+    },
+    "/(auth)/login": {
+      "filePath": "(auth)/login.tsx"
+    },
+    "/(auth)/logout": {
+      "filePath": "(auth)/logout.tsx"
     },
     "/demo/client": {
       "filePath": "demo/client.tsx",

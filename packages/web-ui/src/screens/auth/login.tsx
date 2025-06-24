@@ -50,9 +50,9 @@ export function LoginScreen({
 
 	const handler = (p: Parameters<typeof signIn>) => {
 		trans(async () => {
-			await signIn(p[0], { ...p[1], callbackURL }, () =>
-				navigate({ to: "/", replace: true }),
-			)
+			await signIn(p[0], { ...p[1], callbackURL }, (v: string) => {
+				navigate({ to: v, replace: true });
+			})
 				.then(() => {
 					setOtp("");
 					if (p[0] === "send-otp" && p[1]?.phoneNumber) {

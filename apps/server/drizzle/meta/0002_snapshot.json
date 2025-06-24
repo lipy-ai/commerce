@@ -1,6 +1,6 @@
 {
-  "id": "990083ff-424f-47c8-a344-1e1a43101e32",
-  "prevId": "965df556-9b32-48b8-96f0-26bd088c6dc0",
+  "id": "375dd4b1-690a-45ea-aa25-5c46f16bfaa7",
+  "prevId": "e717e6e7-b687-4cef-858e-9fc5b7c728b4",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -670,15 +670,15 @@
           "primaryKey": false,
           "notNull": false
         },
-        "content": {
-          "name": "content",
-          "type": "text",
+        "price": {
+          "name": "price",
+          "type": "numeric(10, 2)",
           "primaryKey": false,
           "notNull": false
         },
-        "brand": {
-          "name": "brand",
-          "type": "text",
+        "maxPrice": {
+          "name": "maxPrice",
+          "type": "numeric(10, 2)",
           "primaryKey": false,
           "notNull": false
         },
@@ -688,11 +688,23 @@
           "primaryKey": false,
           "notNull": false
         },
+        "images": {
+          "name": "images",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "category": {
           "name": "category",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "storeId": {
           "name": "storeId",
@@ -700,15 +712,21 @@
           "primaryKey": false,
           "notNull": false
         },
-        "globalProduct": {
-          "name": "globalProduct",
-          "type": "uuid",
+        "highlights": {
+          "name": "highlights",
+          "type": "jsonb[]",
           "primaryKey": false,
           "notNull": false
         },
-        "keywords": {
-          "name": "keywords",
-          "type": "text[]",
+        "information": {
+          "name": "information",
+          "type": "jsonb[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "globalProduct": {
+          "name": "globalProduct",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         }
@@ -1002,6 +1020,12 @@
         "metadata": {
           "name": "metadata",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "address": {
+          "name": "address",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
@@ -1444,6 +1468,18 @@
           "type": "boolean",
           "primaryKey": false,
           "notNull": true
+        },
+        "phoneNumber": {
+          "name": "phoneNumber",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phoneNumberVerified": {
+          "name": "phoneNumberVerified",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
         },
         "image": {
           "name": "image",

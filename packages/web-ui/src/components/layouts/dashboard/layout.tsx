@@ -36,7 +36,7 @@ export const DashboardLayout = ({
 		alt: string;
 	};
 }) => {
-	const [open, setOpen] = useState(false);
+	const [open, setOpen] = useState(true);
 	const { isMobile } = useViewport();
 	const { isInstallable, promptInstall } = usePWAInstall();
 	if (isMobile) {
@@ -86,7 +86,7 @@ export const DashboardLayout = ({
 
 			<div
 				className="flex-1 flex flex-col overflow-x-auto h-screen overflow-y-auto"
-				onClick={() => open && setOpen(false)}
+				// onClick={() => open && setOpen(false)}
 			>
 				{children}
 			</div>
@@ -245,10 +245,11 @@ function NavLink({
 	const isActive = !!matchRoute({ to: nav.url, fuzzy: true });
 
 	return (
-		<div
+		<Link
+			to={nav.url}
 			className={cn(
 				"overflow-hidden border-b border-border/20 truncate rounded-md px-1.5 relative w-full",
-				open && "justify-start",
+				open && "justify-start flex items-center",
 				mobile && "px-0 justify-center rounded-none",
 				mobile
 					? isActive && "text-primary [&_svg]:stroke-primary"
@@ -265,12 +266,11 @@ function NavLink({
 					)}
 				/>
 			)}
-			<Link
+			<div
 				className={cn(
 					"inline-flex items-center font-medium py-2 gap-2",
 					mobile && "flex-col font-normal w-full",
 				)}
-				to={nav.url}
 			>
 				<span className="flex justify-center items-center w-[30px]">
 					<nav.icon
@@ -293,7 +293,7 @@ function NavLink({
 					</motion.span>
 				)}
 				{mobile && <span>{nav.label}</span>}
-			</Link>
-		</div>
+			</div>
+		</Link>
 	);
 }

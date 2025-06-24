@@ -4,6 +4,7 @@ import type { ServerContext } from "@/types";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { z } from "zod";
+import { addressSchema } from "../address";
 
 const storeSchema = z.object({
 	name: z.string(),
@@ -13,6 +14,7 @@ const storeSchema = z.object({
 	phone: z.string(),
 	image: z.string(),
 	active: z.boolean().default(true),
+	address: addressSchema,
 });
 
 const route = new Hono<ServerContext>()

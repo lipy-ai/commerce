@@ -5,6 +5,7 @@ import {
 	useAPIMutation,
 	useAPIQuery,
 } from "@lipy/lib/utils/useQueryClient";
+import type { addressSchema } from "@lipy/server/routes/address";
 import {
 	DrawerDialogHeader,
 	DrawerDialogSwitcher,
@@ -25,31 +26,57 @@ import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import type { z } from "zod";
 export const Route = createFileRoute("/(loggedIn)/store/")({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
 	const [isOpenMap, setIsOpenMap] = useState(false);
+
 	const { data, isLoading } = useAPIQuery(
 		apiClient.v1.merchant.store,
 		"$get",
 		{},
 	);
+
 	const queryClient = useQueryClient();
 
-	const defaultValues = {
-		image: data?.image || "",
-		name: data?.name || "",
-		handle: data?.handle || "",
-		description: data?.description || "",
-		email: data?.email || "",
-		phone: data?.phone || "",
+	const form = useForm({
+		defaultValues: {
+			image: "",
+			name: "",
+			handle: "",
+			description: "",
+			email: "",
+			phone: "",
+			address: {},
+		},
+	});
+
+	// Set store address when user selects it from GoogleMaps
+	const handleStoreAddress = (address: z.infer<typeof addressSchema>) => {
+		form.setValue("address", address, {
+			shouldValidate: true,
+			shouldDirty: true,
+		});
+		setIsOpenMap(false);
 	};
 
-	const form = useForm({
-		defaultValues,
-	});
+	// Update form when API data loads
+	useEffect(() => {
+		if (data) {
+			form.reset({
+				image: data.image || "",
+				name: data.name || "",
+				handle: data.handle || "",
+				description: data.description || "",
+				email: data.email || "",
+				phone: data.phone || "",
+				address: data.address || {},
+			});
+		}
+	}, [data, form.reset]);
 
 	const updateMutation = useAPIMutation(apiClient.v1.merchant.store, "$patch", {
 		form,
@@ -58,21 +85,13 @@ function RouteComponent() {
 				queryKey: apiQueryOptions(apiClient.v1.merchant.store, "$get", {})
 					.queryKey,
 			});
-
 			toast.success("Details updated");
 		},
 	});
 
-	const onSubmit = async (json: typeof defaultValues) => {
+	const onSubmit = async (json: any) => {
 		await updateMutation.mutateAsync({ json });
 	};
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		if (data) {
-			form.reset(defaultValues);
-		}
-	}, [data, form]);
 
 	if (isLoading) {
 		return (
@@ -104,13 +123,19 @@ function RouteComponent() {
 								label="Image"
 								wrapperClassName="size-20 mb-4"
 							/>
-							<FormInput name="name" label="Name" placeholder="Flower Mart" />
+							<FormInput
+								name="name"
+								label="Name"
+								placeholder="Flower Mart"
+								required
+							/>
 							<FormInput
 								name="handle"
 								label="Handle"
 								prefixEl={`${env.WEB_URL}/@`}
-								prefixClassName="px-0.5 pl-2"
-								placeholder="flowermart"
+								prefixClassName="pl-4"
+								inputClassName="-ml-4"
+								required
 							/>
 							<FormTextarea
 								name="description"
@@ -122,18 +147,32 @@ function RouteComponent() {
 								<FormInput name="email" label="Email" />
 								<FormInput name="phone" label="Phone Number" />
 							</div>
-							<FormInput
-								name="address"
+
+							<FormTextarea
+								name="address.line1"
 								label="Address"
 								className="cursor-pointer hover:bg-accent"
+								value={
+									(form.watch("address") as { line1?: string })?.line1 || ""
+								}
 								onClick={() => setIsOpenMap(true)}
+								readOnly
+								required
 							/>
 						</div>
+
 						<div className="p-4">
-							<FormButton>Save Changes</FormButton>
+							<FormButton
+								disabled={
+									form.formState.isSubmitting ||
+									!form.formState.isDirty ||
+									!form.formState.isValid
+								}
+							>
+								Save Changes
+							</FormButton>
 						</div>
 					</div>
-					{/* <GoogleMaps type={"saveAddress"} /> */}
 				</div>
 			</form>
 
@@ -145,7 +184,16 @@ function RouteComponent() {
 				<DrawerDialogHeader className="p-4 lg:-mb-8">
 					<DrawerDialogTitle>Save your store address</DrawerDialogTitle>
 				</DrawerDialogHeader>
-				<GoogleMaps type={"saveAddress"} useCase="merchant" />
+
+				<GoogleMaps
+					type="saveAddress"
+					useCase="merchant"
+					setStoreAddress={handleStoreAddress} // this updates the form
+					center={{
+						lat: (form.watch("address") as { lat: number })?.lat,
+						lng: (form.watch("address") as { lng: number })?.lng,
+					}}
+				/>
 			</DrawerDialogSwitcher>
 		</Form>
 	);

@@ -22,9 +22,16 @@ const libraries: "places"[] = ["places"];
 export default function GoogleMapImage({
 	type,
 	useCase = "customer",
+	setStoreAddress,
+	center,
 }: {
 	type: "deliveryAddress" | "saveAddress" | undefined;
 	useCase?: "merchant" | "customer";
+	setStoreAddress?: any;
+	center?: {
+		lat: number;
+		lng: number;
+	};
 }) {
 	const { isLoaded } = useJsApiLoader({
 		googleMapsApiKey: env.GOOGLE_MAP_API_KEY as string,
@@ -32,8 +39,8 @@ export default function GoogleMapImage({
 	});
 
 	const [mapCenter, setMapCenter] = useState({
-		lat: 26.121832,
-		lng: 85.358553,
+		lat: center?.lat || 26.121832,
+		lng: center?.lng || 85.358553,
 	});
 	const [address, setAddress] = useState("");
 	const [addressName, setAddressName] = useState("");
@@ -201,6 +208,15 @@ export default function GoogleMapImage({
 								onClick={() => {
 									if (useCase === "customer") {
 										setIsConfirm(true);
+									}
+									if (useCase === "merchant") {
+										setStoreAddress({
+											...fullAddress,
+											phone: "",
+											line2: "",
+											name: "",
+											tag: "work",
+										});
 									}
 								}}
 							>

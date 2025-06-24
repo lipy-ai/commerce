@@ -1,48 +1,13 @@
 {
-  "version": "7",
-  "dialect": "postgresql",
-  "entries": [
-    {
-      "idx": 0,
-      "version": "7",
-      "when": 1750180121674,
-      "tag": "0000_shocking_dagger",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1750693881562,
-      "tag": "0001_messy_tarot",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1750716753368,
-      "tag": "0002_premium_lockheed",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1750717756396,
-      "tag": "0003_wet_fixer",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1750743385732,
-      "tag": "0004_sparkling_stellaris",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1750744410612,
-      "tag": "0005_ambiguous_nocturne",
-      "breakpoints": true
-    }
-  ]
+	"version": "7",
+	"dialect": "postgresql",
+	"entries": [
+		{
+			"idx": 0,
+			"version": "7",
+			"when": 1750180121674,
+			"tag": "0000_shocking_dagger",
+			"breakpoints": true
+		}
+	]
 }

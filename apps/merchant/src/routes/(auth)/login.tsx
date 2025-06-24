@@ -1,4 +1,3 @@
-import { env } from "@envClient";
 import { LoginScreen } from "@lipy/web-ui/screens/auth/login";
 import { createFileRoute } from "@tanstack/react-router";
 export const Route = createFileRoute("/(auth)/login")({
@@ -6,5 +5,5 @@ export const Route = createFileRoute("/(auth)/login")({
 });
 
 function RouteComponent() {
-	return <LoginScreen callbackUrl={env.MERCHANT_URL} />;
+	return <LoginScreen />;
 }

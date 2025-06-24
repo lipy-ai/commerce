@@ -142,7 +142,7 @@ function RouteComponent() {
 				onOpenChange={setIsOpenMap}
 				className="p-0 lg:min-w-4xl"
 			>
-				<DrawerDialogHeader className="p-4">
+				<DrawerDialogHeader className="p-4 lg:-mb-8">
 					<DrawerDialogTitle>Save your store address</DrawerDialogTitle>
 				</DrawerDialogHeader>
 				<GoogleMaps type={"saveAddress"} useCase="merchant" />

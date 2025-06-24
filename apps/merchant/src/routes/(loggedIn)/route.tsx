@@ -1,8 +1,16 @@
+import { authClient } from "@lipy/lib/providers/auth";
 import {
 	DashboardBody,
 	DashboardLayout,
 } from "@lipy/web-ui/components/layouts/dashboard";
-import { Outlet, createFileRoute, useLocation } from "@tanstack/react-router";
+import { Spinner } from "@lipy/web-ui/components/ui/spinner";
+import {
+	Outlet,
+	createFileRoute,
+	useLocation,
+	useNavigate,
+	useRouter,
+} from "@tanstack/react-router";
 
 import {
 	CircleUser,
@@ -87,6 +95,20 @@ const mobileNav = [
 
 function RouteComponent() {
 	const { pathname } = useLocation();
+	const navigate = useNavigate();
+	const { data, isPending } = authClient.useSession();
+	if (isPending) return <Spinner />;
+
+	if (!data) {
+		navigate({ to: "/login" });
+	}
+
+	if (
+		pathname.includes("/accept-invitation") ||
+		pathname.includes("/newStore")
+	) {
+		return <Outlet />;
+	}
 
 	return (
 		<DashboardLayout
@@ -97,12 +119,6 @@ function RouteComponent() {
 				full: "/logo/ico.svg",
 				alt: "Logo",
 			}}
-			isVisibleDashboarNav={
-				!(
-					pathname.includes("/newStore") ||
-					pathname.includes("/accept-invitation")
-				)
-			}
 		>
 			<DashboardBody>
 				<Outlet />

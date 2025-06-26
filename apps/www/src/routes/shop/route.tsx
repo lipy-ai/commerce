@@ -25,7 +25,7 @@ function RouteComponent() {
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ duration: 0.5, ease: "easeInOut" }}
 							exit={{ opacity: 0, y: 100 }}
-							className="fixed bottom-2 left-4 right-4  rounded-2xl bg-white shadow-2xl p-2"
+							className="fixed bottom-2 left-4 right-4  rounded-2xl bg-card shadow-2xl p-2"
 						>
 							<div className="flex items-center justify-between mx-4">
 								<CustomAvatarGroup items={cart} />

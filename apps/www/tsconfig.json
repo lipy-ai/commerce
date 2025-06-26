@@ -1,5 +1,9 @@
 {
-	"include": ["**/*.ts", "**/*.tsx"],
+	"include": [
+		"**/*.ts",
+		"**/*.tsx",
+		"../../packages/web-ui/src/components/maps/detailedAddress.tsx"
+	],
 	"references": [{ "path": "../../apps/server" }],
 
 	"compilerOptions": {

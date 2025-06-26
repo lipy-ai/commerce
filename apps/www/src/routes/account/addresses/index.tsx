@@ -1,6 +1,10 @@
 import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
-import { DrawerDialogSwitcher } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
+import {
+	DrawerDialogHeader,
+	DrawerDialogSwitcher,
+	DrawerDialogTitle,
+} from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { DeleteAddress } from "@lipy/web-ui/components/maps/deleteAdderess";
 import { DetailedAddress } from "@lipy/web-ui/components/maps/detailedAddress";
@@ -42,16 +46,9 @@ function RouteComponent() {
 		NonNullable<typeof data>[0] | null
 	>(null);
 
-	if (isFetching)
-		return [...Array(5)].map((_, i) => (
-			<div key={i} className="my-2 flex flex-col items-center">
-				<Skeleton className="h-28 w-5/6 " />
-			</div>
-		));
-
 	return (
 		<div>
-			<DashboardHeader title="Addresses">
+			<DashboardHeader title="Saved addresses">
 				{!isMobile && (
 					<Link
 						className={cn(buttonVariants({ variant: "default" }))}
@@ -64,8 +61,15 @@ function RouteComponent() {
 				)}
 			</DashboardHeader>
 
+			{isFetching &&
+				[...Array(5)].map((_, i) => (
+					<div key={i} className="my-2 flex flex-col items-center">
+						<Skeleton className="h-28 w-5/6 " />
+					</div>
+				))}
+
 			{isFetched && data && data?.length > 0 && (
-				<div className="mb-16  divide-y p-4 ">
+				<div className="mb-40 mt-4 space-y-4">
 					{data.map((address) => (
 						<div
 							key={address.id}
@@ -73,6 +77,7 @@ function RouteComponent() {
 								setOptionsDrawerOpen(true);
 								setSelectedAddress(address);
 							}}
+							className="bg-card p-4"
 						>
 							<AddressComponent address={address} />
 						</div>
@@ -122,7 +127,7 @@ export function AddressComponent({
 	address: DeliveryLocation;
 }) {
 	return (
-		<div className="flex  gap-2 py-4 ">
+		<div className="flex  gap-2  ">
 			<Avatar className="rounded-md ">
 				<AvatarFallback>
 					{address.tag === "home" ? (
@@ -163,10 +168,11 @@ function OptionsDrawer(props: {
 	return (
 		<div>
 			<DrawerDialogSwitcher open={props.open} onOpenChange={props.onOpenChange}>
-				<div className="p-0 flex items-start mx-4">
-					<p className="font-medium text-base">Select option</p>
-				</div>
-				<div className="mx-4 my-2 bg-accent p-4 rounded-lg space-y-4 cursor-pointer">
+				<DrawerDialogHeader>
+					<DrawerDialogTitle>Select option</DrawerDialogTitle>
+				</DrawerDialogHeader>
+
+				<div className="bg-accent p-4 rounded-lg space-y-4 cursor-pointer">
 					<div
 						className="flex items-center justify-between"
 						onClick={() => {
@@ -174,7 +180,7 @@ function OptionsDrawer(props: {
 						}}
 					>
 						<div className="flex items-center gap-4">
-							<Pencil className="size-4" />
+							<Pencil className="size-5 flex-shrink-0" />
 							<p className="font-medium text-sm">Edit address</p>
 						</div>
 
@@ -183,7 +189,7 @@ function OptionsDrawer(props: {
 					<Separator className="border-t border-dashed bg-transparent" />
 					<div className="flex items-center justify-between">
 						<div className="flex items-center gap-4">
-							<MapPin className="size-4" />
+							<MapPin className="size-5 flex-shrink-0" />
 							<p className="font-medium text-sm">Set as delivery address</p>
 						</div>
 
@@ -197,7 +203,7 @@ function OptionsDrawer(props: {
 						}}
 					>
 						<div className="flex items-center gap-4">
-							<Trash className="size-4" />
+							<Trash className="size-5 flex-shrink-0" />
 							<p className="font-medium text-sm">Delete address</p>
 						</div>
 

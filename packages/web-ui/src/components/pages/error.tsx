@@ -29,7 +29,7 @@ export default function ErrorPage({
 	return (
 		<div
 			className={cn(
-				"m-auto flex w-full max-w-screen-lg flex-1 flex-col items-center justify-center p-4 text-center overflow-y-auto",
+				"flex w-full flex-1 flex-col items-center justify-center text-center",
 				className,
 			)}
 		>

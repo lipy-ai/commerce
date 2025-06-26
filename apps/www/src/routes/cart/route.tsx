@@ -1,5 +1,6 @@
 import { DeliveryInstruction } from "@/components/cart/instructions";
 import { useCartStore } from "@/components/cart/store";
+
 import PlaceOrder from "@/components/order/placeOrder";
 import ProductCard from "@/components/productCard";
 import { apiClient } from "@lipy/lib/api";
@@ -66,8 +67,7 @@ function RouteComponent() {
 			cacheTime: 0,
 		},
 	);
-	console.log(data);
-	// Reset cart once on mount
+
 	useEffect(() => {
 		resetCart();
 	}, [resetCart]);

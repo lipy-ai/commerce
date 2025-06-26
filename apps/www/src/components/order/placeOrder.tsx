@@ -96,6 +96,7 @@ function ProgressDialog({
 						line1: deliveryLocation.line1,
 						line2: deliveryLocation.line2 as string,
 						name: deliveryLocation.name,
+						metadata: deliveryLocation.metadata as { building: string },
 					},
 					deliveryInstruction: deliveryInstruction || "",
 					storeInstruction: null,
@@ -167,7 +168,7 @@ export default function PlaceOrder({
 			<Button
 				onClick={handlePlaceOrder}
 				variant="emerald"
-				className="w-full flex flex-col items-center justify-center gap-0 font-medium tracking-widest"
+				className="w-full flex flex-col items-center justify-center gap-0 font-medium "
 				size="lg"
 			>
 				CONTINUE TO PLACE ORDER

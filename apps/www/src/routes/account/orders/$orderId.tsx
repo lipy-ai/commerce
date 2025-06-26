@@ -1,27 +1,15 @@
-import { StatusBadge } from "@/components/order/myOrderCard";
-import type { OrderStatus } from "@/components/order/orderTimeLine";
 import { apiClient } from "@lipy/lib/api";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
-import {
-	Avatar,
-	AvatarFallback,
-	AvatarImage,
-} from "@lipy/web-ui/components/ui/avatar";
+import { Badge } from "@lipy/web-ui/components/ui/badge";
+
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
-import {
-	BanknoteArrowUp,
-	Building,
-	CircleUser,
-	House,
-	MapPin,
-	MapPinHouse,
-} from "lucide-react";
+import { BanknoteArrowUp, CircleUser, MapPin } from "lucide-react";
 
 export const Route = createFileRoute("/account/orders/$orderId")({
 	component: RouteComponent,
@@ -67,13 +55,19 @@ function RouteComponent() {
 
 					<div className="lg:grid lg:grid-cols-12 divide-x flex-1">
 						<div className="col-span-7  lg:p-4 ">
-							<div className="bg-white p-4">
+							<div className="bg-card p-4">
 								<div className="flex items-center justify-between">
 									<h2 className="font-bold text-base ">{data[0]?.pk}</h2>
-									<StatusBadge
-										status={data[0]?.status as OrderStatus}
-										size={20}
-									/>
+									<Badge
+										variant={
+											data[0]?.status === "delivered" ? "success" : "premium"
+										}
+									>
+										{data[0]?.status
+											? data[0]?.status.charAt(0).toUpperCase() +
+												data[0]?.status.slice(1)
+											: "Unknown"}
+									</Badge>
 								</div>
 								{data[0]?.deliveredAt ? (
 									<p className="text-xs text-muted-foreground">
@@ -94,15 +88,12 @@ function RouteComponent() {
 								)}
 							</div>
 
-							<div className="bg-white p-4 my-4 ">
+							{/* <div className="bg-card p-4 my-4 ">
 								<div className="relative space-y-6">
 									<div className="absolute left-5 top-10 w-0.5 h-10 border-l border-dashed border-foreground" />
 									<div className="flex items-center gap-2 pr-2">
 										<Avatar className="size-10">
-											<AvatarImage
-												src={data[0]?.image || "https://picsum.photos/200"}
-												alt=""
-											/>
+											<AvatarImage src={"https://picsum.photos/200"} alt="" />
 											<AvatarFallback className="rounded-lg bg-indigo-500 text-white">
 												S
 											</AvatarFallback>
@@ -110,7 +101,7 @@ function RouteComponent() {
 
 										<div>
 											<p className="font-medium line-clamp-1">
-												{data[0]?.name || "Unknown Store"}
+												{"Unknown Store"}
 											</p>
 											<p className="text-muted-foreground text-xs line-clamp-1">
 												Paschim Vihar , Delhi
@@ -139,17 +130,22 @@ function RouteComponent() {
 													: "Other"}
 											</p>
 											<p className="text-muted-foreground text-xs line-clamp-1">
-												{data[0]?.address?.line1 || "No address provided"}
+												{[
+													data[0]?.address?.metadata?.building,
+													data[0]?.address?.line1,
+												]
+													.filter(Boolean)
+													.join(", ")}
 											</p>
 										</div>
 									</div>
 								</div>
-							</div>
+							</div> */}
 
-							<div className="p-4  bg-white">
+							<div className="p-4  bg-card my-4">
 								<h2 className="text-lg font-semibold">Item(s) ordered</h2>
 								{data[0]?.items?.map((product, i) => (
-									<div key={i} className="flex gap-2 items-center p-4">
+									<div key={i} className="flex gap-2 items-center py-4">
 										<img
 											src={product.thumbnail || "https://picsum.photos/200"}
 											alt=""
@@ -180,7 +176,7 @@ function RouteComponent() {
 						</div>
 
 						<div className="col-span-5 space-y-2  lg:p-4  ">
-							<div className="space-y-4  p-4  my-4 bg-white ">
+							<div className="space-y-4  p-4  my-4 bg-card ">
 								<h2 className="text-lg font-semibold">Bill Summary</h2>
 								<div className="space-y-4">
 									<div className="flex justify-between">
@@ -210,15 +206,17 @@ function RouteComponent() {
 									</div>
 								</div>
 							</div>
-							<div className="bg-white  divide-y divide-dashed p-4 my-4">
-								{data[0]?.address?.name && data[0]?.address?.phone && (
+							<div className="bg-card  divide-y divide-dashed p-4 my-4">
+								{data[0]?.address?.name && (
 									<div>
 										<div className="flex items-start gap-4 p-2">
 											<CircleUser className="text-muted-foreground flex-shrink-0" />
 											<div>
 												<p className="font-medium text-base">Receiver's Info</p>
 												<p className="text-muted-foreground text-sm">
-													{data[0]?.address?.name} | {data[0]?.address?.phone}
+													{[data[0]?.address?.name, data[0]?.address?.phone]
+														.filter(Boolean)
+														.join("|")}
 												</p>
 											</div>
 										</div>
@@ -244,7 +242,12 @@ function RouteComponent() {
 									<div>
 										<p className="font-medium text-base">Delivery Address</p>
 										<p className="text-muted-foreground text-sm">
-											{data[0]?.address?.line1}
+											{[
+												data[0]?.address?.metadata?.building,
+												data[0]?.address?.line1,
+											]
+												.filter(Boolean)
+												.join(", ")}
 										</p>
 									</div>
 								</div>

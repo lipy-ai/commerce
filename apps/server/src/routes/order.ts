@@ -47,6 +47,7 @@ const route = new Hono<ServerContext>()
 			.select([
 				"o.id",
 				"o.itemTotalAmount",
+				"o.currency",
 				"o.status",
 				"o.items",
 				"o.pk as orderPrimaryId",
@@ -54,6 +55,7 @@ const route = new Hono<ServerContext>()
 				"s.name as storeName",
 				"s.image as storeLogo",
 				"s.id as storeId",
+				"s.address as storeAddress",
 				"o.address",
 			])
 			.orderBy("o.orderedAt", "desc")
@@ -69,7 +71,6 @@ const route = new Hono<ServerContext>()
 			.selectFrom("orders as o")
 			.where("o.orderedBy", "=", session?.userId!)
 			.where("o.pk", "=", id)
-			.leftJoin("store as s", "s.id", "o.storeId")
 			.selectAll()
 			.execute();
 

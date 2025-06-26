@@ -17,8 +17,6 @@ import {
 } from "lucide-react";
 
 import SettingsCard from "@lipy/web-ui/components/custom-ui/settingsCard";
-import { useViewport } from "@lipy/web-ui/contexts/viewport";
-import { cn } from "@lipy/web-ui/lib/utils";
 
 export const Route = createFileRoute("/(loggedIn)/account/")({
 	component: RouteComponent,
@@ -67,7 +65,6 @@ const moreInfo = [
 
 function RouteComponent() {
 	const { data } = authClient.useSession();
-	const { isMobile } = useViewport();
 
 	const filteredMoreInfo = data
 		? moreInfo
@@ -76,9 +73,9 @@ function RouteComponent() {
 	return (
 		<div>
 			<DashboardHeader title="Settings" />
-			<div className={cn(isMobile ? "p-4 " : "p-8", " space-y-8 max-w-4xl")}>
+			<div className="lg:p-8 space-y-6 max-w-4xl mb-40">
 				{data && (
-					<div className="flex items-center gap-4">
+					<div className="flex items-center gap-4 p-4">
 						<Avatar className="size-12">
 							<AvatarImage src={data?.user.image || ""} alt="" />
 							<AvatarFallback>

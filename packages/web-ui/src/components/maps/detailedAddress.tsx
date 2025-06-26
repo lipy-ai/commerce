@@ -1,3 +1,4 @@
+import { env } from "@envClient";
 import { zodResolver } from "@hookform/resolvers/zod";
 // @ts-nocheck
 import { apiClient } from "@lipy/lib/api";
@@ -7,16 +8,9 @@ import {
 	useAPIMutation,
 } from "@lipy/lib/utils/useQueryClient";
 import { CustomRadioGroup } from "@lipy/web-ui/components/custom-ui/customRadioGroup";
+import { DrawerDialogSwitcher } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
 import { InputWithAnimatedLabel } from "@lipy/web-ui/components/custom-ui/inputWithAnimatedLabel";
-import { useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "@tanstack/react-router";
-import { Loader2 } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
-import { DrawerDialogSwitcher } from "../custom-ui/drawerDialogSwitcher";
-import { Button } from "../ui/button";
-
+import { FormButton } from "@lipy/web-ui/components/forms/elements";
 import {
 	Form,
 	FormControl,
@@ -24,9 +18,13 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage,
-} from "../ui/form";
-import { ScrollArea } from "../ui/scroll-area";
-import { Separator } from "../ui/separator";
+} from "@lipy/web-ui/components/ui/form";
+import { ScrollArea } from "@lipy/web-ui/components/ui/scroll-area";
+import { Separator } from "@lipy/web-ui/components/ui/separator";
+import { useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 import { useLocationStore } from "./utils/store";
 const addressTypesItems = [
 	{ value: "home", label: "Home" },
@@ -50,11 +48,6 @@ export function DetailedAddress({
 	const { data } = authClient.useSession();
 	const queryClient = useQueryClient();
 	const { setDeliveryLocation, deliveryLocation } = useLocationStore();
-	const router = useRouter();
-	const onBack = () => {
-		router.history.back();
-		return false;
-	};
 
 	const formSchema = z.object({
 		building: z.string().min(2, "Please fill your detailed address"),
@@ -80,7 +73,7 @@ export function DetailedAddress({
 			});
 
 			onOpenChange?.(false);
-			onBack();
+			window.location.href = `${env.WEB_URL}/account/addresses`;
 		},
 		onError: () => toast.error("Something went wrong while adding address"),
 	});
@@ -156,11 +149,7 @@ export function DetailedAddress({
 
 				<div className="p-4 mb-6">
 					<div className="text-sm rounded-md border p-2 bg-accent font-medium">
-						<p>
-							{label === "Edit"
-								? fullAddress.line1.split(",").slice(1).join(",")
-								: fullAddress.line1}
-						</p>
+						<p>{fullAddress?.line1}</p>
 					</div>
 
 					<Form {...form}>
@@ -237,10 +226,10 @@ export function DetailedAddress({
 								)}
 							/>
 
-							<div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-t z-10">
-								<Button
+							<div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-t z-10 w-full">
+								<FormButton
 									type="submit"
-									className="w-full font-semibold"
+									className="w-full"
 									disabled={
 										form.formState.isSubmitting ||
 										!form.formState.isValid ||
@@ -248,17 +237,8 @@ export function DetailedAddress({
 										!form.formState.isDirty
 									}
 								>
-									{form.formState.isSubmitting ? (
-										<>
-											<Loader2 className="h-4 w-4 animate-spin mr-2" />
-											Saving...
-										</>
-									) : isDeliveryAddress ? (
-										"Save and continue"
-									) : (
-										"Save Address"
-									)}
-								</Button>
+									{isDeliveryAddress ? "Save and continue" : "Save"}
+								</FormButton>
 							</div>
 						</form>
 					</Form>

@@ -8,7 +8,6 @@ import {
 	AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
-import { Card } from "@lipy/web-ui/components/ui/card";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { shareContent } from "@lipy/web-ui/lib/share";
@@ -57,7 +56,7 @@ const moreInfo: {
 	{
 		title: "Start your own shop",
 		icon: Store,
-		url: "/",
+		url: env.MERCHANT_URL,
 		type: "link",
 	},
 	{
@@ -98,9 +97,9 @@ export function AccountPage() {
 		<div>
 			{isMobile && <DashboardHeader title="Settings" />}
 
-			<div className={cn("p-4 lg:p-8  space-y-8 m-auto max-w-screen-lg ")}>
+			<div className="lg:p-8  space-y-6 m-auto max-w-screen-lg mb-40">
 				{data ? (
-					<div className="flex items-center gap-4">
+					<div className="flex items-center gap-4 p-4">
 						<Avatar className="size-12">
 							<AvatarImage src={data?.user.image || ""} alt={data.user.name} />
 							<AvatarFallback>
@@ -116,7 +115,7 @@ export function AccountPage() {
 						</div>
 					</div>
 				) : (
-					<Card className="p-4 shadow-none">
+					<div className="p-4">
 						<h1 className="font-bold text-xl"> Hi 👋</h1>
 						<p className="text-muted-foreground font-normal">
 							Discover and shop from your favorite local businesses online. Join
@@ -132,21 +131,15 @@ export function AccountPage() {
 							Log In / Sign up
 							<ChevronRight />
 						</Link>
-					</Card>
-				)}
-
-				{data && (
-					<div className="space-y-2">
-						<SettingsCard title="Your Information" items={yourInfo} />
 					</div>
 				)}
 
-				<div className="space-y-2">
-					<SettingsCard
-						title={data ? "More" : "General"}
-						items={filteredMoreInfo}
-					/>
-				</div>
+				{data && <SettingsCard title="Your Information" items={yourInfo} />}
+
+				<SettingsCard
+					title={data ? "More" : "General"}
+					items={filteredMoreInfo}
+				/>
 			</div>
 		</div>
 	);

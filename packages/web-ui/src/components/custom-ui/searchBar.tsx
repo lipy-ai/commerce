@@ -32,12 +32,13 @@ export default function SearchBar({
 	return (
 		<form onSubmit={() => onSearch?.(value)} className="p-2 md:p-0">
 			<Input
+				className="rounded-xl"
 				value={value}
 				onChange={(e) => {
 					setValue(e.currentTarget.value);
 				}}
 				placeholder={placeholder || "Search"}
-				prefixEl={<Search />}
+				prefixEl={<Search className="text-tertiary stroke-2" />}
 				suffixEl={
 					<Button
 						type="button"

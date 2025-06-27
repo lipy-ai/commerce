@@ -12,16 +12,19 @@ export type SingleImageProps = {
 	alt?: string;
 	accept?: string;
 	referrerPolicy?: HTMLImageElement["referrerPolicy"];
-	className?: string;
+	wrapperClassName?: string;
+	imageClassName?: string;
 	onSuccess?: (data: ReturnType<typeof useUpload>["data"]) => void;
 };
 
-const SingleImage = (props: SingleImageProps) => {
+const SingleImage = (
+	props: SingleImageProps & React.ComponentProps<"input">,
+) => {
 	return (
 		<div
 			className={cn(
-				"rounded-md relative bg-muted/40 border border-input flex justify-center items-center cursor-pointer pointer-events-auto hover:bg-muted aspect-square",
-				props.className,
+				"rounded-full relative bg-muted/40 border border-input flex justify-center items-center cursor-pointer pointer-events-auto hover:bg-muted aspect-square",
+				props.wrapperClassName,
 			)}
 		>
 			{props.url ? (
@@ -29,7 +32,10 @@ const SingleImage = (props: SingleImageProps) => {
 					src={props.url}
 					alt={props.alt}
 					referrerPolicy={(props.referrerPolicy as any) || undefined}
-					className="object-cover overflow-hidden size-full"
+					className={cn(
+						"object-cover overflow-hidden size-full",
+						props.imageClassName,
+					)}
 				/>
 			) : (
 				<Input {...props} />

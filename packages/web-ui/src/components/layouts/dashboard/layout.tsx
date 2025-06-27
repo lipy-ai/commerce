@@ -251,21 +251,21 @@ function NavLink({
 				"overflow-hidden border-b border-border/20 truncate rounded-md px-1.5 relative w-full",
 				open && "justify-start flex items-center",
 				mobile && "px-0 justify-center rounded-none",
-				mobile
-					? isActive && "text-primary [&_svg]:stroke-primary"
-					: isActive
-						? "bg-primary text-primary-foreground"
-						: "hover:bg-accent",
+				// mobile
+				// 	? isActive && "text-primary [&_svg]:stroke-primary"
+				// 	: isActive
+				// 		? "bg-primary text-primary-foreground"
+				// 		: "hover:bg-accent",
 			)}
 		>
-			{mobile && (
+			{/* {mobile && (
 				<span
 					className={cn(
 						"h-2 w-4/5 block bg-transparent rounded-b-2xl m-auto",
-						isActive && "bg-primary",
+						isActive && "bg-tertiary",
 					)}
 				/>
-			)}
+			)} */}
 			<div
 				className={cn(
 					"inline-flex items-center font-medium py-2 gap-2",
@@ -278,7 +278,7 @@ function NavLink({
 							"size-5",
 							mobile && "flex-col font-normal w-full stroke-1.5",
 
-							isActive && "stroke-primary-foreground",
+							isActive && "fill-primary/40",
 						)}
 					/>
 				</span>

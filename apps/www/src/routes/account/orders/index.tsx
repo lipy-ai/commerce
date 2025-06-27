@@ -34,101 +34,105 @@ function RouteComponent() {
 	return (
 		<>
 			<DashboardHeader title="My Orders" />
-			<div className="space-y-6 lg:space-y-10 mb-20">
-				{isFetched &&
-					data &&
-					data.length > 0 &&
-					(() => {
-						let lastMonth = "";
 
-						return data.map((order) => {
-							const currentMonth = format(order.orderedAt, "LLLL yyyy");
-							const showMonth = currentMonth !== lastMonth;
-							lastMonth = currentMonth;
+			{isFetched &&
+				data &&
+				data.length > 0 &&
+				(() => {
+					let lastMonth = "";
 
-							return (
-								<div key={order.id}>
-									{showMonth && (
-										<h2 className="text-sm font-semibold m-4">
-											{currentMonth}
-										</h2>
-									)}
+					return (
+						<div className="space-y-6 lg:space-y-10 mb-20">
+							{data.map((order) => {
+								const currentMonth = format(order.orderedAt, "LLLL yyyy");
+								const showMonth = currentMonth !== lastMonth;
+								lastMonth = currentMonth;
 
-									<div className="bg-card p-4">
-										<div className="flex items-center justify-between gap-4">
+								return (
+									<div key={order.id}>
+										{showMonth && (
+											<h2 className="text-sm font-semibold m-4">
+												{currentMonth}
+											</h2>
+										)}
+
+										<div className="bg-card p-4">
+											<div className="flex items-center justify-between gap-4">
+												<Link
+													className="flex items-center gap-2"
+													to="/shop/$id"
+													params={{ id: order.storeId as string }}
+												>
+													<Avatar className="rounded-md size-10">
+														<AvatarImage src={order?.storeLogo || ""} />
+														<AvatarFallback>
+															<Store />
+														</AvatarFallback>
+													</Avatar>
+													<div>
+														<p className="font-medium text-sm line-clamp-1">
+															{order?.storeName || "Unknown store"}
+														</p>
+														<p className="text-muted-foreground line-clamp-1 text-xs">
+															{order?.storeAddress?.line1 ||
+																"Mumbai, Maharashtra"}
+														</p>
+													</div>
+												</Link>
+
+												<Button variant="ghost" size="icon-sm">
+													<EllipsisVertical />
+												</Button>
+											</div>
+
+											<Separator className="my-2" />
+
 											<Link
-												className="flex items-center gap-2"
-												to="/shop/$id"
-												params={{ id: order.storeId as string }}
+												to="/account/orders/$orderId"
+												params={{ orderId: order.orderPrimaryId as string }}
 											>
-												<Avatar className="rounded-md size-10">
-													<AvatarImage src={order?.storeLogo || ""} />
-													<AvatarFallback>
-														<Store />
-													</AvatarFallback>
-												</Avatar>
-												<div>
-													<p className="font-medium text-sm line-clamp-1">
-														{order?.storeName || "Unknown store"}
+												<p className="text-xs ">
+													{order?.items
+														?.map((item) => `${item.title} (${item.quantity})`)
+														.join(", ")}
+												</p>
+												<div className="border border-dashed my-2" />
+												<div className="flex items-center justify-between">
+													<p className="text-muted-foreground text-xs">
+														Ordered on {format(order?.orderedAt, "d LLL, p")}
 													</p>
-													<p className="text-muted-foreground line-clamp-1 text-xs">
-														{order?.storeAddress?.line1 ||
-															"Mumbai, Maharashtra"}
+													<p className="font-semibold">
+														{formatAmount(
+															order?.currency,
+															order?.itemTotalAmount as number,
+														)}
 													</p>
 												</div>
 											</Link>
 
-											<Button variant="ghost" size="icon-sm">
-												<EllipsisVertical />
-											</Button>
+											<Separator className="my-2" />
+											<Badge
+												variant={
+													order.status === "delivered" ? "success" : "premium"
+												}
+											>
+												{order?.status
+													? order.status.charAt(0).toUpperCase() +
+														order.status.slice(1)
+													: "Unknown"}
+											</Badge>
 										</div>
-
-										<Separator className="my-2" />
-
-										<Link
-											to="/account/orders/$orderId"
-											params={{ orderId: order.orderPrimaryId as string }}
-										>
-											<p className="text-xs ">
-												{order?.items
-													?.map((item) => `${item.title} (${item.quantity})`)
-													.join(", ")}
-											</p>
-											<div className="border border-dashed my-2" />
-											<div className="flex items-center justify-between">
-												<p className="text-muted-foreground text-xs">
-													Ordered on {format(order?.orderedAt, "d LLL, p")}
-												</p>
-												<p className="font-semibold">
-													{formatAmount(
-														order?.currency,
-														order?.itemTotalAmount as number,
-													)}
-												</p>
-											</div>
-										</Link>
-
-										<Separator className="my-2" />
-										<Badge
-											variant={
-												order.status === "delivered" ? "success" : "premium"
-											}
-										>
-											{order?.status
-												? order.status.charAt(0).toUpperCase() +
-													order.status.slice(1)
-												: "Unknown"}
-										</Badge>
 									</div>
-								</div>
-							);
-						});
-					})()}
-			</div>
+								);
+							})}
+						</div>
+					);
+				})()}
+
 			{isFetching &&
 				[...Array(5)].map((_, i) => (
-					<div key={i} className="my-2 flex flex-col items-center">
-						<Skeleton className="h-32 w-full " />
+					<div key={i} className="flex flex-col items-center my-4">
+						<Skeleton className="h-24 w-full " />
 					</div>
 				))}
 

@@ -2,6 +2,7 @@ import { cn } from "@lipy/web-ui/lib/utils";
 import type { ReactNode } from "@tanstack/react-router";
 import { IterationCcw, Loader2 } from "lucide-react";
 import { type ControllerRenderProps, useFormContext } from "react-hook-form";
+import InputWithAnimatedLabel from "../custom-ui/inputWithAnimatedLabel";
 import { Button } from "../ui/button";
 import {
 	FormControl,
@@ -36,21 +37,26 @@ export const FormItemWrapper = ({
 	description,
 	wrapperClassName,
 	children,
+	fieldType,
 }: SharedFormProps & {
 	wrapperClassName?: string;
 	children: React.ReactNode;
+	fieldType?: string;
 }) => {
 	return (
 		<FormItem className={cn("w-full gap-1 mb-3", wrapperClassName)}>
 			<div>
-				<div className="flex items-start py-2">
-					<FormLabel
-						className={cn("font-normal text-muted-foreground break-all")}
-					>
-						{label}
-						{required ? RequiredEl : ""}
-					</FormLabel>
-				</div>
+				{!(fieldType === "InputWithAnimatedLabel") && (
+					<div className="flex items-start py-2">
+						<FormLabel
+							className={cn("font-normal text-muted-foreground break-all")}
+						>
+							{label}
+							{required ? RequiredEl : ""}
+						</FormLabel>
+					</div>
+				)}
+
 				{children}
 			</div>
 			<FormDescription>{description}</FormDescription>
@@ -105,6 +111,25 @@ export const FormInput = ({ ...props }: InputProps & SharedFormProps) => {
 				<FormItemWrapper {...props}>
 					<FormControl>
 						<Input {...props} {...field} />
+					</FormControl>
+				</FormItemWrapper>
+			)}
+		/>
+	);
+};
+
+export const FormInputWithAnimatedLabel = ({
+	...props
+}: React.ComponentProps<"input"> & SharedFormProps) => {
+	const form = useFormContext();
+	return (
+		<FormField
+			control={form.control}
+			name={props.name}
+			render={({ field }: { field: ControllerRenderProps }) => (
+				<FormItemWrapper {...props} fieldType="InputWithAnimatedLabel">
+					<FormControl>
+						<InputWithAnimatedLabel {...field} title={props.label} {...props} />
 					</FormControl>
 				</FormItemWrapper>
 			)}
@@ -193,10 +218,14 @@ export const FormTextarea = ({
 
 export const FormImage = ({
 	wrapperClassName,
+	imageClassName,
 	alt,
 	referrerPolicy,
 	...props
-}: SharedFormProps & Pick<SingleImageProps, "alt" | "referrerPolicy">) => {
+}: SharedFormProps &
+	Pick<SingleImageProps, "alt" | "referrerPolicy"> & {
+		imageClassName?: string;
+	}) => {
 	const form = useFormContext();
 	return (
 		<FormField
@@ -208,7 +237,8 @@ export const FormImage = ({
 						referrerPolicy={referrerPolicy}
 						url={field.value || ""}
 						alt={alt}
-						className={wrapperClassName}
+						wrapperClassName={wrapperClassName}
+						imageClassName={imageClassName}
 						onSuccess={(data) => field.onChange(data || undefined)}
 					/>
 				);

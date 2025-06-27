@@ -20,12 +20,7 @@ export default function ProductImage(props: Type) {
 					<FormField
 						control={form.control}
 						name={`${props.name}.${i}.url`}
-						render={({ field }) => (
-							<SingleImage
-								{...field}
-								className="size-full"
-							/>
-						)}
+						render={({ field }) => <SingleImage {...field} />}
 					/>
 				</React.Fragment>
 			))}

@@ -115,7 +115,7 @@ export function AccountPage() {
 						</div>
 					</div>
 				) : (
-					<div className="p-4">
+					<div className="p-4 space-y-2">
 						<h1 className="font-bold text-xl"> Hi 👋</h1>
 						<p className="text-muted-foreground font-normal">
 							Discover and shop from your favorite local businesses online. Join

@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 
 import SettingsCard from "@lipy/web-ui/components/custom-ui/settingsCard";
+import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 
 export const Route = createFileRoute("/(loggedIn)/account/")({
 	component: RouteComponent,
@@ -64,7 +65,9 @@ const moreInfo = [
 ];
 
 function RouteComponent() {
-	const { data } = authClient.useSession();
+	const { data, isPending } = authClient.useSession();
+
+	if (isPending) return <Spinner />;
 
 	const filteredMoreInfo = data
 		? moreInfo

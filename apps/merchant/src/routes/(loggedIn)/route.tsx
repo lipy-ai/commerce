@@ -55,7 +55,6 @@ function RouteComponent() {
 	}
 
 	if (!data) {
-		// Encode current path as base64 for safe URL transmission
 		const encodedCallback = btoa(window.location.href);
 
 		window.location.href = `${env.WEB_URL}/login?cb=${encodedCallback}`;
@@ -68,7 +67,7 @@ function RouteComponent() {
 	return (
 		<DashboardLayout
 			dashboardNav={dashboardNav}
-			mobileNav={mobileNav}
+			mobileNav={pathname.includes("account/profile") ? [] : mobileNav}
 			logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
 		>
 			<DashboardBody>

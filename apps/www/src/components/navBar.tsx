@@ -36,18 +36,19 @@ export default function NavBar() {
 
 	if (isMobile) {
 		return (
-			<div className="relative  text-background bg-emerald-600  p-4 space-y-4">
-				<div className="flex items-center justify-between ">
+			<div className="relative  text-background bg-card p-4 space-y-4">
+				<div className="flex items-center justify-between text-foreground">
 					{deliveryLocation && (
 						<Link to={"/account/addresses/deliveryAddress"}>
 							<div className="text-lg font-bold flex items-center gap-2">
-								{deliveryLocation?.tag === "home" ? (
+								{/* {deliveryLocation?.tag === "home" ? (
 									<House className="size-5" />
 								) : deliveryLocation?.tag === "work" ? (
 									<Building className="size-5" />
 								) : (
 									<MapPin className="size-5" />
-								)}
+								)} */}
+								{<MapPin className="fill-tertiary/60" />}
 								<p className="truncate max-w-[250px] block">
 									{deliveryLocation?.line1 === ""
 										? "Locating"
@@ -74,19 +75,6 @@ export default function NavBar() {
 							<UserRound className="size-6 fill-background" />
 						</div>
 					</Link>
-				</div>
-
-				<SearchBar
-					placeholder="Search for shop, grocery, fruits..."
-					defaultValue=""
-					onSearch={() => {}}
-				/>
-
-				<div className="-mx-4 -mb-4">
-					<ScrollingTabs
-						tabs={CATEGORIES}
-						handleTabChange={setActiveCategory}
-					/>
 				</div>
 			</div>
 		);

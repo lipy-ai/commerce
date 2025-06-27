@@ -9,8 +9,10 @@ import {
 } from "@lipy/lib/utils/useQueryClient";
 import { CustomRadioGroup } from "@lipy/web-ui/components/custom-ui/customRadioGroup";
 import { DrawerDialogSwitcher } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
-import { InputWithAnimatedLabel } from "@lipy/web-ui/components/custom-ui/inputWithAnimatedLabel";
-import { FormButton } from "@lipy/web-ui/components/forms/elements";
+import {
+	FormButton,
+	FormInputWithAnimatedLabel,
+} from "@lipy/web-ui/components/forms/elements";
 import {
 	Form,
 	FormControl,
@@ -157,20 +159,11 @@ export function DetailedAddress({
 							onSubmit={form.handleSubmit(handleSubmit)}
 							className="space-y-8 my-10 w-full"
 						>
-							<FormField
-								control={form.control}
+							<FormInputWithAnimatedLabel
 								name="building"
-								render={({ field }) => (
-									<FormItem>
-										<FormControl>
-											<InputWithAnimatedLabel
-												title="Flat No. / House No. / Building Name *"
-												{...field}
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
+								placeholder="Flat No. 18, Vasant Apartment"
+								label="Flat No. / House No. / Building Name *"
+								required
 							/>
 
 							<FormField
@@ -193,40 +186,19 @@ export function DetailedAddress({
 								Receiver's Details
 							</FormLabel>
 
-							<FormField
-								control={form.control}
+							<FormInputWithAnimatedLabel
 								name="receiverName"
-								render={({ field }) => (
-									<FormItem>
-										<FormControl>
-											<InputWithAnimatedLabel
-												title="Receiver's Name (optional)"
-												{...field}
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
+								placeholder="Joe Doe"
+								label="Receiver's Name (optional)"
 							/>
 
-							<FormField
-								control={form.control}
+							<FormInputWithAnimatedLabel
 								name="receiverPhone"
-								render={({ field }) => (
-									<FormItem>
-										<FormControl>
-											<InputWithAnimatedLabel
-												title="Receiver's Phone (optional)"
-												type="tel"
-												{...field}
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
+								placeholder="example@gmail.com"
+								label="Receiver's Phone (optional)"
 							/>
 
-							<div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-t z-10 w-full">
+							<div className="fixed bottom-0 left-0 right-0 bg-card p-4 shadow-t z-10 w-full">
 								<FormButton
 									type="submit"
 									className="w-full"

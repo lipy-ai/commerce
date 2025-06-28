@@ -18,5 +18,6 @@ export const idGenerate = (props?: IType) => {
 	};
 
 	const nanoid = customAlphabet(types[props?.alphabet_type || "0-9/A-Z"], 6);
-	return `${props?.prefix && `${props.prefix}-`}${addTimeStamp()}${nanoid()}`;
+
+	return `${props?.prefix ? `${props.prefix}-` : ""}${addTimeStamp()}${nanoid()}`;
 };

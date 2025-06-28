@@ -1,27 +1,48 @@
 {
-  "version": "7",
-  "dialect": "postgresql",
-  "entries": [
-    {
-      "idx": 0,
-      "version": "7",
-      "when": 1750748991380,
-      "tag": "0000_pink_maginty",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1750763421661,
-      "tag": "0001_majestic_puff_adder",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1750763567200,
-      "tag": "0002_lying_angel",
-      "breakpoints": true
-    }
-  ]
+	"version": "7",
+	"dialect": "postgresql",
+	"entries": [
+		{
+			"idx": 0,
+			"version": "7",
+			"when": 1750748991380,
+			"tag": "0000_pink_maginty",
+			"breakpoints": true
+		},
+		{
+			"idx": 1,
+			"version": "7",
+			"when": 1750875742908,
+			"tag": "0001_good_tyrannus",
+			"breakpoints": true
+		},
+		{
+			"idx": 2,
+			"version": "7",
+			"when": 1750876134576,
+			"tag": "0002_cheerful_siren",
+			"breakpoints": true
+		},
+		{
+			"idx": 3,
+			"version": "7",
+			"when": 1750876396588,
+			"tag": "0003_lowly_kitty_pryde",
+			"breakpoints": true
+		},
+		{
+			"idx": 4,
+			"version": "7",
+			"when": 1750877403980,
+			"tag": "0004_small_mister_sinister",
+			"breakpoints": true
+		},
+		{
+			"idx": 5,
+			"version": "7",
+			"when": 1751085632181,
+			"tag": "0005_youthful_firelord",
+			"breakpoints": true
+		}
+	]
 }

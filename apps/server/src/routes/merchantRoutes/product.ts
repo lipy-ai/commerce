@@ -1,17 +1,12 @@
 import { type DBTypes, db } from "@/db";
 import { PRODUCT_TYPE } from "@/db/schema";
 import { zValidator } from "@/middlewares/validator";
+import { listZodSchema } from "@/schema/common";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
 import { type Insertable, sql } from "kysely";
-import { P } from "pino";
 import { z } from "zod";
-
-const listZodSchema = z.object({
-	limit: z.coerce.number().max(50),
-	page: z.coerce.number().min(1),
-	q: z.string().optional(),
-});
+import { sseEmitter } from "./events";
 
 const productSchema = z.object({
 	title: z.string(),
@@ -25,6 +20,7 @@ const productSchema = z.object({
 		(e) => (Array.isArray(e) ? e.filter((e) => !!e) : e),
 		z.array(z.string()),
 	),
+
 	highlights: z.array(z.object({ value: z.string(), label: z.string() })),
 	information: z.array(z.object({ value: z.string(), label: z.string() })),
 });
@@ -49,7 +45,13 @@ const route = new Hono<ServerContext>()
 			.selectFrom("product")
 			.selectAll()
 			.where("storeId", "=", activeStoreId)
-			.$if(!!q, (e) => e.where("title", "ilike", `%${q}%`))
+			.$if(!!q, (qb) => {
+				const words = q!.trim().split(/\s+/);
+				return words.reduce(
+					(acc, word) => acc.where("title", "ilike", `%${word}%`),
+					qb,
+				);
+			})
 			.limit(limit)
 			.offset(offset)
 			.execute();
@@ -128,14 +130,21 @@ const route = new Hono<ServerContext>()
 		async (c) => {
 			const { id } = c.req.valid("param");
 			const { images, ...values } = c.req.valid("json");
+			console.log("emitted msg");
+			sseEmitter.emit("send-to-user", {
+				userId: c.var.session?.userId,
+				event: "notify",
+				data: "message",
+			});
 
-			const activeStoreId = c.var.session?.activeStoreId!;
-			const result = await db
-				.updateTable("product")
-				.where("id", "=", id)
-				.where("storeId", "=", activeStoreId)
-				.set(values)
-				.executeTakeFirstOrThrow();
+			// const activeStoreId = c.var.session?.activeStoreId!;
+			// await db
+			// 	.updateTable("product")
+			// 	.where("id", "=", id)
+			// 	.where("storeId", "=", activeStoreId)
+			// 	.set(values)
+			// 	.executeTakeFirstOrThrow();
+
 			return c.json(values);
 		},
 	)
@@ -144,18 +153,19 @@ const route = new Hono<ServerContext>()
 		zValidator(
 			"json",
 			z.object({
-				ids: z.array(z.string()),
+				ids: z.array(z.string().uuid()),
 			}),
 		),
 		async (c) => {
 			const { ids } = c.req.valid("json");
 			const activeStoreId = c.var.session?.activeStoreId!;
-			const result = await db
+
+			await db
 				.deleteFrom("product")
 				.where("id", "in", ids)
 				.where("storeId", "=", activeStoreId)
-				.executeTakeFirstOrThrow();
-			return c.json(result);
+				.execute();
+			return c.json({ success: true });
 		},
 	);
 

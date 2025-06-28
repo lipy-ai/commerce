@@ -1,4 +1,4 @@
-import { betterAuth } from "better-auth";
+import { type BetterAuthPlugin, betterAuth } from "better-auth";
 import { emailOTP } from "better-auth/plugins";
 
 import { plunkSendEmail } from "@/services/ses";
@@ -115,9 +115,9 @@ const organizationsPlugin = organization({
 			body: `You have been invited to join ${data.organization.name} as ${data.role}. Click the link to join: ${inviteLink}`,
 		});
 	},
-});
+}) as BetterAuthPlugin;
 
-export const auth: any = betterAuth({
+export const auth = betterAuth({
 	disabledPaths: ["/error"],
 	database: {
 		db,
@@ -127,9 +127,10 @@ export const auth: any = betterAuth({
 
 	socialProviders,
 	plugins: [
+		organizationsPlugin,
+
 		emailOTPPlugin,
 		phoneOTPPlugin,
-		organizationsPlugin,
 		emailHarmony(),
 		phoneHarmony({ defaultCountry: "IN" }),
 	],

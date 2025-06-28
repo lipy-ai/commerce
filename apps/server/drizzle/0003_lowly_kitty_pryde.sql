@@ -1,0 +1,1 @@
+ALTER TABLE "lipy"."orders" ALTER COLUMN "id" SET NOT NULL;

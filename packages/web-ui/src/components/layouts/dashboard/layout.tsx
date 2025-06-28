@@ -130,7 +130,7 @@ function ActiveLinks({
 	if (isMobile && mobileNav) {
 		return (
 			<motion.div
-				className="fixed bottom-0 w-screen z-50"
+				className="fixed bottom-0 w-screen z-50 print:hidden"
 				initial="visible"
 				animate={isHidden ? "hidden" : "visible"}
 				variants={{
@@ -194,7 +194,7 @@ function ActiveLinks({
 	if (dashboardNav)
 		return (
 			<motion.nav
-				className="flex flex-col justify-between h-screen sticky top-0 left-0 p-3 border-r z-10 bg-background"
+				className="flex flex-col justify-between h-screen sticky top-0 left-0 p-3 border-r z-10 bg-background print:hidden"
 				onClick={handleNavClick}
 				initial={{ width: "var(--sidebar-size)" }}
 				animate={{

@@ -1,0 +1,1 @@
+ALTER TABLE "lipy"."storeMember" ADD CONSTRAINT "user_store_unique" UNIQUE("userId","storeId");

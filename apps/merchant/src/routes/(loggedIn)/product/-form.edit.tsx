@@ -80,15 +80,16 @@ export default function FormEdit({
 	);
 
 	const onSubmit = async (body: typeof defaultValues) => {
+		if (!data?.id) return;
 		await mutation.mutateAsync(
-			{ param: { id: data?.id! }, json: body },
+			{ param: { id: data.id }, json: body },
 			{
 				onSuccess: () => {
 					queryClient.invalidateQueries({
 						queryKey: apiQueryOptions(
 							apiClient.v1.merchant.product[":id"],
 							"$get",
-							{ param: { id: data?.id! } },
+							{ param: { id: data.id } },
 						).queryKey,
 					});
 					setOpen(false);

@@ -1,10 +1,6 @@
 import { apiClient } from "@lipy/lib/api";
 import { formatAmount } from "@lipy/lib/utils/intl";
-import {
-	apiQueryOptions,
-	useAPIMutation,
-	useAPIQuery,
-} from "@lipy/lib/utils/useQueryClient";
+import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Button } from "@lipy/web-ui/components/ui/button";
@@ -21,17 +17,11 @@ import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
-import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import type { InferResponseType } from "hono/client";
-import { Eye, PenLine, Trash } from "lucide-react";
-import { Fragment, useState, useTransition } from "react";
-import {
-	type DefaultValues,
-	type FieldValues,
-	type UseFormReturn,
-	useForm,
-} from "react-hook-form";
+import { Eye, PenLine } from "lucide-react";
+import { Fragment } from "react";
+
 import FormEdit from "./-form.edit";
 
 export const Route = createFileRoute("/(loggedIn)/product/$id")({
@@ -84,50 +74,6 @@ export function Variations({ data }: { data: any }) {
 	);
 }
 
-function useProductFormHook<T extends FieldValues>({
-	data,
-	defaultValues,
-	setOpen,
-}: {
-	data?: InferResponseType<
-		(typeof apiClient.v1.merchant.product)[":id"]["$get"]
-	>;
-	defaultValues: DefaultValues<T>;
-	setOpen?: (v: string) => void;
-}): {
-	form: UseFormReturn<T>;
-	onSubmit: (body: T) => Promise<void>;
-} {
-	const form = useForm<T>({
-		defaultValues,
-	});
-	const queryClient = useQueryClient();
-
-	const mutation = useAPIMutation(
-		apiClient.v1.merchant.product[":id"],
-		"$patch",
-	);
-
-	const onSubmit = async (body: T) => {
-		await mutation.mutateAsync(
-			{ param: { id: data?.id! }, json: body },
-			{
-				onSuccess: () => {
-					queryClient.invalidateQueries({
-						queryKey: apiQueryOptions(
-							apiClient.v1.merchant.product[":id"],
-							"$get",
-							{ param: { id: data?.id! } },
-						).queryKey,
-					});
-					setOpen?.("");
-				},
-			},
-		);
-	};
-	return { form, onSubmit };
-}
-
 export function BasicProductDetails({
 	data,
 }: {
@@ -135,32 +81,31 @@ export function BasicProductDetails({
 		(typeof apiClient.v1.merchant.product)[":id"]["$get"]
 	>;
 }) {
-	const [open, setOpen] = useState("");
-	const [pending, trans] = useTransition();
-	const queryClient = useQueryClient();
-	const navigate = Route.useNavigate();
+	// const [pending, trans] = useTransition();
+	// const queryClient = useQueryClient();
+	// const navigate = Route.useNavigate();
 
 	const { isMobile } = useViewport();
-	const delMutation = useAPIMutation(apiClient.v1.merchant.product, "$delete", {
-		onSuccess: () => {
-			queryClient.invalidateQueries({
-				queryKey: apiQueryOptions(
-					apiClient.v1.merchant.product,
-					"$get",
-					{} as any,
-				).queryKey,
-			});
-			setOpen?.("");
-			navigate({ to: "/product", replace: true });
-		},
-	});
+	// const delMutation = useAPIMutation(apiClient.v1.merchant.product, "$delete", {
+	// 	onSuccess: () => {
+	// 		queryClient.invalidateQueries({
+	// 			queryKey: apiQueryOptions(
+	// 				apiClient.v1.merchant.product,
+	// 				"$get",
+	// 				{} as any,
+	// 			).queryKey,
+	// 		});
+	// 		setOpen?.("");
+	// 		navigate({ to: "/product", replace: true });
+	// 	},
+	// });
 
-	const handleDelete = () => {
-		if (!data) return;
-		trans(() => {
-			delMutation.mutateAsync({ json: { ids: [data.id] } });
-		});
-	};
+	// const handleDelete = () => {
+	// 	if (!data) return;
+	// 	trans(() => {
+	// 		delMutation.mutateAsync({ json: { ids: [data.id] } });
+	// 	});
+	// };
 
 	const mrp = data?.maxPrice || 0;
 	const sp = data?.price || 0;
@@ -173,22 +118,22 @@ export function BasicProductDetails({
 					<CardAction className={cn("flex gap-2")}>
 						{!isMobile && (
 							<Button
-								onClick={() => setOpen("general")}
+								// onClick={() => setOpen("general")}
 								variant={"outline"}
 								size={"sm"}
 							>
 								<Eye /> {!isMobile && "Preview"}
 							</Button>
 						)}
-						<Button
+						{/* <Button
 							onClick={() => setOpen("delete")}
 							variant={"outline"}
 							size={"sm"}
 							disabled={pending}
 						>
 							<Trash /> {!isMobile && (pending ? "Deleting" : "Delete")}
-						</Button>
-						<FormEdit data={data}>
+						</Button> */}
+						<FormEdit type="update" data={data}>
 							<Button variant={"outline"} size={"sm"}>
 								<PenLine /> {!isMobile && "Edit"}
 							</Button>

@@ -1,13 +1,12 @@
 import { env } from "@envClient"; // Make sure this is a client-safe env import
 import type React from "react";
-import { useEffect, useRef, useState } from "react";
-import { Drawer } from "vaul";
+import { useEffect, useRef } from "react";
 
-type Message = {
-	type: string;
-	message: string;
-	[key: string]: any; // Allow other fields
-};
+// type Message = {
+// 	type: string;
+// 	message: string;
+// 	[key: string]: any; // Allow other fields
+// };
 
 const e =
 	typeof window !== "undefined" &&
@@ -38,7 +37,7 @@ if (e) {
 
 const EventsProvider: React.FC = () => {
 	const sse = useRef<EventSource | null>(null);
-	const [messages, setMessages] = useState<Message[]>([]);
+	// const [messages, setMessages] = useState<Message[]>([]);
 
 	useEffect(() => {
 		if (!sse.current) {

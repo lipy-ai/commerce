@@ -130,7 +130,6 @@ export default function NavBar() {
 					<SearchBar
 						placeholder="Search for shop, grocery, fruits..."
 						defaultValue=""
-						onSearch={() => {}}
 					/>
 				</div>
 				<Link to="/account/orders">

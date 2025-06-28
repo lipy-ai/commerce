@@ -1,4 +1,5 @@
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
+import { DialogTrigger } from "@radix-ui/react-dialog";
 import type { ReactNode } from "@tanstack/react-router";
 import { Button } from "../ui/button";
 import {
@@ -18,6 +19,7 @@ import {
 	DrawerFooter,
 	DrawerHeader,
 	DrawerTitle,
+	DrawerTrigger,
 } from "../ui/drawer";
 
 const DrawerDialogSwitcher = ({
@@ -26,12 +28,14 @@ const DrawerDialogSwitcher = ({
 	children,
 	handleInteractOutside = true,
 	className,
+	trigger,
 }: {
 	open?: boolean;
 	onOpenChange?: (open: boolean) => void;
 	children?: React.ReactNode;
 	handleInteractOutside?: boolean;
 	className?: string;
+	trigger?: ReactNode;
 }) => {
 	const { isMobile } = useViewport();
 	if (isMobile) {
@@ -41,12 +45,15 @@ const DrawerDialogSwitcher = ({
 				onOpenChange={onOpenChange}
 				dismissible={handleInteractOutside}
 			>
+				<DrawerTrigger asChild>{trigger}</DrawerTrigger>
+
 				<DrawerContent className={className}>{children}</DrawerContent>
 			</Drawer>
 		);
 	}
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
+			<DialogTrigger asChild>{trigger}</DialogTrigger>
 			<DialogContent
 				className={className}
 				onInteractOutside={(e) => {

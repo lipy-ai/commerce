@@ -53,10 +53,10 @@ const route = new Hono<ServerContext>()
 
 			const limitedProducts = db
 				.selectFrom("product as p")
-				.leftJoin("productVariant as pv", "pv.product", "p.id")
 				.select((eb) => [
 					"p.id",
 					"p.title",
+					"p.thumbnail",
 					"p.thumbnail",
 					"p.price",
 					"p.maxPrice",

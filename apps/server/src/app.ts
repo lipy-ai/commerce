@@ -8,6 +8,7 @@ import { logger } from "./lib/logger";
 
 import { HTTPException } from "hono/http-exception";
 import { secureHeaders } from "hono/secure-headers";
+import { timeout } from "hono/timeout";
 import { auth } from "./auth";
 import { db, pingDatabase } from "./db";
 import env from "./env";
@@ -18,6 +19,8 @@ import { globalMiddleware } from "./middlewares/global";
 import { addressRoute } from "./routes/address";
 import { cartRoute } from "./routes/cart";
 import { merchantComboboxRoute } from "./routes/merchantRoutes/combobox";
+import { eventsRoute } from "./routes/merchantRoutes/events";
+import { merchantOrderRoute } from "./routes/merchantRoutes/order";
 import { merchantProductRoute } from "./routes/merchantRoutes/product";
 import { merchantStoreRoute } from "./routes/merchantRoutes/store";
 import { orderRoute } from "./routes/order";
@@ -28,8 +31,9 @@ import type { ServerContext } from "./types";
 
 export const app = new Hono<ServerContext>();
 
-// Generic middlewares
 app.use("*", corsMiddleware);
+
+// Generic middlewares
 
 app.use(secureHeaders());
 // app.use(tracing);
@@ -68,7 +72,9 @@ export const routes = app
 	.route("/order", orderRoute)
 	.route("/merchant/store", merchantStoreRoute)
 	.route("/merchant/product", merchantProductRoute)
-	.route("/merchant/combobox", merchantComboboxRoute);
+	.route("/merchant/order", merchantOrderRoute)
+	.route("/merchant/combobox", merchantComboboxRoute)
+	.route("/events", eventsRoute);
 
 // routes.basePath("/admin").route("/category", categoryRouter);
 

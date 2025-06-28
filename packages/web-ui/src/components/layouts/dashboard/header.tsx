@@ -26,13 +26,8 @@ export const DashboardHeader = ({
 	};
 
 	return (
-		<div className="sticky top-0 z-10 bg-background">
-			<div
-				className={cn(
-					"flex justify-between gap-8 w-full p-3 items-center bg-accent/30 border-b h-12",
-					className,
-				)}
-			>
+		<div className="sticky top-0 z-10 bg-background print:hidden">
+			<div className="flex justify-between gap-8 w-full p-3 items-center bg-accent/30 border-b h-14">
 				<div className="flex items-center justify-center gap-2">
 					{!hideBackBtn && (
 						<Link to={"/"} onClick={onBack}>

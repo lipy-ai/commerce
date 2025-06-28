@@ -9,9 +9,11 @@ import {
 	jsonb,
 	numeric,
 	pgSchema,
+	primaryKey,
 	smallint,
 	text,
 	timestamp,
+	unique,
 	uuid,
 } from "drizzle-orm/pg-core";
 import type { z } from "zod";
@@ -150,19 +152,26 @@ export const store = schema.table("store", {
 	active: boolean("active").default(false),
 });
 
-export const storeMember = schema.table("storeMember", {
-	id: uuid("id").primaryKey(),
-	storeId: uuid("storeId")
-		.notNull()
-		.references(() => store.id, { onDelete: "cascade" }),
-	userId: uuid("userId")
-		.notNull()
-		.references(() => user.id, { onDelete: "cascade" }),
-	role: text("role", {
-		enum: ["owner", "admin", "delivery", "staff"],
-	}).notNull(),
-	createdAt: timestamp("createdAt").notNull(),
-});
+export const storeMember = schema.table(
+	"storeMember",
+	{
+		id: uuid("id").primaryKey(),
+		storeId: uuid("storeId")
+			.notNull()
+			.references(() => store.id, { onDelete: "cascade" }),
+		userId: uuid("userId")
+			.notNull()
+			.references(() => user.id, { onDelete: "cascade" }),
+		role: text("role", {
+			enum: ["owner", "admin", "delivery", "staff"],
+		}).notNull(),
+		createdAt: timestamp("createdAt").notNull(),
+	},
+	(table) => [
+		// 👇 This enforces uniqueness on the combination
+		unique("user_store_unique").on(table.userId, table.storeId),
+	],
+);
 
 export const storeInvitation = schema.table("storeInvitation", {
 	id: uuid("id").primaryKey(),
@@ -177,6 +186,18 @@ export const storeInvitation = schema.table("storeInvitation", {
 		.notNull()
 		.references(() => user.id, { onDelete: "cascade" }),
 });
+export const customer = schema.table(
+	"customer",
+	{
+		storeId: uuid("storeId").references(() => store.id, {
+			onDelete: "cascade",
+		}),
+		userId: uuid("userId").references(() => store.id, {
+			onDelete: "cascade",
+		}),
+	},
+	(table) => [primaryKey({ columns: [table.storeId, table.userId] })],
+);
 
 export const upload = schema.table("upload", {
 	id: uuid("id").primaryKey(),
@@ -298,8 +319,8 @@ export const cart = schema.table("cart", {
 });
 
 export const orders = schema.table("orders", {
-	id: uuid("id").primaryKey(),
-	pk: text().unique(),
+	pk: uuid("pk").primaryKey(),
+	id: text().unique().notNull(),
 	items: jsonb("items").array().$type<
 		Array<{
 			id: string;
@@ -376,6 +397,7 @@ export const dbTables = {
 	store,
 	storeMember,
 	storeInvitation,
+	customer,
 	product,
 	productVariant,
 	cart,

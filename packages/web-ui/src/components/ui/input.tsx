@@ -28,11 +28,30 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 		},
 		ref,
 	) => {
-		const hasPrefix = !!prefixEl;
-		const hasSuffix = !!suffixEl;
+		const wrapperId = React.useId();
+
+		const update = () => {
+			if (!prefixEl && !suffixEl) return;
+			const wrapper = document.getElementById(wrapperId) as HTMLDivElement;
+			if (!wrapper) return;
+			const prefixE = wrapper?.getElementsByClassName("prefix-el")[0];
+			const suffixE = wrapper?.getElementsByClassName("suffix-el")[0];
+			const input = wrapper?.getElementsByTagName(
+				"input",
+			)[0] as HTMLInputElement;
+			if (!input) return;
+			if (suffixE) input.style.paddingRight = `${suffixE.clientWidth + 2}px`;
+			if (prefixE) input.style.paddingLeft = `${prefixE.clientWidth + 2}px`;
+		};
+
+		// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+		React.useEffect(() => {
+			update();
+		}, [wrapperId, prefixEl, suffixEl]);
 
 		return (
 			<div
+				id={wrapperId}
 				className={cn(
 					"selection:bg-primary selection:text-primary-foreground",
 					"relative flex items-center overflow-hidden rounded-md border text-base",
@@ -43,12 +62,15 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 					className,
 				)}
 			>
-				{hasPrefix && (
+				{prefixEl && (
 					<div
 						className={cn(
-							"flex items-center px-2.5 text-muted-foreground",
-							size === "lg" ? "h-12" : "h-10",
+							"inline-flex text-muted-foreground items-center px-2.5 [&>svg]:w-5 absolute appearance-none h-10",
+							"text-base leading-0 align-middle ",
+							size === "lg" && "text-lg h-12",
+
 							prefixClassName,
+							"prefix-el",
 						)}
 					>
 						{prefixEl}
@@ -59,14 +81,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 					ref={ref}
 					type={type}
 					className={cn(
-						"flex-1 w-full h-full bg-transparent outline-none shadow-none transition-colors",
-						"text-base placeholder:text-muted-foreground",
-						"focus-visible:ring-0 focus-visible:shadow-[0_-3px_0_0_theme('colors.ring.DEFAULT'),0_3px_0_0_theme('colors.ring.DEFAULT')] focus-visible:ring-ring/50 focus-visible:border-ring",
-						"aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
-						"file:border-0 file:bg-transparent file:text-base file:font-medium",
-						"disabled:cursor-not-allowed disabled:opacity-50",
-						hasPrefix ? "pl-2" : "pl-4",
-						hasSuffix ? "pr-2" : "pr-4",
+						"focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
+						"aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+						"placeholder:text-muted-foreground flex-1 flex h-full px-2 shadow-none w-full bg-transparent py-1 text-base outline-none transition-colors file:border-0 file:bg-transparent file:text-base file:font-medium disabled:cursor-not-allowed disabled:opacity-50",
+
 						size === "lg" && "text-lg",
 						noStyle && "h-fit w-fit",
 						inputClassName,
@@ -74,17 +92,21 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 					{...props}
 				/>
 
-				{hasSuffix && (
-					<div
-						className={cn(
-							"flex items-center px-2 text-muted-foreground",
-							size === "lg" ? "h-12" : "h-10",
-							suffixClassName,
-						)}
-					>
-						{suffixEl}
-					</div>
-				)}
+				<span className="text-sm ">
+					{suffixEl && (
+						<span
+							className={cn(
+								"inline-flex items-center text-muted-foreground px-1 [&>svg]:w-5 absolute appearance-none right-0 top-0 h-full w-fit",
+								size === "lg" && "text-lg",
+								suffixClassName,
+								"suffix-el",
+							)}
+							onClick={() => {}}
+						>
+							{suffixEl}
+						</span>
+					)}
+				</span>
 			</div>
 		);
 	},

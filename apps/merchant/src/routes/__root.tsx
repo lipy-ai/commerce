@@ -1,3 +1,4 @@
+import EventsProvider from "@/providers/event";
 import { DefaultCatchBoundary, NotFound } from "@/router";
 import { seo } from "@/utils/seo";
 import { env } from "@envClient";
@@ -116,7 +117,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			>
 				<ViewportProvider isMobile={data?.isSsrMobile}>
 					<QueryProvider handleThrowOnError={handleThrowOnError}>
-						<NuqsAdapter>{children}</NuqsAdapter>
+						<NuqsAdapter>
+							<EventsProvider />
+							{children}
+						</NuqsAdapter>
 						<Toaster />
 					</QueryProvider>
 					{env.SHOW_DEV_TOOLS && (

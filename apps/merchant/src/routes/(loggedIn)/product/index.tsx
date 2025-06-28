@@ -5,7 +5,7 @@ import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Pagination } from "@lipy/web-ui/components/pages/pagination";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
-import { buttonVariants } from "@lipy/web-ui/components/ui/button";
+import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@lipy/web-ui/components/ui/card";
 import {
 	Table,
@@ -21,6 +21,7 @@ import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import type { InferResponseType } from "hono/client";
 import { ArrowUpRight, PlusCircle } from "lucide-react";
 import { z } from "zod";
+import FormEdit from "./-form.edit";
 
 export const Route = createFileRoute("/(loggedIn)/product/")({
 	component: RouteComponent,
@@ -48,16 +49,18 @@ function RouteComponent() {
 	return (
 		<div>
 			<DashboardHeader title="Products">
-				<Link
-					to="/product/create"
-					className={cn(buttonVariants({ size: "sm" }))}
-				>
-					<PlusCircle />
-					New Product
-				</Link>
+				<FormEdit type="create">
+					<Button size={"sm"}>
+						<PlusCircle />
+						New Product
+					</Button>
+				</FormEdit>
 			</DashboardHeader>
 
 			<div className="lg:p-8 lg:space-y-8">
+				<div className="p-4 lg:p-0">
+					<SearchBar placeholder="Search products" defaultValue={q} />
+				</div>
 				{isLoading ? null : !data || data.items.length === 0 ? (
 					<Card>
 						<CardHeader>
@@ -66,10 +69,6 @@ function RouteComponent() {
 					</Card>
 				) : (
 					<>
-						<div className="p-4 lg:p-0">
-							<SearchBar placeholder="Search products" />
-						</div>
-
 						{isMobile ? (
 							<MobileView items={data.items} />
 						) : (

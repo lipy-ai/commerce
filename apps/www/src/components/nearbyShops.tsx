@@ -27,7 +27,11 @@ export default function NearByShops() {
 	>([]);
 	const [_, setActiveCategory] = useState("all");
 
-	const { isFetched, isFetching } = useAPIQuery(apiClient.v1.shops, "$get", {});
+	const { data, isFetched, isFetching } = useAPIQuery(
+		apiClient.v1.shops,
+		"$get",
+		{},
+	);
 	const [navBarColorChange, setNavBarColorChange] = useState(false);
 	const { scrollY } = useScroll();
 
@@ -41,9 +45,9 @@ export default function NearByShops() {
 
 	useEffect(() => {
 		if (isFetched) {
-			setShops([]);
+			setShops(data || []);
 		}
-	}, [isFetched]);
+	}, [isFetched, data]);
 
 	if (isFetching) {
 		return <Spinner />;
@@ -53,7 +57,6 @@ export default function NearByShops() {
 		<div>
 			{isFetched && shops && shops.length > 0 && (
 				<div className="lg:hidden border-b shadow-sm sticky top-0 z-50 bg-card  overflow-hidden">
-					{/* Animated overlay for primary color */}
 					<motion.div
 						className="absolute inset-0 bg-chart-3/30"
 						initial={{ opacity: 0 }}
@@ -64,7 +67,6 @@ export default function NearByShops() {
 						}}
 					/>
 
-					{/* Content container */}
 					<div className="relative z-10 space-y-2">
 						<SearchBar
 							placeholder="Search for shop, grocery, fruits..."
@@ -83,7 +85,7 @@ export default function NearByShops() {
 				</div>
 			)}
 
-			<div className="m-auto max-w-screen-2xl">
+			<div className="m-auto max-w-screen-2xl px-2">
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-center gap-4 py-4">
 					{isFetched &&
 						shops &&
@@ -92,62 +94,11 @@ export default function NearByShops() {
 							<div key={shop.id} className="space-y-6">
 								<div className="bg-card border p-0 rounded-xl">
 									<Link
-										to="/shop/$id"
-										params={{ id: shop.id }}
+										to="/$shopHandle"
+										params={{ shopHandle: shop.handle as string }}
 										viewTransition={{ types: ["warp"] }}
 									>
-										<div className="relative h-48">
-											<img
-												src={shop.image || "/assets/paper-bag-items.webp"}
-												alt={shop.name}
-												className="w-full h-full object-cover rounded-t-xl"
-											/>
-
-											<Badge
-												className="absolute bottom-3 right-3"
-												variant={"secondary"}
-											>
-												<div className="flex items-center">
-													<MapPin className="size-4 mr-1" />
-													<span>1 km</span>
-												</div>
-											</Badge>
-										</div>
-
-										<div className="p-4 -my-4">
-											<div className="flex items-center justify-between">
-												<h3 className="font-bold text-lg">{shop.name}</h3>
-
-												<div className="flex items-center mt-1">
-													<div className="flex items-center bg-green-800 text-background px-2 rounded text-sm">
-														<span>4.6</span>
-														<Star className="h-3 w-3 ml-1 fill-white" />
-													</div>
-												</div>
-											</div>
-
-											<div className="mt-2 text-sm text-muted-foreground">
-												Books • Stationary
-											</div>
-
-											<div className="flex items-center justify-between mt-3 text-sm" />
-										</div>
-									</Link>
-								</div>
-							</div>
-						))}
-					{isFetched &&
-						shops &&
-						shops.length > 0 &&
-						shops.map((shop) => (
-							<div key={shop.id} className="space-y-6">
-								<div className="bg-white border p-0 rounded-xl">
-									<Link
-										to="/shop/$id"
-										params={{ id: shop.id }}
-										viewTransition={{ types: ["warp"] }}
-									>
-										<div className="relative h-48">
+										<div className="relative h-44">
 											<img
 												src={shop.image || "/assets/paper-bag-items.webp"}
 												alt={shop.name}

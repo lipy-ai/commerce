@@ -3,7 +3,7 @@ import { useAPIMutation } from "@lipy/lib/utils/useQueryClient";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { cn } from "@lipy/web-ui/lib/utils";
-import { Loader2, Minus, Plus, ShoppingCart } from "lucide-react";
+import { Loader2, Minus, Plus } from "lucide-react";
 import { useCallback, useState } from "react";
 import { type Operation, useCartStore } from "./store";
 
@@ -16,18 +16,12 @@ export const AddToCart = ({
 	product,
 	variant,
 	disabled = false,
-	thumbnail,
 }: {
 	product: any;
 	variant: "icon" | "primary" | "active";
 	disabled?: boolean;
 	thumbnail?: string;
 }) => {
-	product = {
-		...product,
-		thumbnail,
-	};
-
 	const { cart, updateCart } = useCartStore();
 	const [loadingState, setLoadingState] = useState<LoadingState>({
 		isLoading: false,
@@ -105,31 +99,22 @@ export const AddToCart = ({
 	const computedVariant = productInCart ? "active" : variant;
 	const isLoading = loadingState.isLoading;
 
-	const LoadingSpinner = ({
-		size = "default",
-	}: { size?: "sm" | "default" }) => (
-		<Loader2
-			className={cn("animate-spin", size === "sm" ? "h-3 w-3" : "h-4 w-4")}
-		/>
-	);
-
 	switch (computedVariant) {
 		case "icon":
 			return (
 				<Button
-					className={cn(
-						"text-primary border-primary border-2 ",
-						isLoading && "opacity-75",
-					)}
-					size="icon"
+					size="icon-sm"
 					onClick={handleAddToCart}
 					disabled={disabled || isLoading}
 					type="button"
-					variant="outline"
+					variant="green-outline"
 					aria-label="Add to cart"
+					className="bg-card relative"
 				>
 					{isLoading ? (
-						<LoadingSpinner />
+						<div className="absolute size-full flex justify-center items-center">
+							<Loader2 className="animate-spin" />
+						</div>
 					) : (
 						<Plus className="size-3" strokeWidth={3} />
 					)}
@@ -139,25 +124,19 @@ export const AddToCart = ({
 		case "primary":
 			return (
 				<Button
-					className={cn(
-						"bg-primary text-white font-semibold transition-all duration-200",
-						"hover:bg-primary/90 active:scale-95",
-						isLoading && "opacity-75",
-					)}
 					onClick={handleAddToCart}
 					disabled={disabled || isLoading}
 					aria-label="Add to cart"
+					variant={"secondary"}
+					className="relative"
+					size="sm"
 				>
 					{isLoading ? (
-						<>
-							<LoadingSpinner />
-							<span className="ml-2">Adding...</span>
-						</>
+						<div className="absolute size-full flex justify-center items-center">
+							<Loader2 className="animate-spin" />
+						</div>
 					) : (
-						<>
-							<ShoppingCart className="h-4 w-4 mr-2" />
-							Add to Cart
-						</>
+						<div className="text-tertiary font-semibold">Add</div>
 					)}
 				</Button>
 			);
@@ -170,7 +149,7 @@ export const AddToCart = ({
 				isLoading && loadingState.operation === "increment";
 
 			return (
-				<div className="bg-primary flex items-center  rounded-lg shadow-sm">
+				<div className="bg-tertiary flex items-center  rounded-lg shadow-sm">
 					<Button
 						size="icon-sm"
 						variant="ghost"
@@ -183,7 +162,7 @@ export const AddToCart = ({
 						aria-label="Decrease quantity"
 					>
 						{isDecrementLoading ? (
-							<LoadingSpinner size="sm" />
+							<Loader2 size="sm" className="animate-spin" />
 						) : (
 							<Minus className="h-3 w-3" />
 						)}
@@ -193,7 +172,7 @@ export const AddToCart = ({
 						{isLoading &&
 						(loadingState.operation === "add" ||
 							(!isDecrementLoading && !isIncrementLoading)) ? (
-							<LoadingSpinner size="sm" />
+							<Loader2 size="sm" className="animate-spin" />
 						) : (
 							<span className="font-semibold text-white text-sm px-1">
 								{currentQuantity}
@@ -213,7 +192,7 @@ export const AddToCart = ({
 						aria-label="Increase quantity"
 					>
 						{isIncrementLoading ? (
-							<LoadingSpinner size="sm" />
+							<Loader2 size="sm" className="animate-spin" />
 						) : (
 							<Plus className="h-3 w-3" strokeWidth={2} />
 						)}

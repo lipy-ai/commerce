@@ -1,25 +1,56 @@
 import { discountCalculator } from "@lipy/lib/helper/discountCalculator";
+import { formatAmount } from "@lipy/lib/utils/intl";
+import {
+	DrawerDialogHeader,
+	DrawerDialogSwitcher,
+	DrawerDialogTitle,
+} from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
+import { Button } from "@lipy/web-ui/components/ui/button";
 import { cn } from "@lipy/web-ui/lib/utils";
+import { Minus, Plus } from "lucide-react";
+import { useState } from "react";
 import { AddToCart } from "./cart/addToCart";
+import { useCartStore } from "./cart/store";
 
+export type ProductType = {
+	id: string;
+	price: number;
+	maxPrice: number;
+	title?: string;
+	thumbnail: string;
+	storeId?: string;
+	category?: string;
+	rn?: number;
+	quantity?: number;
+	unit?: string;
+	variants: Array<{
+		id: string;
+		price: number;
+		maxPrice: number;
+		stockQty: number;
+		title: string;
+		unit: string;
+	}>;
+};
 export default function ProductCard({
 	product,
 	className,
-	variant,
-	...props
+	variant = "default",
 }: {
 	className?: {
 		classNameBox?: string;
 		classNameImg?: string;
 	};
-	product: any;
+	product: ProductType;
 	variant?: "default" | "horizontal";
-	thumbnail?: string;
 }) {
 	const discountPercentage = discountCalculator(
-		product.price,
-		product.maxPrice,
+		product?.price,
+		product?.maxPrice,
 	);
+
+	const [variantDrawer, setVariantDrawer] = useState(false);
+	const [_, setActiveProduct] = useState<ProductType>();
 
 	switch (variant) {
 		case "horizontal": {
@@ -35,7 +66,7 @@ export default function ProductCard({
 							<div className=" relative aspect-square">
 								<img
 									alt={""}
-									src={props?.thumbnail || "/assets/paper-bag-items.webp"}
+									src={product.thumbnail || "/assets/paper-bag-items.webp"}
 									className={cn(
 										"w-full h-full object-cover rounded-md bg-gray-200",
 										className?.classNameImg,
@@ -56,10 +87,16 @@ export default function ProductCard({
 							<AddToCart product={product} variant={"icon"} />
 							<div className="flex items-center gap-2">
 								<p className="line-through text-muted-foreground">
-									₹{product.maxPrice * product.quantity}
+									{formatAmount(
+										"inr",
+										product.maxPrice * (product.quantity as number),
+									)}
 								</p>
 								<p className="font-semibold">
-									₹{product.price * product.quantity}
+									{formatAmount(
+										"inr",
+										product.price * (product.quantity as number),
+									)}
 								</p>
 							</div>
 						</div>
@@ -68,43 +105,154 @@ export default function ProductCard({
 			);
 		}
 
-		default:
+		default: {
+			let cartCount = 0;
+			const { cart } = useCartStore();
+
+			for (const cartItem of cart) {
+				if (cart.length === 0) break;
+				for (const variant of product.variants) {
+					if (product.variants.length === 0) break;
+
+					if (variant.id === cartItem.id) {
+						cartCount += 1;
+					}
+				}
+			}
+
 			return (
 				<div className={cn("", className?.classNameBox)}>
 					<div className=" relative aspect-square">
 						<img
 							alt={""}
-							src={props?.thumbnail || "/assets/paper-bag-items.webp"}
+							src={product.thumbnail || "/assets/paper-bag-items.webp"}
 							className={cn(
 								"w-full h-30 object-cover rounded-md bg-gray-200",
 								className?.classNameImg,
 							)}
 						/>
 
-						{discountPercentage > 0 && (
-							<div className="absolute top-0 left-0 bg-orange-400 text-white rounded-br-sm px-2 py-1 text-xs font-semibold clip-zigzag">
-								{discountPercentage}%<p>Off</p>
-							</div>
-						)}
-
 						<div className="absolute -bottom-1 -right-1">
-							<AddToCart
-								product={product}
-								variant={"icon"}
-								thumbnail={props.thumbnail}
-							/>
+							{product.variants.length <= 1 ? (
+								<AddToCart product={product.variants[0]} variant={"icon"} />
+							) : cartCount === 0 ? (
+								<Button
+									size="icon-sm"
+									type="button"
+									variant="green-outline"
+									aria-label="Add to cart"
+									className="bg-card"
+									onClick={(e) => {
+										e.preventDefault();
+										e.stopPropagation();
+
+										setVariantDrawer(true);
+										setActiveProduct(product);
+									}}
+								>
+									<Plus className="size-3" strokeWidth={3} />
+								</Button>
+							) : (
+								<div
+									className="bg-tertiary flex items-center  rounded-lg shadow-sm"
+									onClick={(e) => {
+										e.preventDefault();
+										e.stopPropagation();
+
+										setVariantDrawer(true);
+										setActiveProduct(product);
+									}}
+								>
+									<Button size="icon-sm" variant="ghost" className="text-white">
+										<Minus className="h-3 w-3" />
+									</Button>
+
+									<div className="min-w-[2px] flex items-center justify-center">
+										<span className="font-semibold text-white text-sm px-1">
+											{cartCount}
+										</span>
+									</div>
+
+									<Button size="icon-sm" variant="ghost" className="text-white">
+										<Plus className="h-3 w-3" strokeWidth={2} />
+									</Button>
+								</div>
+							)}
 						</div>
 					</div>
 
-					<p className="py-1 text-sm font-medium">{product.title}</p>
+					<div className="space-y-0.5">
+						<p className="py-1 text-xs font-medium">{product.title}</p>
+						<div>
+							{discountPercentage > 0 && (
+								<p className="text-xs text-blue-600 font-medium">
+									{discountPercentage}% OFF
+								</p>
+							)}
 
-					<span className="font-bold text-md pr-2"> ₹{product.price}</span>
-					{product.maxPrice && (
-						<span className="text-xs line-through text-muted-foreground">
-							₹{product.maxPrice}
-						</span>
+							<span className="font-bold text-md pr-1">
+								{" "}
+								{formatAmount("inr", product.price)}
+							</span>
+							{product.maxPrice && (
+								<span className="text-xs line-through text-muted-foreground">
+									{formatAmount("inr", product.maxPrice)}
+								</span>
+							)}
+						</div>
+					</div>
+
+					{variantDrawer && (
+						<VariantList
+							open={variantDrawer}
+							onOpenChange={setVariantDrawer}
+							product={product}
+						/>
 					)}
 				</div>
 			);
+		}
 	}
+}
+
+function VariantList({
+	open,
+	onOpenChange,
+	product,
+}: {
+	open?: boolean;
+	onOpenChange?: (open: boolean) => void;
+	product: ProductType;
+}) {
+	return (
+		<DrawerDialogSwitcher open={open} onOpenChange={onOpenChange}>
+			<DrawerDialogHeader>
+				<DrawerDialogTitle>{product.title}</DrawerDialogTitle>
+			</DrawerDialogHeader>
+
+			<div className="space-y-1">
+				{product.variants?.map((variant) => (
+					<div
+						key={variant.id}
+						className="bg-card p-4 shadow-xs rounded-lg flex items-center justify-between cursor-pointer"
+					>
+						<div>
+							<p className="text-sm font-medium">{variant.title}</p>
+							<span className="font-bold text-md pr-1">
+								{" "}
+								{formatAmount("inr", variant.price)}
+							</span>
+							{product.maxPrice && (
+								<span className="text-xs line-through text-muted-foreground">
+									{formatAmount("inr", variant.maxPrice)}
+								</span>
+							)}
+						</div>
+
+						<AddToCart product={variant} variant={"primary"} />
+					</div>
+				))}
+			</div>
+		</DrawerDialogSwitcher>
+	);
 }

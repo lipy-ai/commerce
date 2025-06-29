@@ -6,7 +6,7 @@ import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
 
-export const Route = createFileRoute("/shop")({
+export const Route = createFileRoute("/(shop)/$shopHandle")({
 	component: RouteComponent,
 });
 
@@ -33,14 +33,16 @@ function RouteComponent() {
 								<Link
 									to="/cart"
 									className={cn(
-										buttonVariants({ variant: "emerald", size: "lg" }),
+										buttonVariants({ variant: "emerald" }),
 										"gap-4",
 									)}
 									viewTransition={{ types: ["slide-left"] }}
 								>
 									<div className="flex flex-col items-center">
-										<p className="font-semibold text-base">View Cart</p>
-										<p>{cart.length} items</p>
+										<p className="font-semibold text-sm">View Cart</p>
+										<p className="text-xs text-background/80">
+											{cart.length} items
+										</p>
 									</div>
 								</Link>
 							</div>

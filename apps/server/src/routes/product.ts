@@ -35,9 +35,11 @@ const route = new Hono<ServerContext>()
 			.select((eb) => [
 				"p.id",
 				"p.title",
+				"p.price",
+				"p.maxPrice",
 				"p.thumbnail",
 				"c.title as categoryTitle",
-				"c.id as categoryId",
+				"c.id as category",
 				jsonArrayFrom(
 					eb
 						.selectFrom("productVariant as pv")
@@ -58,10 +60,8 @@ const route = new Hono<ServerContext>()
 			const data = await db
 				.selectFrom("product as p")
 				.where("p.id", "=", q.id)
+				.selectAll(["p"])
 				.select((eb) => [
-					"p.id",
-					"p.title",
-					"p.category",
 					jsonArrayFrom(
 						eb
 							.selectFrom("productVariant as pv")

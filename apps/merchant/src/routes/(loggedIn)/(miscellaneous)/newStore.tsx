@@ -22,7 +22,8 @@ export const Route = createFileRoute("/(loggedIn)/(miscellaneous)/newStore")({
 function RouteComponent() {
 	const navigate = useNavigate();
 	const { data, refetch } = authClient.useSession();
-	console.log("Session ", data);
+
+	console.log("sessoin", data);
 
 	if (data?.session.activeOrganizationId) navigate({ to: "/" });
 	const formSchema = z.object({
@@ -99,14 +100,14 @@ function RouteComponent() {
 									name="shopName"
 									label="Shop Name"
 									placeholder="Lipy General Store"
-									className="text-2xl lg:p-2"
+									className="text-2xl "
 									required
 								/>
 								<FormInput
 									name="handle"
 									label="Shop Handle"
 									placeholder="lipy-general-store"
-									className="text-2xl lg:p-2"
+									className="text-2xl "
 									required
 								/>
 							</div>

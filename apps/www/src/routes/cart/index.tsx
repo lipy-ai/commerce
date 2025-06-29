@@ -2,7 +2,7 @@ import { DeliveryInstruction } from "@/components/cart/instructions";
 import { useCartStore } from "@/components/cart/store";
 
 import PlaceOrder from "@/components/order/placeOrder";
-import ProductCard from "@/components/productCard";
+import ProductCard, { type ProductType } from "@/components/productCard";
 import { apiClient } from "@lipy/lib/api";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
@@ -19,7 +19,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@lipy/web-ui/components/ui/card";
-import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute } from "@tanstack/react-router";
@@ -35,7 +34,7 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
-export const Route = createFileRoute("/cart")({
+export const Route = createFileRoute("/cart/")({
 	component: RouteComponent,
 });
 
@@ -51,12 +50,7 @@ function RouteComponent() {
 	const [completeDeliveryInstruction, setCompleteDeliveryInstruction] =
 		useState("");
 
-	const {
-		data = [],
-		isFetched,
-		isError,
-		isFetching,
-	} = useAPIQuery(
+	const { data = [], isFetched } = useAPIQuery(
 		apiClient.v1.cart,
 		"$get",
 		{},
@@ -74,7 +68,7 @@ function RouteComponent() {
 
 	// Update cart when data changes
 	useEffect(() => {
-		if (isFetched && !isError && data.length > 0) {
+		if (isFetched && data.length > 0) {
 			const mappedCart = data.map((item: any) => ({
 				id: item.variantId,
 				quantity: item.quantity,
@@ -86,7 +80,7 @@ function RouteComponent() {
 			}));
 			setCart(mappedCart);
 		}
-	}, [isFetched, isError, data, setCart]);
+	}, [isFetched, data, setCart]);
 
 	const { totalPrice, totalMaxPrice } = useMemo(() => {
 		return cart.reduce(
@@ -98,8 +92,6 @@ function RouteComponent() {
 			{ totalPrice: 0, totalMaxPrice: 0 },
 		);
 	}, [cart]);
-
-	// const totalDiscount = totalMaxPrice - totalPrice;
 
 	const billingDetails = [
 		{
@@ -132,19 +124,9 @@ function RouteComponent() {
 		<div>
 			{isMobile && <DashboardHeader title="Cart" />}
 
-			{isFetching && (
-				<div className="relative m-auto max-w-screen-lg">
-					{Array.from({ length: 5 }).map((_, i) => (
-						<div key={i} className="my-2 flex flex-col items-center">
-							<Skeleton className="h-28 w-5/6" />
-						</div>
-					))}
-				</div>
-			)}
-
-			{isFetched && !isError && data.length > 0 && (
+			{isFetched && data && data.length > 0 && (
 				<div className="relative max-w-screen-lg m-auto">
-					<div className="p-4 space-y-6 mb-4 gap-4">
+					<div className="space-y-6 my-4 gap-4">
 						<Card className="">
 							<CardContent className="divide-y  p-0">
 								<CardHeader className="p-4 flex items-center justify-between">
@@ -157,8 +139,7 @@ function RouteComponent() {
 									{cart.map((product) => (
 										<div key={product.id} className=" py-4">
 											<ProductCard
-												thumbnail={product.thumbnail ?? undefined}
-												product={product}
+												product={product as ProductType}
 												variant="horizontal"
 												className={{ classNameImg: "w-12 h-12" }}
 											/>
@@ -205,7 +186,7 @@ function RouteComponent() {
 							</CardContent>
 						</Card>
 
-						<div className="p-4 mb-42 shadow-none rounded-xl bg-white border-none">
+						<div className="p-4 mb-42 shadow-none rounded-xl bg-card border-none">
 							<div
 								className="flex items-center justify-between"
 								onClick={() => setDeliveryInstructionDrawerOpen(true)}
@@ -226,7 +207,7 @@ function RouteComponent() {
 					</div>
 
 					{/* Bottom Checkout UI */}
-					<div className="fixed bottom-0 border-t  w-full bg-white shadow-xl border-2 rounded-t-lg max-w-screen-lg">
+					<div className="fixed bottom-0 border-t  w-full bg-card shadow-xl border-2 rounded-t-lg max-w-screen-lg">
 						<div
 							className="bg-accent/40 rounded-t-xl p-2 cursor-pointer"
 							onClick={() => setDetailedAddressDrawerOpen(true)}
@@ -270,7 +251,7 @@ function RouteComponent() {
 				</div>
 			)}
 
-			{isFetched && !isError && data.length === 0 && (
+			{isFetched && data && data.length === 0 && (
 				<EmptyPage icon={ShoppingBag} title="Your Cart is Empty" label=" ">
 					<Link
 						className={cn(

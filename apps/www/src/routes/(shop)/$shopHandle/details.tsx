@@ -1,10 +1,9 @@
 import { env } from "@envClient";
 import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
-import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
+import { Button } from "@lipy/web-ui/components/ui/button";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { shareContent } from "@lipy/web-ui/lib/share";
-import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import { Clock, Mail, MapPin, Phone, Share } from "lucide-react";
 import { DashboardHeader } from "../../../../../../packages/web-ui/src/components/layouts/dashboard/header";
@@ -64,34 +63,39 @@ function RouteComponent() {
 				<p className="text-sm font-normal">{data?.description}</p>
 				<div className="mt-4 flex items-center gap-4 justify-between">
 					<div className="flex gap-4">
-						<a
-							href={`mailto:${data?.email}`}
-							target="_blank"
-							rel="noopener noreferrer"
-							className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={() => {
+								window.open(`mailto:${data?.email}`);
+							}}
 						>
 							<Mail />
-						</a>
-						<a
-							href={`tel:${data?.phone}`}
-							target="_blank"
-							rel="noopener noreferrer"
-							className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+						</Button>
+
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={() => {
+								window.open(`tel:${data?.phone}`);
+							}}
 						>
 							<Phone />
-						</a>
+						</Button>
 					</div>
 
-					<a
-						href={`https://www.google.com/maps/dir/?api=1&destination=${data?.address?.lat},${data?.address?.lng}`}
-						target="_blank"
-						rel="noopener noreferrer"
-						aria-label="Get directions to this shop on Google Maps"
-						className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+					<Button
+						variant={"outline"}
+						size="sm"
+						onClick={() => {
+							window.open(
+								`https://www.google.com/maps/dir/?api=1&destination=${data?.address?.lat},${data?.address?.lng}`,
+							);
+						}}
 					>
 						<MapPin className="text-tertiary" />
 						Directions
-					</a>
+					</Button>
 				</div>
 			</div>
 

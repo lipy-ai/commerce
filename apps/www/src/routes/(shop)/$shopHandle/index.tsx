@@ -41,19 +41,15 @@ function RouteComponent() {
 		data: shopData,
 		isFetching: fetchingShopData,
 		isFetched: fetchedShopData,
-	} = useAPIQuery(
-		apiClient.v1.shops[":handle"],
-		"$get",
-		{
-			param: { handle: shopHandle },
-		},
-		{
-			staleTime: Number.POSITIVE_INFINITY,
-			cacheTime: Number.POSITIVE_INFINITY,
-		},
-	);
+	} = useAPIQuery(apiClient.v1.shops[":handle"], "$get", {
+		param: { handle: shopHandle },
+	});
 
-	const { data: productData, isFetched: fetchedProduct } = useAPIQuery(
+	const {
+		data: productData,
+		isFetched: fetchedProduct,
+		isFetching: fetchingProduct,
+	} = useAPIQuery(
 		apiClient.v1.shops[":id"].categories,
 		"$get",
 		{
@@ -70,8 +66,7 @@ function RouteComponent() {
 		},
 	);
 
-	console.log("Product data", productData);
-
+	if (fetchingShopData || fetchingProduct) return <ShopLoadingSkeleton />;
 	return (
 		<div className="relative max-w-screen-lg mx-auto">
 			<DashboardHeader
@@ -87,110 +82,100 @@ function RouteComponent() {
 						{shopData?.name}
 					</motion.h1>
 				}
-				className={cn(
-					!visibleShopName ? "bg-amber-100" : "bgg-card",
-					"lg:hidden border-0 h-12",
-				)}
+				className={cn(!visibleShopName ? "bg-amber-100" : "bg-card")}
 			>
 				{shopData && <ShopOptions shop={shopData} />}
 			</DashboardHeader>
 
-			<div className="px-4 pb-4 bg-amber-100">
-				{fetchingShopData && <Skeleton className="h-16 w-full" />}
-				{fetchedShopData && shopData && (
-					<div className="text-center mb-2">
-						<Link
-							className="text-2xl font-bold "
-							to="/$shopHandle/details"
-							params={{ shopHandle }}
-						>
-							{shopData.name}
-						</Link>
-						<div className="mt-2 text-sm text-muted-foreground">
-							Books • Stationary
-						</div>
+			{fetchedShopData && shopData && (
+				<div className="text-center  bg-amber-100 p-4">
+					<Link
+						className="text-2xl font-bold "
+						to="/$shopHandle/details"
+						params={{ shopHandle }}
+					>
+						{shopData.name}
+					</Link>
+					<div className="mt-2 text-sm text-muted-foreground">
+						Books • Stationary
 					</div>
-				)}
-			</div>
+				</div>
+			)}
 
-			<div>
-				{fetchedProduct && productData && productData.items.length > 0 && (
-					<div className="border border-t-0 rounded-b-xl grid grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-4 p-4 bg-amber-100">
-						{productData.items.map((item) => (
-							<Link
-								key={item.id}
-								className="text-center"
-								to="/$shopHandle/products/category/$categoryId"
-								params={{ shopHandle, categoryId: item.id }}
-							>
+			{fetchedProduct && productData && productData.items.length > 0 && (
+				<div className="border border-t-0 rounded-b-xl grid grid-cols-3 lg:grid-cols-6 gap-x-8 gap-y-8  bg-amber-100 p-4">
+					{productData.items.map((item) => (
+						<Link
+							key={item.id}
+							className="text-center"
+							to="/$shopHandle/products/category/$categoryId"
+							params={{ shopHandle, categoryId: item.id }}
+						>
+							<div className="relative w-full aspect-square rounded-xl overflow-hidden  bg-gray-200">
 								<img
 									src={"./assets/maggy.jpeg"}
 									alt={item?.title || ""}
 									className="rounded-xl aspect-square bg-gray-200"
 								/>
-								<p className="text-xs font-medium line-clamp-1">
-									{item?.title}
-								</p>
-							</Link>
-						))}
-					</div>
-				)}
-				{fetchedProduct &&
-					productData &&
-					productData.items.length > 0 &&
-					productData.items.map((productGroup, _idx) => {
-						const productArray = productGroup.products;
-
-						return (
-							<div key={_idx} className="my-10 mx-4">
-								<p className="text-xl font-bold my-4">{productGroup.title}</p>
-
-								<div className="grid grid-cols-3 lg:grid-cols-4  gap-x-4 gap-y-6 w-full">
-									{productArray?.map((product: any) => (
-										<Link
-											key={product.id}
-											to="/$shopHandle/products/$productId"
-											params={{ shopHandle, productId: product.id }}
-										>
-											<ProductCard
-												product={product}
-												className={{
-													classNameImg: "aspect-square h-full",
-													classNameBox: "w-full h-full",
-												}}
-											/>
-										</Link>
-									))}
-								</div>
-								{productArray.length === 6 && (
-									<Link
-										className={cn(
-											buttonVariants({
-												variant: "blue-soft",
-												className: "w-full my-2 font-semibold",
-											}),
-										)}
-										to="/$shopHandle/products/category/$categoryId"
-										params={{
-											shopHandle,
-											categoryId: productGroup.id,
-										}}
-									>
-										See more products
-										<ChevronRight />
-									</Link>
-								)}
 							</div>
-						);
-					})}
 
-				{fetchedProduct && productData && productData.items.length === 0 && (
-					<EmptyPage
-						title="No products found"
-						label="This shop has no products yet."
-					/>
-				)}
-			</div>
+							<p className="text-xs font-medium line-clamp-1">{item?.title}</p>
+						</Link>
+					))}
+				</div>
+			)}
+			{fetchedProduct &&
+				productData &&
+				productData.items.length > 0 &&
+				productData.items.map((productGroup, _idx) => {
+					const productArray = productGroup.products;
+
+					return (
+						<div key={_idx} className="my-10 mx-4">
+							<p className="text-xl font-bold my-4">{productGroup.title}</p>
+
+							<div className="grid grid-cols-3 lg:grid-cols-4  gap-x-4 gap-y-6 w-full">
+								{productArray?.map((product: any) => (
+									<div key={product.id}>
+										<ProductCard
+											product={product}
+											className={{
+												classNameImg: "aspect-square h-full",
+												classNameBox: "w-full h-full",
+											}}
+											shopHandle={shopHandle}
+										/>
+									</div>
+								))}
+							</div>
+							{productArray.length === 6 && (
+								<Link
+									className={cn(
+										buttonVariants({
+											variant: "blue-soft",
+											className: "w-full my-2 font-semibold",
+										}),
+									)}
+									to="/$shopHandle/products/category/$categoryId"
+									params={{
+										shopHandle,
+										categoryId: productGroup.id,
+									}}
+								>
+									See more products
+									<ChevronRight />
+								</Link>
+							)}
+						</div>
+					);
+				})}
+
+			{fetchedProduct && productData && productData.items.length === 0 && (
+				<EmptyPage
+					title="No products found"
+					label="This shop has no products yet."
+				/>
+			)}
 		</div>
 	);
 }
@@ -204,7 +189,7 @@ function ShopOptions({
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger>
-				<EllipsisVertical className="size-4 stroke-2" />
+				<EllipsisVertical className="size-5 stroke-2" />
 			</DropdownMenuTrigger>
 			<DropdownMenuContent className="min-w-[200px] space-y-3 mr-2">
 				<DropdownMenuItem
@@ -234,5 +219,45 @@ function ShopOptions({
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
+	);
+}
+
+function ShopLoadingSkeleton() {
+	return (
+		<div className="relative max-w-screen-lg mx-auto">
+			<DashboardHeader
+				titleChildren={<Skeleton className="h-6 w-32" />}
+				className="bg-amber-100"
+			>
+				<Skeleton className="size-5" />
+			</DashboardHeader>
+
+			<div className="text-center bg-amber-100 p-4">
+				<Skeleton className="h-8 w-48 mx-auto mb-2" />
+				<Skeleton className="h-4 w-32 mx-auto" />
+			</div>
+
+			<div className="border border-t-0 rounded-b-xl grid grid-cols-3 lg:grid-cols-6 gap-x-8 gap-y-8 bg-amber-100 p-4">
+				{Array.from({ length: 6 }).map((_, i) => (
+					<div key={i} className="text-center">
+						<Skeleton className="w-full aspect-square rounded-xl mb-2" />
+						<Skeleton className="h-3 w-full" />
+					</div>
+				))}
+			</div>
+
+			<div className="my-10 mx-4">
+				<Skeleton className="h-6 w-40 my-4" />
+				<div className="grid grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-6 w-full">
+					{Array.from({ length: 6 }).map((_, j) => (
+						<div key={j} className="w-full">
+							<Skeleton className="aspect-square w-full rounded-lg mb-2" />
+							<Skeleton className="h-4 w-full mb-1" />
+							<Skeleton className="h-3 w-16" />
+						</div>
+					))}
+				</div>
+			</div>
+		</div>
 	);
 }

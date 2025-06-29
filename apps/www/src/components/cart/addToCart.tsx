@@ -127,16 +127,16 @@ export const AddToCart = ({
 					onClick={handleAddToCart}
 					disabled={disabled || isLoading}
 					aria-label="Add to cart"
-					variant={"secondary"}
-					className="relative"
+					variant="secondary"
+					className="relative w-12"
 					size="sm"
 				>
 					{isLoading ? (
-						<div className="absolute size-full flex justify-center items-center">
+						<div className="absolute inset-0 flex justify-center items-center">
 							<Loader2 className="animate-spin" />
 						</div>
 					) : (
-						<div className="text-tertiary font-semibold">Add</div>
+						<span className="text-tertiary font-semibold">Add</span>
 					)}
 				</Button>
 			);
@@ -162,7 +162,7 @@ export const AddToCart = ({
 						aria-label="Decrease quantity"
 					>
 						{isDecrementLoading ? (
-							<Loader2 size="sm" className="animate-spin" />
+							<Loader2 className="animate-spin" />
 						) : (
 							<Minus className="h-3 w-3" />
 						)}
@@ -172,7 +172,7 @@ export const AddToCart = ({
 						{isLoading &&
 						(loadingState.operation === "add" ||
 							(!isDecrementLoading && !isIncrementLoading)) ? (
-							<Loader2 size="sm" className="animate-spin" />
+							<Loader2 className="animate-spin" />
 						) : (
 							<span className="font-semibold text-white text-sm px-1">
 								{currentQuantity}
@@ -192,7 +192,7 @@ export const AddToCart = ({
 						aria-label="Increase quantity"
 					>
 						{isIncrementLoading ? (
-							<Loader2 size="sm" className="animate-spin" />
+							<Loader2 className="animate-spin" />
 						) : (
 							<Plus className="h-3 w-3" strokeWidth={2} />
 						)}

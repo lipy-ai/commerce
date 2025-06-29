@@ -15,7 +15,7 @@ function RouteComponent() {
 	const { isMobile } = useViewport();
 
 	return (
-		<div className=" [view-transition-name:main-content]">
+		<div>
 			<Outlet />
 			{isMobile && (
 				<AnimatePresence>

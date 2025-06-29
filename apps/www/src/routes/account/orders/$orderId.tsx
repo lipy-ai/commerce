@@ -143,7 +143,7 @@ function RouteComponent() {
 							</div> */}
 
 							<div className="p-4  bg-card my-4">
-								<h2 className="text-lg font-semibold">Item(s) ordered</h2>
+								<h2 className="text-base font-semibold">Item(s) ordered</h2>
 								{data[0]?.items?.map((product, i) => (
 									<div key={i} className="flex gap-2 items-center py-4">
 										<img
@@ -177,7 +177,7 @@ function RouteComponent() {
 
 						<div className="col-span-5 space-y-2  lg:p-4  ">
 							<div className="space-y-4  p-4  my-4 bg-card ">
-								<h2 className="text-lg font-semibold">Bill Summary</h2>
+								<h2 className="text-base font-semibold">Bill Summary</h2>
 								<div className="space-y-4">
 									<div className="flex justify-between">
 										<p>Item Total ({data[0]?.items?.length ?? 0})</p>

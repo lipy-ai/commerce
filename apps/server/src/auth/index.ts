@@ -204,7 +204,7 @@ export const auth: any = betterAuth({
 						data: {
 							...session,
 							...((session as any)?.activeOrganizationId && {
-								activeOrganizationId: undefined,
+								// activeOrganizationId: undefined,
 								activeStoreId: (session as any).activeOrganizationId,
 							}),
 						},

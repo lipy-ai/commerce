@@ -58,11 +58,7 @@ function RouteComponent() {
 
 										<div className="bg-card p-4">
 											<div className="flex items-center justify-between gap-4">
-												<Link
-													className="flex items-center gap-2"
-													to="/shop/$id"
-													params={{ id: order.storeId as string }}
-												>
+												<div>
 													<Avatar className="rounded-md size-10">
 														<AvatarImage src={order?.storeLogo || ""} />
 														<AvatarFallback>
@@ -78,7 +74,7 @@ function RouteComponent() {
 																"Mumbai, Maharashtra"}
 														</p>
 													</div>
-												</Link>
+												</div>
 
 												<Button variant="ghost" size="icon-sm">
 													<EllipsisVertical />
@@ -132,7 +128,7 @@ function RouteComponent() {
 			{isFetching &&
 				[...Array(5)].map((_, i) => (
 					<div key={i} className="flex flex-col items-center my-4">
-						<Skeleton className="h-24 w-full " />
+						<Skeleton className="h-32 w-full " />
 					</div>
 				))}
 

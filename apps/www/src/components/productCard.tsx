@@ -7,6 +7,7 @@ import {
 } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { cn } from "@lipy/web-ui/lib/utils";
+import { Link } from "@tanstack/react-router";
 import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
 import { AddToCart } from "./cart/addToCart";
@@ -36,6 +37,7 @@ export default function ProductCard({
 	product,
 	className,
 	variant = "default",
+	shopHandle,
 }: {
 	className?: {
 		classNameBox?: string;
@@ -43,6 +45,7 @@ export default function ProductCard({
 	};
 	product: ProductType;
 	variant?: "default" | "horizontal";
+	shopHandle?: string;
 }) {
 	const discountPercentage = discountCalculator(
 		product?.price,
@@ -121,87 +124,103 @@ export default function ProductCard({
 			}
 
 			return (
-				<div className={cn("", className?.classNameBox)}>
-					<div className=" relative aspect-square">
-						<img
-							alt={""}
-							src={product.thumbnail || "/assets/paper-bag-items.webp"}
-							className={cn(
-								"w-full h-30 object-cover rounded-md bg-gray-200",
-								className?.classNameImg,
-							)}
-						/>
+				<div>
+					<Link
+						className={cn(
+							variantDrawer ? "pointer-events-none" : "pointer-events-auto",
+							className?.classNameBox,
+						)}
+						to="/$shopHandle/products/$productId"
+						params={{ shopHandle: shopHandle as string, productId: product.id }}
+					>
+						<div className=" relative aspect-square">
+							<img
+								alt={""}
+								src={product.thumbnail || "/assets/paper-bag-items.webp"}
+								className={cn(
+									"w-full h-30 object-cover rounded-md bg-gray-200",
+									className?.classNameImg,
+								)}
+							/>
 
-						<div className="absolute -bottom-1 -right-1">
-							{product.variants.length <= 1 ? (
-								<AddToCart product={product.variants[0]} variant={"icon"} />
-							) : cartCount === 0 ? (
-								<Button
-									size="icon-sm"
-									type="button"
-									variant="green-outline"
-									aria-label="Add to cart"
-									className="bg-card"
-									onClick={(e) => {
-										e.preventDefault();
-										e.stopPropagation();
+							<div className="absolute -bottom-1 -right-1">
+								{product.variants.length <= 1 ? (
+									<AddToCart product={product.variants[0]} variant={"icon"} />
+								) : cartCount === 0 ? (
+									<Button
+										size="icon-sm"
+										type="button"
+										variant="green-outline"
+										aria-label="Add to cart"
+										className="bg-card"
+										onClick={(e) => {
+											e.preventDefault();
+											e.stopPropagation();
 
-										setVariantDrawer(true);
-										setActiveProduct(product);
-									}}
-								>
-									<Plus className="size-3" strokeWidth={3} />
-								</Button>
-							) : (
-								<div
-									className="bg-tertiary flex items-center  rounded-lg shadow-sm"
-									onClick={(e) => {
-										e.preventDefault();
-										e.stopPropagation();
-
-										setVariantDrawer(true);
-										setActiveProduct(product);
-									}}
-								>
-									<Button size="icon-sm" variant="ghost" className="text-white">
-										<Minus className="h-3 w-3" />
+											setVariantDrawer(true);
+											setActiveProduct(product);
+										}}
+									>
+										<Plus className="size-3" strokeWidth={3} />
 									</Button>
+								) : (
+									<div
+										className="bg-tertiary flex items-center  rounded-lg shadow-sm"
+										onClick={(e) => {
+											e.preventDefault();
+											e.stopPropagation();
 
-									<div className="min-w-[2px] flex items-center justify-center">
-										<span className="font-semibold text-white text-sm px-1">
-											{cartCount}
-										</span>
+											setVariantDrawer(true);
+											setActiveProduct(product);
+										}}
+									>
+										<Button
+											size="icon-sm"
+											variant="ghost"
+											className="text-white"
+										>
+											<Minus className="h-3 w-3" />
+										</Button>
+
+										<div className="min-w-[2px] flex items-center justify-center">
+											<span className="font-semibold text-white text-sm px-1">
+												{cartCount}
+											</span>
+										</div>
+
+										<Button
+											size="icon-sm"
+											variant="ghost"
+											className="text-white"
+										>
+											<Plus className="h-3 w-3" strokeWidth={2} />
+										</Button>
 									</div>
-
-									<Button size="icon-sm" variant="ghost" className="text-white">
-										<Plus className="h-3 w-3" strokeWidth={2} />
-									</Button>
-								</div>
-							)}
+								)}
+							</div>
 						</div>
-					</div>
 
-					<div className="space-y-0.5">
-						<p className="py-1 text-xs font-medium">{product.title}</p>
-						<div>
-							{discountPercentage > 0 && (
-								<p className="text-xs text-blue-600 font-medium">
-									{discountPercentage}% OFF
-								</p>
-							)}
+						<div className="space-y-0.5">
+							<p className="py-1 text-xs font-medium">{product.title}</p>
+							<div>
+								{discountPercentage > 0 && (
+									<p className="text-xs text-blue-600 font-medium">
+										{discountPercentage}% OFF
+									</p>
+								)}
 
-							<span className="font-bold text-md pr-1">
-								{" "}
-								{formatAmount("inr", product.price)}
-							</span>
-							{product.maxPrice && (
-								<span className="text-xs line-through text-muted-foreground">
-									{formatAmount("inr", product.maxPrice)}
+								<span className="font-bold text-md pr-1">
+									{" "}
+									{formatAmount("inr", product.price)}
 								</span>
-							)}
+								{product.maxPrice && (
+									<span className="text-xs line-through text-muted-foreground">
+										{formatAmount("inr", product.maxPrice)}
+									</span>
+								)}
+							</div>
 						</div>
-					</div>
-
+					</Link>
 					{variantDrawer && (
 						<VariantList
 							open={variantDrawer}

@@ -58,7 +58,13 @@ function RouteComponent() {
 
 										<div className="bg-card p-4">
 											<div className="flex items-center justify-between gap-4">
-												<div>
+												<Link
+													className="flex items-center gap-2"
+													to="/$shopHandle"
+													params={{
+														shopHandle: order?.storeHandle as string,
+													}}
+												>
 													<Avatar className="rounded-md size-10">
 														<AvatarImage src={order?.storeLogo || ""} />
 														<AvatarFallback>
@@ -74,7 +80,7 @@ function RouteComponent() {
 																"Mumbai, Maharashtra"}
 														</p>
 													</div>
-												</div>
+												</Link>
 
 												<Button variant="ghost" size="icon-sm">
 													<EllipsisVertical />
@@ -127,7 +133,7 @@ function RouteComponent() {
 
 			{isFetching &&
 				[...Array(5)].map((_, i) => (
-					<div key={i} className="flex flex-col items-center my-4">
+					<div key={i} className="flex flex-col items-center my-2">
 						<Skeleton className="h-32 w-full " />
 					</div>
 				))}

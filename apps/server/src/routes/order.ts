@@ -56,6 +56,7 @@ const route = new Hono<ServerContext>()
 				"s.image as storeLogo",
 				"s.id as storeId",
 				"s.address as storeAddress",
+				"s.handle as storeHandle",
 				"o.address",
 			])
 			.orderBy("o.orderedAt", "desc")

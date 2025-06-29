@@ -10,7 +10,7 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
 		loop: false,
 		align: "center",
 		skipSnaps: false,
-		dragFree: false, 
+		dragFree: false,
 	});
 
 	const [selectedIndex, setSelectedIndex] = useState<number>(0);
@@ -21,7 +21,7 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
 				emblaApi.scrollTo(index);
 			}
 		},
-		[emblaApi]
+		[emblaApi],
 	);
 
 	const onSelect = useCallback(() => {
@@ -44,7 +44,7 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
 	}
 
 	return (
-		<div className="w-full max-w-2xl mx-auto">
+		<div>
 			{/* Main carousel container */}
 			<div className="relative">
 				<div className="overflow-hidden" ref={emblaRef}>

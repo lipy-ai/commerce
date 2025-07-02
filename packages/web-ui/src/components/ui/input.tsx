@@ -31,9 +31,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 		const wrapperId = React.useId();
 
 		const update = () => {
-			if (!prefixEl && !suffixEl) return;
 			const wrapper = document.getElementById(wrapperId) as HTMLDivElement;
 			if (!wrapper) return;
+			wrapper.classList.remove("opacity-0");
+
+			if (!prefixEl && !suffixEl) return;
+
 			const prefixE = wrapper?.getElementsByClassName("prefix-el")[0];
 			const suffixE = wrapper?.getElementsByClassName("suffix-el")[0];
 			const input = wrapper?.getElementsByTagName(
@@ -60,6 +63,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 					size === "lg" ? "h-12 text-lg" : "h-10",
 					noStyle && "border-none bg-transparent rounded-none",
 					className,
+					(prefixEl || suffixEl) && "opacity-0",
 				)}
 			>
 				{prefixEl && (

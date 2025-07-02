@@ -5,7 +5,6 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import { defineConfig } from "vite";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
 export default defineConfig({
 	plugins: [tailwindcss(), tanstackStart() as any],
 	build: {
@@ -13,7 +12,7 @@ export default defineConfig({
 		sourcemap: process.env.NODE_ENV === "development",
 	},
 	server: {
-		allowedHosts: process.env.ALLOWED_VITE_HOSTS?.split(","),
+		allowedHosts: process.env.VITE_ALLOWED_HOSTS?.split(","),
 
 		proxy: {
 			"/api/**": {

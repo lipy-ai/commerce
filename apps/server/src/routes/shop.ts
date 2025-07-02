@@ -69,15 +69,8 @@ const route = new Hono<ServerContext>()
 					jsonArrayFrom(
 						eb
 							.selectFrom("productVariant as pv")
-							.select([
-								"pv.id",
-								"pv.title",
-								"pv.price",
-								"pv.maxPrice",
-								"pv.unit",
-								"pv.stockQty",
-							])
-							.whereRef("pv.product", "=", "p.id"),
+							.select(["pv.id", "pv.price", "pv.unit"])
+							.whereRef("pv.productId", "=", "p.id"),
 					).as("variants"),
 				])
 				.where("p.storeId", "=", id)

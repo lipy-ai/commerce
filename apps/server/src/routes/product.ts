@@ -44,7 +44,7 @@ const route = new Hono<ServerContext>()
 					eb
 						.selectFrom("productVariant as pv")
 						.selectAll()
-						.whereRef("pv.product", "=", "p.id"),
+						.whereRef("pv.productId", "=", "p.id"),
 				).as("variants"),
 			])
 			.execute();
@@ -66,7 +66,7 @@ const route = new Hono<ServerContext>()
 						eb
 							.selectFrom("productVariant as pv")
 							.selectAll()
-							.whereRef("pv.product", "=", "p.id"),
+							.whereRef("pv.productId", "=", "p.id"),
 					).as("variants"),
 				])
 				.executeTakeFirstOrThrow();

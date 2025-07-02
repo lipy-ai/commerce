@@ -35,7 +35,7 @@ function RouteComponent() {
 	const { data, isFetching } = useAPIQuery(apiClient.v1.address, "$get", {});
 	const { setDeliveryLocation, deliveryLocation, hasHydrated } =
 		useLocationStore();
-
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	const handlePlaceSelect = useCallback(() => {
 		const place = autocompleteRef.current?.getPlace();
 		if (!place?.geometry?.location) return;

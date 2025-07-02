@@ -12,7 +12,7 @@ export const RowInput = ({
 }) => {
 	return (
 		<Editable.Root
-			defaultValue={value}
+			defaultValue={String(value)}
 			onValueChange={onChange}
 			triggerMode="dblclick"
 		>

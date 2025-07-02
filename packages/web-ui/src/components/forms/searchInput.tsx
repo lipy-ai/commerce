@@ -9,6 +9,7 @@ import {
 	CommandItem,
 	CommandList,
 } from "@lipy/web-ui/components/ui/command";
+import { cn } from "@lipy/web-ui/lib/utils";
 import { CommandLoading } from "cmdk";
 import type { InferRequestType } from "hono/client";
 import { ChevronDown, Loader2 } from "lucide-react";
@@ -26,6 +27,7 @@ export function SearchInput({
 	type,
 	value,
 	onChange,
+	className,
 }: {
 	value: string;
 	onChange: (v: string | null) => void;
@@ -33,6 +35,7 @@ export function SearchInput({
 	name: string;
 	disabled?: boolean;
 	type: Type;
+	className?: string;
 }) {
 	const [open, setOpen] = React.useState(false);
 	const ref = React.useRef<HTMLButtonElement>(null);
@@ -56,7 +59,7 @@ export function SearchInput({
 		<Button
 			ref={ref}
 			variant="outline"
-			className="w-full text-base"
+			className={cn("w-full text-base", className)}
 			onClick={() => setOpen(true)}
 			disabled={disabled}
 			type="button"

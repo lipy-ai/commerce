@@ -1,6 +1,6 @@
 import { cn } from "@lipy/web-ui/lib/utils";
-import type { ReactNode } from "@tanstack/react-router";
 import { IterationCcw, Loader2 } from "lucide-react";
+import type { ReactNode } from "react";
 import { type ControllerRenderProps, useFormContext } from "react-hook-form";
 import InputWithAnimatedLabel from "../custom-ui/inputWithAnimatedLabel";
 import { Button } from "../ui/button";
@@ -13,6 +13,13 @@ import {
 	FormMessage,
 } from "../ui/form";
 import { Input, type InputProps } from "../ui/input";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "../ui/select";
 import { SingleImage, type SingleImageProps } from "../ui/single-image";
 import { Switch } from "../ui/switch";
 import { Textarea } from "../ui/textarea";
@@ -165,6 +172,41 @@ export const FormSwitch = ({
 		/>
 	);
 };
+
+export const FormDropdown = (
+	props: React.ComponentProps<"input"> &
+		SharedFormProps & { opts: Array<{ label: string; value: string }> },
+) => {
+	const form = useFormContext();
+
+	return (
+		<FormField
+			control={form.control}
+			name={props.name}
+			render={({ field }: { field: ControllerRenderProps }) => (
+				<FormItemWrapper {...props}>
+					<FormControl>
+						<Select onValueChange={field.onChange} defaultValue={field.value}>
+							<FormControl>
+								<SelectTrigger>
+									<SelectValue placeholder={props.placeholder} />
+								</SelectTrigger>
+							</FormControl>
+							<SelectContent>
+								{props.opts.map((o, i) => (
+									<SelectItem key={i} value={o.value}>
+										{o.label}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+					</FormControl>
+				</FormItemWrapper>
+			)}
+		/>
+	);
+};
+
 export const FormSelect = (
 	props: React.ComponentProps<"input"> &
 		SharedFormProps & { type: Parameters<typeof SearchInput>[0]["type"] },

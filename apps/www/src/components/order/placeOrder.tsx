@@ -69,7 +69,7 @@ function ProgressDialog({
 			});
 		},
 	});
-
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		const interval = setInterval(() => {
 			setProgress((prev) => {

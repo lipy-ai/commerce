@@ -1,31 +1,15 @@
+import type { apiClient } from "@lipy/lib/api";
+import type { InferResponseType } from "hono";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+type ProductInCart = InferResponseType<typeof apiClient.v1.cart.$get>[0];
 
-type ProductInCart = {
-	id: string;
-	quantity: number;
-	unit: string | null;
-	title: string;
-	price: number | null;
-	maxPrice: number | null;
-	thumbnail: string | null;
-};
 export type Operation = "increment" | "decrement" | "add";
 
 export type CartStore = {
 	cart: ProductInCart[];
 	initialized: boolean;
-	updateCart: (
-		product: {
-			id: string;
-			unit: string | null;
-			title: string;
-			price: number | null;
-			maxPrice: number | null;
-			thumbnail: string | null;
-		},
-		operation?: Operation,
-	) => void;
+	updateCart: (product: ProductInCart, operation?: Operation) => void;
 	setCart: (items: ProductInCart[]) => void;
 	resetCart: () => void;
 };
@@ -42,15 +26,15 @@ export const useCartStore = create<CartStore>()(
 			updateCart: (product, operation) => {
 				set((state) => {
 					const existingItem = state.cart.find(
-						(item) => item.id === product.id,
+						(item) => item.inventoryId === product.inventoryId,
 					);
 
 					let updatedCart: ProductInCart[];
 
 					if (existingItem) {
 						updatedCart = state.cart.map((item) => {
-							if (item.id === product.id) {
-								let newQuantity = item.quantity;
+							if (item.inventoryId === product.inventoryId) {
+								let newQuantity = item.quantity || 0;
 
 								if (operation === "increment") newQuantity += 1;
 								else if (operation === "decrement") newQuantity -= 1;
@@ -60,21 +44,12 @@ export const useCartStore = create<CartStore>()(
 							return item;
 						});
 					} else {
-						updatedCart = [
-							...state.cart,
-							{
-								id: product.id,
-								quantity: 1,
-								unit: product.unit,
-								title: product.title,
-								price: product.price,
-								maxPrice: product.maxPrice,
-								thumbnail: product.thumbnail,
-							},
-						];
+						updatedCart = [...state.cart, product];
 					}
 
-					const finalCart = updatedCart.filter((item) => item.quantity > 0);
+					const finalCart = updatedCart.filter(
+						(item) => (item.quantity || 0) > 0,
+					);
 					return { cart: finalCart };
 				});
 			},

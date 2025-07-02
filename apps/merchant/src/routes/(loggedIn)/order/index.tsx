@@ -1,7 +1,12 @@
+import { apiClient } from "@lipy/lib/api";
 import { formatAmount } from "@lipy/lib/utils/intl";
+import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
+import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
+import { Pagination } from "@lipy/web-ui/components/pages/pagination";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
-import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
+import { buttonVariants } from "@lipy/web-ui/components/ui/button";
+import { Card, CardHeader, CardTitle } from "@lipy/web-ui/components/ui/card";
 import {
 	Table,
 	TableBody,
@@ -13,70 +18,81 @@ import {
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { ArrowRight, Plus } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
+import type { InferResponseType } from "hono/client";
+import { ArrowUpRight, PlusCircle } from "lucide-react";
+import { z } from "zod";
 
 export const Route = createFileRoute("/(loggedIn)/order/")({
 	component: RouteComponent,
+	validateSearch: z.object({
+		page: z.coerce.number().int().min(1).catch(1),
+		q: z.string().default(""),
+	}),
 });
 
-const data = [
-	{ name: "Pending", value: 100, className: "bg-chart-1" },
-	{ name: "Delivered", value: 100, className: "bg-chart-2" },
-	{ name: "Returned", value: 100, className: "bg-chart-3" },
-	{ name: "All", value: 100, className: "bg-chart-4" },
-];
+type Response = InferResponseType<typeof apiClient.v1.merchant.order.$get>;
 
 function RouteComponent() {
 	const { isMobile } = useViewport();
+	const { page, q } = Route.useSearch();
+
+	const { data, isLoading } = useAPIQuery(
+		apiClient.v1.merchant.order,
+		"$get",
+		{
+			query: { page: String(page), limit: String(10), q },
+		},
+		{ placeholderData: (p) => p },
+	);
+
 	return (
 		<div>
 			<DashboardHeader title="Orders">
-				<Button>
-					<Plus />
-					Create Order
-				</Button>
+				<Link to="/order/create" className={cn(buttonVariants({ size: "sm" }))}>
+					<PlusCircle />
+					New Order
+				</Link>
 			</DashboardHeader>
 
 			<div className="lg:p-8 lg:space-y-8">
-				<div className="max-w-2xl">
-					<div className="grid grid-cols-4 gap-2 p-2 lg:p-0">
-						{data.map((d, i) => (
-							<Link
-								to="/"
-								className={cn(
-									"p-4 text-base rounded",
-									d.className,
-									// i === 0 && "bg-chart-1 border-primary",
-								)}
-								key={i}
-							>
-								<h1 className="lg:text-xl font-semibold">{d.value}</h1>
-								<h2 className="font-light">
-									{d.name} {!isMobile && "Orders"}
-								</h2>
-							</Link>
-						))}
-					</div>
+				<div className="p-4 lg:p-0">
+					<SearchBar placeholder="Search orders" defaultValue={q} />
 				</div>
-				{isMobile ? <MobileView /> : <DesktopView />}
+				{isLoading ? null : !data || data.items.length === 0 ? (
+					<Card>
+						<CardHeader>
+							<CardTitle>No Orders Found...</CardTitle>
+						</CardHeader>
+					</Card>
+				) : (
+					<>
+						{isMobile ? (
+							<MobileView items={data.items} />
+						) : (
+							<DesktopView items={data.items} />
+						)}
+						<Pagination {...data} />
+					</>
+				)}
 			</div>
 		</div>
 	);
 }
 
-function MobileView() {
+function MobileView({ items }: { items: Response["items"] }) {
 	return (
 		<div className="bg-background border divide-y">
-			{[...Array(40)].map((m) => (
+			{items.map((m) => (
 				<Link
 					to={"/order/$id"}
-					params={{ id: "id" }}
+					params={{ id: m.id }}
 					className="flex p-4"
-					key={m}
+					key={m.id}
 				>
 					<div className="flex w-full gap-4 justify-between text-base">
 						<div className="flex-1">
-							<p className="text-xs font-light">#20250604-A2DN0E</p>
+							<p className="text-xs font-light">{m.id}</p>
 							<p className="font-medium inline-flex items-center truncate ">
 								Kundan Bhosale
 							</p>
@@ -85,19 +101,12 @@ function MobileView() {
 
 						<div className="w-fit text-right">
 							<p className="font-semibold text-lg">
-								{formatAmount("inr", 320)}
+								{formatAmount("inr", Number(m.totalAmount))}
 							</p>
-							<Badge>Delivery in 20 mins</Badge>
+							<Badge>
+								{m.orderedAt && ` ${formatDistanceToNow(m.orderedAt)} ago`}
+							</Badge>
 						</div>
-						{/* 
-						<Link
-							to="/"
-							className={cn(
-								buttonVariants({ variant: "outline", size: "icon" }),
-							)}
-						>
-							<ArrowRight />
-						</Link> */}
 					</div>
 				</Link>
 			))}
@@ -105,7 +114,7 @@ function MobileView() {
 	);
 }
 
-function DesktopView() {
+function DesktopView({ items }: { items: Response["items"] }) {
 	const navigate = useNavigate();
 
 	return (
@@ -113,27 +122,25 @@ function DesktopView() {
 			<TableHeader>
 				<TableRow>
 					<TableHead className="w-32">#</TableHead>
-					<TableHead className="">Customer</TableHead>
-					<TableHead className="">Delivery Partner</TableHead>
-
+					{/* <TableHead className="">Customer</TableHead>
+					<TableHead className="">Delivery Partner</TableHead>{" "} */}
 					<TableHead className="w-32">Status</TableHead>
-					<TableHead className="w-32">Time Left</TableHead>
+					<TableHead className="w-32">Ordered</TableHead>
 					<TableHead className="w-24">Total</TableHead>
-
 					<TableHead className="w-10" />
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				{[...Array(40)].map((m) => (
+				{items.map((m) => (
 					<TableRow
-						key={m}
-						onClick={() => navigate({ to: "/order/$id", params: { id: "id" } })}
+						key={m.id}
+						onClick={() => navigate({ to: "/order/$id", params: { id: m.id } })}
 						className="cursor-pointer focus:bg-accent"
 					>
-						<TableCell>ORD-20250604A2DN0E</TableCell>
-						<TableCell>
+						<TableCell>{m.id}</TableCell>
+						{/* <TableCell>
 							<div>
-								<p className="font-medium"> Kundan Bhosale</p>
+								<p className="font-medium">Kundan Bhosale</p>
 								<p className="font-light">9325029914</p>
 							</div>
 						</TableCell>
@@ -142,25 +149,27 @@ function DesktopView() {
 								<p className="font-medium"> Kundan Bhosale</p>
 								<p className="font-light">9325029914</p>
 							</div>
-						</TableCell>
+						</TableCell> */}
 
 						<TableCell>
-							<p>Ordered</p>
-						</TableCell>
-						<TableCell>
 							<Badge className="" variant={"success"}>
-								10 mins
+								{m.status}
 							</Badge>
 						</TableCell>
-						<TableCell>{formatAmount("inr", 320)}</TableCell>
+						<TableCell>
+							<Badge className="" variant={"outline"}>
+								{m.orderedAt && ` ${formatDistanceToNow(m.orderedAt)} ago`}
+							</Badge>
+						</TableCell>
+						<TableCell>{formatAmount("inr", m.totalAmount || 0)}</TableCell>
 						<TableCell>
 							<Link
 								to="/"
 								className={cn(
-									buttonVariants({ size: "icon", variant: "outline" }),
+									buttonVariants({ size: "icon", variant: "ghost" }),
 								)}
 							>
-								<ArrowRight />
+								<ArrowUpRight />
 							</Link>
 						</TableCell>
 					</TableRow>

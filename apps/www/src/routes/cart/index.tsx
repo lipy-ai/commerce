@@ -68,25 +68,16 @@ function RouteComponent() {
 
 	// Update cart when data changes
 	useEffect(() => {
-		if (isFetched && data.length > 0) {
-			const mappedCart = data.map((item: any) => ({
-				id: item.variantId,
-				quantity: item.quantity,
-				unit: item.variantUnit,
-				title: item.variantTitle,
-				price: item.variantPrice,
-				maxPrice: item.variantMaxPrice,
-				thumbnail: item.thumbnail,
-			}));
-			setCart(mappedCart);
+		if (isFetched && !isError && data.length > 0) {
+			setCart(data);
 		}
 	}, [isFetched, data, setCart]);
 
 	const { totalPrice, totalMaxPrice } = useMemo(() => {
 		return cart.reduce(
 			(acc, item) => {
-				acc.totalPrice += (item.price || 0) * (item.quantity || 0);
-				acc.totalMaxPrice += (item.maxPrice || 0) * (item.quantity || 0);
+				acc.totalPrice += (item.variantPrice || 0) * (item.quantity || 0);
+				acc.totalMaxPrice += (item.variantMaxPrice || 0) * (item.quantity || 0);
 				return acc;
 			},
 			{ totalPrice: 0, totalMaxPrice: 0 },
@@ -137,7 +128,7 @@ function RouteComponent() {
 								</CardHeader>
 								<div className="px-4">
 									{cart.map((product) => (
-										<div key={product.id} className=" py-4">
+										<div key={product.inventoryId} className=" py-4">
 											<ProductCard
 												product={product as ProductType}
 												variant="horizontal"

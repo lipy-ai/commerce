@@ -1,9 +1,9 @@
 import type { DataTableConfig } from "@lipy/web-ui/config/data-table";
 import type { FilterItemSchema } from "@lipy/web-ui/lib/parsers";
 import type { ColumnSort, Row, RowData } from "@tanstack/react-table";
+import type { LucideIcon } from "lucide-react";
 
 declare module "@tanstack/react-table" {
-	// biome-ignore lint/correctness/noUnusedVariables: <explanation>
 	interface ColumnMeta<TData extends RowData, TValue> {
 		label?: string;
 		placeholder?: string;
@@ -11,7 +11,7 @@ declare module "@tanstack/react-table" {
 		options?: Option[];
 		range?: [number, number];
 		unit?: string;
-		icon?: React.FC<React.SVGProps<SVGSVGElement>>;
+		icon?: LucideIcon | React.FC<React.SVGProps<SVGSVGElement>>;
 	}
 }
 

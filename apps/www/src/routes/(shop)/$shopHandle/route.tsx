@@ -1,5 +1,5 @@
+import CartAvatarGroup from "@/components/cart/cartAvatarGroup";
 import { useCartStore } from "@/components/cart/store";
-import CustomAvatarGroup from "@lipy/web-ui/components/custom-ui/customAvatarGroup";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
@@ -28,7 +28,7 @@ function RouteComponent() {
 							className="fixed bottom-2 left-4 right-4  rounded-2xl bg-card shadow-2xl p-2"
 						>
 							<div className="flex items-center justify-between mx-4">
-								<CustomAvatarGroup items={cart} />
+								<CartAvatarGroup items={cart} />
 
 								<Link
 									to="/cart"

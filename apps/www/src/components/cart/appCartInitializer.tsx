@@ -10,17 +10,17 @@ export const AppCartInitializer = () => {
 
 	useEffect(() => {
 		if (isFetched && data) {
-			const mappedCart = data.map((item: any) => ({
-				id: item.variantId,
-				quantity: item.quantity,
-				unit: item.variantUnit,
-				title: item.variantTitle,
-				price: item.variantPrice,
-				maxPrice: item.variantMaxPrice,
-				thumbnail: item.thumbnail,
-			}));
+			// const mappedCart = data.map((item) => ({
+			// 	id: item.inventoryId,
+			// 	quantity: item.quantity,
+			// 	unit: item.variantUnit,
+			// 	title: item.variantTitle,
+			// 	price: item.variantPrice,
+			// 	maxPrice: item.variantMaxPrice,
+			// 	thumbnail: item.thumbnail,
+			// }));
 
-			setCart(mappedCart);
+			setCart(data);
 		}
 	}, [isFetched, data, setCart]);
 

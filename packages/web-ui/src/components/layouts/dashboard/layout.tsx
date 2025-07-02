@@ -8,7 +8,14 @@ import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, useMatchRoute } from "@tanstack/react-router";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { ArrowDownToLine, type LucideIcon } from "lucide-react";
-import { type ReactNode, useRef, useState } from "react";
+import {
+	Fragment,
+	type ReactNode,
+	createContext,
+	useContext,
+	useRef,
+	useState,
+} from "react";
 
 export type DashboardNavs = Record<
 	"primary" | "secondary",
@@ -19,6 +26,21 @@ export type DashboardNavs = Record<
 		mobile?: boolean;
 	}>
 >;
+
+type ContextType = {
+	footer: {
+		id: "save-btn" | "cart-btn";
+		node: ReactNode;
+	}[];
+	addFooter: (v: ContextType["footer"][0]) => void;
+	removeFooter: (v: ContextType["footer"][0]["id"]) => void;
+};
+
+const Context = createContext<ContextType>({
+	footer: [],
+	addFooter: () => {},
+	removeFooter: () => {},
+});
 
 export const DashboardLayout = ({
 	children,
@@ -36,61 +58,80 @@ export const DashboardLayout = ({
 		alt: string;
 	};
 }) => {
-	const [open, setOpen] = useState(true);
+	const [open, setOpen] = useState(false);
 	const { isMobile } = useViewport();
 	const { isInstallable, promptInstall } = usePWAInstall();
-	if (isMobile) {
-		return (
-			<div className="flex flex-col min-h-screen">
-				{isInstallable && (
-					<div
-						onClick={promptInstall}
-						className="appearance-none bg-foreground w-full col-span-2 p-2 sticky top-0 flex gap-2 items-center justify-between"
-					>
-						<span className="flex items-center gap-2 text-background">
-							<span>Install app on your phone</span>
-						</span>
-						<span
-							className={cn(
-								buttonVariants({ variant: "outline", size: "icon" }),
-								"size-6",
-							)}
-						>
-							<ArrowDownToLine />
-						</span>
-					</div>
-				)}
+	const [footer, setFooter] = useState<ContextType["footer"]>([]);
+	const removeFooter: ContextType["removeFooter"] = (v) => {
+		setFooter((p) => p.filter((f) => f.id !== v));
+	};
+	const addFooter: ContextType["addFooter"] = (v) => {
+		setFooter((p) => [...p.filter((f) => f.id !== v.id), v]);
+	};
 
-				<div className="pb-18">{children}</div>
-
-				<ActiveLinks
-					isMobile
-					mobileNav={mobileNav}
-					dashboardNav={dashboardNav}
-					logo={logo}
-					{...props}
-				/>
-			</div>
-		);
-	}
+	const footerList = footer && footer.length > 0 && (
+		<div className="space-y-4 fixed bottom-10 left-1/2 -translate-x-1/2 p-4">
+			{footer?.map((f, i) => (
+				<Fragment key={i}>{f.node}</Fragment>
+			))}
+		</div>
+	);
 
 	return (
-		<div className="flex min-h-screen">
-			<ActiveLinks
-				open={open}
-				setOpen={setOpen}
-				dashboardNav={dashboardNav}
-				logo={logo}
-				{...props}
-			/>
+		<Context.Provider value={{ addFooter, footer, removeFooter }}>
+			{isMobile ? (
+				<div className="flex flex-col min-h-screen">
+					{isInstallable && (
+						<div
+							onClick={promptInstall}
+							className="appearance-none bg-foreground w-full col-span-2 p-2 sticky top-0 flex gap-2 items-center justify-between"
+						>
+							<span className="flex items-center gap-2 text-background">
+								<span>Install app on your phone</span>
+							</span>
+							<span
+								className={cn(
+									buttonVariants({ variant: "outline", size: "icon" }),
+									"size-6",
+								)}
+							>
+								<ArrowDownToLine />
+							</span>
+						</div>
+					)}
 
-			<div
-				className="flex-1 flex flex-col overflow-x-auto h-screen overflow-y-auto"
-				// onClick={() => open && setOpen(false)}
-			>
-				{children}
-			</div>
-		</div>
+					<div className="pb-18 flex-col flex flex-1">{children}</div>
+					{!mobileNav && footerList}
+					<ActiveLinks
+						isMobile
+						footer={footer}
+						mobileNav={mobileNav}
+						dashboardNav={dashboardNav}
+						logo={logo}
+						{...props}
+					/>
+				</div>
+			) : (
+				<div className="flex min-h-screen">
+					<ActiveLinks
+						open={open}
+						setOpen={setOpen}
+						dashboardNav={dashboardNav}
+						logo={logo}
+						{...props}
+					/>
+
+					<div
+						className="flex-1 flex flex-col overflow-x-auto h-screen overflow-y-auto"
+						onClick={() => open && setOpen(false)}
+					>
+						{children}
+
+						{footerList}
+					</div>
+				</div>
+			)}
+		</Context.Provider>
 	);
 };
 
@@ -101,7 +142,8 @@ function ActiveLinks({
 	isMobile = false,
 	open = false,
 	setOpen,
-	...props
+	footer,
+	// ...props
 }: {
 	dashboardNav?: Record<
 		"primary" | "secondary",
@@ -112,7 +154,8 @@ function ActiveLinks({
 	isMobile?: boolean;
 	open?: boolean;
 	setOpen?: (o: boolean) => void;
-	activeOrder?: boolean;
+	footer?: ContextType["footer"];
+	// activeOrder?: boolean;
 }) {
 	const matchRoute = useMatchRoute();
 	const [isHidden, setIsHidden] = useState(false);
@@ -129,59 +172,65 @@ function ActiveLinks({
 
 	if (isMobile && mobileNav) {
 		return (
-			<motion.div
-				className="fixed bottom-0 w-screen z-50"
-				initial="visible"
-				animate={isHidden ? "hidden" : "visible"}
-				variants={{
-					hidden: { y: 77 },
-					visible: { y: 0 },
-				}}
-				transition={{ duration: 0.2, ease: "easeInOut" }}
-			>
-				{props.activeOrder && (
-					<div className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white relative overflow-hidden rounded-t-lg">
-						{/* Animated background pulse */}
-						<div className="absolute inset-0 bg-white/10 animate-pulse" />
+			<>
+				<motion.div
+					className="fixed bottom-0 w-screen z-50 print:hidden"
+					initial="visible"
+					animate={isHidden ? "hidden" : "visible"}
+					variants={{
+						hidden: { y: 77 },
+						visible: { y: 0 },
+					}}
+					transition={{ duration: 0.2, ease: "easeInOut" }}
+				>
+					{footer && footer.length > 0 && (
+						<div className="space-y-4 p-4">
+							{footer?.map((f, i) => (
+								<Fragment key={i}>{f.node}</Fragment>
+							))}
+						</div>
+					)}
+					{/* {props.activeOrder && (
+						<div className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white relative overflow-hidden rounded-t-lg">
+							<div className="absolute inset-0 bg-white/10 animate-pulse" />
 
-						{/* Content */}
-						<div className="relative flex items-center justify-between px-4 py-2">
-							<div className="flex items-center space-x-3">
-								{/* Pulsing dot indicator */}
-								<div className="flex items-center">
-									<div className="w-2 h-2 bg-white rounded-full animate-ping" />
-									<div className="w-2 h-2 bg-white rounded-full absolute" />
+							<div className="relative flex items-center justify-between px-4 py-2">
+								<div className="flex items-center space-x-3">
+									<div className="flex items-center">
+										<div className="w-2 h-2 bg-white rounded-full animate-ping" />
+										<div className="w-2 h-2 bg-white rounded-full absolute" />
+									</div>
+
+									<p className="text-sm text-green-100 font-medium">
+										Your have active orders
+									</p>
 								</div>
 
-								<p className="text-sm text-green-100 font-medium">
-									Your have active orders
-								</p>
+								<button
+									type="button"
+									className="bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full px-4 py-2 text-xs font-medium transition-all duration-200 hover:scale-105"
+								>
+									Track order status
+								</button>
 							</div>
+						</div>
+					)} */}
 
-							{/* Action button */}
-							<button
-								type="button"
-								className="bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full px-4 py-2 text-xs font-medium transition-all duration-200 hover:scale-105"
-							>
-								Track order status
-							</button>
+					{/* Mobile Nav */}
+					<div className="bg-background border-t">
+						<div
+							className={cn("grid justify-center px-4")}
+							style={{
+								gridTemplateColumns: `repeat(${mobileNav.length}, 1fr)`,
+							}}
+						>
+							{mobileNav.map((n, i) => (
+								<NavLink key={i} nav={n} mobile matchRoute={matchRoute} />
+							))}
 						</div>
 					</div>
-				)}
-				{/* Enhanced Active Order Banner */}
-
-				{/* Mobile Nav */}
-				<div className="bg-background border-t">
-					<div
-						className={cn("grid justify-center px-4")}
-						style={{ gridTemplateColumns: `repeat(${mobileNav.length}, 1fr)` }}
-					>
-						{mobileNav.map((n, i) => (
-							<NavLink key={i} nav={n} mobile matchRoute={matchRoute} />
-						))}
-					</div>
-				</div>
-			</motion.div>
+				</motion.div>
+			</>
 		);
 	}
 
@@ -194,7 +243,7 @@ function ActiveLinks({
 	if (dashboardNav)
 		return (
 			<motion.nav
-				className="flex flex-col justify-between h-screen sticky top-0 left-0 p-3 border-r z-10 bg-background"
+				className="flex flex-col justify-between h-screen sticky top-0 left-0 p-3 border-r z-10 bg-background print:hidden"
 				onClick={handleNavClick}
 				initial={{ width: "var(--sidebar-size)" }}
 				animate={{
@@ -243,34 +292,33 @@ function NavLink({
 	matchRoute: ReturnType<typeof useMatchRoute>;
 }) {
 	const isActive = !!matchRoute({ to: nav.url, fuzzy: true });
-
 	return (
-		<Link
-			to={nav.url}
+		<div
 			className={cn(
 				"overflow-hidden border-b border-border/20 truncate rounded-md px-1.5 relative w-full",
-				open && "justify-start flex items-center",
+				open && "justify-start",
 				mobile && "px-0 justify-center rounded-none",
-				// mobile
-				// 	? isActive && "text-primary [&_svg]:stroke-primary"
-				// 	: isActive
-				// 		? "bg-primary text-primary-foreground"
-				// 		: "hover:bg-accent",
+				mobile
+					? isActive && "text-primary [&_svg]:stroke-primary"
+					: isActive
+						? "bg-primary text-primary-foreground"
+						: "hover:bg-accent",
 			)}
 		>
-			{/* {mobile && (
+			{mobile && (
 				<span
 					className={cn(
 						"h-2 w-4/5 block bg-transparent rounded-b-2xl m-auto",
-						isActive && "bg-tertiary",
+						isActive && "bg-primary",
 					)}
 				/>
-			)} */}
-			<div
+			)}
+			<Link
 				className={cn(
 					"inline-flex items-center font-medium py-2 gap-2",
 					mobile && "flex-col font-normal w-full",
 				)}
+				to={nav.url}
 			>
 				<span className="flex justify-center items-center w-[30px]">
 					<nav.icon
@@ -278,7 +326,7 @@ function NavLink({
 							"size-5",
 							mobile && "flex-col font-normal w-full stroke-1.5",
 
-							isActive && "fill-primary/40",
+							isActive && "stroke-primary-foreground",
 						)}
 					/>
 				</span>
@@ -293,7 +341,11 @@ function NavLink({
 					</motion.span>
 				)}
 				{mobile && <span>{nav.label}</span>}
-			</div>
-		</Link>
+			</Link>
+		</div>
 	);
 }
+
+export const useLayout = () => {
+	return useContext(Context);
+};

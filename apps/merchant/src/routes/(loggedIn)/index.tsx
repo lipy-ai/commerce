@@ -50,7 +50,7 @@ const setupSteps = [
 		title: "List products at your shop",
 		description: "Add products in your shop.",
 		action: (
-			<Link className={cn(buttonVariants())} to="/product">
+			<Link className={cn(buttonVariants())} to="/product/add">
 				Add products
 			</Link>
 		),

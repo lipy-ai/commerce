@@ -12,7 +12,7 @@ export const env = {
 	API_URL: e.VITE_API_URL,
 	CDN_URL: e.VITE_CDN_URL,
 	GOOGLE_MAP_API_KEY: e.VITE_GOOGLE_MAP_API_KEY,
-	SHOW_DEV_TOOLS: false,
+	SHOW_DEV_TOOLS: true,
 };
 
 if (env.VITE_USE_IP) {

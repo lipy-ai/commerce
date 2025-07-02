@@ -1,27 +1,63 @@
+import { db } from "@/db";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
-import { HTTPException } from "hono/http-exception";
 import { z } from "zod";
 
 export const merchantInventoryRoute = new Hono<ServerContext>().patch(
-	"/:id",
+	"/",
 	zValidator(
-		"param",
+		"json",
 		z.object({
-			id: z.string(),
+			id: z.string().optional(),
+			variantId: z.string().uuid(),
+			price: z.coerce.number().min(1).optional(),
+			stock: z.coerce.number().min(-1).optional(),
+			sku: z.string().optional(),
+			active: z.boolean(),
 		}),
 	),
 	async (c) => {
 		try {
-			const { id } = c.req.valid("param");
-			console.log("hit");
+			const { id, variantId, price, stock, sku, active } = c.req.valid("json");
 
-			await new Promise((resolve) => setTimeout(resolve, 3000));
+			const sess = c.get("session");
 
-			console.log("after sleep");
+			if (!id) {
+				await db
+					.insertInto("storeInventory")
+					.values({
+						id: crypto.randomUUID(),
+						productVariant: variantId,
+						price,
+						stock,
+						sku,
+						storeId: sess?.activeStoreId!,
+					})
+					.execute();
+			} else {
+				if (!active) {
+					await db
+						.deleteFrom("storeInventory")
+						.where("id", "=", id)
+						.where("storeId", "=", sess?.activeStoreId!)
+						.execute();
+				} else {
+					await db
+						.updateTable("storeInventory")
+						.set({
+							productVariant: variantId,
+							price,
+							stock,
+							sku,
+						})
+						.where("id", "=", id)
+						.where("storeId", "=", sess?.activeStoreId!)
+						.execute();
+				}
+			}
 
-			return c.json({ t: id });
+			return c.json({ success: true });
 		} catch (err) {
 			console.error("ERROR:", err);
 			throw err;

@@ -41,7 +41,6 @@ const route = new Hono<ServerContext>()
 	.get("/", listZodValidator, async (c) => {
 		const { limit, page, q, category } = c.req.valid("query");
 		const activeStoreId = c.var.session?.activeStoreId!;
-		// const activeStoreId = "be2973d8-1df7-442f-9893-3a153f7988ff";
 		const offset = limit * (page - 1);
 
 		const query = db
@@ -79,6 +78,8 @@ const route = new Hono<ServerContext>()
 					.jsonAgg(
 						jsonBuildObject({
 							id: eb.ref("pv.id"),
+							inventoryId: eb.ref("si.id"),
+
 							images: eb.ref("pv.images"),
 							price: eb.ref("pv.price"),
 							unit: eb.ref("pv.unit"),

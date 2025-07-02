@@ -13,7 +13,7 @@ export default defineConfig({
 		sourcemap: process.env.NODE_ENV === "development",
 	},
 	server: {
-		allowedHosts: [process.env.VITE_MERCHANT_URL!],
+		allowedHosts: process.env.ALLOWED_VITE_HOSTS?.split(","),
 
 		proxy: {
 			"/api/**": {

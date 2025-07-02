@@ -19,7 +19,7 @@ export default defineConfig({
 				target: `${process.env.VITE_API_URL}/api/**`,
 			},
 		},
-		allowedHosts: ["app.lipy.in"],
+		allowedHosts: process.env.ALLOWED_VITE_HOSTS?.split(","),
 	},
 	resolve: {
 		alias: [

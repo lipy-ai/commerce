@@ -95,4 +95,4 @@ const shutdown = async () => {
 process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);
 
-export type AppType = typeof routes;
+export type AppType = any;

@@ -2,16 +2,13 @@
 import { authClient } from "@lipy/lib/providers/auth";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import ErrorPage from "@lipy/web-ui/components/pages/error";
-import { buttonVariants } from "@lipy/web-ui/components/ui/button";
-import { Link } from "@tanstack/react-router";
-import { Check } from "lucide-react";
-
 import {
 	Avatar,
 	AvatarFallback,
 	AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
+import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import {
 	Card,
 	CardContent,
@@ -21,8 +18,10 @@ import {
 } from "@lipy/web-ui/components/ui/card";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { cn } from "@lipy/web-ui/lib/utils";
+import { Link } from "@tanstack/react-router";
 import { useNavigate } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
+import { Check } from "lucide-react";
 import { Shirt, ShoppingCart, SquareUser, Store } from "lucide-react";
 import { useState } from "react";
 

@@ -5,7 +5,7 @@ import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Loader2, Minus, Plus } from "lucide-react";
 import { useCallback, useState } from "react";
-import { type Operation, useCartStore } from "./store";
+import { type CartStore, type Operation, useCartStore } from "./store";
 
 type LoadingState = {
 	isLoading: boolean;
@@ -17,7 +17,7 @@ export const AddToCart = ({
 	variant,
 	disabled = false,
 }: {
-	product: any;
+	product: CartStore["cart"][0];
 	variant: "icon" | "primary" | "active";
 	disabled?: boolean;
 	thumbnail?: string;
@@ -60,14 +60,20 @@ export const AddToCart = ({
 				await mutation.mutateAsync({
 					json: {
 						quantity,
-						inventoryId: product.id,
+						inventoryId: product.inventoryId || "",
 					},
 				});
 			} finally {
 				setLoading(null);
 			}
 		},
-		[disabled, loadingState.isLoading, mutation, product.id, setLoading],
+		[
+			disabled,
+			loadingState.isLoading,
+			mutation,
+			product.inventoryId,
+			setLoading,
+		],
 	);
 
 	const handleAddToCart = useCallback(

@@ -80,7 +80,7 @@ const rest = {
 	IN_PROD: env.NODE_ENV === "production",
 };
 if (env.VITE_USE_IP) {
-	const replaceIp = (value) => {
+	const replaceIp = (value: unknown) => {
 		if (
 			typeof value === "string" &&
 			value.startsWith("http") &&
@@ -98,14 +98,14 @@ if (env.VITE_USE_IP) {
 	};
 
 	for (const key of Object.keys(env)) {
-		const value = env[key];
+		const value = (env as any)[key];
 		let vals: any = null;
 		if (Array.isArray(value)) {
 			vals = value.map((m) => replaceIp(m));
 		} else {
 			vals = replaceIp(value);
 		}
-		vals && (env[key] = vals);
+		vals && ((env as any)[key] = vals);
 	}
 }
 

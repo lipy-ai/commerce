@@ -12,7 +12,8 @@ export const Route = createFileRoute(
 });
 
 function RouteComponent() {
-	const { shopHandle, categoryId } = Route.useParams();
+	// FIXME: Should not be any type.
+	const { shopHandle, categoryId }: any = Route.useParams();
 
 	const { data, isFetched, isFetching } = useAPIQuery(
 		apiClient.v1.products,
@@ -39,7 +40,7 @@ function RouteComponent() {
 								params={{ shopHandle, productId: product.id }}
 							>
 								<ProductCard
-									product={product as ProductType}
+									product={product}
 									className={{ classNameImg: "h-full" }}
 								/>
 							</Link>

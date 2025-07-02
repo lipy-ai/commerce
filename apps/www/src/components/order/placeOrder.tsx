@@ -109,7 +109,7 @@ function ProgressDialog({
 			clearInterval(interval);
 			clearTimeout(timeout);
 		};
-	}, []);
+	}, [deliveryLocation, deliveryInstruction]);
 
 	return (
 		<Dialog open={showDialog} onOpenChange={setShowDialog}>

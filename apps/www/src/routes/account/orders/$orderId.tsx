@@ -16,7 +16,7 @@ export const Route = createFileRoute("/account/orders/$orderId")({
 });
 
 function RouteComponent() {
-	const { orderId } = Route.useParams();
+	const { orderId }: any = Route.useParams();
 
 	const { data, isFetched, isFetching } = useAPIQuery(
 		apiClient.v1.order[":id"],
@@ -153,7 +153,7 @@ function RouteComponent() {
 										/>
 										<div className="flex-1">
 											<h2 className="font-semibold">
-												{product.variant.title || product.title}
+												{product.variant.unit || product.title}
 											</h2>
 											<p className="text-sm text-muted-foreground">
 												Color Blue, 5kg
@@ -207,14 +207,17 @@ function RouteComponent() {
 								</div>
 							</div>
 							<div className="bg-card  divide-y divide-dashed p-4 my-4">
-								{data[0]?.address?.name && (
+								{data[0]?.customerDetails?.address?.name && (
 									<div>
 										<div className="flex items-start gap-4 p-2">
 											<CircleUser className="text-muted-foreground flex-shrink-0" />
 											<div>
 												<p className="font-medium text-base">Receiver's Info</p>
 												<p className="text-muted-foreground text-sm">
-													{[data[0]?.address?.name, data[0]?.address?.phone]
+													{[
+														data[0]?.customerDetails?.address?.name,
+														data[0]?.customerDetails.address?.phone,
+													]
 														.filter(Boolean)
 														.join("|")}
 												</p>
@@ -243,8 +246,8 @@ function RouteComponent() {
 										<p className="font-medium text-base">Delivery Address</p>
 										<p className="text-muted-foreground text-sm">
 											{[
-												data[0]?.address?.metadata?.building,
-												data[0]?.address?.line1,
+												data[0]?.customerDetails?.address?.metadata?.building,
+												data[0]?.customerDetails?.address?.line1,
 											]
 												.filter(Boolean)
 												.join(", ")}

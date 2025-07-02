@@ -1,10 +1,10 @@
-// import { useCartStore } from "@/components/cart/store";
-import { DefaultCatchBoundary } from "@/components/defaultCatchBoundry";
-import { NotFound } from "@/components/notFound";
+import EventsProvider from "@/providers/event";
+import { DefaultCatchBoundary, NotFound } from "@/router";
 import { seo } from "@/utils/seo";
+import { env } from "@envClient";
+import useGlobalVibration from "@lipy/lib/hooks/use-vibrate";
 import QueryProvider from "@lipy/lib/providers/queryProvider";
 import { getIsSsrMobile } from "@lipy/lib/utils/isServerMobile";
-
 import { Toaster, toast } from "@lipy/web-ui/components/ui/sonner";
 import { ViewportProvider } from "@lipy/web-ui/contexts/viewport";
 import appCss from "@lipy/web-ui/styles.css?url";
@@ -47,6 +47,10 @@ export const Route = createRootRoute({
 			}),
 		],
 		links: [
+			{
+				rel: "stylesheet",
+				href: "https://unpkg.com/@bprogress/core/dist/index.css",
+			},
 			{ rel: "stylesheet", href: appCss },
 
 			{
@@ -77,11 +81,11 @@ export const Route = createRootRoute({
 			</RootDocument>
 		);
 	},
+	notFoundComponent: () => <NotFound />,
 	loader: async () => {
 		const data = await globalInit();
 		return data;
 	},
-	notFoundComponent: () => <NotFound />,
 	component: RootComponent,
 });
 
@@ -98,27 +102,30 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 		toast.error(error?.message || "Something went wrong!");
 		return false;
 	}, []);
+	useGlobalVibration();
 
 	const data = Route.useLoaderData();
-
-	// const { cart } = useCartStore();
-
 	return (
 		<html className="bg-muted/30" lang="en">
-			<head>
+			<head suppressHydrationWarning>
 				<HeadContent />
 			</head>
 			<body
 				suppressHydrationWarning
-				className="m-auto outline-1 outline-border shadow min-h-screen flex flex-col "
+				className="m-auto outline-1 outline-border shadow min-h-screen flex flex-col"
 				style={{ maxWidth: "1920px" }}
 			>
 				<ViewportProvider isMobile={data?.isSsrMobile}>
 					<QueryProvider handleThrowOnError={handleThrowOnError}>
-						<NuqsAdapter>{children}</NuqsAdapter>
+						<NuqsAdapter>
+							<EventsProvider />
+							{children}
+						</NuqsAdapter>
 						<Toaster />
 					</QueryProvider>
-					<TanStackRouterDevtools position="bottom-right" />
+					{env.SHOW_DEV_TOOLS && (
+						<TanStackRouterDevtools position="bottom-right" />
+					)}
 					<Scripts />
 				</ViewportProvider>
 			</body>

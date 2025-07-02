@@ -66,17 +66,17 @@ function RouteComponent() {
 													}}
 												>
 													<Avatar className="rounded-md size-10">
-														<AvatarImage src={order?.storeLogo || ""} />
+														<AvatarImage src={order?.store.image || ""} />
 														<AvatarFallback>
 															<Store />
 														</AvatarFallback>
 													</Avatar>
 													<div>
 														<p className="font-medium text-sm line-clamp-1">
-															{order?.storeName || "Unknown store"}
+															{order?.store?.name || "Unknown store"}
 														</p>
 														<p className="text-muted-foreground line-clamp-1 text-xs">
-															{order?.storeAddress?.line1 ||
+															{order?.store?.address?.line1 ||
 																"Mumbai, Maharashtra"}
 														</p>
 													</div>
@@ -91,7 +91,7 @@ function RouteComponent() {
 
 											<Link
 												to="/account/orders/$orderId"
-												params={{ orderId: order.orderPrimaryId as string }}
+												params={{ orderId: order.id as string }}
 											>
 												<p className="text-xs ">
 													{order?.items

@@ -14,17 +14,23 @@ export function Pagination({
 	const navigate = useNavigate();
 	const onPrev = () => {
 		navigate({
-			search: {
-				page: page < 1 ? 0 : page - 1,
-			} as any,
-		});
+			search: (s: any) => {
+				return {
+					...s,
+					page: page < 1 ? 0 : page - 1,
+				};
+			},
+		} as any);
 	};
 	const onNext = () => {
 		navigate({
-			search: {
-				page: page < totalPages ? page + 1 : totalPages,
-			} as any,
-		});
+			search: (s: any) => {
+				return {
+					...s,
+					page: page < totalPages ? page + 1 : totalPages,
+				};
+			},
+		} as any);
 	};
 
 	return (

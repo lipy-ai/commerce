@@ -39,7 +39,9 @@ export const AddToCart = ({
 		},
 	});
 
-	const productInCart = cart.find((item) => item.id === product.id);
+	const productInCart = cart.find(
+		(item) => item.inventoryId === product.inventoryId,
+	);
 
 	const setLoading = useCallback((operation: Operation | null) => {
 		setLoadingState({
@@ -58,7 +60,7 @@ export const AddToCart = ({
 				await mutation.mutateAsync({
 					json: {
 						quantity,
-						variantId: product.id,
+						inventoryId: product.id,
 					},
 				});
 			} finally {
@@ -87,8 +89,8 @@ export const AddToCart = ({
 
 				const newQuantity =
 					operation === "increment"
-						? productInCart.quantity + 1
-						: Math.max(0, productInCart.quantity - 1);
+						? (productInCart.quantity || 0) + 1
+						: Math.max(0, (productInCart.quantity || 0) - 1);
 
 				executeCartOperation(operation, newQuantity);
 			},

@@ -2,11 +2,13 @@ import { apiClient } from "@lipy/lib/api";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
+import { SearchInput } from "@lipy/web-ui/components/forms/searchInput";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Pagination } from "@lipy/web-ui/components/pages/pagination";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@lipy/web-ui/components/ui/card";
+import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import {
 	Table,
 	TableBody,
@@ -28,6 +30,7 @@ export const Route = createFileRoute("/(loggedIn)/product/")({
 	validateSearch: z.object({
 		page: z.coerce.number().int().min(1).catch(1),
 		q: z.string().default(""),
+		category: z.string().optional(),
 	}),
 });
 
@@ -35,19 +38,20 @@ type Response = InferResponseType<typeof apiClient.v1.merchant.product.$get>;
 
 function RouteComponent() {
 	const { isMobile } = useViewport();
-	const { page, q } = Route.useSearch();
+	const { page, q, category } = Route.useSearch();
+	const navigate = Route.useNavigate();
 
-	const { data, isLoading } = useAPIQuery(
+	const { data, isLoading, isFetching } = useAPIQuery(
 		apiClient.v1.merchant.product,
 		"$get",
 		{
-			query: { page: String(page), limit: String(10), q },
+			query: { page: String(page), limit: String(10), q, category },
 		},
 		{ placeholderData: (p) => p },
 	);
 
 	return (
-		<div>
+		<>
 			<DashboardHeader title="Products">
 				<FormEdit type="create">
 					<Button size={"sm"}>
@@ -57,11 +61,27 @@ function RouteComponent() {
 				</FormEdit>
 			</DashboardHeader>
 
-			<div className="lg:p-8 lg:space-y-8">
-				<div className="p-4 lg:p-0">
-					<SearchBar placeholder="Search products" defaultValue={q} />
+			<div className="lg:p-8 lg:space-y-8 flex flex-col flex-1">
+				<div className="p-4 lg:p-0 flex flex-col lg:flex-row items-center gap-2">
+					<SearchInput
+						type="categories"
+						value={category || ""}
+						onChange={(v) =>
+							navigate({ search: (p) => ({ ...p, category: v || "" }) })
+						}
+						placeholder={"Select Category"}
+						name={"Category"}
+						className="lg:w-fit"
+					/>
+					<SearchBar
+						placeholder="Search products"
+						defaultValue={q}
+						className="flex-1 w-full lg:w-auto p-0"
+					/>
 				</div>
-				{isLoading ? null : !data || data.items.length === 0 ? (
+				{isLoading || isFetching ? (
+					<Skeleton className="flex-1 mx-4 lg:mx-0" />
+				) : !data || data.items.length === 0 ? (
 					<Card>
 						<CardHeader>
 							<CardTitle>No Products Found...</CardTitle>
@@ -78,7 +98,7 @@ function RouteComponent() {
 					</>
 				)}
 			</div>
-		</div>
+		</>
 	);
 }
 
@@ -102,13 +122,13 @@ function MobileView({ items }: { items: Response["items"] }) {
 							<div className="block break-words">
 								<p className="font-medium line-clamp-1">{m.title}</p>
 								<p className="font-light line-clamp-1">{m.summary}</p>
-								<Badge size={"small"}>In Stock</Badge>
+								{<Badge size={"small"}>In Stock</Badge>}
 							</div>
 						</div>
 
 						<div className="w-fit text-right">
 							<p className="font-semibold text-lg">
-								{formatAmount("inr", 320)}
+								{formatAmount("inr", m?.price || 0)}
 							</p>
 						</div>
 						{/* 
@@ -176,7 +196,7 @@ function DesktopView({ items }: { items: Response["items"] }) {
 								In Stock
 							</Badge>
 						</TableCell>
-						<TableCell>{formatAmount("inr", 320)}</TableCell>
+						<TableCell> {formatAmount("inr", m?.price || 0)}</TableCell>
 						<TableCell>
 							<Link
 								to="/"

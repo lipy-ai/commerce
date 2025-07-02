@@ -8,15 +8,15 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PenLine, Trash } from "lucide-react";
 import DeleteCustomer from "./-delete";
 import { CustomerForm } from "./-form";
-
 export const Route = createFileRoute("/(loggedIn)/customer/$id")({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
+	// const { q, page } = Route.useSearch();
 	const isMobile = useViewport();
-	// const product = useAPIQuery(apiClient.v1.merchant.customer[":id"], "$get", {
-	// 	param: { id },
+	// const product = useAPIQuery(apiClient.v1.merchant.customer, "$get", {
+	// 	query: { q, page },
 	// });
 
 	return (

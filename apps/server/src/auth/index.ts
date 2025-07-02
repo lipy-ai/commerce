@@ -1,6 +1,7 @@
 import { type BetterAuthPlugin, betterAuth } from "better-auth";
 import { emailOTP } from "better-auth/plugins";
 
+import { schema as s } from "@/db/schema";
 import { plunkSendEmail } from "@/services/ses";
 import { sendSMS } from "@/services/sns";
 import { phoneNumber } from "better-auth/plugins";
@@ -53,6 +54,7 @@ const socialProviders = {
 	//   },
 };
 
+const schema = s.schemaName;
 const organizationsPlugin = organization({
 	schema: {
 		session: {
@@ -62,7 +64,7 @@ const organizationsPlugin = organization({
 		},
 
 		organization: {
-			modelName: "lipy.store",
+			modelName: `${schema}.store`,
 			fields: {
 				name: "name",
 				slug: "handle",
@@ -72,7 +74,7 @@ const organizationsPlugin = organization({
 			},
 		},
 		member: {
-			modelName: "lipy.storeMember",
+			modelName: `${schema}.storeMember`,
 			fields: {
 				userId: "userId",
 				organizationId: "storeId",
@@ -81,7 +83,7 @@ const organizationsPlugin = organization({
 			},
 		},
 		invitation: {
-			modelName: "lipy.storeInvitation",
+			modelName: `${schema}.storeInvitation`,
 			fields: {
 				organizationId: "storeId",
 				email: "email",
@@ -128,7 +130,6 @@ export const auth = betterAuth({
 	socialProviders,
 	plugins: [
 		organizationsPlugin,
-
 		emailOTPPlugin,
 		phoneOTPPlugin,
 		emailHarmony(),
@@ -215,7 +216,7 @@ export const auth = betterAuth({
 		},
 	},
 	session: {
-		modelName: "lipy.authSession",
+		modelName: `${schema}.authSession`,
 
 		cookieCache: {
 			enabled: true,
@@ -223,7 +224,7 @@ export const auth = betterAuth({
 		},
 	},
 	user: {
-		modelName: "lipy.user",
+		modelName: `${schema}.user`,
 
 		deleteUser: {
 			enabled: true,
@@ -242,11 +243,11 @@ export const auth = betterAuth({
 	},
 
 	account: {
-		modelName: "lipy.authAccount",
+		modelName: `${schema}.authAccount`,
 	},
 
 	verification: {
-		modelName: "lipy.authVerification",
+		modelName: `${schema}.authVerification`,
 	},
 });
 

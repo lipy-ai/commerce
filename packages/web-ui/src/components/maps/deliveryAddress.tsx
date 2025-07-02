@@ -127,7 +127,7 @@ function LocationComponent() {
 			<DrawerDialogSwitcher
 				open={drawerOpen}
 				onOpenChange={setDrawerOpen}
-				handleInteractOutside={false}
+				dismissible={false}
 				className="[&>button]:hidden"
 			>
 				<DrawerDialogHeader className="mx-auto">

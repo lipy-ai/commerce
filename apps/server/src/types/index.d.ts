@@ -1,10 +1,9 @@
-import type { routes } from "@/app";
 import type { auth } from "@/auth";
 import type { hasPermission } from "@/auth/permission";
 import { DBTypes } from "@/db";
 import type { Context, Env } from "hono";
 export * from "./auth";
-
+import type { routes } from "../app";
 export type AppType = typeof routes;
 
 export interface ServerContext extends Env {

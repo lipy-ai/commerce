@@ -40,6 +40,29 @@ const create = async (user: DBTypes["user"]) => {
 			.execute();
 	}
 
+	const users = await db
+		.insertInto("user")
+		.values(
+			Array.from({ length: faker.number.int({ min: 1, max: 100 }) }).map(
+				() => ({
+					id: crypto.randomUUID(),
+					name: faker.person.fullName(),
+					phoneNumber: faker.phone.number({ style: "international" }),
+					email: faker.internet.email(),
+					phoneNumberVerified: false,
+					emailVerified: false,
+					createdAt: new Date(),
+					updatedAt: new Date(),
+				}),
+			),
+		)
+		.returning("id")
+		.execute();
+
+	const customers = users.map((u) => ({ userId: u.id, storeId: org.id }));
+
+	await db.insertInto("customer").values(customers).execute();
+
 	const categories = await db
 		.insertInto("category")
 		.values(
@@ -48,7 +71,6 @@ const create = async (user: DBTypes["user"]) => {
 				title: faker.commerce.department(),
 				summary: faker.commerce.productDescription(),
 				slug: faker.lorem.slug(),
-				storeId: org.id,
 			})),
 		)
 		.returningAll()
@@ -93,20 +115,23 @@ const create = async (user: DBTypes["user"]) => {
 			.values(
 				Array.from({ length: 3 + Math.floor(Math.random() * 3) }).map(() => ({
 					id: crypto.randomUUID(),
-					title: faker.commerce.productName(),
-					description: faker.commerce.productDescription(),
-					sku: faker.string.alphanumeric(10),
-					model: faker.vehicle.model(),
-					maxPrice: Math.round(
-						Number(faker.commerce.price({ min: 100, max: 1000, dec: 0 })),
-					),
+
+					// sku: faker.string.alphanumeric(10),
+
 					price: Math.round(
 						Number(faker.commerce.price({ min: 100, max: 1000, dec: 0 })),
 					),
-					stockQty: faker.number.int({ min: 1, max: 500 }),
-					unit: faker.helpers.arrayElement(["kg", "g", "lb", "oz", "pcs"]),
-					product: p.id,
-					storeId: org.id,
+					// stockQty: faker.number.int({ min: 1, max: 500 }),
+
+					unit: faker.helpers.arrayElement([
+						"1kg",
+						"250gm",
+						"4 lb",
+						"2 oz",
+						"1 pcs",
+					]),
+
+					productId: p.id,
 				})),
 			)
 			.returningAll()
@@ -120,7 +145,6 @@ const create = async (user: DBTypes["user"]) => {
 				() => ({
 					pk: crypto.randomUUID(),
 					id: idGenerate(),
-
 					items: Array.from({
 						length: faker.number.int({ min: 1, max: 5 }),
 					}).map(() => ({
@@ -130,7 +154,8 @@ const create = async (user: DBTypes["user"]) => {
 						thumbnail: faker.image.urlPicsumPhotos(),
 						variant: {
 							id: crypto.randomUUID(),
-							title: faker.helpers.arrayElement([
+							inventoryId: crypto.randomUUID(),
+							unit: faker.helpers.arrayElement([
 								"1kg",
 								"4 packs",
 								"1 piece",
@@ -166,34 +191,40 @@ const create = async (user: DBTypes["user"]) => {
 						amount: faker.number.int({ min: 1, max: 100 }),
 					})),
 					storeId: org.id,
-					orderedBy: user.id,
+					customerId: user.id,
 					currency: "inr",
 					delivery: {
 						trackingId: crypto.randomUUID(),
 						partnerName: "KungFu Panda",
 						partnerId: crypto.randomUUID(),
 					},
-					address: {
-						id: crypto.randomUUID(),
+					customerDetails: {
 						name: faker.person.fullName(),
-						tag: faker.helpers.arrayElement(["home", "work", "other"]),
-						line1: faker.location.street(),
-						line2: faker.location.streetAddress(),
-						city: faker.location.city(),
-						state: faker.location.state(),
-						country: faker.location.country(),
-						postalCode: faker.location.zipCode(),
-						phone: faker.phone.number(),
-						lat: faker.location.latitude(),
-						lng: faker.location.longitude(),
-						metadata: {
-							building: faker.location.buildingNumber(),
+						phone: faker.phone.number({ style: "international" }),
+						address: {
+							id: crypto.randomUUID(),
+							name: faker.person.fullName(),
+							tag: faker.helpers.arrayElement(["home", "work", "other"]),
+							line1: faker.location.street(),
+							line2: faker.location.streetAddress(),
+							city: faker.location.city(),
+							state: faker.location.state(),
+							country: faker.location.country(),
+							postalCode: faker.location.zipCode(),
+							phone: faker.phone.number(),
+							lat: faker.location.latitude(),
+							lng: faker.location.longitude(),
+							metadata: {
+								building: faker.location.buildingNumber(),
+							},
 						},
 					},
-					deliveryInstruction: faker.lorem.paragraph(),
-					storeInstructions: faker.lorem.paragraph(),
-					paymentMethod: faker.helpers.arrayElement(["cod", "upi", "card"]),
 
+					customerInstructions: {
+						delivery: faker.lorem.paragraph(),
+						store: faker.lorem.paragraph(),
+					},
+					paymentMethod: faker.helpers.arrayElement(["cod", "upi", "card"]),
 					orderedAt: faker.date.anytime(),
 					cancelledAt: faker.helpers.maybe(() => faker.date.anytime()),
 					refundedAt: faker.helpers.maybe(() => faker.date.anytime()),
@@ -216,9 +247,10 @@ const create = async (user: DBTypes["user"]) => {
 };
 
 async function main() {
+	const adminEmails = ["kundanmbhosale@gmail.com"];
 	const users = await db
 		.selectFrom("user")
-		.where("email", "in", ["kundanmbhosale@gmail.com"])
+		.where("email", "in", adminEmails)
 		.selectAll()
 		.execute();
 
@@ -229,6 +261,9 @@ async function main() {
 	await db.deleteFrom("product").execute();
 	await db.deleteFrom("category").execute();
 	await db.deleteFrom("orders").execute();
+	await db.deleteFrom("customer").execute();
+	await db.deleteFrom("user").where("email", "not in", adminEmails).execute();
+
 	for (const user of users) {
 		await create(user);
 	}

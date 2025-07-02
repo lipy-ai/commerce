@@ -40,7 +40,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 				"input",
 			)[0] as HTMLInputElement;
 			if (!input) return;
-			if (suffixE) input.style.paddingRight = `${suffixE.clientWidth + 2}px`;
+			if (suffixE) input.style.paddingRight = `${suffixE.clientWidth + 10}px`;
 			if (prefixE) input.style.paddingLeft = `${prefixE.clientWidth + 2}px`;
 		};
 
@@ -92,21 +92,21 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 					{...props}
 				/>
 
-				<span className="text-sm ">
-					{suffixEl && (
-						<span
-							className={cn(
-								"inline-flex items-center text-muted-foreground px-1 [&>svg]:w-5 absolute appearance-none right-0 top-0 h-full w-fit",
-								size === "lg" && "text-lg",
-								suffixClassName,
-								"suffix-el",
-							)}
-							onClick={() => {}}
-						>
-							{suffixEl}
-						</span>
-					)}
-				</span>
+				{suffixEl && (
+					<div
+						className={cn(
+							"inline-flex text-muted-foreground items-center px-2.5 [&>svg]:w-5 absolute right-0 appearance-none h-10",
+							"text-base leading-0 align-middle ",
+							size === "lg" && "text-lg h-12",
+
+							suffixClassName,
+							"suffix-el",
+						)}
+						onClick={() => {}}
+					>
+						{suffixEl}
+					</div>
+				)}
 			</div>
 		);
 	},

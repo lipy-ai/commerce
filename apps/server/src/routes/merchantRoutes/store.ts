@@ -20,6 +20,7 @@ const storeSchema = z.object({
 const route = new Hono<ServerContext>()
 	.get("/", async (c) => {
 		const session = c.get("session");
+
 		if (!session?.activeStoreId) {
 			throw new HTTPException(404, { message: "No active store found!" });
 		}

@@ -13,7 +13,7 @@
 			"src/**/*.tsx",
 			".vscode/*",
 			"index.html",
-			"vite.config.js"
+			"vite.config.ts"
 		]
 	},
 	"formatter": {
@@ -27,15 +27,12 @@
 		"enabled": true,
 		"rules": {
 			"recommended": true,
-			"a11y": {
-				"useKeyWithClickEvents": "off"
-			},
 			"suspicious": {
 				"noExplicitAny": "off",
 				"noArrayIndexKey": "off"
 			},
-			"correctness": {
-				"useExhaustiveDependencies": "off"
+			"a11y": {
+				"useKeyWithClickEvents": "off"
 			}
 		}
 	},

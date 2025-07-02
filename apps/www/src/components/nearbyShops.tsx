@@ -44,8 +44,8 @@ export default function NearByShops() {
 	});
 
 	useEffect(() => {
-		if (isFetched) {
-			setShops(data || []);
+		if (isFetched && data) {
+			setShops(data);
 		}
 	}, [isFetched, data]);
 
@@ -71,7 +71,6 @@ export default function NearByShops() {
 						<SearchBar
 							placeholder="Search for shop, grocery, fruits..."
 							defaultValue=""
-							onSearch={() => {}}
 						/>
 
 						<div>

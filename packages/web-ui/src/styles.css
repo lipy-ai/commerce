@@ -16,14 +16,14 @@
 	--popover-foreground: rgb(40, 38, 27);
 	--primary: rgb(201, 100, 66);
 	--primary-foreground: rgb(255, 255, 255);
-	--secondary: rgb(233, 230, 220);
-	--secondary-foreground: rgb(83, 81, 70);
+	--secondary: rgb(20, 20, 19);
+	--secondary-foreground: rgb(255, 255, 255);
 	--tertiary: rgb(5, 150, 105);
 	--muted: rgb(237, 233, 222);
 	--muted-foreground: rgb(131, 130, 125);
 	--accent: rgb(233, 230, 220);
 	--accent-foreground: rgb(40, 38, 27);
-	--destructive: rgb(20, 20, 19);
+	--destructive: rgb(161, 10, 38);
 	--destructive-foreground: rgb(255, 255, 255);
 	--border: rgb(230, 229, 224);
 	--input: rgb(202, 201, 194);
@@ -200,6 +200,28 @@
 		stroke-width: 1.5;
 	}
 
+	.disabled-background {
+		background: transparent;
+		position: relative;
+	}
+	.disabled-background:after {
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		z-index: -1;
+		content: "";
+		display: block;
+		background-color: #ffffff;
+		opacity: 0.8;
+		background-size: 8px 8px;
+		background-image: repeating-linear-gradient(
+			45deg,
+			#ddd 0,
+			#ddd 1.5px,
+			#ffffff 0,
+			#ffffff 50%
+		);
+	}
 	.loader {
 		@apply h-2 w-48 rounded-full my-4;
 		--c: no-repeat linear-gradient(var(--color-primary) 0 0);

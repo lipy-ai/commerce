@@ -26,20 +26,17 @@ export const DashboardHeader = ({
 	};
 
 	return (
-		<div className="sticky top-0 z-10 bg-background">
-			<div
-				className={cn(
-					"flex justify-between gap-8 w-full p-3 items-center bg-accent/30 border-b h-12",
-					className,
-				)}
-			>
+		<div className="sticky top-0 z-50 bg-background print:hidden">
+			<div className="flex justify-between gap-8 w-full p-3 items-center bg-accent/30 border-b h-14">
 				<div className="flex items-center justify-center gap-2">
 					{!hideBackBtn && (
 						<Link to={"/"} onClick={onBack}>
 							<ArrowLeft className="stroke-2" />
 						</Link>
 					)}
-					<h1 className="font-semibold text-xl leading-none py-2">{title}</h1>
+					<h1 className="font-semibold text-xl leading-none py-2 max-w-xs lg:max-w-2xl truncate">
+						{title}
+					</h1>
 					{titleChildren && titleChildren}
 				</div>
 				<div className="flex-1 flex justify-end gap-4">{children}</div>

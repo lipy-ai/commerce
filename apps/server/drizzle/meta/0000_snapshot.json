@@ -1,12 +1,12 @@
 {
-  "id": "deafa849-674f-4694-9ac5-e73308ed909b",
+  "id": "da0ae8e5-3650-4ee0-9f73-a45455a484fa",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "lipy.authAccount": {
+    "lipy-dev.authAccount": {
       "name": "authAccount",
-      "schema": "lipy",
+      "schema": "lipy-dev",
       "columns": {
         "id": {
           "name": "id",
@@ -93,7 +93,7 @@
           "name": "authAccount_userId_user_id_fk",
           "tableFrom": "authAccount",
           "tableTo": "user",
-          "schemaTo": "lipy",
+          "schemaTo": "lipy-dev",
           "columnsFrom": [
             "userId"
           ],
@@ -110,9 +110,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "lipy.address": {
+    "lipy-dev.address": {
       "name": "address",
-      "schema": "lipy",
+      "schema": "lipy-dev",
       "columns": {
         "id": {
           "name": "id",
@@ -201,9 +201,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "lipy.cart": {
+    "lipy-dev.cart": {
       "name": "cart",
-      "schema": "lipy",
+      "schema": "lipy-dev",
       "columns": {
         "id": {
           "name": "id",
@@ -217,8 +217,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "variantId": {
-          "name": "variantId",
+        "inventoryId": {
+          "name": "inventoryId",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
@@ -237,7 +237,7 @@
           "name": "cart_userId_user_id_fk",
           "tableFrom": "cart",
           "tableTo": "user",
-          "schemaTo": "lipy",
+          "schemaTo": "lipy-dev",
           "columnsFrom": [
             "userId"
           ],
@@ -247,13 +247,13 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "cart_variantId_productVariant_id_fk": {
-          "name": "cart_variantId_productVariant_id_fk",
+        "cart_inventoryId_storeInventory_id_fk": {
+          "name": "cart_inventoryId_storeInventory_id_fk",
           "tableFrom": "cart",
-          "tableTo": "productVariant",
-          "schemaTo": "lipy",
+          "tableTo": "storeInventory",
+          "schemaTo": "lipy-dev",
           "columnsFrom": [
-            "variantId"
+            "inventoryId"
           ],
           "columnsTo": [
             "id"
@@ -268,9 +268,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "lipy.category": {
+    "lipy-dev.category": {
       "name": "category",
-      "schema": "lipy",
+      "schema": "lipy-dev",
       "columns": {
         "id": {
           "name": "id",
@@ -301,31 +301,10 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
-        },
-        "storeId": {
-          "name": "storeId",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "category_storeId_store_id_fk": {
-          "name": "category_storeId_store_id_fk",
-          "tableFrom": "category",
-          "tableTo": "store",
-          "schemaTo": "lipy",
-          "columnsFrom": [
-            "storeId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "category_slug_unique": {
@@ -340,129 +319,95 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "lipy.globalCategory": {
-      "name": "globalCategory",
-      "schema": "lipy",
+    "lipy-dev.customer": {
+      "name": "customer",
+      "schema": "lipy-dev",
       "columns": {
-        "id": {
-          "name": "id",
+        "storeId": {
+          "name": "storeId",
           "type": "uuid",
-          "primaryKey": true,
-          "notNull": true
+          "primaryKey": false,
+          "notNull": false
+        },
+        "userId": {
+          "name": "userId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "globalCategory_id_category_id_fk": {
-          "name": "globalCategory_id_category_id_fk",
-          "tableFrom": "globalCategory",
-          "tableTo": "category",
-          "schemaTo": "lipy",
+        "customer_storeId_store_id_fk": {
+          "name": "customer_storeId_store_id_fk",
+          "tableFrom": "customer",
+          "tableTo": "store",
+          "schemaTo": "lipy-dev",
           "columnsFrom": [
-            "id"
+            "storeId"
           ],
           "columnsTo": [
             "id"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "lipy.globalProduct": {
-      "name": "globalProduct",
-      "schema": "lipy",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "globalProduct_id_product_id_fk": {
-          "name": "globalProduct_id_product_id_fk",
-          "tableFrom": "globalProduct",
-          "tableTo": "product",
-          "schemaTo": "lipy",
+        },
+        "customer_userId_user_id_fk": {
+          "name": "customer_userId_user_id_fk",
+          "tableFrom": "customer",
+          "tableTo": "user",
+          "schemaTo": "lipy-dev",
           "columnsFrom": [
-            "id"
+            "userId"
           ],
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
+          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "customer_storeId_userId_pk": {
+          "name": "customer_storeId_userId_pk",
+          "columns": [
+            "storeId",
+            "userId"
+          ]
+        }
+      },
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "lipy.globalTag": {
-      "name": "globalTag",
-      "schema": "lipy",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "globalTag_id_tag_id_fk": {
-          "name": "globalTag_id_tag_id_fk",
-          "tableFrom": "globalTag",
-          "tableTo": "tag",
-          "schemaTo": "lipy",
-          "columnsFrom": [
-            "id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "lipy.orders": {
+    "lipy-dev.orders": {
       "name": "orders",
-      "schema": "lipy",
+      "schema": "lipy-dev",
       "columns": {
-        "id": {
-          "name": "id",
+        "pk": {
+          "name": "pk",
           "type": "uuid",
           "primaryKey": true,
           "notNull": true
         },
-        "pk": {
-          "name": "pk",
+        "id": {
+          "name": "id",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "items": {
           "name": "items",
           "type": "jsonb[]",
           "primaryKey": false,
           "notNull": false
+        },
+        "currency": {
+          "name": "currency",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
         },
         "taxes": {
           "name": "taxes",
@@ -482,39 +427,27 @@
           "primaryKey": false,
           "notNull": true
         },
-        "orderedBy": {
-          "name": "orderedBy",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "currency": {
-          "name": "currency",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
         "delivery": {
           "name": "delivery",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
-        "address": {
-          "name": "address",
+        "customerId": {
+          "name": "customerId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "customerDetails": {
+          "name": "customerDetails",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
-        "deliveryInstruction": {
-          "name": "deliveryInstruction",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "storeInstructions": {
-          "name": "storeInstructions",
-          "type": "text",
+        "customerInstructions": {
+          "name": "customerInstructions",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
@@ -609,23 +542,9 @@
           "name": "orders_storeId_store_id_fk",
           "tableFrom": "orders",
           "tableTo": "store",
-          "schemaTo": "lipy",
+          "schemaTo": "lipy-dev",
           "columnsFrom": [
             "storeId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "orders_orderedBy_user_id_fk": {
-          "name": "orders_orderedBy_user_id_fk",
-          "tableFrom": "orders",
-          "tableTo": "user",
-          "schemaTo": "lipy",
-          "columnsFrom": [
-            "orderedBy"
           ],
           "columnsTo": [
             "id"
@@ -636,11 +555,11 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "orders_pk_unique": {
-          "name": "orders_pk_unique",
+        "orders_id_unique": {
+          "name": "orders_id_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "pk"
+            "id"
           ]
         }
       },
@@ -648,9 +567,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "lipy.product": {
+    "lipy-dev.product": {
       "name": "product",
-      "schema": "lipy",
+      "schema": "lipy-dev",
       "columns": {
         "id": {
           "name": "id",
@@ -724,9 +643,9 @@
           "primaryKey": false,
           "notNull": false
         },
-        "globalProduct": {
-          "name": "globalProduct",
-          "type": "uuid",
+        "keywords": {
+          "name": "keywords",
+          "type": "text[]",
           "primaryKey": false,
           "notNull": false
         }
@@ -737,7 +656,7 @@
           "name": "product_category_category_id_fk",
           "tableFrom": "product",
           "tableTo": "category",
-          "schemaTo": "lipy",
+          "schemaTo": "lipy-dev",
           "columnsFrom": [
             "category"
           ],
@@ -751,7 +670,7 @@
           "name": "product_storeId_store_id_fk",
           "tableFrom": "product",
           "tableTo": "store",
-          "schemaTo": "lipy",
+          "schemaTo": "lipy-dev",
           "columnsFrom": [
             "storeId"
           ],
@@ -759,20 +678,6 @@
             "id"
           ],
           "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "product_globalProduct_globalProduct_id_fk": {
-          "name": "product_globalProduct_globalProduct_id_fk",
-          "tableFrom": "product",
-          "tableTo": "globalProduct",
-          "schemaTo": "lipy",
-          "columnsFrom": [
-            "globalProduct"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
           "onUpdate": "no action"
         }
       },
@@ -782,9 +687,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "lipy.productVariant": {
+    "lipy-dev.productVariant": {
       "name": "productVariant",
-      "schema": "lipy",
+      "schema": "lipy-dev",
       "columns": {
         "id": {
           "name": "id",
@@ -792,71 +697,26 @@
           "primaryKey": true,
           "notNull": true
         },
-        "title": {
-          "name": "title",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "sku": {
-          "name": "sku",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "model": {
-          "name": "model",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "maxPrice": {
-          "name": "maxPrice",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "default": 0
-        },
-        "price": {
-          "name": "price",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "default": 0
-        },
-        "stockQty": {
-          "name": "stockQty",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "default": 1
-        },
         "unit": {
           "name": "unit",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "metadata": {
-          "name": "metadata",
-          "type": "jsonb",
+        "price": {
+          "name": "price",
+          "type": "numeric(10, 2)",
           "primaryKey": false,
           "notNull": false
         },
-        "product": {
-          "name": "product",
-          "type": "uuid",
+        "images": {
+          "name": "images",
+          "type": "text[]",
           "primaryKey": false,
           "notNull": false
         },
-        "storeId": {
-          "name": "storeId",
+        "productId": {
+          "name": "productId",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
@@ -864,27 +724,13 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "productVariant_product_product_id_fk": {
-          "name": "productVariant_product_product_id_fk",
+        "productVariant_productId_product_id_fk": {
+          "name": "productVariant_productId_product_id_fk",
           "tableFrom": "productVariant",
           "tableTo": "product",
-          "schemaTo": "lipy",
+          "schemaTo": "lipy-dev",
           "columnsFrom": [
-            "product"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "productVariant_storeId_store_id_fk": {
-          "name": "productVariant_storeId_store_id_fk",
-          "tableFrom": "productVariant",
-          "tableTo": "store",
-          "schemaTo": "lipy",
-          "columnsFrom": [
-            "storeId"
+            "productId"
           ],
           "columnsTo": [
             "id"
@@ -899,9 +745,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "lipy.authSession": {
+    "lipy-dev.authSession": {
       "name": "authSession",
-      "schema": "lipy",
+      "schema": "lipy-dev",
       "columns": {
         "id": {
           "name": "id",
@@ -952,7 +798,7 @@
           "name": "authSession_userId_user_id_fk",
           "tableFrom": "authSession",
           "tableTo": "user",
-          "schemaTo": "lipy",
+          "schemaTo": "lipy-dev",
           "columnsFrom": [
             "userId"
           ],
@@ -977,9 +823,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "lipy.store": {
+    "lipy-dev.store": {
       "name": "store",
-      "schema": "lipy",
+      "schema": "lipy-dev",
       "columns": {
         "id": {
           "name": "id",
@@ -1023,6 +869,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "address": {
+          "name": "address",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
         "email": {
           "name": "email",
           "type": "text",
@@ -1059,9 +911,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "lipy.storeAddress": {
+    "lipy-dev.storeAddress": {
       "name": "storeAddress",
-      "schema": "lipy",
+      "schema": "lipy-dev",
       "columns": {
         "id": {
           "name": "id",
@@ -1082,7 +934,7 @@
           "name": "storeAddress_id_address_id_fk",
           "tableFrom": "storeAddress",
           "tableTo": "address",
-          "schemaTo": "lipy",
+          "schemaTo": "lipy-dev",
           "columnsFrom": [
             "id"
           ],
@@ -1096,7 +948,7 @@
           "name": "storeAddress_storeId_store_id_fk",
           "tableFrom": "storeAddress",
           "tableTo": "store",
-          "schemaTo": "lipy",
+          "schemaTo": "lipy-dev",
           "columnsFrom": [
             "storeId"
           ],
@@ -1113,9 +965,88 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "lipy.storeInvitation": {
+    "lipy-dev.storeInventory": {
+      "name": "storeInventory",
+      "schema": "lipy-dev",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "productVariant": {
+          "name": "productVariant",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "storeId": {
+          "name": "storeId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "price": {
+          "name": "price",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "stock": {
+          "name": "stock",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "sku": {
+          "name": "sku",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "storeInventory_productVariant_product_id_fk": {
+          "name": "storeInventory_productVariant_product_id_fk",
+          "tableFrom": "storeInventory",
+          "tableTo": "product",
+          "schemaTo": "lipy-dev",
+          "columnsFrom": [
+            "productVariant"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "storeInventory_storeId_store_id_fk": {
+          "name": "storeInventory_storeId_store_id_fk",
+          "tableFrom": "storeInventory",
+          "tableTo": "store",
+          "schemaTo": "lipy-dev",
+          "columnsFrom": [
+            "storeId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "lipy-dev.storeInvitation": {
       "name": "storeInvitation",
-      "schema": "lipy",
+      "schema": "lipy-dev",
       "columns": {
         "id": {
           "name": "id",
@@ -1166,7 +1097,7 @@
           "name": "storeInvitation_storeId_store_id_fk",
           "tableFrom": "storeInvitation",
           "tableTo": "store",
-          "schemaTo": "lipy",
+          "schemaTo": "lipy-dev",
           "columnsFrom": [
             "storeId"
           ],
@@ -1180,7 +1111,7 @@
           "name": "storeInvitation_inviterId_user_id_fk",
           "tableFrom": "storeInvitation",
           "tableTo": "user",
-          "schemaTo": "lipy",
+          "schemaTo": "lipy-dev",
           "columnsFrom": [
             "inviterId"
           ],
@@ -1197,9 +1128,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "lipy.storeMember": {
+    "lipy-dev.storeMember": {
       "name": "storeMember",
-      "schema": "lipy",
+      "schema": "lipy-dev",
       "columns": {
         "id": {
           "name": "id",
@@ -1238,7 +1169,7 @@
           "name": "storeMember_storeId_store_id_fk",
           "tableFrom": "storeMember",
           "tableTo": "store",
-          "schemaTo": "lipy",
+          "schemaTo": "lipy-dev",
           "columnsFrom": [
             "storeId"
           ],
@@ -1252,7 +1183,7 @@
           "name": "storeMember_userId_user_id_fk",
           "tableFrom": "storeMember",
           "tableTo": "user",
-          "schemaTo": "lipy",
+          "schemaTo": "lipy-dev",
           "columnsFrom": [
             "userId"
           ],
@@ -1264,14 +1195,23 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "user_store_unique": {
+          "name": "user_store_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "userId",
+            "storeId"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "lipy.tag": {
+    "lipy-dev.tag": {
       "name": "tag",
-      "schema": "lipy",
+      "schema": "lipy-dev",
       "columns": {
         "id": {
           "name": "id",
@@ -1302,40 +1242,19 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
-        },
-        "storeId": {
-          "name": "storeId",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "tag_storeId_store_id_fk": {
-          "name": "tag_storeId_store_id_fk",
-          "tableFrom": "tag",
-          "tableTo": "store",
-          "schemaTo": "lipy",
-          "columnsFrom": [
-            "storeId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "lipy.upload": {
+    "lipy-dev.upload": {
       "name": "upload",
-      "schema": "lipy",
+      "schema": "lipy-dev",
       "columns": {
         "id": {
           "name": "id",
@@ -1404,7 +1323,7 @@
           "name": "upload_uploadedBy_user_id_fk",
           "tableFrom": "upload",
           "tableTo": "user",
-          "schemaTo": "lipy",
+          "schemaTo": "lipy-dev",
           "columnsFrom": [
             "uploadedBy"
           ],
@@ -1418,7 +1337,7 @@
           "name": "upload_storeId_store_id_fk",
           "tableFrom": "upload",
           "tableTo": "store",
-          "schemaTo": "lipy",
+          "schemaTo": "lipy-dev",
           "columnsFrom": [
             "storeId"
           ],
@@ -1435,9 +1354,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "lipy.user": {
+    "lipy-dev.user": {
       "name": "user",
-      "schema": "lipy",
+      "schema": "lipy-dev",
       "columns": {
         "id": {
           "name": "id",
@@ -1493,12 +1412,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "customerId": {
-          "name": "customerId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "country": {
           "name": "country",
           "type": "text",
@@ -1541,9 +1454,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "lipy.userAddress": {
+    "lipy-dev.userAddress": {
       "name": "userAddress",
-      "schema": "lipy",
+      "schema": "lipy-dev",
       "columns": {
         "id": {
           "name": "id",
@@ -1564,7 +1477,7 @@
           "name": "userAddress_id_address_id_fk",
           "tableFrom": "userAddress",
           "tableTo": "address",
-          "schemaTo": "lipy",
+          "schemaTo": "lipy-dev",
           "columnsFrom": [
             "id"
           ],
@@ -1578,7 +1491,7 @@
           "name": "userAddress_userId_user_id_fk",
           "tableFrom": "userAddress",
           "tableTo": "user",
-          "schemaTo": "lipy",
+          "schemaTo": "lipy-dev",
           "columnsFrom": [
             "userId"
           ],
@@ -1595,9 +1508,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "lipy.authVerification": {
+    "lipy-dev.authVerification": {
       "name": "authVerification",
-      "schema": "lipy",
+      "schema": "lipy-dev",
       "columns": {
         "id": {
           "name": "id",
@@ -1647,7 +1560,7 @@
   },
   "enums": {},
   "schemas": {
-    "lipy": "lipy"
+    "lipy-dev": "lipy-dev"
   },
   "sequences": {},
   "roles": {},

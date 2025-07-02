@@ -29,15 +29,15 @@ const route = new Hono<ServerContext>().get(
 				case "categories":
 					return db
 						.selectFrom("category")
-						.$if(!!q, (e) =>
-							e.where((eb) => {
-								const ors: Expression<SqlBool>[] = [];
-								if (q) {
-									ors.push(eb("title", "ilike", `%${q}%`));
-								}
-								return eb.or(ors);
-							}),
-						)
+						.$if(!!q, (qb) => {
+							const words = q!.trim().split(/\s+/);
+							console.log(words);
+							return words.reduce(
+								(acc, word) => acc.where("title", "ilike", `%${word}%`),
+								qb,
+							);
+						})
+
 						.select(["id as value", "title as label", "image as icon"]);
 
 				case "stores":
@@ -45,11 +45,14 @@ const route = new Hono<ServerContext>().get(
 						.selectFrom("store")
 						.$if(!!q, (e) =>
 							e.where((eb) => {
-								const ors: Expression<SqlBool>[] = [];
-								if (q) {
-									ors.push(eb("name", "ilike", `%${q}%`));
-								}
-								return eb.or(ors);
+								const words = q!.trim().split(/\s+/);
+
+								const wordMatches = words.map((word) =>
+									eb("name", "ilike", `%${word}%`),
+								);
+								return eb.or([
+									eb.and(wordMatches), // All words should be in u.name
+								]);
 							}),
 						)
 						.select(["id as value", "name as label", "image as icon"]);
@@ -61,13 +64,16 @@ const route = new Hono<ServerContext>().get(
 
 						.$if(!!q, (e) =>
 							e.where((eb) => {
-								const ors: Expression<SqlBool>[] = [];
-								if (q) {
-									const v = z.string().uuid().safeParse(q);
-									v.success && ors.push(eb("id", "=", v.data));
-									ors.push(eb("title", "ilike", `%${q}%`));
-								}
-								return eb.or(ors);
+								const words = q!.trim().split(/\s+/);
+								const v = z.string().uuid().safeParse(q);
+
+								const wordMatches = words.map((word) =>
+									eb("title", "ilike", `%${word}%`),
+								);
+								return eb.or([
+									...(v.success ? [eb("id", "=", v.data)] : []),
+									eb.and(wordMatches),
+								]);
 							}),
 						);
 
@@ -76,7 +82,11 @@ const route = new Hono<ServerContext>().get(
 			}
 		};
 
-		const data = (await exec()?.limit(30).execute()) || [];
+		const data =
+			(await exec()
+				?.$if(type !== "categories", (qb) => qb.limit(50))
+				.execute()) || [];
+		data.unshift({ value: "", label: "All", icon: null });
 		return c.json(data);
 	},
 );

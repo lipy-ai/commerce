@@ -4,7 +4,7 @@ import { Kysely, PostgresDialect, sql } from "kysely";
 import { Pool } from "pg";
 import env from "../env";
 import { logger } from "../lib/logger";
-import { dbTables } from "./schema";
+import { dbTables, schema } from "./schema";
 
 export const pool = new Pool({ connectionString: env.DATABASE_URL });
 
@@ -25,7 +25,7 @@ export async function pingDatabase() {
 	}
 }
 
-export const db = dbClient.withSchema("lipy");
+export const db = dbClient.withSchema(schema.schemaName);
 
 function createTableMap<T extends Record<string, PgTableWithColumns<any>>>(
 	schemas: T,

@@ -1,5 +1,7 @@
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
-import type { ReactNode } from "@tanstack/react-router";
+import { cn } from "@lipy/web-ui/lib/utils";
+import { DialogTrigger } from "@radix-ui/react-dialog";
+import type { ReactNode } from "react";
 import { Button } from "../ui/button";
 import {
 	Dialog,
@@ -18,43 +20,46 @@ import {
 	DrawerFooter,
 	DrawerHeader,
 	DrawerTitle,
+	DrawerTrigger,
 } from "../ui/drawer";
 
 const DrawerDialogSwitcher = ({
 	open,
 	onOpenChange,
 	children,
-	handleInteractOutside = true,
+	dismissible = true,
+
 	className,
+	trigger,
 }: {
 	open?: boolean;
 	onOpenChange?: (open: boolean) => void;
 	children?: React.ReactNode;
-	handleInteractOutside?: boolean;
+	dismissible?: boolean;
 	className?: string;
+	trigger?: ReactNode;
 }) => {
 	const { isMobile } = useViewport();
 	if (isMobile) {
 		return (
-			<Drawer
-				open={open}
-				onOpenChange={onOpenChange}
-				dismissible={handleInteractOutside}
-			>
+			<Drawer open={open} onOpenChange={onOpenChange} dismissible={dismissible}>
+				<DrawerTrigger asChild>{trigger}</DrawerTrigger>
+
 				<DrawerContent className={className}>{children}</DrawerContent>
 			</Drawer>
 		);
 	}
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
+			<DialogTrigger asChild>{trigger}</DialogTrigger>
 			<DialogContent
-				className={className}
-				onInteractOutside={(e) => {
-					if (!handleInteractOutside) {
-						e.preventDefault();
-					}
+				className={cn(className)}
+				style={{
+					scrollbarWidth: "none",
+					pointerEvents: !dismissible ? "none" : "auto",
 				}}
-				style={{ scrollbarWidth: "none" }}
+				onEscapeKeyDown={(e) => !dismissible && e.preventDefault()}
+				onInteractOutside={(e) => !dismissible && e.preventDefault()}
 			>
 				{children}
 			</DialogContent>

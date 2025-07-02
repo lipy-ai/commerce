@@ -1,9 +1,5 @@
 {
-	"include": [
-		"**/*.ts",
-		"**/*.tsx",
-		"../../packages/web-ui/src/components/maps/detailedAddress.tsx"
-	],
+	"include": ["**/*.ts", "**/*.tsx"],
 	"references": [{ "path": "../../apps/server" }],
 
 	"compilerOptions": {
@@ -12,7 +8,6 @@
 		"module": "ESNext",
 		"lib": ["ES2022", "DOM", "DOM.Iterable"],
 		"types": ["vite/client"],
-
 		"noImplicitAny": true,
 		"removeComments": true,
 
@@ -34,7 +29,6 @@
 		"paths": {
 			"@/*": ["./src/*"],
 			"@envClient": ["../../env.client.ts"],
-
 			"@lipy/web-ui/*": ["../../packages/web-ui/src/*"],
 			"@lipy/lib/*": ["../../packages/lib/src/*"],
 			"@lipy/server/*": ["../server/src/*"]

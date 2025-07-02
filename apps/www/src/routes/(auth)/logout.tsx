@@ -1,6 +1,6 @@
 import { authClient } from "@lipy/lib/providers/auth";
-import { createFileRoute } from "@tanstack/react-router";
 import Loading from "@lipy/web-ui/components/ui/loading";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 export const Route = createFileRoute("/(auth)/logout")({
@@ -9,6 +9,7 @@ export const Route = createFileRoute("/(auth)/logout")({
 
 function RouteComponent() {
 	const navigate = Route.useNavigate();
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		authClient.signOut().then((_e) => navigate({ to: "/", replace: true }));
 	}, []);

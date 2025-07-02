@@ -2,7 +2,7 @@ import { DeliveryInstruction } from "@/components/cart/instructions";
 import { useCartStore } from "@/components/cart/store";
 
 import PlaceOrder from "@/components/order/placeOrder";
-import ProductCard, { type ProductType } from "@/components/productCard";
+import ProductCard from "@/components/productCard";
 import { apiClient } from "@lipy/lib/api";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
@@ -50,7 +50,11 @@ function RouteComponent() {
 	const [completeDeliveryInstruction, setCompleteDeliveryInstruction] =
 		useState("");
 
-	const { data = [], isFetched } = useAPIQuery(
+	const {
+		data = [],
+		isFetched,
+		isError,
+	} = useAPIQuery(
 		apiClient.v1.cart,
 		"$get",
 		{},
@@ -130,7 +134,7 @@ function RouteComponent() {
 									{cart.map((product) => (
 										<div key={product.inventoryId} className=" py-4">
 											<ProductCard
-												product={product as ProductType}
+												product={product}
 												variant="horizontal"
 												className={{ classNameImg: "w-12 h-12" }}
 											/>

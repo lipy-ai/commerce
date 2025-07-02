@@ -117,7 +117,7 @@ export default function ProductCard({
 				for (const variant of product.variants) {
 					if (product.variants.length === 0) break;
 
-					if (variant.id === cartItem.id) {
+					if (variant.id === cartItem.inventoryId) {
 						cartCount += 1;
 					}
 				}

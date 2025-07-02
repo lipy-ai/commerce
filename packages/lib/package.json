@@ -23,7 +23,7 @@
 		"tailwindcss": "^4.1.11"
 	},
 	"dependencies": {
-		"@tanstack/react-query": "^5.81.5",
+		"@tanstack/react-query": "^5.74.4",
 		"hono": "^4.8.3",
 		"mobile-detect": "^1.4.5",
 		"react-cookie": "^8.0.1"

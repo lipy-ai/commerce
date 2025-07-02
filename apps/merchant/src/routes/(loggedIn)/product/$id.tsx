@@ -29,7 +29,8 @@ export const Route = createFileRoute("/(loggedIn)/product/$id")({
 });
 
 function RouteComponent() {
-	const { id } = Route.useParams();
+	// FIXME : no any type
+	const { id }: any = Route.useParams();
 
 	const { data, isLoading } = useAPIQuery(
 		apiClient.v1.merchant.product[":id"],

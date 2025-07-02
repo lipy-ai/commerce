@@ -12,12 +12,14 @@ export default defineConfig({
 		minify: true,
 		sourcemap: process.env.NODE_ENV === "development",
 	},
+
 	server: {
 		proxy: {
 			"/api/**": {
 				target: `${process.env.VITE_API_URL}/api/**`,
 			},
 		},
+		allowedHosts: [".lipy.in"],
 	},
 	resolve: {
 		alias: [

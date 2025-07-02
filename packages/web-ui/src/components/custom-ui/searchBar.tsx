@@ -9,9 +9,11 @@ import { Input } from "../ui/input";
 export default function SearchBar({
 	placeholder,
 	defaultValue,
+	className,
 }: {
 	placeholder?: string;
 	defaultValue?: string;
+	className?: string;
 }) {
 	const [value, setValue] = useState(defaultValue || "");
 	const [debounced] = useDebounce(value, 300);
@@ -37,16 +39,16 @@ export default function SearchBar({
 				onSearch(value);
 				e.preventDefault();
 			}}
-			className="p-2 md:p-0"
+			className={cn("p-2 md:p-0", className)}
 		>
 			<Input
-				className="rounded-xl"
+				className="rounded"
 				value={value}
 				onChange={(e) => {
 					setValue(e.currentTarget.value);
 				}}
 				placeholder={placeholder || "Search"}
-				prefixEl={<Search className="text-tertiary stroke-2" />}
+				prefixEl={<Search className="stroke-2" />}
 				suffixEl={
 					<Button
 						type="button"

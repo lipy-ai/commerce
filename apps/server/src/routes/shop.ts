@@ -23,6 +23,7 @@ const route = new Hono<ServerContext>()
 			.where("active", "=", true)
 			.selectAll()
 			.execute();
+
 		return c.json(d || []);
 	})
 	.get(

@@ -16,6 +16,7 @@ if (process.versions.bun) {
 }
 
 export default {
-	fetch: app.fetch,
+	idleTimeout: 30,
+	fetch: (request: Request) => app.fetch(request),
 	port,
 };

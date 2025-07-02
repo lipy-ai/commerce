@@ -29,7 +29,7 @@ const route = new Hono<ServerContext>()
 		const q = c.req.valid("query");
 		const data = await db
 			.selectFrom("orders as o")
-			.where("o.orderedBy", "=", session?.userId!)
+			.where("o.customerId", "=", session?.userId!)
 			.$if(q.view === "active", (qb) =>
 				qb.where((eb) =>
 					eb.or([
@@ -44,20 +44,22 @@ const route = new Hono<ServerContext>()
 				),
 			)
 			.leftJoin("store as s", "s.id", "o.storeId")
-			.select([
+			.select((eb) => [
 				"o.id",
 				"o.itemTotalAmount",
 				"o.currency",
 				"o.status",
 				"o.items",
-				"o.pk as orderPrimaryId",
 				"o.orderedAt",
 				"s.name as storeName",
 				"s.image as storeLogo",
 				"s.id as storeId",
 				"s.address as storeAddress",
 				"s.handle as storeHandle",
-				"o.address",
+
+				"o.customerId",
+				"o.customerDetails",
+				eb.fn.toJson("s").as("store"),
 			])
 			.orderBy("o.orderedAt", "desc")
 			.execute();
@@ -70,7 +72,7 @@ const route = new Hono<ServerContext>()
 
 		const data = await db
 			.selectFrom("orders as o")
-			.where("o.orderedBy", "=", session?.userId!)
+			.where("o.customerId", "=", session?.userId!)
 			.where("o.pk", "=", id)
 			.selectAll()
 			.execute();
@@ -79,27 +81,23 @@ const route = new Hono<ServerContext>()
 	})
 	.post("/", zValidator("json", orderSchema), async (c) => {
 		const session = c.get("session");
+		const user = c.get("user");
 		const values = c.req.valid("json");
-
-		// const address = await db
-		// 	.selectFrom("address")
-		// 	.where("address.id", "=", values.address)
-		// 	.where("address.userId", "=", session?.userId!)
-		// 	.selectAll()
-		// 	.executeTakeFirst();
 
 		if (!values.address)
 			throw new HTTPException(404, { message: "Address not found!" });
 
 		const cart = await db
-			.selectFrom("cart")
-			.where("cart.userId", "=", session?.userId!)
-			.leftJoin("productVariant as pv", "pv.id", "cart.variantId")
-			.leftJoin("product as p", "p.id", "pv.product")
+			.selectFrom("cart as c")
+			.where("c.userId", "=", session?.userId!)
+			.rightJoin("storeInventory as si", "si.id", "c.inventoryId")
+			.rightJoin("productVariant as pv", "pv.id", "si.productVariant")
+			.rightJoin("product as p", "p.id", "pv.productId")
 			.select((eb) => [
-				eb.fn.toJson("cart").as("cart"),
+				eb.fn.toJson("c").as("cart"),
 				eb.fn.toJson("p").as("product"),
 				eb.fn.toJson("pv").as("variant"),
+				eb.fn.toJson("si").as("inventory"),
 			])
 			.execute();
 
@@ -110,16 +108,17 @@ const route = new Hono<ServerContext>()
 				id: c.product.id!,
 				title: c.product.title!,
 				quantity: c.cart.quantity!,
-				thumbnail: c.product.thumbnail!,
+				thumbnail: c.variant.images?.[0] || c.product.thumbnail!,
 				variant: {
 					id: c.variant.id!,
-					title: c.variant.title!,
-					maxPrice: c.variant.maxPrice!,
-					price: c.variant.price!,
+					inventoryId: c.inventory.id!,
+					maxPrice: c.variant.price || 0,
+					price: c.inventory.price || 0,
+					unit: c.variant.unit!,
 				},
 			} satisfies NonNullable<DBTypes["orders"]["items"]>[0];
 
-			const store = orders.find((s) => s?.storeId === c.variant.storeId);
+			const store = orders.find((s) => s?.storeId === c.inventory.storeId);
 
 			if (store) {
 				store.items?.push(item);
@@ -128,13 +127,23 @@ const route = new Hono<ServerContext>()
 					id: crypto.randomUUID(),
 					pk: idGenerate({ prefix: "ORD" }),
 					status: "ordered",
-					address: values.address,
 					items: [item],
 					taxes: [],
 					discounts: [],
 					currency: "inr",
-					storeId: c.variant.storeId!,
-					orderedBy: session?.userId!,
+					storeId: c.inventory.storeId!,
+					customerId: session?.userId!,
+					customerDetails: {
+						name: user?.name!,
+						phone: user?.phoneNumber!,
+						address: values?.address,
+					},
+					customerInstructions: {
+						delivery: values.deliveryInstruction,
+						store: values.storeInstruction?.find(
+							(s) => s.id === c.inventory.storeId,
+						)?.instruction,
+					},
 					paymentMethod: "cod",
 					orderedAt: new Date(),
 					itemTotalAmount: 0,
@@ -144,10 +153,6 @@ const route = new Hono<ServerContext>()
 					totalDiscountAmount: 0,
 					maxItemTotalAmount: 0,
 					delivery: null,
-					deliveryInstruction: values.deliveryInstruction,
-					storeInstructions:
-						values.storeInstruction?.find((s) => s.id === c.variant.storeId)
-							?.instruction || null,
 					cancelledAt: null,
 					refundedAt: null,
 					deliveredAt: null,
@@ -201,7 +206,7 @@ const route = new Hono<ServerContext>()
 		await db
 			.updateTable("orders")
 			.where("id", "=", id)
-			.where("orderedBy", "=", session?.userId!)
+			.where("customerId", "=", session?.userId!)
 			.set({ status: "cancelled" })
 			.execute();
 		return c.json({ success: true });

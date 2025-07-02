@@ -1,36 +1,20 @@
 "use client";
 
-import {
-	composeEventHandlers,
-	useComposedRefs,
-} from "@lipy/web-ui/lib/composition";
+import { VisuallyHiddenInput } from "@lipy/web-ui/components/visually-hidden-input";
+import { useComposedRefs } from "@lipy/web-ui/lib/compose-refs";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Slot } from "@radix-ui/react-slot";
 import * as React from "react";
-import { VisuallyHiddenInput } from "../custom-ui/visually-hidden-input";
-import type { InputProps } from "./input";
 
 const ROOT_NAME = "Editable";
+const LABEL_NAME = "EditableLabel";
 const AREA_NAME = "EditableArea";
 const PREVIEW_NAME = "EditablePreview";
 const INPUT_NAME = "EditableInput";
 const TRIGGER_NAME = "EditableTrigger";
-const LABEL_NAME = "EditableLabel";
 const TOOLBAR_NAME = "EditableToolbar";
 const CANCEL_NAME = "EditableCancel";
 const SUBMIT_NAME = "EditableSubmit";
-
-const EDITABLE_ERRORS = {
-	[ROOT_NAME]: `\`${ROOT_NAME}\` components must be within \`${ROOT_NAME}\``,
-	[AREA_NAME]: `\`${AREA_NAME}\` must be within \`${ROOT_NAME}\``,
-	[PREVIEW_NAME]: `\`${PREVIEW_NAME}\` must be within \`${ROOT_NAME}\``,
-	[INPUT_NAME]: `\`${INPUT_NAME}\` must be within \`${ROOT_NAME}\``,
-	[TRIGGER_NAME]: `\`${TRIGGER_NAME}\` must be within \`${ROOT_NAME}\``,
-	[LABEL_NAME]: `\`${LABEL_NAME}\` must be within \`${ROOT_NAME}\``,
-	[TOOLBAR_NAME]: `\`${TOOLBAR_NAME}\` must be within \`${ROOT_NAME}\``,
-	[CANCEL_NAME]: `\`${CANCEL_NAME}\` must be within \`${ROOT_NAME}\``,
-	[SUBMIT_NAME]: `\`${SUBMIT_NAME}\` must be within \`${ROOT_NAME}\``,
-} as const;
 
 type Direction = "ltr" | "rtl";
 
@@ -52,6 +36,7 @@ interface EditableContextValue {
 	onCancel: () => void;
 	onEdit: () => void;
 	onSubmit: (value: string) => void;
+	onEnterKeyDown?: (event: KeyboardEvent) => void;
 	onEscapeKeyDown?: (event: KeyboardEvent) => void;
 	dir?: Direction;
 	maxLength?: number;
@@ -67,21 +52,21 @@ interface EditableContextValue {
 const EditableContext = React.createContext<EditableContextValue | null>(null);
 EditableContext.displayName = ROOT_NAME;
 
-function useEditableContext(name: keyof typeof EDITABLE_ERRORS) {
+function useEditableContext(consumerName: string) {
 	const context = React.useContext(EditableContext);
 	if (!context) {
-		throw new Error(EDITABLE_ERRORS[name]);
+		throw new Error(`\`${consumerName}\` must be used within \`${ROOT_NAME}\``);
 	}
 	return context;
 }
 
-type RootElement = React.ComponentRef<typeof Editable>;
+type RootElement = React.ComponentRef<typeof EditableRoot>;
 
 interface EditableRootProps
 	extends Omit<React.ComponentPropsWithoutRef<"div">, "onSubmit"> {
 	id?: string;
-	defaultValue?: InputProps["defaultValue"];
-	value?: InputProps["value"];
+	defaultValue?: string;
+	value?: string;
 	onValueChange?: (value: string) => void;
 	defaultEditing?: boolean;
 	editing?: boolean;
@@ -90,6 +75,7 @@ interface EditableRootProps
 	onEdit?: () => void;
 	onSubmit?: (value: string) => void;
 	onEscapeKeyDown?: (event: KeyboardEvent) => void;
+	onEnterKeyDown?: (event: KeyboardEvent) => void;
 	dir?: Direction;
 	maxLength?: number;
 	name?: string;
@@ -116,6 +102,7 @@ const EditableRoot = React.forwardRef<HTMLDivElement, EditableRootProps>(
 			onEdit: onEditProp,
 			onSubmit: onSubmitProp,
 			onEscapeKeyDown,
+			onEnterKeyDown,
 			dir: dirProp,
 			maxLength,
 			name,
@@ -191,7 +178,7 @@ const EditableRoot = React.forwardRef<HTMLDivElement, EditableRootProps>(
 
 		const onCancel = React.useCallback(() => {
 			const prevValue = previousValueRef.current;
-			onValueChange(prevValue.toString());
+			onValueChange(prevValue);
 			onEditingChange(false);
 			onCancelProp?.();
 		}, [onValueChange, onCancelProp, onEditingChange]);
@@ -217,14 +204,15 @@ const EditableRoot = React.forwardRef<HTMLDivElement, EditableRootProps>(
 				id,
 				inputId,
 				labelId,
-				defaultValue: defaultValue.toString(),
-				value: value.toString(),
+				defaultValue,
+				value,
 				onValueChange,
 				editing,
 				onSubmit,
 				onEdit,
 				onCancel,
 				onEscapeKeyDown,
+				onEnterKeyDown,
 				dir,
 				maxLength,
 				placeholder,
@@ -247,6 +235,7 @@ const EditableRoot = React.forwardRef<HTMLDivElement, EditableRootProps>(
 				onCancel,
 				onEdit,
 				onEscapeKeyDown,
+				onEnterKeyDown,
 				dir,
 				maxLength,
 				placeholder,
@@ -362,7 +351,55 @@ const EditablePreview = React.forwardRef<HTMLDivElement, EditablePreviewProps>(
 		const onTrigger = React.useCallback(() => {
 			if (context.disabled || context.readOnly) return;
 			context.onEdit();
-		}, [context.disabled, context.readOnly, context.onEdit]);
+		}, [context.onEdit, context.disabled, context.readOnly]);
+
+		const onClick = React.useCallback(
+			(event: React.MouseEvent<HTMLDivElement>) => {
+				previewProps.onClick?.(event);
+				if (event.defaultPrevented || context.triggerMode !== "click") return;
+
+				onTrigger();
+			},
+			[previewProps.onClick, onTrigger, context.triggerMode],
+		);
+
+		const onDoubleClick = React.useCallback(
+			(event: React.MouseEvent<HTMLDivElement>) => {
+				previewProps.onDoubleClick?.(event);
+				if (event.defaultPrevented || context.triggerMode !== "dblclick")
+					return;
+
+				onTrigger();
+			},
+			[previewProps.onDoubleClick, onTrigger, context.triggerMode],
+		);
+
+		const onFocus = React.useCallback(
+			(event: React.FocusEvent<HTMLDivElement>) => {
+				previewProps.onFocus?.(event);
+				if (event.defaultPrevented || context.triggerMode !== "focus") return;
+
+				onTrigger();
+			},
+			[previewProps.onFocus, onTrigger, context.triggerMode],
+		);
+
+		const onKeyDown = React.useCallback(
+			(event: React.KeyboardEvent<HTMLDivElement>) => {
+				previewProps.onKeyDown?.(event);
+				if (event.defaultPrevented) return;
+
+				if (event.key === "Enter") {
+					const nativeEvent = event.nativeEvent;
+					if (context.onEnterKeyDown) {
+						context.onEnterKeyDown(nativeEvent);
+						if (nativeEvent.defaultPrevented) return;
+					}
+					onTrigger();
+				}
+			},
+			[previewProps.onKeyDown, onTrigger, context.onEnterKeyDown],
+		);
 
 		const PreviewPrimitive = asChild ? Slot : "div";
 
@@ -370,6 +407,8 @@ const EditablePreview = React.forwardRef<HTMLDivElement, EditablePreviewProps>(
 
 		return (
 			<PreviewPrimitive
+				// biome-ignore lint/a11y/useSemanticElements: <explanation>
+				role="button"
 				aria-disabled={context.disabled || context.readOnly}
 				data-empty={!context.value ? "" : undefined}
 				data-disabled={context.disabled ? "" : undefined}
@@ -378,20 +417,12 @@ const EditablePreview = React.forwardRef<HTMLDivElement, EditablePreviewProps>(
 				tabIndex={context.disabled || context.readOnly ? undefined : 0}
 				{...previewProps}
 				ref={forwardedRef}
-				onClick={composeEventHandlers(
-					previewProps.onClick,
-					context.triggerMode === "click" ? onTrigger : undefined,
-				)}
-				onDoubleClick={composeEventHandlers(
-					previewProps.onDoubleClick,
-					context.triggerMode === "dblclick" ? onTrigger : undefined,
-				)}
-				onFocus={composeEventHandlers(
-					previewProps.onFocus,
-					context.triggerMode === "focus" ? onTrigger : undefined,
-				)}
+				onClick={onClick}
+				onDoubleClick={onDoubleClick}
+				onFocus={onFocus}
+				onKeyDown={onKeyDown}
 				className={cn(
-					"cursor-text truncate rounded-sm border border-transparent py-1 text-base focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring data-disabled:cursor-not-allowed data-readonly:cursor-default data-empty:text-muted-foreground data-disabled:opacity-50 md:text-sm",
+					"cursor-text truncate   appearance-none rounded  py-1 text-current focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring data-disabled:cursor-not-allowed data-readonly:cursor-default data-empty:text-muted-foreground data-disabled:opacity-50",
 					className,
 				)}
 			>
@@ -432,7 +463,7 @@ const EditableInput = React.forwardRef<HTMLInputElement, EditableInputProps>(
 		const isRequired = required || context.required;
 
 		const onAutosize = React.useCallback(
-			(target: HTMLInputElement | HTMLTextAreaElement) => {
+			(target: InputElement) => {
 				if (!context.autosize) return;
 
 				if (target instanceof HTMLTextAreaElement) {
@@ -445,9 +476,14 @@ const EditableInput = React.forwardRef<HTMLInputElement, EditableInputProps>(
 			},
 			[context.autosize],
 		);
+
 		const onBlur = React.useCallback(
 			(event: React.FocusEvent<InputElement>) => {
-				if (isReadOnly) return;
+				if (isDisabled || isReadOnly) return;
+
+				inputProps.onBlur?.(event);
+				if (event.defaultPrevented) return;
+
 				const relatedTarget = event.relatedTarget;
 
 				const isAction =
@@ -459,21 +495,41 @@ const EditableInput = React.forwardRef<HTMLInputElement, EditableInputProps>(
 					context.onSubmit(context.value);
 				}
 			},
-			[context.value, context.onSubmit, isReadOnly],
+			[
+				context.value,
+				context.onSubmit,
+				inputProps.onBlur,
+				isDisabled,
+				isReadOnly,
+			],
 		);
 
 		const onChange = React.useCallback(
-			(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-				if (isReadOnly) return;
+			(event: React.ChangeEvent<InputElement>) => {
+				if (isDisabled || isReadOnly) return;
+
+				inputProps.onChange?.(event);
+				if (event.defaultPrevented) return;
+
 				context.onValueChange(event.target.value);
 				onAutosize(event.target);
 			},
-			[context.onValueChange, isReadOnly, onAutosize],
+			[
+				context.onValueChange,
+				inputProps.onChange,
+				onAutosize,
+				isDisabled,
+				isReadOnly,
+			],
 		);
 
 		const onKeyDown = React.useCallback(
 			(event: React.KeyboardEvent<InputElement>) => {
-				if (isReadOnly) return;
+				if (isDisabled || isReadOnly) return;
+
+				inputProps.onKeyDown?.(event);
+				if (event.defaultPrevented) return;
+
 				if (event.key === "Escape") {
 					const nativeEvent = event.nativeEvent;
 					if (context.onEscapeKeyDown) {
@@ -490,12 +546,15 @@ const EditableInput = React.forwardRef<HTMLInputElement, EditableInputProps>(
 				context.onSubmit,
 				context.onCancel,
 				context.onEscapeKeyDown,
+				inputProps.onKeyDown,
+				isDisabled,
 				isReadOnly,
 			],
 		);
 
 		useIsomorphicLayoutEffect(() => {
-			if (!context.editing || isReadOnly || !inputRef.current) return;
+			if (!context.editing || isDisabled || isReadOnly || !inputRef.current)
+				return;
 
 			const frameId = window.requestAnimationFrame(() => {
 				if (!inputRef.current) return;
@@ -508,7 +567,7 @@ const EditableInput = React.forwardRef<HTMLInputElement, EditableInputProps>(
 			return () => {
 				window.cancelAnimationFrame(frameId);
 			};
-		}, [context.editing, isReadOnly, onAutosize]);
+		}, [context.editing, onAutosize, isDisabled, isReadOnly]);
 
 		const InputPrimitive = asChild ? Slot : "input";
 
@@ -530,11 +589,11 @@ const EditableInput = React.forwardRef<HTMLInputElement, EditableInputProps>(
 				maxLength={maxLength}
 				placeholder={context.placeholder}
 				value={context.value}
-				onBlur={composeEventHandlers(inputProps.onBlur, onBlur)}
-				onChange={composeEventHandlers(inputProps.onChange, onChange)}
-				onKeyDown={composeEventHandlers(inputProps.onKeyDown, onKeyDown)}
+				onBlur={onBlur}
+				onChange={onChange}
+				onKeyDown={onKeyDown}
 				className={cn(
-					"flex rounded-sm border border-input bg-transparent py-1 text-base shadow-xs transition-colors file:border-0 file:bg-transparent file:font-medium file:text-foreground file:text-sm placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+					"flex rounded-sm border border-input bg-transparent py-1 appearance-none text-current transition-colors file:border-0 file:bg-transparent file:font-medium file:text-current placeholder:text-muted-foreground focus-visible:border-0 focus-visible:outline-hidden focus-visible:bg-muted disabled:cursor-not-allowed disabled:opacity-50 min-w-4",
 					context.autosize ? "w-auto" : "w-full",
 					className,
 				)}
@@ -629,6 +688,23 @@ const EditableCancel = React.forwardRef<HTMLButtonElement, EditableCancelProps>(
 		const { asChild, ...cancelProps } = props;
 		const context = useEditableContext(CANCEL_NAME);
 
+		const onClick = React.useCallback(
+			(event: React.MouseEvent<HTMLButtonElement>) => {
+				if (context.disabled || context.readOnly) return;
+
+				cancelProps.onClick?.(event);
+				if (event.defaultPrevented) return;
+
+				context.onCancel();
+			},
+			[
+				cancelProps.onClick,
+				context.onCancel,
+				context.disabled,
+				context.readOnly,
+			],
+		);
+
 		const CancelPrimitive = asChild ? Slot : "button";
 
 		if (!context.editing && !context.readOnly) return null;
@@ -639,9 +715,7 @@ const EditableCancel = React.forwardRef<HTMLButtonElement, EditableCancelProps>(
 				aria-controls={context.id}
 				data-slot="editable-cancel"
 				{...cancelProps}
-				onClick={composeEventHandlers(cancelProps.onClick, () => {
-					context.onCancel();
-				})}
+				onClick={onClick}
 				ref={forwardedRef}
 			/>
 		);
@@ -658,6 +732,24 @@ const EditableSubmit = React.forwardRef<HTMLButtonElement, EditableSubmitProps>(
 		const { asChild, ...submitProps } = props;
 		const context = useEditableContext(SUBMIT_NAME);
 
+		const onClick = React.useCallback(
+			(event: React.MouseEvent<HTMLButtonElement>) => {
+				if (context.disabled || context.readOnly) return;
+
+				submitProps.onClick?.(event);
+				if (event.defaultPrevented) return;
+
+				context.onSubmit(context.value);
+			},
+			[
+				submitProps.onClick,
+				context.onSubmit,
+				context.value,
+				context.disabled,
+				context.readOnly,
+			],
+		);
+
 		const SubmitPrimitive = asChild ? Slot : "button";
 
 		if (!context.editing && !context.readOnly) return null;
@@ -669,44 +761,31 @@ const EditableSubmit = React.forwardRef<HTMLButtonElement, EditableSubmitProps>(
 				data-slot="editable-submit"
 				{...submitProps}
 				ref={forwardedRef}
-				onClick={composeEventHandlers(submitProps.onClick, () => {
-					context.onSubmit(context.value);
-				})}
+				onClick={onClick}
 			/>
 		);
 	},
 );
 EditableSubmit.displayName = SUBMIT_NAME;
 
-const Editable = EditableRoot;
-const Root = EditableRoot;
-const Label = EditableLabel;
-const Area = EditableArea;
-const Preview = EditablePreview;
-const Input = EditableInput;
-const Trigger = EditableTrigger;
-const Toolbar = EditableToolbar;
-const Cancel = EditableCancel;
-const Submit = EditableSubmit;
-
 export {
-	Editable,
+	EditableRoot as Editable,
 	EditableLabel,
 	EditableArea,
 	EditablePreview,
 	EditableInput,
+	EditableTrigger,
 	EditableToolbar,
 	EditableCancel,
 	EditableSubmit,
-	EditableTrigger,
 	//
-	Root,
-	Label,
-	Area,
-	Preview,
-	Input,
-	Toolbar,
-	Cancel,
-	Submit,
-	Trigger,
+	EditableRoot as Root,
+	EditableLabel as Label,
+	EditableArea as Area,
+	EditablePreview as Preview,
+	EditableInput as Input,
+	EditableTrigger as Trigger,
+	EditableToolbar as Toolbar,
+	EditableCancel as Cancel,
+	EditableSubmit as Submit,
 };

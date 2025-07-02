@@ -5,7 +5,7 @@ import { Hono } from "hono";
 import { z } from "zod";
 
 const cartSchema = z.object({
-	variantId: z.string().uuid(),
+	inventoryId: z.string().uuid(),
 	quantity: z.number().min(0).int(),
 });
 
@@ -15,22 +15,24 @@ const route = new Hono<ServerContext>()
 		const data = await db
 			.selectFrom("cart as c")
 			.where("userId", "=", session?.userId!)
-			.leftJoin("productVariant as pv", "pv.id", "c.variantId")
-			.leftJoin("product as p", "p.id", "pv.product")
-			.leftJoin("store as s", "s.id", "pv.storeId")
+			.leftJoin("storeInventory as s", "s.storeId", "c.inventoryId")
+			.leftJoin("store as st", "s.storeId", "st.id")
+
+			.leftJoin("productVariant as pv", "pv.id", "s.productVariant")
+			.leftJoin("product as p", "p.id", "pv.productId")
 			.select([
 				"c.quantity",
 				// "p.brand",
-				"c.variantId",
+				"c.inventoryId",
 				"p.id as productId",
 				"p.thumbnail",
-				"pv.maxPrice as variantMaxPrice",
-				"pv.price as variantPrice",
-				"pv.title as variantTitle",
-				"pv.stockQty as variantStock",
+				"pv.price as variantMaxPrice",
+				"s.price as variantPrice",
+				"p.title as variantTitle",
+				"s.stock as variantStock",
 				"pv.unit as variantUnit",
-				"s.id as storeId",
-				"s.name as storeName",
+				"st.id as storeId",
+				"st.name as storeName",
 			])
 			.execute();
 
@@ -43,7 +45,7 @@ const route = new Hono<ServerContext>()
 			await db
 				.deleteFrom("cart")
 				.where("userId", "=", session?.userId!)
-				.where("variantId", "=", values.variantId)
+				.where("inventoryId", "=", values.inventoryId)
 				.executeTakeFirstOrThrow();
 
 			return c.json({ success: true });
@@ -52,7 +54,7 @@ const route = new Hono<ServerContext>()
 		const result = await db
 			.updateTable("cart")
 			.where("userId", "=", session?.userId!)
-			.where("variantId", "=", values.variantId)
+			.where("inventoryId", "=", values.inventoryId)
 			.set({
 				quantity: values.quantity,
 			})
@@ -65,7 +67,7 @@ const route = new Hono<ServerContext>()
 					id: crypto.randomUUID(),
 					userId: session?.userId!,
 					quantity: values.quantity,
-					variantId: values.variantId,
+					inventoryId: values.inventoryId,
 				})
 				.execute();
 		}

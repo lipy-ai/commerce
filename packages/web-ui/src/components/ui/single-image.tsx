@@ -23,7 +23,7 @@ const SingleImage = (
 	return (
 		<div
 			className={cn(
-				"rounded-full relative bg-muted/40 border border-input flex justify-center items-center cursor-pointer pointer-events-auto hover:bg-muted aspect-square",
+				"rounded overflow-hidden relative bg-muted/40 border border-input flex justify-center items-center cursor-pointer pointer-events-auto hover:bg-muted aspect-square",
 				props.wrapperClassName,
 			)}
 		>
@@ -53,7 +53,7 @@ const Input = ({ onSuccess, accept }: SingleImageProps) => {
 			onSuccess?.(data);
 			setFile(null);
 		}
-	}, [status, data]);
+	}, [status, data, onSuccess]);
 
 	const defaultMimes =
 		"image/jpeg,image/png,image/webp,image/heic,image/heif,video/mp4,video/webm,video/quicktime";

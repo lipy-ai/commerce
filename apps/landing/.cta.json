@@ -1,6 +1,6 @@
 {
 	"framework": "react",
-	"projectName": "www",
+	"projectName": "admin",
 	"mode": "file-router",
 	"typescript": true,
 	"tailwind": true,

@@ -1,7 +1,6 @@
 import type { addressSchema } from "@/routes/address";
 import { sql } from "drizzle-orm";
 import {
-	type AnyPgColumn,
 	bigint,
 	boolean,
 	doublePrecision,
@@ -38,7 +37,7 @@ export const PRODUCT_TYPE = [
 	"fruits",
 ] as const;
 
-export const schema = pgSchema("lipy");
+export const schema = pgSchema("lipy-dev");
 
 export const enableUuidExtension = sql`CREATE EXTENSION IF NOT EXISTS "postgis";`;
 
@@ -52,7 +51,6 @@ export const user = schema.table("user", {
 	image: text("image"),
 	createdAt: timestamp("createdAt").notNull(),
 	updatedAt: timestamp("updatedAt").notNull(),
-	customerId: text("customerId"),
 	country: text("country"),
 	onboarded: boolean("onboarded").notNull().default(false),
 	address: text("address"),
@@ -186,17 +184,18 @@ export const storeInvitation = schema.table("storeInvitation", {
 		.notNull()
 		.references(() => user.id, { onDelete: "cascade" }),
 });
+
 export const customer = schema.table(
 	"customer",
 	{
 		storeId: uuid("storeId").references(() => store.id, {
 			onDelete: "cascade",
 		}),
-		userId: uuid("userId").references(() => store.id, {
-			onDelete: "cascade",
+		userId: uuid("userId").references(() => user.id, {
+			onDelete: "set null",
 		}),
 	},
-	(table) => [primaryKey({ columns: [table.storeId, table.userId] })],
+	(t) => [primaryKey({ columns: [t.storeId, t.userId] })],
 );
 
 export const upload = schema.table("upload", {
@@ -222,9 +221,6 @@ export const category = schema.table("category", {
 	summary: text("summary"),
 	slug: text("slug").unique(),
 	image: text("image"),
-	storeId: uuid("storeId").references(() => store.id, {
-		onDelete: "cascade",
-	}),
 });
 
 export const tags = schema.table("tag", {
@@ -233,33 +229,6 @@ export const tags = schema.table("tag", {
 	summary: text("summary"),
 	slug: text("slug"),
 	image: text("image"),
-	storeId: uuid("storeId").references(() => store.id, {
-		onDelete: "cascade",
-	}),
-});
-
-export const globalProduct = schema.table("globalProduct", {
-	id: uuid("id")
-		.primaryKey()
-		.references((): AnyPgColumn => product.id, {
-			onDelete: "cascade",
-		}),
-});
-
-export const globalCategory = schema.table("globalCategory", {
-	id: uuid("id")
-		.primaryKey()
-		.references((): AnyPgColumn => category.id, {
-			onDelete: "cascade",
-		}),
-});
-
-export const globalTag = schema.table("globalTag", {
-	id: uuid("id")
-		.primaryKey()
-		.references((): AnyPgColumn => tags.id, {
-			onDelete: "cascade",
-		}),
 });
 
 export const product = schema.table("product", {
@@ -285,26 +254,30 @@ export const product = schema.table("product", {
 	information: jsonb("information")
 		.array()
 		.$type<{ label: string; value: string }[]>(),
-	globalProduct: uuid("globalProduct").references(() => globalProduct.id),
+	keywords: text("keywords").array(),
 });
 
 export const productVariant = schema.table("productVariant", {
 	id: uuid("id").primaryKey(),
-	title: text("title").notNull(),
-	description: text("description"),
-	sku: text("sku"),
-	model: text("model"),
-	maxPrice: integer("maxPrice").default(0),
-	price: integer("price").default(0),
-	stockQty: integer("stockQty").default(1),
 	unit: text("unit"),
-	metadata: jsonb(),
-	product: uuid("product").references(() => product.id, {
+	price: numeric("price", { precision: 10, scale: 2, mode: "number" }),
+	images: text("images").array(),
+	productId: uuid("productId").references(() => product.id, {
+		onDelete: "cascade",
+	}),
+});
+
+export const storeInventory = schema.table("storeInventory", {
+	id: uuid("id").primaryKey(),
+	variantId: uuid("productVariant").references(() => product.id, {
 		onDelete: "cascade",
 	}),
 	storeId: uuid("storeId").references(() => store.id, {
 		onDelete: "cascade",
 	}),
+	price: numeric("price", { precision: 10, scale: 2, mode: "number" }),
+	stock: integer("stock").default(0),
+	sku: text("sku"),
 });
 
 export const cart = schema.table("cart", {
@@ -312,7 +285,7 @@ export const cart = schema.table("cart", {
 	userId: uuid("userId").references(() => user.id, {
 		onDelete: "cascade",
 	}),
-	variantId: uuid("variantId").references(() => productVariant.id, {
+	inventoryId: uuid("inventoryId").references(() => storeInventory.id, {
 		onDelete: "cascade",
 	}),
 	quantity: smallint("quantity").default(1),
@@ -329,12 +302,15 @@ export const orders = schema.table("orders", {
 			thumbnail: string;
 			variant: {
 				id: string;
-				title: string;
-				maxPrice: number;
+				inventoryId: string;
 				price: number;
+				maxPrice: number;
+				unit: string;
 			};
 		}>
 	>(),
+	currency: text("currency", { enum: ["inr"] }).notNull(),
+
 	taxes: jsonb("taxes").array().$type<
 		Array<{
 			id: string;
@@ -353,23 +329,24 @@ export const orders = schema.table("orders", {
 		.notNull()
 		.references(() => store.id, { onDelete: "cascade" }),
 
-	orderedBy: uuid("orderedBy")
-		.notNull()
-		.references(() => user.id, { onDelete: "cascade" }),
-
-	currency: text("currency", { enum: ["inr"] }).notNull(),
 	delivery: jsonb("delivery").$type<{
 		trackingId?: string;
 		partnerName?: string;
 		partnerId?: string;
 	}>(),
-
-	// address: jsonb("address").$type<typeof address.$inferSelect>(),
-	address: jsonb("address").$type<z.infer<typeof addressSchema>>(),
-	deliveryInstruction: text("deliveryInstruction"),
-	storeInstructions: text("storeInstructions"),
+	customerId: text("customerId"),
+	customerDetails: jsonb("customerDetails").$type<{
+		name: string;
+		phone: string;
+		image?: string;
+		email?: string;
+		address: z.infer<typeof addressSchema>;
+	}>(),
+	customerInstructions: jsonb("customerInstructions").$type<{
+		delivery?: string | null;
+		store?: string | null;
+	}>(),
 	paymentMethod: text("paymentMethod", { enum: ["cod", "upi", "card"] }),
-
 	orderedAt: timestamp("orderedAt").notNull(),
 	cancelledAt: timestamp("cancelledAt"),
 	refundedAt: timestamp("refundedAt"),
@@ -405,6 +382,5 @@ export const dbTables = {
 	upload,
 	category,
 	tags,
-	globalProduct,
-	globalCategory,
+	storeInventory,
 };

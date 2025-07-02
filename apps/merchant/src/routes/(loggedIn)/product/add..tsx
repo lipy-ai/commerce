@@ -1,5 +1,9 @@
 import { apiClient } from "@lipy/lib/api";
-import { useAPIMutation, useAPIQuery } from "@lipy/lib/utils/useQueryClient";
+import {
+	apiQueryOptions,
+	useAPIMutation,
+	useAPIQuery,
+} from "@lipy/lib/utils/useQueryClient";
 
 import {
 	DrawerDialogClose,
@@ -32,13 +36,14 @@ import {
 	FormLabel,
 } from "@lipy/web-ui/components/ui/form";
 import { cn } from "@lipy/web-ui/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import type { InferResponseType } from "hono";
+import { produce } from "immer";
 import { CheckCircle, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
 export const Route = createFileRoute("/(loggedIn)/product/add/")({
 	component: RouteComponent,
 	validateSearch: z.object({
@@ -52,21 +57,80 @@ type Response = InferResponseType<typeof apiClient.v1.merchant.product.$get>;
 function RouteComponent() {
 	const { page, q } = Route.useSearch();
 	const { addFooter, removeFooter } = useLayout();
-	const mutation = useAPIMutation(
-		apiClient.v1.merchant.inventory[":id"],
-		"$patch",
-	);
-	const onSubmit = async (m: Response["items"][0]["variants"][0]) => {
-		await mutation.mutateAsync({ param: { id: m.id! } });
-	};
+	const queryClient = useQueryClient();
+
+	const query = { page: String(page), limit: String(3 * 3), q };
 	const { data, isLoading } = useAPIQuery(
 		apiClient.v1.merchant.product,
 		"$get",
 		{
-			query: { page: String(page), limit: String(3 * 3), q },
+			query,
 		},
-		{ placeholderData: (p) => p },
+		{
+			placeholderData: (p) => p,
+		},
 	);
+
+	const mutation = useAPIMutation(apiClient.v1.merchant.inventory, "$patch", {
+		onMutate({ json }) {
+			queryClient.setQueryData(
+				apiQueryOptions(apiClient.v1.merchant.product, "$get", {
+					query,
+				}).queryKey,
+				(prev: typeof data) =>
+					produce(prev, (draft) => {
+						if (!draft) return draft;
+
+						let variantIdx = -1;
+						const productIdx = draft.items.findIndex((product) => {
+							const idx = product.variants.findIndex(
+								(variant) => variant.id === json.variantId,
+							);
+
+							if (idx !== -1) {
+								variantIdx = idx;
+								return true;
+							}
+							return false;
+						});
+						if (productIdx !== -1 && variantIdx !== -1) {
+							const variant = draft.items[productIdx].variants[variantIdx];
+							draft.items[productIdx].variants[variantIdx] = json.active
+								? {
+										...variant,
+										storePrice: Number(json.price),
+										stock: Number(json.stock),
+										sku: json.sku || null,
+									}
+								: {
+										...variant,
+										storePrice: null,
+										stock: null,
+										sku: null,
+										inventoryId: null,
+									};
+						}
+
+						return draft;
+					}),
+			);
+		},
+	});
+
+	const onSubmit = async (
+		m: Response["items"][0]["variants"][0] & { active: boolean },
+	) => {
+		await mutation.mutateAsync({
+			json: {
+				id: m.inventoryId || undefined,
+				variantId: m.id!,
+				sku: m.sku || undefined,
+				price: m.price === null ? undefined : Number(m.price),
+				stock: m.stock === null ? undefined : Number(m.stock),
+				active: m.active,
+			},
+		});
+	};
 
 	const [updates, setUpdates] = useState<Response["items"][0]["variants"]>([]);
 
@@ -201,9 +265,9 @@ function EditVariation({
 	const [open, setOpen] = useState(false);
 
 	const defaultValues = {
-		active: false,
-		price: data?.price || 0,
-		stock: data?.stock || 0,
+		active: !!data.inventoryId || false,
+		price: data?.storePrice || data?.price || 0,
+		stock: data?.stock || !!data.inventoryId ? -1 : 0,
 		sku: data?.sku || "",
 	};
 
@@ -215,7 +279,6 @@ function EditVariation({
 
 	const handle = async (body: typeof defaultValues) => {
 		onSubmit({ ...data, ...body });
-		onSubmit({ ...data, ...body, id: "new" });
 
 		setOpen(false);
 	};
@@ -229,6 +292,9 @@ function EditVariation({
 				<p
 					className={cn(
 						"absolute before:absolute before:-z-10 before:-inset-1 before:block before before:bg-primary/20 after:absolute after:-z-20 after:-inset-1 after after:block after:bg-white -top-3 z-10 inline-flex text-foreground bg-white text-xs px-2",
+						data.stock &&
+							data.stock !== 0 &&
+							"before:bg-primary text-primary-foreground",
 					)}
 				>
 					{data?.unit}
@@ -236,15 +302,15 @@ function EditVariation({
 				<div className="text-sm md:text-base">
 					<div
 						className={cn(
-							"flex  has-[input:focus]:bg-muted overflow-hidden h-12",
-							// isActive ? "" : "disabled-background",
+							"flex has-[input:focus]:bg-muted overflow-hidden h-12",
+							data.inventoryId ? "" : "disabled-background",
 						)}
 					>
 						<span className="pl-2 flex items-center justify-center text-muted-foreground">
 							₹
 						</span>
 						<span className="flex flex-1 flex-col px-2 h-12 justify-center">
-							{data?.price}
+							{data?.storePrice || data?.price}
 						</span>
 						{/* <Editable.Root
 												defaultValue={String(v.price)}
@@ -266,16 +332,25 @@ function EditVariation({
 											<EditVariation /> */}
 					</div>
 				</div>
-				<div className="bg-accent/50 border-t border-accent text-sm px-2 py-0.5 flex justify-between gap-4 flex-wrap font-light">
+				<div
+					className={cn(
+						"bg-accent/50 border-t border-accent text-sm px-2 py-0.5 flex justify-between gap-4 flex-wrap font-light",
+						data.stock &&
+							data.stock !== 0 &&
+							"bg-primary text-primary-foreground",
+					)}
+				>
 					<div className="flex">
 						<span>
-							{!data?.stock
-								? "Out of Stock"
-								: data?.stock === -1
-									? "In Stock"
-									: data?.stock > 0
-										? data?.stock
-										: "-"}
+							{!data.inventoryId
+								? "Inactive"
+								: !data?.stock
+									? "Out of Stock"
+									: data?.stock === -1
+										? "In Stock"
+										: data?.stock > 0
+											? data?.stock
+											: "-"}
 						</span>
 					</div>
 					{data.sku && (

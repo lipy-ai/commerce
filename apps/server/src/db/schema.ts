@@ -269,7 +269,7 @@ export const productVariant = schema.table("productVariant", {
 
 export const storeInventory = schema.table("storeInventory", {
 	id: uuid("id").primaryKey(),
-	variantId: uuid("productVariant").references(() => product.id, {
+	variantId: uuid("productVariant").references(() => productVariant.id, {
 		onDelete: "cascade",
 	}),
 	storeId: uuid("storeId").references(() => store.id, {

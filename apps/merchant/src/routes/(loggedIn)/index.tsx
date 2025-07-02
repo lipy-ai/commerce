@@ -23,7 +23,6 @@ import { useNavigate } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { Check } from "lucide-react";
 import { Shirt, ShoppingCart, SquareUser, Store } from "lucide-react";
-import { useState } from "react";
 
 const setupSteps = [
 	{
@@ -88,8 +87,6 @@ const btns = [
 	},
 ];
 function RouteComponent() {
-	const [storeFullySet] = useState(false);
-
 	const navigate = useNavigate();
 
 	const {

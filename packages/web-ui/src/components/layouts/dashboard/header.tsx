@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, useRouter } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import type { ReactNode } from "react";
@@ -10,7 +9,6 @@ export const DashboardHeader = ({
 	children,
 	titleChildren,
 	hideBackBtn,
-	className,
 }: {
 	title?: string;
 	children?: ReactNode;

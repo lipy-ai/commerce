@@ -274,6 +274,7 @@ export function DataTableFilterList<TData>({
 					{filters.length > 0 ? (
 						<SortableContent asChild>
 							<div
+								// biome-ignore lint/a11y/useSemanticElements: <explanation>
 								role="list"
 								className="flex max-h-[300px] flex-col gap-2 overflow-y-auto p-1"
 							>
@@ -398,6 +399,7 @@ function DataTableFilterItem<TData>({
 	return (
 		<SortableItem value={filter.filterId} asChild>
 			<div
+				// biome-ignore lint/a11y/useSemanticElements: <explanation>
 				role="listitem"
 				id={filterItemId}
 				tabIndex={-1}
@@ -440,6 +442,7 @@ function DataTableFilterItem<TData>({
 				<Popover open={showFieldSelector} onOpenChange={setShowFieldSelector}>
 					<PopoverTrigger asChild>
 						<Button
+							// biome-ignore lint/a11y/useSemanticElements: <explanation>
 							role="combobox"
 							aria-controls={fieldListboxId}
 							variant="outline"

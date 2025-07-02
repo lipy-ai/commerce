@@ -19,7 +19,7 @@ export default defineConfig({
 				target: `${process.env.VITE_API_URL}/api/**`,
 			},
 		},
-		allowedHosts: process.env.VITE_ALLOWED_HOSTS?.split(","),
+		allowedHosts: true,
 	},
 	resolve: {
 		alias: [

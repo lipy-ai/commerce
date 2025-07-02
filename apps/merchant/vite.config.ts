@@ -13,7 +13,7 @@ export default defineConfig({
 		sourcemap: process.env.NODE_ENV === "development",
 	},
 	server: {
-		allowedHosts: [".lipy.in"],
+		allowedHosts: ["merchant.lipy.in"],
 
 		proxy: {
 			"/api/**": {

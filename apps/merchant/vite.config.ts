@@ -12,9 +12,11 @@ export default defineConfig({
 		minify: true,
 		sourcemap: process.env.NODE_ENV === "development",
 	},
+
 	server: {
 		allowedHosts: true,
-
+		port: 3001,
+		host: true,
 		proxy: {
 			"/api/**": {
 				target: `${process.env.VITE_API_URL}/api/**`,

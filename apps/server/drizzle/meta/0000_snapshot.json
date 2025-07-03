@@ -1,5 +1,5 @@
 {
-  "id": "da0ae8e5-3650-4ee0-9f73-a45455a484fa",
+  "id": "8832be41-d090-4767-91ed-85595da375bc",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1009,10 +1009,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "storeInventory_productVariant_product_id_fk": {
-          "name": "storeInventory_productVariant_product_id_fk",
+        "storeInventory_productVariant_productVariant_id_fk": {
+          "name": "storeInventory_productVariant_productVariant_id_fk",
           "tableFrom": "storeInventory",
-          "tableTo": "product",
+          "tableTo": "productVariant",
           "schemaTo": "lipy-dev",
           "columnsFrom": [
             "productVariant"

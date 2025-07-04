@@ -36,6 +36,7 @@ function RouteComponent() {
 								<ProductCard
 									product={product as ProductType}
 									className={{ classNameImg: "h-full" }}
+									storeHandle={storeHandle}
 								/>
 							</div>
 						))}

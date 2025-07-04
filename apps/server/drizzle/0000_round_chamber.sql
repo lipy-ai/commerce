@@ -1,4 +1,4 @@
-CREATE SCHEMA "lipy-dev";
+-- CREATE SCHEMA "lipy-dev";
 --> statement-breakpoint
 CREATE TABLE "lipy-dev"."authAccount" (
 	"id" uuid PRIMARY KEY NOT NULL,
@@ -229,7 +229,7 @@ ALTER TABLE "lipy-dev"."productVariant" ADD CONSTRAINT "productVariant_productId
 ALTER TABLE "lipy-dev"."authSession" ADD CONSTRAINT "authSession_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "lipy-dev"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "lipy-dev"."storeAddress" ADD CONSTRAINT "storeAddress_id_address_id_fk" FOREIGN KEY ("id") REFERENCES "lipy-dev"."address"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "lipy-dev"."storeAddress" ADD CONSTRAINT "storeAddress_storeId_store_id_fk" FOREIGN KEY ("storeId") REFERENCES "lipy-dev"."store"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "lipy-dev"."storeInventory" ADD CONSTRAINT "storeInventory_productVariant_product_id_fk" FOREIGN KEY ("productVariant") REFERENCES "lipy-dev"."product"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "lipy-dev"."storeInventory" ADD CONSTRAINT "storeInventory_productVariant_productVariant_id_fk" FOREIGN KEY ("productVariant") REFERENCES "lipy-dev"."productVariant"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "lipy-dev"."storeInventory" ADD CONSTRAINT "storeInventory_storeId_store_id_fk" FOREIGN KEY ("storeId") REFERENCES "lipy-dev"."store"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "lipy-dev"."storeInvitation" ADD CONSTRAINT "storeInvitation_storeId_store_id_fk" FOREIGN KEY ("storeId") REFERENCES "lipy-dev"."store"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "lipy-dev"."storeInvitation" ADD CONSTRAINT "storeInvitation_inviterId_user_id_fk" FOREIGN KEY ("inviterId") REFERENCES "lipy-dev"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint

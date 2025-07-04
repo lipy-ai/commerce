@@ -245,9 +245,7 @@ export const product = schema.table("product", {
 			onDelete: "set null",
 		})
 		.notNull(),
-	storeId: uuid("storeId").references(() => store.id, {
-		onDelete: "cascade",
-	}),
+
 	highlights: jsonb("highlights")
 		.array()
 		.$type<{ label: string; value: string }[]>(),
@@ -267,18 +265,25 @@ export const productVariant = schema.table("productVariant", {
 	}),
 });
 
-export const storeInventory = schema.table("storeInventory", {
-	id: uuid("id").primaryKey(),
-	variantId: uuid("productVariant").references(() => productVariant.id, {
-		onDelete: "cascade",
-	}),
-	storeId: uuid("storeId").references(() => store.id, {
-		onDelete: "cascade",
-	}),
-	price: numeric("price", { precision: 10, scale: 2, mode: "number" }),
-	stock: integer("stock").default(0),
-	sku: text("sku"),
-});
+export const storeInventory = schema.table(
+	"storeInventory",
+	{
+		id: uuid("id").primaryKey(),
+		variantId: uuid("productVariant").references(() => productVariant.id, {
+			onDelete: "cascade",
+		}),
+		storeId: uuid("storeId").references(() => store.id, {
+			onDelete: "cascade",
+		}),
+		price: numeric("price", { precision: 10, scale: 2, mode: "number" }),
+		stock: integer("stock").default(0),
+		sku: text("sku"),
+	},
+	(table) => [
+		// 👇 This enforces uniqueness on the combination
+		unique("variant_store_unique").on(table.variantId, table.storeId),
+	],
+);
 
 export const cart = schema.table("cart", {
 	id: uuid("id").primaryKey(),

@@ -100,7 +100,7 @@ export const DashboardLayout = ({
 						</div>
 					)}
 
-					<div className="pb-18 flex-col flex flex-1">{children}</div>
+					<div className="pb-18">{children}</div>
 					{!mobileNav && footerList}
 					<ActiveLinks
 						isMobile
@@ -190,31 +190,6 @@ function ActiveLinks({
 							))}
 						</div>
 					)}
-					{/* {props.activeOrder && (
-						<div className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white relative overflow-hidden rounded-t-lg">
-							<div className="absolute inset-0 bg-white/10 animate-pulse" />
-
-							<div className="relative flex items-center justify-between px-4 py-2">
-								<div className="flex items-center space-x-3">
-									<div className="flex items-center">
-										<div className="w-2 h-2 bg-white rounded-full animate-ping" />
-										<div className="w-2 h-2 bg-white rounded-full absolute" />
-									</div>
-
-									<p className="text-sm text-green-100 font-medium">
-										Your have active orders
-									</p>
-								</div>
-
-								<button
-									type="button"
-									className="bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full px-4 py-2 text-xs font-medium transition-all duration-200 hover:scale-105"
-								>
-									Track order status
-								</button>
-							</div>
-						</div>
-					)} */}
 
 					{/* Mobile Nav */}
 					<div className="bg-background border-t">
@@ -305,14 +280,14 @@ function NavLink({
 						: "hover:bg-accent",
 			)}
 		>
-			{mobile && (
+			{/* {mobile && (
 				<span
 					className={cn(
 						"h-2 w-4/5 block bg-transparent rounded-b-2xl m-auto",
 						isActive && "bg-primary",
 					)}
 				/>
-			)}
+			)} */}
 			<Link
 				className={cn(
 					"inline-flex items-center font-medium py-2 gap-2",

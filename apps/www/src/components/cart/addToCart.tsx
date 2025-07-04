@@ -2,7 +2,6 @@ import { apiClient } from "@lipy/lib/api";
 import { useAPIMutation } from "@lipy/lib/utils/useQueryClient";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
-import { cn } from "@lipy/web-ui/lib/utils";
 import { Loader2, Minus, Plus } from "lucide-react";
 import { useCallback, useState } from "react";
 
@@ -112,20 +111,16 @@ export const AddToCart = ({
 		case "icon":
 			return (
 				<Button
-					size="icon-sm"
+					size="xs"
 					onClick={handleAddToCart}
 					disabled={disabled || isLoading}
 					type="button"
-					variant="green-outline"
 					aria-label="Add to cart"
-					className="bg-card relative"
 				>
 					{isLoading ? (
-						<div className="absolute size-full flex justify-center items-center">
-							<Loader2 className="animate-spin" />
-						</div>
+						<Loader2 className="animate-spin" />
 					) : (
-						<Plus className="size-3" strokeWidth={3} />
+						<Plus className="size-3 stroke-2" />
 					)}
 				</Button>
 			);
@@ -158,22 +153,17 @@ export const AddToCart = ({
 				isLoading && loadingState.operation === "increment";
 
 			return (
-				<div className="bg-primary flex items-center  rounded-lg shadow-sm">
+				<div className="bg-primary flex items-center  rounded-sm shadow-sm">
 					<Button
-						size="icon-sm"
-						variant="ghost"
+						size="xs"
 						onClick={handleQuantityChange("decrement")}
 						disabled={disabled || isLoading}
-						className={cn(
-							"h-8 w-8 text-white hover:bg-white/20 transition-colors",
-							"disabled:opacity-50 disabled:cursor-not-allowed",
-						)}
 						aria-label="Decrease quantity"
 					>
 						{isDecrementLoading ? (
-							<Loader2 className="animate-spin" />
+							<Loader2 className="animate-spin stroke-2" />
 						) : (
-							<Minus className="h-3 w-3" />
+							<Minus className="h-3 w-3 stroke-2" />
 						)}
 					</Button>
 
@@ -181,7 +171,7 @@ export const AddToCart = ({
 						{isLoading &&
 						(loadingState.operation === "add" ||
 							(!isDecrementLoading && !isIncrementLoading)) ? (
-							<Loader2 className="animate-spin" />
+							<Loader2 className="animate-spin stroke-2" />
 						) : (
 							<span className="font-semibold text-white text-sm px-1">
 								{currentQuantity}
@@ -190,20 +180,15 @@ export const AddToCart = ({
 					</div>
 
 					<Button
-						size="icon-sm"
-						variant="ghost"
+						size="xs"
 						onClick={handleQuantityChange("increment")}
 						disabled={disabled || isLoading}
-						className={cn(
-							"h-8 w-8 text-white hover:bg-white/20 transition-colors",
-							"disabled:opacity-50",
-						)}
 						aria-label="Increase quantity"
 					>
 						{isIncrementLoading ? (
-							<Loader2 className="animate-spin" />
+							<Loader2 className="animate-spin stroke-2" />
 						) : (
-							<Plus className="h-3 w-3" strokeWidth={2} />
+							<Plus className="h-3 w-3 stroke-2" />
 						)}
 					</Button>
 				</div>

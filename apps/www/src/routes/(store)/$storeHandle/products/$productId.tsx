@@ -50,8 +50,6 @@ function RouteComponent() {
 		}
 	}, [isFetched, product?.variants]);
 
-	console.log("single product", product);
-
 	return (
 		<div className="mb-20 [view-transition-name:main-content]">
 			{isFetched && product && (

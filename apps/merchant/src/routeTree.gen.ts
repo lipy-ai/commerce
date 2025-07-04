@@ -30,13 +30,13 @@ import { Route as loggedInStoreStaffRouteImport } from './routes/(loggedIn)/stor
 import { Route as loggedInProductCreateRouteImport } from './routes/(loggedIn)/product/create'
 import { Route as loggedInProductIdRouteImport } from './routes/(loggedIn)/product/$id'
 import { Route as loggedInOrderCreateRouteImport } from './routes/(loggedIn)/order/create'
-import { Route as loggedInOrderIdRouteImport } from './routes/(loggedIn)/order/$id'
 import { Route as loggedInCustomerIdRouteImport } from './routes/(loggedIn)/customer/$id'
 import { Route as loggedInAccountSupportRouteImport } from './routes/(loggedIn)/account/support'
 import { Route as loggedInAccountReferralRouteImport } from './routes/(loggedIn)/account/referral'
 import { Route as loggedInAccountProfileRouteImport } from './routes/(loggedIn)/account/profile'
 import { Route as loggedInAccountPreferencesRouteImport } from './routes/(loggedIn)/account/preferences'
 import { Route as loggedInmiscellaneousNewStoreRouteImport } from './routes/(loggedIn)/(miscellaneous)/newStore'
+import { Route as loggedInOrderIdIndexRouteImport } from './routes/(loggedIn)/order/$id/index'
 import { Route as loggedInProductAddRouteImport } from './routes/(loggedIn)/product/add.'
 import { Route as loggedInmiscellaneousAcceptInvitationInvitationIdIndexRouteImport } from './routes/(loggedIn)/(miscellaneous)/accept-invitation/$invitationId/index'
 
@@ -144,11 +144,6 @@ const loggedInOrderCreateRoute = loggedInOrderCreateRouteImport.update({
   path: '/order/create',
   getParentRoute: () => loggedInRouteRoute,
 } as any)
-const loggedInOrderIdRoute = loggedInOrderIdRouteImport.update({
-  id: '/order/$id',
-  path: '/order/$id',
-  getParentRoute: () => loggedInRouteRoute,
-} as any)
 const loggedInCustomerIdRoute = loggedInCustomerIdRouteImport.update({
   id: '/customer/$id',
   path: '/customer/$id',
@@ -181,6 +176,11 @@ const loggedInmiscellaneousNewStoreRoute =
     path: '/newStore',
     getParentRoute: () => loggedInRouteRoute,
   } as any)
+const loggedInOrderIdIndexRoute = loggedInOrderIdIndexRouteImport.update({
+  id: '/order/$id/',
+  path: '/order/$id/',
+  getParentRoute: () => loggedInRouteRoute,
+} as any)
 const loggedInProductAddRoute = loggedInProductAddRouteImport.update({
   id: '/product/add/',
   path: '/product/add/',
@@ -211,7 +211,6 @@ export interface FileRoutesByFullPath {
   '/account/referral': typeof loggedInAccountReferralRoute
   '/account/support': typeof loggedInAccountSupportRoute
   '/customer/$id': typeof loggedInCustomerIdRoute
-  '/order/$id': typeof loggedInOrderIdRoute
   '/order/create': typeof loggedInOrderCreateRoute
   '/product/$id': typeof loggedInProductIdRoute
   '/product/create': typeof loggedInProductCreateRoute
@@ -222,6 +221,7 @@ export interface FileRoutesByFullPath {
   '/product': typeof loggedInProductIndexRoute
   '/store': typeof loggedInStoreIndexRoute
   '/product/add': typeof loggedInProductAddRoute
+  '/order/$id': typeof loggedInOrderIdIndexRoute
   '/accept-invitation/$invitationId': typeof loggedInmiscellaneousAcceptInvitationInvitationIdIndexRoute
 }
 export interface FileRoutesByTo {
@@ -240,7 +240,6 @@ export interface FileRoutesByTo {
   '/account/referral': typeof loggedInAccountReferralRoute
   '/account/support': typeof loggedInAccountSupportRoute
   '/customer/$id': typeof loggedInCustomerIdRoute
-  '/order/$id': typeof loggedInOrderIdRoute
   '/order/create': typeof loggedInOrderCreateRoute
   '/product/$id': typeof loggedInProductIdRoute
   '/product/create': typeof loggedInProductCreateRoute
@@ -251,6 +250,7 @@ export interface FileRoutesByTo {
   '/product': typeof loggedInProductIndexRoute
   '/store': typeof loggedInStoreIndexRoute
   '/product/add': typeof loggedInProductAddRoute
+  '/order/$id': typeof loggedInOrderIdIndexRoute
   '/accept-invitation/$invitationId': typeof loggedInmiscellaneousAcceptInvitationInvitationIdIndexRoute
 }
 export interface FileRoutesById {
@@ -273,7 +273,6 @@ export interface FileRoutesById {
   '/(loggedIn)/account/referral': typeof loggedInAccountReferralRoute
   '/(loggedIn)/account/support': typeof loggedInAccountSupportRoute
   '/(loggedIn)/customer/$id': typeof loggedInCustomerIdRoute
-  '/(loggedIn)/order/$id': typeof loggedInOrderIdRoute
   '/(loggedIn)/order/create': typeof loggedInOrderCreateRoute
   '/(loggedIn)/product/$id': typeof loggedInProductIdRoute
   '/(loggedIn)/product/create': typeof loggedInProductCreateRoute
@@ -284,6 +283,7 @@ export interface FileRoutesById {
   '/(loggedIn)/product/': typeof loggedInProductIndexRoute
   '/(loggedIn)/store/': typeof loggedInStoreIndexRoute
   '/(loggedIn)/product/add/': typeof loggedInProductAddRoute
+  '/(loggedIn)/order/$id/': typeof loggedInOrderIdIndexRoute
   '/(loggedIn)/(miscellaneous)/accept-invitation/$invitationId/': typeof loggedInmiscellaneousAcceptInvitationInvitationIdIndexRoute
 }
 export interface FileRouteTypes {
@@ -306,7 +306,6 @@ export interface FileRouteTypes {
     | '/account/referral'
     | '/account/support'
     | '/customer/$id'
-    | '/order/$id'
     | '/order/create'
     | '/product/$id'
     | '/product/create'
@@ -317,6 +316,7 @@ export interface FileRouteTypes {
     | '/product'
     | '/store'
     | '/product/add'
+    | '/order/$id'
     | '/accept-invitation/$invitationId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -335,7 +335,6 @@ export interface FileRouteTypes {
     | '/account/referral'
     | '/account/support'
     | '/customer/$id'
-    | '/order/$id'
     | '/order/create'
     | '/product/$id'
     | '/product/create'
@@ -346,6 +345,7 @@ export interface FileRouteTypes {
     | '/product'
     | '/store'
     | '/product/add'
+    | '/order/$id'
     | '/accept-invitation/$invitationId'
   id:
     | '__root__'
@@ -367,7 +367,6 @@ export interface FileRouteTypes {
     | '/(loggedIn)/account/referral'
     | '/(loggedIn)/account/support'
     | '/(loggedIn)/customer/$id'
-    | '/(loggedIn)/order/$id'
     | '/(loggedIn)/order/create'
     | '/(loggedIn)/product/$id'
     | '/(loggedIn)/product/create'
@@ -378,6 +377,7 @@ export interface FileRouteTypes {
     | '/(loggedIn)/product/'
     | '/(loggedIn)/store/'
     | '/(loggedIn)/product/add/'
+    | '/(loggedIn)/order/$id/'
     | '/(loggedIn)/(miscellaneous)/accept-invitation/$invitationId/'
   fileRoutesById: FileRoutesById
 }
@@ -538,13 +538,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof loggedInOrderCreateRouteImport
       parentRoute: typeof loggedInRouteRoute
     }
-    '/(loggedIn)/order/$id': {
-      id: '/(loggedIn)/order/$id'
-      path: '/order/$id'
-      fullPath: '/order/$id'
-      preLoaderRoute: typeof loggedInOrderIdRouteImport
-      parentRoute: typeof loggedInRouteRoute
-    }
     '/(loggedIn)/customer/$id': {
       id: '/(loggedIn)/customer/$id'
       path: '/customer/$id'
@@ -585,6 +578,13 @@ declare module '@tanstack/react-router' {
       path: '/newStore'
       fullPath: '/newStore'
       preLoaderRoute: typeof loggedInmiscellaneousNewStoreRouteImport
+      parentRoute: typeof loggedInRouteRoute
+    }
+    '/(loggedIn)/order/$id/': {
+      id: '/(loggedIn)/order/$id/'
+      path: '/order/$id'
+      fullPath: '/order/$id'
+      preLoaderRoute: typeof loggedInOrderIdIndexRouteImport
       parentRoute: typeof loggedInRouteRoute
     }
     '/(loggedIn)/product/add/': {
@@ -628,7 +628,6 @@ interface loggedInRouteRouteChildren {
   loggedInIndexRoute: typeof loggedInIndexRoute
   loggedInmiscellaneousNewStoreRoute: typeof loggedInmiscellaneousNewStoreRoute
   loggedInCustomerIdRoute: typeof loggedInCustomerIdRoute
-  loggedInOrderIdRoute: typeof loggedInOrderIdRoute
   loggedInOrderCreateRoute: typeof loggedInOrderCreateRoute
   loggedInProductIdRoute: typeof loggedInProductIdRoute
   loggedInProductCreateRoute: typeof loggedInProductCreateRoute
@@ -638,6 +637,7 @@ interface loggedInRouteRouteChildren {
   loggedInProductIndexRoute: typeof loggedInProductIndexRoute
   loggedInStoreIndexRoute: typeof loggedInStoreIndexRoute
   loggedInProductAddRoute: typeof loggedInProductAddRoute
+  loggedInOrderIdIndexRoute: typeof loggedInOrderIdIndexRoute
   loggedInmiscellaneousAcceptInvitationInvitationIdIndexRoute: typeof loggedInmiscellaneousAcceptInvitationInvitationIdIndexRoute
 }
 
@@ -646,7 +646,6 @@ const loggedInRouteRouteChildren: loggedInRouteRouteChildren = {
   loggedInIndexRoute: loggedInIndexRoute,
   loggedInmiscellaneousNewStoreRoute: loggedInmiscellaneousNewStoreRoute,
   loggedInCustomerIdRoute: loggedInCustomerIdRoute,
-  loggedInOrderIdRoute: loggedInOrderIdRoute,
   loggedInOrderCreateRoute: loggedInOrderCreateRoute,
   loggedInProductIdRoute: loggedInProductIdRoute,
   loggedInProductCreateRoute: loggedInProductCreateRoute,
@@ -656,6 +655,7 @@ const loggedInRouteRouteChildren: loggedInRouteRouteChildren = {
   loggedInProductIndexRoute: loggedInProductIndexRoute,
   loggedInStoreIndexRoute: loggedInStoreIndexRoute,
   loggedInProductAddRoute: loggedInProductAddRoute,
+  loggedInOrderIdIndexRoute: loggedInOrderIdIndexRoute,
   loggedInmiscellaneousAcceptInvitationInvitationIdIndexRoute:
     loggedInmiscellaneousAcceptInvitationInvitationIdIndexRoute,
 }

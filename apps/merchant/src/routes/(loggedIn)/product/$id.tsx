@@ -1,6 +1,14 @@
 import { apiClient } from "@lipy/lib/api";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
+import {
+	Carousel,
+	type CarouselApi,
+	CarouselContent,
+	CarouselItem,
+	CarouselNext,
+	CarouselPrevious,
+} from "@lipy/web-ui/components/ui/carousel";
 
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Button } from "@lipy/web-ui/components/ui/button";
@@ -19,8 +27,9 @@ import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import { Eye, PenLine } from "lucide-react";
-import { Fragment } from "react";
+import React, { Fragment, type ReactNode } from "react";
 
+import { DrawerDialogSwitcher } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
 import FormEdit from "./-form.edit";
 import ProductVariationForm from "./-variation";
 
@@ -100,21 +109,26 @@ function RouteComponent() {
 									</CardHeader>
 									<CardContent className="space-y-8">
 										<div className="flex flex-col md:flex-row gap-4">
-											<div className="relative w-fit">
-												<img
-													src={data?.thumbnail || ""}
-													alt={data?.title || "Untitled"}
-													className="size-full lg:size-24 aspect-square object-cover bg-accent border rounded"
-												/>
-												{(data?.images?.length || 0) > 0 && (
-													<Badge
-														variant={"outline"}
-														className="absolute -top-1 -right-1"
-													>
-														{data?.images?.length}+
-													</Badge>
-												)}
-											</div>
+											<Images
+												images={data?.images || []}
+												trigger={
+													<div className="relative w-fit">
+														<img
+															src={data?.thumbnail || ""}
+															alt={data?.title || "Thumbnail"}
+															className="size-full lg:size-24 aspect-square object-cover bg-accent border rounded"
+														/>
+														{(data?.images?.length || 0) > 0 && (
+															<Badge
+																variant={"outline"}
+																className="absolute -top-1 -right-1"
+															>
+																{data?.images?.length}+
+															</Badge>
+														)}
+													</div>
+												}
+											/>
 
 											<div className="flex-1">
 												<p className="text-lg">{data?.title}</p>
@@ -185,5 +199,53 @@ function RouteComponent() {
 				</>
 			)}
 		</>
+	);
+}
+
+export function Images({
+	trigger,
+	images,
+}: { trigger: ReactNode; images: string[] }) {
+	const [api, setApi] = React.useState<CarouselApi>();
+	const [current, setCurrent] = React.useState(0);
+	const [count, setCount] = React.useState(0);
+	React.useEffect(() => {
+		if (!api) {
+			return;
+		}
+		setCount(api.scrollSnapList().length);
+		setCurrent(api.selectedScrollSnap() + 1);
+		api.on("select", () => {
+			setCurrent(api.selectedScrollSnap() + 1);
+		});
+	}, [api]);
+	return (
+		<DrawerDialogSwitcher
+			trigger={trigger}
+			className="min-h-fit min-w-fit px-20"
+		>
+			<div className="mx-auto">
+				<Carousel setApi={setApi} className="w-full max-w-xl">
+					<CarouselContent>
+						{images.map((m, index) => (
+							<CarouselItem key={index}>
+								<Card>
+									<CardContent className="flex aspect-square items-center justify-center p-6">
+										<span className="text-4xl font-semibold">
+											<img src={m || ""} alt="Product" />
+										</span>
+									</CardContent>
+								</Card>
+							</CarouselItem>
+						))}
+					</CarouselContent>
+					<CarouselPrevious />
+					<CarouselNext />
+				</Carousel>
+				<div className="text-muted-foreground py-2 text-center text-sm">
+					Image {current} of {count}
+				</div>
+			</div>
+		</DrawerDialogSwitcher>
 	);
 }

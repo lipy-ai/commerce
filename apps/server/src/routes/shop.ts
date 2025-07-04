@@ -6,7 +6,6 @@ import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { sql } from "kysely";
 import { jsonArrayFrom, jsonBuildObject } from "kysely/helpers/postgres"; // Use 'mysql' or 'sqlite' if needed
-import { jsonArrayFrom, jsonBuildObject } from "kysely/helpers/postgres"; // Use 'mysql' or 'sqlite' if needed
 import { z } from "zod";
 
 const route = new Hono<ServerContext>()
@@ -85,41 +84,16 @@ const route = new Hono<ServerContext>()
 							}),
 						)
 						.as("variants"),
-					eb.fn
-						.jsonAgg(
-							jsonBuildObject({
-								id: eb.ref("pv.id"),
-								inventoryId: eb.ref("si.id"),
-								price: eb.fn.coalesce(eb.ref("si.price")),
-								maxPrice: eb.ref("pv.price"),
-								unit: eb.ref("pv.unit"),
-								productId: eb.ref("pv.productId"),
-								inStock: eb
-									.case()
-									.when("si.stock", "=", 0)
-									.then(false)
-									.when("si.stock", "=", -1)
-									.then(true)
-									.when("si.stock", ">", 0)
-									.then(true)
-									.else(false)
-									.end(),
-							}),
-						)
-						.as("variants"),
 				])
 				.as("limited_products");
 
 			const result = await db
-				.selectFrom(r)
 				.selectFrom(r)
 				.innerJoin("category", "category.id", "limited_products.category")
 				.where("limited_products.rn", "<=", 6)
 				.select((eb) => [
 					"category.id",
 					"category.title",
-					"category.image",
-					"category.slug",
 					"category.image",
 					"category.slug",
 					eb.fn.jsonAgg("limited_products").as("products"),

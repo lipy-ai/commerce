@@ -211,7 +211,6 @@ function SingProduct({
 	onSubmit: (v: Response["items"][0]["variants"][0]) => void;
 }) {
 	const m = product;
-
 	return (
 		<div className="space-y-8  p-8 border-r" key={m.id}>
 			<div className="flex gap-4">

@@ -34,6 +34,7 @@ export default function SettingsCard({
 											item.handleFunction();
 										}
 									}}
+									viewTransition={{ types: ["slide-left"] }}
 								>
 									<div className="flex items-center justify-between">
 										<div className="flex items-center gap-2">

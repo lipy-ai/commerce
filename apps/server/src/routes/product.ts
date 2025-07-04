@@ -2,12 +2,13 @@ import { db } from "@/db";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
-import { jsonArrayFrom } from "kysely/helpers/postgres";
+import { sql } from "kysely";
+import { jsonArrayFrom, jsonBuildObject } from "kysely/helpers/postgres";
 import { z } from "zod";
 
 const schema = z.object({
-	categoryId: z.string().optional(),
-	shopId: z.string().optional(),
+	categorySlug: z.string().optional(),
+	storeHandle: z.string().optional(),
 	search: z.string().optional(),
 });
 
@@ -15,16 +16,20 @@ const route = new Hono<ServerContext>()
 	.get("/", zValidator("query", schema), async (c) => {
 		const q = c.req.valid("query");
 		let query = db
-			.selectFrom("product as p")
-			.leftJoin("category as c", "p.category", "c.id")
+			.selectFrom("storeInventory as si")
+			.leftJoin("store as s", "s.id", "si.storeId")
+			.rightJoin("productVariant as pv", "pv.id", "si.productVariant")
+			.rightJoin("product as p", "p.id", "pv.productId")
+			.rightJoin("category as c", "p.category", "c.id")
+			.groupBy(["p.id", "c.title", "c.id", "c.slug"]) // <-- fix here
 			.orderBy("c.id");
 
-		if (q.categoryId) {
-			query = query.where("p.category", "=", q.categoryId);
+		if (q.categorySlug) {
+			query = query.where("c.slug", "=", q.categorySlug);
 		}
 
-		if (q.shopId) {
-			query = query.where("p.storeId", "=", q.shopId);
+		if (q.storeHandle) {
+			query = query.where("s.handle", "=", q.storeHandle);
 		}
 
 		if (q.search) {
@@ -33,19 +38,34 @@ const route = new Hono<ServerContext>()
 
 		const data = await query
 			.select((eb) => [
-				"p.id",
+				"p.id as id",
 				"p.title",
-				"p.price",
-				"p.maxPrice",
 				"p.thumbnail",
 				"c.title as categoryTitle",
 				"c.id as category",
-				jsonArrayFrom(
-					eb
-						.selectFrom("productVariant as pv")
-						.selectAll()
-						.whereRef("pv.productId", "=", "p.id"),
-				).as("variants"),
+				"c.slug as categorySlug",
+				eb.fn
+					.jsonAgg(
+						jsonBuildObject({
+							id: eb.ref("pv.id"),
+							inventoryId: eb.ref("si.id"),
+							price: eb.fn.coalesce(eb.ref("si.price")),
+							maxPrice: eb.ref("pv.price"),
+							unit: eb.ref("pv.unit"),
+							productId: eb.ref("pv.productId"),
+							inStock: eb
+								.case()
+								.when("si.stock", "=", 0)
+								.then(false)
+								.when("si.stock", "=", -1)
+								.then(true)
+								.when("si.stock", ">", 0)
+								.then(true)
+								.else(false)
+								.end(),
+						}),
+					)
+					.as("variants"),
 			])
 			.execute();
 
@@ -58,16 +78,41 @@ const route = new Hono<ServerContext>()
 			const q = c.req.valid("param");
 
 			const data = await db
-				.selectFrom("product as p")
+				.selectFrom("storeInventory as si")
+				.rightJoin("productVariant as pv", "pv.id", "si.productVariant")
+				.rightJoin("product as p", "p.id", "pv.productId")
+				.groupBy(["p.id", "si.storeId"])
 				.where("p.id", "=", q.id)
-				.selectAll(["p"])
 				.select((eb) => [
-					jsonArrayFrom(
-						eb
-							.selectFrom("productVariant as pv")
-							.selectAll()
-							.whereRef("pv.productId", "=", "p.id"),
-					).as("variants"),
+					"p.id as id",
+					"p.title as title",
+					"p.thumbnail as thumbnail",
+					"si.storeId as storeId",
+					"p.category as category",
+					"p.images",
+					"p.highlights",
+					eb.fn
+						.jsonAgg(
+							jsonBuildObject({
+								id: eb.ref("pv.id"),
+								inventoryId: eb.ref("si.id"),
+								price: eb.fn.coalesce(eb.ref("si.price")),
+								maxPrice: eb.ref("pv.price"),
+								unit: eb.ref("pv.unit"),
+								productId: eb.ref("pv.productId"),
+								inStock: eb
+									.case()
+									.when("si.stock", "=", 0)
+									.then(false)
+									.when("si.stock", "=", -1)
+									.then(true)
+									.when("si.stock", ">", 0)
+									.then(true)
+									.else(false)
+									.end(),
+							}),
+						)
+						.as("variants"),
 				])
 				.executeTakeFirstOrThrow();
 

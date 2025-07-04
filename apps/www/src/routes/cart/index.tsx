@@ -1,8 +1,8 @@
 import { DeliveryInstruction } from "@/components/cart/instructions";
-import { useCartStore } from "@/components/cart/store";
+import { type CartStore, useCartStore } from "@/components/cart/store";
 
+import { AddToCart } from "@/components/cart/addToCart";
 import PlaceOrder from "@/components/order/placeOrder";
-import ProductCard from "@/components/productCard";
 import { apiClient } from "@lipy/lib/api";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
@@ -19,6 +19,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@lipy/web-ui/components/ui/card";
+import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute } from "@tanstack/react-router";
@@ -53,7 +54,7 @@ function RouteComponent() {
 	const {
 		data = [],
 		isFetched,
-		isError,
+		isFetching,
 	} = useAPIQuery(
 		apiClient.v1.cart,
 		"$get",
@@ -72,7 +73,7 @@ function RouteComponent() {
 
 	// Update cart when data changes
 	useEffect(() => {
-		if (isFetched && !isError && data.length > 0) {
+		if (isFetched && data.length > 0) {
 			setCart(data);
 		}
 	}, [isFetched, data, setCart]);
@@ -80,8 +81,8 @@ function RouteComponent() {
 	const { totalPrice, totalMaxPrice } = useMemo(() => {
 		return cart.reduce(
 			(acc, item) => {
-				acc.totalPrice += (item.variantPrice || 0) * (item.quantity || 0);
-				acc.totalMaxPrice += (item.variantMaxPrice || 0) * (item.quantity || 0);
+				acc.totalPrice += (item.price || 0) * (item.quantity || 0);
+				acc.totalMaxPrice += (item.maxPrice || 0) * (item.quantity || 0);
 				return acc;
 			},
 			{ totalPrice: 0, totalMaxPrice: 0 },
@@ -116,7 +117,7 @@ function RouteComponent() {
 	];
 
 	return (
-		<div>
+		<div className="[view-transition-name:main-content]">
 			{isMobile && <DashboardHeader title="Cart" />}
 
 			{isFetched && data && data.length > 0 && (
@@ -133,11 +134,7 @@ function RouteComponent() {
 								<div className="px-4">
 									{cart.map((product) => (
 										<div key={product.inventoryId} className=" py-4">
-											<ProductCard
-												product={product}
-												variant="horizontal"
-												className={{ classNameImg: "w-12 h-12" }}
-											/>
+											<ProductComp product={product} />
 										</div>
 									))}
 								</div>
@@ -259,6 +256,13 @@ function RouteComponent() {
 					</Link>
 				</EmptyPage>
 			)}
+			{isFetching && [
+				Array(5).map((_, indx) => (
+					<div key={indx}>
+						<Skeleton className="h-12 w-full" />
+					</div>
+				)),
+			]}
 
 			{detailedAddressDrawerOpen && (
 				<DetailedAddress
@@ -277,6 +281,50 @@ function RouteComponent() {
 					setCompleteInstruction={setCompleteDeliveryInstruction}
 				/>
 			)}
+		</div>
+	);
+}
+
+export function ProductComp({
+	product,
+}: {
+	product: CartStore["cart"][0];
+}) {
+	return (
+		<div className={cn("flex items-center justify-between gap-4")}>
+			<div className="flex items-start gap-2">
+				<div className=" relative aspect-square size-14">
+					<img
+						alt={""}
+						src={product.thumbnail || "/assets/paper-bag-items.webp"}
+						className={cn("w-full h-full object-cover rounded-md bg-accent")}
+					/>
+				</div>
+
+				<div>
+					<p className="text-xs font-medium line-clamp-2">{product.title}</p>
+					<p className="text-muted-foreground text-xs">
+						{product.quantity} x {product.unit}
+					</p>
+				</div>
+			</div>
+			<div className="flex flex-col items-center gap-1">
+				<AddToCart product={product} variant={"icon"} />
+				<div className="flex items-center gap-2">
+					<p className="line-through text-muted-foreground">
+						{formatAmount(
+							"inr",
+							(product?.maxPrice ?? 0) * (product?.quantity ?? 0),
+						)}
+					</p>
+					<p className="font-semibold">
+						{formatAmount(
+							"inr",
+							(product.price ?? 0) * (product.quantity ?? 0),
+						)}
+					</p>
+				</div>
+			</div>
 		</div>
 	);
 }

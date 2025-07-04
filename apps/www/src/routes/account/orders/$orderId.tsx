@@ -16,7 +16,7 @@ export const Route = createFileRoute("/account/orders/$orderId")({
 });
 
 function RouteComponent() {
-	const { orderId }: any = Route.useParams();
+	const { orderId } = Route.useParams();
 
 	const { data, isFetched, isFetching } = useAPIQuery(
 		apiClient.v1.order[":id"],
@@ -34,7 +34,7 @@ function RouteComponent() {
 	const totalPayableAmount = totalPrice + deliveryCharges + totalTaxAmount;
 
 	return (
-		<>
+		<div className="[view-transition-name:main-content]">
 			{isFetched && data && (
 				<div className="min-h-screen flex flex-col">
 					<DashboardHeader
@@ -57,7 +57,7 @@ function RouteComponent() {
 						<div className="col-span-7  lg:p-4 ">
 							<div className="bg-card p-4">
 								<div className="flex items-center justify-between">
-									<h2 className="font-bold text-base ">{data[0]?.pk}</h2>
+									<h2 className="font-bold text-base ">{data[0]?.id}</h2>
 									<Badge
 										variant={
 											data[0]?.status === "delivered" ? "success" : "premium"
@@ -152,12 +152,7 @@ function RouteComponent() {
 											className="size-12 border rounded bg-accent"
 										/>
 										<div className="flex-1">
-											<h2 className="font-semibold">
-												{product.variant.unit || product.title}
-											</h2>
-											<p className="text-sm text-muted-foreground">
-												Color Blue, 5kg
-											</p>
+											<h2 className="font-semibold">{product.title}</h2>
 										</div>
 										<div className="text-right">
 											<p className="font-medium">
@@ -167,7 +162,7 @@ function RouteComponent() {
 												)}
 											</p>
 											<p className="text-sm text-muted-foreground">
-												{product.quantity || 0}
+												Qty {product.quantity || 0}
 											</p>
 										</div>
 									</div>
@@ -261,6 +256,6 @@ function RouteComponent() {
 			)}
 
 			{isFetching && !data && <Spinner className="absolute left-1/2 top-1/2" />}
-		</>
+		</div>
 	);
 }

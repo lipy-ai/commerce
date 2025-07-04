@@ -14,12 +14,12 @@ function RouteComponent() {
 	const { type } = Route.useSearch();
 
 	return (
-		<>
+		<div className="[view-transition-name:main-content]">
 			<DashboardHeader
 				title={type === "deliveryAddress" ? "Delivery Address" : "New Address"}
 			/>
 
 			<GoogleMapImage type={type} />
-		</>
+		</div>
 	);
 }

@@ -44,7 +44,7 @@ export const useCartStore = create<CartStore>()(
 							return item;
 						});
 					} else {
-						updatedCart = [...state.cart, product];
+						updatedCart = [...state.cart, { ...product, quantity: 1 }];
 					}
 
 					const finalCart = updatedCart.filter(

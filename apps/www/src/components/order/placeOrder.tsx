@@ -4,6 +4,7 @@ import {
 	apiQueryOptions,
 	useAPIMutation,
 } from "@lipy/lib/utils/useQueryClient";
+import type { addressSchema } from "@lipy/server/routes/address";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import {
@@ -18,6 +19,7 @@ import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import type { z } from "zod";
 
 function ProgressDialog({
 	showDialog,
@@ -84,20 +86,7 @@ function ProgressDialog({
 		const timeout = setTimeout(() => {
 			mutation.mutateAsync({
 				json: {
-					address: {
-						lat: deliveryLocation.lat as number,
-						lng: deliveryLocation.lng as number,
-						phone: deliveryLocation.phone as string,
-						tag: deliveryLocation.tag,
-						city: deliveryLocation.city,
-						state: deliveryLocation.state,
-						country: deliveryLocation.country as string,
-						postalCode: deliveryLocation.postalCode as string,
-						line1: deliveryLocation.line1,
-						line2: deliveryLocation.line2 as string,
-						name: deliveryLocation.name,
-						metadata: deliveryLocation.metadata as { building: string },
-					},
+					address: deliveryLocation as z.infer<typeof addressSchema>,
 					deliveryInstruction: deliveryInstruction || "",
 					storeInstruction: null,
 				},

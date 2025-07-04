@@ -12,8 +12,6 @@ import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { createFileRoute } from "@tanstack/react-router";
 import {
 	HomeIcon,
-	// CircleUser,
-	// LogOut,
 	type LucideIcon,
 	ShoppingCart,
 	Store,
@@ -70,7 +68,7 @@ function Home() {
 	];
 
 	return (
-		<>
+		<div className="[view-transition-name:main-content]">
 			<DashboardLayout
 				mobileNav={mobileNav}
 				logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
@@ -86,6 +84,6 @@ function Home() {
 					{!initialized && <AppCartInitializer />}
 				</DashboardBody>
 			</DashboardLayout>
-		</>
+		</div>
 	);
 }

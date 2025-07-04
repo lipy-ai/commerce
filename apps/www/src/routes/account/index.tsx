@@ -94,7 +94,7 @@ export function AccountPage() {
 		? moreInfo
 		: moreInfo.filter((item) => item.title !== "Logout");
 	return (
-		<div>
+		<div className="[view-transition-name:main-content]">
 			{isMobile && <DashboardHeader title="Settings" />}
 
 			<div className="lg:p-8  space-y-6 m-auto max-w-screen-lg mb-40">

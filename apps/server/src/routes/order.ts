@@ -73,7 +73,7 @@ const route = new Hono<ServerContext>()
 		const data = await db
 			.selectFrom("orders as o")
 			.where("o.customerId", "=", session?.userId!)
-			.where("o.pk", "=", id)
+			.where("o.id", "=", id)
 			.selectAll()
 			.execute();
 
@@ -124,8 +124,8 @@ const route = new Hono<ServerContext>()
 				store.items?.push(item);
 			} else {
 				orders.push({
-					id: crypto.randomUUID(),
-					pk: idGenerate({ prefix: "ORD" }),
+					pk: crypto.randomUUID(),
+					id: idGenerate({ prefix: "ORD" }),
 					status: "ordered",
 					items: [item],
 					taxes: [],

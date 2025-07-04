@@ -5,6 +5,7 @@ import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Loader2, Minus, Plus } from "lucide-react";
 import { useCallback, useState } from "react";
+
 import { type CartStore, type Operation, useCartStore } from "./store";
 
 type LoadingState = {
@@ -144,7 +145,7 @@ export const AddToCart = ({
 							<Loader2 className="animate-spin" />
 						</div>
 					) : (
-						<span className="text-tertiary font-semibold">Add</span>
+						<span className="text-primary font-semibold">Add</span>
 					)}
 				</Button>
 			);
@@ -157,7 +158,7 @@ export const AddToCart = ({
 				isLoading && loadingState.operation === "increment";
 
 			return (
-				<div className="bg-tertiary flex items-center  rounded-lg shadow-sm">
+				<div className="bg-primary flex items-center  rounded-lg shadow-sm">
 					<Button
 						size="icon-sm"
 						variant="ghost"

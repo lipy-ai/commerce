@@ -1,4 +1,4 @@
-import { BProgress } from "@bprogress/core";
+// import { BProgress } from "@bprogress/core";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
@@ -21,14 +21,14 @@ export function createRouter() {
 		scrollRestoration: true,
 		// defaultViewTransition: true,
 	});
-	BProgress.configure({ showSpinner: false });
-	router.subscribe("onBeforeLoad", ({ fromLocation, pathChanged }) => {
-		// Don't show the progress bar on initial page load, seems like the onLoad event doesn't fire in that case
-		fromLocation && pathChanged && BProgress.start();
-	});
-	router.subscribe("onLoad", () => {
-		BProgress.done();
-	});
+	// BProgress.configure({ showSpinner: false });
+	// router.subscribe("onBeforeLoad", ({ fromLocation, pathChanged }) => {
+
+	// 	fromLocation && pathChanged && BProgress.start();
+	// });
+	// router.subscribe("onLoad", () => {
+	// 	BProgress.done();
+	// });
 
 	return router;
 }

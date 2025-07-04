@@ -7,7 +7,7 @@ interface ImageCarouselProps {
 
 export default function ImageCarousel({ images }: ImageCarouselProps) {
 	const [emblaRef, emblaApi] = useEmblaCarousel({
-		loop: false,
+		loop: true,
 		align: "center",
 		skipSnaps: false,
 		dragFree: false,
@@ -44,14 +44,14 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
 	}
 
 	return (
-		<div>
+		<div className="w-full">
 			{/* Main carousel container */}
 			<div className="relative">
 				<div className="overflow-hidden" ref={emblaRef}>
 					<div className="flex">
 						{images.map((src, index) => (
 							<div key={index} className="flex-[0_0_100%] min-w-0 relative">
-								<div className="aspect-square p-2">
+								<div className="aspect-square border-0">
 									<img
 										src={src}
 										alt={`Product ${index + 1}`}
@@ -67,16 +67,16 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
 
 			{/* Navigation dots */}
 			{images.length > 1 && (
-				<div className="flex justify-center items-center gap-2 mt-2">
+				<div className="flex justify-center items-center gap-1.5 mt-4">
 					{images.map((_, index) => (
 						<button
 							type="button"
 							key={index}
 							onClick={() => scrollTo(index)}
-							className={`transition-all duration-200 ease-out rounded-full border-2 ${
+							className={`w-2 h-2 rounded-full transition-colors duration-200 ${
 								index === selectedIndex
-									? "w-8 h-3 bg-primary border-primary"
-									: "w-3 h-3 bg-transparent border-gray-300 hover:border-gray-400"
+									? "bg-gray-800"
+									: "bg-gray-300 hover:bg-gray-400"
 							}`}
 							aria-label={`Go to image ${index + 1}`}
 						/>

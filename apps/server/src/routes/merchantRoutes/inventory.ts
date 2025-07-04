@@ -9,21 +9,22 @@ export const merchantInventoryRoute = new Hono<ServerContext>().patch(
 	zValidator(
 		"json",
 		z.object({
-			id: z.string().optional(),
+			id: z.string(),
 			variantId: z.string().uuid(),
 			price: z.coerce.number().min(1).optional(),
 			stock: z.coerce.number().min(-1).optional(),
 			sku: z.string().optional(),
-			active: z.boolean(),
+			operation: z.enum(["create", "update", "delete"]),
 		}),
 	),
 	async (c) => {
 		try {
-			const { id, variantId, price, stock, sku, active } = c.req.valid("json");
+			const { id, variantId, price, stock, sku, operation } =
+				c.req.valid("json");
 
 			const sess = c.get("session");
 
-			if (!id) {
+			if (operation === "create") {
 				await db
 					.insertInto("storeInventory")
 					.values({
@@ -35,26 +36,28 @@ export const merchantInventoryRoute = new Hono<ServerContext>().patch(
 						storeId: sess?.activeStoreId!,
 					})
 					.execute();
-			} else {
-				if (!active) {
-					await db
-						.deleteFrom("storeInventory")
-						.where("id", "=", id)
-						.where("storeId", "=", sess?.activeStoreId!)
-						.execute();
-				} else {
-					await db
-						.updateTable("storeInventory")
-						.set({
-							productVariant: variantId,
-							price,
-							stock,
-							sku,
-						})
-						.where("id", "=", id)
-						.where("storeId", "=", sess?.activeStoreId!)
-						.execute();
-				}
+			}
+
+			if (operation === "update") {
+				await db
+					.updateTable("storeInventory")
+					.set({
+						productVariant: variantId,
+						price,
+						stock,
+						sku,
+					})
+					.where("id", "=", id)
+					.where("storeId", "=", sess?.activeStoreId!)
+					.execute();
+			}
+
+			if (operation === "delete") {
+				await db
+					.deleteFrom("storeInventory")
+					.where("id", "=", id)
+					.where("storeId", "=", sess?.activeStoreId!)
+					.execute();
 			}
 
 			return c.json({ success: true });

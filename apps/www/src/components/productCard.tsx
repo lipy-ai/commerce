@@ -1,3 +1,4 @@
+import type { apiClient } from "@lipy/lib/api";
 import { discountCalculator } from "@lipy/lib/helper/discountCalculator";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import {
@@ -8,36 +9,24 @@ import {
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link } from "@tanstack/react-router";
+import type { InferResponseType } from "hono";
 import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
 import { AddToCart } from "./cart/addToCart";
-import { useCartStore } from "./cart/store";
+import { type CartStore, useCartStore } from "./cart/store";
 
-export type ProductType = {
-	id: string;
-	price: number;
-	maxPrice: number;
-	title?: string;
-	thumbnail: string;
-	storeId?: string;
-	category?: string;
-	rn?: number;
-	quantity?: number;
-	unit?: string;
-	variants: Array<{
-		id: string;
-		price: number;
-		maxPrice: number;
-		stockQty: number;
-		title: string;
-		unit: string;
-	}>;
-};
+export type ProductType = Omit<
+	InferResponseType<
+		(typeof apiClient.v1.shops)[":storeHandle"]["categories"]["$get"]
+	>["items"][number]["products"][number],
+	"rn"
+>;
+
 export default function ProductCard({
 	product,
 	className,
 	variant = "default",
-	shopHandle,
+	storeHandle,
 }: {
 	className?: {
 		classNameBox?: string;
@@ -45,11 +34,11 @@ export default function ProductCard({
 	};
 	product: ProductType;
 	variant?: "default" | "horizontal";
-	shopHandle?: string;
+	storeHandle?: string;
 }) {
 	const discountPercentage = discountCalculator(
-		product?.price,
-		product?.maxPrice,
+		product.variants[0]?.price as number,
+		product.variants[0]?.maxPrice as number,
 	);
 
 	const [variantDrawer, setVariantDrawer] = useState(false);
@@ -57,55 +46,7 @@ export default function ProductCard({
 
 	switch (variant) {
 		case "horizontal": {
-			return (
-				<>
-					<div
-						className={cn(
-							"flex items-center justify-between gap-4",
-							className?.classNameBox,
-						)}
-					>
-						<div className="flex items-start gap-2">
-							<div className=" relative aspect-square">
-								<img
-									alt={""}
-									src={product.thumbnail || "/assets/paper-bag-items.webp"}
-									className={cn(
-										"w-full h-full object-cover rounded-md bg-gray-200",
-										className?.classNameImg,
-									)}
-								/>
-							</div>
-
-							<div>
-								<p className="text-xs font-medium line-clamp-2">
-									{product.title}
-								</p>
-								<p className="text-muted-foreground text-xs">
-									{product.quantity} {product.unit}
-								</p>
-							</div>
-						</div>
-						<div className="flex flex-col items-center gap-1">
-							<AddToCart product={product} variant={"icon"} />
-							<div className="flex items-center gap-2">
-								<p className="line-through text-muted-foreground">
-									{formatAmount(
-										"inr",
-										product.maxPrice * (product.quantity as number),
-									)}
-								</p>
-								<p className="font-semibold">
-									{formatAmount(
-										"inr",
-										product.price * (product.quantity as number),
-									)}
-								</p>
-							</div>
-						</div>
-					</div>
-				</>
-			);
+			return;
 		}
 
 		default: {
@@ -114,10 +55,10 @@ export default function ProductCard({
 
 			for (const cartItem of cart) {
 				if (cart.length === 0) break;
-				for (const variant of product.variants) {
-					if (product.variants.length === 0) break;
+				for (const variant of product.variants as any) {
+					if (product?.variants && product?.variants.length === 0) break;
 
-					if (variant.id === cartItem.inventoryId) {
+					if (variant.inventoryId === cartItem.inventoryId) {
 						cartCount += 1;
 					}
 				}
@@ -130,22 +71,35 @@ export default function ProductCard({
 							variantDrawer ? "pointer-events-none" : "pointer-events-auto",
 							className?.classNameBox,
 						)}
-						to="/$shopHandle/products/$productId"
-						params={{ shopHandle: shopHandle as string, productId: product.id }}
+						to="/$storeHandle/products/$productId"
+						params={{ storeHandle: storeHandle ?? "", productId: product.id }}
+						viewTransition={{ types: ["slide-left"] }}
 					>
 						<div className=" relative aspect-square">
 							<img
 								alt={""}
 								src={product.thumbnail || "/assets/paper-bag-items.webp"}
 								className={cn(
-									"w-full h-30 object-cover rounded-md bg-gray-200",
+									"w-full h-30 object-cover rounded-md bg-accent",
 									className?.classNameImg,
 								)}
 							/>
 
 							<div className="absolute -bottom-1 -right-1">
-								{product.variants.length <= 1 ? (
-									<AddToCart product={product.variants[0]} variant={"icon"} />
+								{product?.variants && product?.variants.length <= 1 ? (
+									<AddToCart
+										product={
+											{
+												storeHandle: storeHandle ?? null,
+												thumbnail: product.thumbnail ?? null,
+												title: product.title ?? null,
+												storeName: null,
+												quantity: null,
+												...product.variants[0],
+											} as CartStore["cart"][0]
+										}
+										variant={"icon"}
+									/>
 								) : cartCount === 0 ? (
 									<Button
 										size="icon-sm"
@@ -165,7 +119,7 @@ export default function ProductCard({
 									</Button>
 								) : (
 									<div
-										className="bg-tertiary flex items-center  rounded-lg shadow-sm"
+										className="bg-primary flex items-center  rounded-lg shadow-sm"
 										onClick={(e) => {
 											e.preventDefault();
 											e.stopPropagation();
@@ -211,11 +165,11 @@ export default function ProductCard({
 
 								<span className="font-bold text-md pr-1">
 									{" "}
-									{formatAmount("inr", product.price)}
+									{formatAmount("inr", product.variants[0]?.price as number)}
 								</span>
-								{product.maxPrice && (
+								{product.variants[0].maxPrice && (
 									<span className="text-xs line-through text-muted-foreground">
-										{formatAmount("inr", product.maxPrice)}
+										{formatAmount("inr", product.variants[0].maxPrice)}
 									</span>
 								)}
 							</div>
@@ -226,6 +180,7 @@ export default function ProductCard({
 							open={variantDrawer}
 							onOpenChange={setVariantDrawer}
 							product={product}
+							storeHandle={storeHandle}
 						/>
 					)}
 				</div>
@@ -238,10 +193,12 @@ function VariantList({
 	open,
 	onOpenChange,
 	product,
+	storeHandle,
 }: {
 	open?: boolean;
 	onOpenChange?: (open: boolean) => void;
 	product: ProductType;
+	storeHandle?: string;
 }) {
 	return (
 		<DrawerDialogSwitcher open={open} onOpenChange={onOpenChange}>
@@ -250,25 +207,37 @@ function VariantList({
 			</DrawerDialogHeader>
 
 			<div className="space-y-1">
-				{product.variants?.map((variant) => (
+				{product.variants?.map((variant: ProductType["variants"][0]) => (
 					<div
-						key={variant.id}
+						key={variant.inventoryId}
 						className="bg-card p-4 shadow-xs rounded-lg flex items-center justify-between cursor-pointer"
 					>
 						<div>
-							<p className="text-sm font-medium">{variant.title}</p>
+							<p>{variant.unit}</p>
 							<span className="font-bold text-md pr-1">
 								{" "}
-								{formatAmount("inr", variant.price)}
+								{formatAmount("inr", variant?.price as number)}
 							</span>
-							{product.maxPrice && (
+							{variant.maxPrice && (
 								<span className="text-xs line-through text-muted-foreground">
 									{formatAmount("inr", variant.maxPrice)}
 								</span>
 							)}
 						</div>
 
-						<AddToCart product={variant} variant={"primary"} />
+						<AddToCart
+							product={
+								{
+									title: product.title ?? null,
+									thumbnail: product.thumbnail ?? null,
+									storeHandle: storeHandle ?? null,
+									storeName: null,
+									quantity: null,
+									...variant,
+								} as CartStore["cart"][0]
+							}
+							variant={"primary"}
+						/>
 					</div>
 				))}
 			</div>

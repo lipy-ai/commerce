@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, useRouter } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import type { ReactNode } from "react";
@@ -9,6 +10,7 @@ export const DashboardHeader = ({
 	children,
 	titleChildren,
 	hideBackBtn,
+	className,
 }: {
 	title?: string;
 	children?: ReactNode;
@@ -25,7 +27,12 @@ export const DashboardHeader = ({
 
 	return (
 		<div className="sticky top-0 z-50 bg-background print:hidden">
-			<div className="flex justify-between gap-8 w-full p-3 items-center bg-accent/30 border-b h-14">
+			<div
+				className={cn(
+					"flex justify-between gap-8 w-full p-3 items-center bg-accent/30 border-b h-14",
+					className,
+				)}
+			>
 				<div className="flex items-center justify-center gap-2">
 					{!hideBackBtn && (
 						<Link to={"/"} onClick={onBack}>

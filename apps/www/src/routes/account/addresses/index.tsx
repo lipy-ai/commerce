@@ -47,7 +47,7 @@ function RouteComponent() {
 	>(null);
 
 	return (
-		<div>
+		<div className="[view-transition-name:main-content]">
 			<DashboardHeader title="Saved addresses">
 				{!isMobile && (
 					<Link
@@ -128,7 +128,7 @@ export function AddressComponent({
 }) {
 	return (
 		<div className="flex  gap-2  ">
-			<Avatar className="rounded-md ">
+			<Avatar className="rounded-md mt-1">
 				<AvatarFallback>
 					{address.tag === "home" ? (
 						<House className=" flex-shrink-0 text-foreground fill-primary/40" />

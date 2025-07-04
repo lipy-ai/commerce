@@ -48,7 +48,7 @@ export default function NavBar() {
 								) : (
 									<MapPin className="size-5" />
 								)} */}
-								{<MapPin className="fill-tertiary/60" />}
+								{<MapPin className="fill-primary/60" />}
 								<p className="truncate max-w-[250px] block">
 									{deliveryLocation?.line1 === ""
 										? "Locating"

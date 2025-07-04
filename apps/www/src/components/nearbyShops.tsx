@@ -91,10 +91,10 @@ export default function NearByShops() {
 						shops.length > 0 &&
 						shops.map((shop) => (
 							<div key={shop.id} className="space-y-6">
-								<div className="bg-card border p-0 rounded-xl">
+								<div className="bg-card border p-0 rounded-xl border-accent">
 									<Link
-										to="/$shopHandle"
-										params={{ shopHandle: shop.handle as string }}
+										to="/$storeHandle"
+										params={{ storeHandle: shop.handle as string }}
 										viewTransition={{ types: ["warp"] }}
 									>
 										<div className="relative h-44">

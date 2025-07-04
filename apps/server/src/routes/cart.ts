@@ -14,25 +14,33 @@ const route = new Hono<ServerContext>()
 		const session = c.get("session");
 		const data = await db
 			.selectFrom("cart as c")
-			.where("userId", "=", session?.userId!)
-			.leftJoin("storeInventory as s", "s.storeId", "c.inventoryId")
-			.leftJoin("store as st", "s.storeId", "st.id")
-
-			.leftJoin("productVariant as pv", "pv.id", "s.productVariant")
+			.where("c.userId", "=", session?.userId!)
+			.leftJoin("storeInventory as si", "si.id", "c.inventoryId")
+			.leftJoin("store as s", "si.storeId", "s.id")
+			.leftJoin("productVariant as pv", "pv.id", "si.productVariant")
 			.leftJoin("product as p", "p.id", "pv.productId")
-			.select([
+			.select((eb) => [
 				"c.quantity",
-				// "p.brand",
 				"c.inventoryId",
 				"p.id as productId",
 				"p.thumbnail",
-				"pv.price as variantMaxPrice",
-				"s.price as variantPrice",
-				"p.title as variantTitle",
-				"s.stock as variantStock",
-				"pv.unit as variantUnit",
-				"st.id as storeId",
-				"st.name as storeName",
+				"p.title as title",
+				"pv.price as maxPrice",
+				"si.price as price",
+				eb
+					.case()
+					.when("si.stock", "=", 0)
+					.then(false)
+					.when("si.stock", "=", -1)
+					.then(true)
+					.when("si.stock", ">", 0)
+					.then(true)
+					.else(false)
+					.end()
+					.as("inStock"),
+				"pv.unit as unit",
+				"s.handle as storeHandle",
+				"s.name as storeName",
 			])
 			.execute();
 

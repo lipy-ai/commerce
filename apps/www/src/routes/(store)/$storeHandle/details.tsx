@@ -8,17 +8,17 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Clock, Mail, MapPin, Phone, Share } from "lucide-react";
 import { DashboardHeader } from "../../../../../../packages/web-ui/src/components/layouts/dashboard/header";
 
-export const Route = createFileRoute("/(shop)/$shopHandle/details")({
+export const Route = createFileRoute("/(store)/$storeHandle/details")({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-	const { shopHandle } = Route.useParams();
+	const { storeHandle } = Route.useParams();
 	const { data, isFetching } = useAPIQuery(
 		apiClient.v1.shops[":handle"],
 		"$get",
 		{
-			param: { handle: shopHandle },
+			param: { handle: storeHandle },
 		},
 		{
 			staleTime: Number.POSITIVE_INFINITY,
@@ -28,7 +28,7 @@ function RouteComponent() {
 
 	if (isFetching) return <Spinner />;
 	return (
-		<div>
+		<div className="[view-transition-name:main-content]">
 			<DashboardHeader>
 				<Button
 					size="sm"
@@ -93,7 +93,7 @@ function RouteComponent() {
 							);
 						}}
 					>
-						<MapPin className="text-tertiary" />
+						<MapPin className="text-primary" />
 						Directions
 					</Button>
 				</div>

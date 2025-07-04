@@ -59,7 +59,7 @@ export default function UserProfile() {
 						name="image"
 						label="Image"
 						wrapperClassName="size-24 mx-auto"
-						imageClassName="rounded-full"
+						imageClassName=""
 						alt="Profile image"
 						referrerPolicy="no-referrer"
 					/>

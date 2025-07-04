@@ -4,9 +4,9 @@
 	"type": "module",
 	"packageManager": "bun@1.1.21",
 	"scripts": {
-		"dev": "vite dev --port 3003 --host",
+		"dev": "vite dev",
 		"build": "vite build",
-		"start": "vite start --port 3003 --host",
+		"start": "node .output/server/index.mjs",
 		"test": "vitest run",
 		"format": "biome format",
 		"lint": "tsc && biome lint",

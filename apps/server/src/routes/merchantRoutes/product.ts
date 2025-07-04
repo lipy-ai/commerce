@@ -221,13 +221,8 @@ const route = new Hono<ServerContext>()
 		),
 		async (c) => {
 			const { ids } = c.req.valid("json");
-			const activeStoreId = c.var.session?.activeStoreId!;
 
-			await db
-				.deleteFrom("product")
-				.where("id", "in", ids)
-				.where("storeId", "=", activeStoreId)
-				.execute();
+			await db.deleteFrom("product").where("id", "in", ids).execute();
 			return c.json({ success: true });
 		},
 	);

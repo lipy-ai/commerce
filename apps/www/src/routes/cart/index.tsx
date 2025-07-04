@@ -54,7 +54,6 @@ function RouteComponent() {
 	const {
 		data = [],
 		isFetched,
-		isError,
 		isFetching,
 	} = useAPIQuery(
 		apiClient.v1.cart,
@@ -74,7 +73,7 @@ function RouteComponent() {
 
 	// Update cart when data changes
 	useEffect(() => {
-		if (isFetched && !isError && data.length > 0) {
+		if (isFetched && data.length > 0) {
 			setCart(data);
 		}
 	}, [isFetched, data, setCart]);

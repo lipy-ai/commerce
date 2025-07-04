@@ -182,11 +182,11 @@ const CartAvatarGroup = React.forwardRef<
 							>
 								<AvatarImage
 									src={item.thumbnail || ""}
-									alt={item.variantTitle || ""}
+									alt={item.title || ""}
 									className="object-cover"
 								/>
 								<AvatarFallback className="bg-gradient-to-br from-muted to-muted/80 text-muted-foreground font-medium">
-									{getInitials(item.variantTitle || "")}
+									{getInitials(item.title || "")}
 								</AvatarFallback>
 							</Avatar>
 							{showQuantity && item.quantity && item.quantity > 1 && (

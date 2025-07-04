@@ -82,9 +82,9 @@ function RouteComponent() {
 												/>
 												<div className="flex-1">
 													<h2 className="font-semibold">{m.title}</h2>
-													<p className="text-sm text-muted-foreground">
-														{m.variant.title}
-													</p>
+													{/* <p className="text-sm text-muted-foreground">
+														{m.variant.unit}
+													</p> */}
 												</div>
 												<div className="text-right">
 													<p className="font-medium">
@@ -188,15 +188,15 @@ function RouteComponent() {
 									<div className="flex justify-between items-center p-4">
 										<p className="font-semibold text-xl">Total Payable</p>
 										<p className="font-semibold text-3xl mb-2">
-											{formatAmount("inr", Number(data?.totalAmount))}
+											{formatAmount("inr", Number(data?.itemTotalAmount))}
 										</p>
 									</div>
 									<div className="space-y-4 p-4">
 										<Label>Contact Info</Label>
 										<div className="space-y-1">
-											<p className="">Kundan Mahadev Bhosale</p>
+											<p className="">{data?.customerDetails?.name}</p>
 											<p className="">
-												<span>+91 9325029116</span>
+												<span>{data?.customerDetails?.phone}</span>
 											</p>
 										</div>
 									</div>
@@ -204,16 +204,18 @@ function RouteComponent() {
 										<Label>Delivery Address</Label>
 										<div className="space-y-1">
 											<p className="">
-												{data?.address?.line1}
-												{data?.address?.line2
-													? `, ${data?.address?.line2}`
-													: ""}
+												{[
+													data?.customerDetails?.address?.metadata?.building,
+													data?.customerDetails?.address?.line1,
+												]
+													.filter(Boolean)
+													.join(", ")}
 											</p>
-											<p>{data?.address?.city}</p>
+											{/* <p>{data?.address?.city}</p>
 											<p>{data?.address?.postalCode}</p>
 											<p>
 												{data?.address?.state}, {data?.address?.country}
-											</p>
+											</p> */}
 										</div>
 									</div>
 									<div className="space-y-4 p-4">

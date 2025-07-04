@@ -6,5 +6,9 @@ export const Route = createFileRoute("/account/profile")({
 });
 
 function RouteComponent() {
-	return <UserProfile />;
+	return (
+		<div className="[view-transition-name:main-content]">
+			<UserProfile />
+		</div>
+	);
 }

@@ -21,12 +21,12 @@ import type { InferResponseType } from "hono/client";
 import { ChevronRight, EllipsisVertical, Info, Share } from "lucide-react";
 import { useState } from "react";
 
-export const Route = createFileRoute("/(shop)/$shopHandle/")({
+export const Route = createFileRoute("/(store)/$storeHandle/")({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-	const { shopHandle } = Route.useParams();
+	const { storeHandle } = Route.useParams();
 	const { scrollY } = useScroll();
 	const [visibleShopName, setVisibleShopName] = useState(false);
 	useMotionValueEvent(scrollY, "change", (current) => {
@@ -41,20 +41,28 @@ function RouteComponent() {
 		data: shopData,
 		isFetching: fetchingShopData,
 		isFetched: fetchedShopData,
-	} = useAPIQuery(apiClient.v1.shops[":handle"], "$get", {
-		param: { handle: shopHandle },
-	});
+	} = useAPIQuery(
+		apiClient.v1.shops[":handle"],
+		"$get",
+		{
+			param: { handle: storeHandle },
+		},
+		{
+			staleTime: Number.POSITIVE_INFINITY,
+			cacheTime: Number.POSITIVE_INFINITY,
+		},
+	);
 
 	const {
 		data: productData,
 		isFetched: fetchedProduct,
 		isFetching: fetchingProduct,
 	} = useAPIQuery(
-		apiClient.v1.shops[":id"].categories,
+		apiClient.v1.shops[":storeHandle"].categories,
 		"$get",
 		{
 			param: {
-				id: shopData?.id as string,
+				storeHandle: storeHandle,
 			},
 			query: {
 				limit: "10",
@@ -62,13 +70,14 @@ function RouteComponent() {
 			},
 		},
 		{
-			enabled: !!shopData?.id,
+			staleTime: Number.POSITIVE_INFINITY,
+			cacheTime: Number.POSITIVE_INFINITY,
 		},
 	);
 
 	if (fetchingShopData || fetchingProduct) return <ShopLoadingSkeleton />;
 	return (
-		<div className="relative max-w-screen-lg mx-auto">
+		<div className="relative max-w-screen-lg mx-auto [view-transition-name:main-content]">
 			<DashboardHeader
 				titleChildren={
 					<motion.h1
@@ -91,8 +100,9 @@ function RouteComponent() {
 				<div className="text-center  bg-amber-100 p-4">
 					<Link
 						className="text-2xl font-bold "
-						to="/$shopHandle/details"
-						params={{ shopHandle }}
+						to="/$storeHandle/details"
+						params={{ storeHandle }}
+						viewTransition={{ types: ["slide-left"] }}
 					>
 						{shopData.name}
 					</Link>
@@ -108,12 +118,13 @@ function RouteComponent() {
 						<Link
 							key={item.id}
 							className="text-center"
-							to="/$shopHandle/products/category/$categoryId"
-							params={{ shopHandle, categoryId: item.id }}
+							to="/$storeHandle/products/category/$categorySlug"
+							params={{ storeHandle, categorySlug: item.slug as string }}
+							viewTransition={{ types: ["slide-left"] }}
 						>
-							<div className="relative w-full aspect-square rounded-xl overflow-hidden  bg-gray-200">
+							<div className="relative w-full aspect-square rounded-xl overflow-hidden  bg-accent">
 								<img
-									src={"./assets/maggy.jpeg"}
+									src={item?.image || "./assets/maggy.jpeg"}
 									alt={item?.title || ""}
 									className="rounded-xl aspect-square bg-gray-200"
 								/>
@@ -135,7 +146,7 @@ function RouteComponent() {
 							<p className="text-xl font-bold my-4">{productGroup.title}</p>
 
 							<div className="grid grid-cols-3 lg:grid-cols-4  gap-x-4 gap-y-6 w-full">
-								{productArray?.map((product: any) => (
+								{productArray?.map((product) => (
 									<div key={product.id}>
 										<ProductCard
 											product={product}
@@ -143,7 +154,7 @@ function RouteComponent() {
 												classNameImg: "aspect-square h-full",
 												classNameBox: "w-full h-full",
 											}}
-											shopHandle={shopHandle}
+											storeHandle={storeHandle}
 										/>
 									</div>
 								))}
@@ -156,10 +167,10 @@ function RouteComponent() {
 											className: "w-full my-2 font-semibold",
 										}),
 									)}
-									to="/$shopHandle/products/category/$categoryId"
+									to="/$storeHandle/products/category/$categorySlug"
 									params={{
-										shopHandle,
-										categoryId: productGroup.id,
+										storeHandle,
+										categorySlug: productGroup.slug as string,
 									}}
 								>
 									See more products
@@ -207,9 +218,9 @@ function ShopOptions({
 				<DropdownMenuItem
 					onClick={() =>
 						navigate({
-							to: "/$shopHandle/details",
+							to: "/$storeHandle/details",
 							params: {
-								shopHandle: shop.handle as string,
+								storeHandle: shop.handle as string,
 							},
 						})
 					}

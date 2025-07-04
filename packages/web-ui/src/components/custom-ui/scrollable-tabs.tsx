@@ -62,7 +62,7 @@ export const ScrollingTabs = ({
 							className={cn(
 								"group snap-start flex-shrink-0 relative flex flex-col lg:flex-row items-center py-2 lg:px-2 lg:py-4 mx-2 min-w-14 cursor-pointer transition-all duration-300",
 								isActive
-									? "after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-tertiary lg:after:bg-primary after:rounded-t-full text-primary"
+									? "after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-primary lg:after:bg-primary after:rounded-t-full text-primary"
 									: "text-foreground hover:text-background/80",
 								className,
 							)}

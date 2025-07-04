@@ -32,7 +32,7 @@ function RouteComponent() {
 	);
 
 	return (
-		<>
+		<div className="[view-transition-name:main-content]">
 			<DashboardHeader title="My Orders" />
 
 			{isFetched &&
@@ -60,9 +60,9 @@ function RouteComponent() {
 											<div className="flex items-center justify-between gap-4">
 												<Link
 													className="flex items-center gap-2"
-													to="/$shopHandle"
+													to="/$storeHandle"
 													params={{
-														shopHandle: order?.storeHandle as string,
+														storeHandle: order?.storeHandle as string,
 													}}
 												>
 													<Avatar className="rounded-md size-10">
@@ -144,6 +144,6 @@ function RouteComponent() {
 					label="Place order to start"
 				/>
 			)}
-		</>
+		</div>
 	);
 }

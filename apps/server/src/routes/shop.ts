@@ -39,17 +39,18 @@ const route = new Hono<ServerContext>()
 		},
 	)
 	.get(
-		"/:id/categories",
-		zValidator("param", z.object({ id: z.string() })),
+		"/:storeHandle/categories",
+		zValidator("param", z.object({ storeHandle: z.string() })),
 		zValidator("query", listZodSchema),
 		async (c) => {
-			const { id } = c.req.valid("param");
+			const { storeHandle } = c.req.valid("param");
 			const { limit, page } = c.req.valid("query");
 			const offset = limit * (page - 1);
 
 			const r = db
 				.selectFrom("storeInventory as si")
-				.where("si.storeId", "=", id)
+				.leftJoin("store as s", "s.id", "si.storeId")
+				.where("s.handle", "=", storeHandle)
 				.rightJoin("productVariant as pv", "pv.id", "si.productVariant")
 				.rightJoin("product as p", "p.id", "pv.productId")
 				.groupBy("p.id")

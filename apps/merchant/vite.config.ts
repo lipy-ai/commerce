@@ -13,11 +13,6 @@ export default defineConfig({
 		minify: true,
 		sourcemap: process.env.NODE_ENV === "development",
 	},
-	preview: {
-		allowedHosts: [".lipy.in"],
-		port: 3001,
-		host: true,
-	},
 
 	server: {
 		allowedHosts: [".lipy.in"],

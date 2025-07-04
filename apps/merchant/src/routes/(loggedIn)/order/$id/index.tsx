@@ -1,6 +1,10 @@
 import { apiClient } from "@lipy/lib/api";
 import { formatAmount } from "@lipy/lib/utils/intl";
-import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
+import {
+	apiQueryOptions,
+	useAPIMutation,
+	useAPIQuery,
+} from "@lipy/lib/utils/useQueryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import {
 	Avatar,
@@ -20,17 +24,35 @@ import {
 	HoverCardTrigger,
 } from "@lipy/web-ui/components/ui/hover-card";
 import { Label } from "@lipy/web-ui/components/ui/label";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@lipy/web-ui/components/ui/select";
+import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
+import { cn } from "@lipy/web-ui/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
+import type { InferRequestType } from "hono";
 import { Info } from "lucide-react";
-
-export const Route = createFileRoute("/(loggedIn)/order/$id")({
+export const Route = createFileRoute("/(loggedIn)/order/$id/")({
 	component: RouteComponent,
 });
 
+type PatchTypes = InferRequestType<
+	(typeof apiClient.v1.merchant.order)[":id"]["$patch"]
+>;
 function RouteComponent() {
-	const { id } = Route.useParams();
+	const { id }: any = Route.useParams();
+	const queryClient = useQueryClient();
+	const q = apiQueryOptions(apiClient.v1.merchant.order[":id"], "$get", {
+		param: { id },
+	});
+
 	const { data, isLoading } = useAPIQuery(
 		apiClient.v1.merchant.order[":id"],
 		"$get",
@@ -38,6 +60,49 @@ function RouteComponent() {
 			param: { id },
 		},
 	);
+	const mutation = useAPIMutation(
+		apiClient.v1.merchant.order[":id"],
+		"$patch",
+		{
+			onMutate: ({ json }) => {
+				queryClient.setQueryData(q.queryKey, (p: typeof data) => ({
+					...p,
+					status: json.status,
+				}));
+			},
+			onError() {
+				queryClient.invalidateQueries({ queryKey: q.queryKey });
+			},
+		},
+	);
+
+	const handlePrint = () => {
+		const printContents = document.getElementById("invoice-content")?.innerHTML;
+		if (!printContents) return;
+
+		const originalContents = document.body.innerHTML;
+		document.body.innerHTML = printContents;
+		window.print();
+		document.body.innerHTML = originalContents;
+		window.location.reload();
+	};
+
+	const status = [
+		"ordered",
+		"accepted",
+		"packed",
+		"out_for_delivery",
+		"delivered",
+		"return_requested",
+		"refunded",
+		"replaced",
+		"cancelled",
+	] satisfies PatchTypes["json"]["status"][];
+
+	const handlePatch = async (status: PatchTypes["json"]["status"]) => {
+		await mutation.mutateAsync({ param: { id }, json: { status } });
+	};
+
 	return (
 		<>
 			{isLoading ? (
@@ -45,12 +110,16 @@ function RouteComponent() {
 			) : (
 				<>
 					<div className="min-h-screen flex flex-col">
-						<DashboardHeader title="Edit Order" />
-						<div className="lg:grid lg:grid-cols-12 flex-1 md:p-4 gap-8 print:p-0">
-							<Card className="col-span-8">
-								<CardContent className="divide-y p-0 py-4 lg:p-4">
+						<DashboardHeader title="Edit Order" />{" "}
+						{/* Hidden iframe for printing */}
+						<div
+							className="lg:grid lg:grid-cols-12 flex-1 md:p-4 gap-8 print:p-0"
+							id={"invoice-content"}
+						>
+							<Card className="col-span-8 print:shadow-none">
+								<CardContent className="divide-y p-0 py-4 lg:p-4 print:border-none">
 									<div className="flex flex-col lg:flex-row gap-8 lg:gap-4 p-4 justify-between">
-										<div>
+										<div className="">
 											<div>
 												<h1 className="text-2xl font-semibold mb-2">
 													Order ID: {id}
@@ -63,28 +132,61 @@ function RouteComponent() {
 														{data?.orderedAt && format(data?.orderedAt, "Pp")}
 													</span>
 												</p>
-												<span className="hidden md:block">|</span>
-												<p className="text-primary">Delivery in 10 mins</p>
+												<span className="hidden md:block print:hidden">|</span>
+												<p className="text-primary print:hidden">
+													Delivery in 10 mins
+												</p>
 											</div>
 										</div>
-										<div className="flex gap-4">
-											<Button variant={"outline"}>Invoice</Button>
-											<Button>Change Status</Button>
+										<div className="flex gap-4 print:hidden">
+											<Button variant={"outline"} onClick={() => handlePrint()}>
+												Invoice
+											</Button>
+											<Select
+												defaultValue={data?.status || status[0]}
+												onValueChange={(v) => handlePatch(v as any)}
+												disabled={mutation.isPending}
+											>
+												<SelectTrigger className="capitalize pl-0">
+													<Button>Change Status</Button>
+													<Separator orientation="vertical" />
+													<SelectValue placeholder="Order Status" />
+												</SelectTrigger>
+												<SelectContent>
+													{status.map((s) => (
+														<SelectItem
+															key={s}
+															value={s}
+															className={cn(
+																"capitalize",
+																status.indexOf(s) <=
+																	status.indexOf(data?.status as any) &&
+																	"pointer-events-none bg-muted/30 text-muted-foreground my-1",
+															)}
+														>
+															{s.replaceAll("_", " ")}
+														</SelectItem>
+													))}
+												</SelectContent>
+											</Select>
 										</div>
 									</div>
 									<div className="py-4">
 										{data?.items?.map((m, i) => (
-											<div key={i} className="flex gap-2 items-center p-4">
+											<div
+												key={i}
+												className="flex gap-2 items-center print:py-2 p-4"
+											>
 												<img
 													src={m.thumbnail}
 													alt={m.title}
-													className="size-12 border rounded bg-accent"
+													className="size-12 border rounded bg-accent print:hidden"
 												/>
 												<div className="flex-1">
 													<h2 className="font-semibold">{m.title}</h2>
-													{/* <p className="text-sm text-muted-foreground">
+													<p className="text-sm text-muted-foreground">
 														{m.variant.unit}
-													</p> */}
+													</p>
 												</div>
 												<div className="text-right">
 													<p className="font-medium">
@@ -99,8 +201,8 @@ function RouteComponent() {
 									</div>
 								</CardContent>
 							</Card>
-							<Card className="col-span-4">
-								<CardContent className="space-y-4 px-0 py-4 lg:p-4 divide-y border-t">
+							<Card className="col-span-4 print:shadow-none print:border-t">
+								<CardContent className="space-y-4 px-0 py-4 lg:p-4 divide-y border-t print:border-0">
 									<div className="space-y-4 p-4">
 										<Label>Payment Summary</Label>
 										<div className="space-y-4">
@@ -204,21 +306,20 @@ function RouteComponent() {
 										<Label>Delivery Address</Label>
 										<div className="space-y-1">
 											<p className="">
-												{[
-													data?.customerDetails?.address?.metadata?.building,
-													data?.customerDetails?.address?.line1,
-												]
-													.filter(Boolean)
-													.join(", ")}
+												{data?.customerDetails?.address?.line1}
+												{data?.customerDetails?.address?.line2
+													? `, ${data?.customerDetails?.address?.line2}`
+													: ""}
 											</p>
-											{/* <p>{data?.address?.city}</p>
-											<p>{data?.address?.postalCode}</p>
+											<p>{data?.customerDetails?.address?.city}</p>
+											<p>{data?.customerDetails?.address?.postalCode}</p>
 											<p>
-												{data?.address?.state}, {data?.address?.country}
-											</p> */}
+												{data?.customerDetails?.address?.state},
+												{data?.customerDetails?.address?.country}
+											</p>
 										</div>
 									</div>
-									<div className="space-y-4 p-4">
+									<div className="space-y-4 p-4 print:hidden">
 										<Label>Delivery Partner</Label>
 
 										<div className="space-y-4">

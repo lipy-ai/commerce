@@ -82,33 +82,35 @@ function RouteComponent() {
 						if (!draft) return draft;
 
 						let variantIdx = -1;
-						const productIdx = draft.items.findIndex((product) => {
-							const idx = product.variants.findIndex(
+						const productIdx = draft.items.findIndex((product, i) => {
+							const idx = product.variants?.findIndex(
 								(variant) => variant.id === json.variantId,
 							);
-
-							if (idx !== -1) {
+							if (Number(idx) >= 0) {
 								variantIdx = idx;
 								return true;
 							}
 							return false;
 						});
+						console.log(productIdx, variantIdx);
 						if (productIdx !== -1 && variantIdx !== -1) {
 							const variant = draft.items[productIdx].variants[variantIdx];
-							draft.items[productIdx].variants[variantIdx] = json.active
-								? {
-										...variant,
-										storePrice: Number(json.price),
-										stock: Number(json.stock),
-										sku: json.sku || null,
-									}
-								: {
-										...variant,
-										storePrice: null,
-										stock: null,
-										sku: null,
-										inventoryId: null,
-									};
+							draft.items[productIdx].variants[variantIdx] =
+								json.operation !== "delete"
+									? {
+											...variant,
+											inventoryId: json.id,
+											storePrice: Number(json.price),
+											stock: Number(json.stock),
+											sku: json.sku || null,
+										}
+									: {
+											...variant,
+											storePrice: null,
+											stock: null,
+											sku: null,
+											inventoryId: null,
+										};
 						}
 
 						return draft;
@@ -122,12 +124,16 @@ function RouteComponent() {
 	) => {
 		await mutation.mutateAsync({
 			json: {
-				id: m.inventoryId || undefined,
+				id: m.inventoryId || crypto.randomUUID(),
 				variantId: m.id!,
 				sku: m.sku || undefined,
 				price: m.price === null ? undefined : Number(m.price),
 				stock: m.stock === null ? undefined : Number(m.stock),
-				active: m.active,
+				operation: m.inventoryId
+					? "update"
+					: m.inventoryId && !m.active
+						? "delete"
+						: "create",
 			},
 		});
 	};
@@ -223,10 +229,19 @@ function SingProduct({
 			</div>
 			<div className="flex-1">
 				<div className="grid gap-6">
-					{m.variants?.map((v, i) => {
-						// const isActive = activeIds.includes(v.id || "");
-						return <EditVariation data={v} key={i} onSubmit={onSubmit} />;
-					})}
+					{!m.variants || m.variants?.length === 0 ? (
+						<div className="p-4 text-base gap-2 items-center border flex justify-between">
+							<span>No Variants Yet....</span>
+							<Button variant={"link"} className="text-base">
+								Raise Request
+							</Button>
+						</div>
+					) : (
+						m.variants?.map((v, i) => {
+							// const isActive = activeIds.includes(v.id || "");
+							return <EditVariation data={v} key={i} onSubmit={onSubmit} />;
+						})
+					)}
 				</div>
 			</div>
 		</div>
@@ -267,7 +282,7 @@ function EditVariation({
 	const defaultValues = {
 		active: !!data.inventoryId || false,
 		price: data?.storePrice || data?.price || 0,
-		stock: data?.stock || !!data.inventoryId ? -1 : 0,
+		stock: data?.stock || 0,
 		sku: data?.sku || "",
 	};
 
@@ -342,14 +357,14 @@ function EditVariation({
 				>
 					<div className="flex">
 						<span>
-							{!data.inventoryId
+							{!data.storePrice
 								? "Inactive"
 								: !data?.stock
 									? "Out of Stock"
 									: data?.stock === -1
 										? "In Stock"
 										: data?.stock > 0
-											? data?.stock
+											? `${data?.stock} left`
 											: "-"}
 						</span>
 					</div>

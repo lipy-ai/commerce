@@ -13,7 +13,7 @@ export default defineConfig({
 	},
 	server: {
 		allowedHosts: true,
-
+		port: 3003,
 		proxy: {
 			"/api/**": {
 				target: `${process.env.VITE_API_URL}/api/**`,

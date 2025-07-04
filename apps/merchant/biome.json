@@ -31,6 +31,9 @@
 				"noExplicitAny": "off",
 				"noArrayIndexKey": "off"
 			},
+			"style": {
+				"noNonNullAssertion": "off"
+			},
 			"a11y": {
 				"useKeyWithClickEvents": "off"
 			}

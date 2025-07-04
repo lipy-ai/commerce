@@ -82,7 +82,7 @@ function RouteComponent() {
 						if (!draft) return draft;
 
 						let variantIdx = -1;
-						const productIdx = draft.items.findIndex((product, i) => {
+						const productIdx = draft.items.findIndex((product) => {
 							const idx = product.variants?.findIndex(
 								(variant) => variant.id === json.variantId,
 							);
@@ -207,7 +207,9 @@ function SingProduct({
 	onSubmit,
 }: {
 	product: Response["items"][0];
-	onSubmit: (v: Response["items"][0]["variants"][0]) => void;
+	onSubmit: (
+		v: Response["items"][0]["variants"][0] & { active: boolean },
+	) => void;
 }) {
 	const m = product;
 	return (
@@ -273,7 +275,9 @@ function EditVariation({
 	onSubmit,
 }: {
 	data: Response["items"][0]["variants"][0];
-	onSubmit: (v: Response["items"][0]["variants"][0]) => void;
+	onSubmit: (
+		v: Response["items"][0]["variants"][0] & { active: boolean },
+	) => void;
 }) {
 	const [open, setOpen] = useState(false);
 

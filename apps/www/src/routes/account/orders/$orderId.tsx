@@ -153,6 +153,9 @@ function RouteComponent() {
 										/>
 										<div className="flex-1">
 											<h2 className="font-semibold">{product.title}</h2>
+											<p className="text-muted-foreground text-xsa">
+												{product.variant.unit}
+											</p>
 										</div>
 										<div className="text-right">
 											<p className="font-medium">
@@ -214,7 +217,7 @@ function RouteComponent() {
 														data[0]?.customerDetails.address?.phone,
 													]
 														.filter(Boolean)
-														.join("|")}
+														.join(" | ")}
 												</p>
 											</div>
 										</div>

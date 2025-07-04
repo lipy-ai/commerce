@@ -197,7 +197,7 @@ const route = new Hono<ServerContext>()
 
 		await db.insertInto("orders").values(orders).execute();
 
-		return c.json({ orders: orders.map((o) => o.pk) });
+		return c.json({ orders: orders.map((o) => o.id) });
 	})
 	.post("/cancel/:id", zValidator("param", paramSchema), async (c) => {
 		const session = c.get("session");

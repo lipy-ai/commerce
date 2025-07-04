@@ -18,6 +18,7 @@ import { Progress } from "@lipy/web-ui/components/ui/progress";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
+import { StepForward } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { z } from "zod";
 
@@ -154,14 +155,16 @@ export default function PlaceOrder({
 
 	return (
 		<>
-			<Button
-				onClick={handlePlaceOrder}
-				variant="emerald"
-				className="w-full flex flex-col items-center justify-center gap-0 font-medium "
-				size="lg"
-			>
-				CONTINUE TO PLACE ORDER
-			</Button>
+			<div className="flex items-center gap-4 my-2">
+				<div className="flex-1 text-center">
+					<p className="font-medium">Pay Cash/UPI</p>
+					<p>(on delivery)</p>
+				</div>
+				<Button onClick={handlePlaceOrder} className="flex-2">
+					Place Order
+					<StepForward className="fill-card" />
+				</Button>
+			</div>
 
 			{showDialog && (
 				<ProgressDialog

@@ -5,13 +5,8 @@ import type { ServerContext } from "@/types";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { sql } from "kysely";
-import { jsonArrayFrom } from "kysely/helpers/postgres"; // Use 'mysql' or 'sqlite' if needed
+import { jsonArrayFrom, jsonBuildObject } from "kysely/helpers/postgres"; // Use 'mysql' or 'sqlite' if needed
 import { z } from "zod";
-
-const cartSchema = z.object({
-	variantId: z.number(),
-	quantity: z.number().min(0).int(),
-});
 
 const route = new Hono<ServerContext>()
 	/**
@@ -52,47 +47,54 @@ const route = new Hono<ServerContext>()
 			const { limit, page } = c.req.valid("query");
 			const offset = limit * (page - 1);
 
-			const limitedProducts = db
-				.selectFrom("product as p")
+			const r = db
+				.selectFrom("storeInventory as si")
+				.where("si.storeId", "=", id)
+				.rightJoin("productVariant as pv", "pv.id", "si.productVariant")
+				.rightJoin("product as p", "p.id", "pv.productId")
+				.groupBy("p.id")
 				.select((eb) => [
 					"p.id",
 					"p.title",
 					"p.thumbnail",
-					"p.thumbnail",
-					"p.price",
-					"p.maxPrice",
 					"p.category",
-					"p.storeId",
 					sql`ROW_NUMBER() OVER (PARTITION BY p.category ORDER BY p.id)`.as(
 						"rn",
 					),
-					jsonArrayFrom(
-						eb
-							.selectFrom("productVariant as pv")
-							.select(["pv.id", "pv.price", "pv.unit"])
-							.whereRef("pv.productId", "=", "p.id"),
-					).as("variants"),
-				])
-				.where("p.storeId", "=", id)
-				.groupBy([
-					"p.id",
-					"p.title",
-					"p.thumbnail",
-					"p.price",
-					"p.maxPrice",
-					"p.category",
-					"p.storeId",
+					eb.fn
+						.jsonAgg(
+							jsonBuildObject({
+								id: eb.ref("pv.id"),
+								inventoryId: eb.ref("si.id"),
+								price: eb.fn.coalesce(eb.ref("si.price")),
+								maxPrice: eb.ref("pv.price"),
+								unit: eb.ref("pv.unit"),
+								productId: eb.ref("pv.productId"),
+								inStock: eb
+									.case()
+									.when("si.stock", "=", 0)
+									.then(false)
+									.when("si.stock", "=", -1)
+									.then(true)
+									.when("si.stock", ">", 0)
+									.then(true)
+									.else(false)
+									.end(),
+							}),
+						)
+						.as("variants"),
 				])
 				.as("limited_products");
 
 			const result = await db
-				.selectFrom(limitedProducts)
+				.selectFrom(r)
 				.innerJoin("category", "category.id", "limited_products.category")
 				.where("limited_products.rn", "<=", 6)
 				.select((eb) => [
 					"category.id",
 					"category.title",
-
+					"category.image",
+					"category.slug",
 					eb.fn.jsonAgg("limited_products").as("products"),
 				])
 				.groupBy("category.id")

@@ -44,7 +44,7 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
 	}
 
 	return (
-		<div className="w-full">
+		<div className="w-full relative">
 			{/* Main carousel container */}
 			<div className="relative">
 				<div className="overflow-hidden" ref={emblaRef}>
@@ -67,7 +67,7 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
 
 			{/* Navigation dots */}
 			{images.length > 1 && (
-				<div className="flex justify-center items-center gap-1.5 mt-4">
+				<div className="absolute bottom-4 right-4 flex justify-center items-center gap-1.5 ">
 					{images.map((_, index) => (
 						<button
 							type="button"

@@ -77,7 +77,7 @@ export default function ProductCard({
 					>
 						<div className=" relative aspect-square">
 							<img
-								alt={""}
+								alt=""
 								src={product.thumbnail || "/assets/paper-bag-items.webp"}
 								className={cn(
 									"w-full h-30 object-cover rounded-md bg-accent",
@@ -102,11 +102,9 @@ export default function ProductCard({
 									/>
 								) : cartCount === 0 ? (
 									<Button
-										size="icon-sm"
+										size="xs"
 										type="button"
-										variant="green-outline"
 										aria-label="Add to cart"
-										className="bg-card"
 										onClick={(e) => {
 											e.preventDefault();
 											e.stopPropagation();

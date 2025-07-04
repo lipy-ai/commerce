@@ -7,7 +7,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default defineConfig({
-	plugins: [tailwindcss(), tanstackStart() as any],
+	plugins: [tailwindcss(), tanstackStart()],
+
 	build: {
 		minify: true,
 		sourcemap: process.env.NODE_ENV === "development",

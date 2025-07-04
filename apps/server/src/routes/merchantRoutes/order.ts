@@ -1,8 +1,10 @@
 import { db } from "@/db";
+import { ORDER_STATUS } from "@/db/schema";
 import { zValidator } from "@/middlewares/validator";
 import { listZodSchema } from "@/schema/common";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
+import { HTTPException } from "hono/http-exception";
 import { type Expression, type SqlBool, sql } from "kysely";
 import { z } from "zod";
 
@@ -63,6 +65,56 @@ const route = new Hono<ServerContext>()
 				// .select((eb) => [eb.fn.toJson("c").as("category")])
 				.executeTakeFirstOrThrow();
 			return c.json(result);
+		},
+	)
+	.patch(
+		"/:id",
+		zValidator(
+			"param",
+			z.object({
+				id: z.string(),
+			}),
+		),
+		zValidator(
+			"json",
+			z.object({
+				status: z.enum(ORDER_STATUS),
+			}),
+		),
+		async (c) => {
+			const { id } = c.req.valid("param");
+			const { status } = c.req.valid("json");
+
+			const order = await db
+				.selectFrom("orders")
+				.where("id", "=", id)
+				.executeTakeFirst();
+
+			if (!order) {
+				throw new HTTPException(404, {
+					message: "No order found!",
+				});
+			}
+
+			const statusIdx = ORDER_STATUS.indexOf(status);
+
+			const oldStatusIdx = ORDER_STATUS.indexOf(status);
+
+			if (oldStatusIdx > statusIdx) {
+				throw new HTTPException(401, {
+					message: `Can't change to this order to "${status}" status, because the order has been already tagged with "${status}" before.`,
+				});
+			}
+
+			await db
+				.updateTable("orders")
+				.where("id", "=", id)
+				.set({
+					status,
+				})
+				.execute();
+
+			return c.json({ success: true });
 		},
 	);
 export { route as merchantOrderRoute };

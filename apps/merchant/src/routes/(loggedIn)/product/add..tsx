@@ -92,7 +92,6 @@ function RouteComponent() {
 							}
 							return false;
 						});
-						console.log(productIdx, variantIdx);
 						if (productIdx !== -1 && variantIdx !== -1) {
 							const variant = draft.items[productIdx].variants[variantIdx];
 							draft.items[productIdx].variants[variantIdx] =

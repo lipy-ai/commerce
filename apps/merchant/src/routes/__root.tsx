@@ -106,7 +106,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 
 	const data = Route.useLoaderData();
 	return (
-		<html className="bg-muted/30" lang="en">
+		<html className="not-print:bg-muted/30" lang="en">
 			<head suppressHydrationWarning>
 				<HeadContent />
 			</head>

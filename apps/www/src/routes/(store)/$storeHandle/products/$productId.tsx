@@ -11,12 +11,15 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@lipy/web-ui/components/ui/accordion";
+import { Avatar, AvatarFallback } from "@lipy/web-ui/components/ui/avatar";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Label } from "@lipy/web-ui/components/ui/label";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
+import { shareContent } from "@lipy/web-ui/lib/share";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import type { InferResponseType } from "hono/client";
+import { Share } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export const Route = createFileRoute(
@@ -62,94 +65,83 @@ function RouteComponent() {
 		<div className="mb-20 [view-transition-name:main-content]">
 			{isFetched && product && (
 				<div>
-					<DashboardHeader title={product.title || ""} />
+					<DashboardHeader title={product.title || ""}>
+						<Avatar
+							onClick={() => {
+								shareContent({
+									title: product.title || "",
+									url: window.location.href,
+									text: "Hey, Check out this product!",
+								});
+							}}
+						>
+							<AvatarFallback className="bg-card">
+								<Share className="size-4 stroke-2" />
+							</AvatarFallback>
+						</Avatar>
+					</DashboardHeader>
 
 					<ImageCarousel images={product.images || []} />
-					<h3 className="font-bold text-xl px-4 pt-2">{product.title}</h3>
-					{product.variants?.length === 1 && (
-						<div className="px-4 py-2">
-							<p className="font-medium text-base">
-								{product.variants[0]?.unit}
-							</p>
-							<div>
-								<span className="font-semibold text-lg pr-2">
-									{formatAmount("inr", product.variants[0]?.price || 0)}
-								</span>
-								{product.variants[0]?.maxPrice && (
-									<span className="text line-through text-muted-foreground">
-										{formatAmount("inr", product.variants[0]?.maxPrice)}
-									</span>
-								)}
-								{discount > 0 && <Badge variant="info">{discount}% OFF</Badge>}
-							</div>
-						</div>
-					)}
-					{product.variants?.length > 1 && (
-						<div className="px-4 py-2">
-							<Label className="text-muted-foreground">Select variant</Label>
-							<div
-								className="overflow-x-auto py-2 px-1 flex items-center gap-4"
-								style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-							>
-								{product.variants.map((variant) => (
-									<div
-										key={variant.inventoryId}
-										className={cn(
-											"cursor-pointer px-3 py-1 rounded-lg bg-muted/50",
-											selectedVariant?.id === variant.id
-												? "border-2 border-primary bg-primary/10"
-												: "",
-										)}
-										onClick={() => setSelectedVariant(variant)}
-									>
-										<p className="line-clamp-1 text-sm mt-1 text-center">
-											{variant.unit}
-										</p>
-										<div>
-											<span className="font-semibold text-lg pr-2">
-												{formatAmount("inr", variant.price || 0)}
-											</span>
-											{variant.maxPrice && (
-												<span className="text-xs line-through text-muted-foreground">
-													{formatAmount("inr", variant.maxPrice)}
-												</span>
-											)}
-										</div>
-									</div>
-								))}
-							</div>
-						</div>
-					)}
-
-					{/* {selectedVariant && (
-						<div className="p-4">
-							<p className="text-lg font-semibold">{selectedVariant.unit}</p>
-
-							<div className="flex items-center justify-between">
+					<div className="bg-card">
+						<h3 className="font-bold text-lg px-4 pt-2">{product.title}</h3>
+						{product.variants?.length === 1 && (
+							<div className="px-4 py-2">
+								<p className="font-medium text-base">
+									{product.variants[0]?.unit}
+								</p>
 								<div>
 									<span className="font-semibold text-lg pr-2">
-										{formatAmount("inr", selectedVariant.price || 0)}
+										{formatAmount("inr", product.variants[0]?.price || 0)}
 									</span>
-									{selectedVariant.maxPrice && (
-										<span className="text-xs line-through text-muted-foreground">
-											{formatAmount("inr", selectedVariant.maxPrice)}
+									{product.variants[0]?.maxPrice && (
+										<span className="text line-through text-muted-foreground">
+											{formatAmount("inr", product.variants[0]?.maxPrice)}
 										</span>
 									)}
+									{discount > 0 && (
+										<Badge variant="info">{discount}% OFF</Badge>
+									)}
 								</div>
-								<AddToCart
-									product={{
-										...selectedVariant,
-										quantity: null,
-										thumbnail: product.thumbnail || "",
-										title: product.title || "",
-										storeHandle: storeHandle || "",
-										storeName: "",
-									}}
-									variant="primary"
-								/>
 							</div>
-						</div>
-					)} */}
+						)}
+
+						{product.variants?.length > 1 && (
+							<div className="px-4 py-2">
+								<Label className="text-muted-foreground">Select variant</Label>
+								<div
+									className="overflow-x-auto py-2 px-1 flex items-center gap-4"
+									style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+								>
+									{product.variants.map((variant) => (
+										<div
+											key={variant.inventoryId}
+											className={cn(
+												"cursor-pointer px-3 py-1 rounded-lg bg-muted/50",
+												selectedVariant?.id === variant.id
+													? "border-2 border-primary bg-primary/10"
+													: "",
+											)}
+											onClick={() => setSelectedVariant(variant)}
+										>
+											<p className="line-clamp-1 text-sm mt-1 text-center">
+												{variant.unit}
+											</p>
+											<div>
+												<span className="font-semibold text-lg pr-2">
+													{formatAmount("inr", variant.price || 0)}
+												</span>
+												{variant.maxPrice && (
+													<span className="text-xs line-through text-muted-foreground">
+														{formatAmount("inr", variant.maxPrice)}
+													</span>
+												)}
+											</div>
+										</div>
+									))}
+								</div>
+							</div>
+						)}
+					</div>
 
 					{product?.highlights && product?.highlights?.length > 0 && (
 						<Accordion type="single" collapsible className="bg-accent/40 my-4">
@@ -157,16 +149,17 @@ function RouteComponent() {
 								<AccordionTrigger className="hover:no-underline font-medium text-base px-6">
 									Basic details
 								</AccordionTrigger>
+
 								<AccordionContent className="px-6 pb-6 space-y-4">
 									{product.highlights.map((highlight) => (
 										<div
 											key={highlight.label}
 											className="flex items-start justify-between"
 										>
-											<span className="text-muted-foreground flex-1">
+											<span className="font-normal flex-1">
 												{highlight.label}
 											</span>
-											<span className="text-foreground font-normal flex-1 text-left">
+											<span className="text-foreground/80 flex-1 text-left">
 												{highlight.value}
 											</span>
 										</div>

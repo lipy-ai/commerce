@@ -19,9 +19,7 @@ export default function SettingsCard({
 	return (
 		<>
 			<div className="bg-card p-4 space-y-2">
-				<Label className="tracking-wider text-muted-foreground text-base">
-					{title.toUpperCase()}
-				</Label>
+				<Label className="text-muted-foreground">{title.toUpperCase()}</Label>
 				<div className="divide-y  divide-dashed">
 					{items.map((item, index) => {
 						return (

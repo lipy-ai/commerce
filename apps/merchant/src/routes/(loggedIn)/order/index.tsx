@@ -49,10 +49,14 @@ function RouteComponent() {
 	return (
 		<div>
 			<DashboardHeader title="Orders">
-				<Link to="/order/create" className={cn(buttonVariants({ size: "sm" }))}>
+				{/* <Link
+					to="/order/$id"
+					params={{ id: "" }}
+					className={cn(buttonVariants({ size: "sm" }))}
+				>
 					<PlusCircle />
 					New Order
-				</Link>
+				</Link> */}
 			</DashboardHeader>
 
 			<div className="lg:p-8 lg:space-y-8">

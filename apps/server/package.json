@@ -19,6 +19,7 @@
 		"@aws-sdk/client-ses": "^3.835.0",
 		"@aws-sdk/client-sns": "^3.835.0",
 		"@aws-sdk/s3-request-presigner": "^3.837.0",
+		"@hono/event-emitter": "^2.0.0",
 		"@hono/zod-validator": "^0.4.3",
 		"better-auth": "^1.2.10",
 		"bun": "^1.2.17",

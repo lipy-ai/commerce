@@ -1,4 +1,5 @@
 import { cn } from "@lipy/web-ui/lib/utils";
+import { ToggleGroup } from "@radix-ui/react-toggle-group";
 import { IterationCcw, Loader2 } from "lucide-react";
 import type { ReactNode } from "react";
 import { type ControllerRenderProps, useFormContext } from "react-hook-form";
@@ -23,9 +24,10 @@ import {
 import { SingleImage, type SingleImageProps } from "../ui/single-image";
 import { Switch } from "../ui/switch";
 import { Textarea } from "../ui/textarea";
+import { ToggleGroupItem } from "../ui/toggle-group";
 import { SearchInput } from "./searchInput";
 
-export const RequiredEl = <span className="text-destructive">*</span>;
+export const RequiredEl = <span className="text-red-700">*</span>;
 
 export type SharedFormProps = {
 	name: string;
@@ -56,7 +58,9 @@ export const FormItemWrapper = ({
 				{!(fieldType === "InputWithAnimatedLabel") && (
 					<div className="flex items-start py-2">
 						<FormLabel
-							className={cn("font-normal text-muted-foreground break-all")}
+							className={cn(
+								"font-normal text-muted-foreground break-all gap-0.5",
+							)}
 						>
 							{label}
 							{required ? RequiredEl : ""}
@@ -188,13 +192,13 @@ export const FormDropdown = (
 					<FormControl>
 						<Select onValueChange={field.onChange} defaultValue={field.value}>
 							<FormControl>
-								<SelectTrigger>
+								<SelectTrigger className="capitalize">
 									<SelectValue placeholder={props.placeholder} />
 								</SelectTrigger>
 							</FormControl>
 							<SelectContent>
 								{props.opts.map((o, i) => (
-									<SelectItem key={i} value={o.value}>
+									<SelectItem key={i} value={o.value} className="capitalize">
 										{o.label}
 									</SelectItem>
 								))}
@@ -249,7 +253,7 @@ export const FormTextarea = ({
 						<Textarea
 							{...props}
 							{...field}
-							className={cn("resize-none w-full")}
+							className={cn("resize-none w-full", props.className)}
 						/>
 					</FormControl>
 				</FormItemWrapper>
@@ -285,6 +289,65 @@ export const FormImage = ({
 					/>
 				);
 			}}
+		/>
+	);
+};
+
+export const FormToggleGroup = (
+	props: SharedFormProps &
+		Pick<Parameters<typeof ToggleGroupItem>[0], "variant"> &
+		Pick<Parameters<typeof ToggleGroup>[0], "type" | "defaultValue"> & {
+			opts: Array<{ label: string; value: string; icon?: string }>;
+		},
+) => {
+	const form = useFormContext();
+
+	const options = props.opts.map(({ label, value }) => (
+		<ToggleGroupItem
+			value={value}
+			variant={props.variant}
+			key={value}
+			className="flex items-center gap-x-2 md:w-full min-w-32 capitalize"
+		>
+			{label}
+		</ToggleGroupItem>
+	));
+
+	return (
+		<FormField
+			control={form.control}
+			name={props.name}
+			render={({ field }: { field: ControllerRenderProps }) => (
+				<FormItemWrapper {...props}>
+					<FormControl>
+						{props.type === "single" ? (
+							<ToggleGroup
+								{...field}
+								type="single"
+								onValueChange={field.onChange}
+								defaultValue={props.defaultValue?.toString()}
+								className="flex flex-wrap justify-start items-center gap-4"
+							>
+								{options}
+							</ToggleGroup>
+						) : (
+							<ToggleGroup
+								{...field}
+								type="multiple"
+								onValueChange={field.onChange}
+								defaultValue={
+									Array.isArray(props.defaultValue)
+										? props.defaultValue.filter((val) => val !== undefined)
+										: [props.defaultValue].filter((val) => val !== undefined)
+								}
+								className="flex justify-start items-center gap-2 flex-wrap"
+							>
+								{options}
+							</ToggleGroup>
+						)}
+					</FormControl>
+				</FormItemWrapper>
+			)}
 		/>
 	);
 };

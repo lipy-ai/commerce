@@ -3,11 +3,14 @@ import type { hasPermission } from "@/auth/permission";
 import { DBTypes } from "@/db";
 import type { Context, Env } from "hono";
 export * from "./auth";
+import type { AvailableEvents } from "@/events";
 import type { routes } from "../app";
 export type AppType = typeof routes;
+import type { Emitter } from "@hono/event-emitter";
 
 export interface ServerContext extends Env {
 	Variables: {
+		emitter: Emitter<AvailableEvents>;
 		user: typeof auth.$Infer.Session.user | null;
 		session:
 			| (typeof auth.$Infer.Session.session & { activeStoreId: string | null })

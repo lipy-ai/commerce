@@ -64,6 +64,7 @@ const route = new Hono<ServerContext>()
 				.selectAll(["o"])
 				// .select((eb) => [eb.fn.toJson("c").as("category")])
 				.executeTakeFirstOrThrow();
+
 			return c.json(result);
 		},
 	)

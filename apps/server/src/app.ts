@@ -6,11 +6,13 @@ import { trimTrailingSlash } from "hono/trailing-slash";
 
 import { logger } from "./lib/logger";
 
+import { emitter } from "@hono/event-emitter";
 import { HTTPException } from "hono/http-exception";
 import { secureHeaders } from "hono/secure-headers";
 import { auth } from "./auth";
 import { db, pingDatabase } from "./db";
 import env from "./env";
+import { handlers } from "./events";
 import { globalError } from "./lib/globalError";
 import { authMiddleware } from "./middlewares/auth";
 import { corsMiddleware } from "./middlewares/cors";
@@ -42,6 +44,7 @@ app.use(secureHeaders());
 app.use(httpLogger());
 app.use(trimTrailingSlash());
 app.use("*", globalMiddleware);
+app.use(emitter(handlers));
 
 if (env.NODE_ENV === "development") {
 	logger.info("Available routes:");

@@ -340,7 +340,7 @@ const StaffOptions = ({
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger>
-				<Button variant={"ghost"} size="icon-sm">
+				<Button variant={"ghost"} size="icon">
 					<MoreVertical />
 				</Button>
 			</DropdownMenuTrigger>
@@ -405,8 +405,8 @@ const CancelInvitation = ({
 				</Button>
 			) : (
 				<Button
-					variant={"rose"}
-					size={"icon-sm"}
+					variant={"destructive"}
+					size={"icon"}
 					onClick={() => {
 						handleCancelInvite();
 					}}

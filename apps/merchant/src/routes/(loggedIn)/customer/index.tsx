@@ -52,7 +52,7 @@ function RouteComponent() {
 		<div>
 			<DashboardHeader title="Customers">
 				<CustomerForm type="create">
-					<Button size={isMobile ? "icon-sm" : "sm"}>
+					<Button>
 						<Plus /> {!isMobile ? "Customer" : ""}
 					</Button>
 				</CustomerForm>

@@ -189,11 +189,7 @@ function RouteComponent() {
 						</Button>
 					</AlertDialogCancel>
 					<AlertDialogAction asChild>
-						<Button
-							variant="green"
-							className="w-full sm:w-auto"
-							onClick={handleAccept}
-						>
+						<Button className="w-full sm:w-auto" onClick={handleAccept}>
 							{acceptingInvite ? (
 								<Loader2 className="animate-spin" />
 							) : (

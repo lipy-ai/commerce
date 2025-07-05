@@ -99,7 +99,7 @@ function RouteComponent() {
 			{fetchedShopData && shopData && (
 				<div className="text-center  bg-amber-100 p-4">
 					<Link
-						className="text-3xl font-bold "
+						className="text-2xl font-bold "
 						to="/$storeHandle/details"
 						params={{ storeHandle }}
 						viewTransition={{ types: ["slide-left"] }}

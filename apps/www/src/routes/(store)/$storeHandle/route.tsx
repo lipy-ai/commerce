@@ -1,23 +1,23 @@
-import CartAvatarGroup from "@/components/cart/cartAvatarGroup";
-import { useCartStore } from "@/components/cart/store";
-import { buttonVariants } from "@lipy/web-ui/components/ui/button";
-import { useViewport } from "@lipy/web-ui/contexts/viewport";
-import { cn } from "@lipy/web-ui/lib/utils";
-import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
-import { AnimatePresence, motion } from "framer-motion";
+// import CartAvatarGroup from "@/components/cart/cartAvatarGroup";
+// import { useCartStore } from "@/components/cart/store";
+// import { buttonVariants } from "@lipy/web-ui/components/ui/button";
+// import { useViewport } from "@lipy/web-ui/contexts/viewport";
+// import { cn } from "@lipy/web-ui/lib/utils";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
+// import { AnimatePresence, motion } from "framer-motion";
 
 export const Route = createFileRoute("/(store)/$storeHandle")({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-	const { cart } = useCartStore();
-	const { isMobile } = useViewport();
+	// const { cart } = useCartStore();
+	// const { isMobile } = useViewport();
 
 	return (
 		<div>
 			<Outlet />
-			{isMobile && (
+			{/* {isMobile && (
 				<AnimatePresence>
 					{cart.length > 0 && (
 						<motion.div
@@ -46,7 +46,7 @@ function RouteComponent() {
 						</motion.div>
 					)}
 				</AnimatePresence>
-			)}
+			)} */}
 		</div>
 	);
 }

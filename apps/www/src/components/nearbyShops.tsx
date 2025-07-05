@@ -117,7 +117,7 @@ export default function NearByShops() {
 
 										<div className="p-4 -my-4">
 											<div className="flex items-center justify-between">
-												<h3 className="font-bold text-lg">{shop.name}</h3>
+												<h3 className="font-bold text-2xl">{shop.name}</h3>
 
 												<div className="flex items-center mt-1">
 													<div className="flex items-center bg-green-800 text-background px-2 rounded text-sm">

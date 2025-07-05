@@ -1,7 +1,7 @@
-import { cn } from "@lipy/web-ui/lib/utils";
 import { Link } from "@tanstack/react-router";
 import { ChevronRight } from "lucide-react";
 import { Avatar, AvatarFallback } from "../ui/avatar";
+import { Label } from "../ui/label";
 
 export default function SettingsCard({
 	title,
@@ -18,10 +18,10 @@ export default function SettingsCard({
 }) {
 	return (
 		<>
-			<div className="bg-card p-4">
-				<p className="text-base text-muted-foreground pb-2">
+			<div className="bg-card p-4 space-y-2">
+				<Label className="tracking-wider text-muted-foreground">
 					{title.toUpperCase()}
-				</p>
+				</Label>
 				<div className="divide-y  divide-dashed">
 					{items.map((item, index) => {
 						return (
@@ -37,14 +37,14 @@ export default function SettingsCard({
 									viewTransition={{ types: ["slide-left"] }}
 								>
 									<div className="flex items-center justify-between">
-										<div className="flex items-center gap-2">
-											<Avatar className="size-9">
+										<div className="flex items-center gap-4">
+											<Avatar className="size-8">
 												<AvatarFallback>
-													<item.icon className={cn("size-5")} />
+													<item.icon className="size-5 text-foreground/80" />
 												</AvatarFallback>
 											</Avatar>
 
-											<div className={cn("font-medium")}>{item.title}</div>
+											<p className="font-medium ">{item.title}</p>
 										</div>
 										<ChevronRight />
 									</div>

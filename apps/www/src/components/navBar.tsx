@@ -40,7 +40,7 @@ export default function NavBar() {
 				<div className="flex items-center justify-between text-foreground">
 					{deliveryLocation && (
 						<Link to={"/account/addresses/deliveryAddress"}>
-							<div className="text-lg font-bold flex items-center gap-2">
+							<div className="flex items-center gap-2">
 								{/* {deliveryLocation?.tag === "home" ? (
 									<House className="size-5" />
 								) : deliveryLocation?.tag === "work" ? (
@@ -49,7 +49,7 @@ export default function NavBar() {
 									<MapPin className="size-5" />
 								)} */}
 								{<MapPin className="fill-primary/60" />}
-								<p className="truncate max-w-[250px] block">
+								<p className="truncate max-w-[250px] font-bold text-lg">
 									{deliveryLocation?.line1 === ""
 										? "Locating"
 										: (deliveryLocation?.tag ?? "").charAt(0).toUpperCase() +
@@ -57,15 +57,10 @@ export default function NavBar() {
 								</p>
 								<ChevronDown className="size-5" />
 							</div>
-							<p className="text-sm">
-								<span className="truncate max-w-[250px] block">
-									{[
-										deliveryLocation?.metadata?.building,
-										deliveryLocation?.line1,
-									]
-										.filter(Boolean)
-										.join(", ")}
-								</span>
+							<p className="truncate max-w-[250px] block font-normal">
+								{[deliveryLocation?.metadata?.building, deliveryLocation?.line1]
+									.filter(Boolean)
+									.join(", ")}
 							</p>
 						</Link>
 					)}
@@ -135,7 +130,7 @@ export default function NavBar() {
 				<Link to="/account/orders">
 					<CircleUserRound className="size-8" />
 				</Link>
-				<Link to="/cart" className={buttonVariants({ variant: "green" })}>
+				<Link to="/cart" className={buttonVariants()}>
 					<ShoppingCart className="size-8" />
 					<p className="font-medium text-base">{cart.length} items</p>
 				</Link>

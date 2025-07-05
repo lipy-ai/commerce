@@ -243,7 +243,7 @@ function SortableForm({ name, label }: { name: string; label: string }) {
 													</div>
 													<Button
 														variant="secondary"
-														size="icon-sm"
+														size="sm"
 														type="button"
 														onClick={() => {
 															arr.remove(i);

@@ -42,7 +42,7 @@ function RouteComponent() {
 					let lastMonth = "";
 
 					return (
-						<div className="space-y-6 lg:space-y-10 mb-20">
+						<div className="space-y-2 lg:space-y-10 mb-20">
 							{data.map((order) => {
 								const currentMonth = format(order.orderedAt, "LLLL yyyy");
 								const showMonth = currentMonth !== lastMonth;
@@ -72,10 +72,10 @@ function RouteComponent() {
 														</AvatarFallback>
 													</Avatar>
 													<div>
-														<p className="font-medium text-sm line-clamp-1">
+														<p className="font-medium text-base line-clamp-1">
 															{order?.store?.name || "Unknown store"}
 														</p>
-														<p className="text-muted-foreground line-clamp-1 text-xs">
+														<p className="text-muted-foreground line-clamp-1">
 															{order?.store?.address?.line1 ||
 																"Mumbai, Maharashtra"}
 														</p>
@@ -93,17 +93,17 @@ function RouteComponent() {
 												to="/account/orders/$orderId"
 												params={{ orderId: order.id as string }}
 											>
-												<p className="text-xs ">
+												<p>
 													{order?.items
 														?.map((item) => `${item.title} (${item.quantity})`)
 														.join(", ")}
 												</p>
 												<div className="border border-dashed my-2" />
 												<div className="flex items-center justify-between">
-													<p className="text-muted-foreground text-xs">
+													<p className="text-muted-foreground">
 														Ordered on {format(order?.orderedAt, "d LLL, p")}
 													</p>
-													<p className="font-semibold">
+													<p className="font-bold text-base">
 														{formatAmount(
 															order?.currency,
 															order?.itemTotalAmount as number,
@@ -113,16 +113,18 @@ function RouteComponent() {
 											</Link>
 
 											<Separator className="my-2" />
-											<Badge
-												variant={
-													order.status === "delivered" ? "success" : "premium"
-												}
-											>
-												{order?.status
-													? order.status.charAt(0).toUpperCase() +
-														order.status.slice(1)
-													: "Unknown"}
-											</Badge>
+											<div className="flex justify-end">
+												<Badge
+													variant={
+														order.status === "delivered" ? "success" : "premium"
+													}
+												>
+													{order?.status
+														? order.status.charAt(0).toUpperCase() +
+															order.status.slice(1)
+														: "Unknown"}
+												</Badge>
+											</div>
 										</div>
 									</div>
 								);

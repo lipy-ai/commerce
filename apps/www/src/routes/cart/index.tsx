@@ -140,7 +140,7 @@ function RouteComponent() {
 								</div>
 
 								<CardFooter className="justify-between p-4">
-									<p className="font-medium text-base ">Forgot something ?</p>
+									<p className="font-medium  ">Forgot something ?</p>
 									<Button variant="secondary" size="sm">
 										<Plus />
 										Add more items

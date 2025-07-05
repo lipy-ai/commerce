@@ -57,7 +57,7 @@ function RouteComponent() {
 						<div className="col-span-7  lg:p-4 ">
 							<div className="bg-card p-4">
 								<div className="flex items-center justify-between">
-									<h2 className="font-bold text-base ">{data[0]?.id}</h2>
+									<h2 className="font-bold text-base">{data[0]?.id}</h2>
 									<Badge
 										variant={
 											data[0]?.status === "delivered" ? "success" : "premium"
@@ -70,19 +70,19 @@ function RouteComponent() {
 									</Badge>
 								</div>
 								{data[0]?.deliveredAt ? (
-									<p className="text-xs text-muted-foreground">
+									<p className="text-muted-foreground text-sm">
 										Delivered on {format(new Date(data[0]?.deliveredAt), "Pp")}
 									</p>
 								) : data[0]?.cancelledAt ? (
-									<p className="text-xs text-muted-foreground">
+									<p className="text-muted-foreground text-sm">
 										Cancelled on {format(new Date(data[0]?.cancelledAt), "Pp")}
 									</p>
 								) : data[0]?.refundedAt ? (
-									<p className="text-xs text-muted-foreground">
+									<p className="text-muted-foreground text-sm">
 										Refunded on {format(new Date(data[0]?.refundedAt), "Pp")}
 									</p>
 								) : (
-									<p className="text-xs text-muted-foreground">
+									<p className="text-muted-foreground text-sm">
 										Ordered on {format(new Date(data[0]?.orderedAt), "Pp")}
 									</p>
 								)}
@@ -143,17 +143,18 @@ function RouteComponent() {
 							</div> */}
 
 							<div className="p-4  bg-card my-4">
-								<h2 className="text-base font-semibold">Item(s) ordered</h2>
+								<h2 className="text-lg font-semibold">Item(s) ordered</h2>
 								{data[0]?.items?.map((product, i) => (
 									<div key={i} className="flex gap-2 items-center py-4">
 										<img
 											src={product.thumbnail || "https://picsum.photos/200"}
 											alt=""
-											className="size-12 border rounded bg-accent"
+											className="size-14 border rounded bg-accent"
 										/>
+
 										<div className="flex-1">
 											<h2 className="font-semibold">{product.title}</h2>
-											<p className="text-muted-foreground text-xsa">
+											<p className="text-muted-foreground text-sm">
 												{product.variant.unit}
 											</p>
 										</div>
@@ -175,21 +176,21 @@ function RouteComponent() {
 
 						<div className="col-span-5 space-y-2  lg:p-4  ">
 							<div className="space-y-4  p-4  my-4 bg-card ">
-								<h2 className="text-base font-semibold">Bill Summary</h2>
-								<div className="space-y-4">
-									<div className="flex justify-between">
+								<h2 className="text-lg font-semibold">Bill Summary</h2>
+								<div className="space-y-4 text-base">
+									<div className="flex justify-between text-base">
 										<p>Item Total ({data[0]?.items?.length ?? 0})</p>
 										<p className="font-medium">
 											{formatAmount(data[0]?.currency, totalPrice || 0)}
 										</p>
 									</div>
-									<div className="flex justify-between">
+									<div className="flex justify-between text-base">
 										<p>Delivery Charges</p>
 										<p className="font-medium">
 											{formatAmount(data[0]?.currency, deliveryCharges)}
 										</p>
 									</div>
-									<div className="flex justify-between">
+									<div className="flex justify-between text-base">
 										<p>Taxes</p>
 										<p className="font-medium">
 											{formatAmount(data[0]?.currency, totalTaxAmount)}
@@ -211,7 +212,7 @@ function RouteComponent() {
 											<CircleUser className="text-muted-foreground flex-shrink-0" />
 											<div>
 												<p className="font-medium text-base">Receiver's Info</p>
-												<p className="text-muted-foreground text-sm">
+												<p className="text-muted-foreground">
 													{[
 														data[0]?.customerDetails?.address?.name,
 														data[0]?.customerDetails.address?.phone,
@@ -229,7 +230,7 @@ function RouteComponent() {
 										<BanknoteArrowUp className="text-muted-foreground flex-shrink-0" />
 										<div>
 											<p className="font-medium text-base">Payment method</p>
-											<p className="text-muted-foreground text-sm">
+											<p className="text-muted-foreground">
 												{data[0]?.paymentMethod === "cod"
 													? "Cash on Delivery"
 													: "Unspecified"}
@@ -242,7 +243,7 @@ function RouteComponent() {
 									<MapPin className="text-muted-foreground flex-shrink-0" />
 									<div>
 										<p className="font-medium text-base">Delivery Address</p>
-										<p className="text-muted-foreground text-sm">
+										<p className="text-muted-foreground">
 											{[
 												data[0]?.customerDetails?.address?.metadata?.building,
 												data[0]?.customerDetails?.address?.line1,

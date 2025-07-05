@@ -97,7 +97,7 @@ function RouteComponent() {
 				<div className="fixed bottom-0 w-full p-4 bg-background">
 					<Link
 						className={cn(
-							buttonVariants({ variant: "default" }),
+							buttonVariants({ variant: "default", size: "lg" }),
 							"w-full font-semibold",
 						)}
 						to="/account/addresses/new"

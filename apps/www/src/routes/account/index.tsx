@@ -109,10 +109,12 @@ export function AccountPage() {
 						</Avatar>
 
 						<div>
-							<h1 className="text-xl font-semibold tracking-wide">
+							<h1 className="text-2xl font-semibold ">
 								{data?.user.name || "Hello, User"}
 							</h1>
-							<p className="text-muted-foreground">{data?.user.email || ""}</p>
+							<p className="text-muted-foreground text-base">
+								{data?.user.email || ""}
+							</p>
 						</div>
 					</div>
 				) : (

@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-	--font-size: 14px; /* Default for smaller screens */
+	--font-size: 16px; /* Default for smaller screens */
 	--sidebar-size: 66px;
 	--sidebar-max-size: 250px;
 	--background: rgb(250, 249, 253);

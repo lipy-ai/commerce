@@ -19,7 +19,7 @@ export default function SettingsCard({
 	return (
 		<>
 			<div className="bg-card p-4 space-y-2">
-				<Label className="tracking-wider text-muted-foreground">
+				<Label className="tracking-wider text-muted-foreground text-base">
 					{title.toUpperCase()}
 				</Label>
 				<div className="divide-y  divide-dashed">
@@ -38,13 +38,13 @@ export default function SettingsCard({
 								>
 									<div className="flex items-center justify-between">
 										<div className="flex items-center gap-4">
-											<Avatar className="size-8">
-												<AvatarFallback>
+											<Avatar className="size-9">
+												<AvatarFallback className="bg-muted/50">
 													<item.icon className="size-5 text-foreground/80" />
 												</AvatarFallback>
 											</Avatar>
 
-											<p className="font-medium ">{item.title}</p>
+											<p className="font-medium">{item.title}</p>
 										</div>
 										<ChevronRight />
 									</div>

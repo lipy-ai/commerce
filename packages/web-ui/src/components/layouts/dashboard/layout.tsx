@@ -100,7 +100,15 @@ export const DashboardLayout = ({
 						</div>
 					)}
 
-					<div className="pb-18">{children}</div>
+					<div
+						className="pb-18 flex-col flex flex-1"
+						style={{
+							viewTransitionName: "main-content",
+						}}
+						id="main-content"
+					>
+						{children}
+					</div>
 					{!mobileNav && footerList}
 					<ActiveLinks
 						isMobile
@@ -124,8 +132,11 @@ export const DashboardLayout = ({
 					<div
 						className="flex-1 flex flex-col overflow-x-auto h-screen overflow-y-auto"
 						onClick={() => open && setOpen(false)}
+						style={{
+							viewTransitionName: "main-content",
+						}}
 					>
-						{children}
+						<div>{children}</div>
 
 						{footerList}
 					</div>
@@ -162,6 +173,7 @@ function ActiveLinks({
 	const lastRef = useRef(0);
 
 	const { scrollY } = useScroll();
+
 	useMotionValueEvent(scrollY, "change", (current) => {
 		const diff = current - lastRef.current;
 		if (Math.abs(diff) > 100) {
@@ -174,7 +186,9 @@ function ActiveLinks({
 		return (
 			<>
 				<motion.div
-					className="fixed bottom-0 w-screen z-50 print:hidden"
+					className={cn(
+						"fixed bottom-0 w-screen z-50 print:hidden transition-all ease-in-out",
+					)}
 					initial="visible"
 					animate={isHidden ? "hidden" : "visible"}
 					variants={{
@@ -182,6 +196,7 @@ function ActiveLinks({
 						visible: { y: 0 },
 					}}
 					transition={{ duration: 0.2, ease: "easeInOut" }}
+					data-state={isHidden ? "hidden" : "visible"}
 				>
 					{footer && footer.length > 0 && (
 						<div className="space-y-4 p-4">

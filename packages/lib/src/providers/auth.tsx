@@ -1,13 +1,8 @@
 import { env } from "@envClient";
-// import {
-// 	ac,
-// 	admin,
-// 	deliveryAgent,
-// 	owner,
-// 	staff,
-// } from "@lipy/server/auth/permission";
+
 import type { AuthType } from "@lipy/server/types";
 import {
+	emailOTPClient,
 	inferAdditionalFields,
 	organizationClient,
 	phoneNumberClient,
@@ -18,15 +13,8 @@ export const authClient = createAuthClient({
 	baseURL: env.API_URL,
 	plugins: [
 		inferAdditionalFields<AuthType>(),
-		// organizationClient({
-		// 	ac,
-		// 	roles: {
-		// 		owner,
-		// 		admin,
-		// 		staff,
-		// 		deliveryAgent,
-		// 	},
-		// }),
+		emailOTPClient(),
+
 		organizationClient(),
 		phoneNumberClient(),
 	],
@@ -45,12 +33,32 @@ export const getSsrSession = async (headers?: Headers) => {
 };
 
 export const signIn = async (
-	type: "google" | "microsoft" | "verify-otp" | "send-otp",
-	opts?: { phoneNumber?: string; callbackURL?: string; otp?: string },
+	type: "google" | "microsoft" | "verify-otp" | "send-otp" | "email-otp",
+	opts?: {
+		phoneNumber?: string;
+		callbackURL?: string;
+		otp?: string;
+		email?: string;
+	},
 	routeCb?: (v: string) => void,
 ) => {
 	const callbackURL = opts?.callbackURL || window.location.origin;
 	switch (type) {
+		case "email-otp":
+			return await authClient.emailOtp
+				.sendVerificationOtp({
+					email: opts!.email!,
+					type: "sign-in",
+				})
+				.then((r) => {
+					if (r.data?.success === false) {
+						throw new Error("Failed to send login OTP");
+					}
+					return routeCb?.(callbackURL);
+				})
+				.catch((e) => {
+					throw e;
+				});
 		case "send-otp":
 			return await authClient.phoneNumber
 				.sendOtp({

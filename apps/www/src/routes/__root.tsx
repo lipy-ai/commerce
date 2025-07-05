@@ -117,7 +117,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			<body
 				suppressHydrationWarning
 				className="m-auto outline-1 outline-border shadow min-h-screen flex flex-col"
-				style={{ maxWidth: "1920px" }}
 			>
 				<ViewportProvider isMobile={data?.isSsrMobile}>
 					<QueryProvider handleThrowOnError={handleThrowOnError}>

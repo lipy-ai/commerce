@@ -53,7 +53,7 @@ export default function SearchBar({
 					<Button
 						type="button"
 						variant={"ghost"}
-						size="icon-sm"
+						size="icon"
 						onClick={() => setValue("")}
 						className={cn(value ? "" : "hidden")}
 					>

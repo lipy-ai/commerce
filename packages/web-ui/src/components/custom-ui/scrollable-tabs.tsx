@@ -68,17 +68,16 @@ export const ScrollingTabs = ({
 							)}
 						>
 							<Icon
-								size={18}
 								className={cn(
 									isActive
 										? "text-foreground lg:text-primary"
 										: "text-muted-foreground",
-									"lg:size-5",
+									"size-6 lg:size-5",
 								)}
 							/>
 							<span
 								className={cn(
-									"mt-1 lg:mt-0 lg:ml-2 text-xs lg:text-lg font-medium whitespace-nowrap",
+									"mt-1 lg:mt-0 ml-2  lg:text-lg font-medium whitespace-nowrap",
 									isActive
 										? "text-foreground lg:text-primary"
 										: "text-muted-foreground",

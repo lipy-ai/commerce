@@ -140,8 +140,8 @@ function RouteComponent() {
 								</div>
 
 								<CardFooter className="justify-between p-4">
-									<p className="font-medium">Forgot something ?</p>
-									<Button variant="black" size="sm">
+									<p className="font-medium text-base ">Forgot something ?</p>
+									<Button variant="secondary" size="sm">
 										<Plus />
 										Add more items
 									</Button>
@@ -162,7 +162,7 @@ function RouteComponent() {
 										>
 											<div className="flex items-center gap-2">
 												<Icon className="size-4" />
-												<p>{title}</p>
+												<p className="text-sm">{title}</p>
 											</div>
 											<div className="">{value}</div>
 										</div>
@@ -213,7 +213,7 @@ function RouteComponent() {
 
 								<div>
 									<div className="flex items-center gap-2">
-										<p className="text-sm font-semibold">
+										<p className="font-semibold">
 											Delivering to{" "}
 											{deliveryLocation?.tag?.charAt(0).toUpperCase() +
 												deliveryLocation?.tag?.slice(1)}
@@ -293,7 +293,7 @@ export function ProductComp({
 	return (
 		<div className={cn("flex items-center justify-between gap-4")}>
 			<div className="flex items-start gap-2">
-				<div className=" relative aspect-square size-14">
+				<div className=" relative aspect-square size-16">
 					<img
 						alt={""}
 						src={product.thumbnail || "/assets/paper-bag-items.webp"}
@@ -302,7 +302,7 @@ export function ProductComp({
 				</div>
 
 				<div>
-					<p className="text-xs font-medium line-clamp-2">{product.title}</p>
+					<p className="font-medium line-clamp-2">{product.title}</p>
 					<p className="text-muted-foreground text-xs">
 						{product.quantity} x {product.unit}
 					</p>

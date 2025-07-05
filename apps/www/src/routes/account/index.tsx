@@ -22,6 +22,7 @@ import {
 	ShoppingBag,
 	Store,
 	UserCircle2,
+	UserRound,
 } from "lucide-react";
 
 export const Route = createFileRoute("/account/")({
@@ -102,13 +103,13 @@ export function AccountPage() {
 					<div className="flex items-center gap-4 p-4">
 						<Avatar className="size-12">
 							<AvatarImage src={data?.user.image || ""} alt={data.user.name} />
-							<AvatarFallback>
-								<UserCircle2 width={40} height={75} strokeWidth={1.5} />
+							<AvatarFallback className="bg-primary/20">
+								<UserRound className="size-12 fill-primary text-primary mt-3" />
 							</AvatarFallback>
 						</Avatar>
 
 						<div>
-							<h1 className="font-semibold text-xl">
+							<h1 className="text-xl font-semibold tracking-wide">
 								{data?.user.name || "Hello, User"}
 							</h1>
 							<p className="text-muted-foreground">{data?.user.email || ""}</p>

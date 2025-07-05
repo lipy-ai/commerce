@@ -1,5 +1,6 @@
 import { AddToCart } from "@/components/cart/addToCart";
 import { apiClient } from "@lipy/lib/api";
+import { discountCalculator } from "@lipy/lib/helper/discountCalculator";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import ImageCarousel from "@lipy/web-ui/components/custom-ui/imageCarousel";
@@ -10,6 +11,8 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@lipy/web-ui/components/ui/accordion";
+import { Badge } from "@lipy/web-ui/components/ui/badge";
+import { Label } from "@lipy/web-ui/components/ui/label";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
@@ -50,6 +53,11 @@ function RouteComponent() {
 		}
 	}, [isFetched, product?.variants]);
 
+	const discount = discountCalculator(
+		selectedVariant?.price || 0,
+		selectedVariant?.maxPrice || 0,
+	);
+
 	return (
 		<div className="mb-20 [view-transition-name:main-content]">
 			{isFetched && product && (
@@ -57,37 +65,63 @@ function RouteComponent() {
 					<DashboardHeader title={product.title || ""} />
 
 					<ImageCarousel images={product.images || []} />
-					<h3 className="font-medium text-lg px-4 py-2">{product.title}</h3>
-
+					<h3 className="font-bold text-xl px-4 pt-2">{product.title}</h3>
+					{product.variants?.length === 1 && (
+						<div className="px-4 py-2">
+							<p className="font-medium text-base">
+								{product.variants[0]?.unit}
+							</p>
+							<div>
+								<span className="font-semibold text-lg pr-2">
+									{formatAmount("inr", product.variants[0]?.price || 0)}
+								</span>
+								{product.variants[0]?.maxPrice && (
+									<span className="text line-through text-muted-foreground">
+										{formatAmount("inr", product.variants[0]?.maxPrice)}
+									</span>
+								)}
+								{discount > 0 && <Badge variant="info">{discount}% OFF</Badge>}
+							</div>
+						</div>
+					)}
 					{product.variants?.length > 1 && (
-						<div className="grid grid-cols-4 lg:grid-cols-8 gap-x-2 gap-y-2 px-4">
-							{product.variants.map((variant) => (
-								<div
-									key={variant.inventoryId}
-									className={cn(
-										"cursor-pointer p-1 rounded",
-										selectedVariant?.id === variant.id
-											? "ring-2 ring-primary bg-primary/10"
-											: "hover:bg-accent/30",
-									)}
-									onClick={() => setSelectedVariant(variant)}
-								>
-									<img
-										src={product.thumbnail || ""}
-										alt={""}
-										className="aspect-square border rounded bg-accent object-cover"
-									/>
-									<p className="line-clamp-1 text-sm mt-1 text-center">
-										{variant.unit}
-									</p>
-								</div>
-							))}
+						<div className="px-4 py-2">
+							<Label className="text-muted-foreground">Select variant</Label>
+							<div
+								className="overflow-x-auto py-2 px-1 flex items-center gap-4"
+								style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+							>
+								{product.variants.map((variant) => (
+									<div
+										key={variant.inventoryId}
+										className={cn(
+											"cursor-pointer px-3 py-1 rounded-lg bg-muted/50",
+											selectedVariant?.id === variant.id
+												? "border-2 border-primary bg-primary/10"
+												: "",
+										)}
+										onClick={() => setSelectedVariant(variant)}
+									>
+										<p className="line-clamp-1 text-sm mt-1 text-center">
+											{variant.unit}
+										</p>
+										<div>
+											<span className="font-semibold text-lg pr-2">
+												{formatAmount("inr", variant.price || 0)}
+											</span>
+											{variant.maxPrice && (
+												<span className="text-xs line-through text-muted-foreground">
+													{formatAmount("inr", variant.maxPrice)}
+												</span>
+											)}
+										</div>
+									</div>
+								))}
+							</div>
 						</div>
 					)}
 
-					<div className="border border-dashed my-4" />
-
-					{selectedVariant && (
+					{/* {selectedVariant && (
 						<div className="p-4">
 							<p className="text-lg font-semibold">{selectedVariant.unit}</p>
 
@@ -115,7 +149,7 @@ function RouteComponent() {
 								/>
 							</div>
 						</div>
-					)}
+					)} */}
 
 					{product?.highlights && product?.highlights?.length > 0 && (
 						<Accordion type="single" collapsible className="bg-accent/40 my-4">
@@ -140,6 +174,38 @@ function RouteComponent() {
 								</AccordionContent>
 							</AccordionItem>
 						</Accordion>
+					)}
+
+					{selectedVariant && (
+						<div className="fixed bottom-0 w-full bg-card shadow-sm p-4 flex items-center justify-between">
+							<div>
+								<p className="font-medium">{selectedVariant?.unit}</p>
+								<div>
+									<span className="font-bold text-lg pr-2">
+										{formatAmount("inr", selectedVariant?.price || 0)}
+									</span>
+									{selectedVariant?.maxPrice && (
+										<span className="text line-through text-muted-foreground pr-2">
+											{formatAmount("inr", selectedVariant?.maxPrice)}
+										</span>
+									)}
+									{discount > 0 && (
+										<Badge variant="info">{discount}% OFF</Badge>
+									)}
+								</div>
+							</div>
+							<AddToCart
+								product={{
+									...selectedVariant,
+									quantity: null,
+									thumbnail: product.thumbnail || "",
+									title: product.title || "",
+									storeHandle: storeHandle || "",
+									storeName: "",
+								}}
+								variant="primary"
+							/>
+						</div>
 					)}
 				</div>
 			)}

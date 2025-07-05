@@ -50,7 +50,7 @@ export function Pagination({
 				<div className="flex gap-4">
 					<Button
 						variant={"outline"}
-						size={"icon-sm"}
+						size={"icon"}
 						onClick={onPrev}
 						disabled={page === 1}
 					>
@@ -59,7 +59,7 @@ export function Pagination({
 
 					<Button
 						variant={"outline"}
-						size={"icon-sm"}
+						size={"icon"}
 						onClick={onNext}
 						disabled={page === totalPages}
 					>

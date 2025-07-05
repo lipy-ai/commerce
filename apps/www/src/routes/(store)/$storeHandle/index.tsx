@@ -99,7 +99,7 @@ function RouteComponent() {
 			{fetchedShopData && shopData && (
 				<div className="text-center  bg-amber-100 p-4">
 					<Link
-						className="text-2xl font-bold "
+						className="text-3xl font-bold "
 						to="/$storeHandle/details"
 						params={{ storeHandle }}
 						viewTransition={{ types: ["slide-left"] }}
@@ -130,7 +130,7 @@ function RouteComponent() {
 								/>
 							</div>
 
-							<p className="text-xs font-medium line-clamp-1">{item?.title}</p>
+							<p className="font-medium line-clamp-1">{item?.title}</p>
 						</Link>
 					))}
 				</div>
@@ -145,7 +145,7 @@ function RouteComponent() {
 						<div key={_idx} className="my-10 mx-4">
 							<p className="text-xl font-bold my-4">{productGroup.title}</p>
 
-							<div className="grid grid-cols-3 lg:grid-cols-4  gap-x-4 gap-y-6 w-full">
+							<div className="grid grid-cols-2 lg:grid-cols-4  gap-x-4 gap-y-6 w-full">
 								{productArray?.map((product) => (
 									<div key={product.id}>
 										<ProductCard
@@ -163,7 +163,7 @@ function RouteComponent() {
 								<Link
 									className={cn(
 										buttonVariants({
-											variant: "blue-soft",
+											variant: "outline",
 											className: "w-full my-2 font-semibold",
 										}),
 									)}

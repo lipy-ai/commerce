@@ -160,7 +160,7 @@ export default function PlaceOrder({
 					<p className="font-medium">Pay Cash/UPI</p>
 					<p>(on delivery)</p>
 				</div>
-				<Button onClick={handlePlaceOrder} className="flex-2">
+				<Button onClick={handlePlaceOrder} className="flex-2" size="lg">
 					Place Order
 					<StepForward className="fill-card" />
 				</Button>

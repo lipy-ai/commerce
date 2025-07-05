@@ -82,7 +82,7 @@ function RouteComponent() {
 													</div>
 												</Link>
 
-												<Button variant="ghost" size="icon-sm">
+												<Button variant="ghost" size="icon">
 													<EllipsisVertical />
 												</Button>
 											</div>

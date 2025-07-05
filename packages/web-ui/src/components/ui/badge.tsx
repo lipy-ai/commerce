@@ -24,7 +24,7 @@ const badgeVariants = cva(
 				accent: "bg-indigo-50 text-indigo-700 ring-indigo-200",
 				muted: "bg-slate-100 text-slate-600 ring-slate-200",
 				ghost: "bg-transparent text-foreground hover:bg-accent/50",
-				subtle: "bg-primary/5 text-primary/80 ring-primary/20",
+				subtle: "bg-purple-100 text-purple-700 ring-purple-200",
 				elegant: "bg-zinc-900 text-zinc-100 ring-zinc-700",
 				soft: "bg-gray-50 text-gray-600 ring-gray-100 border border-gray-200",
 				professional: "bg-slate-800 text-slate-100 ring-slate-600",

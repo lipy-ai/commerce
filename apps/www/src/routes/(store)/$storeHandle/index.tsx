@@ -4,6 +4,7 @@ import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
+import { Avatar, AvatarFallback } from "@lipy/web-ui/components/ui/avatar";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import {
 	DropdownMenu,
@@ -91,7 +92,7 @@ function RouteComponent() {
 						{shopData?.name}
 					</motion.h1>
 				}
-				className={cn(!visibleShopName ? "bg-amber-100" : "bg-card")}
+				className={cn(!visibleShopName ? "bg-amber-100 border-b-0" : "bg-card")}
 			>
 				{shopData && <ShopOptions shop={shopData} />}
 			</DashboardHeader>
@@ -130,7 +131,7 @@ function RouteComponent() {
 								/>
 							</div>
 
-							<p className="font-medium line-clamp-1">{item?.title}</p>
+							<p className="font-medium line-clamp-1 text-sm">{item?.title}</p>
 						</Link>
 					))}
 				</div>
@@ -200,7 +201,11 @@ function ShopOptions({
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger>
-				<EllipsisVertical className="size-5 stroke-2" />
+				<Avatar>
+					<AvatarFallback className="bg-card">
+						<EllipsisVertical className="size-5 stroke-2" />
+					</AvatarFallback>
+				</Avatar>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent className="min-w-[200px] space-y-3 mr-2">
 				<DropdownMenuItem

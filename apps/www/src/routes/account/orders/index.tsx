@@ -100,7 +100,7 @@ function RouteComponent() {
 												</p>
 												<div className="border border-dashed my-2" />
 												<div className="flex items-center justify-between">
-													<p className="text-muted-foreground">
+													<p className="text-muted-foreground text-xs">
 														Ordered on {format(order?.orderedAt, "d LLL, p")}
 													</p>
 													<p className="font-bold text-base">

@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ErrorRouteImport } from './routes/error'
+import { Route as RegisterRouteRouteImport } from './routes/register/route'
 import { Route as DemoRouteRouteImport } from './routes/demo/route'
 import { Route as loggedInRouteRouteImport } from './routes/(loggedIn)/route'
 import { Route as DemoIndexRouteImport } from './routes/demo/index'
@@ -43,6 +44,11 @@ import { Route as loggedInmiscellaneousAcceptInvitationInvitationIdIndexRouteImp
 const ErrorRoute = ErrorRouteImport.update({
   id: '/error',
   path: '/error',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterRouteRoute = RegisterRouteRouteImport.update({
+  id: '/register',
+  path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DemoRouteRoute = DemoRouteRouteImport.update({
@@ -196,6 +202,7 @@ const loggedInmiscellaneousAcceptInvitationInvitationIdIndexRoute =
 export interface FileRoutesByFullPath {
   '/': typeof loggedInIndexRoute
   '/demo': typeof DemoRouteRouteWithChildren
+  '/register': typeof RegisterRouteRoute
   '/error': typeof ErrorRoute
   '/account': typeof loggedInAccountRouteRouteWithChildren
   '/login': typeof authLoginRoute
@@ -225,6 +232,7 @@ export interface FileRoutesByFullPath {
   '/accept-invitation/$invitationId': typeof loggedInmiscellaneousAcceptInvitationInvitationIdIndexRoute
 }
 export interface FileRoutesByTo {
+  '/register': typeof RegisterRouteRoute
   '/error': typeof ErrorRoute
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
@@ -257,6 +265,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(loggedIn)': typeof loggedInRouteRouteWithChildren
   '/demo': typeof DemoRouteRouteWithChildren
+  '/register': typeof RegisterRouteRoute
   '/error': typeof ErrorRoute
   '/(loggedIn)/account': typeof loggedInAccountRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
@@ -291,6 +300,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/demo'
+    | '/register'
     | '/error'
     | '/account'
     | '/login'
@@ -320,6 +330,7 @@ export interface FileRouteTypes {
     | '/accept-invitation/$invitationId'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/register'
     | '/error'
     | '/login'
     | '/logout'
@@ -351,6 +362,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/(loggedIn)'
     | '/demo'
+    | '/register'
     | '/error'
     | '/(loggedIn)/account'
     | '/(auth)/login'
@@ -384,6 +396,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   loggedInRouteRoute: typeof loggedInRouteRouteWithChildren
   DemoRouteRoute: typeof DemoRouteRouteWithChildren
+  RegisterRouteRoute: typeof RegisterRouteRoute
   ErrorRoute: typeof ErrorRoute
   authLoginRoute: typeof authLoginRoute
   authLogoutRoute: typeof authLogoutRoute
@@ -396,6 +409,13 @@ declare module '@tanstack/react-router' {
       path: '/error'
       fullPath: '/error'
       preLoaderRoute: typeof ErrorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/demo': {
@@ -687,6 +707,7 @@ const DemoRouteRouteWithChildren = DemoRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   loggedInRouteRoute: loggedInRouteRouteWithChildren,
   DemoRouteRoute: DemoRouteRouteWithChildren,
+  RegisterRouteRoute: RegisterRouteRoute,
   ErrorRoute: ErrorRoute,
   authLoginRoute: authLoginRoute,
   authLogoutRoute: authLogoutRoute,

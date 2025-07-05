@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-	--font-size: 16px;
+	--font-size: 14px; /* Default for smaller screens */
 	--sidebar-size: 66px;
 	--sidebar-max-size: 250px;
 	--background: rgb(250, 249, 253);
@@ -14,7 +14,7 @@
 	--card-foreground: rgb(20, 20, 19);
 	--popover: rgb(255, 255, 255);
 	--popover-foreground: rgb(40, 38, 27);
-	--primary: rgb(21, 128, 61);
+	--primary: rgb(51, 195, 99);
 	--primary-foreground: rgb(255, 255, 255);
 	--secondary: rgb(233, 230, 220);
 	--secondary-foreground: rgb(83, 81, 70);
@@ -61,6 +61,13 @@
 	--bprogress-color: var(--primary);
 	--bprogress-height: 4px;
 	--bprogress-box-shadow: none;
+}
+
+/* Media query for larger screens - 16px font size */
+@media (min-width: 768px) {
+	:root {
+		--font-size: 16px;
+	}
 }
 
 .dark {

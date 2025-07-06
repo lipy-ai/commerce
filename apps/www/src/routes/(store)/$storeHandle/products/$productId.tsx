@@ -11,8 +11,8 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@lipy/web-ui/components/ui/accordion";
-import { Avatar, AvatarFallback } from "@lipy/web-ui/components/ui/avatar";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
+import { Button } from "@lipy/web-ui/components/ui/button";
 import { Label } from "@lipy/web-ui/components/ui/label";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { shareContent } from "@lipy/web-ui/lib/share";
@@ -66,7 +66,7 @@ function RouteComponent() {
 			{isFetched && product && (
 				<div>
 					<DashboardHeader title={product.title || ""}>
-						<Avatar
+						<Button
 							onClick={() => {
 								shareContent({
 									title: product.title || "",
@@ -74,15 +74,16 @@ function RouteComponent() {
 									text: "Hey, Check out this product!",
 								});
 							}}
+							variant="outline"
+							className="rounded-full border-none"
+							size="icon"
 						>
-							<AvatarFallback className="bg-card">
-								<Share className="size-4 stroke-2" />
-							</AvatarFallback>
-						</Avatar>
+							<Share className="size-4 stroke-2" />
+						</Button>
 					</DashboardHeader>
 
 					<ImageCarousel images={product.images || []} />
-					<div className="bg-card">
+					<div className="bg-card rounded-xl  mx-2 ">
 						<h3 className="font-bold text-lg px-4 pt-2">{product.title}</h3>
 						{product.variants?.length === 1 && (
 							<div className="px-4 py-2">
@@ -144,8 +145,12 @@ function RouteComponent() {
 					</div>
 
 					{product?.highlights && product?.highlights?.length > 0 && (
-						<Accordion type="single" collapsible className="bg-accent/40 my-4">
-							<AccordionItem value="item-1">
+						<Accordion
+							type="single"
+							collapsible
+							className="bg-card rounded-xl m-2 mb-32 "
+						>
+							<AccordionItem value="item-1" className="border-b-0">
 								<AccordionTrigger className="hover:no-underline font-medium text-base px-6">
 									Basic details
 								</AccordionTrigger>

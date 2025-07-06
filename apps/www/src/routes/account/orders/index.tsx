@@ -9,12 +9,11 @@ import {
 	AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
-import { Button } from "@lipy/web-ui/components/ui/button";
-import { Separator } from "@lipy/web-ui/components/ui/separator";
+import { Card, CardContent, CardHeader } from "@lipy/web-ui/components/ui/card";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
-import { EllipsisVertical, Store } from "lucide-react";
+import { Store } from "lucide-react";
 
 export const Route = createFileRoute("/account/orders/")({
 	component: RouteComponent,
@@ -42,7 +41,7 @@ function RouteComponent() {
 					let lastMonth = "";
 
 					return (
-						<div className="space-y-2 lg:space-y-10 mb-20">
+						<div className="mb-20 p-4 space-y-2">
 							{data.map((order) => {
 								const currentMonth = format(order.orderedAt, "LLLL yyyy");
 								const showMonth = currentMonth !== lastMonth;
@@ -51,13 +50,13 @@ function RouteComponent() {
 								return (
 									<div key={order.id}>
 										{showMonth && (
-											<h2 className="text-sm font-semibold m-4">
+											<h2 className="text-sm font-semibold py-2">
 												{currentMonth}
 											</h2>
 										)}
 
-										<div className="bg-card p-4">
-											<div className="flex items-center justify-between gap-4">
+										<Card className="p-0 gap-0  border border-border/40">
+											<CardHeader className="flex items-start justify-between gap-4 border-b p-2 ">
 												<Link
 													className="flex items-center gap-2"
 													to="/$storeHandle"
@@ -65,55 +64,22 @@ function RouteComponent() {
 														storeHandle: order?.storeHandle as string,
 													}}
 												>
-													<Avatar className="rounded-md size-10">
+													<Avatar className="rounded-md size-8">
 														<AvatarImage src={order?.store.image || ""} />
 														<AvatarFallback>
 															<Store />
 														</AvatarFallback>
 													</Avatar>
 													<div>
-														<p className="font-medium text-base line-clamp-1">
+														<p className="font-medium text-sm line-clamp-1">
 															{order?.store?.name || "Unknown store"}
 														</p>
-														<p className="text-muted-foreground line-clamp-1">
+														<p className="text-xs text-muted-foreground line-clamp-1">
 															{order?.store?.address?.line1 ||
 																"Mumbai, Maharashtra"}
 														</p>
 													</div>
 												</Link>
-
-												<Button variant="ghost" size="icon">
-													<EllipsisVertical />
-												</Button>
-											</div>
-
-											<Separator className="my-2" />
-
-											<Link
-												to="/account/orders/$orderId"
-												params={{ orderId: order.id as string }}
-											>
-												<p>
-													{order?.items
-														?.map((item) => `${item.title} (${item.quantity})`)
-														.join(", ")}
-												</p>
-												<div className="border border-dashed my-2" />
-												<div className="flex items-center justify-between">
-													<p className="text-muted-foreground text-xs">
-														Ordered on {format(order?.orderedAt, "d LLL, p")}
-													</p>
-													<p className="font-bold text-base">
-														{formatAmount(
-															order?.currency,
-															order?.itemTotalAmount as number,
-														)}
-													</p>
-												</div>
-											</Link>
-
-											<Separator className="my-2" />
-											<div className="flex justify-end">
 												<Badge
 													variant={
 														order.status === "delivered" ? "success" : "premium"
@@ -124,8 +90,37 @@ function RouteComponent() {
 															order.status.slice(1)
 														: "Unknown"}
 												</Badge>
-											</div>
-										</div>
+											</CardHeader>
+
+											<CardContent className="p-2">
+												<Link
+													to="/account/orders/$orderId"
+													params={{ orderId: order.id as string }}
+													className="space-y-2"
+													viewTransition={{ types: ["slide-left"] }}
+												>
+													<p className="text-xs">
+														{order?.items
+															?.map(
+																(item) => `${item.title} (${item.quantity})`,
+															)
+															.join(", ")}
+													</p>
+
+													<div className="flex items-center justify-between">
+														<p className="text-muted-foreground text-xs">
+															Ordered on {format(order?.orderedAt, "d LLL, p")}
+														</p>
+														<p className="font-bold text-base">
+															{formatAmount(
+																order?.currency,
+																order?.itemTotalAmount as number,
+															)}
+														</p>
+													</div>
+												</Link>
+											</CardContent>
+										</Card>
 									</div>
 								);
 							})}

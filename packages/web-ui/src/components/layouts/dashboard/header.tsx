@@ -1,10 +1,7 @@
 "use client";
-
-import { Avatar, AvatarFallback } from "@lipy/web-ui/components/ui/avatar";
-import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, useRouter } from "@tanstack/react-router";
-import { ArrowLeft, ChevronLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import type { ReactNode } from "react";
 
 export const DashboardHeader = ({
@@ -21,7 +18,6 @@ export const DashboardHeader = ({
 	hideBackBtn?: boolean;
 }) => {
 	const router = useRouter();
-	const { isMobile } = useViewport();
 	const onBack = (e: any) => {
 		e.preventDefault();
 		router.history.back();
@@ -32,7 +28,7 @@ export const DashboardHeader = ({
 		<div className="sticky top-0 z-50 bg-background print:hidden">
 			<div
 				className={cn(
-					"flex justify-between gap-4 w-full p-3 items-center bg-accent/30 border-b h-12 lg:h-14",
+					"flex justify-between gap-4 w-full p-3 items-center bg-accent/30 border-b h-14",
 					className,
 				)}
 			>
@@ -40,15 +36,7 @@ export const DashboardHeader = ({
 				<div className="flex items-center flex-shrink min-w-0 gap-2">
 					{!hideBackBtn && (
 						<Link to={"/"} onClick={onBack}>
-							{isMobile ? (
-								<Avatar className="mr-2">
-									<AvatarFallback className="bg-card">
-										<ChevronLeft className="size-5 stroke-2" />
-									</AvatarFallback>
-								</Avatar>
-							) : (
-								<ArrowLeft className="stroke-2" />
-							)}
+							<ArrowLeft className="stroke-2" />
 						</Link>
 					)}
 

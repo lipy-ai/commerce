@@ -121,61 +121,56 @@ function RouteComponent() {
 			{isMobile && <DashboardHeader title="Cart" />}
 
 			{isFetched && data && data.length > 0 && (
-				<div className="relative max-w-screen-lg m-auto">
+				<div className="relative max-w-screen-lg m-auto p-4">
 					<div className="space-y-6 my-4 gap-4">
-						<Card className="">
-							<CardContent className="divide-y  p-0">
-								<CardHeader className="p-4 flex items-center justify-between">
-									<CardTitle>Order Items(s)</CardTitle>
-									{cart.length > 0 && (
-										<p className="text-muted-foreground">{cart.length} items</p>
-									)}
-								</CardHeader>
-								<div className="px-4">
-									{cart.map((product) => (
-										<div key={product.inventoryId} className=" py-4">
-											<ProductComp product={product} />
-										</div>
-									))}
-								</div>
-
-								<CardFooter className="justify-between p-4">
-									<p className="font-medium  ">Forgot something ?</p>
-									<Button variant="secondary" size="sm">
-										<Plus />
-										Add more items
-									</Button>
-								</CardFooter>
+						<Card className="gap-0 p-0">
+							<CardHeader className="p-4 flex items-center justify-between border-b">
+								<CardTitle>Order Items(s)</CardTitle>
+								{cart.length > 0 && (
+									<p className="text-muted-foreground">{cart.length} items</p>
+								)}
+							</CardHeader>
+							<CardContent className="p-2 border-b">
+								{cart.map((product) => (
+									<div key={product.inventoryId} className=" py-4">
+										<ProductComp product={product} />
+									</div>
+								))}
 							</CardContent>
+
+							<CardFooter className="flex items-center justify-between p-4">
+								<p className="font-medium  ">Forgot something ?</p>
+								<Button variant="secondary" size="sm">
+									<Plus />
+									Add more items
+								</Button>
+							</CardFooter>
 						</Card>
 
-						<Card className="">
-							<CardContent className="p-0 divide-y">
-								<CardHeader className="p-4 ">
-									<CardTitle>Billing Details</CardTitle>
-								</CardHeader>
-								<div className="p-4">
-									{billingDetails.map(({ icon: Icon, title, value }) => (
-										<div
-											key={title}
-											className="flex items-center justify-between py-2"
-										>
-											<div className="flex items-center gap-2">
-												<Icon className="size-4" />
-												<p className="text-sm">{title}</p>
-											</div>
-											<div className="">{value}</div>
+						<Card className="gap-0 p-0">
+							<CardHeader className="p-4 border-b">
+								<CardTitle>Billing Details</CardTitle>
+							</CardHeader>
+							<CardContent className="p-4 border-b">
+								{billingDetails.map(({ icon: Icon, title, value }) => (
+									<div
+										key={title}
+										className="flex items-center justify-between py-2"
+									>
+										<div className="flex items-center gap-2">
+											<Icon className="size-4" />
+											<p className="text-sm">{title}</p>
 										</div>
-									))}
-								</div>
-
-								<CardFooter className="p-4">
-									<div className=" flex items-center justify-between w-full">
-										<p className="text-lg font-semibold">Total Payable</p>
-										<p className="text-lg font-semibold">₹{totalPrice}</p>
+										<div className="">{value}</div>
 									</div>
-								</CardFooter>
+								))}
 							</CardContent>
+							<CardFooter className="p-4">
+								<div className=" flex items-center justify-between w-full">
+									<p className="text-lg font-semibold">Total Payable</p>
+									<p className="text-lg font-semibold">₹{totalPrice}</p>
+								</div>
+							</CardFooter>
 						</Card>
 
 						<div className="p-4 mb-42 shadow-none rounded-xl bg-card border-none">
@@ -199,7 +194,7 @@ function RouteComponent() {
 					</div>
 
 					{/* Bottom Checkout UI */}
-					<div className="fixed bottom-0 border-t  w-full bg-card shadow-xl border-2 rounded-t-lg max-w-screen-lg">
+					<div className="fixed bottom-0 left-0 right-0 border-t  w-full bg-card shadow-xl border-2 rounded-t-xl max-w-screen-lg ">
 						<div
 							className="bg-accent/40 rounded-t-xl p-2 cursor-pointer"
 							onClick={() => setDetailedAddressDrawerOpen(true)}

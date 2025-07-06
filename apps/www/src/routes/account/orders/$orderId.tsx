@@ -5,6 +5,12 @@ import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 
 import { Button } from "@lipy/web-ui/components/ui/button";
+import {
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
+} from "@lipy/web-ui/components/ui/card";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { createFileRoute } from "@tanstack/react-router";
@@ -54,8 +60,8 @@ function RouteComponent() {
 					</DashboardHeader>
 
 					<div className="lg:grid lg:grid-cols-12 divide-x flex-1">
-						<div className="col-span-7  lg:p-4 ">
-							<div className="bg-card p-4">
+						<div className="col-span-7 p-4 space-y-4">
+							<div className="bg-card rounded-xl p-2">
 								<div className="flex items-center justify-between">
 									<h2 className="font-bold text-base">{data[0]?.id}</h2>
 									<Badge
@@ -88,128 +94,80 @@ function RouteComponent() {
 								)}
 							</div>
 
-							{/* <div className="bg-card p-4 my-4 ">
-								<div className="relative space-y-6">
-									<div className="absolute left-5 top-10 w-0.5 h-10 border-l border-dashed border-foreground" />
-									<div className="flex items-center gap-2 pr-2">
-										<Avatar className="size-10">
-											<AvatarImage src={"https://picsum.photos/200"} alt="" />
-											<AvatarFallback className="rounded-lg bg-indigo-500 text-white">
-												S
-											</AvatarFallback>
-										</Avatar>
+							<Card className="gap-0 p-0 border-none">
+								<CardHeader className="px-2 py-4 gap-0">
+									<CardTitle>Item(s) ordered</CardTitle>
+								</CardHeader>
+								<CardContent className="p-2">
+									{data[0]?.items?.map((product, i) => (
+										<div key={i} className="flex gap-2 items-center py-2">
+											<img
+												src={product.thumbnail || "https://picsum.photos/200"}
+												alt=""
+												className="size-14 border rounded bg-accent"
+											/>
 
-										<div>
-											<p className="font-medium line-clamp-1">
-												{"Unknown Store"}
-											</p>
-											<p className="text-muted-foreground text-xs line-clamp-1">
-												Paschim Vihar , Delhi
-											</p>
+											<div className="flex-1">
+												<h2 className="text-sm">{product.title}</h2>
+												<p className="text-muted-foreground text-sm">
+													{product.variant.unit}
+												</p>
+											</div>
+											<div className="text-right">
+												<p className="font-medium">
+													{formatAmount(
+														data[0]?.currency,
+														product.variant.price || 0,
+													)}
+												</p>
+												<p className="text-sm text-muted-foreground">
+													Qty {product.quantity || 0}
+												</p>
+											</div>
 										</div>
-									</div>
-
-									<div className=" flex items-center gap-2 ">
-										<Avatar className="size-10">
-											<AvatarFallback>
-												{data[0]?.address?.tag === "home" ? (
-													<House className="flex-shrink-0 size-5" />
-												) : data[0]?.address?.tag === "work" ? (
-													<Building className="  flex-shrink-0 size-5" />
-												) : (
-													<MapPinHouse className="size-5  flex-shrink-0 " />
-												)}
-											</AvatarFallback>
-										</Avatar>
-
-										<div>
-											<p className="font-medium line-clamp-1">
-												{data[0]?.address?.tag
-													? data[0].address.tag.charAt(0).toUpperCase() +
-														data[0].address.tag.slice(1)
-													: "Other"}
-											</p>
-											<p className="text-muted-foreground text-xs line-clamp-1">
-												{[
-													data[0]?.address?.metadata?.building,
-													data[0]?.address?.line1,
-												]
-													.filter(Boolean)
-													.join(", ")}
-											</p>
-										</div>
-									</div>
-								</div>
-							</div> */}
-
-							<div className="p-4  bg-card my-4">
-								<h2 className="text-lg font-semibold">Item(s) ordered</h2>
-								{data[0]?.items?.map((product, i) => (
-									<div key={i} className="flex gap-2 items-center py-4">
-										<img
-											src={product.thumbnail || "https://picsum.photos/200"}
-											alt=""
-											className="size-14 border rounded bg-accent"
-										/>
-
-										<div className="flex-1">
-											<h2 className="font-semibold">{product.title}</h2>
-											<p className="text-muted-foreground text-sm">
-												{product.variant.unit}
-											</p>
-										</div>
-										<div className="text-right">
-											<p className="font-medium">
-												{formatAmount(
-													data[0]?.currency,
-													product.variant.price || 0,
-												)}
-											</p>
-											<p className="text-sm text-muted-foreground">
-												Qty {product.quantity || 0}
-											</p>
-										</div>
-									</div>
-								))}
-							</div>
+									))}
+								</CardContent>
+							</Card>
 						</div>
 
-						<div className="col-span-5 space-y-2  lg:p-4  ">
-							<div className="space-y-4  p-4  my-4 bg-card ">
-								<h2 className="text-lg font-semibold">Bill Summary</h2>
-								<div className="space-y-4 text-base">
-									<div className="flex justify-between text-base">
+						<div className="col-span-5 space-y-4 p-4 -mt-4">
+							<Card className="p-0 gap-0 border-none">
+								<CardHeader className="px-2 py-4 gap-0">
+									<CardTitle>Bill Summary</CardTitle>
+								</CardHeader>
+								<CardContent className="p-2 space-y-2">
+									<div className="flex justify-between text-sm">
 										<p>Item Total ({data[0]?.items?.length ?? 0})</p>
 										<p className="font-medium">
 											{formatAmount(data[0]?.currency, totalPrice || 0)}
 										</p>
 									</div>
-									<div className="flex justify-between text-base">
+									<div className="flex justify-between text-sm">
 										<p>Delivery Charges</p>
 										<p className="font-medium">
 											{formatAmount(data[0]?.currency, deliveryCharges)}
 										</p>
 									</div>
-									<div className="flex justify-between text-base">
+									<div className="flex justify-between text-sm">
 										<p>Taxes</p>
 										<p className="font-medium">
 											{formatAmount(data[0]?.currency, totalTaxAmount)}
 										</p>
 									</div>
-									<Separator className="border-t border-dashed bg-transparent my-2" />
+									<Separator className="border-t border-dashed bg-transparent " />
 									<div className="flex justify-between items-center ">
 										<p className="font-semibold text-md">Total Payable</p>
 										<p className="font-semibold text-xl">
 											{formatAmount(data[0]?.currency, totalPayableAmount)}
 										</p>
 									</div>
-								</div>
-							</div>
-							<div className="bg-card  divide-y divide-dashed p-4 my-4">
+								</CardContent>
+							</Card>
+							<div className="divide-y divide-dashed bg-card rounded-xl">
 								{data[0]?.customerDetails?.address?.name && (
 									<div>
 										<div className="flex items-start gap-4 p-2">
-											<CircleUser className="text-muted-foreground flex-shrink-0" />
+											<CircleUser className="text-muted-foreground flex-shrink-0 mt-1" />
 											<div>
 												<p className="font-medium text-base">Receiver's Info</p>
 												<p className="text-muted-foreground">
@@ -240,7 +198,7 @@ function RouteComponent() {
 								</div>
 
 								<div className="flex items-start gap-4 p-2">
-									<MapPin className="text-muted-foreground flex-shrink-0" />
+									<MapPin className="text-muted-foreground flex-shrink-0 mt-1" />
 									<div>
 										<p className="font-medium text-base">Delivery Address</p>
 										<p className="text-muted-foreground">

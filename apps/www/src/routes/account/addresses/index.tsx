@@ -13,7 +13,6 @@ import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { Avatar, AvatarFallback } from "@lipy/web-ui/components/ui/avatar";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 
-import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
@@ -69,7 +68,7 @@ function RouteComponent() {
 				))}
 
 			{isFetched && data && data?.length > 0 && (
-				<div className="mb-40 mt-4 space-y-4">
+				<div className="p-4 divide-y mb-20">
 					{data.map((address) => (
 						<div
 							key={address.id}
@@ -77,7 +76,7 @@ function RouteComponent() {
 								setOptionsDrawerOpen(true);
 								setSelectedAddress(address);
 							}}
-							className="bg-card p-4"
+							className="py-4"
 						>
 							<AddressComponent address={address} />
 						</div>
@@ -172,9 +171,9 @@ function OptionsDrawer(props: {
 					<DrawerDialogTitle>Select option</DrawerDialogTitle>
 				</DrawerDialogHeader>
 
-				<div className="bg-accent p-4 rounded-lg space-y-4 cursor-pointer">
+				<div className="bg-accent/10c p-4 rounded-lg cursor-pointer divide-y divide-dashed">
 					<div
-						className="flex items-center justify-between"
+						className="flex items-center justify-between pb-4 pt-2"
 						onClick={() => {
 							setDetailedAddressDrawerOpen(true);
 						}}
@@ -186,8 +185,8 @@ function OptionsDrawer(props: {
 
 						<ChevronRight className="size-4" />
 					</div>
-					<Separator className="border-t border-dashed bg-transparent" />
-					<div className="flex items-center justify-between">
+
+					<div className="flex items-center justify-between py-4">
 						<div className="flex items-center gap-4">
 							<MapPin className="size-5 flex-shrink-0" />
 							<p className="font-medium text-sm">Set as delivery address</p>
@@ -195,14 +194,14 @@ function OptionsDrawer(props: {
 
 						<ChevronRight className="size-4" />
 					</div>
-					<Separator className="border-t border-dashed bg-transparent" />
+
 					<div
-						className="flex items-center justify-between"
+						className="flex items-center justify-between pt-4 pb-2"
 						onClick={() => {
 							setDeleteAddressDialogOpen(true);
 						}}
 					>
-						<div className="flex items-center gap-4">
+						<div className="flex items-center gap-4 ">
 							<Trash className="size-5 flex-shrink-0" />
 							<p className="font-medium text-sm">Delete address</p>
 						</div>

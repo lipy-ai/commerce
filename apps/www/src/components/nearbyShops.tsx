@@ -56,7 +56,7 @@ export default function NearByShops() {
 	return (
 		<div>
 			{isFetched && shops && shops.length > 0 && (
-				<div className="lg:hidden border-b shadow-sm sticky top-0 z-50 bg-card  overflow-hidden">
+				<div className="lg:hidden border-b sticky top-0 z-50 bg-card  overflow-hidden">
 					<motion.div
 						className="absolute inset-0 bg-chart-3/30"
 						initial={{ opacity: 0 }}

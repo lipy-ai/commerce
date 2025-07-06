@@ -8,6 +8,8 @@ import {
 	AlertDialogTitle,
 } from "@lipy/web-ui/components/ui/alert-dialog";
 
+import { env } from "@envClient";
+import { discordNotification } from "@lipy/server/notification/discord";
 import { Form } from "@lipy/web-ui/components/ui/form";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { Link, useNavigate } from "@tanstack/react-router";
@@ -22,8 +24,6 @@ export const Route = createFileRoute("/(loggedIn)/(miscellaneous)/newStore")({
 function RouteComponent() {
 	const navigate = useNavigate();
 	const { data, refetch } = authClient.useSession();
-
-	console.log("sessoin", data);
 
 	if (data?.session.activeOrganizationId) navigate({ to: "/" });
 	const formSchema = z.object({
@@ -61,6 +61,15 @@ function RouteComponent() {
 
 		if (orgError) {
 			toast.error(orgError.message);
+			discordNotification({
+				type: "error",
+				fields: [
+					{
+						name: "Message",
+						value: orgError.message || orgError.statusText,
+					},
+				],
+			});
 			return;
 		}
 
@@ -72,6 +81,24 @@ function RouteComponent() {
 			refetch();
 			navigate({ to: "/" });
 			toast.success("Organization created successfully");
+
+			discordNotification({
+				type: "storeCreated",
+				fields: [
+					{
+						name: "Store Name",
+						value: org.name,
+					},
+					{
+						name: "Store url",
+						value: `${env.WEB_URL}/${org.slug}`,
+					},
+					{
+						name: "Store Id",
+						value: org.id,
+					},
+				],
+			});
 		}
 	};
 

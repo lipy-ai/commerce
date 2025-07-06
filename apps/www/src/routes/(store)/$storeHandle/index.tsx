@@ -4,8 +4,7 @@ import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
-import { Avatar, AvatarFallback } from "@lipy/web-ui/components/ui/avatar";
-import { buttonVariants } from "@lipy/web-ui/components/ui/button";
+import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -201,11 +200,13 @@ function ShopOptions({
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger>
-				<Avatar>
-					<AvatarFallback className="bg-card">
-						<EllipsisVertical className="size-5 stroke-2" />
-					</AvatarFallback>
-				</Avatar>
+				<Button
+					variant="outline"
+					size="icon"
+					className="rounded-full border-none"
+				>
+					<EllipsisVertical className="size-5 stroke-2" />
+				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent className="min-w-[200px] space-y-3 mr-2">
 				<DropdownMenuItem

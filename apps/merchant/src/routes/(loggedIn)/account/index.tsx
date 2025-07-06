@@ -97,8 +97,8 @@ function RouteComponent() {
 					</div>
 				)}
 
-				<SettingsCard title="General Information" items={generalInfo} />
-				<SettingsCard title="More Information" items={filteredMoreInfo} />
+				<SettingsCard items={generalInfo} />
+				<SettingsCard items={filteredMoreInfo} />
 			</div>
 		</div>
 	);

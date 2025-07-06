@@ -253,7 +253,7 @@ function VariantList({
 									...variant,
 								} as CartStore["cart"][0]
 							}
-							variant={"primary"}
+							variant={"icon"}
 						/>
 					</div>
 				))}

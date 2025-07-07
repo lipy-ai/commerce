@@ -17,12 +17,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { BanknoteArrowUp, CircleUser, MapPin } from "lucide-react";
 
-export const Route = createFileRoute("/account/orders/$orderId")({
+export const Route = createFileRoute("/(default)/account/orders/$orderId")({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-	const { orderId } = Route.useParams();
+	const { orderId }: any = Route.useParams();
 
 	const { data, isFetched, isFetching } = useAPIQuery(
 		apiClient.v1.order[":id"],
@@ -40,7 +40,8 @@ function RouteComponent() {
 	const totalPayableAmount = totalPrice + deliveryCharges + totalTaxAmount;
 
 	return (
-		<div className="[view-transition-name:main-content]">
+		<>
+			{isFetching && <Spinner />}
 			{isFetched && data && (
 				<div className="min-h-screen flex flex-col">
 					<DashboardHeader
@@ -215,8 +216,6 @@ function RouteComponent() {
 					</div>
 				</div>
 			)}
-
-			{isFetching && !data && <Spinner className="absolute left-1/2 top-1/2" />}
-		</div>
+		</>
 	);
 }

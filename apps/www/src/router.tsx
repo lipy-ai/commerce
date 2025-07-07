@@ -1,4 +1,3 @@
-// import { BProgress } from "@bprogress/core";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
@@ -19,16 +18,8 @@ export function createRouter() {
 		defaultErrorComponent: DefaultCatchBoundary,
 		defaultNotFoundComponent: () => <NotFound />,
 		scrollRestoration: true,
-		// defaultViewTransition: true,
+		defaultViewTransition: true,
 	});
-	// BProgress.configure({ showSpinner: false });
-	// router.subscribe("onBeforeLoad", ({ fromLocation, pathChanged }) => {
-
-	// 	fromLocation && pathChanged && BProgress.start();
-	// });
-	// router.subscribe("onLoad", () => {
-	// 	BProgress.done();
-	// });
 
 	return router;
 }
@@ -47,8 +38,6 @@ export function DefaultCatchBoundary({ error }: ErrorComponentProps) {
 	});
 
 	console.error("DefaultCatchBoundary Error:", error);
-	// console.log(error instanceof Error);
-	// console.log(error);
 
 	return (
 		<div className="min-w-0 flex-1 p-4 flex flex-col items-center justify-center gap-6">

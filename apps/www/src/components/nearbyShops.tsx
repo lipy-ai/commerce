@@ -95,7 +95,6 @@ export default function NearByShops() {
 									<Link
 										to="/$storeHandle"
 										params={{ storeHandle: shop.handle as string }}
-										viewTransition={{ types: ["warp"] }}
 									>
 										<div className="relative h-44">
 											<img

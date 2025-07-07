@@ -13,7 +13,7 @@ export default function SettingsCard({
 	}[];
 }) {
 	return (
-		<div className="rounded-xl border border-border/20 p-4 divide-y divide-dashed bg-card">
+		<div className="rounded-xl border border-border/40 p-4 divide-y divide-dashed bg-card">
 			{items.map((item, index) => {
 				return (
 					<div key={index} className="py-4 first:pt-2 last:pb-2">

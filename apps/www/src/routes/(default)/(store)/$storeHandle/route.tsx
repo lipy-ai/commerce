@@ -6,7 +6,7 @@
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 // import { AnimatePresence, motion } from "framer-motion";
 
-export const Route = createFileRoute("/(store)/$storeHandle")({
+export const Route = createFileRoute("/(default)/(store)/$storeHandle")({
 	component: RouteComponent,
 });
 
@@ -48,5 +48,5 @@ function RouteComponent() {
 				</AnimatePresence>
 			)} */}
 		</div>
-	);
+	)
 }

@@ -26,7 +26,7 @@ import {
 	UserRound,
 } from "lucide-react";
 
-export const Route = createFileRoute("/account/")({
+export const Route = createFileRoute("/(default)/account/")({
 	component: AccountPage,
 });
 
@@ -90,13 +90,11 @@ export function AccountPage() {
 	const { data, isPending } = authClient.useSession();
 	const { isMobile } = useViewport();
 
-	if (isPending) return <Spinner />;
-
 	const filteredMoreInfo = data
 		? moreInfo
 		: moreInfo.filter((item) => item.title !== "Logout");
 	return (
-		<div className="[view-transition-name:main-content]">
+		<>
 			{isMobile && <DashboardHeader title="Settings" />}
 			{isPending ? (
 				<Spinner />
@@ -154,6 +152,6 @@ export function AccountPage() {
 					</div>
 				</div>
 			)}
-		</div>
+		</>
 	);
 }

@@ -1,20 +1,23 @@
 import { db } from "@/db";
+import { STORE_TYPE } from "@/db/schema";
+import { idGenerate } from "@/lib/generateId";
 import { zValidator } from "@/middlewares/validator";
+import { emailSchema, phoneSchema } from "@/schema/common";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
+import slugify from "slugify";
 import { z } from "zod";
-import { addressSchema } from "../address";
-
+import { coreAddressSchema } from "../address";
 const storeSchema = z.object({
 	name: z.string(),
-	handle: z.string(),
-	description: z.string(),
-	email: z.string(),
-	phone: z.string(),
-	image: z.string(),
-	active: z.boolean().default(true),
-	address: addressSchema,
+	email: emailSchema,
+	phone: phoneSchema,
+	type: z.enum(STORE_TYPE),
+	address: coreAddressSchema,
+	payments: z.object({
+		upiIds: z.array(z.object({ name: z.string(), id: z.string() })).min(1),
+	}),
 });
 
 const route = new Hono<ServerContext>()
@@ -35,23 +38,30 @@ const route = new Hono<ServerContext>()
 	})
 	.post("/", zValidator("json", storeSchema), async (c) => {
 		const session = c.get("session");
-		const values = c.req.valid("json");
-		if (session?.activeStoreId) {
-			throw new HTTPException(400, { message: "Store already exists!" });
-		}
+		const { payments, ...vals } = c.req.valid("json");
 
 		const store = await db.transaction().execute(async (trx) => {
 			const store = await trx
 				.insertInto("store")
 				.values({
+					...vals,
 					id: crypto.randomUUID(),
+					handle: `${slugify(vals.name)}-${idGenerate()}`,
 					createdAt: new Date(),
-					...values,
 				})
 				.returning(["id"])
 				.executeTakeFirst();
 
 			if (!store) throw Error("Failed to create store");
+
+			await trx
+				.insertInto("storePayments")
+				.values({
+					id: store.id,
+					acceptedPayments: ["cod"],
+					upiIds: payments.upiIds,
+				})
+				.execute();
 
 			await trx
 				.insertInto("storeMember")
@@ -66,6 +76,7 @@ const route = new Hono<ServerContext>()
 
 			return store;
 		});
+		c.get("emitter").emit(c, "store:created", store);
 		return c.json(store);
 	})
 	.patch("/", zValidator("json", storeSchema), async (c) => {

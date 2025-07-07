@@ -123,8 +123,11 @@ export function LoginScreen({
 								<div className="grid justify-center gap-8 items-center">
 									<InputOTP
 										maxLength={6}
+										// onComplete={(c) =>
+										// 	handler(["verify-otp", { phoneNumber: verify, otp: c }])
+										// }
 										onComplete={(c) =>
-											handler(["verify-otp", { phoneNumber: verify, otp: c }])
+											handler(["verify-email-otp", { email: verify, otp: c }])
 										}
 										onChange={(v) => setOtp(v)}
 										value={otp}
@@ -150,13 +153,21 @@ export function LoginScreen({
 										>
 											<ArrowLeft /> Back
 										</Button>
-										<Button
+										{/* <Button
 											variant={"default"}
 											className=""
 											size={"lg"}
 											onClick={() =>
 												handler(["send-otp", { phoneNumber: verify }])
 											}
+										>
+											Resend OTP
+										</Button> */}
+										<Button
+											variant={"default"}
+											className=""
+											size={"lg"}
+											onClick={() => handler(["email-otp", { email: verify }])}
 										>
 											Resend OTP
 										</Button>

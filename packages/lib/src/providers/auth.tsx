@@ -33,7 +33,13 @@ export const getSsrSession = async (headers?: Headers) => {
 };
 
 export const signIn = async (
-	type: "google" | "microsoft" | "verify-otp" | "send-otp" | "email-otp",
+	type:
+		| "google"
+		| "microsoft"
+		| "verify-otp"
+		| "send-otp"
+		| "email-otp"
+		| "verify-email-otp",
 	opts?: {
 		phoneNumber?: string;
 		callbackURL?: string;
@@ -53,6 +59,20 @@ export const signIn = async (
 				.then((r) => {
 					if (r.data?.success === false) {
 						throw new Error("Failed to send login OTP");
+					}
+				})
+				.catch((e) => {
+					throw e;
+				});
+		case "verify-email-otp":
+			return await authClient.signIn
+				.emailOtp({
+					email: opts!.email!,
+					otp: opts?.otp!,
+				})
+				.then((r) => {
+					if (!r.data?.user) {
+						throw new Error("Failed to signin");
 					}
 					return routeCb?.(callbackURL);
 				})

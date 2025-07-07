@@ -78,7 +78,7 @@ function RouteComponent() {
 					<div className="grid lg:grid-cols-3 p-4 lg:p-8 gap-4 lg:gap-8">
 						<div className="lg:col-span-2">
 							<div className="space-y-8">
-								<Card className="=">
+								<Card className="">
 									<CardHeader>
 										<CardTitle>Product Details</CardTitle>
 										<CardAction className={cn("flex gap-2")}>

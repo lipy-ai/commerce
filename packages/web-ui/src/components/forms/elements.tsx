@@ -307,7 +307,7 @@ export const FormToggleGroup = (
 			value={value}
 			variant={props.variant}
 			key={value}
-			className="flex items-center gap-x-2 md:w-full min-w-32 capitalize"
+			className="flex items-center gap-x-2 w-full h-20  min-w-32 capitalize break-all p-2 text-balance whitespace-break-spaces"
 		>
 			{label}
 		</ToggleGroupItem>

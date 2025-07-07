@@ -41,13 +41,6 @@ export default function NavBar() {
 					{deliveryLocation && (
 						<Link to={"/account/addresses/deliveryAddress"}>
 							<div className="flex items-center gap-2">
-								{/* {deliveryLocation?.tag === "home" ? (
-									<House className="size-5" />
-								) : deliveryLocation?.tag === "work" ? (
-									<Building className="size-5" />
-								) : (
-									<MapPin className="size-5" />
-								)} */}
 								{<MapPin className="fill-primary/60" />}
 								<p className="truncate max-w-[250px] font-bold text-lg">
 									{deliveryLocation?.line1 === ""
@@ -76,74 +69,76 @@ export default function NavBar() {
 	}
 
 	return (
-		<div className="p-6 sticky top-0 z-50  bg-background bg-gradient-to-b from-primary/20 to-transparent backdrop-blur-md shadow-sm px-16">
-			<div className="flex items-center  gap-8">
-				<Link to="/" className="overflow-hidden">
-					<img
-						src={"/logo/logo.png"} // Replace with your logo path
-						alt={"lipy-logo"}
-						width={100}
-						height={200}
-						className="rounded-md"
-					/>
-				</Link>
-
-				{deliveryLocation && (
-					<Link to={"/account/addresses/deliveryAddress"}>
-						<div className="text-xl font-bold flex items-center gap-2">
-							{deliveryLocation?.tag === "home" ? (
-								<House />
-							) : deliveryLocation?.tag === "work" ? (
-								<Building />
-							) : (
-								<MapPin />
-							)}
-							<p className="truncate max-w-[400px] block">
-								{deliveryLocation?.line1 === ""
-									? "Locating"
-									: (deliveryLocation?.tag ?? "").charAt(0).toUpperCase() +
-										(deliveryLocation?.tag ?? "").slice(1)}
-							</p>
-							<ChevronDown />
-						</div>
-						{deliveryLocation.line1 !== "" && (
-							<p className="text-base">
-								<span className="truncate max-w-[400px] block">
-									{[
-										deliveryLocation?.name,
-										deliveryLocation?.metadata?.building,
-										deliveryLocation?.line1,
-									]
-										.filter(Boolean)
-										.join(", ")}
-								</span>
-							</p>
-						)}
+		<div className="sticky top-0 z-50   shadow-sm bg-background">
+			<div className="px-16 p-6 bg-accent/20">
+				<div className="flex items-center  gap-8">
+					<Link to="/" className="overflow-hidden">
+						<img
+							src={"/logo/logo.png"} // Replace with your logo path
+							alt={"lipy-logo"}
+							width={100}
+							height={200}
+							className="rounded-md"
+						/>
 					</Link>
+
+					{deliveryLocation && (
+						<Link to={"/account/addresses/deliveryAddress"}>
+							<div className="text-xl font-bold flex items-center gap-2">
+								{deliveryLocation?.tag === "home" ? (
+									<House />
+								) : deliveryLocation?.tag === "work" ? (
+									<Building />
+								) : (
+									<MapPin />
+								)}
+								<p className="truncate max-w-[400px] block">
+									{deliveryLocation?.line1 === ""
+										? "Locating"
+										: (deliveryLocation?.tag ?? "").charAt(0).toUpperCase() +
+											(deliveryLocation?.tag ?? "").slice(1)}
+								</p>
+								<ChevronDown />
+							</div>
+							{deliveryLocation.line1 !== "" && (
+								<p className="text-base">
+									<span className="truncate max-w-[400px] block">
+										{[
+											deliveryLocation?.name,
+											deliveryLocation?.metadata?.building,
+											deliveryLocation?.line1,
+										]
+											.filter(Boolean)
+											.join(", ")}
+									</span>
+								</p>
+							)}
+						</Link>
+					)}
+					<div className="w-full">
+						<SearchBar
+							placeholder="Search for shop, grocery, fruits..."
+							defaultValue=""
+						/>
+					</div>
+					<Link to="/account/orders">
+						<CircleUserRound className="size-8" />
+					</Link>
+					<Link to="/cart" className={buttonVariants()}>
+						<ShoppingCart className="size-8" />
+						<p className="font-medium text-base">{cart.length} items</p>
+					</Link>
+				</div>
+				{pathname === "/" && (
+					<div className="mt-4 -mb-6 ">
+						<ScrollingTabs
+							tabs={CATEGORIES}
+							handleTabChange={setActiveCategory}
+							className="text-foreground hover:text-foreground/80 active:text-foreground/90"
+						/>
+					</div>
 				)}
-				<div className="w-full">
-					<SearchBar
-						placeholder="Search for shop, grocery, fruits..."
-						defaultValue=""
-					/>
-				</div>
-				<Link to="/account/orders">
-					<CircleUserRound className="size-8" />
-				</Link>
-				<Link to="/cart" className={buttonVariants()}>
-					<ShoppingCart className="size-8" />
-					<p className="font-medium text-base">{cart.length} items</p>
-				</Link>
 			</div>
-			{pathname === "/" && (
-				<div className="mt-4 -mb-6 ">
-					<ScrollingTabs
-						tabs={CATEGORIES}
-						handleTabChange={setActiveCategory}
-						className="text-foreground hover:text-foreground/80 active:text-foreground/90"
-					/>
-				</div>
-			)}
 		</div>
 	);
 }

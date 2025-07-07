@@ -91,7 +91,9 @@ function RouteComponent() {
 						{shopData?.name}
 					</motion.h1>
 				}
-				className={cn(!visibleShopName ? "bg-amber-100 border-b-0" : "bg-card")}
+				className={cn(
+					!visibleShopName ? "bg-amber-100 border-b-0 shadow-none" : "bg-card",
+				)}
 			>
 				{shopData && <ShopOptions shop={shopData} />}
 			</DashboardHeader>

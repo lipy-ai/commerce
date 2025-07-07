@@ -10,7 +10,6 @@ import { DeleteAddress } from "@lipy/web-ui/components/maps/deleteAdderess";
 import { DetailedAddress } from "@lipy/web-ui/components/maps/detailedAddress";
 import type { DeliveryLocation } from "@lipy/web-ui/components/maps/utils/store";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
-import { Avatar, AvatarFallback } from "@lipy/web-ui/components/ui/avatar";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
@@ -126,18 +125,16 @@ export function AddressComponent({
 	address: DeliveryLocation;
 }) {
 	return (
-		<div className="flex  gap-2  ">
-			<Avatar className="rounded-md mt-1">
-				<AvatarFallback>
-					{address.tag === "home" ? (
-						<House className=" flex-shrink-0 text-foreground fill-primary/40" />
-					) : address.tag === "work" ? (
-						<Building className=" flex-shrink-0 text-foreground fill-primary/40" />
-					) : (
-						<MapPinHouse className="size-6 flex-shrink-0 text-foreground fill-primary/40" />
-					)}
-				</AvatarFallback>
-			</Avatar>
+		<div className="flex  gap-2  items-start">
+			<div className="mt-1">
+				{address.tag === "home" ? (
+					<House className=" flex-shrink-0 text-foreground " />
+				) : address.tag === "work" ? (
+					<Building className=" flex-shrink-0 text-foreground " />
+				) : (
+					<MapPinHouse className="flex-shrink-0 text-foreground " />
+				)}
+			</div>
 
 			<div>
 				<h2 className="text-lg font-semibold">
@@ -171,9 +168,9 @@ function OptionsDrawer(props: {
 					<DrawerDialogTitle>Select option</DrawerDialogTitle>
 				</DrawerDialogHeader>
 
-				<div className="bg-accent/10c p-4 rounded-lg cursor-pointer divide-y divide-dashed">
+				<div className="cursor-pointer divide-y divide-dashed">
 					<div
-						className="flex items-center justify-between pb-4 pt-2"
+						className="flex items-center justify-between py-4"
 						onClick={() => {
 							setDetailedAddressDrawerOpen(true);
 						}}
@@ -196,7 +193,7 @@ function OptionsDrawer(props: {
 					</div>
 
 					<div
-						className="flex items-center justify-between pt-4 pb-2"
+						className="flex items-center justify-between py-4"
 						onClick={() => {
 							setDeleteAddressDialogOpen(true);
 						}}

@@ -20,7 +20,7 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { Store } from "lucide-react";
 
-export const Route = createFileRoute("/account/orders/")({
+export const Route = createFileRoute("/(default)/account/orders/")({
 	component: RouteComponent,
 });
 
@@ -36,7 +36,7 @@ function RouteComponent() {
 	);
 
 	return (
-		<div className="[view-transition-name:main-content]">
+		<>
 			<DashboardHeader title="My Orders" />
 
 			{isFetched &&
@@ -145,6 +145,6 @@ function RouteComponent() {
 					label="Place order to start"
 				/>
 			)}
-		</div>
+		</>
 	);
 }

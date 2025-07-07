@@ -21,7 +21,7 @@ import type { InferResponseType } from "hono/client";
 import { ChevronRight, EllipsisVertical, Info, Share } from "lucide-react";
 import { useState } from "react";
 
-export const Route = createFileRoute("/(store)/$storeHandle/")({
+export const Route = createFileRoute("/(default)/(store)/$storeHandle/")({
 	component: RouteComponent,
 });
 
@@ -51,7 +51,7 @@ function RouteComponent() {
 			staleTime: Number.POSITIVE_INFINITY,
 			cacheTime: Number.POSITIVE_INFINITY,
 		},
-	);
+	)
 
 	const {
 		data: productData,
@@ -73,11 +73,11 @@ function RouteComponent() {
 			staleTime: Number.POSITIVE_INFINITY,
 			cacheTime: Number.POSITIVE_INFINITY,
 		},
-	);
+	)
 
 	if (fetchingShopData || fetchingProduct) return <ShopLoadingSkeleton />;
 	return (
-		<div className="relative max-w-screen-lg mx-auto [view-transition-name:main-content]">
+		<div className="relative max-w-screen-lg mx-auto ">
 			<DashboardHeader
 				titleChildren={
 					<motion.h1
@@ -104,7 +104,6 @@ function RouteComponent() {
 						className="text-2xl font-bold "
 						to="/$storeHandle/details"
 						params={{ storeHandle }}
-						viewTransition={{ types: ["slide-left"] }}
 					>
 						{shopData.name}
 					</Link>
@@ -122,7 +121,6 @@ function RouteComponent() {
 							className="text-center"
 							to="/$storeHandle/products/category/$categorySlug"
 							params={{ storeHandle, categorySlug: item.slug as string }}
-							viewTransition={{ types: ["slide-left"] }}
 						>
 							<div className="relative w-full aspect-square rounded-xl overflow-hidden  bg-accent">
 								<img
@@ -180,7 +178,7 @@ function RouteComponent() {
 								</Link>
 							)}
 						</div>
-					);
+					)
 				})}
 
 			{fetchedProduct && productData && productData.items.length === 0 && (
@@ -190,7 +188,7 @@ function RouteComponent() {
 				/>
 			)}
 		</div>
-	);
+	)
 }
 
 function ShopOptions({
@@ -217,7 +215,7 @@ function ShopOptions({
 							title: shop?.name,
 							text: "Hey, Check out this shop!",
 							url: `${env.WEB_URL}/${shop?.handle}`,
-						});
+						})
 					}}
 				>
 					<Share />
@@ -238,7 +236,7 @@ function ShopOptions({
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
-	);
+	)
 }
 
 function ShopLoadingSkeleton() {
@@ -278,5 +276,5 @@ function ShopLoadingSkeleton() {
 				</div>
 			</div>
 		</div>
-	);
+	)
 }

@@ -35,7 +35,7 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
-export const Route = createFileRoute("/cart/")({
+export const Route = createFileRoute("/(default)/cart/")({
 	component: RouteComponent,
 });
 
@@ -65,7 +65,7 @@ function RouteComponent() {
 			staleTime: 0,
 			cacheTime: 0,
 		},
-	);
+	)
 
 	useEffect(() => {
 		resetCart();
@@ -83,10 +83,10 @@ function RouteComponent() {
 			(acc, item) => {
 				acc.totalPrice += (item.price || 0) * (item.quantity || 0);
 				acc.totalMaxPrice += (item.maxPrice || 0) * (item.quantity || 0);
-				return acc;
+				return acc
 			},
 			{ totalPrice: 0, totalMaxPrice: 0 },
-		);
+		)
 	}, [cart]);
 
 	const billingDetails = [
@@ -114,10 +114,10 @@ function RouteComponent() {
 				<div className="text-muted-foreground">{formatAmount("inr", 0)}</div>
 			),
 		},
-	];
+	]
 
 	return (
-		<div className="[view-transition-name:main-content]">
+		<div className="">
 			{isMobile && <DashboardHeader title="Cart" />}
 			{isFetching && [
 				Array(5).map((_, indx) => (
@@ -203,7 +203,7 @@ function RouteComponent() {
 					{/* Bottom Checkout UI */}
 					<div className="fixed bottom-0 left-0 right-0 border-t  w-full bg-card shadow-xl border-2 rounded-t-xl max-w-screen-lg ">
 						<div
-							className="rounded-t-xl p-2 cursor-pointer"
+							className="rounded-t-xl p-2 cursor-pointer border-b border-dashed"
 							onClick={() => setDetailedAddressDrawerOpen(true)}
 						>
 							<div className="flex items-center gap-2">
@@ -277,7 +277,7 @@ function RouteComponent() {
 				/>
 			)}
 		</div>
-	);
+	)
 }
 
 export function ProductComp({
@@ -321,5 +321,5 @@ export function ProductComp({
 				</div>
 			</div>
 		</div>
-	);
+	)
 }

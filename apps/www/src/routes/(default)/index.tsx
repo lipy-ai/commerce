@@ -18,7 +18,7 @@ import {
 	UserCircle,
 } from "lucide-react";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/(default)/")({
 	component: Home,
 });
 
@@ -65,10 +65,10 @@ function Home() {
 			},
 			mobile: true,
 		} as any,
-	];
+	]
 
 	return (
-		<div className="[view-transition-name:main-content]">
+		<div>
 			<DashboardLayout
 				mobileNav={mobileNav}
 				logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
@@ -85,5 +85,5 @@ function Home() {
 				</DashboardBody>
 			</DashboardLayout>
 		</div>
-	);
+	)
 }

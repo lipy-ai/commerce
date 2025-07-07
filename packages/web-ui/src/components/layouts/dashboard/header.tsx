@@ -32,15 +32,17 @@ export const DashboardHeader = ({
 					className,
 				)}
 			>
-				{/* LEFT SIDE */}
 				<div className="flex items-center flex-shrink min-w-0 gap-2">
 					{!hideBackBtn && (
-						<Link to={"/"} onClick={onBack}>
+						<Link
+							to={"/"}
+							onClick={onBack}
+							viewTransition={{ types: ["slide-right"] }}
+						>
 							<ArrowLeft className="stroke-2" />
 						</Link>
 					)}
 
-					{/* TITLE WRAPPER */}
 					<div className="flex items-center min-w-0 gap-2">
 						<h1 className="font-semibold text-lg lg:text-xl leading-none py-2 truncate">
 							{title}
@@ -49,7 +51,6 @@ export const DashboardHeader = ({
 					</div>
 				</div>
 
-				{/* RIGHT SIDE */}
 				<div className="flex-1 flex justify-end gap-4">{children}</div>
 			</div>
 		</div>

@@ -143,10 +143,12 @@ function LocationComponent() {
 					</DrawerDialogDescription>
 				</DrawerDialogHeader>
 				<DrawerDialogFooter>
-					<Button onClick={() => window.location.reload()}>Retry</Button>
+					<Button onClick={() => window.location.reload()} size="lg">
+						Retry
+					</Button>
 
 					<Link
-						className={cn(buttonVariants({ variant: "outline" }))}
+						className={cn(buttonVariants({ variant: "outline", size: "lg" }))}
 						to={"/account/addresses/deliveryAddress"}
 					>
 						Search your location

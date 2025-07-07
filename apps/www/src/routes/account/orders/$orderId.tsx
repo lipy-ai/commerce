@@ -8,10 +8,10 @@ import { Button } from "@lipy/web-ui/components/ui/button";
 import {
 	Card,
 	CardContent,
+	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@lipy/web-ui/components/ui/card";
-import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
@@ -94,11 +94,11 @@ function RouteComponent() {
 								)}
 							</div>
 
-							<Card className="gap-0 p-0 border-none">
-								<CardHeader className="px-2 py-4 gap-0">
+							<Card>
+								<CardHeader>
 									<CardTitle>Item(s) ordered</CardTitle>
 								</CardHeader>
-								<CardContent className="p-2">
+								<CardContent>
 									{data[0]?.items?.map((product, i) => (
 										<div key={i} className="flex gap-2 items-center py-2">
 											<img
@@ -108,7 +108,7 @@ function RouteComponent() {
 											/>
 
 											<div className="flex-1">
-												<h2 className="text-sm">{product.title}</h2>
+												<h2 className="text-sm ">{product.title}</h2>
 												<p className="text-muted-foreground text-sm">
 													{product.variant.unit}
 												</p>
@@ -131,11 +131,11 @@ function RouteComponent() {
 						</div>
 
 						<div className="col-span-5 space-y-4 p-4 -mt-4">
-							<Card className="p-0 gap-0 border-none">
-								<CardHeader className="px-2 py-4 gap-0">
+							<Card>
+								<CardHeader>
 									<CardTitle>Bill Summary</CardTitle>
 								</CardHeader>
-								<CardContent className="p-2 space-y-2">
+								<CardContent className="space-y-2">
 									<div className="flex justify-between text-sm">
 										<p>Item Total ({data[0]?.items?.length ?? 0})</p>
 										<p className="font-medium">
@@ -154,14 +154,13 @@ function RouteComponent() {
 											{formatAmount(data[0]?.currency, totalTaxAmount)}
 										</p>
 									</div>
-									<Separator className="border-t border-dashed bg-transparent " />
-									<div className="flex justify-between items-center ">
-										<p className="font-semibold text-md">Total Payable</p>
-										<p className="font-semibold text-xl">
-											{formatAmount(data[0]?.currency, totalPayableAmount)}
-										</p>
-									</div>
 								</CardContent>
+								<CardFooter className="flex justify-between items-center border-t border-dashed">
+									<p className="font-semibold text-base">Total Payable</p>
+									<p className="font-semibold text-xl">
+										{formatAmount(data[0]?.currency, totalPayableAmount)}
+									</p>
+								</CardFooter>
 							</Card>
 							<div className="divide-y divide-dashed bg-card rounded-xl">
 								{data[0]?.customerDetails?.address?.name && (

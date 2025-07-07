@@ -1,16 +1,18 @@
 import { env } from "@envClient";
 import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
+import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { shareContent } from "@lipy/web-ui/lib/share";
 import { createFileRoute } from "@tanstack/react-router";
 import { Clock, Mail, MapPin, Phone, Share } from "lucide-react";
-import { DashboardHeader } from "../../../../../../packages/web-ui/src/components/layouts/dashboard/header";
 
-export const Route = createFileRoute("/(store)/$storeHandle/details")({
-	component: RouteComponent,
-});
+export const Route = createFileRoute("/(default)/(store)/$storeHandle/details")(
+	{
+		component: RouteComponent,
+	},
+);
 
 function RouteComponent() {
 	const { storeHandle } = Route.useParams();
@@ -28,7 +30,7 @@ function RouteComponent() {
 
 	if (isFetching) return <Spinner />;
 	return (
-		<div className="[view-transition-name:main-content]">
+		<div className="">
 			<DashboardHeader>
 				<Button
 					size="sm"

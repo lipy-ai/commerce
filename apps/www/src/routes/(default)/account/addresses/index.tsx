@@ -28,7 +28,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-export const Route = createFileRoute("/account/addresses/")({
+export const Route = createFileRoute("/(default)/account/addresses/")({
 	component: RouteComponent,
 });
 
@@ -37,7 +37,7 @@ function RouteComponent() {
 		apiClient.v1.address,
 		"$get",
 		{},
-	);
+	)
 	const { isMobile } = useViewport();
 	const [optionsDrawerOpen, setOptionsDrawerOpen] = useState(false);
 	const [selectedAddress, setSelectedAddress] = useState<
@@ -45,7 +45,7 @@ function RouteComponent() {
 	>(null);
 
 	return (
-		<div className="[view-transition-name:main-content]">
+		<div className="">
 			<DashboardHeader title="Saved addresses">
 				{!isMobile && (
 					<Link
@@ -116,7 +116,7 @@ function RouteComponent() {
 				/>
 			)}
 		</div>
-	);
+	)
 }
 
 export function AddressComponent({
@@ -150,7 +150,7 @@ export function AddressComponent({
 				)}
 			</div>
 		</div>
-	);
+	)
 }
 
 function OptionsDrawer(props: {
@@ -224,5 +224,5 @@ function OptionsDrawer(props: {
 				/>
 			)}
 		</div>
-	);
+	)
 }

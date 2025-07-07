@@ -23,7 +23,7 @@ import { Share } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export const Route = createFileRoute(
-	"/(store)/$storeHandle/products/$productId",
+	"/(default)/(store)/$storeHandle/products/$productId",
 )({
 	component: RouteComponent,
 });
@@ -43,7 +43,7 @@ function RouteComponent() {
 
 	type ProductResponse = InferResponseType<
 		(typeof apiClient.v1.products)[":id"]["$get"]
-	>;
+	>
 	type ProductVariant = ProductResponse extends { variants: Array<infer V> }
 		? V
 		: unknown;
@@ -59,10 +59,10 @@ function RouteComponent() {
 	const discount = discountCalculator(
 		selectedVariant?.price || 0,
 		selectedVariant?.maxPrice || 0,
-	);
+	)
 
 	return (
-		<div className="mb-20 [view-transition-name:main-content]">
+		<div className="mb-20 ">
 			{isFetched && product && (
 				<div>
 					<DashboardHeader title={product.title || ""}>
@@ -72,7 +72,7 @@ function RouteComponent() {
 									title: product.title || "",
 									url: window.location.href,
 									text: "Hey, Check out this product!",
-								});
+								})
 							}}
 							variant="outline"
 							className="rounded-full border-none"
@@ -210,5 +210,5 @@ function RouteComponent() {
 
 			{isFetching && <Spinner />}
 		</div>
-	);
+	)
 }

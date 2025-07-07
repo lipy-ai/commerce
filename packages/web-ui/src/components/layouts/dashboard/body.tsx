@@ -14,9 +14,6 @@ export const DashboardBody = ({
 	return (
 		<div
 			className={cn("flex-1 flex flex-col", noPadding && "p-0", className)}
-			style={{
-				viewTransitionName: "main-content",
-			}}
 			id="main-content"
 		>
 			{children}

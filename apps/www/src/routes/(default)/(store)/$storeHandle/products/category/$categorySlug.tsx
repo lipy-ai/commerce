@@ -6,7 +6,7 @@ import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute(
-	"/(store)/$storeHandle/products/category/$categorySlug",
+	"/(default)/(store)/$storeHandle/products/category/$categorySlug",
 )({
 	component: RouteComponent,
 });
@@ -23,10 +23,10 @@ function RouteComponent() {
 				categorySlug: categorySlug,
 			},
 		},
-	);
+	)
 
 	return (
-		<div className="[view-transition-name:main-content]">
+		<div className="">
 			{isFetched && data && data.length > 0 && (
 				<div className="max-w-screen-lg mx-auto">
 					<DashboardHeader title={data[0].categoryTitle || ""} />
@@ -46,5 +46,5 @@ function RouteComponent() {
 
 			{isFetching && <Spinner />}
 		</div>
-	);
+	)
 }

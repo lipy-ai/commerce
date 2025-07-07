@@ -20,7 +20,7 @@ import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { formatDistanceToNow } from "date-fns";
 import type { InferResponseType } from "hono/client";
-import { ArrowUpRight, PlusCircle } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { z } from "zod";
 
 export const Route = createFileRoute("/(loggedIn)/order/")({

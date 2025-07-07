@@ -119,18 +119,25 @@ function RouteComponent() {
 	return (
 		<div className="[view-transition-name:main-content]">
 			{isMobile && <DashboardHeader title="Cart" />}
+			{isFetching && [
+				Array(5).map((_, indx) => (
+					<div key={indx}>
+						<Skeleton className="h-12 w-full" />
+					</div>
+				)),
+			]}
 
 			{isFetched && data && data.length > 0 && (
 				<div className="relative max-w-screen-lg m-auto p-4">
 					<div className="space-y-6 my-4 gap-4">
-						<Card className="gap-0 p-0">
-							<CardHeader className="p-4 flex items-center justify-between border-b">
-								<CardTitle>Order Items(s)</CardTitle>
+						<Card>
+							<CardHeader className="flex items-center justify-between border-b">
+								<CardTitle>Order Item(s)</CardTitle>
 								{cart.length > 0 && (
 									<p className="text-muted-foreground">{cart.length} items</p>
 								)}
 							</CardHeader>
-							<CardContent className="p-2 border-b">
+							<CardContent>
 								{cart.map((product) => (
 									<div key={product.inventoryId} className=" py-4">
 										<ProductComp product={product} />
@@ -138,7 +145,7 @@ function RouteComponent() {
 								))}
 							</CardContent>
 
-							<CardFooter className="flex items-center justify-between p-4">
+							<CardFooter className="flex items-center justify-between border-t">
 								<p className="font-medium  ">Forgot something ?</p>
 								<Button variant="secondary" size="sm">
 									<Plus />
@@ -147,11 +154,11 @@ function RouteComponent() {
 							</CardFooter>
 						</Card>
 
-						<Card className="gap-0 p-0">
-							<CardHeader className="p-4 border-b">
-								<CardTitle>Billing Details</CardTitle>
+						<Card>
+							<CardHeader>
+								<CardTitle>Billing details</CardTitle>
 							</CardHeader>
-							<CardContent className="p-4 border-b">
+							<CardContent>
 								{billingDetails.map(({ icon: Icon, title, value }) => (
 									<div
 										key={title}
@@ -165,10 +172,10 @@ function RouteComponent() {
 									</div>
 								))}
 							</CardContent>
-							<CardFooter className="p-4">
+							<CardFooter className="border-t">
 								<div className=" flex items-center justify-between w-full">
-									<p className="text-lg font-semibold">Total Payable</p>
-									<p className="text-lg font-semibold">₹{totalPrice}</p>
+									<p className="text-base font-semibold">Total Payable</p>
+									<p className="text-base font-semibold">₹{totalPrice}</p>
 								</div>
 							</CardFooter>
 						</Card>
@@ -196,7 +203,7 @@ function RouteComponent() {
 					{/* Bottom Checkout UI */}
 					<div className="fixed bottom-0 left-0 right-0 border-t  w-full bg-card shadow-xl border-2 rounded-t-xl max-w-screen-lg ">
 						<div
-							className="bg-accent/40 rounded-t-xl p-2 cursor-pointer"
+							className="rounded-t-xl p-2 cursor-pointer"
 							onClick={() => setDetailedAddressDrawerOpen(true)}
 						>
 							<div className="flex items-center gap-2">
@@ -251,13 +258,6 @@ function RouteComponent() {
 					</Link>
 				</EmptyPage>
 			)}
-			{isFetching && [
-				Array(5).map((_, indx) => (
-					<div key={indx}>
-						<Skeleton className="h-12 w-full" />
-					</div>
-				)),
-			]}
 
 			{detailedAddressDrawerOpen && (
 				<DetailedAddress
@@ -288,7 +288,7 @@ export function ProductComp({
 	return (
 		<div className={cn("flex items-center justify-between gap-4")}>
 			<div className="flex items-start gap-2">
-				<div className=" relative aspect-square size-16">
+				<div className=" relative aspect-square size-12">
 					<img
 						alt={""}
 						src={product.thumbnail || "/assets/paper-bag-items.webp"}
@@ -297,7 +297,7 @@ export function ProductComp({
 				</div>
 
 				<div>
-					<p className="font-medium line-clamp-2">{product.title}</p>
+					<p className="line-clamp-2 text-xs">{product.title}</p>
 					<p className="text-muted-foreground text-xs">
 						{product.quantity} x {product.unit}
 					</p>

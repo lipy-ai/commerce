@@ -9,7 +9,12 @@ import {
 	AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
-import { Card, CardContent, CardHeader } from "@lipy/web-ui/components/ui/card";
+import {
+	Card,
+	CardContent,
+	CardFooter,
+	CardHeader,
+} from "@lipy/web-ui/components/ui/card";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
@@ -41,7 +46,7 @@ function RouteComponent() {
 					let lastMonth = "";
 
 					return (
-						<div className="mb-20 p-4 space-y-2">
+						<div className="mb-20 p-4 space-y-4">
 							{data.map((order) => {
 								const currentMonth = format(order.orderedAt, "LLLL yyyy");
 								const showMonth = currentMonth !== lastMonth;
@@ -55,8 +60,8 @@ function RouteComponent() {
 											</h2>
 										)}
 
-										<Card className="p-0 gap-0  border border-border/40">
-											<CardHeader className="flex items-start justify-between gap-4 border-b p-2 ">
+										<Card className="border border-border/40">
+											<CardHeader className="flex items-start justify-between gap-4 border-b ">
 												<Link
 													className="flex items-center gap-2"
 													to="/$storeHandle"
@@ -64,14 +69,14 @@ function RouteComponent() {
 														storeHandle: order?.storeHandle as string,
 													}}
 												>
-													<Avatar className="rounded-md size-8">
+													<Avatar className="rounded-md size-10">
 														<AvatarImage src={order?.store.image || ""} />
 														<AvatarFallback>
 															<Store />
 														</AvatarFallback>
 													</Avatar>
 													<div>
-														<p className="font-medium text-sm line-clamp-1">
+														<p className="font-medium  line-clamp-1">
 															{order?.store?.name || "Unknown store"}
 														</p>
 														<p className="text-xs text-muted-foreground line-clamp-1">
@@ -92,34 +97,33 @@ function RouteComponent() {
 												</Badge>
 											</CardHeader>
 
-											<CardContent className="p-2">
+											<CardContent>
 												<Link
 													to="/account/orders/$orderId"
 													params={{ orderId: order.id as string }}
 													className="space-y-2"
 													viewTransition={{ types: ["slide-left"] }}
 												>
-													<p className="text-xs">
+													<p>
 														{order?.items
 															?.map(
 																(item) => `${item.title} (${item.quantity})`,
 															)
 															.join(", ")}
 													</p>
-
-													<div className="flex items-center justify-between">
-														<p className="text-muted-foreground text-xs">
-															Ordered on {format(order?.orderedAt, "d LLL, p")}
-														</p>
-														<p className="font-bold text-base">
-															{formatAmount(
-																order?.currency,
-																order?.itemTotalAmount as number,
-															)}
-														</p>
-													</div>
 												</Link>
 											</CardContent>
+											<CardFooter className="flex items-center justify-between border-t border-dashed">
+												<p className="text-muted-foreground text-sm">
+													Ordered on {format(order?.orderedAt, "d LLL, p")}
+												</p>
+												<p className="font-bold text-base">
+													{formatAmount(
+														order?.currency,
+														order?.itemTotalAmount as number,
+													)}
+												</p>
+											</CardFooter>
 										</Card>
 									</div>
 								);

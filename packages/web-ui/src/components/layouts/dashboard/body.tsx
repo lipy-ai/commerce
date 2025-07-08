@@ -12,10 +12,7 @@ export const DashboardBody = ({
 	noPadding?: boolean;
 }) => {
 	return (
-		<div
-			className={cn("flex-1 flex flex-col", noPadding && "p-0", className)}
-			id="main-content"
-		>
+		<div className={cn("flex-1 flex flex-col", noPadding && "p-0", className)}>
 			{children}
 		</div>
 	);

@@ -21,7 +21,7 @@ import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import type { InferResponseType } from "hono/client";
-import { ArrowUpRight, PlusCircle } from "lucide-react";
+import { ArrowUpRight, Plus } from "lucide-react";
 import { z } from "zod";
 import FormEdit from "./-form.edit";
 
@@ -55,8 +55,8 @@ function RouteComponent() {
 			<DashboardHeader title="Products">
 				<FormEdit type="create">
 					<Button size={"sm"}>
-						<PlusCircle />
-						New Product
+						<Plus />
+						{isMobile ? "" : "New Product"}
 					</Button>
 				</FormEdit>
 			</DashboardHeader>

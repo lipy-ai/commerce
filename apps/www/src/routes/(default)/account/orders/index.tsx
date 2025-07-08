@@ -1,6 +1,7 @@
 import { apiClient } from "@lipy/lib/api";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
+import type { ORDER_STATUS } from "@lipy/server/db/schema";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import {
@@ -8,7 +9,7 @@ import {
 	AvatarFallback,
 	AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
-import { Badge } from "@lipy/web-ui/components/ui/badge";
+import { Badge, type badgeVariants } from "@lipy/web-ui/components/ui/badge";
 import {
 	Card,
 	CardContent,
@@ -17,12 +18,28 @@ import {
 } from "@lipy/web-ui/components/ui/card";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { Link, createFileRoute } from "@tanstack/react-router";
+import type { VariantProps } from "class-variance-authority";
 import { format } from "date-fns";
 import { Store } from "lucide-react";
 
 export const Route = createFileRoute("/(default)/account/orders/")({
 	component: RouteComponent,
 });
+
+export const ORDER_STATUS_BADGE_VARIANT: Record<
+	(typeof ORDER_STATUS)[number],
+	VariantProps<typeof badgeVariants>["variant"]
+> = {
+	ordered: "info",
+	accepted: "accent",
+	packed: "accent",
+	out_for_delivery: "warning",
+	delivered: "success",
+	return_requested: "warning",
+	refunded: "destructive",
+	replaced: "brand",
+	cancelled: "destructive",
+};
 
 function RouteComponent() {
 	const { data, isFetched, isFetching } = useAPIQuery(
@@ -87,43 +104,46 @@ function RouteComponent() {
 												</Link>
 												<Badge
 													variant={
-														order.status === "delivered" ? "success" : "premium"
+														ORDER_STATUS_BADGE_VARIANT[
+															order.status as (typeof ORDER_STATUS)[number]
+														] || "neutral"
 													}
+													className="capitalize"
 												>
-													{order?.status
-														? order.status.charAt(0).toUpperCase() +
-															order.status.slice(1)
-														: "Unknown"}
+													{order.status || "Unknown"}
 												</Badge>
 											</CardHeader>
 
-											<CardContent>
-												<Link
-													to="/account/orders/$orderId"
-													params={{ orderId: order.id as string }}
-													className="space-y-2"
-													viewTransition={{ types: ["slide-left"] }}
-												>
-													<p>
-														{order?.items
-															?.map(
-																(item) => `${item.title} (${item.quantity})`,
-															)
-															.join(", ")}
+											<Link
+												to="/account/orders/$orderId"
+												params={{ orderId: order.id as string }}
+												className="space-y-2"
+												viewTransition={{ types: ["slide-left"] }}
+											>
+												<CardContent>
+													<div className="grid grid-cols-5 gap-y-1.5">
+														{order?.items?.map((item) => (
+															<img
+																key={item.id}
+																src={item.thumbnail || ""}
+																className="aspect-square object-cover size-12 rounded-sm border border-border/40 bg-accent/40"
+																alt={""}
+															/>
+														))}
+													</div>
+												</CardContent>
+												<CardFooter className="flex items-center justify-between border-t border-dashed">
+													<p className="text-muted-foreground text-sm">
+														Ordered on {format(order?.orderedAt, "d LLL, p")}
 													</p>
-												</Link>
-											</CardContent>
-											<CardFooter className="flex items-center justify-between border-t border-dashed">
-												<p className="text-muted-foreground text-sm">
-													Ordered on {format(order?.orderedAt, "d LLL, p")}
-												</p>
-												<p className="font-bold text-base">
-													{formatAmount(
-														order?.currency,
-														order?.itemTotalAmount as number,
-													)}
-												</p>
-											</CardFooter>
+													<p className="font-bold text-base">
+														{formatAmount(
+															order?.currency,
+															order?.itemTotalAmount as number,
+														)}
+													</p>
+												</CardFooter>
+											</Link>
 										</Card>
 									</div>
 								);

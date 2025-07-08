@@ -1,7 +1,13 @@
 import { apiClient } from "@lipy/lib/api";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
+import type { ORDER_STATUS } from "@lipy/server/db/schema";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
+import {
+	Avatar,
+	AvatarFallback,
+	AvatarImage,
+} from "@lipy/web-ui/components/ui/avatar";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 
 import { Button } from "@lipy/web-ui/components/ui/button";
@@ -13,9 +19,17 @@ import {
 	CardTitle,
 } from "@lipy/web-ui/components/ui/card";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
-import { BanknoteArrowUp, CircleUser, MapPin } from "lucide-react";
+import {
+	BanknoteArrowUp,
+	CircleUser,
+	MapPin,
+	MessageSquareText,
+	Phone,
+	Store,
+} from "lucide-react";
+import { ORDER_STATUS_BADGE_VARIANT } from ".";
 
 export const Route = createFileRoute("/(default)/account/orders/$orderId")({
 	component: RouteComponent,
@@ -39,6 +53,40 @@ function RouteComponent() {
 	const totalTaxAmount = data?.[0]?.totalTaxAmount ?? 0;
 	const totalPayableAmount = totalPrice + deliveryCharges + totalTaxAmount;
 
+	const infos = [
+		{
+			title: "Receiver's Info",
+			icon: CircleUser,
+			value: [
+				data?.[0]?.customerDetails?.address?.name,
+				data?.[0]?.customerDetails?.address?.phone,
+			]
+				.filter(Boolean)
+				.join(" | "),
+		},
+		{
+			title: "Delivery Address",
+			icon: MapPin,
+			value: [
+				data?.[0]?.customerDetails?.address?.metadata?.building,
+				data?.[0]?.customerDetails?.address?.line1,
+			]
+				.filter(Boolean)
+				.join(", "),
+		},
+		{
+			title: "Payment Method",
+			icon: BanknoteArrowUp,
+			value:
+				data?.[0]?.paymentMethod === "cod" ? "Cash on Delivery" : "Unspecified",
+		},
+		{
+			title: "Delivery Instruction",
+			icon: MessageSquareText,
+			value: data?.[0]?.customerInstructions?.delivery,
+		},
+	];
+
 	return (
 		<>
 			{isFetching && <Spinner />}
@@ -47,7 +95,7 @@ function RouteComponent() {
 					<DashboardHeader
 						titleChildren={
 							<div>
-								<p className="font-semibold">Order Details</p>
+								s<p className="font-semibold">Order Details</p>
 								<p className="text-muted-foreground text-xs">
 									{data[0]?.items?.length ?? 0} items |{" "}
 									{formatAmount(data[0]?.currency, totalPrice || 0)}{" "}
@@ -55,45 +103,82 @@ function RouteComponent() {
 							</div>
 						}
 					>
-						{data?.[0]?.status === "delivered" && (
-							<Button size={"sm"}>REORDER</Button>
-						)}
+						<Badge
+							variant={
+								ORDER_STATUS_BADGE_VARIANT[
+									data[0]?.status as (typeof ORDER_STATUS)[number]
+								] || "neutral"
+							}
+							className="capitalize"
+						>
+							{data[0]?.status || "Unknown"}
+						</Badge>
 					</DashboardHeader>
 
 					<div className="lg:grid lg:grid-cols-12 divide-x flex-1">
 						<div className="col-span-7 p-4 space-y-4">
-							<div className="bg-card rounded-xl p-2">
-								<div className="flex items-center justify-between">
-									<h2 className="font-bold text-base">{data[0]?.id}</h2>
-									<Badge
-										variant={
-											data[0]?.status === "delivered" ? "success" : "premium"
-										}
+							<Card>
+								<CardHeader className="flex items-center justify-between gap-4 border-b -mx-4 px-4">
+									<Link
+										className="flex items-center gap-2"
+										to="/$storeHandle"
+										params={{
+											storeHandle: data[0]?.storeHandle ?? "",
+										}}
 									>
-										{data[0]?.status
-											? data[0]?.status.charAt(0).toUpperCase() +
-												data[0]?.status.slice(1)
-											: "Unknown"}
-									</Badge>
-								</div>
-								{data[0]?.deliveredAt ? (
-									<p className="text-muted-foreground text-sm">
-										Delivered on {format(new Date(data[0]?.deliveredAt), "Pp")}
+										<Avatar>
+											<AvatarImage src={data[0]?.storeLogo || ""} />
+											<AvatarFallback>
+												<Store />
+											</AvatarFallback>
+										</Avatar>
+										<div>
+											<p className="font-medium text-base">
+												{data[0]?.storeName}
+											</p>
+											<p className="text-muted-foreground line-clamp-1">
+												{data[0]?.storeAddress?.line1 || ""}
+											</p>
+										</div>
+									</Link>
+
+									<Button
+										variant="outline"
+										size="icon"
+										className="rounded-full"
+										onClick={() => {
+											window.open(`tel:${data[0]?.storePhone}`);
+										}}
+									>
+										<Phone className="text-ring size-5" />
+									</Button>
+								</CardHeader>
+								<CardContent>
+									<p className="font-medium text-base">
+										Order ID : {data[0]?.id}
 									</p>
-								) : data[0]?.cancelledAt ? (
-									<p className="text-muted-foreground text-sm">
-										Cancelled on {format(new Date(data[0]?.cancelledAt), "Pp")}
-									</p>
-								) : data[0]?.refundedAt ? (
-									<p className="text-muted-foreground text-sm">
-										Refunded on {format(new Date(data[0]?.refundedAt), "Pp")}
-									</p>
-								) : (
-									<p className="text-muted-foreground text-sm">
-										Ordered on {format(new Date(data[0]?.orderedAt), "Pp")}
-									</p>
-								)}
-							</div>
+
+									{data[0]?.deliveredAt ? (
+										<p className="text-muted-foreground text-sm">
+											Delivered on{" "}
+											{format(new Date(data[0]?.deliveredAt), "PPp")}
+										</p>
+									) : data[0]?.cancelledAt ? (
+										<p className="text-muted-foreground text-sm">
+											Cancelled on{" "}
+											{format(new Date(data[0]?.cancelledAt), "PPp")}
+										</p>
+									) : data[0]?.refundedAt ? (
+										<p className="text-muted-foreground text-sm">
+											Refunded on {format(new Date(data[0]?.refundedAt), "PPp")}
+										</p>
+									) : (
+										<p className="text-muted-foreground text-sm">
+											Ordered on {format(new Date(data[0]?.orderedAt), "PPp")}
+										</p>
+									)}
+								</CardContent>
+							</Card>
 
 							<Card>
 								<CardHeader>
@@ -102,14 +187,22 @@ function RouteComponent() {
 								<CardContent>
 									{data[0]?.items?.map((product, i) => (
 										<div key={i} className="flex gap-2 items-center py-2">
-											<img
-												src={product.thumbnail || "https://picsum.photos/200"}
-												alt=""
-												className="size-14 border rounded bg-accent"
-											/>
+											<Link
+												to="/$storeHandle/products/$productId"
+												params={{
+													storeHandle: data[0]?.storeHandle ?? "",
+													productId: product?.id ?? "",
+												}}
+											>
+												<img
+													src={product.thumbnail || "https://picsum.photos/200"}
+													alt=""
+													className="size-12 border rounded bg-accent"
+												/>
+											</Link>
 
 											<div className="flex-1">
-												<h2 className="text-sm ">{product.title}</h2>
+												<h2 className="text-sm leading-4">{product.title}</h2>
 												<p className="text-muted-foreground text-sm">
 													{product.variant.unit}
 												</p>
@@ -163,57 +256,37 @@ function RouteComponent() {
 									</p>
 								</CardFooter>
 							</Card>
-							<div className="divide-y divide-dashed bg-card rounded-xl">
-								{data[0]?.customerDetails?.address?.name && (
-									<div>
-										<div className="flex items-start gap-4 p-2">
-											<CircleUser className="text-muted-foreground flex-shrink-0 mt-1" />
+							<div className="divide-y divide-dashed bg-card rounded-xl mb-20">
+								{infos.map((info) => {
+									if (!info.value) return;
+									return (
+										<div
+											key={info?.title}
+											className="flex items-start gap-4 p-2"
+										>
+											<info.icon className="text-muted-foreground flex-shrink-0 mt-1" />
 											<div>
-												<p className="font-medium text-base">Receiver's Info</p>
-												<p className="text-muted-foreground">
-													{[
-														data[0]?.customerDetails?.address?.name,
-														data[0]?.customerDetails.address?.phone,
-													]
-														.filter(Boolean)
-														.join(" | ")}
-												</p>
+												<p className="font-medium text-base">{info.title}</p>
+												<p className="text-muted-foreground">{info.value}</p>
 											</div>
 										</div>
-									</div>
-								)}
-
-								<div>
-									<div className="flex items-start gap-4 p-2">
-										<BanknoteArrowUp className="text-muted-foreground flex-shrink-0" />
-										<div>
-											<p className="font-medium text-base">Payment method</p>
-											<p className="text-muted-foreground">
-												{data[0]?.paymentMethod === "cod"
-													? "Cash on Delivery"
-													: "Unspecified"}
-											</p>
-										</div>
-									</div>
-								</div>
-
-								<div className="flex items-start gap-4 p-2">
-									<MapPin className="text-muted-foreground flex-shrink-0 mt-1" />
-									<div>
-										<p className="font-medium text-base">Delivery Address</p>
-										<p className="text-muted-foreground">
-											{[
-												data[0]?.customerDetails?.address?.metadata?.building,
-												data[0]?.customerDetails?.address?.line1,
-											]
-												.filter(Boolean)
-												.join(", ")}
-										</p>
-									</div>
-								</div>
+									);
+								})}
 							</div>
 						</div>
 					</div>
+
+					{/* <div className="fixed bottom-0 w-full bg-card shadow-md p-4 flex items-center justify-between gap-4">
+						<Button variant="outline" className="flex-1 w-full">
+							<Headset />
+							Need help
+						</Button>
+						<Button className="flex-1 w-full">
+							{data[0]?.status === "ordered" || data[0]?.status === "accepted"
+								? "Cancel Order"
+								: "Reorder"}
+						</Button>
+					</div> */}
 				</div>
 			)}
 		</>

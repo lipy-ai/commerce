@@ -21,6 +21,7 @@ const route = new Hono<ServerContext>()
 
 		return c.json(d || []);
 	})
+
 	.get(
 		"/:handle",
 		zValidator("param", z.object({ handle: z.string() })),

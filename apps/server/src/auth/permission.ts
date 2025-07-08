@@ -1,13 +1,11 @@
 // import { getCachedOrgUser } from "@/cache/org";
-// import { DBTypes } from "@/db";
 // import { HTTPException } from "hono/http-exception";
 // export const roles = ["owner", "manager", "customer"] as const;
 
 // export const statements = {
-// 	// Org
-// 	owner: ["read", "create", "update", "delete"],
+// 	owner: ["list", "read", "create", "update", "delete"],
 // 	manager: ["list", "read", "create", "update", "delete"],
-// 	customer: ["read", "create", "update", "delete"],
+// 	delivery: ["list", "read", "create", "update", "delete"],
 // } as const;
 
 // export type Roles = (typeof roles)[number];
@@ -26,7 +24,7 @@
 // };
 
 // const ownerRole: RoleWithStatement = {
-// 	org: ["read", "create", "update", "delete"],
+// 	store: ["read", "create", "update", "delete"],
 // 	subscription: ["read", "create", "update", "delete"],
 // 	employee: ["list", "read", "create", "update", "delete"],
 // 	job: ["read", "create", "update", "delete"],
@@ -49,12 +47,12 @@
 // };
 
 // export const hasPermission = async ({
-// 	orgId,
+// 	storeId,
 // 	userId,
 // 	scope,
 // }: {
-// 	orgId: DBTypes["org.list"]["id"];
-// 	userId: DBTypes["auth.user"]["id"];
+// 	storeId: DBTypes["store"]["id"];
+// 	userId: DBTypes["user"]["id"];
 // 	scope?: RoleWithStatement;
 // }) => {
 // 	const data = await getCachedOrgUser(orgId, userId);
@@ -93,6 +91,7 @@
 // 	memberAc,
 // 	ownerAc,
 // } from "better-auth/plugins/organization/access";
+// import { DBTypes } from "@/db";
 
 // const statement = {
 // 	...defaultStatements,

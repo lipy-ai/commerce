@@ -19,7 +19,20 @@ export function createRouter() {
 		defaultErrorComponent: DefaultCatchBoundary,
 		defaultNotFoundComponent: () => <NotFound />,
 		scrollRestoration: true,
-		// defaultViewTransition: true,
+		// defaultViewTransition: ["wrap"],
+		// defaultViewTransition: {
+		// 	types: ({ fromLocation, toLocation }) => {
+		// 		let transition = "none";
+
+		// 		if (fromLocation) {
+		// 			const fromIndex = fromLocation.state.__TSR_index;
+		// 			const toIndex = toLocation.state.__TSR_index;
+		// 			transition = fromIndex > toIndex ? "slide-right" : "wrap";
+		// 		}
+
+		// 		return [transition];
+		// 	},
+		// },
 	});
 	BProgress.configure({ showSpinner: false });
 	router.subscribe("onBeforeLoad", ({ fromLocation, pathChanged }) => {

@@ -95,7 +95,7 @@ function RouteComponent() {
 					<DashboardHeader
 						titleChildren={
 							<div>
-								s<p className="font-semibold">Order Details</p>
+								<p className="font-semibold">Order Details</p>
 								<p className="text-muted-foreground text-xs">
 									{data[0]?.items?.length ?? 0} items |{" "}
 									{formatAmount(data[0]?.currency, totalPrice || 0)}{" "}

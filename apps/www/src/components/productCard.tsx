@@ -81,7 +81,7 @@ export default function ProductCard({
 									alt=""
 									src={product.thumbnail || "/assets/paper-bag-items.webp"}
 									className={cn(
-										"w-full h-full object-cover rounded-xl bg-accent",
+										"w-full h-full object-cover rounded-xl  bg-accent",
 										product?.variants[0].inStock ? "" : "",
 										className?.classNameImg,
 									)}
@@ -89,7 +89,7 @@ export default function ProductCard({
 
 								{!product?.variants[0].inStock && (
 									<div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-xl">
-										<span className="text-white text-lg font-semibold">
+										<span className="text-primary-foreground text-lg font-semibold">
 											Out of stock
 										</span>
 									</div>

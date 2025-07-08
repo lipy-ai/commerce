@@ -27,7 +27,6 @@ function Home() {
 
 	const { deliveryLocation, hasHydrated } = useLocationStore();
 	const { isMobile } = useViewport();
-
 	const mobileNav = [
 		{
 			label: "Home",

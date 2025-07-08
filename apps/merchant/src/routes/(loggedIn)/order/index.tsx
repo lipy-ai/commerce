@@ -20,7 +20,7 @@ import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { formatDistanceToNow } from "date-fns";
 import type { InferResponseType } from "hono/client";
-import { ArrowUpRight, PlusCircle } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { z } from "zod";
 
 export const Route = createFileRoute("/(loggedIn)/order/")({
@@ -49,10 +49,14 @@ function RouteComponent() {
 	return (
 		<div>
 			<DashboardHeader title="Orders">
-				<Link to="/order/create" className={cn(buttonVariants({ size: "sm" }))}>
+				{/* <Link
+					to="/order/$id"
+					params={{ id: "" }}
+					className={cn(buttonVariants({ size: "sm" }))}
+				>
 					<PlusCircle />
 					New Order
-				</Link>
+				</Link> */}
 			</DashboardHeader>
 
 			<div className="lg:p-8 lg:space-y-8">

@@ -197,6 +197,9 @@ const route = new Hono<ServerContext>()
 
 		await db.insertInto("orders").values(orders).execute();
 
+		for (const ord of orders) {
+			c.get("emitter").emit(c, "order:created", ord);
+		}
 		return c.json({ orders: orders.map((o) => o.id) });
 	})
 	.post("/cancel/:id", zValidator("param", paramSchema), async (c) => {

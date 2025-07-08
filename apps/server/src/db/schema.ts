@@ -1,4 +1,4 @@
-import type { addressSchema } from "@/routes/address";
+import type { addressSchema, coreAddressSchema } from "@/routes/address";
 import { sql } from "drizzle-orm";
 import {
 	bigint,
@@ -35,6 +35,15 @@ export const PRODUCT_TYPE = [
 	"food",
 	"vegetable",
 	"fruits",
+] as const;
+
+export const STORE_TYPE = [
+	"grocery",
+	"pharmacy",
+	"fruits_and_vegetables",
+	"restaurant",
+	"cafe",
+	"hardware",
 ] as const;
 
 export const schema = pgSchema("lipy-dev");
@@ -86,17 +95,6 @@ export const userAddress = schema.table("userAddress", {
 		.references(() => user.id, { onDelete: "cascade" }),
 });
 
-export const storeAddress = schema.table("storeAddress", {
-	id: uuid("id")
-		.primaryKey()
-		.references(() => address.id, {
-			onDelete: "cascade",
-		}),
-	storeId: uuid("storeId")
-		.notNull()
-		.references(() => store.id, { onDelete: "cascade" }),
-});
-
 export const account = schema.table("authAccount", {
 	id: uuid("id").primaryKey(),
 	accountId: text("accountId").notNull(),
@@ -144,10 +142,22 @@ export const store = schema.table("store", {
 	description: text("description"),
 	createdAt: timestamp("createdAt").notNull(),
 	metadata: text("metadata"),
-	address: jsonb("address").$type<z.infer<typeof addressSchema>>(),
+	address: jsonb("address").$type<z.infer<typeof coreAddressSchema>>(),
 	email: text("email"),
 	phone: text("phone"),
+	type: text("type"),
 	active: boolean("active").default(false),
+});
+
+export const storePayments = schema.table("storePayments", {
+	id: uuid("id")
+		.notNull()
+		.references(() => store.id, { onDelete: "cascade" })
+		.primaryKey(),
+	acceptedPayments: text({ enum: ["cod"] })
+		.array()
+		.notNull(),
+	upiIds: jsonb("upiIds").array().$type<Array<{ name: string; id: string }>>(),
 });
 
 export const storeMember = schema.table(
@@ -372,7 +382,6 @@ export const dbTables = {
 	user,
 	address,
 	userAddress,
-	storeAddress,
 	account,
 	session,
 	verification,
@@ -388,4 +397,5 @@ export const dbTables = {
 	category,
 	tags,
 	storeInventory,
+	storePayments,
 };

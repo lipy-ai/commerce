@@ -78,7 +78,7 @@ function RouteComponent() {
 					<div className="grid lg:grid-cols-3 p-4 lg:p-8 gap-4 lg:gap-8">
 						<div className="lg:col-span-2">
 							<div className="space-y-8">
-								<Card className="=">
+								<Card className="">
 									<CardHeader>
 										<CardTitle>Product Details</CardTitle>
 										<CardAction className={cn("flex gap-2")}>
@@ -222,27 +222,29 @@ export function Images({
 	return (
 		<DrawerDialogSwitcher
 			trigger={trigger}
-			className="min-h-fit min-w-fit px-20"
+			className="min-h-fit min-w-fit lg:px-20"
 		>
 			<div className="mx-auto">
 				<Carousel setApi={setApi} className="w-full max-w-xl">
-					<CarouselContent>
+					<div className="absolute right-0 -bottom-10 w-20 block h-8">
+						<CarouselPrevious className="left-0" />
+						<CarouselNext className="right-0" />
+					</div>
+					<CarouselContent className="relative">
 						{images.map((m, index) => (
 							<CarouselItem key={index}>
 								<Card>
-									<CardContent className="flex aspect-square items-center justify-center p-6">
-										<span className="text-4xl font-semibold">
-											<img src={m || ""} alt="Product" />
+									<CardContent className="flex items-center justify-center p-6">
+										<span className="text-4xl aspect-square  font-semibold">
+											<img src={m || ""} alt="Product" className="size-full" />
 										</span>
 									</CardContent>
 								</Card>
 							</CarouselItem>
 						))}
 					</CarouselContent>
-					<CarouselPrevious />
-					<CarouselNext />
 				</Carousel>
-				<div className="text-muted-foreground py-2 text-center text-sm">
+				<div className="text-muted-foreground pt-4 text-center text-sm">
 					Image {current} of {count}
 				</div>
 			</div>

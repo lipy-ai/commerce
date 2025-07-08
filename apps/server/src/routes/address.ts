@@ -3,24 +3,26 @@ import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
 import { z } from "zod";
-
-export const addressSchema = z.object({
-	name: z.string(),
-	tag: z.enum(["home", "work", "other"]),
+export const coreAddressSchema = z.object({
 	line1: z.string().min(1),
 	line2: z.string(),
 	city: z.string().min(1),
 	state: z.string().min(1),
 	country: z.string().min(1),
-	lat: z.number(),
-	lng: z.number(),
-	phone: z.string().optional(),
 	postalCode: z.string().min(1),
+	lat: z.number().optional(),
+	lng: z.number().optional(),
+});
+export const addressSchema = z.object({
+	name: z.string(),
+	tag: z.enum(["home", "work", "other"]),
+	phone: z.string().optional(),
 	metadata: z
 		.object({
 			building: z.string().min(1),
 		})
 		.optional(),
+	...coreAddressSchema.shape,
 });
 
 const route = new Hono<ServerContext>()

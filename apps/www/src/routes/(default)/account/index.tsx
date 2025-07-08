@@ -108,8 +108,8 @@ export function AccountPage() {
 										src={data?.user.image || ""}
 										alt={data.user.name}
 									/>
-									<AvatarFallback className="bg-primary/20">
-										<UserRound className="size-12 fill-primary text-primary mt-3" />
+									<AvatarFallback className="bg-secondary/20">
+										<UserRound className="size-12 fill-secondary text-secondary mt-3" />
 									</AvatarFallback>
 								</Avatar>
 

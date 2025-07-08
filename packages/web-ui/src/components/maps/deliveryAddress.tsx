@@ -1,7 +1,7 @@
 import { env } from "@envClient";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link } from "@tanstack/react-router";
-import { MapPinOff } from "lucide-react";
+import { MapPinOff, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
 	DrawerDialogDescription,
@@ -151,6 +151,7 @@ function LocationComponent() {
 						className={cn(buttonVariants({ variant: "outline", size: "lg" }))}
 						to={"/account/addresses/deliveryAddress"}
 					>
+						<Search className="stroke-2" />
 						Search your location
 					</Link>
 				</DrawerDialogFooter>

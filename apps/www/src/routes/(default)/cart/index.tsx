@@ -1,4 +1,3 @@
-import { DeliveryInstruction } from "@/components/cart/instructions";
 import { type CartStore, useCartStore } from "@/components/cart/store";
 
 import { AddToCart } from "@/components/cart/addToCart";
@@ -6,12 +5,16 @@ import PlaceOrder from "@/components/order/placeOrder";
 import { apiClient } from "@lipy/lib/api";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
+import {
+	DrawerDialogHeader,
+	DrawerDialogSwitcher,
+} from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { DetailedAddress } from "@lipy/web-ui/components/maps/detailedAddress";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { Avatar, AvatarFallback } from "@lipy/web-ui/components/ui/avatar";
-import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
+import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import {
 	Card,
 	CardContent,
@@ -25,13 +28,20 @@ import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import {
 	Bike,
+	Check,
 	ChevronDown,
 	ChevronRight,
+	Clock,
+	Dog,
+	MapPin,
 	MapPinned,
 	MessageSquareText,
-	Plus,
+	Package,
+	Phone,
 	ReceiptText,
+	ScanBarcode,
 	ShoppingBag,
+	StickyNote,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
@@ -39,17 +49,90 @@ export const Route = createFileRoute("/(default)/cart/")({
 	component: RouteComponent,
 });
 
+const instructions = [
+	{
+		name: "deliveryInstructions",
+		label: "Delivery Instructions",
+		description: "We will inform the delivery partner",
+		icon: MessageSquareText,
+		options: [
+			{
+				name: "leave-at-door",
+				label: "Leave at door",
+				icon: MapPin,
+				description: "Leave the order at my doorstep",
+			},
+			{
+				name: "ring-doorbell",
+				label: "Ring doorbell",
+				icon: Clock,
+				description: "Please ring the doorbell upon arrival",
+			},
+			{
+				name: "call-on-arrival",
+				label: "Call on arrival",
+				icon: Phone,
+				description: "Call me when you arrive",
+			},
+			{
+				name: "pet-at-home",
+				label: "Pet is at home",
+				icon: Dog,
+				description: "Beware of pets at home",
+			},
+		],
+	},
+	{
+		name: "storeInstructions",
+		label: "Store Instructions",
+		description: "We will inform the store about your preferences",
+		icon: StickyNote,
+		options: [
+			{
+				name: "prepare-fresh",
+				label: "Prepare fresh items",
+				icon: Check,
+				description: "Please pack fresh and good-quality items only",
+			},
+			{
+				name: "check-expiry",
+				label: "Check expiry date",
+				icon: ScanBarcode,
+				description: "Ensure products are not close to expiry",
+			},
+			{
+				name: "pack-securely",
+				label: "Pack securely",
+				icon: Package,
+				description: "Ensure items are packed safely to avoid damage",
+			},
+			{
+				name: "notify-if-unavailable",
+				label: "Notify if item unavailable",
+				icon: Clock,
+				description: "Call or update me if any item is not available",
+			},
+		],
+	},
+] as const;
+
+export type CompleteInstruction = {
+	[K in (typeof instructions)[number]["name"]]: string;
+};
+
 function RouteComponent() {
 	const { cart, setCart, resetCart } = useCartStore();
 	const { deliveryLocation } = useLocationStore();
 	const { isMobile } = useViewport();
 	const [detailedAddressDrawerOpen, setDetailedAddressDrawerOpen] =
 		useState(false);
-	const [deliveryInstructionDrawerOpen, setDeliveryInstructionDrawerOpen] =
-		useState(false);
 
-	const [completeDeliveryInstruction, setCompleteDeliveryInstruction] =
-		useState("");
+	const [completeInstruction, setCompleteInstruction] =
+		useState<CompleteInstruction>(
+			Object.fromEntries(
+				instructions.map((item) => [item.name, ""]),
+			) as CompleteInstruction,
+		);
 
 	const {
 		data = [],
@@ -65,7 +148,7 @@ function RouteComponent() {
 			staleTime: 0,
 			cacheTime: 0,
 		},
-	)
+	);
 
 	useEffect(() => {
 		resetCart();
@@ -83,10 +166,10 @@ function RouteComponent() {
 			(acc, item) => {
 				acc.totalPrice += (item.price || 0) * (item.quantity || 0);
 				acc.totalMaxPrice += (item.maxPrice || 0) * (item.quantity || 0);
-				return acc
+				return acc;
 			},
 			{ totalPrice: 0, totalMaxPrice: 0 },
-		)
+		);
 	}, [cart]);
 
 	const billingDetails = [
@@ -114,7 +197,7 @@ function RouteComponent() {
 				<div className="text-muted-foreground">{formatAmount("inr", 0)}</div>
 			),
 		},
-	]
+	];
 
 	return (
 		<div className="">
@@ -139,19 +222,11 @@ function RouteComponent() {
 							</CardHeader>
 							<CardContent>
 								{cart.map((product) => (
-									<div key={product.inventoryId} className=" py-4">
+									<div key={product.inventoryId} className="py-4">
 										<ProductComp product={product} />
 									</div>
 								))}
 							</CardContent>
-
-							<CardFooter className="flex items-center justify-between border-t">
-								<p className="font-medium  ">Forgot something ?</p>
-								<Button variant="secondary" size="sm">
-									<Plus />
-									Add more items
-								</Button>
-							</CardFooter>
 						</Card>
 
 						<Card>
@@ -180,23 +255,11 @@ function RouteComponent() {
 							</CardFooter>
 						</Card>
 
-						<div className="p-4 mb-42 shadow-none rounded-xl bg-card border-none">
-							<div
-								className="flex items-center justify-between"
-								onClick={() => setDeliveryInstructionDrawerOpen(true)}
-							>
-								<div className="flex items-center gap-4">
-									<MessageSquareText />
-									<div>
-										<p className="font-medium text-sm">Delivery Instruction</p>
-										<p className="text-muted-foreground text-xs">
-											We will inform the delivery partner.
-										</p>
-									</div>
-								</div>
-
-								<ChevronRight />
-							</div>
+						<div className="mb-40">
+							<InstructionComp
+								completeInstruction={completeInstruction}
+								setCompleteInstruction={setCompleteInstruction}
+							/>
 						</div>
 					</div>
 
@@ -209,7 +272,7 @@ function RouteComponent() {
 							<div className="flex items-center gap-2">
 								<Avatar className="rounded-md">
 									<AvatarFallback>
-										<MapPinned className="size-6 fill-primary/40" />
+										<MapPinned className="size-6 fill-secondary/40" />
 									</AvatarFallback>
 								</Avatar>
 
@@ -238,7 +301,7 @@ function RouteComponent() {
 						<div className="px-4 py-2">
 							<PlaceOrder
 								setOpen={setDetailedAddressDrawerOpen}
-								deliveryInstruction={completeDeliveryInstruction}
+								completeInstruction={completeInstruction}
 							/>
 						</div>
 					</div>
@@ -268,16 +331,8 @@ function RouteComponent() {
 					isDeliveryAddress
 				/>
 			)}
-
-			{deliveryInstructionDrawerOpen && (
-				<DeliveryInstruction
-					open={deliveryInstructionDrawerOpen}
-					onOpenChange={setDeliveryInstructionDrawerOpen}
-					setCompleteInstruction={setCompleteDeliveryInstruction}
-				/>
-			)}
 		</div>
-	)
+	);
 }
 
 export function ProductComp({
@@ -289,22 +344,34 @@ export function ProductComp({
 		<div className={cn("flex items-center justify-between gap-4")}>
 			<div className="flex items-start gap-2">
 				<div className=" relative aspect-square size-12">
-					<img
-						alt={""}
-						src={product.thumbnail || "/assets/paper-bag-items.webp"}
-						className={cn("w-full h-full object-cover rounded-md bg-accent")}
-					/>
+					<Link
+						to="/$storeHandle/products/$productId"
+						params={{
+							storeHandle: product?.storeHandle ?? "",
+							productId: product?.productId ?? "",
+						}}
+					>
+						<img
+							alt={""}
+							src={product.thumbnail || "/assets/paper-bag-items.webp"}
+							className={cn("w-full h-full object-cover rounded-md bg-accent")}
+						/>
+					</Link>
 				</div>
 
 				<div>
-					<p className="line-clamp-2 text-xs">{product.title}</p>
+					<p className="line-clamp-2 text-sm leading-4">{product.title}</p>
 					<p className="text-muted-foreground text-xs">
 						{product.quantity} x {product.unit}
 					</p>
 				</div>
 			</div>
 			<div className="flex flex-col items-end gap-1">
-				<AddToCart product={product} variant={"icon"} />
+				<AddToCart
+					product={product}
+					variant={"primary"}
+					activeVariant="tertiary-active"
+				/>
 				<div className="flex items-center gap-2">
 					<p className="line-through text-muted-foreground">
 						{formatAmount(
@@ -321,5 +388,92 @@ export function ProductComp({
 				</div>
 			</div>
 		</div>
-	)
+	);
+}
+
+function InstructionComp({
+	completeInstruction,
+	setCompleteInstruction,
+}: {
+	completeInstruction: CompleteInstruction;
+	setCompleteInstruction: (instruction: CompleteInstruction) => void;
+}) {
+	const [drawerDialogOpen, setDrawerDialogOpen] = useState(false);
+	const [selectedInstruction, setSelectedInstruction] =
+		useState<(typeof instructions)[number]>();
+
+	return (
+		<div>
+			<div className="rounded-xl bg-card divide-y divide-dashed">
+				{instructions.map((instruction) => (
+					<div
+						key={instruction.name}
+						className="flex items-center justify-between p-4"
+						onClick={() => {
+							setDrawerDialogOpen(true);
+							setSelectedInstruction(instruction);
+						}}
+					>
+						<div className="flex items-center gap-2">
+							<instruction.icon className="size-6 stroke-2" />
+							<div>
+								<p className="font-medium">{instruction.label}</p>
+								<p className="text-muted-foreground text-xs">
+									{completeInstruction[instruction?.name] ||
+										instruction.description}
+								</p>
+							</div>
+						</div>
+						<ChevronRight className="size-5" />
+					</div>
+				))}
+			</div>
+
+			{selectedInstruction && (
+				<DrawerDialogSwitcher
+					open={drawerDialogOpen}
+					onOpenChange={setDrawerDialogOpen}
+				>
+					<DrawerDialogHeader>
+						<div className="flex items-center gap-4">
+							<selectedInstruction.icon className="size-8 stroke-2" />
+							<div>
+								<p className="font-medium">{selectedInstruction?.label}</p>
+								<p className="text-muted-foreground text-xs">
+									{selectedInstruction?.description}
+								</p>
+							</div>
+						</div>
+					</DrawerDialogHeader>
+					<div className="space-y-2">
+						{selectedInstruction.options.map((option) => (
+							<div
+								key={option.name}
+								className={cn(
+									completeInstruction[selectedInstruction.name] === option.label
+										? "bg-primary/10 border-2 border-primary"
+										: null,
+									"flex items-center gap-4 p-4 border rounded-xl",
+								)}
+								onClick={() => {
+									setCompleteInstruction({
+										...completeInstruction,
+										[selectedInstruction.name]: option.label,
+									});
+								}}
+							>
+								<option.icon className="size-6 stroke-1.5" />
+								<div>
+									<p className="font-medium">{option.label}</p>
+									<p className="text-muted-foreground text-xs">
+										{option.description}
+									</p>
+								</div>
+							</div>
+						))}
+					</div>
+				</DrawerDialogSwitcher>
+			)}
+		</div>
+	);
 }

@@ -5,6 +5,7 @@ import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { Loader2, Minus, Plus } from "lucide-react";
 import { useCallback, useState } from "react";
 
+import { cn } from "@lipy/web-ui/lib/utils";
 import { type CartStore, type Operation, useCartStore } from "./store";
 
 type LoadingState = {
@@ -15,10 +16,12 @@ type LoadingState = {
 export const AddToCart = ({
 	product,
 	variant,
+	activeVariant,
 	disabled = false,
 }: {
 	product: CartStore["cart"][0];
-	variant: "icon" | "primary" | "active";
+	variant: "primary" | "secondary" | "active";
+	activeVariant?: "primary-active" | "secondary-active" | "tertiary-active";
 	disabled?: boolean;
 	thumbnail?: string;
 }) => {
@@ -114,7 +117,7 @@ export const AddToCart = ({
 	const isLoading = loadingState.isLoading;
 
 	switch (computedVariant) {
-		case "icon":
+		case "primary":
 			return (
 				<Button
 					size="sm"
@@ -122,13 +125,14 @@ export const AddToCart = ({
 					disabled={disabled || isLoading}
 					type="button"
 					aria-label="Add to cart"
-					className="min-w-12"
+					className="text-secondary border border-secondary min-w-16 hover:text-secondary border-b-2 border-r-2 disabled:opacity-100"
+					variant={"outline"}
 				>
-					{isLoading ? <Loader2 className="animate-spin" /> : <p>Add</p>}
+					{isLoading ? <Loader2 className="animate-spin" /> : <p>ADD</p>}
 				</Button>
 			);
 
-		case "primary":
+		case "secondary":
 			return (
 				<Button
 					onClick={handleAddToCart}
@@ -153,52 +157,121 @@ export const AddToCart = ({
 				isLoading && loadingState.operation === "increment";
 
 			return (
-				<div className="bg-primary flex items-center  shadow-sm rounded-md">
+				<div
+					className={cn(
+						activeVariant === "secondary-active"
+							? "bg-primary min-w-32"
+							: activeVariant === "tertiary-active"
+								? "bg-secondary/20 ring-1 ring-primary/40"
+								: "bg-secondary ",
+						"flex items-center  shadow-sm rounded-md justify-between",
+					)}
+				>
 					<Button
-						size="sm"
+						size={
+							activeVariant === "secondary-active"
+								? "lg"
+								: activeVariant === "tertiary-active"
+									? "icon"
+									: "sm"
+						}
 						onClick={handleQuantityChange("decrement")}
 						disabled={disabled || isLoading}
 						aria-label="Decrease quantity"
 						variant="ghost"
-						className="text-white hover:bg-primary hover:text-white"
+						className={cn(
+							activeVariant === "secondary-active"
+								? "bg-primary hover:bg-primary"
+								: activeVariant === "tertiary-active"
+									? "hover:bg-primary/10 "
+									: "hover:bg-secondary",
+							"text-primary-foreground  hover:text-primary-foreground",
+						)}
 					>
 						{isDecrementLoading ? (
-							<Loader2 className="animate-spin " />
+							<Loader2
+								className={cn(
+									activeVariant === "tertiary-active"
+										? "text-foreground"
+										: null,
+									"animate-spin",
+								)}
+							/>
 						) : (
-							<Minus className="h-3 w-3 stroke-3" />
+							<Minus
+								className={cn(
+									activeVariant === "tertiary-active"
+										? "text-secondary"
+										: "stroke-3 ",
+									"h-3 w-3 ",
+								)}
+							/>
 						)}
 					</Button>
 
-					<div className="min-w-[2px] flex items-center justify-center">
+					<div className="min-w-[2px] flex items-center justify-center -mx-2">
 						{isLoading &&
 						(loadingState.operation === "add" ||
 							(!isDecrementLoading && !isIncrementLoading)) ? (
 							<Loader2 className="animate-spin" />
 						) : (
-							<span className="font-semibold text-white text-sm px-1">
+							<span
+								className={cn(
+									activeVariant === "tertiary-active"
+										? ""
+										: "font-semibold  text-primary-foreground",
+									"text-sm px-1",
+								)}
+							>
 								{currentQuantity}
 							</span>
 						)}
 					</div>
 
 					<Button
-						size="sm"
+						size={
+							activeVariant === "secondary-active"
+								? "lg"
+								: activeVariant === "tertiary-active"
+									? "icon"
+									: "sm"
+						}
 						onClick={handleQuantityChange("increment")}
 						disabled={disabled || isLoading}
 						aria-label="Increase quantity"
 						variant="ghost"
-						className="text-white hover:bg-primary hover:text-white"
+						className={cn(
+							activeVariant === "secondary-active"
+								? "bg-primary hover:bg-primary"
+								: activeVariant === "tertiary-active"
+									? "hover:bg-primary/10"
+									: "hover:bg-secondary",
+							"text-primary-foreground  hover:text-primary-foreground",
+						)}
 					>
 						{isIncrementLoading ? (
-							<Loader2 className="animate-spin " />
+							<Loader2
+								className={cn(
+									activeVariant === "tertiary-active"
+										? "text-foreground"
+										: null,
+									"animate-spin",
+								)}
+							/>
 						) : (
-							<Plus className="h-3 w-3 stroke-3" />
+							<Plus
+								className={cn(
+									activeVariant === "tertiary-active"
+										? "text-secondary"
+										: "stroke-3",
+									"h-3 w-3 ",
+								)}
+							/>
 						)}
 					</Button>
 				</div>
 			);
 		}
-
 		default:
 			return null;
 	}

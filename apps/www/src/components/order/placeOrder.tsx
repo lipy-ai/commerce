@@ -1,3 +1,4 @@
+import type { CompleteInstruction } from "@/routes/(default)/cart";
 import { apiClient } from "@lipy/lib/api";
 import { authClient } from "@lipy/lib/providers/auth";
 import {
@@ -27,11 +28,11 @@ import { useCartStore } from "../cart/store";
 function ProgressDialog({
 	showDialog,
 	setShowDialog,
-	deliveryInstruction,
+	completeInstruction,
 }: {
 	showDialog: boolean;
 	setShowDialog: (showDialog: boolean) => void;
-	deliveryInstruction?: string;
+	completeInstruction?: CompleteInstruction;
 }) {
 	const [progress, setProgress] = useState(0);
 
@@ -116,7 +117,7 @@ function ProgressDialog({
 			mutation.mutateAsync({
 				json: {
 					address: deliveryLocation as z.infer<typeof addressSchema>,
-					deliveryInstruction: deliveryInstruction || "",
+					deliveryInstruction: completeInstruction?.deliveryInstructions ?? "",
 					storeInstruction: null,
 				},
 			});
@@ -127,7 +128,7 @@ function ProgressDialog({
 			clearInterval(interval);
 			clearTimeout(timeout);
 		};
-	}, [deliveryLocation, deliveryInstruction]);
+	}, [deliveryLocation, completeInstruction]);
 
 	return (
 		<Dialog open={showDialog} onOpenChange={setShowDialog}>
@@ -151,8 +152,11 @@ function ProgressDialog({
 
 export default function PlaceOrder({
 	setOpen,
-	deliveryInstruction,
-}: { setOpen: (open: boolean) => void; deliveryInstruction?: string }) {
+	completeInstruction,
+}: {
+	setOpen: (open: boolean) => void;
+	completeInstruction?: CompleteInstruction;
+}) {
 	const { data } = authClient.useSession();
 	const [showDialog, setShowDialog] = useState(false);
 	const { deliveryLocation } = useLocationStore();
@@ -198,7 +202,7 @@ export default function PlaceOrder({
 				<ProgressDialog
 					showDialog={showDialog}
 					setShowDialog={setShowDialog}
-					deliveryInstruction={deliveryInstruction}
+					completeInstruction={completeInstruction}
 				/>
 			)}
 		</>

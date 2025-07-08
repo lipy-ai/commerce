@@ -109,7 +109,9 @@ export default function ProductCard({
 												...product.variants[0],
 											} as CartStore["cart"][0]
 										}
-										variant={"icon"}
+										variant={"primary"}
+										disabled={!product.variants[0].inStock}
+										activeVariant={"primary-active"}
 									/>
 								) : cartCount === 0 ? (
 									<Button
@@ -123,13 +125,17 @@ export default function ProductCard({
 										size="sm"
 										type="button"
 										aria-label="Add to cart"
-										className="min-w-12"
+										className="text-secondary border border-secondary min-w-16 hover:text-secondary border-b-2 border-r-2 disabled:opacity-100 flex flex-col p-0  gap-0"
+										variant={"outline"}
 									>
-										Add
+										<p className=" ">ADD</p>
+										<p className="-mt-1 bg-secondary/20 w-full text-xs text-muted-foreground font-normal  rounded-b-md pb-0.5 ">
+											{product.variants.length} options
+										</p>
 									</Button>
 								) : (
 									<div
-										className="bg-primary flex items-center  rounded-md shadow-sm"
+										className="bg-secondary flex items-center  shadow-sm rounded-md"
 										onClick={(e) => {
 											e.preventDefault();
 											e.stopPropagation();
@@ -141,13 +147,13 @@ export default function ProductCard({
 										<Button
 											size="sm"
 											variant="ghost"
-											className="text-white hover:bg-primary hover:text-white"
+											className="text-primary-foreground hover:bg-secondary hover:text-primary-foreground"
 										>
 											<Minus className="h-3 w-3 stroke-3" />
 										</Button>
 
 										<div className="min-w-[2px] flex items-center justify-center">
-											<span className="font-semibold text-white text-sm px-1">
+											<span className="font-semibold text-primary-foreground text-sm px-1">
 												{cartCount}
 											</span>
 										</div>
@@ -155,7 +161,7 @@ export default function ProductCard({
 										<Button
 											size="sm"
 											variant="ghost"
-											className="text-white hover:bg-primary hover:text-white"
+											className="text-primary-foreground hover:bg-secondary hover:text-primary-foreground"
 										>
 											<Plus className="h-3 w-3 stroke-3" />
 										</Button>
@@ -169,7 +175,16 @@ export default function ProductCard({
 								<Badge className="text-xs" variant="subtle" size="compact">
 									{product.variants[0].unit}
 								</Badge>
-								<p className="font-medium line-clamp-3">{product.title}</p>
+								<p
+									className={cn(
+										!product.variants[0].inStock
+											? "text-muted-foreground"
+											: null,
+										"font-medium line-clamp-3",
+									)}
+								>
+									{product.title}
+								</p>
 							</div>
 
 							<div>
@@ -252,7 +267,8 @@ function VariantList({
 									...variant,
 								} as CartStore["cart"][0]
 							}
-							variant={"icon"}
+							variant={"primary"}
+							activeVariant="primary-active"
 						/>
 					</div>
 				))}

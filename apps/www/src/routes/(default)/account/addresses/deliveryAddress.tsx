@@ -13,11 +13,13 @@ import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { Autocomplete, useJsApiLoader } from "@react-google-maps/api";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { ChevronRight, Navigation } from "lucide-react";
+import { ChevronRight, Locate } from "lucide-react";
 import { useCallback, useRef } from "react";
 import { AddressComponent } from ".";
 
-export const Route = createFileRoute("/(default)/account/addresses/deliveryAddress")({
+export const Route = createFileRoute(
+	"/(default)/account/addresses/deliveryAddress",
+)({
 	component: RouteComponent,
 });
 
@@ -49,7 +51,7 @@ function RouteComponent() {
 			address,
 			lat,
 			lng,
-		)
+		);
 
 		setDeliveryLocation({
 			...deliveryLocation,
@@ -57,7 +59,7 @@ function RouteComponent() {
 			metadata: { building: "" },
 			tag: "other",
 			id: "",
-		})
+		});
 		navigate({ to: "/" });
 	}, [setDeliveryLocation, navigate]);
 
@@ -67,14 +69,14 @@ function RouteComponent() {
 			navigate({ to: "/" });
 		},
 		[setDeliveryLocation, navigate],
-	)
+	);
 
 	const handleAutocompleteLoad = useCallback(
 		(autocomplete: google.maps.places.Autocomplete) => {
 			autocompleteRef.current = autocomplete;
 		},
 		[],
-	)
+	);
 
 	if (!isLoaded || isFetching) return <Spinner />;
 
@@ -100,7 +102,7 @@ function RouteComponent() {
 					search={{ type: "deliveryAddress" }}
 				>
 					<div className="flex items-center gap-2">
-						<Navigation className="fill-primary" />
+						<Locate />
 						Use my current location
 					</div>
 					<ChevronRight className="text-muted-foreground" />
@@ -139,5 +141,5 @@ function RouteComponent() {
 				)}
 			</div>
 		</motion.div>
-	)
+	);
 }

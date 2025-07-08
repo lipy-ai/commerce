@@ -43,7 +43,7 @@ function RouteComponent() {
 
 	type ProductResponse = InferResponseType<
 		(typeof apiClient.v1.products)[":id"]["$get"]
-	>
+	>;
 	type ProductVariant = ProductResponse extends { variants: Array<infer V> }
 		? V
 		: unknown;
@@ -59,7 +59,7 @@ function RouteComponent() {
 	const discount = discountCalculator(
 		selectedVariant?.price || 0,
 		selectedVariant?.maxPrice || 0,
-	)
+	);
 
 	return (
 		<div className="mb-20 ">
@@ -72,7 +72,7 @@ function RouteComponent() {
 									title: product.title || "",
 									url: window.location.href,
 									text: "Hey, Check out this product!",
-								})
+								});
 							}}
 							variant="outline"
 							className="rounded-full border-none"
@@ -83,7 +83,7 @@ function RouteComponent() {
 					</DashboardHeader>
 
 					<ImageCarousel images={product.images || []} />
-					<div className="bg-card rounded-xl  mx-2 ">
+					<div className="bg-card rounded-xl  mx-2 border border-border/40">
 						<h3 className="font-bold text-lg px-4 pt-2">{product.title}</h3>
 						{product.variants?.length === 1 && (
 							<div className="px-4 py-2">
@@ -149,6 +149,7 @@ function RouteComponent() {
 							type="single"
 							collapsible
 							className="bg-card rounded-xl m-2 mb-32 "
+							defaultValue="item-1"
 						>
 							<AccordionItem value="item-1" className="border-b-0">
 								<AccordionTrigger className="hover:no-underline font-medium text-base px-6">
@@ -201,7 +202,8 @@ function RouteComponent() {
 									storeHandle: storeHandle || "",
 									storeName: "",
 								}}
-								variant="primary"
+								variant="secondary"
+								activeVariant="secondary-active"
 							/>
 						</div>
 					)}
@@ -210,5 +212,5 @@ function RouteComponent() {
 
 			{isFetching && <Spinner />}
 		</div>
-	)
+	);
 }

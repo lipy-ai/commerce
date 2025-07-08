@@ -54,9 +54,9 @@ function Home() {
 			icon: () => {
 				return (
 					<div className="relative inline-block">
-						<ShoppingCart className="w-6 h-6 text-gray-700" />
+						<ShoppingCart className="w-6 h-6 " />
 						{cart.length > 0 && (
-							<span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center min-w-[20px]">
+							<span className="absolute -top-2 -right-2 bg-secondary text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center min-w-[20px]">
 								{cart.length > 99 ? "99+" : cart.length}
 							</span>
 						)}
@@ -65,7 +65,7 @@ function Home() {
 			},
 			mobile: true,
 		} as any,
-	]
+	];
 
 	return (
 		<div>
@@ -85,5 +85,5 @@ function Home() {
 				</DashboardBody>
 			</DashboardLayout>
 		</div>
-	)
+	);
 }

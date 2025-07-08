@@ -41,7 +41,7 @@ export default function NavBar() {
 					{deliveryLocation && (
 						<Link to={"/account/addresses/deliveryAddress"}>
 							<div className="flex items-center gap-2">
-								{<MapPin className="fill-primary/60" />}
+								{<MapPin className="fill-secondary/60" />}
 								<p className="truncate max-w-[250px] font-bold text-lg">
 									{deliveryLocation?.line1 === ""
 										? "Locating"

@@ -51,12 +51,15 @@ export function LoginScreen({
 	const handler = (p: Parameters<typeof signIn>) => {
 		trans(async () => {
 			await signIn(p[0], { ...p[1], callbackURL }, (v: string) => {
-				navigate({ to: v, replace: true });
+				navigate({ href: v, replace: true });
 			})
 				.then(() => {
 					setOtp("");
 					if (p[0] === "send-otp" && p[1]?.phoneNumber) {
 						return setVerify(p[1]?.phoneNumber);
+					}
+					if (p[0] === "email-otp" && p[1]?.email) {
+						return setVerify(p[1]?.email);
 					}
 				})
 				.catch((e) => {
@@ -68,9 +71,13 @@ export function LoginScreen({
 	const handleForm = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const formdata = new FormData(e.currentTarget);
-		const phone = formdata.get("phone")?.toString();
-		if (!phone) return toast.error(`Invalid phone: ${phone}`);
-		handler(["send-otp", { phoneNumber: phone }]);
+		// const phone = formdata.get("phone")?.toString();
+		// if (!phone) return toast.error(`Invalid phone: ${phone}`);
+		// handler(["send-otp", { phoneNumber: phone }]);
+
+		const email = formdata.get("email")?.toString();
+		if (!email) return toast.error(`Invalid email: ${email}`);
+		handler(["email-otp", { email }]);
 	};
 
 	return (
@@ -116,8 +123,11 @@ export function LoginScreen({
 								<div className="grid justify-center gap-8 items-center">
 									<InputOTP
 										maxLength={6}
+										// onComplete={(c) =>
+										// 	handler(["verify-otp", { phoneNumber: verify, otp: c }])
+										// }
 										onComplete={(c) =>
-											handler(["verify-otp", { phoneNumber: verify, otp: c }])
+											handler(["verify-email-otp", { email: verify, otp: c }])
 										}
 										onChange={(v) => setOtp(v)}
 										value={otp}
@@ -143,13 +153,21 @@ export function LoginScreen({
 										>
 											<ArrowLeft /> Back
 										</Button>
-										<Button
+										{/* <Button
 											variant={"default"}
 											className=""
 											size={"lg"}
 											onClick={() =>
 												handler(["send-otp", { phoneNumber: verify }])
 											}
+										>
+											Resend OTP
+										</Button> */}
+										<Button
+											variant={"default"}
+											className=""
+											size={"lg"}
+											onClick={() => handler(["email-otp", { email: verify }])}
 										>
 											Resend OTP
 										</Button>
@@ -160,7 +178,7 @@ export function LoginScreen({
 									<div className="grid gap-6">
 										<div className="grid gap-6">
 											<div className="grid gap-2">
-												<Label htmlFor="phone" className="sr-only">
+												{/* <Label htmlFor="phone" className="sr-only">
 													Phone
 												</Label>
 												<Input
@@ -171,6 +189,17 @@ export function LoginScreen({
 													prefixEl={<span>+91</span>}
 													required
 													inputClassName="pl-12"
+													size={"lg"}
+												/> */}
+												<Label htmlFor="email" className="sr-only">
+													Email
+												</Label>
+												<Input
+													id="email"
+													name="email"
+													type="email"
+													placeholder="Enter Email Address"
+													required
 													size={"lg"}
 												/>
 											</div>

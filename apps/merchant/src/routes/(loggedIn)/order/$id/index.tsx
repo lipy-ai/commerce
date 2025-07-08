@@ -11,7 +11,7 @@ import {
 	AvatarFallback,
 	AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
-import { Button } from "@lipy/web-ui/components/ui/button";
+import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Card, CardContent } from "@lipy/web-ui/components/ui/card";
 import {
 	Collapsible,
@@ -148,7 +148,9 @@ function RouteComponent() {
 												disabled={mutation.isPending}
 											>
 												<SelectTrigger className="capitalize pl-0">
-													<Button>Change Status</Button>
+													<span className={buttonVariants()}>
+														Change Status
+													</span>
 													<Separator orientation="vertical" />
 													<SelectValue placeholder="Order Status" />
 												</SelectTrigger>

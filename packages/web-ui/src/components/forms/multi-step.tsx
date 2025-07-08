@@ -22,9 +22,9 @@ type MultiStepLayoutProps = {
 	children: () => JSX.Element;
 };
 
-type CtxType = Record<string, any> | null;
+type CtxType = { data: Record<string, any> | null };
 
-const Ctx = createContext<CtxType>({});
+const Ctx = createContext<CtxType>({ data: null });
 
 export function MultiStepLayout({
 	steps,
@@ -40,7 +40,7 @@ export function MultiStepLayout({
 	const { isMobile } = useViewport();
 	const [success, setSuccess] = useState(false);
 
-	const [data, setData] = useState<CtxType>(null);
+	const [data, setData] = useState<CtxType>({ data: null });
 
 	const form = useForm({
 		defaultValues: {},

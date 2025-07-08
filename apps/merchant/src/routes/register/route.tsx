@@ -108,6 +108,7 @@ const step3 = {
 
 		const payments = form.watch("payments");
 
+		// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 		useEffect(() => {
 			if (!payments?.upiIds?.[0]?.name) {
 				form.setValue("payments.upiIds.0.name", data?.store_info?.name);

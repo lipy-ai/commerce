@@ -2,7 +2,7 @@ import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import type { ReactNode } from "react";
-import { Button, buttonVariants } from "../ui/button";
+import { buttonVariants } from "../ui/button";
 import {
 	Dialog,
 	DialogClose,

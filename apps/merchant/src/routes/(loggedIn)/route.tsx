@@ -82,7 +82,7 @@ function RouteComponent() {
 	return (
 		<DashboardLayout
 			dashboardNav={dashboardNav}
-			mobileNav={pathname.includes("account/profile") ? [] : mobileNav}
+			mobileNav={pathname.includes("account/profile") ? undefined : mobileNav}
 			logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
 		>
 			<DashboardBody>

@@ -40,6 +40,14 @@ const route = new Hono<ServerContext>()
 		const session = c.get("session");
 		const { payments, ...vals } = c.req.valid("json");
 
+		const oldStore = await db
+			.selectFrom("storeMember")
+			.where("storeMember.userId", "=", session?.userId!)
+			.executeTakeFirst();
+
+		if (oldStore)
+			throw new HTTPException(401, { message: "Store already exists!" });
+
 		const store = await db.transaction().execute(async (trx) => {
 			const store = await trx
 				.insertInto("store")

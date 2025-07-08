@@ -352,7 +352,6 @@ import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { ArrowDownToLine, type LucideIcon } from "lucide-react";
 import {
 	Fragment,
-	type JSX,
 	type ReactNode,
 	createContext,
 	useContext,
@@ -366,7 +365,7 @@ export type DashboardNavs = Record<
 		label: string;
 		url: string;
 		icon: LucideIcon;
-		activeIcon?: JSX.Element;
+		// activeIcon?: JSX.Element;
 		mobile?: boolean;
 	}>
 >;

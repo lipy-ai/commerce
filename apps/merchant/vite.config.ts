@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default defineConfig({
-	plugins: [tailwindcss(), tanstackStart()],
+	plugins: [tailwindcss(), tanstackStart() as any],
 
 	build: {
 		minify: true,

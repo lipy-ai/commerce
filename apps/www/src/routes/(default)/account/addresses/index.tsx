@@ -37,7 +37,7 @@ function RouteComponent() {
 		apiClient.v1.address,
 		"$get",
 		{},
-	)
+	);
 	const { isMobile } = useViewport();
 	const [optionsDrawerOpen, setOptionsDrawerOpen] = useState(false);
 	const [selectedAddress, setSelectedAddress] = useState<
@@ -95,7 +95,7 @@ function RouteComponent() {
 				<div className="fixed bottom-0 w-full p-4 bg-background">
 					<Link
 						className={cn(
-							buttonVariants({ variant: "default", size: "lg" }),
+							buttonVariants({ variant: "default" }),
 							"w-full font-semibold",
 						)}
 						to="/account/addresses/new"
@@ -116,7 +116,7 @@ function RouteComponent() {
 				/>
 			)}
 		</div>
-	)
+	);
 }
 
 export function AddressComponent({
@@ -150,7 +150,7 @@ export function AddressComponent({
 				)}
 			</div>
 		</div>
-	)
+	);
 }
 
 function OptionsDrawer(props: {
@@ -224,5 +224,5 @@ function OptionsDrawer(props: {
 				/>
 			)}
 		</div>
-	)
+	);
 }

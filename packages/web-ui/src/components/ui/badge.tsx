@@ -16,7 +16,6 @@ const badgeVariants = cva(
 				secondary: "bg-secondary text-secondary-foreground",
 				outline:
 					"bg-background ring ring-inset text-foreground-light ring-border",
-				// New professional variants
 				info: "bg-blue-50 text-blue-700 ring-blue-200",
 				neutral: "bg-gray-100 text-gray-700 ring-gray-200",
 				premium:

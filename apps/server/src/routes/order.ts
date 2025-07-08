@@ -56,7 +56,6 @@ const route = new Hono<ServerContext>()
 				"s.id as storeId",
 				"s.address as storeAddress",
 				"s.handle as storeHandle",
-
 				"o.customerId",
 				"o.customerDetails",
 				eb.fn.toJson("s").as("store"),
@@ -74,7 +73,16 @@ const route = new Hono<ServerContext>()
 			.selectFrom("orders as o")
 			.where("o.customerId", "=", session?.userId!)
 			.where("o.id", "=", id)
-			.selectAll()
+			.leftJoin("store as s", "s.id", "o.storeId")
+			.selectAll(["o"])
+			.select([
+				"s.handle as storeHandle",
+				"s.name as storeName",
+				"s.image as storeLogo",
+				"s.address as storeAddress",
+				"s.phone as storePhone",
+			])
+
 			.execute();
 
 		return c.json(data || []);

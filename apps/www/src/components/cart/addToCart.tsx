@@ -172,7 +172,7 @@ export const AddToCart = ({
 							activeVariant === "secondary-active"
 								? "lg"
 								: activeVariant === "tertiary-active"
-									? "icon"
+									? "icon-xs"
 									: "sm"
 						}
 						onClick={handleQuantityChange("decrement")}
@@ -209,7 +209,7 @@ export const AddToCart = ({
 						)}
 					</Button>
 
-					<div className="min-w-[2px] flex items-center justify-center -mx-2">
+					<div className="min-w-[2px] flex items-center justify-center ">
 						{isLoading &&
 						(loadingState.operation === "add" ||
 							(!isDecrementLoading && !isIncrementLoading)) ? (
@@ -233,7 +233,7 @@ export const AddToCart = ({
 							activeVariant === "secondary-active"
 								? "lg"
 								: activeVariant === "tertiary-active"
-									? "icon"
+									? "icon-xs"
 									: "sm"
 						}
 						onClick={handleQuantityChange("increment")}

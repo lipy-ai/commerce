@@ -85,9 +85,7 @@ export default function UserProfile() {
 						isMobile ? "fixed bg-card bottom-0 left-0 right-0 w-full p-4" : "",
 					)}
 				>
-					<FormButton className="w-full lg:w-fit" size="lg">
-						Update profile
-					</FormButton>
+					<FormButton className="w-full lg:w-fit">Update profile</FormButton>
 				</div>
 			</form>
 		</Form>

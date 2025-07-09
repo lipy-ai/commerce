@@ -1,3 +1,4 @@
+import { HTTPError } from "@/lib/exception";
 import type {
 	Context,
 	Env,
@@ -6,7 +7,6 @@ import type {
 	TypedResponse,
 	ValidationTargets,
 } from "hono";
-import { HTTPException } from "hono/http-exception";
 import { validator } from "hono/validator";
 import { ZodObject } from "zod";
 import type { ZodError, ZodSchema, z } from "zod";
@@ -112,7 +112,7 @@ export const zValidator = <
 
 		if (!result.success) {
 			// return c.json(result, 400);
-			throw new HTTPException(400, {
+			throw new HTTPError(400, {
 				// code:"VALIDATION_ERR",
 				message: "Validation Error",
 				cause: {

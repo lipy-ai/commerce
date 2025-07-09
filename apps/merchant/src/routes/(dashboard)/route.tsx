@@ -1,4 +1,4 @@
-import { Outlet, createFileRoute, useLocation } from "@tanstack/react-router";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
 
 import {
 	DashboardBody,
@@ -58,12 +58,10 @@ const mobileNav = [
 ];
 
 function RouteComponent() {
-	const { pathname } = useLocation();
-
 	return (
 		<DashboardLayout
 			dashboardNav={dashboardNav}
-			mobileNav={pathname.includes("account/profile") ? undefined : mobileNav}
+			mobileNav={mobileNav}
 			logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
 		>
 			<DashboardBody>

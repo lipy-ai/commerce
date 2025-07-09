@@ -67,7 +67,7 @@ function RouteComponent() {
 				))}
 
 			{isFetched && data && data?.length > 0 && (
-				<div className="p-4 divide-y mb-20">
+				<div className="p-4 mb-20 space-y-2">
 					{data.map((address) => (
 						<div
 							key={address.id}
@@ -75,7 +75,6 @@ function RouteComponent() {
 								setOptionsDrawerOpen(true);
 								setSelectedAddress(address);
 							}}
-							className="py-4"
 						>
 							<AddressComponent address={address} />
 						</div>
@@ -125,7 +124,7 @@ export function AddressComponent({
 	address: DeliveryLocation;
 }) {
 	return (
-		<div className="flex  gap-2  items-start">
+		<div className="bg-card p-4 flex  gap-2  items-start rounded-xl">
 			<div className="mt-1">
 				{address.tag === "home" ? (
 					<House className=" flex-shrink-0 text-foreground " />
@@ -168,7 +167,7 @@ function OptionsDrawer(props: {
 					<DrawerDialogTitle>Select option</DrawerDialogTitle>
 				</DrawerDialogHeader>
 
-				<div className="cursor-pointer divide-y divide-dashed">
+				<div className="cursor-pointer divide-y divide-dashed bg-card rounded-xl px-2">
 					<div
 						className="flex items-center justify-between py-4"
 						onClick={() => {

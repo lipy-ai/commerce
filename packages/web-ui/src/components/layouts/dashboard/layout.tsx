@@ -479,7 +479,7 @@ export const DashboardLayout = ({
 							viewTransitionName: "main-content",
 						}}
 					>
-						<div>{children}</div>
+						{children}
 
 						{footerList}
 					</div>

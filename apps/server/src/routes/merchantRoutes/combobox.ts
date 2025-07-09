@@ -1,14 +1,8 @@
-import { type Database, db } from "@/db";
+import { db } from "@/db";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
-import { HTTPException } from "hono/http-exception";
-import {
-	type Expression,
-	type SelectQueryBuilder,
-	type SqlBool,
-	sql,
-} from "kysely";
+
 import { z } from "zod";
 
 const listZodSchema = z.object({

@@ -1,5 +1,4 @@
 import { cn } from "@lipy/web-ui/lib/utils";
-import { ToggleGroup } from "@radix-ui/react-toggle-group";
 import { IterationCcw, Loader2 } from "lucide-react";
 import type { ReactNode } from "react";
 import { type ControllerRenderProps, useFormContext } from "react-hook-form";
@@ -24,7 +23,7 @@ import {
 import { SingleImage, type SingleImageProps } from "../ui/single-image";
 import { Switch } from "../ui/switch";
 import { Textarea } from "../ui/textarea";
-import { ToggleGroupItem } from "../ui/toggle-group";
+import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 import { SearchInput } from "./searchInput";
 
 export const RequiredEl = <span className="text-red-700">*</span>;

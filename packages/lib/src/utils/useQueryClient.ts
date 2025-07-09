@@ -10,9 +10,8 @@ import {
 	useQuery as useRQQuery,
 	useSuspenseQuery as useRQSuspenseQuery,
 } from "@tanstack/react-query";
-import type { UseFormReturn } from "react-hook-form";
-
 import type { InferResponseType } from "hono/client";
+import type { UseFormReturn } from "react-hook-form";
 
 import type {
 	ClientErrorStatusCode,
@@ -20,6 +19,7 @@ import type {
 	StatusCode,
 	SuccessStatusCode,
 } from "hono/utils/http-status";
+import { useRedirect } from "../hooks/use-navigate";
 
 type ErrorStatusCode = ClientErrorStatusCode | ServerErrorStatusCode;
 
@@ -270,6 +270,7 @@ export const useAPIQuery = <
 	InferSelectReturnType<TResponse, Options["select"]>,
 	TError
 > => {
+	const { handleNavigate } = useRedirect();
 	const q = useRQQuery(
 		apiQueryOptions<T, M, Params, Options, TResponse, TError>(
 			endpoint,
@@ -278,6 +279,12 @@ export const useAPIQuery = <
 			options,
 		),
 	);
+
+	if (q.error) {
+		const err = q?.error as any;
+		const code = err?.data?.error?.code;
+		handleNavigate(code);
+	}
 
 	return q;
 };
@@ -306,7 +313,9 @@ export const useAPISuspenseQuery = <
 	InferSelectReturnType<TResponse, Options["select"]>,
 	TError
 > => {
-	return useRQSuspenseQuery(
+	const { handleNavigate } = useRedirect();
+
+	const q = useRQSuspenseQuery(
 		apiQueryOptions<T, M, Params, Options, TResponse, TError>(
 			endpoint,
 			method,
@@ -314,6 +323,13 @@ export const useAPISuspenseQuery = <
 			options,
 		),
 	);
+
+	if (q.error) {
+		const err = q?.error as any;
+		const code = err?.data?.error?.code;
+		handleNavigate(code);
+	}
+	return q;
 };
 
 export const useAPIMutation = <
@@ -331,13 +347,22 @@ export const useAPIMutation = <
 		"mutationFn" | "mutationKey"
 	> & { form?: UseFormReturn<any> },
 ): UseMutationResult<TResponse, TError, TVariables, TContext> => {
-	return useRQMutation(
+	const { handleNavigate } = useRedirect();
+
+	const q = useRQMutation(
 		apiMutationOptions<T, M, TResponse, TError, TVariables, TContext>(
 			endpoint,
 			method,
 			options,
 		),
 	);
+
+	if (q.error) {
+		const err = q?.error as any;
+		const code = err?.data?.error?.code;
+		handleNavigate(code);
+	}
+	return q;
 };
 
 // Usage

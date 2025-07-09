@@ -6,6 +6,8 @@ export * from "./auth";
 import type { AvailableEvents } from "@/events";
 import type { routes } from "../app";
 export type AppType = typeof routes;
+import type { ErrCode } from "@/lib/exception";
+import type { STORE_ROLES } from "@/middlewares/auth";
 import type { Emitter } from "@hono/event-emitter";
 
 export interface ServerContext extends Env {
@@ -13,7 +15,10 @@ export interface ServerContext extends Env {
 		emitter: Emitter<AvailableEvents>;
 		user: typeof auth.$Infer.Session.user | null;
 		session:
-			| (typeof auth.$Infer.Session.session & { activeStoreId: string | null })
+			| (typeof auth.$Infer.Session.session & {
+					activeStoreId: string | null;
+					activeStoreRole: keyof typeof STORE_ROLES | null;
+			  })
 			| null;
 		orgUser: Awaited<ReturnType<typeof hasPermission>> | null;
 	};
@@ -26,7 +31,7 @@ export type SuccessResponse<T = void> = {
 
 export type ErrorResponse = {
 	success: false;
-	error: { message: string; cause: any };
+	error: { message: string; cause: any; code?: ErrCode };
 };
 
 export type AwaitedReturn<T extends (...args: any) => any> = Awaited<

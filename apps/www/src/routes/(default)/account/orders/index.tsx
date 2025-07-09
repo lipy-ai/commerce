@@ -124,7 +124,7 @@ function RouteComponent() {
 													<div className="grid grid-cols-5 gap-y-1.5">
 														{order?.items?.map((item) => (
 															<img
-																key={item.id}
+																key={item.variant.inventoryId}
 																src={item.thumbnail || ""}
 																className="aspect-square object-cover size-12 rounded-sm border border-border/40 bg-accent/40"
 																alt={""}

@@ -101,6 +101,7 @@ export default function ProductCard({
 									<AddToCart
 										product={
 											{
+												storeLogo: null,
 												storeHandle: storeHandle ?? null,
 												thumbnail: product.thumbnail ?? null,
 												title: product.title ?? null,
@@ -110,7 +111,6 @@ export default function ProductCard({
 											} as CartStore["cart"][0]
 										}
 										variant={"primary"}
-										disabled={!product.variants[0].inStock}
 										activeVariant={"primary-active"}
 									/>
 								) : cartCount === 0 ? (
@@ -128,8 +128,8 @@ export default function ProductCard({
 										className="text-secondary border border-secondary min-w-16 hover:text-secondary border-b-2 border-r-2 disabled:opacity-100 flex flex-col p-0  gap-0"
 										variant={"outline"}
 									>
-										<p className=" ">ADD</p>
-										<p className="-mt-1 bg-secondary/20 w-full text-xs text-muted-foreground font-normal  rounded-b-md pb-0.5 ">
+										<p className=" text-sm">ADD</p>
+										<p className="-mt-1 bg-secondary/20 w-full text-xs text-muted-foreground font-normal  rounded-b-md pb-0.5">
 											{product.variants.length} options
 										</p>
 									</Button>
@@ -198,11 +198,14 @@ export default function ProductCard({
 									{" "}
 									{formatAmount("inr", product.variants[0]?.price as number)}
 								</span>
-								{product.variants[0].maxPrice && (
-									<span className="text-xs line-through text-muted-foreground">
-										{formatAmount("inr", product.variants[0].maxPrice)}
-									</span>
-								)}
+								{product.variants[0] &&
+									product.variants[0].maxPrice != null &&
+									product.variants[0].price != null &&
+									product.variants[0].maxPrice > product.variants[0].price && (
+										<span className="text-xs line-through text-muted-foreground">
+											{formatAmount("inr", product.variants[0].maxPrice)}
+										</span>
+									)}
 							</div>
 						</div>
 					</Link>
@@ -249,16 +252,19 @@ function VariantList({
 								{" "}
 								{formatAmount("inr", variant?.price as number)}
 							</span>
-							{variant.maxPrice && (
-								<span className="text-xs line-through text-muted-foreground">
-									{formatAmount("inr", variant.maxPrice)}
-								</span>
-							)}
+							{variant.maxPrice &&
+								variant.price != null &&
+								variant.maxPrice > variant.price && (
+									<span className="text-xs line-through text-muted-foreground">
+										{formatAmount("inr", variant.maxPrice)}
+									</span>
+								)}
 						</div>
 
 						<AddToCart
 							product={
 								{
+									storeLogo: null,
 									title: product.title ?? null,
 									thumbnail: product.thumbnail ?? null,
 									storeHandle: storeHandle ?? null,

@@ -12,7 +12,7 @@ const route = new Hono<ServerContext>()
 	.get("/", zValidator("query", listZodSchema), async (c) => {
 		const { limit, page, q } = c.req.valid("query");
 		const activeStoreId = c.var.session?.activeStoreId!;
-		// const activeStoreId = "be2973d8-1df7-442f-9893-3a153f7988ff";
+
 		const offset = limit * (page - 1);
 		const query = db
 			.selectFrom("orders")
@@ -29,7 +29,8 @@ const route = new Hono<ServerContext>()
 			.executeTakeFirst();
 
 		const resultsPromise = query
-			.selectAll()
+			.selectAll(["orders"])
+			.orderBy("orderedAt", "desc")
 			.limit(limit)
 			.offset(offset)
 			.execute();

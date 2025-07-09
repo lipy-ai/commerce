@@ -41,6 +41,7 @@ const route = new Hono<ServerContext>()
 				"pv.unit as unit",
 				"s.handle as storeHandle",
 				"s.name as storeName",
+				"s.image as storeLogo",
 			])
 			.execute();
 
@@ -89,6 +90,30 @@ const route = new Hono<ServerContext>()
 			.where("userId", "=", session?.userId!)
 			.execute();
 		return c.json({ success: true });
-	});
+	})
+	.delete(
+		"/:shopHandle",
+		zValidator("param", z.object({ shopHandle: z.string() })),
+		async (c) => {
+			const session = c.get("session");
+			const { shopHandle } = c.req.valid("param");
+			await db
+				.deleteFrom("cart")
+				.where("userId", "=", session?.userId!)
+				.where("inventoryId", "in", () => {
+					return db
+						.selectFrom("storeInventory")
+						.where("storeId", "in", () => {
+							return db
+								.selectFrom("store")
+								.where("handle", "=", shopHandle)
+								.select("id");
+						})
+						.select("id");
+				})
+				.execute();
+			return c.json({ success: true });
+		},
+	);
 
 export { route as cartRoute };

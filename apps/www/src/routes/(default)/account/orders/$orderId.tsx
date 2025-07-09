@@ -202,8 +202,10 @@ function RouteComponent() {
 											</Link>
 
 											<div className="flex-1">
-												<h2 className="text-sm leading-4">{product.title}</h2>
-												<p className="text-muted-foreground text-sm">
+												<h2 className="font-semibold leading-4 line-clamp-2">
+													{product.title}
+												</h2>
+												<p className="text-muted-foreground text-xs">
 													{product.variant.unit}
 												</p>
 											</div>
@@ -266,8 +268,10 @@ function RouteComponent() {
 										>
 											<info.icon className="text-muted-foreground flex-shrink-0 mt-1" />
 											<div>
-												<p className="font-medium text-base">{info.title}</p>
-												<p className="text-muted-foreground">{info.value}</p>
+												<p className="font-medium ">{info.title}</p>
+												<p className="text-muted-foreground text-xs">
+													{info.value}
+												</p>
 											</div>
 										</div>
 									);

@@ -195,7 +195,7 @@
 	}
 
 	body {
-		@apply text-foreground text-sm;
+		@apply text-foreground text-sm bg-background;
 	}
 	.lucide {
 		stroke-width: 1.5;

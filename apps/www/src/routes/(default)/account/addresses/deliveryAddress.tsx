@@ -126,11 +126,11 @@ function RouteComponent() {
 						<p className="font-medium text-base my-2 text-muted-foreground">
 							Saved addresses
 						</p>
-						<div className="mb-10  divide-y">
+						<div className="mb-10 space-y-2">
 							{data.map((address) => (
 								<div
 									key={address.id}
-									className="cursor-pointer py-2"
+									className="cursor-pointer "
 									onClick={() => handleAddressSelect(address)}
 								>
 									<AddressComponent address={address} />

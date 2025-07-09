@@ -1,3 +1,4 @@
+import { PrimaryCartFooter } from "@/components/cart/cartFooter";
 import { env } from "@envClient";
 import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
@@ -112,6 +113,7 @@ function RouteComponent() {
 					</div>
 				</div>
 			</div>
+			<PrimaryCartFooter />
 		</div>
 	);
 }

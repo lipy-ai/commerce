@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 
 import SettingsCard from "@lipy/web-ui/components/custom-ui/settingsCard";
+import { Label } from "@lipy/web-ui/components/ui/label";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 
 export const Route = createFileRoute("/(dashboard)/account/")({
@@ -76,9 +77,9 @@ function RouteComponent() {
 	return (
 		<div>
 			<DashboardHeader title="Settings" />
-			<div className="lg:p-8 space-y-6 max-w-4xl mb-40">
+			<div className="p-4 lg:p-8 space-y-6 max-w-4xl mb-40">
 				{data && (
-					<div className="flex items-center gap-4 p-4">
+					<div className="flex items-center gap-4 ">
 						<Avatar className="size-12">
 							<AvatarImage src={data?.user.image || ""} alt="" />
 							<AvatarFallback>
@@ -96,8 +97,14 @@ function RouteComponent() {
 						</div>
 					</div>
 				)}
-				<div className="px-4 md:px-0 space-y-8">
+
+				<div className="space-y-2">
+					<Label className="text-base">General Information</Label>
 					<SettingsCard items={generalInfo} />
+				</div>
+
+				<div className="space-y-2">
+					<Label className="text-base">More</Label>
 					<SettingsCard items={filteredMoreInfo} />
 				</div>
 			</div>

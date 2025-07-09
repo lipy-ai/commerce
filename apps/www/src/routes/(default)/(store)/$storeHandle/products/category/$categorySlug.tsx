@@ -1,3 +1,4 @@
+import { PrimaryCartFooter } from "@/components/cart/cartFooter";
 import ProductCard, { type ProductType } from "@/components/productCard";
 import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
@@ -23,14 +24,14 @@ function RouteComponent() {
 				categorySlug: categorySlug,
 			},
 		},
-	)
+	);
 
 	return (
 		<div className="">
 			{isFetched && data && data.length > 0 && (
 				<div className="max-w-screen-lg mx-auto">
 					<DashboardHeader title={data[0].categoryTitle || ""} />
-					<div className="grid grid-cols-2 md:grid-cols-4 gap-4 space-y-4 p-4 mb-20">
+					<div className="grid grid-cols-2 md:grid-cols-4 gap-4 space-y-4 p-4 mb-32">
 						{data.map((product) => (
 							<div key={product.id}>
 								<ProductCard
@@ -45,6 +46,7 @@ function RouteComponent() {
 			)}
 
 			{isFetching && <Spinner />}
+			<PrimaryCartFooter />
 		</div>
-	)
+	);
 }

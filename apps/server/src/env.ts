@@ -48,6 +48,7 @@ const EnvSchema = z.object({
 	PLUNK_SECRET_KEY: z.string(),
 	REPLY_EMAIL: z.string(),
 	VITE_MERCHANT_URL: z.string(),
+	VITE_WEB_URL: z.string(),
 	TRANSACTIONAL_EMAIL: z.string(),
 	TRUSTED_ORIGINS: z
 		.string()

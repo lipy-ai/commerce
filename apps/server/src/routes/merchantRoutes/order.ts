@@ -1,10 +1,10 @@
 import { db } from "@/db";
 import { ORDER_STATUS } from "@/db/schema";
+import { HTTPError } from "@/lib/exception";
 import { zValidator } from "@/middlewares/validator";
 import { listZodSchema } from "@/schema/common";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
-import { HTTPException } from "hono/http-exception";
 import { type Expression, type SqlBool, sql } from "kysely";
 import { z } from "zod";
 
@@ -93,7 +93,7 @@ const route = new Hono<ServerContext>()
 				.executeTakeFirst();
 
 			if (!order) {
-				throw new HTTPException(404, {
+				throw new HTTPError(404, {
 					message: "No order found!",
 				});
 			}
@@ -103,7 +103,7 @@ const route = new Hono<ServerContext>()
 			const oldStatusIdx = ORDER_STATUS.indexOf(status);
 
 			if (oldStatusIdx > statusIdx) {
-				throw new HTTPException(401, {
+				throw new HTTPError(401, {
 					message: `Can't change to this order to "${status}" status, because the order has been already tagged with "${status}" before.`,
 				});
 			}

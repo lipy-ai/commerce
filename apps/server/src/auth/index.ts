@@ -9,7 +9,6 @@ import { organization } from "better-auth/plugins";
 import { redis } from "../cache";
 import { db } from "../db";
 import env from "../env";
-// import { ac, admin, deliveryAgent, owner, staff } from "./permission";
 import emailHarmony from "./plugins/emailValidator";
 import phoneHarmony from "./plugins/phoneValidator";
 
@@ -93,14 +92,6 @@ const organizationsPlugin = organization({
 				inviterId: "inviterId",
 			},
 		},
-
-		// ac,
-		// roles: {
-		// 	owner,
-		// 	admin,
-		// 	staff,
-		// 	deliveryAgent,
-		// },
 	},
 
 	async sendInvitationEmail(data) {
@@ -187,7 +178,7 @@ export const auth = betterAuth({
 						.innerJoin("storeMember", "storeMember.storeId", "store.id")
 						.innerJoin("user", "user.id", "storeMember.userId")
 						.where("user.id", "=", session.userId)
-						.select("store.id")
+						.select(["store.id", "storeMember.role"])
 						.limit(1)
 						.executeTakeFirst();
 
@@ -195,6 +186,7 @@ export const auth = betterAuth({
 						data: {
 							...session,
 							activeStoreId: store?.id || null,
+							activeStoreRole: store?.role || null,
 							activeOrganizationId: store?.id || null,
 						},
 					};

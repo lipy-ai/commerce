@@ -1,7 +1,7 @@
-import { Database, type DBTypes } from "@/db";
-import env from "../env";
-import { HTTPException } from "hono/http-exception";
+import { type DBTypes, Database } from "@/db";
+import { HTTPError } from "@/lib/exception";
 import { Redis } from "ioredis";
+import env from "../env";
 
 export const redis = new Redis(env?.REDIS_URL!);
 
@@ -38,7 +38,7 @@ export const getOrCache = async <T>({
 		: await getFromDB();
 
 	if (!result) {
-		throw new HTTPException(404, {
+		throw new HTTPError(404, {
 			message: errorName,
 		});
 	}

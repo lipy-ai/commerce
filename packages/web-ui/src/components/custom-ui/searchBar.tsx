@@ -39,7 +39,7 @@ export default function SearchBar({
 				onSearch(value);
 				e.preventDefault();
 			}}
-			className={cn("p-2 md:p-0", className)}
+			className={cn("", className)}
 		>
 			<Input
 				className="rounded-xl"

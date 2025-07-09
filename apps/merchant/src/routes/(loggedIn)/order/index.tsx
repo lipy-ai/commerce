@@ -105,9 +105,9 @@ function MobileView({ items }: { items: Response["items"] }) {
 
 						<div className="w-fit text-right">
 							<p className="font-semibold text-lg">
-								{formatAmount("inr", Number(m.totalAmount))}
+								{formatAmount("inr", Number(m.itemTotalAmount))}
 							</p>
-							<Badge>
+							<Badge variant="soft" size="compact">
 								{m.orderedAt && ` ${formatDistanceToNow(m.orderedAt)} ago`}
 							</Badge>
 						</div>

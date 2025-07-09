@@ -1,3 +1,4 @@
+import { PrimaryCartFooter } from "@/components/cart/cartFooter";
 import ProductCard from "@/components/productCard"; // Fixed the path
 import { env } from "@envClient";
 import { apiClient } from "@lipy/lib/api";
@@ -51,7 +52,7 @@ function RouteComponent() {
 			staleTime: Number.POSITIVE_INFINITY,
 			cacheTime: Number.POSITIVE_INFINITY,
 		},
-	)
+	);
 
 	const {
 		data: productData,
@@ -73,7 +74,7 @@ function RouteComponent() {
 			staleTime: Number.POSITIVE_INFINITY,
 			cacheTime: Number.POSITIVE_INFINITY,
 		},
-	)
+	);
 
 	if (fetchingShopData || fetchingProduct) return <ShopLoadingSkeleton />;
 	return (
@@ -101,11 +102,11 @@ function RouteComponent() {
 			{fetchedShopData && shopData && (
 				<div className="text-center  bg-amber-100 p-4">
 					<Link
-						className="text-2xl font-bold "
+						className="text-3xl font-extrabold tracking-wide"
 						to="/$storeHandle/details"
 						params={{ storeHandle }}
 					>
-						{shopData.name}
+						{shopData.name.toUpperCase()}
 					</Link>
 					<div className="mt-2 text-sm text-muted-foreground">
 						Books • Stationary
@@ -130,56 +131,59 @@ function RouteComponent() {
 								/>
 							</div>
 
-							<p className="font-medium line-clamp-1 text-sm">{item?.title}</p>
+							<p className="font-medium  text-xs">{item?.title}</p>
 						</Link>
 					))}
 				</div>
 			)}
-			{fetchedProduct &&
-				productData &&
-				productData.items.length > 0 &&
-				productData.items.map((productGroup, _idx) => {
-					const productArray = productGroup.products;
 
-					return (
-						<div key={_idx} className="my-10 mx-4">
-							<p className="text-xl font-bold my-4">{productGroup.title}</p>
+			<div className="mb-32">
+				{fetchedProduct &&
+					productData &&
+					productData.items.length > 0 &&
+					productData.items.map((productGroup, _idx) => {
+						const productArray = productGroup.products;
 
-							<div className="grid grid-cols-2 lg:grid-cols-4  gap-x-4 gap-y-6 w-full">
-								{productArray?.map((product) => (
-									<div key={product.id}>
-										<ProductCard
-											product={product}
-											className={{
-												classNameImg: "aspect-square h-full",
-												classNameBox: "w-full h-full",
-											}}
-											storeHandle={storeHandle}
-										/>
-									</div>
-								))}
+						return (
+							<div key={_idx} className="my-10 mx-4">
+								<p className="text-xl font-bold my-4">{productGroup.title}</p>
+
+								<div className="grid grid-cols-2 lg:grid-cols-4  gap-x-4 gap-y-6 w-full">
+									{productArray?.map((product) => (
+										<div key={product.id}>
+											<ProductCard
+												product={product}
+												className={{
+													classNameImg: "aspect-square h-full",
+													classNameBox: "w-full h-full",
+												}}
+												storeHandle={storeHandle}
+											/>
+										</div>
+									))}
+								</div>
+								{productArray.length === 6 && (
+									<Link
+										className={cn(
+											buttonVariants({
+												variant: "outline",
+												className: "w-full my-2 font-semibold",
+											}),
+										)}
+										to="/$storeHandle/products/category/$categorySlug"
+										params={{
+											storeHandle,
+											categorySlug: productGroup.slug as string,
+										}}
+									>
+										See more products
+										<ChevronRight />
+									</Link>
+								)}
 							</div>
-							{productArray.length === 6 && (
-								<Link
-									className={cn(
-										buttonVariants({
-											variant: "outline",
-											className: "w-full my-2 font-semibold",
-										}),
-									)}
-									to="/$storeHandle/products/category/$categorySlug"
-									params={{
-										storeHandle,
-										categorySlug: productGroup.slug as string,
-									}}
-								>
-									See more products
-									<ChevronRight />
-								</Link>
-							)}
-						</div>
-					)
-				})}
+						);
+					})}
+			</div>
 
 			{fetchedProduct && productData && productData.items.length === 0 && (
 				<EmptyPage
@@ -187,8 +191,10 @@ function RouteComponent() {
 					label="This shop has no products yet."
 				/>
 			)}
+
+			<PrimaryCartFooter />
 		</div>
-	)
+	);
 }
 
 function ShopOptions({
@@ -215,7 +221,7 @@ function ShopOptions({
 							title: shop?.name,
 							text: "Hey, Check out this shop!",
 							url: `${env.WEB_URL}/${shop?.handle}`,
-						})
+						});
 					}}
 				>
 					<Share />
@@ -236,7 +242,7 @@ function ShopOptions({
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
-	)
+	);
 }
 
 function ShopLoadingSkeleton() {
@@ -276,5 +282,5 @@ function ShopLoadingSkeleton() {
 				</div>
 			</div>
 		</div>
-	)
+	);
 }

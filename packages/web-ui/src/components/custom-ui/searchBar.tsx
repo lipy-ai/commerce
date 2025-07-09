@@ -42,7 +42,7 @@ export default function SearchBar({
 			className={cn("p-2 md:p-0", className)}
 		>
 			<Input
-				className="rounded"
+				className="rounded-xl"
 				value={value}
 				onChange={(e) => {
 					setValue(e.currentTarget.value);

@@ -5,7 +5,6 @@ import { Fragment, type JSX, createContext, useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../ui/button";
 import {
-	Card,
 	CardContent,
 	CardDescription,
 	CardHeader,
@@ -27,10 +26,12 @@ type CtxType = { data: Record<string, any> | null };
 const Ctx = createContext<CtxType>({ data: null });
 
 export function MultiStepLayout({
+	loading,
 	steps,
 	onSubmit,
 	onSuccess,
 }: {
+	loading: boolean;
 	steps: MultiStepLayoutProps[];
 	onSubmit: (data: CtxType) => Promise<void>;
 	onSuccess: () => void;
@@ -72,7 +73,7 @@ export function MultiStepLayout({
 	const Component = (
 		<Form {...form}>
 			<form
-				className="grid md:grid-cols-[minmax(300px,700px)_auto] h-screen overflow-auto"
+				className="flex h-screen overflow-auto"
 				onSubmit={form.handleSubmit(handleSubmit)}
 			>
 				{success ? (
@@ -81,11 +82,11 @@ export function MultiStepLayout({
 							<Check className="size-16 stroke-2 text-primary-foreground" />
 						</div>
 					</div>
-				) : form.formState.isSubmitting ? (
+				) : loading || form.formState.isSubmitting ? (
 					<Loading title="" description="" />
 				) : (
-					<div className="max-w-lg m-auto w-full min-h-screen flex flex-col overflow-auto relative z-20 bg-background/90 md:bg-background">
-						<Card className="w-full pt-8 pb-8 px-4 space-y-4 flex-1">
+					<div className="max-w-xl m-auto w-full min-h-screen flex flex-col overflow-auto relative z-20">
+						<div className="w-full p-8 bg-card/95 space-y-4 flex-1 rounded-none lg:rounded-2xl">
 							<Button
 								type="button"
 								variant={"outline"}
@@ -116,7 +117,7 @@ export function MultiStepLayout({
 									<CardTitle className="text-xl">{activeStep.title}</CardTitle>
 								</div>
 							</CardHeader>
-							<CardContent className="md:px-0 flex flex-col border-0 bg-background shadow-none">
+							<CardContent className="md:px-0 flex flex-col border-0 shadow-none">
 								<Comp />
 							</CardContent>
 							<div className="gap-4 flex w-full lg:justify-end mt-auto">
@@ -135,10 +136,10 @@ export function MultiStepLayout({
 									{step === totalSteps ? "Submit" : "Next Step"}
 								</FormButton>
 							</div>
-						</Card>
+						</div>
 					</div>
 				)}
-				<div className="h-screen overflow-hidden fixed z-10 md:sticky top-0">
+				<div className="h-screen overflow-hidden fixed z-10 md:sticky top-0 flex-1">
 					 
 					<img
 						src="/assets/store.jpg"
@@ -149,6 +150,15 @@ export function MultiStepLayout({
 			</form>
 		</Form>
 	);
+
+	if (loading) {
+		return (
+			<div className="p-8 flex-1 flex flex-col">
+				<Loading hideDefault />
+			</div>
+		);
+	}
+
 	return (
 		<Ctx.Provider value={{ data }}>
 			<Fragment key={step}>{Component}</Fragment>

@@ -1,9 +1,9 @@
 import { db } from "@/db";
+import { HTTPError } from "@/lib/exception";
 import { zValidator } from "@/middlewares/validator";
 import { listZodSchema } from "@/schema/common";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
-import { HTTPException } from "hono/http-exception";
 import { sql } from "kysely";
 import { jsonArrayFrom, jsonBuildObject } from "kysely/helpers/postgres"; // Use 'mysql' or 'sqlite' if needed
 import { z } from "zod";
@@ -34,7 +34,7 @@ const route = new Hono<ServerContext>()
 				.executeTakeFirst();
 
 			if (!d) {
-				throw new HTTPException(404, { message: "Store not found!" });
+				throw new HTTPError(404, { message: "Store not found!" });
 			}
 			return c.json(d || []);
 		},

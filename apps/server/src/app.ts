@@ -7,14 +7,18 @@ import { trimTrailingSlash } from "hono/trailing-slash";
 import { logger } from "./lib/logger";
 
 import { emitter } from "@hono/event-emitter";
-import { HTTPException } from "hono/http-exception";
 import { secureHeaders } from "hono/secure-headers";
 import { auth } from "./auth";
 import { db, pingDatabase } from "./db";
 import env from "./env";
 import { handlers } from "./events";
+import { HTTPError } from "./lib/exception";
 import { globalError } from "./lib/globalError";
-import { authMiddleware } from "./middlewares/auth";
+import {
+	STORE_ROLES,
+	authMiddleware,
+	hasStorePermission,
+} from "./middlewares/auth";
 import { corsMiddleware } from "./middlewares/cors";
 import { globalMiddleware } from "./middlewares/global";
 import { addressRoute } from "./routes/address";
@@ -56,7 +60,7 @@ app.use("*", authMiddleware);
 
 app.on(["POST", "GET"], "/api/auth/*", (c) => {
 	if (c.req.path === "/api/auth/error") {
-		throw new HTTPException(401, {
+		throw new HTTPError(401, {
 			message: "Failed to authenticate",
 			cause: c.req.query("error"),
 		});
@@ -75,6 +79,7 @@ export const routes = app
 	.route("/products", productRoute)
 	.route("/shops", shopRoute)
 	.route("/order", orderRoute)
+	.use(hasStorePermission(["owner", "admin"]))
 	.route("/merchant/store", merchantStoreRoute)
 	.route("/merchant/product", merchantProductRoute)
 	.route("/merchant/variant", merchantVariantRoute)

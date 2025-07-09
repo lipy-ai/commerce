@@ -1,11 +1,11 @@
 import { db } from "@/db";
 import { STORE_TYPE } from "@/db/schema";
+import { ERR_CODES, HTTPError } from "@/lib/exception";
 import { idGenerate } from "@/lib/generateId";
 import { zValidator } from "@/middlewares/validator";
 import { emailSchema, phoneSchema } from "@/schema/common";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
-import { HTTPException } from "hono/http-exception";
 import slugify from "slugify";
 import { z } from "zod";
 import { coreAddressSchema } from "../address";
@@ -25,7 +25,7 @@ const route = new Hono<ServerContext>()
 		const session = c.get("session");
 
 		if (!session?.activeStoreId) {
-			throw new HTTPException(404, { message: "No active store found!" });
+			throw new HTTPError(404, { code: ERR_CODES.NO_ACTIVE_STORE });
 		}
 		const result = await db
 			.selectFrom("store")
@@ -46,7 +46,7 @@ const route = new Hono<ServerContext>()
 			.executeTakeFirst();
 
 		if (oldStore)
-			throw new HTTPException(401, { message: "Store already exists!" });
+			throw new HTTPError(401, { message: "Store already exists!" });
 
 		const store = await db.transaction().execute(async (trx) => {
 			const store = await trx

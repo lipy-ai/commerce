@@ -1,9 +1,9 @@
 import { type DBTypes, db } from "@/db";
+import { HTTPError } from "@/lib/exception";
 import { idGenerate } from "@/lib/generateId";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
-import { HTTPException } from "hono/http-exception";
 import { z } from "zod";
 import { addressSchema } from "./address";
 
@@ -93,7 +93,7 @@ const route = new Hono<ServerContext>()
 		const values = c.req.valid("json");
 
 		if (!values.address)
-			throw new HTTPException(404, { message: "Address not found!" });
+			throw new HTTPError(404, { message: "Address not found!" });
 
 		const cart = await db
 			.selectFrom("cart as c")

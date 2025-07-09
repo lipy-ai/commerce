@@ -1,8 +1,8 @@
 import env from "@/env";
+import { HTTPError } from "@/lib/exception";
 import { logger } from "@/lib/logger";
 import type { ServerContext } from "@/types";
 import type { MiddlewareHandler } from "hono";
-import { HTTPException } from "hono/http-exception";
 import { isbot } from "isbot";
 // import { getConnInfo } from "hono/bun";
 
@@ -31,7 +31,7 @@ export const globalMiddleware: MiddlewareHandler<ServerContext> = async (
 		const trustedHost = hosts.includes(c.req.header("Origin") || "");
 		if (!trustedHost) {
 			logger.warn("Blocked an due isBot lib...");
-			throw new HTTPException(401, {
+			throw new HTTPError(401, {
 				message: "Unauthorized!",
 			});
 		}

@@ -71,6 +71,7 @@ export default function NearByShops() {
 						<SearchBar
 							placeholder="Search for shop, grocery, fruits..."
 							defaultValue=""
+							className="px-4"
 						/>
 
 						<div>

@@ -115,7 +115,7 @@ export default function NavBar() {
 							)}
 						</Link>
 					)}
-					<div className="w-full">
+					<div className="w-full px-2">
 						<SearchBar
 							placeholder="Search for shop, grocery, fruits..."
 							defaultValue=""

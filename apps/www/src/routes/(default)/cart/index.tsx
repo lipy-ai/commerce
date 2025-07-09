@@ -4,7 +4,11 @@ import { AddToCart } from "@/components/cart/addToCart";
 import PlaceOrder from "@/components/order/placeOrder";
 import { apiClient } from "@lipy/lib/api";
 import { formatAmount } from "@lipy/lib/utils/intl";
-import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
+import {
+	apiQueryOptions,
+	useAPIMutation,
+	useAPIQuery,
+} from "@lipy/lib/utils/useQueryClient";
 import {
 	DrawerDialogHeader,
 	DrawerDialogSwitcher,
@@ -13,7 +17,12 @@ import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { DetailedAddress } from "@lipy/web-ui/components/maps/detailedAddress";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
-import { Avatar, AvatarFallback } from "@lipy/web-ui/components/ui/avatar";
+import {
+	Avatar,
+	AvatarFallback,
+	AvatarImage,
+} from "@lipy/web-ui/components/ui/avatar";
+import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import {
 	Card,
@@ -25,10 +34,10 @@ import {
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import {
 	Bike,
-	Check,
 	ChevronDown,
 	ChevronRight,
 	Clock,
@@ -36,12 +45,10 @@ import {
 	MapPin,
 	MapPinned,
 	MessageSquareText,
-	Package,
 	Phone,
 	ReceiptText,
-	ScanBarcode,
 	ShoppingBag,
-	StickyNote,
+	Store,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
@@ -49,75 +56,37 @@ export const Route = createFileRoute("/(default)/cart/")({
 	component: RouteComponent,
 });
 
-const instructions = [
-	{
-		name: "deliveryInstructions",
-		label: "Delivery Instructions",
-		description: "We will inform the delivery partner",
-		icon: MessageSquareText,
-		options: [
-			{
-				name: "leave-at-door",
-				label: "Leave at door",
-				icon: MapPin,
-				description: "Leave the order at my doorstep",
-			},
-			{
-				name: "ring-doorbell",
-				label: "Ring doorbell",
-				icon: Clock,
-				description: "Please ring the doorbell upon arrival",
-			},
-			{
-				name: "call-on-arrival",
-				label: "Call on arrival",
-				icon: Phone,
-				description: "Call me when you arrive",
-			},
-			{
-				name: "pet-at-home",
-				label: "Pet is at home",
-				icon: Dog,
-				description: "Beware of pets at home",
-			},
-		],
-	},
-	{
-		name: "storeInstructions",
-		label: "Store Instructions",
-		description: "We will inform the store about your preferences",
-		icon: StickyNote,
-		options: [
-			{
-				name: "prepare-fresh",
-				label: "Prepare fresh items",
-				icon: Check,
-				description: "Please pack fresh and good-quality items only",
-			},
-			{
-				name: "check-expiry",
-				label: "Check expiry date",
-				icon: ScanBarcode,
-				description: "Ensure products are not close to expiry",
-			},
-			{
-				name: "pack-securely",
-				label: "Pack securely",
-				icon: Package,
-				description: "Ensure items are packed safely to avoid damage",
-			},
-			{
-				name: "notify-if-unavailable",
-				label: "Notify if item unavailable",
-				icon: Clock,
-				description: "Call or update me if any item is not available",
-			},
-		],
-	},
-] as const;
-
-export type CompleteInstruction = {
-	[K in (typeof instructions)[number]["name"]]: string;
+const deliveryInstructions = {
+	name: "deliveryInstructions",
+	label: "Delivery Instructions",
+	description: "We will inform the delivery partner",
+	icon: MessageSquareText,
+	options: [
+		{
+			name: "leave-at-door",
+			label: "Leave at door",
+			icon: MapPin,
+			description: "Leave the order at my doorstep",
+		},
+		{
+			name: "ring-doorbell",
+			label: "Ring doorbell",
+			icon: Clock,
+			description: "Please ring the doorbell upon arrival",
+		},
+		{
+			name: "call-on-arrival",
+			label: "Call on arrival",
+			icon: Phone,
+			description: "Call me when you arrive",
+		},
+		{
+			name: "pet-at-home",
+			label: "Pet is at home",
+			icon: Dog,
+			description: "Beware of pets at home",
+		},
+	],
 };
 
 function RouteComponent() {
@@ -126,13 +95,21 @@ function RouteComponent() {
 	const { isMobile } = useViewport();
 	const [detailedAddressDrawerOpen, setDetailedAddressDrawerOpen] =
 		useState(false);
+	const queryClient = useQueryClient();
+	const [isRemovingFromCart, setIsRemovingFromCart] = useState(false);
+	const [removingShopHandle, setRemovingShopHandle] = useState("");
 
-	const [completeInstruction, setCompleteInstruction] =
-		useState<CompleteInstruction>(
-			Object.fromEntries(
-				instructions.map((item) => [item.name, ""]),
-			) as CompleteInstruction,
-		);
+	const removeFromCart = useAPIMutation(
+		apiClient.v1.cart[":shopHandle"],
+		"$delete",
+		{
+			onSuccess() {
+				queryClient.invalidateQueries({
+					queryKey: apiQueryOptions(apiClient.v1.cart, "$get", {}).queryKey,
+				});
+			},
+		},
+	);
 
 	const {
 		data = [],
@@ -172,6 +149,10 @@ function RouteComponent() {
 		);
 	}, [cart]);
 
+	const totalDiscount = useMemo(() => {
+		return Math.floor(totalMaxPrice - totalPrice);
+	}, [totalPrice, totalMaxPrice]);
+
 	const billingDetails = [
 		{
 			icon: ReceiptText,
@@ -199,9 +180,67 @@ function RouteComponent() {
 		},
 	];
 
+	const storeWiseItems = new Map<string, CartStore["cart"]>();
+
+	for (const item of cart) {
+		const storeHandle = item?.storeHandle ?? "";
+
+		let items = storeWiseItems.get(storeHandle);
+
+		if (!items) {
+			items = [];
+			storeWiseItems.set(storeHandle, items);
+		}
+
+		items.push(item);
+	}
+
+	const handleRemoveFromCart = async (shopHandle: string) => {
+		try {
+			setIsRemovingFromCart(true);
+			setRemovingShopHandle(shopHandle);
+			await removeFromCart.mutateAsync({
+				param: {
+					shopHandle: shopHandle,
+				},
+			});
+		} finally {
+			setIsRemovingFromCart(false);
+		}
+	};
+
 	return (
 		<div className="">
-			{isMobile && <DashboardHeader title="Cart" />}
+			{isMobile && (
+				<DashboardHeader
+					titleChildren={
+						<div>
+							<p
+								className={cn(
+									cart.length === 0 ? "text-lg" : "text-base",
+									"font-semibold",
+								)}
+							>
+								Your cart
+							</p>
+							<p
+								className={cn(
+									cart.length === 0 && "hidden",
+									"text-muted-foreground text-xs",
+								)}
+							>
+								{storeWiseItems.size ?? 0} stores | {cart.length || 0} items
+							</p>
+						</div>
+					}
+				>
+					{totalDiscount > 0 && (
+						<Badge variant="success" size="spacious">
+							SAVED {formatAmount("inr", totalDiscount)}
+						</Badge>
+					)}
+				</DashboardHeader>
+			)}
 			{isFetching && [
 				Array(5).map((_, indx) => (
 					<div key={indx}>
@@ -213,21 +252,53 @@ function RouteComponent() {
 			{isFetched && data && data.length > 0 && (
 				<div className="relative max-w-screen-lg m-auto p-4">
 					<div className="space-y-6 my-4 gap-4">
-						<Card>
-							<CardHeader className="flex items-center justify-between border-b">
-								<CardTitle>Order Item(s)</CardTitle>
-								{cart.length > 0 && (
-									<p className="text-muted-foreground">{cart.length} items</p>
-								)}
-							</CardHeader>
-							<CardContent>
-								{cart.map((product) => (
-									<div key={product.inventoryId} className="py-4">
-										<ProductComp product={product} />
-									</div>
-								))}
-							</CardContent>
-						</Card>
+						{Array.from(storeWiseItems.entries()).map(
+							([storeHandle, storeData]) => (
+								<Card key={storeHandle} className="mb-6">
+									{/* Store name header */}
+									<CardHeader className="flex items-center justify-between mb-2 border-b -mx-4 ">
+										<Link
+											className="flex items-center gap-2 px-4"
+											to="/$storeHandle"
+											params={{ storeHandle }}
+										>
+											<Avatar className="rounded-md size-10">
+												<AvatarImage src={storeData[0].storeLogo || ""} />
+												<AvatarFallback>
+													<Store />
+												</AvatarFallback>
+											</Avatar>
+											<div>
+												<p className="text-base font-semibold">
+													{storeData[0].storeName}
+												</p>
+												<p className="text-sm text-muted-foreground">
+													{storeData.length} item
+													{storeData.length > 1 ? "s" : ""}
+												</p>
+											</div>
+										</Link>
+										<p
+											className="text-muted-foreground underline decoration-dashed px-4"
+											style={{ textUnderlineOffset: "4px" }}
+											onClick={() => handleRemoveFromCart(storeHandle)}
+										>
+											{isRemovingFromCart && removingShopHandle === storeHandle
+												? "Removing..."
+												: "Remove"}
+										</p>
+									</CardHeader>
+
+									<CardContent className="space-y-6">
+										{storeData.map((product) => (
+											<div key={product.inventoryId}>
+												<ProductComp product={product} />
+											</div>
+										))}
+									</CardContent>
+								</Card>
+							),
+						)}
 
 						<Card>
 							<CardHeader>
@@ -256,10 +327,7 @@ function RouteComponent() {
 						</Card>
 
 						<div className="mb-40">
-							<InstructionComp
-								completeInstruction={completeInstruction}
-								setCompleteInstruction={setCompleteInstruction}
-							/>
+							<DeliveryInstruction />
 						</div>
 					</div>
 
@@ -299,10 +367,7 @@ function RouteComponent() {
 						</div>
 
 						<div className="px-4 py-2">
-							<PlaceOrder
-								setOpen={setDetailedAddressDrawerOpen}
-								completeInstruction={completeInstruction}
-							/>
+							<PlaceOrder setOpen={setDetailedAddressDrawerOpen} />
 						</div>
 					</div>
 				</div>
@@ -360,7 +425,7 @@ export function ProductComp({
 				</div>
 
 				<div>
-					<p className="line-clamp-2 text-sm leading-4">{product.title}</p>
+					<p className="line-clamp-2  leading-4">{product.title}</p>
 					<p className="text-muted-foreground text-xs">
 						{product.quantity} x {product.unit}
 					</p>
@@ -373,12 +438,15 @@ export function ProductComp({
 					activeVariant="tertiary-active"
 				/>
 				<div className="flex items-center gap-2">
-					<p className="line-through text-muted-foreground">
-						{formatAmount(
-							"inr",
-							(product?.maxPrice ?? 0) * (product?.quantity ?? 0),
-						)}
-					</p>
+					{product.maxPrice && product.maxPrice > (product.price ?? 0) && (
+						<p className="line-through text-muted-foreground">
+							{formatAmount(
+								"inr",
+								(product?.maxPrice ?? 0) * (product?.quantity ?? 0),
+							)}
+						</p>
+					)}
+
 					<p className="font-semibold">
 						{formatAmount(
 							"inr",
@@ -391,89 +459,71 @@ export function ProductComp({
 	);
 }
 
-function InstructionComp({
-	completeInstruction,
-	setCompleteInstruction,
-}: {
-	completeInstruction: CompleteInstruction;
-	setCompleteInstruction: (instruction: CompleteInstruction) => void;
-}) {
+function DeliveryInstruction() {
 	const [drawerDialogOpen, setDrawerDialogOpen] = useState(false);
-	const [selectedInstruction, setSelectedInstruction] =
-		useState<(typeof instructions)[number]>();
-
+	const { instructions, setInstructions } = useCartStore();
 	return (
 		<div>
 			<div className="rounded-xl bg-card divide-y divide-dashed">
-				{instructions.map((instruction) => (
-					<div
-						key={instruction.name}
-						className="flex items-center justify-between p-4"
-						onClick={() => {
-							setDrawerDialogOpen(true);
-							setSelectedInstruction(instruction);
-						}}
-					>
-						<div className="flex items-center gap-2">
-							<instruction.icon className="size-6 stroke-2" />
-							<div>
-								<p className="font-medium">{instruction.label}</p>
-								<p className="text-muted-foreground text-xs">
-									{completeInstruction[instruction?.name] ||
-										instruction.description}
-								</p>
-							</div>
+				<div
+					className="flex items-center justify-between p-4"
+					onClick={() => {
+						setDrawerDialogOpen(true);
+					}}
+				>
+					<div className="flex items-center gap-2">
+						<deliveryInstructions.icon className="size-6 stroke-2" />
+						<div>
+							<p className="font-medium">{deliveryInstructions.label}</p>
+							<p className="text-muted-foreground text-xs">
+								{instructions.deliveryInstruction ||
+									deliveryInstructions.description}
+							</p>
 						</div>
-						<ChevronRight className="size-5" />
 					</div>
-				))}
+					<ChevronRight className="size-5" />
+				</div>
 			</div>
 
-			{selectedInstruction && (
-				<DrawerDialogSwitcher
-					open={drawerDialogOpen}
-					onOpenChange={setDrawerDialogOpen}
-				>
-					<DrawerDialogHeader>
-						<div className="flex items-center gap-4">
-							<selectedInstruction.icon className="size-8 stroke-2" />
+			<DrawerDialogSwitcher
+				open={drawerDialogOpen}
+				onOpenChange={setDrawerDialogOpen}
+			>
+				<DrawerDialogHeader>
+					<div className="flex items-center gap-4">
+						<deliveryInstructions.icon className="size-8 stroke-2" />
+						<div>
+							<p className="font-medium">{deliveryInstructions.label}</p>
+							<p className="text-muted-foreground text-xs">
+								{deliveryInstructions.description}
+							</p>
+						</div>
+					</div>
+				</DrawerDialogHeader>
+				<div className="space-y-2">
+					{deliveryInstructions.options.map((option) => (
+						<div
+							key={option.name}
+							className={cn(
+								instructions.deliveryInstruction === option.label &&
+									"bg-primary/10 ring ring-primary",
+								"flex items-center gap-4 p-4 border rounded-xl",
+							)}
+							onClick={() => {
+								setInstructions({ deliveryInstruction: option.label });
+							}}
+						>
+							<option.icon className="size-6 stroke-1.5" />
 							<div>
-								<p className="font-medium">{selectedInstruction?.label}</p>
+								<p className="font-medium">{option.label}</p>
 								<p className="text-muted-foreground text-xs">
-									{selectedInstruction?.description}
+									{option.description}
 								</p>
 							</div>
 						</div>
-					</DrawerDialogHeader>
-					<div className="space-y-2">
-						{selectedInstruction.options.map((option) => (
-							<div
-								key={option.name}
-								className={cn(
-									completeInstruction[selectedInstruction.name] === option.label
-										? "bg-primary/10 border-2 border-primary"
-										: null,
-									"flex items-center gap-4 p-4 border rounded-xl",
-								)}
-								onClick={() => {
-									setCompleteInstruction({
-										...completeInstruction,
-										[selectedInstruction.name]: option.label,
-									});
-								}}
-							>
-								<option.icon className="size-6 stroke-1.5" />
-								<div>
-									<p className="font-medium">{option.label}</p>
-									<p className="text-muted-foreground text-xs">
-										{option.description}
-									</p>
-								</div>
-							</div>
-						))}
-					</div>
-				</DrawerDialogSwitcher>
-			)}
+					))}
+				</div>
+			</DrawerDialogSwitcher>
 		</div>
 	);
 }

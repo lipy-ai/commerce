@@ -307,6 +307,9 @@ function RouteComponent() {
 									<div className="space-y-4 p-4">
 										<Label>Delivery Address</Label>
 										<div className="space-y-1">
+											<p>
+												{data?.customerDetails?.address?.metadata?.building}
+											</p>
 											<p className="">
 												{data?.customerDetails?.address?.line1}
 												{data?.customerDetails?.address?.line2

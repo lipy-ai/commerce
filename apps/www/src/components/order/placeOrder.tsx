@@ -1,4 +1,3 @@
-import type { CompleteInstruction } from "@/routes/(default)/cart";
 import { apiClient } from "@lipy/lib/api";
 import { authClient } from "@lipy/lib/providers/auth";
 import {
@@ -28,11 +27,9 @@ import { useCartStore } from "../cart/store";
 function ProgressDialog({
 	showDialog,
 	setShowDialog,
-	completeInstruction,
 }: {
 	showDialog: boolean;
 	setShowDialog: (showDialog: boolean) => void;
-	completeInstruction?: CompleteInstruction;
 }) {
 	const [progress, setProgress] = useState(0);
 
@@ -42,7 +39,7 @@ function ProgressDialog({
 	const { data: session } = authClient.useSession();
 
 	const { deliveryLocation } = useLocationStore();
-	const { cart } = useCartStore();
+	const { cart, instructions } = useCartStore();
 
 	const clearCartMutation = useAPIMutation(apiClient.v1.cart, "$delete", {
 		onSuccess: () => {
@@ -117,7 +114,7 @@ function ProgressDialog({
 			mutation.mutateAsync({
 				json: {
 					address: deliveryLocation as z.infer<typeof addressSchema>,
-					deliveryInstruction: completeInstruction?.deliveryInstructions ?? "",
+					deliveryInstruction: instructions.deliveryInstruction,
 					storeInstruction: null,
 				},
 			});
@@ -128,7 +125,7 @@ function ProgressDialog({
 			clearInterval(interval);
 			clearTimeout(timeout);
 		};
-	}, [deliveryLocation, completeInstruction]);
+	}, [deliveryLocation]);
 
 	return (
 		<Dialog open={showDialog} onOpenChange={setShowDialog}>
@@ -152,10 +149,8 @@ function ProgressDialog({
 
 export default function PlaceOrder({
 	setOpen,
-	completeInstruction,
 }: {
 	setOpen: (open: boolean) => void;
-	completeInstruction?: CompleteInstruction;
 }) {
 	const { data } = authClient.useSession();
 	const [showDialog, setShowDialog] = useState(false);
@@ -199,11 +194,7 @@ export default function PlaceOrder({
 			</div>
 
 			{showDialog && (
-				<ProgressDialog
-					showDialog={showDialog}
-					setShowDialog={setShowDialog}
-					completeInstruction={completeInstruction}
-				/>
+				<ProgressDialog showDialog={showDialog} setShowDialog={setShowDialog} />
 			)}
 		</>
 	);

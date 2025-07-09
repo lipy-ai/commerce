@@ -12,11 +12,18 @@ export type CartStore = {
 	updateCart: (product: ProductInCart, operation?: Operation) => void;
 	setCart: (items: ProductInCart[]) => void;
 	resetCart: () => void;
+	setInstructions: (instructions: { deliveryInstruction: string }) => void;
+	instructions: {
+		deliveryInstruction: string;
+	};
 };
 
 const defaultValues = {
 	cart: [],
 	initialized: false,
+	instructions: {
+		deliveryInstruction: "",
+	},
 };
 
 export const useCartStore = create<CartStore>()(
@@ -60,6 +67,10 @@ export const useCartStore = create<CartStore>()(
 				}),
 
 			resetCart: () => set({ cart: [], initialized: false }),
+			setInstructions: (instructions) =>
+				set({
+					instructions: instructions,
+				}),
 		}),
 		{
 			name: "lipy-cart-state",

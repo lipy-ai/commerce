@@ -162,7 +162,7 @@ export const AddToCart = ({
 						activeVariant === "secondary-active"
 							? "bg-primary min-w-32"
 							: activeVariant === "tertiary-active"
-								? "bg-secondary/20 ring-1 ring-primary/40"
+								? "bg-secondary/20 ring-1 ring-secondary/40"
 								: "bg-secondary ",
 						"flex items-center  shadow-sm rounded-md justify-between",
 					)}
@@ -220,7 +220,7 @@ export const AddToCart = ({
 									activeVariant === "tertiary-active"
 										? ""
 										: "font-semibold  text-primary-foreground",
-									"text-sm px-1",
+									"text-sm px-1 font-semibold",
 								)}
 							>
 								{currentQuantity}

@@ -119,7 +119,7 @@ function RouteComponent() {
 											className={cn(
 												"cursor-pointer px-3 py-1 rounded-lg bg-muted/50",
 												selectedVariant?.id === variant.id
-													? "border-2 border-primary bg-primary/10"
+													? "ring-2 ring-primary bg-primary/10"
 													: "",
 											)}
 											onClick={() => setSelectedVariant(variant)}
@@ -148,7 +148,7 @@ function RouteComponent() {
 						<Accordion
 							type="single"
 							collapsible
-							className="bg-card rounded-xl m-2 mb-32 "
+							className="bg-card rounded-xl m-2 mb-40 "
 							defaultValue="item-1"
 						>
 							<AccordionItem value="item-1" className="border-b-0">
@@ -176,35 +176,38 @@ function RouteComponent() {
 					)}
 
 					{selectedVariant && (
-						<div className="fixed bottom-0 w-full bg-card shadow-sm p-4 flex items-center justify-between">
-							<div>
-								<p className="font-medium">{selectedVariant?.unit}</p>
+						<div className="fixed bottom-0 w-full bg-card shadow-xl   border-t border-border/50 divide-y divide-muted-foreground/10">
+							<div className="flex items-center justify-between p-4">
 								<div>
-									<span className="font-bold text-lg pr-2">
-										{formatAmount("inr", selectedVariant?.price || 0)}
-									</span>
-									{selectedVariant?.maxPrice && (
-										<span className="text line-through text-muted-foreground pr-2">
-											{formatAmount("inr", selectedVariant?.maxPrice)}
+									<p className="font-medium">{selectedVariant?.unit}</p>
+									<div>
+										<span className="font-bold text-lg pr-2">
+											{formatAmount("inr", selectedVariant?.price || 0)}
 										</span>
-									)}
-									{discount > 0 && (
-										<Badge variant="info">{discount}% OFF</Badge>
-									)}
+										{selectedVariant?.maxPrice && (
+											<span className="text line-through text-muted-foreground pr-2">
+												{formatAmount("inr", selectedVariant?.maxPrice)}
+											</span>
+										)}
+										{discount > 0 && (
+											<Badge variant="info">{discount}% OFF</Badge>
+										)}
+									</div>
 								</div>
+								<AddToCart
+									product={{
+										...selectedVariant,
+										quantity: null,
+										thumbnail: product.thumbnail || "",
+										title: product.title || "",
+										storeHandle: storeHandle || "",
+										storeName: "",
+										storeLogo: null,
+									}}
+									variant="secondary"
+									activeVariant="secondary-active"
+								/>
 							</div>
-							<AddToCart
-								product={{
-									...selectedVariant,
-									quantity: null,
-									thumbnail: product.thumbnail || "",
-									title: product.title || "",
-									storeHandle: storeHandle || "",
-									storeName: "",
-								}}
-								variant="secondary"
-								activeVariant="secondary-active"
-							/>
 						</div>
 					)}
 				</div>

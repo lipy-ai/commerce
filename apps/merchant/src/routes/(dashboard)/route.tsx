@@ -61,7 +61,6 @@ const mobileNav = [
 
 function RouteComponent() {
 	const { isPending } = useStore();
-
 	return (
 		<DashboardLayout
 			dashboardNav={dashboardNav}

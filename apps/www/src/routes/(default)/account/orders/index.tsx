@@ -42,7 +42,7 @@ export const ORDER_STATUS_BADGE_VARIANT: Record<
 };
 
 function RouteComponent() {
-	const { data, isFetching } = useAPIQuery(
+	const { data, isLoading } = useAPIQuery(
 		apiClient.v1.order,
 		"$get",
 		{
@@ -56,9 +56,9 @@ function RouteComponent() {
 	);
 
 	return (
-		<>
-			<DashboardHeader title="My Orders" />
-			{isFetching ? (
+		<div className="w-full">
+			<DashboardHeader title="My Orders" className="z-0" />
+			{isLoading ? (
 				<Spinner />
 			) : !data || data.length === 0 ? (
 				<EmptyPage
@@ -66,7 +66,7 @@ function RouteComponent() {
 					label="Place an order to start"
 				/>
 			) : (
-				<div className="p-4 space-y-4 mb-10">
+				<div className="p-4 space-y-4 mb-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:gap-4">
 					{(() => {
 						let lastMonth = "";
 						return data.map((order) => {
@@ -77,7 +77,7 @@ function RouteComponent() {
 							return (
 								<div key={order.id}>
 									{showMonth && (
-										<h2 className="text-sm font-semibold py-2">
+										<h2 className="text-sm font-semibold py-2 lg:hidden">
 											{currentMonth}
 										</h2>
 									)}
@@ -155,6 +155,6 @@ function RouteComponent() {
 					})()}
 				</div>
 			)}
-		</>
+		</div>
 	);
 }

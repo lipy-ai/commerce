@@ -11,8 +11,7 @@ import { DetailedAddress } from "@lipy/web-ui/components/maps/detailedAddress";
 import type { DeliveryLocation } from "@lipy/web-ui/components/maps/utils/store";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
-
-import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
+import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute } from "@tanstack/react-router";
@@ -33,10 +32,13 @@ export const Route = createFileRoute("/(default)/account/addresses/")({
 });
 
 function RouteComponent() {
-	const { data, isFetching, isFetched } = useAPIQuery(
+	const { data, isLoading } = useAPIQuery(
 		apiClient.v1.address,
 		"$get",
 		{},
+		{
+			placeholderData: (p) => p,
+		},
 	);
 	const { isMobile } = useViewport();
 	const [optionsDrawerOpen, setOptionsDrawerOpen] = useState(false);
@@ -58,15 +60,15 @@ function RouteComponent() {
 					</Link>
 				)}
 			</DashboardHeader>
-
-			{isFetching &&
-				[...Array(5)].map((_, i) => (
-					<div key={i} className="my-2 flex flex-col items-center">
-						<Skeleton className="h-28 w-5/6 " />
-					</div>
-				))}
-
-			{isFetched && data && data?.length > 0 && (
+			{isLoading ? (
+				<Spinner />
+			) : !data || data.length === 0 ? (
+				<EmptyPage
+					icon={MapPinHouse}
+					title="You have no saved addresses"
+					label="Add a new address to get started"
+				/>
+			) : (
 				<div className="p-4 mb-20 space-y-2">
 					{data.map((address) => (
 						<div
@@ -80,14 +82,6 @@ function RouteComponent() {
 						</div>
 					))}
 				</div>
-			)}
-
-			{isFetched && data?.length === 0 && (
-				<EmptyPage
-					icon={MapPinHouse}
-					title="You have no saved addresses"
-					label="Add a new address to get started"
-				/>
 			)}
 
 			{isMobile && (

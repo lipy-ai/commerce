@@ -10,7 +10,8 @@ import {
 } from "@lipy/web-ui/components/ui/avatar";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 
-import { Button } from "@lipy/web-ui/components/ui/button";
+import EmptyPage from "@lipy/web-ui/components/pages/empty";
+import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import {
 	Card,
 	CardContent,
@@ -19,6 +20,7 @@ import {
 	CardTitle,
 } from "@lipy/web-ui/components/ui/card";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
+import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
 import {
@@ -36,9 +38,9 @@ export const Route = createFileRoute("/(default)/account/orders/$orderId")({
 });
 
 function RouteComponent() {
-	const { orderId }: any = Route.useParams();
+	const { orderId } = Route.useParams();
 
-	const { data, isFetched, isFetching } = useAPIQuery(
+	const { data: order, isLoading } = useAPIQuery(
 		apiClient.v1.order[":id"],
 		"$get",
 		{
@@ -46,11 +48,14 @@ function RouteComponent() {
 				id: orderId,
 			},
 		},
+		{
+			placeholderData: (p) => p,
+		},
 	);
 
-	const totalPrice = data?.[0]?.itemTotalAmount ?? 0;
+	const totalPrice = order?.itemTotalAmount ?? 0;
 	const deliveryCharges = 0;
-	const totalTaxAmount = data?.[0]?.totalTaxAmount ?? 0;
+	const totalTaxAmount = order?.totalTaxAmount ?? 0;
 	const totalPayableAmount = totalPrice + deliveryCharges + totalTaxAmount;
 
 	const infos = [
@@ -58,8 +63,8 @@ function RouteComponent() {
 			title: "Receiver's Info",
 			icon: CircleUser,
 			value: [
-				data?.[0]?.customerDetails?.address?.name,
-				data?.[0]?.customerDetails?.address?.phone,
+				order?.customerDetails?.address?.name,
+				order?.customerDetails?.address?.phone,
 			]
 				.filter(Boolean)
 				.join(" | "),
@@ -68,8 +73,8 @@ function RouteComponent() {
 			title: "Delivery Address",
 			icon: MapPin,
 			value: [
-				data?.[0]?.customerDetails?.address?.metadata?.building,
-				data?.[0]?.customerDetails?.address?.line1,
+				order?.customerDetails?.address?.metadata?.building,
+				order?.customerDetails?.address?.line1,
 			]
 				.filter(Boolean)
 				.join(", "),
@@ -78,27 +83,33 @@ function RouteComponent() {
 			title: "Payment Method",
 			icon: BanknoteArrowUp,
 			value:
-				data?.[0]?.paymentMethod === "cod" ? "Cash on Delivery" : "Unspecified",
+				order?.paymentMethod === "cod" ? "Cash on Delivery" : "Unspecified",
 		},
 		{
 			title: "Delivery Instruction",
 			icon: MessageSquareText,
-			value: data?.[0]?.customerInstructions?.delivery,
+			value: order?.customerInstructions?.delivery,
 		},
 	];
 
 	return (
 		<>
-			{isFetching && <Spinner />}
-			{isFetched && data && (
-				<div className="min-h-screen flex flex-col">
+			{isLoading ? (
+				<Spinner />
+			) : !order ? (
+				<EmptyPage
+					title={"Order not found"}
+					label="The order you are looking for does not exist or has been deleted."
+				/>
+			) : (
+				<div>
 					<DashboardHeader
 						titleChildren={
 							<div>
 								<p className="font-semibold">Order Details</p>
 								<p className="text-muted-foreground text-xs">
-									{data[0]?.items?.length ?? 0} items |{" "}
-									{formatAmount(data[0]?.currency, totalPrice || 0)}{" "}
+									{order?.items?.length || 0} item(s) |{" "}
+									{formatAmount(order.currency, totalPrice || 0)}{" "}
 								</p>
 							</div>
 						}
@@ -106,12 +117,13 @@ function RouteComponent() {
 						<Badge
 							variant={
 								ORDER_STATUS_BADGE_VARIANT[
-									data[0]?.status as (typeof ORDER_STATUS)[number]
+									order.status as (typeof ORDER_STATUS)[number]
 								] || "neutral"
 							}
 							className="capitalize"
+							size="spacious"
 						>
-							{data[0]?.status || "Unknown"}
+							{order.status || "Unknown"}
 						</Badge>
 					</DashboardHeader>
 
@@ -123,58 +135,51 @@ function RouteComponent() {
 										className="flex items-center gap-2"
 										to="/$storeHandle"
 										params={{
-											storeHandle: data[0]?.storeHandle ?? "",
+											storeHandle: order.storeHandle ?? "",
 										}}
 									>
 										<Avatar>
-											<AvatarImage src={data[0]?.storeLogo || ""} />
+											<AvatarImage src={order.storeLogo || ""} />
 											<AvatarFallback>
 												<Store />
 											</AvatarFallback>
 										</Avatar>
 										<div>
-											<p className="font-medium text-base">
-												{data[0]?.storeName}
-											</p>
+											<p className="font-medium text-base">{order.storeName}</p>
 											<p className="text-muted-foreground line-clamp-1">
-												{data[0]?.storeAddress?.line1 || ""}
+												{order.storeAddress?.line1 || ""}
 											</p>
 										</div>
 									</Link>
 
-									<Button
-										variant="outline"
-										size="icon"
-										className="rounded-full"
-										onClick={() => {
-											window.open(`tel:${data[0]?.storePhone}`);
-										}}
+									<a
+										href={`tel:${order?.storePhone}`}
+										className={cn(
+											buttonVariants({ variant: "outline", size: "icon" }),
+											"rounded-full",
+										)}
 									>
 										<Phone className="text-ring size-5" />
-									</Button>
+									</a>
 								</CardHeader>
 								<CardContent>
-									<p className="font-medium text-base">
-										Order ID : {data[0]?.id}
-									</p>
+									<p className="font-medium text-base">Order ID : {order.id}</p>
 
-									{data[0]?.deliveredAt ? (
+									{order.deliveredAt ? (
 										<p className="text-muted-foreground text-sm">
-											Delivered on{" "}
-											{format(new Date(data[0]?.deliveredAt), "PPp")}
+											Delivered on {format(new Date(order?.deliveredAt), "PPp")}
 										</p>
-									) : data[0]?.cancelledAt ? (
+									) : order?.cancelledAt ? (
 										<p className="text-muted-foreground text-sm">
-											Cancelled on{" "}
-											{format(new Date(data[0]?.cancelledAt), "PPp")}
+											Cancelled on {format(new Date(order?.cancelledAt), "PPp")}
 										</p>
-									) : data[0]?.refundedAt ? (
+									) : order?.refundedAt ? (
 										<p className="text-muted-foreground text-sm">
-											Refunded on {format(new Date(data[0]?.refundedAt), "PPp")}
+											Refunded on {format(new Date(order?.refundedAt), "PPp")}
 										</p>
 									) : (
 										<p className="text-muted-foreground text-sm">
-											Ordered on {format(new Date(data[0]?.orderedAt), "PPp")}
+											Ordered on {format(new Date(order?.orderedAt), "PPp")}
 										</p>
 									)}
 								</CardContent>
@@ -185,12 +190,12 @@ function RouteComponent() {
 									<CardTitle>Item(s) ordered</CardTitle>
 								</CardHeader>
 								<CardContent>
-									{data[0]?.items?.map((product, i) => (
+									{order?.items?.map((product, i) => (
 										<div key={i} className="flex gap-2 items-center py-2">
 											<Link
 												to="/$storeHandle/products/$productId"
 												params={{
-													storeHandle: data[0]?.storeHandle ?? "",
+													storeHandle: order?.storeHandle ?? "",
 													productId: product?.id ?? "",
 												}}
 											>
@@ -202,7 +207,7 @@ function RouteComponent() {
 											</Link>
 
 											<div className="flex-1">
-												<h2 className="font-semibold leading-4 line-clamp-2">
+												<h2 className="leading-4 line-clamp-2">
 													{product.title}
 												</h2>
 												<p className="text-muted-foreground text-xs">
@@ -212,7 +217,7 @@ function RouteComponent() {
 											<div className="text-right">
 												<p className="font-medium">
 													{formatAmount(
-														data[0]?.currency,
+														order.currency,
 														product.variant.price || 0,
 													)}
 												</p>
@@ -233,28 +238,28 @@ function RouteComponent() {
 								</CardHeader>
 								<CardContent className="space-y-2">
 									<div className="flex justify-between text-sm">
-										<p>Item Total ({data[0]?.items?.length ?? 0})</p>
+										<p>Item Total ({order.items?.length ?? 0})</p>
 										<p className="font-medium">
-											{formatAmount(data[0]?.currency, totalPrice || 0)}
+											{formatAmount(order?.currency, totalPrice || 0)}
 										</p>
 									</div>
 									<div className="flex justify-between text-sm">
 										<p>Delivery Charges</p>
 										<p className="font-medium">
-											{formatAmount(data[0]?.currency, deliveryCharges)}
+											{formatAmount(order?.currency, deliveryCharges)}
 										</p>
 									</div>
 									<div className="flex justify-between text-sm">
 										<p>Taxes</p>
 										<p className="font-medium">
-											{formatAmount(data[0]?.currency, totalTaxAmount)}
+											{formatAmount(order?.currency, totalTaxAmount)}
 										</p>
 									</div>
 								</CardContent>
 								<CardFooter className="flex justify-between items-center border-t border-dashed">
 									<p className="font-semibold text-base">Total Payable</p>
 									<p className="font-semibold text-xl">
-										{formatAmount(data[0]?.currency, totalPayableAmount)}
+										{formatAmount(order?.currency, totalPayableAmount)}
 									</p>
 								</CardFooter>
 							</Card>
@@ -264,9 +269,9 @@ function RouteComponent() {
 									return (
 										<div
 											key={info?.title}
-											className="flex items-start gap-4 p-2"
+											className="flex items-start gap-2 p-4"
 										>
-											<info.icon className="text-muted-foreground flex-shrink-0 mt-1" />
+											<info.icon className="text-muted-foreground flex-shrink-0 size-5" />
 											<div>
 												<p className="font-medium ">{info.title}</p>
 												<p className="text-muted-foreground text-xs">
@@ -279,18 +284,6 @@ function RouteComponent() {
 							</div>
 						</div>
 					</div>
-
-					{/* <div className="fixed bottom-0 w-full bg-card shadow-md p-4 flex items-center justify-between gap-4">
-						<Button variant="outline" className="flex-1 w-full">
-							<Headset />
-							Need help
-						</Button>
-						<Button className="flex-1 w-full">
-							{data[0]?.status === "ordered" || data[0]?.status === "accepted"
-								? "Cancel Order"
-								: "Reorder"}
-						</Button>
-					</div> */}
 				</div>
 			)}
 		</>

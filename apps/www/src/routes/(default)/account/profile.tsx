@@ -7,8 +7,8 @@ export const Route = createFileRoute("/(default)/account/profile")({
 
 function RouteComponent() {
 	return (
-		<div className="">
+		<div>
 			<UserProfile />
 		</div>
-	)
+	);
 }

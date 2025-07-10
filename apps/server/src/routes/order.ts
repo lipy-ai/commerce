@@ -83,7 +83,7 @@ const route = new Hono<ServerContext>()
 				"s.phone as storePhone",
 			])
 
-			.execute();
+			.executeTakeFirstOrThrow();
 
 		return c.json(data || []);
 	})

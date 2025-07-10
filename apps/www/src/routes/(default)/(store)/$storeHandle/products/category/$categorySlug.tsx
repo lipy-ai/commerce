@@ -29,9 +29,12 @@ function RouteComponent() {
 	return (
 		<div className="">
 			{isFetched && data && data.length > 0 && (
-				<div className="max-w-screen-lg mx-auto">
-					<DashboardHeader title={data[0].categoryTitle || ""} />
-					<div className="grid grid-cols-2 md:grid-cols-4 gap-4 space-y-4 p-4 mb-32">
+				<div className="max-w-screen-xl mx-auto">
+					<DashboardHeader
+						title={data[0].categoryTitle || ""}
+						className="lg:border-0 lg:bg-background"
+					/>
+					<div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 space-y-4 p-4 mb-32">
 						{data.map((product) => (
 							<div key={product.id}>
 								<ProductCard

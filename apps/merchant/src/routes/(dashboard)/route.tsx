@@ -61,7 +61,6 @@ const mobileNav = [
 
 function RouteComponent() {
 	const { isPending } = useStore();
-	const { pathname } = useLocation();
 
 	return (
 		<DashboardLayout

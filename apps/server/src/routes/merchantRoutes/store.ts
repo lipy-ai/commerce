@@ -14,11 +14,9 @@ export const storeSchema = z.object({
 	phone: phoneSchema,
 	type: z.enum(STORE_TYPE),
 	address: coreAddressSchema,
-	payments: z
-		.object({
-			upiIds: z.array(z.object({ name: z.string(), id: z.string() })).min(1),
-		})
-		.optional(),
+	payments: z.object({
+		upiIds: z.array(z.object({ name: z.string(), id: z.string() })).min(1),
+	}),
 });
 
 const route = new Hono<ServerContext>()

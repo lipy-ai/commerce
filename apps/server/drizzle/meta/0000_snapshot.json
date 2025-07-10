@@ -1,5 +1,5 @@
 {
-  "id": "8832be41-d090-4767-91ed-85595da375bc",
+  "id": "1eee74d3-eaa9-448f-a722-f01f350c33a9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -625,12 +625,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "storeId": {
-          "name": "storeId",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
         "highlights": {
           "name": "highlights",
           "type": "jsonb[]",
@@ -664,20 +658,6 @@
             "id"
           ],
           "onDelete": "set null",
-          "onUpdate": "no action"
-        },
-        "product_storeId_store_id_fk": {
-          "name": "product_storeId_store_id_fk",
-          "tableFrom": "product",
-          "tableTo": "store",
-          "schemaTo": "lipy-dev",
-          "columnsFrom": [
-            "storeId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -887,6 +867,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "active": {
           "name": "active",
           "type": "boolean",
@@ -907,60 +893,6 @@
           ]
         }
       },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "lipy-dev.storeAddress": {
-      "name": "storeAddress",
-      "schema": "lipy-dev",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "storeId": {
-          "name": "storeId",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "storeAddress_id_address_id_fk": {
-          "name": "storeAddress_id_address_id_fk",
-          "tableFrom": "storeAddress",
-          "tableTo": "address",
-          "schemaTo": "lipy-dev",
-          "columnsFrom": [
-            "id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "storeAddress_storeId_store_id_fk": {
-          "name": "storeAddress_storeId_store_id_fk",
-          "tableFrom": "storeAddress",
-          "tableTo": "store",
-          "schemaTo": "lipy-dev",
-          "columnsFrom": [
-            "storeId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -1039,7 +971,16 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "variant_store_unique": {
+          "name": "variant_store_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "productVariant",
+            "storeId"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -1205,6 +1146,52 @@
           ]
         }
       },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "lipy-dev.storePayments": {
+      "name": "storePayments",
+      "schema": "lipy-dev",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "acceptedPayments": {
+          "name": "acceptedPayments",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "upiIds": {
+          "name": "upiIds",
+          "type": "jsonb[]",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "storePayments_id_store_id_fk": {
+          "name": "storePayments_id_store_id_fk",
+          "tableFrom": "storePayments",
+          "tableTo": "store",
+          "schemaTo": "lipy-dev",
+          "columnsFrom": [
+            "id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false

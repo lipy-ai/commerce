@@ -10,7 +10,6 @@ import {
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Label } from "@lipy/web-ui/components/ui/label";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
-import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { shareContent } from "@lipy/web-ui/lib/share";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute } from "@tanstack/react-router";
@@ -88,67 +87,68 @@ const moreInfo: {
 
 export function AccountPage() {
 	const { data, isPending } = authClient.useSession();
-	const { isMobile } = useViewport();
 
 	const filteredMoreInfo = data
 		? moreInfo
 		: moreInfo.filter((item) => item.title !== "Logout");
 	return (
 		<>
-			{isMobile && <DashboardHeader title="Settings" />}
 			{isPending ? (
 				<Spinner />
 			) : (
-				<div className="p-4 space-y-6">
-					{data ? (
-						<div className="space-y-8">
-							<div className="flex items-center gap-4">
-								<Avatar className="size-12">
-									<AvatarImage
-										src={data?.user.image || ""}
-										alt={data.user.name}
-									/>
-									<AvatarFallback className="bg-secondary/20">
-										<UserRound className="size-12 fill-secondary text-secondary mt-3" />
-									</AvatarFallback>
-								</Avatar>
+				<div>
+					<DashboardHeader title="Settings" className="lg:hidden" />
+					<div className="p-4 space-y-6">
+						{data ? (
+							<div className="space-y-8">
+								<div className="flex items-center gap-4">
+									<Avatar className="size-12">
+										<AvatarImage
+											src={data?.user.image || ""}
+											alt={data.user.name}
+										/>
+										<AvatarFallback className="bg-secondary/20">
+											<UserRound className="size-12 fill-secondary text-secondary mt-3" />
+										</AvatarFallback>
+									</Avatar>
 
-								<div>
-									<h1 className="text-xl font-semibold ">
-										{data?.user.name || "Hello, User"}
-									</h1>
-									<p className="text-muted-foreground ">
-										{data?.user.email || ""}
-									</p>
+									<div>
+										<h1 className="text-xl font-semibold ">
+											{data?.user.name || "Hello, User"}
+										</h1>
+										<p className="text-muted-foreground ">
+											{data?.user.email || ""}
+										</p>
+									</div>
+								</div>
+								<div className="space-y-2">
+									<Label className="text-base">Your Information</Label>
+									<SettingsCard items={yourInfo} />
 								</div>
 							</div>
-							<div className="space-y-2">
-								<Label className="text-base">Your Information</Label>
-								<SettingsCard items={yourInfo} />
+						) : (
+							<div className="space-y-2 py-4">
+								<h1 className="font-bold text-xl"> Hi 👋</h1>
+								<p className="text-muted-foreground font-normal">
+									Discover and shop from your favorite local businesses online.
+									Join our community today and support local commerce.
+								</p>
+								<Link
+									to="/login"
+									className={cn(
+										buttonVariants({ variant: "default" }),
+										"flex items-center justify-between",
+									)}
+								>
+									Log In / Sign up
+									<ChevronRight />
+								</Link>
 							</div>
+						)}
+						<div className="space-y-2">
+							<Label className="text-base">General</Label>
+							<SettingsCard items={filteredMoreInfo} />
 						</div>
-					) : (
-						<div className="space-y-2 py-4">
-							<h1 className="font-bold text-xl"> Hi 👋</h1>
-							<p className="text-muted-foreground font-normal">
-								Discover and shop from your favorite local businesses online.
-								Join our community today and support local commerce.
-							</p>
-							<Link
-								to="/login"
-								className={cn(
-									buttonVariants({ variant: "default" }),
-									"flex items-center justify-between",
-								)}
-							>
-								Log In / Sign up
-								<ChevronRight />
-							</Link>
-						</div>
-					)}
-					<div className="space-y-2">
-						<Label className="text-base">General</Label>
-						<SettingsCard items={filteredMoreInfo} />
 					</div>
 				</div>
 			)}

@@ -1,9 +1,6 @@
 import { apiClient } from "@lipy/lib/api";
 import { authClient } from "@lipy/lib/providers/auth";
-import {
-	apiQueryOptions,
-	useAPIMutation,
-} from "@lipy/lib/utils/useQueryClient";
+import { useAPIMutation } from "@lipy/lib/utils/useQueryClient";
 // import { discordNotification } from "@lipy/server/notification/discord";
 import type { addressSchema } from "@lipy/server/routes/address";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
@@ -17,7 +14,6 @@ import {
 } from "@lipy/web-ui/components/ui/dialog";
 import { Progress } from "@lipy/web-ui/components/ui/progress";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
-import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { StepForward } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -33,29 +29,16 @@ function ProgressDialog({
 }) {
 	const [progress, setProgress] = useState(0);
 
-	const queryClient = useQueryClient();
-
 	const navigate = useNavigate();
-	// const { data: session } = authClient.useSession();
 
 	const { deliveryLocation } = useLocationStore();
 	const { instructions } = useCartStore();
-
-	const clearCartMutation = useAPIMutation(apiClient.v1.cart, "$delete", {
-		onSuccess: () => {
-			queryClient.invalidateQueries({
-				queryKey: apiQueryOptions(apiClient.v1.cart, "$get", {}).queryKey,
-			});
-		},
-	});
 
 	const mutation = useAPIMutation(apiClient.v1.order, "$post", {
 		onSuccess: async (data: {
 			orders: string[];
 		}) => {
 			setShowDialog(false);
-
-			await clearCartMutation.mutateAsync({});
 
 			if (data.orders.length > 1) {
 				navigate({
@@ -186,7 +169,7 @@ export default function PlaceOrder({
 
 	return (
 		<>
-			<div className="flex items-center gap-4 my-2">
+			<div className="flex items-center gap-4 my-2 justify-between">
 				<div className="flex-1 text-center">
 					<p className="font-medium">Pay Cash/UPI</p>
 					<p>(on delivery)</p>

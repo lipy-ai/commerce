@@ -8,7 +8,8 @@ export const redirectToLoginURL = () => {
 
 export const useRedirect = () => {
 	const navigate = useNavigate() as any;
-	const handleNavigate = (code: string) => {
+	const handleNavigate = (code?: string) => {
+		if (!code) return;
 		if (code === "NOT_LOGGED_IN") {
 			redirectToLoginURL();
 		}

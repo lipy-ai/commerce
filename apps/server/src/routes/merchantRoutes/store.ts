@@ -7,6 +7,7 @@ import type { ServerContext } from "@/types";
 import { Hono } from "hono";
 import { z } from "zod";
 import { coreAddressSchema } from "../address";
+
 export const storeSchema = z.object({
 	name: z.string(),
 	email: emailSchema,

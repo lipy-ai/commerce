@@ -100,16 +100,16 @@ export function MultiStepLayout({
 							</Button>
 							<CardHeader>
 								{/* <div className="flex justify-center items-center mb-4">
-                                <Link to={"/"}>
-                                    <img
-                                        src="/logo/ico.png"
-                                        alt="Lipy"
-                                        width={75}
-                                        height={75}
-                                        className="rounded-md"
-                                    />
-                                </Link>
-                            </div> */}
+									<Link to={"/"}>
+										<img
+											src="/logo/ico.png"
+											alt="Lipy"
+											width={75}
+											height={75}
+											className="rounded-md"
+										/>
+									</Link>
+								</div> */}
 								<div className="text-center">
 									<CardDescription>
 										{step} of {totalSteps}

@@ -186,6 +186,7 @@
 		);
 	}
 }
+
 @layer base {
 	html {
 		font-size: var(--font-size);

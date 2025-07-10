@@ -42,7 +42,7 @@ const step1 = {
 			<FormInput
 				label="Store Name"
 				name="name"
-				placeholder="Your Full Name"
+				placeholder="Your Store Name"
 				required
 			/>
 			<FormInput
@@ -189,6 +189,7 @@ function RouteComponent() {
 	});
 
 	const handleSubmit = async (data: any) => {
+		console.log(data);
 		await mutation.mutateAsync({ json: data });
 	};
 

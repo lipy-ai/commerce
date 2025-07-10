@@ -4,7 +4,7 @@ import {
 	apiQueryOptions,
 	useAPIMutation,
 } from "@lipy/lib/utils/useQueryClient";
-import { discordNotification } from "@lipy/server/notification/discord";
+// import { discordNotification } from "@lipy/server/notification/discord";
 import type { addressSchema } from "@lipy/server/routes/address";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import { Button } from "@lipy/web-ui/components/ui/button";
@@ -36,10 +36,10 @@ function ProgressDialog({
 	const queryClient = useQueryClient();
 
 	const navigate = useNavigate();
-	const { data: session } = authClient.useSession();
+	// const { data: session } = authClient.useSession();
 
 	const { deliveryLocation } = useLocationStore();
-	const { cart, instructions } = useCartStore();
+	const { instructions } = useCartStore();
 
 	const clearCartMutation = useAPIMutation(apiClient.v1.cart, "$delete", {
 		onSuccess: () => {
@@ -66,30 +66,34 @@ function ProgressDialog({
 					to: `/account/orders/${data.orders[0]}`,
 				});
 			}
-			discordNotification({
-				type: "orderPlaced",
-				fields: [
-					{
-						name: "Order ID",
-						value: data.orders.toString(),
-					},
-					{
-						name: "Customer",
-						value: session?.user.email || session?.session.userId || "",
-					},
-					{
-						name: "Total Bill",
-						value: `₹ ${cart.reduce(
-							(sum, item) => sum + Number(item.price ?? 0),
-							0,
-						)}`,
-					},
-					{
-						name: "Delivery Address",
-						value: `${deliveryLocation?.metadata?.building}, ${deliveryLocation?.line1}`,
-					},
-				],
-			});
+			/**
+			 * What is this server function doing in client? Remove it
+			 */
+
+			// discordNotification({
+			// 	type: "orderPlaced",
+			// 	fields: [
+			// 		{
+			// 			name: "Order ID",
+			// 			value: data.orders.toString(),
+			// 		},
+			// 		{
+			// 			name: "Customer",
+			// 			value: session?.user.email || session?.session.userId || "",
+			// 		},
+			// 		{
+			// 			name: "Total Bill",
+			// 			value: `₹ ${cart.reduce(
+			// 				(sum, item) => sum + Number(item.price ?? 0),
+			// 				0,
+			// 			)}`,
+			// 		},
+			// 		{
+			// 			name: "Delivery Address",
+			// 			value: `${deliveryLocation?.metadata?.building}, ${deliveryLocation?.line1}`,
+			// 		},
+			// 	],
+			// });
 		},
 
 		onError: () => {

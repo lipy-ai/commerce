@@ -128,7 +128,7 @@ export default function ProductCard({
 										className="text-secondary border border-secondary min-w-16 hover:text-secondary border-b-2 border-r-2 disabled:opacity-100 flex flex-col p-0  gap-0"
 										variant={"outline"}
 									>
-										<p className=" text-sm">ADD</p>
+										<p className=" text-sm font-medium">ADD</p>
 										<p className="-mt-1 bg-secondary/20 w-full text-xs text-muted-foreground font-normal  rounded-b-md pb-0.5">
 											{product.variants.length} options
 										</p>

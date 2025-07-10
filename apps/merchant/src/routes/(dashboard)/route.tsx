@@ -5,6 +5,8 @@ import {
 	DashboardLayout,
 } from "@lipy/web-ui/components/layouts/dashboard";
 
+import { useStore } from "@lipy/lib/hooks/use-store";
+import Loading from "@lipy/web-ui/components/ui/loading";
 import {
 	CircleUser,
 	Home,
@@ -58,6 +60,7 @@ const mobileNav = [
 ];
 
 function RouteComponent() {
+	const { isPending } = useStore();
 	return (
 		<DashboardLayout
 			dashboardNav={dashboardNav}
@@ -65,7 +68,7 @@ function RouteComponent() {
 			logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
 		>
 			<DashboardBody>
-				<Outlet />
+				{isPending ? <Loading hideDefault /> : <Outlet />}
 			</DashboardBody>
 		</DashboardLayout>
 	);

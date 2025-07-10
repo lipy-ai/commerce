@@ -38,7 +38,7 @@ function RouteComponent() {
 		apiClient.v1.merchant.store,
 		"$get",
 		{},
-	)
+	);
 
 	const queryClient = useQueryClient();
 
@@ -52,16 +52,16 @@ function RouteComponent() {
 			phone: "",
 			address: {},
 		},
-	})
+	});
 
 	// Set store address when user selects it from GoogleMaps
 	const handleStoreAddress = (address: z.infer<typeof addressSchema>) => {
 		form.setValue("address", address, {
 			shouldValidate: true,
 			shouldDirty: true,
-		})
+		});
 		setIsOpenMap(false);
-	}
+	};
 
 	// Update form when API data loads
 	useEffect(() => {
@@ -74,7 +74,7 @@ function RouteComponent() {
 				email: data.email || "",
 				phone: data.phone || "",
 				address: data.address || {},
-			})
+			});
 		}
 	}, [data, form.reset]);
 
@@ -84,14 +84,14 @@ function RouteComponent() {
 			queryClient.invalidateQueries({
 				queryKey: apiQueryOptions(apiClient.v1.merchant.store, "$get", {})
 					.queryKey,
-			})
+			});
 			toast.success("Details updated");
 		},
-	})
+	});
 
 	const onSubmit = async (json: any) => {
 		await updateMutation.mutateAsync({ json });
-	}
+	};
 
 	if (isLoading) {
 		return (
@@ -101,7 +101,7 @@ function RouteComponent() {
 					<VerticalListSkeleton count={8} />
 				</div>
 			</div>
-		)
+		);
 	}
 
 	return (
@@ -133,8 +133,6 @@ function RouteComponent() {
 								name="handle"
 								label="Handle"
 								prefixEl={`${env.WEB_URL}/@`}
-								prefixClassName="pl-4"
-								inputClassName="-ml-4"
 								required
 							/>
 							<FormTextarea
@@ -162,15 +160,7 @@ function RouteComponent() {
 						</div>
 
 						<div className="p-4">
-							<FormButton
-								disabled={
-									form.formState.isSubmitting ||
-									!form.formState.isDirty ||
-									!form.formState.isValid
-								}
-							>
-								Save Changes
-							</FormButton>
+							<FormButton>Save Changes</FormButton>
 						</div>
 					</div>
 				</div>
@@ -196,5 +186,5 @@ function RouteComponent() {
 				/>
 			</DrawerDialogSwitcher>
 		</Form>
-	)
+	);
 }

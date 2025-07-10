@@ -34,7 +34,7 @@ export function MultiStepLayout({
 	loading: boolean;
 	steps: MultiStepLayoutProps[];
 	onSubmit: (data: CtxType) => Promise<void>;
-	onSuccess: () => void;
+	onSuccess?: () => void;
 }) {
 	const [step, setStep] = useState(1);
 	const router = useRouter();
@@ -64,7 +64,7 @@ export function MultiStepLayout({
 			return await onSubmit(data)
 				.then(() => {
 					setSuccess(true);
-					onSuccess();
+					onSuccess?.();
 				})
 				.catch(() => setSuccess(false));
 		setStep((s) => s + 1);
@@ -77,13 +77,15 @@ export function MultiStepLayout({
 				onSubmit={form.handleSubmit(handleSubmit)}
 			>
 				{success ? (
-					<div className="m-auto">
+					<div className="m-auto w-full flex items-center justify-center relative z-20 bg-background min-h-screen">
 						<div className="h-20 w-20 bg-primary flex items-center justify-center rounded-full">
 							<Check className="size-16 stroke-2 text-primary-foreground" />
 						</div>
 					</div>
 				) : loading || form.formState.isSubmitting ? (
-					<Loading title="" description="" />
+					<div className="relative z-20 bg-background min-h-screen w-full flex items-center justify-center">
+						<Loading title="" description="" />
+					</div>
 				) : (
 					<div className="max-w-xl m-auto w-full min-h-screen flex flex-col overflow-auto relative z-20">
 						<div className="w-full p-8 bg-card/95 space-y-4 flex-1 rounded-none lg:rounded-2xl">

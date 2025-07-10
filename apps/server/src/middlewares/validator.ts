@@ -113,10 +113,8 @@ export const zValidator = <
 		if (!result.success) {
 			// return c.json(result, 400);
 			throw new HTTPError(400, {
-				// code:"VALIDATION_ERR",
-				message: "Validation Error",
+				code: "VALIDATION_ERR",
 				cause: {
-					code: "VALIDATION_ERR",
 					issues: transformZodErrors(result.error.issues),
 				},
 			});

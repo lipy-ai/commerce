@@ -16,7 +16,6 @@ import {
 	CardFooter,
 	CardHeader,
 } from "@lipy/web-ui/components/ui/card";
-import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import type { VariantProps } from "class-variance-authority";
@@ -67,7 +66,7 @@ function RouteComponent() {
 					label="Place an order to start"
 				/>
 			) : (
-				<div className="mb-20 p-4 space-y-4">
+				<div className="p-4 space-y-4 mb-10">
 					{(() => {
 						let lastMonth = "";
 						return data.map((order) => {
@@ -124,7 +123,6 @@ function RouteComponent() {
 											to="/account/orders/$orderId"
 											params={{ orderId: order.id as string }}
 											className="space-y-2"
-											viewTransition={{ types: ["slide-left"] }}
 										>
 											<CardContent>
 												<div className="grid grid-cols-5 gap-y-1.5">

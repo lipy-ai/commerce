@@ -47,14 +47,12 @@ const step1 = {
 				label="Support Phone"
 				name="phone"
 				placeholder="Your Store Phone Number"
-				type="tel"
 				required
 			/>
 			<FormInput
 				label="Support Email"
 				name="email"
 				placeholder="Your Store Email Address"
-				type="email"
 				required
 			/>
 			<FormToggleGroup

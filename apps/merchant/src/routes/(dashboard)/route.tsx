@@ -1,4 +1,4 @@
-import { Outlet, createFileRoute, useLocation } from "@tanstack/react-router";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
 
 import {
 	DashboardBody,

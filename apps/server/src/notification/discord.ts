@@ -1,5 +1,4 @@
-const discordWebhookURL =
-	"https://discord.com/api/webhooks/1391084933782441984/_MWqvMCsS5DTPKv2jBs1akZUU_JJ-pN5rk21Z0BrxD58kflHxjb3BBmvDAaMIoQfj7CU";
+import env from "@/env";
 
 type DiscordNotificationParams = {
 	type: "orderPlaced" | "error" | "storeCreated";
@@ -49,7 +48,7 @@ export const discordNotification = async (
 			throw new Error(`Unknown notification type: ${params.type}`);
 	}
 
-	const response = await fetch(discordWebhookURL, {
+	const response = await fetch(env.DISCORD_WEBHOOK, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",

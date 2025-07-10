@@ -34,12 +34,13 @@ const listZodValidator = zValidator(
 			(t) => (!t ? undefined : t),
 			z.string().uuid().optional(),
 		),
+		showAll: z.coerce.boolean().optional(),
 	}),
 );
 
 const route = new Hono<ServerContext>()
 	.get("/", listZodValidator, async (c) => {
-		const { limit, page, q, category } = c.req.valid("query");
+		const { limit, page, q, category, showAll } = c.req.valid("query");
 		const activeStoreId = c.var.session?.activeStoreId!;
 		const offset = limit * (page - 1);
 
@@ -53,12 +54,15 @@ const route = new Hono<ServerContext>()
 				);
 			})
 			.leftJoin("productVariant as pv", "pv.productId", "p.id")
+			.leftJoin("category as c", "p.category", "c.id")
+
 			.leftJoin("storeInventory as si", (join) =>
 				join
 					.onRef("si.productVariant", "=", "pv.id")
 					.on("si.storeId", "=", activeStoreId!),
 			)
-			.$if(!!category, (qb) => qb.where("category", "=", category!));
+			.$if(!!category, (qb) => qb.where("category", "=", category!))
+			.$if(!showAll, (qb) => qb.where("si.storeId", "=", activeStoreId!));
 
 		const countPromise = query
 			.select(sql<number>`count(*)`.as("total_count"))
@@ -72,7 +76,7 @@ const route = new Hono<ServerContext>()
 				"p.thumbnail",
 				"p.price",
 				"p.maxPrice",
-				"p.category",
+				"c.title as category",
 				"p.summary",
 				eb.fn
 					.jsonAgg(
@@ -92,7 +96,7 @@ const route = new Hono<ServerContext>()
 					.filterWhere("pv.id", "is not", null)
 					.as("variants"),
 			])
-			.groupBy("p.id")
+			.groupBy(["p.id", "c.title"])
 			.limit(limit)
 			.offset(offset)
 			.execute();

@@ -1,12 +1,15 @@
 import { db } from "@/db";
 import { HTTPError } from "@/lib/exception";
+import { idGenerate } from "@/lib/generateId";
 import { zValidator } from "@/middlewares/validator";
 import { listZodSchema } from "@/schema/common";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
 import { sql } from "kysely";
-import { jsonArrayFrom, jsonBuildObject } from "kysely/helpers/postgres"; // Use 'mysql' or 'sqlite' if needed
+import { jsonBuildObject } from "kysely/helpers/postgres"; // Use 'mysql' or 'sqlite' if needed
+import slugify from "slugify";
 import { z } from "zod";
+import { storeSchema } from "./merchantRoutes/store";
 
 const route = new Hono<ServerContext>()
 	/**
@@ -111,6 +114,58 @@ const route = new Hono<ServerContext>()
 				hasMore: result.length === limit,
 			});
 		},
-	);
+	)
+	.post("/", zValidator("json", storeSchema), async (c) => {
+		const session = c.get("session");
+		const { payments, ...vals } = c.req.valid("json");
+
+		const oldStore = await db
+			.selectFrom("storeMember")
+			.where("storeMember.userId", "=", session?.userId!)
+			.executeTakeFirst();
+
+		if (oldStore)
+			throw new HTTPError(401, { message: "Store already exists!" });
+
+		const store = await db.transaction().execute(async (trx) => {
+			const store = await trx
+				.insertInto("store")
+				.values({
+					...vals,
+					id: crypto.randomUUID(),
+					handle: `${slugify(vals.name)}-${idGenerate()}`,
+					createdAt: new Date(),
+				})
+				.returning(["id"])
+				.executeTakeFirst();
+
+			if (!store)
+				throw new HTTPError(400, { message: "Failed to create store." });
+
+			await trx
+				.insertInto("storePayments")
+				.values({
+					id: store.id,
+					acceptedPayments: ["cod"],
+					upiIds: payments.upiIds,
+				})
+				.execute();
+
+			await trx
+				.insertInto("storeMember")
+				.values({
+					id: crypto.randomUUID(),
+					storeId: store.id,
+					userId: session?.userId!,
+					role: "owner",
+					createdAt: new Date(),
+				})
+				.executeTakeFirst();
+
+			return store;
+		});
+		c.get("emitter").emit(c, "store:created", store);
+		return c.json(store);
+	});
 
 export { route as shopRoute };

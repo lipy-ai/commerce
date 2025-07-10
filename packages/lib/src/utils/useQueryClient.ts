@@ -136,6 +136,8 @@ export const apiQueryOptions = <
 		>;
 	}
 > => {
+	const { handleNavigate } = useRedirect();
+
 	const endpointFn = endpoint[method] as unknown as (
 		params: any,
 	) => Promise<Response>;
@@ -146,7 +148,22 @@ export const apiQueryOptions = <
 			if (res.status >= 200 && res.status < 300) {
 				return (await res.json()) as TResponse;
 			}
-			const errorData = (await res.json()) as TError;
+			const errorData = (await res
+				.json()
+				.then((e) => {
+					return e.error;
+				})
+				.catch(
+					async (_e) =>
+						await res
+							.text()
+							.catch((_f) => ({ message: "Failed to decode response..." })),
+				)) as TError & {
+				code?: string;
+				cause: Record<string, any>;
+				message?: string;
+			};
+			handleNavigate((errorData as any)?.code);
 
 			const error = new Error(
 				`Request failed with status ${res.status}`,
@@ -185,22 +202,14 @@ export const apiMutationOptions = <
 		params: TVariables,
 	) => Promise<Response>;
 
+	const { handleNavigate } = useRedirect();
+
 	return {
 		mutationKey: getAPIQueryKey(endpoint, method, {} as any),
 		mutationFn: async (variables) => {
 			const res = await endpointFn(variables);
 
 			if (res.status >= 200 && res.status < 300) {
-				// options?.form?.reset(
-				// 	{},
-				// 	{
-				// 		keepValues: true,
-				// 		keepSubmitCount: true,
-				// 		keepIsSubmitted: true,
-				// 		keepIsSubmitSuccessful: true,
-				// 		keepDirty: false,
-				// 	},
-				// );
 				return (await res.json()) as TResponse;
 			}
 			const errorData = (await res
@@ -213,15 +222,14 @@ export const apiMutationOptions = <
 						await res
 							.text()
 							.catch((_f) => ({ message: "Failed to decode response..." })),
-				)) as TError;
+				)) as TError & {
+				code?: string;
+				cause: Record<string, any>;
+				message?: string;
+			};
 
-			if (
-				(errorData as any).cause.code === "VALIDATION_ERR" &&
-				options?.form?.setError
-			) {
-				for (const [field, message] of Object.entries(
-					(errorData as any).cause.issues,
-				)) {
+			if (errorData?.code === "VALIDATION_ERR" && options?.form?.setError) {
+				for (const [field, message] of Object.entries(errorData.cause.issues)) {
 					options?.form.setError(field as any, {
 						type: "server",
 						message: message as string,
@@ -229,9 +237,10 @@ export const apiMutationOptions = <
 				}
 			}
 
+			handleNavigate(errorData?.code);
+
 			const error = new Error(
-				(errorData as any).message ||
-					`Request failed with status ${res.status}`,
+				errorData.message || `Request failed with status ${res.status}`,
 			) as Error & {
 				status: number;
 				data: TError;
@@ -270,7 +279,6 @@ export const useAPIQuery = <
 	InferSelectReturnType<TResponse, Options["select"]>,
 	TError
 > => {
-	const { handleNavigate } = useRedirect();
 	const q = useRQQuery(
 		apiQueryOptions<T, M, Params, Options, TResponse, TError>(
 			endpoint,
@@ -279,12 +287,6 @@ export const useAPIQuery = <
 			options,
 		),
 	);
-
-	if (q.error) {
-		const err = q?.error as any;
-		const code = err?.data?.error?.code;
-		handleNavigate(code);
-	}
 
 	return q;
 };
@@ -313,8 +315,6 @@ export const useAPISuspenseQuery = <
 	InferSelectReturnType<TResponse, Options["select"]>,
 	TError
 > => {
-	const { handleNavigate } = useRedirect();
-
 	const q = useRQSuspenseQuery(
 		apiQueryOptions<T, M, Params, Options, TResponse, TError>(
 			endpoint,
@@ -324,11 +324,6 @@ export const useAPISuspenseQuery = <
 		),
 	);
 
-	if (q.error) {
-		const err = q?.error as any;
-		const code = err?.data?.error?.code;
-		handleNavigate(code);
-	}
 	return q;
 };
 
@@ -347,8 +342,6 @@ export const useAPIMutation = <
 		"mutationFn" | "mutationKey"
 	> & { form?: UseFormReturn<any> },
 ): UseMutationResult<TResponse, TError, TVariables, TContext> => {
-	const { handleNavigate } = useRedirect();
-
 	const q = useRQMutation(
 		apiMutationOptions<T, M, TResponse, TError, TVariables, TContext>(
 			endpoint,
@@ -357,11 +350,6 @@ export const useAPIMutation = <
 		),
 	);
 
-	if (q.error) {
-		const err = q?.error as any;
-		const code = err?.data?.error?.code;
-		handleNavigate(code);
-	}
 	return q;
 };
 

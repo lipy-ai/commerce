@@ -7,15 +7,18 @@ import type { ServerContext } from "@/types";
 import { Hono } from "hono";
 import { z } from "zod";
 import { coreAddressSchema } from "../address";
+
 export const storeSchema = z.object({
 	name: z.string(),
 	email: emailSchema,
 	phone: phoneSchema,
 	type: z.enum(STORE_TYPE),
 	address: coreAddressSchema,
-	payments: z.object({
-		upiIds: z.array(z.object({ name: z.string(), id: z.string() })).min(1),
-	}),
+	payments: z
+		.object({
+			upiIds: z.array(z.object({ name: z.string(), id: z.string() })).min(1),
+		})
+		.optional(),
 });
 
 const route = new Hono<ServerContext>()

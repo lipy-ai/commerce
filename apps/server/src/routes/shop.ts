@@ -1,15 +1,27 @@
 import { db } from "@/db";
+import { STORE_TYPE } from "@/db/schema";
 import { HTTPError } from "@/lib/exception";
 import { idGenerate } from "@/lib/generateId";
 import { zValidator } from "@/middlewares/validator";
-import { listZodSchema } from "@/schema/common";
+import { emailSchema, listZodSchema, phoneSchema } from "@/schema/common";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres"; // Use 'mysql' or 'sqlite' if needed
 import slugify from "slugify";
 import { z } from "zod";
-import { storeSchema } from "./merchantRoutes/store";
+import { coreAddressSchema } from "./address";
+
+export const storeSchema = z.object({
+	name: z.string(),
+	email: emailSchema,
+	phone: phoneSchema,
+	type: z.enum(STORE_TYPE),
+	address: coreAddressSchema,
+	payments: z.object({
+		upiIds: z.array(z.object({ name: z.string(), id: z.string() })).min(1),
+	}),
+});
 
 const route = new Hono<ServerContext>()
 	/**

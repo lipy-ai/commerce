@@ -5,7 +5,7 @@ import { ERR_CODES_MSGS, HTTPError } from "./exception";
 
 export const globalError: ErrorHandler<ServerContext> = (err, c) => {
 	const cause = process.env.NODE_ENV === "production" ? undefined : err.stack;
-	console.log(err, err instanceof HTTPError);
+	console.log(err);
 	if (err instanceof HTTPError) {
 		const errResponse =
 			err.res ??

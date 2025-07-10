@@ -69,7 +69,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 				{prefixEl && (
 					<div
 						className={cn(
-							"inline-flex text-muted-foreground items-center px-2.5 [&>svg]:w-5 absolute appearance-none h-10",
+							"inline-flex text-muted-foreground items-center pl-2.5 [&>svg]:w-5 absolute appearance-none h-10",
 							"text-base leading-0 align-middle ",
 							size === "lg" && "text-lg h-12",
 

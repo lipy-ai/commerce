@@ -125,7 +125,7 @@ export const AddToCart = ({
 					disabled={disabled || isLoading}
 					type="button"
 					aria-label="Add to cart"
-					className="text-secondary border border-secondary min-w-16 hover:text-secondary border-b-2 border-r-2 disabled:opacity-100"
+					className="text-secondary border border-secondary min-w-16 hover:text-secondary border-b-2 border-r-2 disabled:opacity-100 font-medium"
 					variant={"outline"}
 				>
 					{isLoading ? <Loader2 className="animate-spin" /> : <p>ADD</p>}

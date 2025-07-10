@@ -17,6 +17,7 @@ import {
 	CardHeader,
 } from "@lipy/web-ui/components/ui/card";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
+import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import type { VariantProps } from "class-variance-authority";
 import { format } from "date-fns";
@@ -42,7 +43,7 @@ export const ORDER_STATUS_BADGE_VARIANT: Record<
 };
 
 function RouteComponent() {
-	const { data, isFetched, isFetching } = useAPIQuery(
+	const { data, isFetching } = useAPIQuery(
 		apiClient.v1.order,
 		"$get",
 		{
@@ -50,120 +51,111 @@ function RouteComponent() {
 				view: "all",
 			},
 		},
+		{
+			placeholderData: (p) => p,
+		},
 	);
 
 	return (
 		<>
 			<DashboardHeader title="My Orders" />
-
-			{isFetched &&
-				data &&
-				data.length > 0 &&
-				(() => {
-					let lastMonth = "";
-
-					return (
-						<div className="mb-20 p-4 space-y-4">
-							{data.map((order) => {
-								const currentMonth = format(order.orderedAt, "LLLL yyyy");
-								const showMonth = currentMonth !== lastMonth;
-								lastMonth = currentMonth;
-
-								return (
-									<div key={order.id}>
-										{showMonth && (
-											<h2 className="text-sm font-semibold py-2">
-												{currentMonth}
-											</h2>
-										)}
-
-										<Card className="border border-border/40">
-											<CardHeader className="flex items-start justify-between gap-4 border-b ">
-												<Link
-													className="flex items-center gap-2"
-													to="/$storeHandle"
-													params={{
-														storeHandle: order?.storeHandle as string,
-													}}
-												>
-													<Avatar className="rounded-md size-10">
-														<AvatarImage src={order?.store.image || ""} />
-														<AvatarFallback>
-															<Store />
-														</AvatarFallback>
-													</Avatar>
-													<div>
-														<p className="font-medium  line-clamp-1">
-															{order?.store?.name || "Unknown store"}
-														</p>
-														<p className="text-xs text-muted-foreground line-clamp-1">
-															{order?.store?.address?.line1 ||
-																"Mumbai, Maharashtra"}
-														</p>
-													</div>
-												</Link>
-												<Badge
-													variant={
-														ORDER_STATUS_BADGE_VARIANT[
-															order.status as (typeof ORDER_STATUS)[number]
-														] || "neutral"
-													}
-													className="capitalize"
-												>
-													{order.status || "Unknown"}
-												</Badge>
-											</CardHeader>
-
-											<Link
-												to="/account/orders/$orderId"
-												params={{ orderId: order.id as string }}
-												className="space-y-2"
-												viewTransition={{ types: ["slide-left"] }}
-											>
-												<CardContent>
-													<div className="grid grid-cols-5 gap-y-1.5">
-														{order?.items?.map((item) => (
-															<img
-																key={item.variant.inventoryId}
-																src={item.thumbnail || ""}
-																className="aspect-square object-cover size-12 rounded-sm border border-border/40 bg-accent/40"
-																alt={""}
-															/>
-														))}
-													</div>
-												</CardContent>
-												<CardFooter className="flex items-center justify-between border-t border-dashed">
-													<p className="text-muted-foreground text-sm">
-														Ordered on {format(order?.orderedAt, "d LLL, p")}
-													</p>
-													<p className="font-bold text-base">
-														{formatAmount(
-															order?.currency,
-															order?.itemTotalAmount as number,
-														)}
-													</p>
-												</CardFooter>
-											</Link>
-										</Card>
-									</div>
-								);
-							})}
-						</div>
-					);
-				})()}
-
-			{isFetching &&
-				[...Array(5)].map((_, i) => (
-					<div key={i} className="flex flex-col items-center my-2">
-						<Skeleton className="h-32 w-full " />
-					</div>
-				))}
-
-			{isFetched && data?.length === 0 && (
+			{isFetching ? (
+				<Spinner />
+			) : !data || data.length === 0 ? (
 				<EmptyPage
-					title={"You have no order records"}
-					label="Place order to start"
+					title={"You have no orders yet"}
+					label="Place an order to start"
 				/>
+			) : (
+				<div className="mb-20 p-4 space-y-4">
+					{(() => {
+						let lastMonth = "";
+						return data.map((order) => {
+							const currentMonth = format(order.orderedAt, "LLLL yyyy");
+							const showMonth = currentMonth !== lastMonth;
+							lastMonth = currentMonth;
+
+							return (
+								<div key={order.id}>
+									{showMonth && (
+										<h2 className="text-sm font-semibold py-2">
+											{currentMonth}
+										</h2>
+									)}
+
+									<Card className="border border-border/40">
+										<CardHeader className="flex items-start justify-between gap-4 border-b ">
+											<Link
+												className="flex items-center gap-2"
+												to="/$storeHandle"
+												params={{
+													storeHandle: order?.storeHandle as string,
+												}}
+											>
+												<Avatar className="rounded-md size-10">
+													<AvatarImage src={order?.store.image || ""} />
+													<AvatarFallback>
+														<Store />
+													</AvatarFallback>
+												</Avatar>
+												<div>
+													<p className="font-medium  line-clamp-1">
+														{order?.store?.name || "Unknown store"}
+													</p>
+													<p className="text-xs text-muted-foreground line-clamp-1">
+														{order?.store?.address?.line1 ||
+															"Mumbai, Maharashtra"}
+													</p>
+												</div>
+											</Link>
+											<Badge
+												variant={
+													ORDER_STATUS_BADGE_VARIANT[
+														order.status as (typeof ORDER_STATUS)[number]
+													] || "neutral"
+												}
+												className="capitalize"
+											>
+												{order.status || "Unknown"}
+											</Badge>
+										</CardHeader>
+
+										<Link
+											to="/account/orders/$orderId"
+											params={{ orderId: order.id as string }}
+											className="space-y-2"
+											viewTransition={{ types: ["slide-left"] }}
+										>
+											<CardContent>
+												<div className="grid grid-cols-5 gap-y-1.5">
+													{order?.items?.map((item) => (
+														<img
+															key={item.variant.inventoryId}
+															src={item.thumbnail || ""}
+															className="aspect-square object-cover size-12 rounded-sm border border-border/40 bg-accent/40"
+															alt={""}
+														/>
+													))}
+												</div>
+											</CardContent>
+											<CardFooter className="flex items-center justify-between border-t border-dashed">
+												<p className="text-muted-foreground text-sm">
+													Ordered on {format(order?.orderedAt, "d LLL, p")}
+												</p>
+												<p className="font-bold text-base">
+													{formatAmount(
+														order?.currency,
+														order?.itemTotalAmount as number,
+													)}
+												</p>
+											</CardFooter>
+										</Link>
+									</Card>
+								</div>
+							);
+						});
+					})()}
+				</div>
 			)}
 		</>
 	);

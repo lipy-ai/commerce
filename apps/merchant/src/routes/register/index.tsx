@@ -40,19 +40,21 @@ const step1 = {
 			<FormInput
 				label="Store Name"
 				name="name"
-				placeholder="Your Full Name"
+				placeholder="Your Store Name"
 				required
 			/>
 			<FormInput
 				label="Support Phone"
 				name="phone"
 				placeholder="Your Store Phone Number"
+				type="tel"
 				required
 			/>
 			<FormInput
 				label="Support Email"
 				name="email"
 				placeholder="Your Store Email Address"
+				type="email"
 				required
 			/>
 			<FormToggleGroup
@@ -182,6 +184,7 @@ function RouteComponent() {
 	const mutation = useAPIMutation(apiClient.v1.merchant.store, "$post");
 
 	const handleSubmit = async (data: any) => {
+		console.log(data);
 		await mutation.mutateAsync({ json: data });
 	};
 

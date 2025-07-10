@@ -1,5 +1,6 @@
 import { apiClient } from "@lipy/lib/api";
 import { useStore } from "@lipy/lib/hooks/use-store";
+import { authClient } from "@lipy/lib/providers/auth";
 import { useAPIMutation } from "@lipy/lib/utils/useQueryClient";
 import {
 	FormInput,
@@ -13,7 +14,8 @@ import { Button } from "@lipy/web-ui/components/ui/button";
 import { CopyButton } from "@lipy/web-ui/components/ui/copy-button";
 import { Label } from "@lipy/web-ui/components/ui/label";
 import { cn } from "@lipy/web-ui/lib/utils";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useRouter } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { Info } from "lucide-react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
@@ -140,7 +142,7 @@ const step3 = {
 function UPIQRCode({ upi, name }: { upi: string; name: string }) {
 	const val = `upi://pay?pa=${upi}&pn=${name}`;
 	return (
-		<div className="p-8 bg-card border drop-shadow-xs rounded w-fit flex flex-col justify-center items-center space-y-4 m-auto transition-all">
+		<div className="bg-card p-8 overflow-hidden border drop-shadow-xs rounded w-fit flex flex-col justify-center items-center space-y-4 m-auto transition-all">
 			<img src="/assets/upi-bhim.svg" alt="Upi" width={150} />
 
 			<div className="relative">
@@ -148,14 +150,14 @@ function UPIQRCode({ upi, name }: { upi: string; name: string }) {
 					title={name}
 					value={val}
 					level="H"
-					className={cn("transition-all", !upi && "blur")}
+					className={cn("transition-all w-full", !upi && "blur")}
 				/>
 				{!upi && (
 					<span className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 transition-all">
 						<Button
 							variant={"outline"}
 							size={"sm"}
-							className="rounded-full w-fit px-8 text-sm text-muted-foreground"
+							className="rounded-full w-fit text-sm text-muted-foreground"
 						>
 							<Info className="size-4" />
 							<span>No UPI</span>
@@ -176,10 +178,15 @@ function UPIQRCode({ upi, name }: { upi: string; name: string }) {
 }
 
 function RouteComponent() {
-	const navigate = useNavigate();
+	const router = useRouter();
 	const store = useStore();
 
-	const mutation = useAPIMutation(apiClient.v1.merchant.store, "$post");
+	const mutation = useAPIMutation(apiClient.v1.shops, "$post", {
+		onSuccess: async (data) => {
+			await authClient.organization.setActive({ organizationId: data.id });
+			router.navigate({ to: "/" });
+		},
+	});
 
 	const handleSubmit = async (data: any) => {
 		await mutation.mutateAsync({ json: data });
@@ -187,15 +194,14 @@ function RouteComponent() {
 
 	useEffect(() => {
 		if (store.isLoading) return;
-		store.data?.id && navigate({ to: "/" });
-	}, [store, navigate]);
+		store.data?.id && router.navigate({ from: "/register", to: "/" });
+	}, [store, router.navigate]);
 
 	return (
 		<MultiStepLayout
 			loading={store.isLoading || !!store.data?.id}
 			steps={[step1, step2, step3]}
 			onSubmit={handleSubmit}
-			onSuccess={() => navigate({ to: "/" })}
 		/>
 	);
 }

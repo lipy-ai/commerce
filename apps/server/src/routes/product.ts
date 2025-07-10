@@ -2,8 +2,7 @@ import { db } from "@/db";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
-import { sql } from "kysely";
-import { jsonArrayFrom, jsonBuildObject } from "kysely/helpers/postgres";
+import { jsonBuildObject } from "kysely/helpers/postgres";
 import { z } from "zod";
 
 const schema = z.object({
@@ -15,6 +14,7 @@ const schema = z.object({
 const route = new Hono<ServerContext>()
 	.get("/", zValidator("query", schema), async (c) => {
 		const q = c.req.valid("query");
+
 		let query = db
 			.selectFrom("storeInventory as si")
 			.leftJoin("store as s", "s.id", "si.storeId")

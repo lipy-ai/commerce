@@ -43,6 +43,7 @@ export const ERR_CODES_MSGS = {
 	NO_ACTIVE_STORE: "No active store found!",
 	NOT_LOGGED_IN: "No active session found!",
 	INSUFFICIENT_PERMISSION: "Insufficient permission!",
+	VALIDATION_ERR: "Validation error!",
 } as const;
 
 export type ErrCode = keyof typeof ERR_CODES_MSGS;

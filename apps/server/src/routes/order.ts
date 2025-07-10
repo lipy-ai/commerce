@@ -205,6 +205,11 @@ const route = new Hono<ServerContext>()
 
 		await db.insertInto("orders").values(orders).execute();
 
+		await db
+			.deleteFrom("cart")
+			.where("userId", "=", session?.userId!)
+			.execute();
+
 		for (const ord of orders) {
 			c.get("emitter").emit(c, "order:created", ord);
 		}

@@ -44,7 +44,7 @@ import { CheckCircle, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-export const Route = createFileRoute("/(dashboard)/product/add/")({
+export const Route = createFileRoute("/(dashboard)/product/add")({
 	component: RouteComponent,
 	validateSearch: z.object({
 		page: z.coerce.number().int().min(1).catch(1),
@@ -59,7 +59,12 @@ function RouteComponent() {
 	const { addFooter, removeFooter } = useLayout();
 	const queryClient = useQueryClient();
 
-	const query = { page: String(page), limit: String(3 * 3), q };
+	const query = {
+		page: String(page),
+		limit: String(3 * 3),
+		q,
+		showAll: "true",
+	};
 	const { data, isLoading } = useAPIQuery(
 		apiClient.v1.merchant.product,
 		"$get",
@@ -69,7 +74,7 @@ function RouteComponent() {
 		{
 			placeholderData: (p) => p,
 		},
-	)
+	);
 
 	const mutation = useAPIMutation(apiClient.v1.merchant.inventory, "$patch", {
 		onMutate({ json }) {
@@ -85,13 +90,13 @@ function RouteComponent() {
 						const productIdx = draft.items.findIndex((product) => {
 							const idx = product.variants?.findIndex(
 								(variant) => variant.id === json.variantId,
-							)
+							);
 							if (Number(idx) >= 0) {
-								variantIdx = idx
-								return true
+								variantIdx = idx;
+								return true;
 							}
-							return false
-						})
+							return false;
+						});
 						if (productIdx !== -1 && variantIdx !== -1) {
 							const variant = draft.items[productIdx].variants[variantIdx];
 							draft.items[productIdx].variants[variantIdx] =
@@ -109,14 +114,14 @@ function RouteComponent() {
 											stock: null,
 											sku: null,
 											inventoryId: null,
-										}
+										};
 						}
 
-						return draft
+						return draft;
 					}),
-			)
+			);
 		},
-	})
+	});
 
 	const onSubmit = async (
 		m: Response["items"][0]["variants"][0] & { active: boolean },
@@ -134,8 +139,8 @@ function RouteComponent() {
 						? "delete"
 						: "create",
 			},
-		})
-	}
+		});
+	};
 
 	const [updates, setUpdates] = useState<Response["items"][0]["variants"]>([]);
 
@@ -159,7 +164,7 @@ function RouteComponent() {
 				</div>
 			</CardContent>
 		</Card>
-	)
+	);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
@@ -170,7 +175,7 @@ function RouteComponent() {
 		}
 		return () => {
 			removeFooter("save-btn");
-		}
+		};
 	}, [updates]);
 
 	return (
@@ -199,7 +204,7 @@ function RouteComponent() {
 				)}
 			</div>
 		</div>
-	)
+	);
 }
 
 function SingProduct({
@@ -225,6 +230,7 @@ function SingProduct({
 				<div className="flex-1">
 					<p className="font-semibold">{m.title}</p>
 					<p className="line-clamp-2"> {m.summary}</p>
+					<p className="line-clamp-2"> {m.category}</p>
 				</div>
 			</div>
 			<div className="flex-1">
@@ -245,7 +251,7 @@ function SingProduct({
 				</div>
 			</div>
 		</div>
-	)
+	);
 }
 
 // function StockToggle({
@@ -286,11 +292,11 @@ function EditVariation({
 		price: data?.storePrice || data?.price || 0,
 		stock: data?.stock || 0,
 		sku: data?.sku || "",
-	}
+	};
 
 	const form = useForm({
 		defaultValues,
-	})
+	});
 
 	const isActivated = form.watch("active");
 
@@ -298,7 +304,7 @@ function EditVariation({
 		onSubmit({ ...data, ...body });
 
 		setOpen(false);
-	}
+	};
 
 	return (
 		<>
@@ -366,7 +372,7 @@ function EditVariation({
 									: data?.stock === -1
 										? "In Stock"
 										: data?.stock > 0
-											? "${data?.stock} left"
+											? `${data?.stock} left`
 											: "-"}
 						</span>
 					</div>
@@ -419,5 +425,5 @@ function EditVariation({
 				</DrawerDialogHeader>
 			</DrawerDialogSwitcher>
 		</>
-	)
+	);
 }

@@ -1,7 +1,6 @@
 import { ScrollingTabs } from "@lipy/web-ui/components/custom-ui/scrollable-tabs";
 import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
-import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { Link, useLocation } from "@tanstack/react-router";
 import {
@@ -10,18 +9,16 @@ import {
 	CircleUserRound,
 	House,
 	MapPin,
-	ShoppingCart,
 	UserRound,
 } from "lucide-react";
 import { Cherry, Milk, Salad, ShoppingBasket, Store } from "lucide-react";
 import { useState } from "react";
-import { useCartStore } from "./cart/store";
+import { CartInDesktop } from "./cart/cartInDesktop";
 
 export default function NavBar() {
 	const { isMobile } = useViewport();
 	const { deliveryLocation } = useLocationStore();
 	const [_, setActiveCategory] = useState("all");
-	const { cart } = useCartStore();
 	const { pathname } = useLocation();
 
 	const CATEGORIES = [
@@ -69,7 +66,7 @@ export default function NavBar() {
 	}
 
 	return (
-		<div className="sticky top-0 z-50   shadow-sm bg-background">
+		<div className="sticky top-0 z-100   shadow-sm bg-background">
 			<div className="px-16 p-6 bg-accent/20">
 				<div className="flex items-center  gap-8">
 					<Link to="/" className="overflow-hidden">
@@ -121,13 +118,10 @@ export default function NavBar() {
 							defaultValue=""
 						/>
 					</div>
-					<Link to="/account/orders">
+					<Link to="/account">
 						<CircleUserRound className="size-8" />
 					</Link>
-					<Link to="/cart" className={buttonVariants()}>
-						<ShoppingCart className="size-8" />
-						<p className="font-medium text-base">{cart.length} items</p>
-					</Link>
+					<CartInDesktop />
 				</div>
 				{pathname === "/" && (
 					<div className="mt-4 -mb-6 ">

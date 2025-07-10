@@ -31,7 +31,7 @@ function RouteComponent() {
 
 	if (isFetching) return <Spinner />;
 	return (
-		<div className="">
+		<div className="max-w-screen-lg mx-auto mb-20">
 			<DashboardHeader>
 				<Button
 					size="sm"
@@ -113,7 +113,9 @@ function RouteComponent() {
 					</div>
 				</div>
 			</div>
-			<PrimaryCartFooter />
+			<div className="lg:hidden">
+				<PrimaryCartFooter />
+			</div>
 		</div>
 	);
 }

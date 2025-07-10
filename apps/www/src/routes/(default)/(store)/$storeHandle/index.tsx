@@ -78,7 +78,7 @@ function RouteComponent() {
 
 	if (fetchingShopData || fetchingProduct) return <ShopLoadingSkeleton />;
 	return (
-		<div className="relative max-w-screen-lg mx-auto ">
+		<div className="relative max-w-screen-xl mx-auto ">
 			<DashboardHeader
 				titleChildren={
 					<motion.h1
@@ -94,28 +94,29 @@ function RouteComponent() {
 				}
 				className={cn(
 					!visibleShopName ? "bg-amber-100 border-b-0 shadow-none" : "bg-card",
+					"border-x",
 				)}
 			>
 				{shopData && <ShopOptions shop={shopData} />}
 			</DashboardHeader>
 
 			{fetchedShopData && shopData && (
-				<div className="text-center  bg-amber-100 p-4">
+				<div className="text-center  bg-amber-100 p-4 border-x">
 					<Link
-						className="text-3xl font-extrabold tracking-wide"
+						className="text-3xl lg:text-5xl font-extrabold tracking-wide"
 						to="/$storeHandle/details"
 						params={{ storeHandle }}
 					>
 						{shopData.name.toUpperCase()}
 					</Link>
-					<div className="mt-2 text-sm text-muted-foreground">
-						Books • Stationary
+					<div className="mt-2 text-sm lg:text-base text-muted-foreground capitalize">
+						{shopData?.type}
 					</div>
 				</div>
 			)}
 
 			{fetchedProduct && productData && productData.items.length > 0 && (
-				<div className="border border-t-0 rounded-b-xl grid grid-cols-3 lg:grid-cols-6 gap-x-8 gap-y-8  bg-amber-100 p-4">
+				<div className="border border-t-0 rounded-b-xl grid grid-cols-3 lg:grid-cols-8 gap-x-8 gap-y-8  bg-amber-100 p-4">
 					{productData.items.map((item) => (
 						<Link
 							key={item.id}
@@ -148,7 +149,7 @@ function RouteComponent() {
 							<div key={_idx} className="my-10 mx-4">
 								<p className="text-xl font-bold my-4">{productGroup.title}</p>
 
-								<div className="grid grid-cols-2 lg:grid-cols-4  gap-x-4 gap-y-6 w-full">
+								<div className="grid grid-cols-2 lg:grid-cols-6  gap-x-4 gap-y-6 w-full">
 									{productArray?.map((product) => (
 										<div key={product.id}>
 											<ProductCard
@@ -192,7 +193,9 @@ function RouteComponent() {
 				/>
 			)}
 
-			<PrimaryCartFooter />
+			<div className="lg:hidden">
+				<PrimaryCartFooter />
+			</div>
 		</div>
 	);
 }

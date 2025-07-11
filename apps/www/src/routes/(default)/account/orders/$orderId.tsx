@@ -19,7 +19,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@lipy/web-ui/components/ui/card";
-import { Spinner } from "@lipy/web-ui/components/ui/spinner";
+import Loading from "@lipy/web-ui/components/ui/loading";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
@@ -95,14 +95,14 @@ function RouteComponent() {
 	return (
 		<>
 			{isLoading ? (
-				<Spinner />
+				<Loading hideDefault />
 			) : !order ? (
 				<EmptyPage
 					title={"Order not found"}
 					label="The order you are looking for does not exist or has been deleted."
 				/>
 			) : (
-				<div>
+				<div className="w-full">
 					<DashboardHeader
 						titleChildren={
 							<div>
@@ -271,7 +271,7 @@ function RouteComponent() {
 											key={info?.title}
 											className="flex items-start gap-2 p-4"
 										>
-											<info.icon className="text-muted-foreground flex-shrink-0 size-5" />
+											<info.icon className="text-muted-foreground flex-shrink-0 size-6" />
 											<div>
 												<p className="font-medium ">{info.title}</p>
 												<p className="text-muted-foreground text-xs">

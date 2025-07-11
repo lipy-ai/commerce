@@ -16,7 +16,7 @@ import {
 	CardFooter,
 	CardHeader,
 } from "@lipy/web-ui/components/ui/card";
-import { Spinner } from "@lipy/web-ui/components/ui/spinner";
+import Loading from "@lipy/web-ui/components/ui/loading";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import type { VariantProps } from "class-variance-authority";
 import { format } from "date-fns";
@@ -56,105 +56,107 @@ function RouteComponent() {
 	);
 
 	return (
-		<div className="w-full">
-			<DashboardHeader title="My Orders" className="z-0" />
+		<>
 			{isLoading ? (
-				<Spinner />
+				<Loading hideDefault />
 			) : !data || data.length === 0 ? (
 				<EmptyPage
 					title={"You have no orders yet"}
 					label="Place an order to start"
 				/>
 			) : (
-				<div className="p-4 space-y-4 mb-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:gap-4">
-					{(() => {
-						let lastMonth = "";
-						return data.map((order) => {
-							const currentMonth = format(order.orderedAt, "LLLL yyyy");
-							const showMonth = currentMonth !== lastMonth;
-							lastMonth = currentMonth;
+				<div className="w-full">
+					<DashboardHeader title="My Orders" className="z-0" />
+					<div className="p-4 space-y-4 mb-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:gap-4">
+						{(() => {
+							let lastMonth = "";
+							return data.map((order) => {
+								const currentMonth = format(order.orderedAt, "LLLL yyyy");
+								const showMonth = currentMonth !== lastMonth;
+								lastMonth = currentMonth;
 
-							return (
-								<div key={order.id}>
-									{showMonth && (
-										<h2 className="text-sm font-semibold py-2 lg:hidden">
-											{currentMonth}
-										</h2>
-									)}
+								return (
+									<div key={order.id}>
+										{showMonth && (
+											<h2 className="text-sm font-semibold py-2 lg:hidden">
+												{currentMonth}
+											</h2>
+										)}
 
-									<Card className="border border-border/40">
-										<CardHeader className="flex items-start justify-between gap-4 border-b ">
+										<Card className="border border-border/40">
+											<CardHeader className="flex items-start justify-between gap-4 border-b ">
+												<Link
+													className="flex items-center gap-2"
+													to="/$storeHandle"
+													params={{
+														storeHandle: order?.storeHandle as string,
+													}}
+												>
+													<Avatar className="rounded-md size-10">
+														<AvatarImage src={order?.store.image || ""} />
+														<AvatarFallback>
+															<Store />
+														</AvatarFallback>
+													</Avatar>
+													<div>
+														<p className="font-medium  line-clamp-1">
+															{order?.store?.name || "Unknown store"}
+														</p>
+														<p className="text-xs text-muted-foreground line-clamp-1">
+															{order?.store?.address?.line1 ||
+																"Mumbai, Maharashtra"}
+														</p>
+													</div>
+												</Link>
+												<Badge
+													variant={
+														ORDER_STATUS_BADGE_VARIANT[
+															order.status as (typeof ORDER_STATUS)[number]
+														] || "neutral"
+													}
+													className="capitalize"
+												>
+													{order.status || "Unknown"}
+												</Badge>
+											</CardHeader>
+
 											<Link
-												className="flex items-center gap-2"
-												to="/$storeHandle"
-												params={{
-													storeHandle: order?.storeHandle as string,
-												}}
+												to="/account/orders/$orderId"
+												params={{ orderId: order.id as string }}
+												className="space-y-2"
 											>
-												<Avatar className="rounded-md size-10">
-													<AvatarImage src={order?.store.image || ""} />
-													<AvatarFallback>
-														<Store />
-													</AvatarFallback>
-												</Avatar>
-												<div>
-													<p className="font-medium  line-clamp-1">
-														{order?.store?.name || "Unknown store"}
+												<CardContent>
+													<div className="grid grid-cols-5 gap-y-1.5">
+														{order?.items?.map((item) => (
+															<img
+																key={item.variant.inventoryId}
+																src={item.thumbnail || ""}
+																className="aspect-square object-cover size-12 rounded-sm border border-border/40 bg-accent/40"
+																alt={""}
+															/>
+														))}
+													</div>
+												</CardContent>
+												<CardFooter className="flex items-center justify-between border-t border-dashed">
+													<p className="text-muted-foreground text-sm">
+														Ordered on {format(order?.orderedAt, "d LLL, p")}
 													</p>
-													<p className="text-xs text-muted-foreground line-clamp-1">
-														{order?.store?.address?.line1 ||
-															"Mumbai, Maharashtra"}
+													<p className="font-bold text-base">
+														{formatAmount(
+															order?.currency,
+															order?.itemTotalAmount as number,
+														)}
 													</p>
-												</div>
+												</CardFooter>
 											</Link>
-											<Badge
-												variant={
-													ORDER_STATUS_BADGE_VARIANT[
-														order.status as (typeof ORDER_STATUS)[number]
-													] || "neutral"
-												}
-												className="capitalize"
-											>
-												{order.status || "Unknown"}
-											</Badge>
-										</CardHeader>
-
-										<Link
-											to="/account/orders/$orderId"
-											params={{ orderId: order.id as string }}
-											className="space-y-2"
-										>
-											<CardContent>
-												<div className="grid grid-cols-5 gap-y-1.5">
-													{order?.items?.map((item) => (
-														<img
-															key={item.variant.inventoryId}
-															src={item.thumbnail || ""}
-															className="aspect-square object-cover size-12 rounded-sm border border-border/40 bg-accent/40"
-															alt={""}
-														/>
-													))}
-												</div>
-											</CardContent>
-											<CardFooter className="flex items-center justify-between border-t border-dashed">
-												<p className="text-muted-foreground text-sm">
-													Ordered on {format(order?.orderedAt, "d LLL, p")}
-												</p>
-												<p className="font-bold text-base">
-													{formatAmount(
-														order?.currency,
-														order?.itemTotalAmount as number,
-													)}
-												</p>
-											</CardFooter>
-										</Link>
-									</Card>
-								</div>
-							);
-						});
-					})()}
+										</Card>
+									</div>
+								);
+							});
+						})()}
+					</div>
 				</div>
 			)}
-		</div>
+		</>
 	);
 }

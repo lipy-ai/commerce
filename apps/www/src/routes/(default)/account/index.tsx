@@ -9,7 +9,7 @@ import {
 } from "@lipy/web-ui/components/ui/avatar";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Label } from "@lipy/web-ui/components/ui/label";
-import { Spinner } from "@lipy/web-ui/components/ui/spinner";
+import Loading from "@lipy/web-ui/components/ui/loading";
 import { shareContent } from "@lipy/web-ui/lib/share";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute } from "@tanstack/react-router";
@@ -94,7 +94,7 @@ export function AccountPage() {
 	return (
 		<>
 			{isPending ? (
-				<Spinner />
+				<Loading hideDefault />
 			) : (
 				<div>
 					<DashboardHeader title="Settings" className="lg:hidden" />

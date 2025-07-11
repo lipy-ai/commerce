@@ -7,7 +7,7 @@ export const Route = createFileRoute("/(default)/account/profile")({
 
 function RouteComponent() {
 	return (
-		<div>
+		<div className="w-full">
 			<UserProfile />
 		</div>
 	);

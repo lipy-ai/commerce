@@ -51,6 +51,7 @@ function RouteComponent() {
 		{
 			staleTime: Number.POSITIVE_INFINITY,
 			cacheTime: Number.POSITIVE_INFINITY,
+			placeholderData: (p) => p,
 		},
 	);
 
@@ -73,10 +74,16 @@ function RouteComponent() {
 		{
 			staleTime: Number.POSITIVE_INFINITY,
 			cacheTime: Number.POSITIVE_INFINITY,
+			placeholderData: (p) => p,
 		},
 	);
 
-	if (fetchingShopData || fetchingProduct) return <ShopLoadingSkeleton />;
+	if (fetchingShopData || fetchingProduct)
+		return (
+			<div className="w-full">
+				<ShopLoadingSkeleton />
+			</div>
+		);
 	return (
 		<div className="relative max-w-screen-xl mx-auto ">
 			<DashboardHeader
@@ -250,7 +257,7 @@ function ShopOptions({
 
 function ShopLoadingSkeleton() {
 	return (
-		<div className="relative max-w-screen-lg mx-auto">
+		<div className="relative max-w-screen-xl mx-auto">
 			<DashboardHeader
 				titleChildren={<Skeleton className="h-6 w-32" />}
 				className="bg-amber-100"
@@ -274,7 +281,7 @@ function ShopLoadingSkeleton() {
 
 			<div className="my-10 mx-4">
 				<Skeleton className="h-6 w-40 my-4" />
-				<div className="grid grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-6 w-full">
+				<div className="grid grid-cols-2 lg:grid-cols-6  gap-x-4 gap-y-6 w-full">
 					{Array.from({ length: 6 }).map((_, j) => (
 						<div key={j} className="w-full">
 							<Skeleton className="aspect-square w-full rounded-lg mb-2" />

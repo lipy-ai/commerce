@@ -14,7 +14,7 @@ export default function Loading({
 	return (
 		<div
 			className={cn(
-				"m-auto flex flex-1 flex-col space-y-1 items-center justify-center",
+				"m-auto flex flex-1 flex-col space-y-1 items-center justify-center ",
 				className,
 			)}
 		>

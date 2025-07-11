@@ -157,7 +157,7 @@ export default function GoogleMapImage({
 					/>
 				</GoogleMap>
 				{useCase === "customer" && (
-					<div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 z-10">
+					<div className="absolute bottom-16 lg:bottom-24 left-1/2 transform -translate-x-1/2 z-10">
 						<Button
 							className="text-primary border-primary font-semibold shadow-md hover:bg-primary/10"
 							variant="outline"
@@ -183,14 +183,15 @@ export default function GoogleMapImage({
 				<div
 					className={cn(
 						"flex items-center gap-4 ",
-						isMobile ? "flex-col w-full" : "flex-row justify-between",
+						isMobile
+							? "flex-col w-full justify-start"
+							: "flex-row justify-between",
 					)}
 				>
-					<div className="flex items-start gap-3 ">
-						<MapPinned className="size-8 text-primary mt-1 flex-shrink-0" />
+					<div className="flex items-center gap-3 w-full">
+						<MapPinned className="size-8 text-primary  flex-shrink-0" />
 						<div className="overflow-hidden">
 							<h1 className="text-lg font-semibold truncate">
-								{/* {addressName || "Loading address..."} */}
 								{addressName || "Fetching address..."}
 							</h1>
 							<p className="text-sm text-muted-foreground line-clamp-2">
@@ -200,8 +201,6 @@ export default function GoogleMapImage({
 					</div>
 
 					{type === "saveAddress" && (
-						// <DetailedAddress fullAddress={fullAddress} label="Add" />
-
 						<div className="w-full lg:w-fit">
 							<Button
 								className="font-semibold px-6 w-full"

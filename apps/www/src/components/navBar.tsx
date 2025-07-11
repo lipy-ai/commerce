@@ -1,8 +1,7 @@
-import { ScrollingTabs } from "@lipy/web-ui/components/custom-ui/scrollable-tabs";
 import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import {
 	Building,
 	ChevronDown,
@@ -11,24 +10,12 @@ import {
 	MapPin,
 	UserRound,
 } from "lucide-react";
-import { Cherry, Milk, Salad, ShoppingBasket, Store } from "lucide-react";
-import { useState } from "react";
+
 import { CartInDesktop } from "./cart/cartInDesktop";
 
 export default function NavBar() {
 	const { isMobile } = useViewport();
 	const { deliveryLocation } = useLocationStore();
-	const [_, setActiveCategory] = useState("all");
-	const { pathname } = useLocation();
-
-	const CATEGORIES = [
-		{ id: "all", name: "All Stores", icon: Store },
-		{ id: "grocery", name: "Grocery", icon: ShoppingBasket },
-		{ id: "fruits", name: "Fruits", icon: Cherry },
-		{ id: "vegetables", name: "Vegetables", icon: Salad },
-		{ id: "dairy", name: "Dairy", icon: Milk },
-	];
-
 	// Mobile layout
 
 	if (isMobile) {
@@ -66,8 +53,8 @@ export default function NavBar() {
 	}
 
 	return (
-		<div className="sticky top-0 z-100   shadow-sm bg-background">
-			<div className="px-16 p-6 bg-accent/20">
+		<div className="sticky top-0 z-100  bg-background">
+			<div className="px-16 p-6 bg-accent/20 ">
 				<div className="flex items-center  gap-8">
 					<Link to="/" className="overflow-hidden">
 						<img
@@ -123,15 +110,6 @@ export default function NavBar() {
 					</Link>
 					<CartInDesktop />
 				</div>
-				{pathname === "/" && (
-					<div className="mt-4 -mb-6 ">
-						<ScrollingTabs
-							tabs={CATEGORIES}
-							handleTabChange={setActiveCategory}
-							className="text-foreground hover:text-foreground/80 active:text-foreground/90"
-						/>
-					</div>
-				)}
 			</div>
 		</div>
 	);

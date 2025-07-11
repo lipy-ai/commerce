@@ -1,4 +1,5 @@
 import type { DBTypes } from "@/db";
+import { discordNotification } from "@/notification/discord";
 import { defineHandlers } from "@hono/event-emitter";
 
 export type AvailableEvents = {
@@ -14,8 +15,19 @@ export type AvailableEvents = {
 export const handlers = defineHandlers<AvailableEvents>({
 	"order:created": [
 		(c, payload) => {
-			console.log("event", payload);
-		}, // c is current Context, payload will be correctly inferred as User
+			discordNotification({
+				type: "order:created",
+				payload: payload,
+			});
+		}, // c is current Context, payload will be correctly inferred as Order
+	],
+	"store:created": [
+		(c, payload) => {
+			discordNotification({
+				type: "store:created",
+				payload: payload,
+			});
+		},
 	],
 	"store:deleted": [
 		async (c, payload) => {}, // c is current Context, payload will be inferred as string

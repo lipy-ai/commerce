@@ -1,33 +1,53 @@
 import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
+import type { STORE_TYPE } from "@lipy/server/db/schema";
 import { ScrollingTabs } from "@lipy/web-ui/components/custom-ui/scrollable-tabs";
 import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
 import ComingSoonPage from "@lipy/web-ui/components/pages/coming-soon";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import Loading from "@lipy/web-ui/components/ui/loading";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { Link } from "@tanstack/react-router";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
-import type { InferResponseType } from "hono/client";
-import { MapPin, Star } from "lucide-react";
-import { Cherry, Milk, Salad, ShoppingBasket, Store } from "lucide-react";
-import { useEffect, useState } from "react";
+import {
+	BrickWall,
+	BriefcaseMedical,
+	Coffee,
+	MapPin,
+	Star,
+	Utensils,
+} from "lucide-react";
+import { Cherry, ShoppingBasket, Store } from "lucide-react";
+import { useState } from "react";
 
 const CATEGORIES = [
 	{ id: "all", name: "All Stores", icon: Store },
 	{ id: "grocery", name: "Grocery", icon: ShoppingBasket },
-	{ id: "fruits", name: "Fruits", icon: Cherry },
-	{ id: "vegetables", name: "Vegetables", icon: Salad },
-	{ id: "dairy", name: "Dairy", icon: Milk },
+	{ id: "pharmacy", name: "Pharmacy", icon: BriefcaseMedical },
+	{ id: "fruits_and_vegetables", name: "Fruits & Vegetables", icon: Cherry },
+	{ id: "restaurant", name: "Restaurant", icon: Utensils },
+	{ id: "cafe", name: "Cafe", icon: Coffee },
+	{ id: "hardware", name: "Hardware", icon: BrickWall },
 ];
 
 export default function NearByShops() {
-	// const [showFavorites, setShowFavorites] = useState(false);
-	const [shops, setShops] = useState<
-		InferResponseType<typeof apiClient.v1.shops.$get>
-	>([]);
-	const [_, setActiveCategory] = useState("all");
-
-	const { data, isLoading } = useAPIQuery(apiClient.v1.shops, "$get", {});
+	const [activeCategory, setActiveCategory] = useState("all");
+	const { isMobile } = useViewport();
+	const { data: shops, isFetching } = useAPIQuery(
+		apiClient.v1.shops,
+		"$get",
+		{
+			query: {
+				type: activeCategory as (typeof STORE_TYPE)[number] | "all",
+			},
+		},
+		{
+			staleTime: Number.POSITIVE_INFINITY,
+			cacheTime: Number.POSITIVE_INFINITY,
+			placeholderData: (p) => p,
+			// enabled: activeCategory !== "all",
+		},
+	);
 	const [navBarColorChange, setNavBarColorChange] = useState(false);
 	const { scrollY } = useScroll();
 
@@ -39,49 +59,55 @@ export default function NearByShops() {
 		}
 	});
 
-	useEffect(() => {
-		if (!isLoading && data) {
-			setShops(data);
-		}
-	}, [isLoading, data]);
-
 	return (
 		<>
-			{isLoading ? (
+			{isMobile ? (
+				<div className=" border-b sticky top-0 z-50 bg-card  overflow-hidden">
+					<motion.div
+						className="absolute inset-0 bg-chart-3/30"
+						initial={{ opacity: 0 }}
+						animate={{ opacity: navBarColorChange ? 1 : 0 }}
+						transition={{
+							duration: 1,
+							ease: "easeInOut",
+						}}
+					/>
+
+					<div className="relative z-10 space-y-2 ">
+						<SearchBar
+							placeholder="Search for shop, grocery, fruits..."
+							defaultValue=""
+							className="px-4 "
+						/>
+
+						<div>
+							<ScrollingTabs
+								tabs={CATEGORIES}
+								handleTabChange={setActiveCategory}
+								className="text-foreground "
+							/>
+						</div>
+					</div>
+				</div>
+			) : (
+				<div className="sticky top-0 z-100 bg-background border-b">
+					<div className="bg-accent/20 px-12">
+						<ScrollingTabs
+							tabs={CATEGORIES}
+							handleTabChange={setActiveCategory}
+							className="text-foreground"
+						/>
+					</div>
+				</div>
+			)}
+
+			{isFetching ? (
 				<Loading hideDefault />
 			) : !shops || shops.length === 0 ? (
 				<ComingSoonPage />
 			) : (
 				<div>
-					<div className="lg:hidden border-b sticky top-0 z-50 bg-card  overflow-hidden">
-						<motion.div
-							className="absolute inset-0 bg-chart-3/30"
-							initial={{ opacity: 0 }}
-							animate={{ opacity: navBarColorChange ? 1 : 0 }}
-							transition={{
-								duration: 1,
-								ease: "easeInOut",
-							}}
-						/>
-
-						<div className="relative z-10 space-y-2">
-							<SearchBar
-								placeholder="Search for shop, grocery, fruits..."
-								defaultValue=""
-								className="px-4"
-							/>
-
-							<div>
-								<ScrollingTabs
-									tabs={CATEGORIES}
-									handleTabChange={setActiveCategory}
-									className="text-foreground"
-								/>
-							</div>
-						</div>
-					</div>
-
-					<div className="m-auto max-w-screen-2xl px-2">
+					<div className="m-auto max-w-screen-2xl px-2 ">
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-center gap-4 py-4">
 							{shops.map((shop) => (
 								<div key={shop.id} className="space-y-6">
@@ -120,8 +146,8 @@ export default function NearByShops() {
 													</div>
 												</div>
 
-												<div className="mt-2 text-sm text-muted-foreground">
-													Books • Stationary
+												<div className="mt-2 text-sm text-muted-foreground capitalize">
+													{shop?.type?.replace("_", " ")}
 												</div>
 
 												<div className="flex items-center justify-between mt-3 text-sm" />

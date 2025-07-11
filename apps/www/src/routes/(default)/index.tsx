@@ -13,9 +13,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import {
 	HomeIcon,
 	type LucideIcon,
+	ShoppingBag,
 	ShoppingCart,
 	Store,
-	UserCircle,
 } from "lucide-react";
 
 export const Route = createFileRoute("/(default)/")({
@@ -42,9 +42,9 @@ function Home() {
 			mobile: true,
 		},
 		{
-			label: "Account",
-			url: "/account",
-			icon: UserCircle,
+			label: "Orders",
+			url: "/account/orders",
+			icon: ShoppingBag,
 			mobile: true,
 		},
 		{

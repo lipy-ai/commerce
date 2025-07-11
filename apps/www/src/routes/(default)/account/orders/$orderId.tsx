@@ -189,9 +189,9 @@ function RouteComponent() {
 								<CardHeader>
 									<CardTitle>Item(s) ordered</CardTitle>
 								</CardHeader>
-								<CardContent>
+								<CardContent className="space-y-6">
 									{order?.items?.map((product, i) => (
-										<div key={i} className="flex gap-2 items-center py-2">
+										<div key={i} className="flex gap-2 items-center">
 											<Link
 												to="/$storeHandle/products/$productId"
 												params={{
@@ -274,9 +274,7 @@ function RouteComponent() {
 											<info.icon className="text-muted-foreground flex-shrink-0 size-6" />
 											<div>
 												<p className="font-medium ">{info.title}</p>
-												<p className="text-muted-foreground text-xs">
-													{info.value}
-												</p>
+												<p className="text-muted-foreground">{info.value}</p>
 											</div>
 										</div>
 									);

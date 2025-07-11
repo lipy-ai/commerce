@@ -2,7 +2,7 @@ import { Player } from "@lottiefiles/react-lottie-player";
 const ComingSoonPage = () => {
 	return (
 		<>
-			<div className="flex flex-col items-center justify-center mx-6 min-h-[calc(100vh-200px)]">
+			<div className="flex flex-col items-center justify-center mx-6 ">
 				<Player
 					src={"./lottie/online-delivery-service.json"}
 					loop

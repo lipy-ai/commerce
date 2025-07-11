@@ -23,16 +23,24 @@ export const storeSchema = z.object({
 	}),
 });
 
+const schema = z.object({
+	type: z.enum([...STORE_TYPE, "all"] as [string, ...string[]]).optional(),
+});
+
 const route = new Hono<ServerContext>()
 	/**
 	 * Gets All Shops
 	 */
-	.get("/", async (c) => {
-		const d = await db
-			.selectFrom("store")
-			.where("active", "=", true)
-			.selectAll()
-			.execute();
+	.get("/", zValidator("query", schema), async (c) => {
+		const q = c.req.valid("query");
+
+		let query = db.selectFrom("store").where("active", "=", true);
+
+		if (q.type && q.type !== "all") {
+			query = query.where("type", "=", q.type);
+		}
+
+		const d = await query.selectAll().execute();
 
 		return c.json(d || []);
 	})

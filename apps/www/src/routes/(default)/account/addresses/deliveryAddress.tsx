@@ -8,8 +8,8 @@ import {
 	type DeliveryLocation,
 	useLocationStore,
 } from "@lipy/web-ui/components/maps/utils/store";
+import Loading from "@lipy/web-ui/components/ui/loading";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
-import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { Autocomplete, useJsApiLoader } from "@react-google-maps/api";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
@@ -34,7 +34,7 @@ function RouteComponent() {
 	const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
 	const navigate = useNavigate();
 
-	const { data, isFetching } = useAPIQuery(apiClient.v1.address, "$get", {});
+	const { data, isLoading } = useAPIQuery(apiClient.v1.address, "$get", {});
 	const { setDeliveryLocation, deliveryLocation, hasHydrated } =
 		useLocationStore();
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -78,68 +78,73 @@ function RouteComponent() {
 		[],
 	);
 
-	if (!isLoaded || isFetching) return <Spinner />;
-
 	return (
-		<motion.div
-			initial={{ opacity: 0, y: 1000 }}
-			animate={{ opacity: 1, y: 0 }}
-			transition={{ duration: 0.5 }}
-		>
-			<DashboardHeader title="Delivery Address" />
-
-			<div className="p-4 space-y-8 lg:p-8 m-auto max-w-screen-xl md:border-x min-h-screen">
-				<Autocomplete
-					onLoad={handleAutocompleteLoad}
-					onPlaceChanged={handlePlaceSelect}
+		<>
+			{!isLoaded || isLoading ? (
+				<Loading hideDefault />
+			) : data ? (
+				<motion.div
+					initial={{ opacity: 0, y: 1000 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.5 }}
+					className="w-full"
 				>
-					<SearchBar placeholder="Search for address" />
-				</Autocomplete>
+					<DashboardHeader title="Delivery Address" />
 
-				<Link
-					to="/account/addresses/new"
-					className="flex justify-between text-md font-medium w-full text-primary"
-					search={{ type: "deliveryAddress" }}
-				>
-					<div className="flex items-center gap-2">
-						<Locate />
-						Use my current location
-					</div>
-					<ChevronRight className="text-muted-foreground" />
-				</Link>
+					<div className="p-4 space-y-8 lg:p-8 m-auto max-w-screen-xl md:border-x min-h-screen">
+						<Autocomplete
+							onLoad={handleAutocompleteLoad}
+							onPlaceChanged={handlePlaceSelect}
+						>
+							<SearchBar placeholder="Search for address" />
+						</Autocomplete>
 
-				<Separator className="mt-4" />
+						<Link
+							to="/account/addresses/new"
+							className="flex justify-between text-md font-medium w-full text-primary"
+							search={{ type: "deliveryAddress" }}
+						>
+							<div className="flex items-center gap-2">
+								<Locate />
+								Use my current location
+							</div>
+							<ChevronRight className="text-muted-foreground" />
+						</Link>
 
-				{hasHydrated && deliveryLocation.line1 && (
-					<section>
-						<p className="font-medium text-base my-2 text-muted-foreground">
-							Current address
-						</p>
-
-						<AddressComponent address={deliveryLocation} />
 						<Separator className="mt-4" />
-					</section>
-				)}
 
-				{data && data?.length > 0 && (
-					<section>
-						<p className="font-medium text-base my-2 text-muted-foreground">
-							Saved addresses
-						</p>
-						<div className="mb-10 space-y-2">
-							{data.map((address) => (
-								<div
-									key={address.id}
-									className="cursor-pointer "
-									onClick={() => handleAddressSelect(address)}
-								>
-									<AddressComponent address={address} />
+						{hasHydrated && deliveryLocation.line1 && (
+							<section>
+								<p className="font-medium text-base my-2 text-muted-foreground">
+									Current address
+								</p>
+
+								<AddressComponent address={deliveryLocation} />
+								<Separator className="mt-4" />
+							</section>
+						)}
+
+						{data && data?.length > 0 && (
+							<section>
+								<p className="font-medium text-base my-2 text-muted-foreground">
+									Saved addresses
+								</p>
+								<div className="mb-10 space-y-2">
+									{data.map((address) => (
+										<div
+											key={address.id}
+											className="cursor-pointer "
+											onClick={() => handleAddressSelect(address)}
+										>
+											<AddressComponent address={address} />
+										</div>
+									))}
 								</div>
-							))}
-						</div>
-					</section>
-				)}
-			</div>
-		</motion.div>
+							</section>
+						)}
+					</div>
+				</motion.div>
+			) : null}
+		</>
 	);
 }

@@ -3,7 +3,7 @@ import { type VariantProps, cva } from "class-variance-authority";
 import { Loader2 } from "lucide-react";
 
 const spinnerVariants = cva(
-	"flex flex-col items-center justify-center min-h-[calc(100vh-200px)]",
+	"flex flex-col items-center justify-center min-h-[calc(100vh)]",
 	{
 		variants: {
 			show: {

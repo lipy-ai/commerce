@@ -6,7 +6,7 @@ export const Route = createFileRoute("/(default)/account/addresses/new")({
 	validateSearch: (search: Record<string, unknown>) => {
 		return {
 			type: search.type as "deliveryAddress" | "saveAddress" | undefined,
-		}
+		};
 	},
 });
 
@@ -14,12 +14,12 @@ function RouteComponent() {
 	const { type } = Route.useSearch();
 
 	return (
-		<div className="">
+		<div className="w-full">
 			<DashboardHeader
 				title={type === "deliveryAddress" ? "Delivery Address" : "New Address"}
 			/>
 
 			<GoogleMapImage type={type} />
 		</div>
-	)
+	);
 }

@@ -12,7 +12,7 @@ function RouteComponent() {
 	if (isMobile) return <Outlet />;
 	return (
 		<div className="flex">
-			<div className="min-w-[500px] border-r min-h-[calc(100vh-64px)] overflow-y-auto p-8">
+			<div className="min-w-[450px] border-r min-h-[calc(100vh-64px)] overflow-y-auto p-8">
 				<AccountPage />
 			</div>
 			{pathname === "/account" ? (
@@ -27,9 +27,7 @@ function RouteComponent() {
 					</p>
 				</div>
 			) : (
-				<div className="w-full">
-					<Outlet />
-				</div>
+				<Outlet />
 			)}
 		</div>
 	);

@@ -3,9 +3,10 @@ import { env } from "@envClient";
 import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
-import { Button } from "@lipy/web-ui/components/ui/button";
+import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { shareContent } from "@lipy/web-ui/lib/share";
+import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import { Clock, Mail, MapPin, Phone, Share } from "lucide-react";
 
@@ -66,39 +67,30 @@ function RouteComponent() {
 				<p className="text-sm font-normal">{data?.description}</p>
 				<div className="mt-4 flex items-center gap-4 justify-between">
 					<div className="flex gap-4">
-						<Button
-							variant="outline"
-							size="sm"
-							onClick={() => {
-								window.open(`mailto:${data?.email}`);
-							}}
+						<a
+							href={`mailto:${data?.email}`}
+							className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
 						>
 							<Mail />
-						</Button>
-
-						<Button
-							variant="outline"
-							size="sm"
-							onClick={() => {
-								window.open(`tel:${data?.phone}`);
-							}}
+						</a>
+						<a
+							href={`tel:${data?.phone}`}
+							className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
 						>
 							<Phone />
-						</Button>
+						</a>
 					</div>
 
-					<Button
-						variant={"outline"}
-						size="sm"
-						onClick={() => {
-							window.open(
-								`https://www.google.com/maps/dir/?api=1&destination=${data?.address?.lat},${data?.address?.lng}`,
-							);
-						}}
+					<a
+						href={`https://www.google.com/maps/dir/?api=1&destination=${data?.address?.lat},${data?.address?.lng}`}
+						className={cn(
+							buttonVariants({ variant: "outline", size: "sm" }),
+							"flex items-center gap-2",
+						)}
 					>
 						<MapPin className="text-primary" />
 						Directions
-					</Button>
+					</a>
 				</div>
 			</div>
 

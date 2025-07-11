@@ -16,7 +16,6 @@ import { Route as defaultAccountRouteRouteImport } from './routes/(default)/acco
 import { Route as defaultCartIndexRouteImport } from './routes/(default)/cart/index'
 import { Route as defaultAccountIndexRouteImport } from './routes/(default)/account/index'
 import { Route as defaultAccountProfileRouteImport } from './routes/(default)/account/profile'
-import { Route as defaultstoreStoreHandleRouteRouteImport } from './routes/(default)/(store)/$storeHandle/route'
 import { Route as defaultAccountOrdersIndexRouteImport } from './routes/(default)/account/orders/index'
 import { Route as defaultAccountAddressesIndexRouteImport } from './routes/(default)/account/addresses/index'
 import { Route as defaultstoreStoreHandleIndexRouteImport } from './routes/(default)/(store)/$storeHandle/index'
@@ -63,12 +62,6 @@ const defaultAccountProfileRoute = defaultAccountProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => defaultAccountRouteRoute,
 } as any)
-const defaultstoreStoreHandleRouteRoute =
-  defaultstoreStoreHandleRouteRouteImport.update({
-    id: '/(default)/(store)/$storeHandle',
-    path: '/$storeHandle',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const defaultAccountOrdersIndexRoute =
   defaultAccountOrdersIndexRouteImport.update({
     id: '/orders/',
@@ -83,9 +76,9 @@ const defaultAccountAddressesIndexRoute =
   } as any)
 const defaultstoreStoreHandleIndexRoute =
   defaultstoreStoreHandleIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => defaultstoreStoreHandleRouteRoute,
+    id: '/(default)/(store)/$storeHandle/',
+    path: '/$storeHandle/',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const defaultAccountOrdersOrderIdRoute =
   defaultAccountOrdersOrderIdRouteImport.update({
@@ -107,27 +100,27 @@ const defaultAccountAddressesDeliveryAddressRoute =
   } as any)
 const defaultstoreStoreHandleDetailsRoute =
   defaultstoreStoreHandleDetailsRouteImport.update({
-    id: '/details',
-    path: '/details',
-    getParentRoute: () => defaultstoreStoreHandleRouteRoute,
+    id: '/(default)/(store)/$storeHandle/details',
+    path: '/$storeHandle/details',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const defaultstoreStoreHandleProductsIndexRoute =
   defaultstoreStoreHandleProductsIndexRouteImport.update({
-    id: '/products/',
-    path: '/products/',
-    getParentRoute: () => defaultstoreStoreHandleRouteRoute,
+    id: '/(default)/(store)/$storeHandle/products/',
+    path: '/$storeHandle/products/',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const defaultstoreStoreHandleProductsProductIdRoute =
   defaultstoreStoreHandleProductsProductIdRouteImport.update({
-    id: '/products/$productId',
-    path: '/products/$productId',
-    getParentRoute: () => defaultstoreStoreHandleRouteRoute,
+    id: '/(default)/(store)/$storeHandle/products/$productId',
+    path: '/$storeHandle/products/$productId',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const defaultstoreStoreHandleProductsCategoryCategorySlugRoute =
   defaultstoreStoreHandleProductsCategoryCategorySlugRouteImport.update({
-    id: '/products/category/$categorySlug',
-    path: '/products/category/$categorySlug',
-    getParentRoute: () => defaultstoreStoreHandleRouteRoute,
+    id: '/(default)/(store)/$storeHandle/products/category/$categorySlug',
+    path: '/$storeHandle/products/category/$categorySlug',
+    getParentRoute: () => rootRouteImport,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -135,7 +128,6 @@ export interface FileRoutesByFullPath {
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
   '/': typeof defaultIndexRoute
-  '/$storeHandle': typeof defaultstoreStoreHandleRouteRouteWithChildren
   '/account/profile': typeof defaultAccountProfileRoute
   '/account/': typeof defaultAccountIndexRoute
   '/cart': typeof defaultCartIndexRoute
@@ -143,7 +135,7 @@ export interface FileRoutesByFullPath {
   '/account/addresses/deliveryAddress': typeof defaultAccountAddressesDeliveryAddressRoute
   '/account/addresses/new': typeof defaultAccountAddressesNewRoute
   '/account/orders/$orderId': typeof defaultAccountOrdersOrderIdRoute
-  '/$storeHandle/': typeof defaultstoreStoreHandleIndexRoute
+  '/$storeHandle': typeof defaultstoreStoreHandleIndexRoute
   '/account/addresses': typeof defaultAccountAddressesIndexRoute
   '/account/orders': typeof defaultAccountOrdersIndexRoute
   '/$storeHandle/products/$productId': typeof defaultstoreStoreHandleProductsProductIdRoute
@@ -174,7 +166,6 @@ export interface FileRoutesById {
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/logout': typeof authLogoutRoute
   '/(default)/': typeof defaultIndexRoute
-  '/(default)/(store)/$storeHandle': typeof defaultstoreStoreHandleRouteRouteWithChildren
   '/(default)/account/profile': typeof defaultAccountProfileRoute
   '/(default)/account/': typeof defaultAccountIndexRoute
   '/(default)/cart/': typeof defaultCartIndexRoute
@@ -196,7 +187,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/logout'
     | '/'
-    | '/$storeHandle'
     | '/account/profile'
     | '/account/'
     | '/cart'
@@ -204,7 +194,7 @@ export interface FileRouteTypes {
     | '/account/addresses/deliveryAddress'
     | '/account/addresses/new'
     | '/account/orders/$orderId'
-    | '/$storeHandle/'
+    | '/$storeHandle'
     | '/account/addresses'
     | '/account/orders'
     | '/$storeHandle/products/$productId'
@@ -234,7 +224,6 @@ export interface FileRouteTypes {
     | '/(auth)/login'
     | '/(auth)/logout'
     | '/(default)/'
-    | '/(default)/(store)/$storeHandle'
     | '/(default)/account/profile'
     | '/(default)/account/'
     | '/(default)/cart/'
@@ -255,8 +244,12 @@ export interface RootRouteChildren {
   authLoginRoute: typeof authLoginRoute
   authLogoutRoute: typeof authLogoutRoute
   defaultIndexRoute: typeof defaultIndexRoute
-  defaultstoreStoreHandleRouteRoute: typeof defaultstoreStoreHandleRouteRouteWithChildren
   defaultCartIndexRoute: typeof defaultCartIndexRoute
+  defaultstoreStoreHandleDetailsRoute: typeof defaultstoreStoreHandleDetailsRoute
+  defaultstoreStoreHandleIndexRoute: typeof defaultstoreStoreHandleIndexRoute
+  defaultstoreStoreHandleProductsProductIdRoute: typeof defaultstoreStoreHandleProductsProductIdRoute
+  defaultstoreStoreHandleProductsIndexRoute: typeof defaultstoreStoreHandleProductsIndexRoute
+  defaultstoreStoreHandleProductsCategoryCategorySlugRoute: typeof defaultstoreStoreHandleProductsCategoryCategorySlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -310,13 +303,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof defaultAccountProfileRouteImport
       parentRoute: typeof defaultAccountRouteRoute
     }
-    '/(default)/(store)/$storeHandle': {
-      id: '/(default)/(store)/$storeHandle'
-      path: '/$storeHandle'
-      fullPath: '/$storeHandle'
-      preLoaderRoute: typeof defaultstoreStoreHandleRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/(default)/account/orders/': {
       id: '/(default)/account/orders/'
       path: '/orders'
@@ -333,10 +319,10 @@ declare module '@tanstack/react-router' {
     }
     '/(default)/(store)/$storeHandle/': {
       id: '/(default)/(store)/$storeHandle/'
-      path: '/'
-      fullPath: '/$storeHandle/'
+      path: '/$storeHandle'
+      fullPath: '/$storeHandle'
       preLoaderRoute: typeof defaultstoreStoreHandleIndexRouteImport
-      parentRoute: typeof defaultstoreStoreHandleRouteRoute
+      parentRoute: typeof rootRouteImport
     }
     '/(default)/account/orders/$orderId': {
       id: '/(default)/account/orders/$orderId'
@@ -361,31 +347,31 @@ declare module '@tanstack/react-router' {
     }
     '/(default)/(store)/$storeHandle/details': {
       id: '/(default)/(store)/$storeHandle/details'
-      path: '/details'
+      path: '/$storeHandle/details'
       fullPath: '/$storeHandle/details'
       preLoaderRoute: typeof defaultstoreStoreHandleDetailsRouteImport
-      parentRoute: typeof defaultstoreStoreHandleRouteRoute
+      parentRoute: typeof rootRouteImport
     }
     '/(default)/(store)/$storeHandle/products/': {
       id: '/(default)/(store)/$storeHandle/products/'
-      path: '/products'
+      path: '/$storeHandle/products'
       fullPath: '/$storeHandle/products'
       preLoaderRoute: typeof defaultstoreStoreHandleProductsIndexRouteImport
-      parentRoute: typeof defaultstoreStoreHandleRouteRoute
+      parentRoute: typeof rootRouteImport
     }
     '/(default)/(store)/$storeHandle/products/$productId': {
       id: '/(default)/(store)/$storeHandle/products/$productId'
-      path: '/products/$productId'
+      path: '/$storeHandle/products/$productId'
       fullPath: '/$storeHandle/products/$productId'
       preLoaderRoute: typeof defaultstoreStoreHandleProductsProductIdRouteImport
-      parentRoute: typeof defaultstoreStoreHandleRouteRoute
+      parentRoute: typeof rootRouteImport
     }
     '/(default)/(store)/$storeHandle/products/category/$categorySlug': {
       id: '/(default)/(store)/$storeHandle/products/category/$categorySlug'
-      path: '/products/category/$categorySlug'
+      path: '/$storeHandle/products/category/$categorySlug'
       fullPath: '/$storeHandle/products/category/$categorySlug'
       preLoaderRoute: typeof defaultstoreStoreHandleProductsCategoryCategorySlugRouteImport
-      parentRoute: typeof defaultstoreStoreHandleRouteRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -414,39 +400,20 @@ const defaultAccountRouteRouteChildren: defaultAccountRouteRouteChildren = {
 const defaultAccountRouteRouteWithChildren =
   defaultAccountRouteRoute._addFileChildren(defaultAccountRouteRouteChildren)
 
-interface defaultstoreStoreHandleRouteRouteChildren {
-  defaultstoreStoreHandleDetailsRoute: typeof defaultstoreStoreHandleDetailsRoute
-  defaultstoreStoreHandleIndexRoute: typeof defaultstoreStoreHandleIndexRoute
-  defaultstoreStoreHandleProductsProductIdRoute: typeof defaultstoreStoreHandleProductsProductIdRoute
-  defaultstoreStoreHandleProductsIndexRoute: typeof defaultstoreStoreHandleProductsIndexRoute
-  defaultstoreStoreHandleProductsCategoryCategorySlugRoute: typeof defaultstoreStoreHandleProductsCategoryCategorySlugRoute
-}
-
-const defaultstoreStoreHandleRouteRouteChildren: defaultstoreStoreHandleRouteRouteChildren =
-  {
-    defaultstoreStoreHandleDetailsRoute: defaultstoreStoreHandleDetailsRoute,
-    defaultstoreStoreHandleIndexRoute: defaultstoreStoreHandleIndexRoute,
-    defaultstoreStoreHandleProductsProductIdRoute:
-      defaultstoreStoreHandleProductsProductIdRoute,
-    defaultstoreStoreHandleProductsIndexRoute:
-      defaultstoreStoreHandleProductsIndexRoute,
-    defaultstoreStoreHandleProductsCategoryCategorySlugRoute:
-      defaultstoreStoreHandleProductsCategoryCategorySlugRoute,
-  }
-
-const defaultstoreStoreHandleRouteRouteWithChildren =
-  defaultstoreStoreHandleRouteRoute._addFileChildren(
-    defaultstoreStoreHandleRouteRouteChildren,
-  )
-
 const rootRouteChildren: RootRouteChildren = {
   defaultAccountRouteRoute: defaultAccountRouteRouteWithChildren,
   authLoginRoute: authLoginRoute,
   authLogoutRoute: authLogoutRoute,
   defaultIndexRoute: defaultIndexRoute,
-  defaultstoreStoreHandleRouteRoute:
-    defaultstoreStoreHandleRouteRouteWithChildren,
   defaultCartIndexRoute: defaultCartIndexRoute,
+  defaultstoreStoreHandleDetailsRoute: defaultstoreStoreHandleDetailsRoute,
+  defaultstoreStoreHandleIndexRoute: defaultstoreStoreHandleIndexRoute,
+  defaultstoreStoreHandleProductsProductIdRoute:
+    defaultstoreStoreHandleProductsProductIdRoute,
+  defaultstoreStoreHandleProductsIndexRoute:
+    defaultstoreStoreHandleProductsIndexRoute,
+  defaultstoreStoreHandleProductsCategoryCategorySlugRoute:
+    defaultstoreStoreHandleProductsCategoryCategorySlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

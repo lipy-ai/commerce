@@ -5,6 +5,7 @@ import { formatAmount } from "@lipy/lib/utils/intl";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import ImageCarousel from "@lipy/web-ui/components/custom-ui/imageCarousel";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
+import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import {
 	Accordion,
 	AccordionContent,
@@ -14,7 +15,7 @@ import {
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { Label } from "@lipy/web-ui/components/ui/label";
-import { Spinner } from "@lipy/web-ui/components/ui/spinner";
+import Loading from "@lipy/web-ui/components/ui/loading";
 import { shareContent } from "@lipy/web-ui/lib/share";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
@@ -31,15 +32,15 @@ export const Route = createFileRoute(
 function RouteComponent() {
 	const { productId, storeHandle } = Route.useParams();
 
-	const {
-		data: product,
-		isFetching,
-		isFetched,
-	} = useAPIQuery(apiClient.v1.products[":id"], "$get", {
-		param: {
-			id: productId,
+	const { data: product, isLoading } = useAPIQuery(
+		apiClient.v1.products[":id"],
+		"$get",
+		{
+			param: {
+				id: productId,
+			},
 		},
-	});
+	);
 
 	type ProductResponse = InferResponseType<
 		(typeof apiClient.v1.products)[":id"]["$get"]
@@ -51,10 +52,10 @@ function RouteComponent() {
 	const [selectedVariant, setSelectedVariant] = useState<ProductVariant>();
 
 	useEffect(() => {
-		if (isFetched && product?.variants?.length) {
+		if (!isLoading && product?.variants?.length) {
 			setSelectedVariant(product.variants[0]);
 		}
-	}, [isFetched, product?.variants]);
+	}, [isLoading, product?.variants]);
 
 	const discount = discountCalculator(
 		selectedVariant?.price || 0,
@@ -62,8 +63,15 @@ function RouteComponent() {
 	);
 
 	return (
-		<div className="mb-20 ">
-			{isFetched && product && (
+		<>
+			{isLoading ? (
+				<Loading hideDefault />
+			) : !product ? (
+				<EmptyPage
+					title="Product Not Found"
+					label="The product you are looking for does not exist or has been removed."
+				/>
+			) : (
 				<div>
 					<DashboardHeader title={product.title || ""} className="lg:hidden">
 						<Button
@@ -236,8 +244,6 @@ function RouteComponent() {
 					</div>
 				</div>
 			)}
-
-			{isFetching && <Spinner />}
-		</div>
+		</>
 	);
 }

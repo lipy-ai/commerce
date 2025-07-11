@@ -11,7 +11,7 @@ import { DetailedAddress } from "@lipy/web-ui/components/maps/detailedAddress";
 import type { DeliveryLocation } from "@lipy/web-ui/components/maps/utils/store";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
-import { Spinner } from "@lipy/web-ui/components/ui/spinner";
+import Loading from "@lipy/web-ui/components/ui/loading";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute } from "@tanstack/react-router";
@@ -47,21 +47,9 @@ function RouteComponent() {
 	>(null);
 
 	return (
-		<div className="">
-			<DashboardHeader title="Saved addresses">
-				{!isMobile && (
-					<Link
-						className={cn(buttonVariants({ variant: "default" }))}
-						to="/account/addresses/new"
-						search={{ type: "saveAddress" }}
-					>
-						<CirclePlus />
-						Add New Address
-					</Link>
-				)}
-			</DashboardHeader>
+		<>
 			{isLoading ? (
-				<Spinner />
+				<Loading hideDefault />
 			) : !data || data.length === 0 ? (
 				<EmptyPage
 					icon={MapPinHouse}
@@ -69,18 +57,33 @@ function RouteComponent() {
 					label="Add a new address to get started"
 				/>
 			) : (
-				<div className="p-4 mb-20 space-y-2">
-					{data.map((address) => (
-						<div
-							key={address.id}
-							onClick={() => {
-								setOptionsDrawerOpen(true);
-								setSelectedAddress(address);
-							}}
+				<div className="w-full">
+					<DashboardHeader title="Saved addresses">
+						<Link
+							className={cn(
+								buttonVariants({ variant: "default" }),
+								"hidden md:inline-flex",
+							)}
+							to="/account/addresses/new"
+							search={{ type: "saveAddress" }}
 						>
-							<AddressComponent address={address} />
-						</div>
-					))}
+							<CirclePlus />
+							Add New Address
+						</Link>
+					</DashboardHeader>
+					<div className="p-4 mb-20 space-y-2">
+						{data.map((address) => (
+							<div
+								key={address.id}
+								onClick={() => {
+									setOptionsDrawerOpen(true);
+									setSelectedAddress(address);
+								}}
+							>
+								<AddressComponent address={address} />
+							</div>
+						))}
+					</div>
 				</div>
 			)}
 
@@ -108,7 +111,7 @@ function RouteComponent() {
 					address={selectedAddress}
 				/>
 			)}
-		</div>
+		</>
 	);
 }
 

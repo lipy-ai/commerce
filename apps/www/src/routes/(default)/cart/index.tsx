@@ -30,7 +30,7 @@ import {
 	CardTitle,
 } from "@lipy/web-ui/components/ui/card";
 
-import { Spinner } from "@lipy/web-ui/components/ui/spinner";
+import Loading from "@lipy/web-ui/components/ui/loading";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
@@ -218,7 +218,7 @@ export const CartMainContent = () => {
 	return (
 		<>
 			{isLoading ? (
-				<Spinner />
+				<Loading hideDefault />
 			) : !data || data.length === 0 ? (
 				<EmptyPage icon={ShoppingBag} title="Your Cart is Empty" label=" " />
 			) : (

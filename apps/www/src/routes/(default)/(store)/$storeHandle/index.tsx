@@ -117,7 +117,7 @@ function RouteComponent() {
 						{shopData.name.toUpperCase()}
 					</Link>
 					<div className="mt-2 text-sm lg:text-base text-muted-foreground capitalize">
-						{shopData?.type}
+						{shopData?.type?.replace("_", " ")}
 					</div>
 				</div>
 			)}

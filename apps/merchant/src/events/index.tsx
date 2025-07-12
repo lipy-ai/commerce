@@ -1,6 +1,7 @@
 import { env } from "@envClient"; // Make sure this is a client-safe env import
 import type React from "react";
 import { useEffect, useRef } from "react";
+import { OrderNotification } from "./order";
 
 // type Message = {
 // 	type: string;
@@ -51,7 +52,11 @@ const EventsProvider: React.FC = () => {
 		};
 	}, []);
 
-	return null; // Or return context/provider if exposing `messages` to children
+	return (
+		<>
+			<OrderNotification />
+		</>
+	); // Or return context/provider if exposing `messages` to children
 };
 
 export default EventsProvider;

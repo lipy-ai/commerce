@@ -57,6 +57,7 @@ function RouteComponent() {
 
 	return (
 		<>
+			<DashboardHeader title="My Orders" />
 			{isLoading ? (
 				<Loading hideDefault />
 			) : !data || data.length === 0 ? (
@@ -66,7 +67,6 @@ function RouteComponent() {
 				/>
 			) : (
 				<div className="w-full">
-					<DashboardHeader title="My Orders" className="z-0" />
 					<div className="p-4 space-y-4 mb-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:gap-4">
 						{(() => {
 							let lastMonth = "";

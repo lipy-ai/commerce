@@ -48,6 +48,19 @@ function RouteComponent() {
 
 	return (
 		<>
+			<DashboardHeader title="Saved addresses">
+				<Link
+					className={cn(
+						buttonVariants({ variant: "default" }),
+						"hidden md:inline-flex",
+					)}
+					to="/account/addresses/new"
+					search={{ type: "saveAddress" }}
+				>
+					<CirclePlus />
+					Add New Address
+				</Link>
+			</DashboardHeader>
 			{isLoading ? (
 				<Loading hideDefault />
 			) : !data || data.length === 0 ? (
@@ -58,19 +71,6 @@ function RouteComponent() {
 				/>
 			) : (
 				<div className="w-full">
-					<DashboardHeader title="Saved addresses">
-						<Link
-							className={cn(
-								buttonVariants({ variant: "default" }),
-								"hidden md:inline-flex",
-							)}
-							to="/account/addresses/new"
-							search={{ type: "saveAddress" }}
-						>
-							<CirclePlus />
-							Add New Address
-						</Link>
-					</DashboardHeader>
 					<div className="p-4 mb-20 space-y-2">
 						{data.map((address) => (
 							<div

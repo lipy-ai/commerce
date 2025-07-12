@@ -59,7 +59,10 @@
 		"@biomejs/biome",
 		"@parcel/watcher",
 		"@tailwindcss/oxide",
-		"core-js"
+		"core-js",
+		"esbuild",
+		"bun",
+		"msw"
 	],
 	"module": "index.ts",
 	"type": "module"

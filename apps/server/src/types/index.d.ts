@@ -10,6 +10,34 @@ import type { ErrCode } from "@/lib/exception";
 import type { STORE_ROLES } from "@/middlewares/auth";
 import type { Emitter } from "@hono/event-emitter";
 
+// import type {
+// 	EmitAsyncOptions,
+// 	EventHandler,
+// 	EventPayloadMap,
+// } from "@hono/event-emitter";
+
+// interface Emitter<EPMap extends EventPayloadMap> {
+// 	on<Key extends keyof EPMap>(
+// 		key: Key,
+// 		handler: EventHandler<EPMap[Key]>,
+// 	): void;
+// 	off<Key extends keyof EPMap>(
+// 		key: Key,
+// 		handler?: EventHandler<EPMap[Key]>,
+// 	): void;
+// 	emit<Key extends keyof EPMap>(
+// 		c: Context<ServerContext>,
+// 		key: Key,
+// 		payload: EPMap[Key],
+// 	): void;
+// 	emitAsync<Key extends keyof EPMap>(
+// 		c: Context<ServerContext>,
+// 		key: Key,
+// 		payload: EPMap[Key],
+// 		options?: EmitAsyncOptions,
+// 	): Promise<void>;
+// }
+
 export interface ServerContext extends Env {
 	Variables: {
 		emitter: Emitter<AvailableEvents>;

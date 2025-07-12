@@ -8,6 +8,8 @@ import type { routes } from "../app";
 export type AppType = typeof routes;
 import type { ErrCode } from "@/lib/exception";
 import type { STORE_ROLES } from "@/middlewares/auth";
+import type { Emitter } from "@hono/event-emitter";
+
 // import type {
 // 	EmitAsyncOptions,
 // 	EventHandler,
@@ -38,7 +40,7 @@ import type { STORE_ROLES } from "@/middlewares/auth";
 
 export interface ServerContext extends Env {
 	Variables: {
-		emitter: any; //Emitter<AvailableEvents>;
+		emitter: Emitter<AvailableEvents>;
 		user: typeof auth.$Infer.Session.user | null;
 		session:
 			| (typeof auth.$Infer.Session.session & {

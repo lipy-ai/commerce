@@ -6,10 +6,12 @@ import { trimTrailingSlash } from "hono/trailing-slash";
 
 import { logger } from "./lib/logger";
 
+import { emitter } from "@hono/event-emitter";
 import { secureHeaders } from "hono/secure-headers";
 import { auth } from "./auth";
 import { db, pingDatabase } from "./db";
 import env from "./env";
+import { handlers } from "./events";
 import { HTTPError } from "./lib/exception";
 import { globalError } from "./lib/globalError";
 import { authMiddleware, hasStorePermission } from "./middlewares/auth";
@@ -19,6 +21,7 @@ import { addressRoute } from "./routes/address";
 import { cartRoute } from "./routes/cart";
 import { merchantComboboxRoute } from "./routes/merchantRoutes/combobox";
 import { merchantCustomerRoute } from "./routes/merchantRoutes/customer";
+import { eventsRoute } from "./routes/merchantRoutes/events";
 import { merchantInventoryRoute } from "./routes/merchantRoutes/inventory";
 import { merchantOrderRoute } from "./routes/merchantRoutes/order";
 import { merchantProductRoute } from "./routes/merchantRoutes/product";
@@ -40,6 +43,8 @@ app.use(secureHeaders());
 app.use(httpLogger());
 app.use(trimTrailingSlash());
 app.use("*", globalMiddleware);
+
+app.use(emitter(handlers));
 
 if (env.NODE_ENV === "development") {
 	logger.info("Available routes:");
@@ -77,8 +82,8 @@ export const routes = app
 	.route("/merchant/order", merchantOrderRoute)
 	.route("/merchant/customer", merchantCustomerRoute)
 	.route("/merchant/combobox", merchantComboboxRoute)
-	.route("/merchant/inventory", merchantInventoryRoute);
-// .route("/events", eventsRoute);
+	.route("/merchant/inventory", merchantInventoryRoute)
+	.route("/events", eventsRoute);
 
 // routes.basePath("/admin").route("/category", categoryRouter);
 

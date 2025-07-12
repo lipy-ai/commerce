@@ -1,6 +1,5 @@
 /// <reference types="vite/client" />
 
-import NavBar from "@/components/navBar";
 import { DefaultCatchBoundary, NotFound } from "@/router";
 import { seo } from "@/utils/seo";
 import { env } from "@envClient";
@@ -15,7 +14,6 @@ import {
 	Outlet,
 	Scripts,
 	createRootRoute,
-	useLocation,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { createServerFn } from "@tanstack/react-start";
@@ -40,7 +38,19 @@ export const Route = createRootRoute({
 			},
 			{
 				name: "viewport",
-				content: "width=device-width, initial-scale=1",
+				content: "width=device-width, initial-scale=1; viewport-fit=cover",
+			},
+			{
+				name: "mobile-web-app-capable",
+				content: "yes",
+			},
+			{
+				name: "apple-mobile-web-app-capable",
+				content: "yes",
+			},
+			{
+				name: "apple-mobile-web-app-status-bar-style",
+				content: "black-translucent",
 			},
 
 			...seo({
@@ -108,7 +118,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 	useGlobalVibration();
 
 	const data = Route.useLoaderData();
-	const { pathname } = useLocation();
 	return (
 		<html className="bg-muted/30" lang="en">
 			<head suppressHydrationWarning>
@@ -120,15 +129,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			>
 				<ViewportProvider isMobile={data?.isSsrMobile}>
 					<QueryProvider handleThrowOnError={handleThrowOnError}>
-						<NuqsAdapter>
-							{" "}
-							<>
-								{!data?.isSsrMobile &&
-									pathname !== "/login" &&
-									pathname !== "/logout" && <NavBar />}
-								{children}
-							</>
-						</NuqsAdapter>
+						<NuqsAdapter>{children}</NuqsAdapter>
 						<Toaster />
 					</QueryProvider>
 					{env.SHOW_DEV_TOOLS && (

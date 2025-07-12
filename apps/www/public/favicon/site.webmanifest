@@ -1,6 +1,6 @@
 {
-	"name": "Lipy Commerce",
-	"short_name": "Lipy Commerce",
+	"name": "Lipy",
+	"short_name": "Lipy",
 	"icons": [
 		{
 			"src": "/favicon/pwa-192x192.png",
@@ -30,7 +30,7 @@
 
 	"start_url": "/",
 	"display": "standalone",
-	"background_color": "#FFFFFF",
-	"theme_color": "#FFFFFF",
+	"background_color": "#3d3d3a",
+	"theme_color": "#3d3d3a",
 	"orientation": "portrait"
 }

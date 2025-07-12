@@ -144,6 +144,7 @@ const route = new Hono<ServerContext>()
 					customerDetails: {
 						name: user?.name!,
 						phone: user?.phoneNumber!,
+						email: user?.email!,
 						address: values?.address,
 					},
 					customerInstructions: {

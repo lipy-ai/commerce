@@ -156,7 +156,7 @@ const route = new Hono<ServerContext>()
 					handle: `${slugify(vals.name)}-${idGenerate()}`,
 					createdAt: new Date(),
 				})
-				.returning(["id"])
+				.returningAll()
 				.executeTakeFirst();
 
 			if (!store)

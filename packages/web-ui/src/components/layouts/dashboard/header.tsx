@@ -28,7 +28,7 @@ export const DashboardHeader = ({
 		<div className="sticky top-0 z-50 bg-background print:hidden">
 			<div
 				className={cn(
-					"flex justify-between gap-4 w-full p-3 items-center bg-accent/50  h-14 border-b",
+					"flex justify-between gap-4 w-full p-3 items-center bg-card  h-14 border-b",
 					className,
 				)}
 			>

@@ -6,26 +6,19 @@ import { trimTrailingSlash } from "hono/trailing-slash";
 
 import { logger } from "./lib/logger";
 
-import { emitter } from "@hono/event-emitter";
 import { secureHeaders } from "hono/secure-headers";
 import { auth } from "./auth";
 import { db, pingDatabase } from "./db";
 import env from "./env";
-import { handlers } from "./events";
 import { HTTPError } from "./lib/exception";
 import { globalError } from "./lib/globalError";
-import {
-	STORE_ROLES,
-	authMiddleware,
-	hasStorePermission,
-} from "./middlewares/auth";
+import { authMiddleware, hasStorePermission } from "./middlewares/auth";
 import { corsMiddleware } from "./middlewares/cors";
 import { globalMiddleware } from "./middlewares/global";
 import { addressRoute } from "./routes/address";
 import { cartRoute } from "./routes/cart";
 import { merchantComboboxRoute } from "./routes/merchantRoutes/combobox";
 import { merchantCustomerRoute } from "./routes/merchantRoutes/customer";
-import { eventsRoute } from "./routes/merchantRoutes/events";
 import { merchantInventoryRoute } from "./routes/merchantRoutes/inventory";
 import { merchantOrderRoute } from "./routes/merchantRoutes/order";
 import { merchantProductRoute } from "./routes/merchantRoutes/product";
@@ -42,13 +35,11 @@ export const app = new Hono<ServerContext>();
 app.use("*", corsMiddleware);
 
 // Generic middlewares
-
 app.use(secureHeaders());
 // app.use(tracing);
 app.use(httpLogger());
 app.use(trimTrailingSlash());
 app.use("*", globalMiddleware);
-app.use(emitter(handlers));
 
 if (env.NODE_ENV === "development") {
 	logger.info("Available routes:");

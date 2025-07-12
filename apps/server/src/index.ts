@@ -1,6 +1,10 @@
+import { emitter } from "@hono/event-emitter";
 import { app } from "./app";
 import env from "./env";
+import { handlers } from "./events";
 import { logger } from "./lib/logger";
+
+// app.use(emitter(handlers));
 
 const port = env.PORT;
 // eslint-disable-next-line no-console

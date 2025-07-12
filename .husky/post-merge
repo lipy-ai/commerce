@@ -1,1 +1,2 @@
 bun install
+bun pm trust --all

@@ -2,7 +2,7 @@
 	"name": "merchant",
 	"private": true,
 	"type": "module",
-	"packageManager": "bun@1.1.21",
+	"packageManager": "bun@1.2.18",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",

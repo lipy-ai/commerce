@@ -60,6 +60,7 @@ const DrawerDialogSwitcher = ({
 				}}
 				onEscapeKeyDown={(e) => !dismissible && e.preventDefault()}
 				onInteractOutside={(e) => !dismissible && e.preventDefault()}
+				dismissible={dismissible}
 			>
 				{children}
 			</DialogContent>

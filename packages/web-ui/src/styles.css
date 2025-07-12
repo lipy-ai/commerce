@@ -269,6 +269,28 @@
 		}
 	}
 
+	.rise-shake {
+		animation: jump-shaking 0.5s infinite;
+	}
+
+	@keyframes jump-shaking {
+		0% {
+			transform: rotate(0deg);
+		}
+		25% {
+			transform: rotate(5deg);
+		}
+		50% {
+			transform: rotate(0deg);
+		}
+		75% {
+			transform: rotate(-5deg);
+		}
+		100% {
+			transform: rotate(0deg);
+		}
+	}
+
 	/* Slide Right Transition */
 	html::active-view-transition-type(slide-right) {
 		&::view-transition-old(main-content) {

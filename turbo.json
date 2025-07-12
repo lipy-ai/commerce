@@ -6,7 +6,7 @@
 		"build": {
 			"dependsOn": ["^build"],
 			"inputs": ["$TURBO_DEFAULT$", ".env*"],
-			"outputs": [".output/**", ".vinxi/**", "dist/**", "build/**"]
+			"outputs": [".output/**", ".nitro/**", "dist/**", "build/**"]
 		},
 		"start": {
 			"cache": true,

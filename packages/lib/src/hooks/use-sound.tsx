@@ -26,6 +26,7 @@ export function useSoundPlayer(
 
 	const play = useCallback(() => {
 		loadAudio();
+
 		audioRef.current?.pause(); // Ensure restart
 		audioRef.current!.currentTime = 0;
 		audioRef.current?.play().catch(console.error);

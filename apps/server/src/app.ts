@@ -14,11 +14,7 @@ import env from "./env";
 import { handlers } from "./events";
 import { HTTPError } from "./lib/exception";
 import { globalError } from "./lib/globalError";
-import {
-	STORE_ROLES,
-	authMiddleware,
-	hasStorePermission,
-} from "./middlewares/auth";
+import { authMiddleware, hasStorePermission } from "./middlewares/auth";
 import { corsMiddleware } from "./middlewares/cors";
 import { globalMiddleware } from "./middlewares/global";
 import { addressRoute } from "./routes/address";
@@ -42,12 +38,12 @@ export const app = new Hono<ServerContext>();
 app.use("*", corsMiddleware);
 
 // Generic middlewares
-
 app.use(secureHeaders());
 // app.use(tracing);
 app.use(httpLogger());
 app.use(trimTrailingSlash());
 app.use("*", globalMiddleware);
+
 app.use(emitter(handlers));
 
 if (env.NODE_ENV === "development") {
@@ -86,8 +82,8 @@ export const routes = app
 	.route("/merchant/order", merchantOrderRoute)
 	.route("/merchant/customer", merchantCustomerRoute)
 	.route("/merchant/combobox", merchantComboboxRoute)
-	.route("/merchant/inventory", merchantInventoryRoute);
-// .route("/events", eventsRoute);
+	.route("/merchant/inventory", merchantInventoryRoute)
+	.route("/events", eventsRoute);
 
 // routes.basePath("/admin").route("/category", categoryRouter);
 

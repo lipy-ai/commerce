@@ -1,4 +1,4 @@
-import EventsProvider from "@/providers/event";
+import EventsProvider from "@/events";
 import { DefaultCatchBoundary, NotFound } from "@/router";
 import { seo } from "@/utils/seo";
 import { env } from "@envClient";

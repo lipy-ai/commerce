@@ -25,13 +25,15 @@
 		"prettier": "^3.6.2",
 		"turbo": "^2.5.4",
 		"typescript": "5.8.2",
-		"vite-tsconfig-paths": "^5.1.4"
+		"vite-tsconfig-paths": "^5.1.4",
+		"@types/bun": "latest"
 	},
 	"engines": {
 		"node": ">=18"
 	},
-	"packageManager": "bun@1.1.21",
+	"packageManager": "bun@1.2.18",
 	"workspaces": ["apps/*", "packages/*"],
+	"lockfileVersion": 0,
 	"dependencies": {
 		"@lottiefiles/dotlottie-react": "^0.13.5",
 		"@lottiefiles/react-lottie-player": "^3.6.0",
@@ -39,9 +41,9 @@
 		"@radix-ui/react-alert-dialog": "^1.1.14",
 		"@radix-ui/react-progress": "^1.1.7",
 		"@react-google-maps/api": "^2.20.7",
-		"@tanstack/react-router": "^1.124.0",
-		"@tanstack/react-start": "^1.124.1",
-		"@vis.gl/react-google-maps": "^1.5.3",
+		"@tanstack/react-router": "^1.127.3",
+		"@tanstack/react-start": "^1.127.4",
+		"@vis.gl/react-google-maps": "^1.5.4",
 		"dotenv-cli": "^8.0.0",
 		"embla-carousel-react": "^8.6.0",
 		"lint-staged": "^15.5.2",
@@ -52,5 +54,16 @@
 		"resend": "^4.6.0",
 		"vaul": "^1.1.2",
 		"vinxi": "^0.5.8"
-	}
+	},
+	"trustedDependencies": [
+		"@biomejs/biome",
+		"@parcel/watcher",
+		"@tailwindcss/oxide",
+		"core-js",
+		"esbuild",
+		"bun",
+		"msw"
+	],
+	"module": "index.ts",
+	"type": "module"
 }

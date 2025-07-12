@@ -1,9 +1,8 @@
-import { type BetterAuthPlugin, betterAuth } from "better-auth";
-import { emailOTP } from "better-auth/plugins";
-
 import { schema as s } from "@/db/schema";
 import { plunkSendEmail } from "@/services/ses";
 import { sendSMS } from "@/services/sns";
+import { type BetterAuthPlugin, betterAuth } from "better-auth";
+import { emailOTP } from "better-auth/plugins";
 import { phoneNumber } from "better-auth/plugins";
 import { organization } from "better-auth/plugins";
 import { redis } from "../cache";
@@ -61,7 +60,6 @@ const organizationsPlugin = organization({
 				activeOrganizationId: "activeStoreId",
 			},
 		},
-
 		organization: {
 			modelName: `${schema}.store`,
 			fields: {
@@ -221,6 +219,7 @@ export const auth = betterAuth({
 		deleteUser: {
 			enabled: true,
 		},
+
 		additionalFields: {
 			address: {
 				type: "string",

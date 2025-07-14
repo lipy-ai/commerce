@@ -1,6 +1,5 @@
 import { apiClient } from "@lipy/lib/api";
 import { useStore } from "@lipy/lib/hooks/use-store";
-import { authClient } from "@lipy/lib/providers/auth";
 import { useAPIMutation } from "@lipy/lib/utils/useQueryClient";
 import {
 	FormInput,
@@ -182,8 +181,7 @@ function RouteComponent() {
 	const store = useStore();
 
 	const mutation = useAPIMutation(apiClient.v1.shops, "$post", {
-		onSuccess: async (data) => {
-			await authClient.organization.setActive({ organizationId: data.id });
+		onSuccess: async () => {
 			router.navigate({ to: "/" });
 		},
 	});

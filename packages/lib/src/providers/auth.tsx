@@ -4,7 +4,6 @@ import type { AuthType } from "@lipy/server/types";
 import {
 	emailOTPClient,
 	inferAdditionalFields,
-	organizationClient,
 	phoneNumberClient,
 } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
@@ -14,8 +13,6 @@ export const authClient = createAuthClient({
 	plugins: [
 		inferAdditionalFields<AuthType>(),
 		emailOTPClient(),
-
-		organizationClient(),
 		phoneNumberClient(),
 	],
 });

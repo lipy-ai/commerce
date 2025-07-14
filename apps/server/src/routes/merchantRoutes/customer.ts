@@ -122,8 +122,10 @@ export const merchantCustomerRoute = new Hono<ServerContext>().get(
 // 						phoneNumber,
 // 						emailVerified: false,
 // 						phoneNumberVerified: false,
-// 						createdAt: new Date(),
-// 						updatedAt: new Date(),
+// 										createdAt: sql`now()`,
+
+// 										createdAt: sql`now()`,
+
 // 					})
 // 					.onConflict((oc) => oc.doNothing())
 // 					.returning("id")

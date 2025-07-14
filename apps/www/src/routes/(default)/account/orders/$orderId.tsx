@@ -95,7 +95,7 @@ function RouteComponent() {
 	return (
 		<>
 			{isLoading ? (
-				<Loading hideDefault />
+				<Loading />
 			) : !order ? (
 				<EmptyPage
 					title={"Order not found"}

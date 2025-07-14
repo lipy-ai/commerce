@@ -2,7 +2,7 @@ import { apiClient } from "@lipy/lib/api";
 import { authClient } from "@lipy/lib/providers/auth";
 import { useAPIMutation } from "@lipy/lib/utils/useQueryClient";
 // import { discordNotification } from "@lipy/server/notification/discord";
-import type { addressSchema } from "@lipy/server/routes/address";
+import type { addressSchema } from "@lipy/server/routes/loggedRoutes/address";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import {

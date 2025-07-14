@@ -5,7 +5,7 @@ import {
 	useAPIMutation,
 	useAPIQuery,
 } from "@lipy/lib/utils/useQueryClient";
-import type { addressSchema } from "@lipy/server/routes/address";
+import type { coreAddressSchema } from "@lipy/server/routes/loggedRoutes/address";
 import {
 	DrawerDialogHeader,
 	DrawerDialogSwitcher,
@@ -55,7 +55,7 @@ function RouteComponent() {
 	});
 
 	// Set store address when user selects it from GoogleMaps
-	const handleStoreAddress = (address: z.infer<typeof addressSchema>) => {
+	const handleStoreAddress = (address: z.infer<typeof coreAddressSchema>) => {
 		form.setValue("address", address, {
 			shouldValidate: true,
 			shouldDirty: true,

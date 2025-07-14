@@ -34,7 +34,7 @@ function RouteComponent() {
 	return (
 		<>
 			{isLoading ? (
-				<Loading hideDefault />
+				<Loading />
 			) : !data ? (
 				<EmptyPage
 					title="Shop not found"

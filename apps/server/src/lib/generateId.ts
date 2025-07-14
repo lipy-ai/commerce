@@ -3,6 +3,7 @@ import { customAlphabet } from "nanoid";
 type IType = {
 	prefix?: "ORD";
 	alphabet_type?: "0-9" | "0-9/A-Z/a-z" | "0-9/A-Z";
+	timestamp?: boolean;
 };
 export const idGenerate = (props?: IType) => {
 	const types = {
@@ -19,5 +20,5 @@ export const idGenerate = (props?: IType) => {
 
 	const nanoid = customAlphabet(types[props?.alphabet_type || "0-9/A-Z"], 6);
 
-	return `${props?.prefix ? `${props.prefix}-` : ""}${addTimeStamp()}${nanoid()}`;
+	return `${props?.prefix ? `${props.prefix}-` : ""}${props?.timestamp ? addTimeStamp() : ""}${nanoid()}`;
 };

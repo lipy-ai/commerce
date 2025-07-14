@@ -45,10 +45,9 @@ export interface ServerContext extends Env {
 		session:
 			| (typeof auth.$Infer.Session.session & {
 					activeStoreId: string | null;
-					activeStoreRole: keyof typeof STORE_ROLES | null;
+					activeStoreRole: (typeof STORE_ROLES)[number] | null;
 			  })
 			| null;
-		orgUser: Awaited<ReturnType<typeof hasPermission>> | null;
 	};
 }
 

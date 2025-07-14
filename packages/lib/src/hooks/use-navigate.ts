@@ -17,6 +17,10 @@ export const useRedirect = () => {
 		if (code === "NO_ACTIVE_STORE") {
 			navigate({ to: "/register" });
 		}
+
+		if (code === "INSUFFICIENT_PERMISSION") {
+			navigate({ to: "/error" });
+		}
 	};
 
 	return { handleNavigate };

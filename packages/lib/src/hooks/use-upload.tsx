@@ -1,12 +1,37 @@
 import { env } from "@envClient";
 import { useMutation } from "@tanstack/react-query";
+import type { InferResponseType } from "hono";
 import { useEffect, useRef, useState } from "react";
 import { apiClient } from "../api";
 import { useAPIMutation } from "../utils/useQueryClient";
+
 type UploadCallbacks = {
 	onRemove?: (id?: string) => void;
-	onSuccess?: (id?: string) => void;
+	onSuccess?: (
+		data: InferResponseType<typeof apiClient.v1.upload.presigned.$post>,
+	) => void;
 	onError?: (id?: string) => void;
+};
+
+export const useDeleteUpload = ({ onSuccess }: { onSuccess: () => void }) => {
+	const { mutateAsync, isPending } = useAPIMutation(
+		apiClient.v1.upload,
+		"$delete",
+		{
+			onSuccess: () => {
+				onSuccess();
+			},
+		},
+	);
+	const deleteFile = async (url: string) => {
+		await mutateAsync({
+			json: {
+				url,
+			},
+		});
+	};
+
+	return { deleteFile, isPending };
 };
 
 export function useUpload(
@@ -76,7 +101,7 @@ export function useUpload(
 		mutationFn: async (file: File) => {
 			const data = await getPresignedUrl(file);
 			await uploadWithProgress(data.presigned_url, file);
-			onSuccess?.(data.id);
+			onSuccess?.(data);
 			return data;
 		},
 		onError: (error: any) => {
@@ -101,6 +126,7 @@ export function useUpload(
 		abortController.current = new AbortController();
 	};
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		const timer = setTimeout(() => {
 			if (file && progress !== 100 && !uploadMutation.isPending) {

@@ -16,7 +16,7 @@ import { Route as dashboardIndexRouteImport } from './routes/(dashboard)/index'
 import { Route as authLogoutRouteImport } from './routes/(auth)/logout'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as dashboardAccountRouteRouteImport } from './routes/(dashboard)/account/route'
-import { Route as AcceptInvitationInvitationIdIndexRouteImport } from './routes/accept-invitation/$invitationId/index'
+import { Route as AcceptInvitationIdIndexRouteImport } from './routes/accept-invitation/$id/index'
 import { Route as dashboardStoreIndexRouteImport } from './routes/(dashboard)/store/index'
 import { Route as dashboardProductIndexRouteImport } from './routes/(dashboard)/product/index'
 import { Route as dashboardOrderIndexRouteImport } from './routes/(dashboard)/order/index'
@@ -68,12 +68,11 @@ const dashboardAccountRouteRoute = dashboardAccountRouteRouteImport.update({
   path: '/account',
   getParentRoute: () => dashboardRouteRoute,
 } as any)
-const AcceptInvitationInvitationIdIndexRoute =
-  AcceptInvitationInvitationIdIndexRouteImport.update({
-    id: '/accept-invitation/$invitationId/',
-    path: '/accept-invitation/$invitationId/',
-    getParentRoute: () => rootRouteImport,
-  } as any)
+const AcceptInvitationIdIndexRoute = AcceptInvitationIdIndexRouteImport.update({
+  id: '/accept-invitation/$id/',
+  path: '/accept-invitation/$id/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const dashboardStoreIndexRoute = dashboardStoreIndexRouteImport.update({
   id: '/store/',
   path: '/store/',
@@ -179,7 +178,7 @@ export interface FileRoutesByFullPath {
   '/order': typeof dashboardOrderIndexRoute
   '/product': typeof dashboardProductIndexRoute
   '/store': typeof dashboardStoreIndexRoute
-  '/accept-invitation/$invitationId': typeof AcceptInvitationInvitationIdIndexRoute
+  '/accept-invitation/$id': typeof AcceptInvitationIdIndexRoute
   '/order/$id': typeof dashboardOrderIdIndexRoute
 }
 export interface FileRoutesByTo {
@@ -203,7 +202,7 @@ export interface FileRoutesByTo {
   '/order': typeof dashboardOrderIndexRoute
   '/product': typeof dashboardProductIndexRoute
   '/store': typeof dashboardStoreIndexRoute
-  '/accept-invitation/$invitationId': typeof AcceptInvitationInvitationIdIndexRoute
+  '/accept-invitation/$id': typeof AcceptInvitationIdIndexRoute
   '/order/$id': typeof dashboardOrderIdIndexRoute
 }
 export interface FileRoutesById {
@@ -230,7 +229,7 @@ export interface FileRoutesById {
   '/(dashboard)/order/': typeof dashboardOrderIndexRoute
   '/(dashboard)/product/': typeof dashboardProductIndexRoute
   '/(dashboard)/store/': typeof dashboardStoreIndexRoute
-  '/accept-invitation/$invitationId/': typeof AcceptInvitationInvitationIdIndexRoute
+  '/accept-invitation/$id/': typeof AcceptInvitationIdIndexRoute
   '/(dashboard)/order/$id/': typeof dashboardOrderIdIndexRoute
 }
 export interface FileRouteTypes {
@@ -257,7 +256,7 @@ export interface FileRouteTypes {
     | '/order'
     | '/product'
     | '/store'
-    | '/accept-invitation/$invitationId'
+    | '/accept-invitation/$id'
     | '/order/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -281,7 +280,7 @@ export interface FileRouteTypes {
     | '/order'
     | '/product'
     | '/store'
-    | '/accept-invitation/$invitationId'
+    | '/accept-invitation/$id'
     | '/order/$id'
   id:
     | '__root__'
@@ -307,7 +306,7 @@ export interface FileRouteTypes {
     | '/(dashboard)/order/'
     | '/(dashboard)/product/'
     | '/(dashboard)/store/'
-    | '/accept-invitation/$invitationId/'
+    | '/accept-invitation/$id/'
     | '/(dashboard)/order/$id/'
   fileRoutesById: FileRoutesById
 }
@@ -317,7 +316,7 @@ export interface RootRouteChildren {
   authLoginRoute: typeof authLoginRoute
   authLogoutRoute: typeof authLogoutRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
-  AcceptInvitationInvitationIdIndexRoute: typeof AcceptInvitationInvitationIdIndexRoute
+  AcceptInvitationIdIndexRoute: typeof AcceptInvitationIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -371,11 +370,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof dashboardAccountRouteRouteImport
       parentRoute: typeof dashboardRouteRoute
     }
-    '/accept-invitation/$invitationId/': {
-      id: '/accept-invitation/$invitationId/'
-      path: '/accept-invitation/$invitationId'
-      fullPath: '/accept-invitation/$invitationId'
-      preLoaderRoute: typeof AcceptInvitationInvitationIdIndexRouteImport
+    '/accept-invitation/$id/': {
+      id: '/accept-invitation/$id/'
+      path: '/accept-invitation/$id'
+      fullPath: '/accept-invitation/$id'
+      preLoaderRoute: typeof AcceptInvitationIdIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(dashboard)/store/': {
@@ -556,8 +555,7 @@ const rootRouteChildren: RootRouteChildren = {
   authLoginRoute: authLoginRoute,
   authLogoutRoute: authLogoutRoute,
   RegisterIndexRoute: RegisterIndexRoute,
-  AcceptInvitationInvitationIdIndexRoute:
-    AcceptInvitationInvitationIdIndexRoute,
+  AcceptInvitationIdIndexRoute: AcceptInvitationIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

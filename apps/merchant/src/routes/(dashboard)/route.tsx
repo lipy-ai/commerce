@@ -67,9 +67,7 @@ function RouteComponent() {
 			mobileNav={mobileNav}
 			logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
 		>
-			<DashboardBody>
-				{isPending ? <Loading hideDefault /> : <Outlet />}
-			</DashboardBody>
+			<DashboardBody>{isPending ? <Loading /> : <Outlet />}</DashboardBody>
 		</DashboardLayout>
 	);
 }

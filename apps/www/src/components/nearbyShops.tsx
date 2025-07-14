@@ -102,7 +102,7 @@ export default function NearByShops() {
 			)}
 
 			{isFetching ? (
-				<Loading hideDefault />
+				<Loading />
 			) : !shops || shops.length === 0 ? (
 				<ComingSoonPage />
 			) : (

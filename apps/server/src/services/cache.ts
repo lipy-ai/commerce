@@ -1,19 +1,8 @@
-import { type DBTypes, Database } from "@/db";
-import { HTTPError } from "@/lib/exception";
+import { type ErrCode, HTTPError } from "@/lib/exception";
 import { Redis } from "ioredis";
 import env from "../env";
 
 export const redis = new Redis(env?.REDIS_URL!);
-
-export const redisKeys = {
-	store: {
-		single: (val: DBTypes["store"]["id"]) => `store:${val}`,
-	},
-	storeUser: {
-		single: (storeId: DBTypes["store"]["id"], userId: DBTypes["user"]["id"]) =>
-			`storeUser:${storeId}:${userId}`,
-	},
-};
 
 type CacheMissFn<T> = () => Promise<T>;
 
@@ -21,10 +10,12 @@ export const getOrCache = async <T>({
 	key,
 	cacheMissFn,
 	errorName,
+	errorCode,
 }: {
 	key: string;
 	cacheMissFn: CacheMissFn<T>;
 	errorName: string;
+	errorCode?: ErrCode;
 }) => {
 	const cache = await redis.get(key);
 	const getFromDB = async () => {
@@ -39,6 +30,7 @@ export const getOrCache = async <T>({
 
 	if (!result) {
 		throw new HTTPError(404, {
+			code: errorCode || undefined,
 			message: errorName,
 		});
 	}

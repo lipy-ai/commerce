@@ -33,7 +33,7 @@ function RouteComponent() {
 	return (
 		<>
 			{isLoading ? (
-				<Loading hideDefault />
+				<Loading />
 			) : !data || data.length === 0 ? (
 				<EmptyPage
 					title="No Products Found"

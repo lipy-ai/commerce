@@ -1,6 +1,7 @@
 import { idGenerate } from "@/lib/generateId";
 import { logger } from "@/lib/logger";
 import { faker } from "@faker-js/faker";
+import { sql } from "kysely";
 import { type DBTypes, db, dbClient } from ".";
 import { ORDER_STATUS, PRODUCT_TYPE } from "./schema";
 
@@ -19,7 +20,7 @@ const create = async (user: DBTypes["user"]) => {
 				name: faker.company.name(),
 				handle: faker.lorem.slug(),
 				image: faker.image.urlPicsumPhotos(), // Simulated logo URL
-				createdAt: new Date(),
+				createdAt: sql`now()`,
 				active: true,
 			})
 			.returningAll()
@@ -35,7 +36,7 @@ const create = async (user: DBTypes["user"]) => {
 				storeId: org.id!,
 				userId: user.id,
 				role: "owner",
-				createdAt: new Date(),
+				createdAt: sql`now()`,
 			})
 			.execute();
 	}
@@ -51,8 +52,8 @@ const create = async (user: DBTypes["user"]) => {
 					email: faker.internet.email(),
 					phoneNumberVerified: false,
 					emailVerified: false,
-					createdAt: new Date(),
-					updatedAt: new Date(),
+					createdAt: sql`now()`,
+					updatedAt: sql`now()`,
 				}),
 			),
 		)
@@ -90,7 +91,6 @@ const create = async (user: DBTypes["user"]) => {
 					price: Number(faker.commerce.price()),
 					maxPrice: Number(faker.commerce.price()),
 					category: faker.helpers.arrayElement(catIds),
-					storeId: org.id,
 					thumbnail: faker.image.urlPicsumPhotos(),
 					highlights: Array.from({ length: 5 }, () => ({
 						label: faker.commerce.productAdjective(),
@@ -110,7 +110,7 @@ const create = async (user: DBTypes["user"]) => {
 		.execute();
 
 	for (const p of products) {
-		await db
+		const variants = await db
 			.insertInto("productVariant")
 			.values(
 				Array.from({ length: 3 + Math.floor(Math.random() * 3) }).map(() => ({
@@ -136,6 +136,22 @@ const create = async (user: DBTypes["user"]) => {
 			)
 			.returningAll()
 			.execute();
+
+		for (const v of variants) {
+			await db
+				.insertInto("storeInventory")
+				.values({
+					id: crypto.randomUUID(),
+					storeId: org.id!,
+					price: Math.round(
+						Number(faker.commerce.price({ min: 100, max: 1000, dec: 0 })),
+					),
+					stock: Math.round(
+						Number(faker.commerce.price({ min: -1, max: 1000, dec: 0 })),
+					),
+				})
+				.execute();
+		}
 	}
 
 	const orders = await db

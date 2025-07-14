@@ -218,7 +218,7 @@ export const CartMainContent = () => {
 	return (
 		<>
 			{isLoading ? (
-				<Loading hideDefault />
+				<Loading />
 			) : !data || data.length === 0 ? (
 				<EmptyPage icon={ShoppingBag} title="Your Cart is Empty" label=" " />
 			) : (

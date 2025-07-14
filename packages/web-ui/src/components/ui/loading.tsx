@@ -1,15 +1,13 @@
 import { cn } from "@lipy/web-ui/lib/utils";
 
 export default function Loading({
-	title = "Loading...",
-	description = "Hold tight, we're processing your request.",
+	title = "",
+	description = "",
 	className,
-	hideDefault = false,
 }: {
 	title?: string;
 	description?: string;
 	className?: string;
-	hideDefault?: boolean;
 }) {
 	return (
 		<div
@@ -18,8 +16,8 @@ export default function Loading({
 				className,
 			)}
 		>
-			{!hideDefault && <h1 className="text-xl font-medium">{title}</h1>}
-			{!hideDefault && (
+			{!title && <h1 className="text-xl font-medium">{title}</h1>}
+			{!description && (
 				<h1 className="text-md text-muted-foreground">{description}</h1>
 			)}
 			<div className="loader" />

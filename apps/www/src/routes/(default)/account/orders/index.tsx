@@ -59,7 +59,7 @@ function RouteComponent() {
 		<>
 			<DashboardHeader title="My Orders" />
 			{isLoading ? (
-				<Loading hideDefault />
+				<Loading />
 			) : !data || data.length === 0 ? (
 				<EmptyPage
 					title={"You have no orders yet"}

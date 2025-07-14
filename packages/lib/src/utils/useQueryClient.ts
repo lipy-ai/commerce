@@ -136,8 +136,6 @@ export const apiQueryOptions = <
 		>;
 	}
 > => {
-	const { handleNavigate } = useRedirect();
-
 	const endpointFn = endpoint[method] as unknown as (
 		params: any,
 	) => Promise<Response>;
@@ -163,7 +161,6 @@ export const apiQueryOptions = <
 				cause: Record<string, any>;
 				message?: string;
 			};
-			handleNavigate((errorData as any)?.code);
 
 			const error = new Error(
 				`Request failed with status ${res.status}`,
@@ -202,8 +199,6 @@ export const apiMutationOptions = <
 		params: TVariables,
 	) => Promise<Response>;
 
-	const { handleNavigate } = useRedirect();
-
 	return {
 		mutationKey: getAPIQueryKey(endpoint, method, {} as any),
 		mutationFn: async (variables) => {
@@ -236,8 +231,6 @@ export const apiMutationOptions = <
 					});
 				}
 			}
-
-			handleNavigate(errorData?.code);
 
 			const error = new Error(
 				errorData.message || `Request failed with status ${res.status}`,
@@ -279,6 +272,8 @@ export const useAPIQuery = <
 	InferSelectReturnType<TResponse, Options["select"]>,
 	TError
 > => {
+	const { handleNavigate } = useRedirect();
+
 	const q = useRQQuery(
 		apiQueryOptions<T, M, Params, Options, TResponse, TError>(
 			endpoint,
@@ -287,6 +282,8 @@ export const useAPIQuery = <
 			options,
 		),
 	);
+	console.log((q.error as any)?.data?.code);
+	handleNavigate((q.error as any)?.data?.code);
 
 	return q;
 };
@@ -315,6 +312,8 @@ export const useAPISuspenseQuery = <
 	InferSelectReturnType<TResponse, Options["select"]>,
 	TError
 > => {
+	const { handleNavigate } = useRedirect();
+
 	const q = useRQSuspenseQuery(
 		apiQueryOptions<T, M, Params, Options, TResponse, TError>(
 			endpoint,
@@ -323,6 +322,7 @@ export const useAPISuspenseQuery = <
 			options,
 		),
 	);
+	handleNavigate((q.error as any)?.data?.code);
 
 	return q;
 };
@@ -342,6 +342,8 @@ export const useAPIMutation = <
 		"mutationFn" | "mutationKey"
 	> & { form?: UseFormReturn<any> },
 ): UseMutationResult<TResponse, TError, TVariables, TContext> => {
+	const { handleNavigate } = useRedirect();
+
 	const q = useRQMutation(
 		apiMutationOptions<T, M, TResponse, TError, TVariables, TContext>(
 			endpoint,
@@ -349,6 +351,7 @@ export const useAPIMutation = <
 			options,
 		),
 	);
+	handleNavigate((q.error as any)?.data?.code);
 
 	return q;
 };

@@ -156,7 +156,7 @@ export function MultiStepLayout({
 	if (loading) {
 		return (
 			<div className="p-8 flex-1 flex flex-col">
-				<Loading hideDefault />
+				<Loading />
 			</div>
 		);
 	}

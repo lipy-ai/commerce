@@ -20,10 +20,10 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "../ui/select";
-import { SingleImage, type SingleImageProps } from "../ui/single-image";
 import { Switch } from "../ui/switch";
 import { Textarea } from "../ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
+import { SingleImage, type SingleImageProps } from "../uploads/image";
 import { SearchInput } from "./searchInput";
 
 export const RequiredEl = <span className="text-red-700">*</span>;
@@ -284,7 +284,12 @@ export const FormImage = ({
 						alt={alt}
 						wrapperClassName={wrapperClassName}
 						imageClassName={imageClassName}
-						onSuccess={(data) => field.onChange(data || undefined)}
+						onSuccess={(data) => {
+							field.onChange(data?.url || undefined);
+						}}
+						onDelete={() => {
+							field.onChange(undefined);
+						}}
 					/>
 				);
 			}}

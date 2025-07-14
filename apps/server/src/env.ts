@@ -51,6 +51,7 @@ const EnvSchema = z.object({
 	VITE_WEB_URL: z.string(),
 	TRANSACTIONAL_EMAIL: z.string(),
 	DISCORD_WEBHOOK: z.string(),
+	RESEND_SECRET_KEY: z.string(),
 	TRUSTED_ORIGINS: z
 		.string()
 		.transform((t) => t.split(",").map((e) => e.trim())),

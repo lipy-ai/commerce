@@ -1,6 +1,7 @@
 import env from "@/env";
+import { HTTPError } from "@/lib/exception";
 import {
-	GetObjectCommand,
+	DeleteObjectCommand,
 	PutObjectCommand,
 	S3Client,
 } from "@aws-sdk/client-s3";
@@ -34,31 +35,20 @@ export async function getPresignedUrl({
 			ContentLength: contentLength,
 		}),
 		{ expiresIn: 3600 },
-	);
+	).catch((e) => {
+		throw new HTTPError(404, { message: "Failed to delete file!", cause: e });
+	});
 
 	return url;
 }
 
-export async function getFileUrl({ key }: { key: string }) {
-	const url = await getSignedUrl(
-		s3Client,
-		new GetObjectCommand({
-			Bucket: env.AWS_S3_BUCKET,
-			Key: key,
-		}),
-		{ expiresIn: 3600 },
-	);
+export async function s3DeleteFile({ key }: { key: string }) {
+	const cmd = new DeleteObjectCommand({
+		Bucket: env.AWS_S3_BUCKET,
+		Key: key,
+	});
 
-	return url;
-}
-
-export async function getDownloadUrl(objectName: string) {
-	return getSignedUrl(
-		s3Client,
-		new GetObjectCommand({
-			Bucket: env.AWS_S3_BUCKET,
-			Key: objectName,
-		}),
-		{ expiresIn: 3600 },
-	);
+	return await s3Client.send(cmd).catch((e) => {
+		throw new HTTPError(400, { message: "Failed to delete file!", cause: e });
+	});
 }

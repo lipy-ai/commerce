@@ -15,6 +15,13 @@
       "when": 1752303213011,
       "tag": "0001_wooden_centennial",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1752496028550,
+      "tag": "0002_young_la_nuit",
+      "breakpoints": true
     }
   ]
 }

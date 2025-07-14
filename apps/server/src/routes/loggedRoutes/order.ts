@@ -132,7 +132,7 @@ const route = new Hono<ServerContext>()
 				store.items?.push(item);
 			} else {
 				orders.push({
-					id: idGenerate({ prefix: "ORD" }),
+					id: idGenerate({ prefix: "ORD", timestamp: true }),
 					pk: crypto.randomUUID(),
 					status: "ordered",
 					items: [item],

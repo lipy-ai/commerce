@@ -4,10 +4,7 @@ import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { Link, createFileRoute } from "@tanstack/react-router";
-<<<<<<< HEAD
-=======
 import { AnimatePresence, motion } from "framer-motion";
->>>>>>> 3323559 (basic problems fixed)
 import { z } from "zod";
 
 export const Route = createFileRoute(
@@ -48,48 +45,6 @@ function RouteComponent() {
 	);
 
 	return (
-<<<<<<< HEAD
-		<div className="w-full relative">
-			<DashboardHeader className="bg-background" title="Search products" />
-
-			<SearchBar
-				className="w-full p-4 sticky top-0 z-50 bg-background"
-				fullPageSearch
-				placeholder={`Search in ${storeInfo?.name}`}
-			/>
-
-			<div>
-				{isFetching ? (
-					<ProductSkeleton />
-				) : !products || products.length === 0 ? (
-					<p className="p-4 font-medium text-lg">No result found for "{q}"</p>
-				) : (
-					<div className="grid grid-cols-2 gap-4 p-4">
-						{products.map((product) => (
-							<Link
-								key={product.id}
-								className="relative aspect-square rounded-xl overflow-hidden"
-								to="/$storeHandle/products/$productId"
-								params={{
-									storeHandle: storeHandle,
-									productId: product.id,
-								}}
-							>
-								<img
-									alt={product.title || ""}
-									src={product.thumbnail || ""}
-									className="w-full h-full object-cover"
-								/>
-								<div className="absolute bottom-0 w-full px-2 py-1 bg-black/70 backdrop-blur-md text-white text-sm font-medium line-clamp-1">
-									{product.title}
-								</div>
-							</Link>
-						))}
-					</div>
-				)}
-			</div>
-		</div>
-=======
 		<AnimatePresence>
 			<motion.div
 				initial={{ opacity: 0, y: 1000 }}
@@ -139,7 +94,6 @@ function RouteComponent() {
 				</div>
 			</motion.div>
 		</AnimatePresence>
->>>>>>> 3323559 (basic problems fixed)
 	);
 }
 

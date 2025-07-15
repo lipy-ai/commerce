@@ -76,7 +76,7 @@ function RouteComponent() {
 									src={product.thumbnail || ""}
 									className="w-full h-full object-cover"
 								/>
-								<div className="absolute bottom-0 w-full px-2 py-1 bg-black/50 backdrop-blur-md text-white text-sm font-medium line-clamp-1">
+								<div className="absolute bottom-0 w-full px-2 py-1 bg-black/80 backdrop-blur-md text-white text-sm font-medium line-clamp-1">
 									{product.title}
 								</div>
 							</Link>

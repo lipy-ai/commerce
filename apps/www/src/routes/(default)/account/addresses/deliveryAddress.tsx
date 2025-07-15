@@ -81,7 +81,7 @@ function RouteComponent() {
 	return (
 		<>
 			{!isLoaded || isLoading ? (
-				<Loading hideDefault />
+				<Loading />
 			) : data ? (
 				<motion.div
 					initial={{ opacity: 0, y: 1000 }}

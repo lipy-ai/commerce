@@ -62,7 +62,7 @@ function RouteComponent() {
 				</Link>
 			</DashboardHeader>
 			{isLoading ? (
-				<Loading hideDefault />
+				<Loading />
 			) : !data || data.length === 0 ? (
 				<EmptyPage
 					icon={MapPinHouse}

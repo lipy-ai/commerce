@@ -1,12 +1,14 @@
 // import { authClient } from "@lipy/lib/providers/auth";
+import { apiClient } from "@lipy/lib/api";
 import { useStore } from "@lipy/lib/hooks/use-store";
+import { formatAddress } from "@lipy/lib/utils/address";
 import { formatAmount } from "@lipy/lib/utils/intl";
+import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import {
 	Avatar,
 	AvatarFallback,
 	AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
-import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import {
 	Card,
@@ -15,11 +17,24 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@lipy/web-ui/components/ui/card";
+import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
-import { Check } from "lucide-react";
+import { Check, StoreIcon } from "lucide-react";
 import { Shirt, ShoppingCart, SquareUser, Store } from "lucide-react";
+
+import {
+	type ChartConfig,
+	ChartContainer,
+	ChartLegend,
+	ChartLegendContent,
+	ChartTooltip,
+	ChartTooltipContent,
+} from "@lipy/web-ui/components/ui/chart";
+import { format } from "date-fns";
+import type { InferResponseType } from "hono";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 const setupSteps = [
 	{
@@ -66,122 +81,181 @@ const setupSteps = [
 export const Route = createFileRoute("/(dashboard)/")({
 	component: RouteComponent,
 });
+
 const btns = [
+	{
+		name: "POS",
+		icon: StoreIcon,
+		className: "bg-yellow-400 text-foreground",
+		href: "/pos",
+	},
 	{
 		name: "Checkout",
 		icon: ShoppingCart,
 		className: "bg-emerald-600 text-primary-foreground",
+		href: "/checkout",
 	},
 	{
 		name: "Add Customer",
 		icon: SquareUser,
 		className: "bg-amber-600 text-primary-foreground",
+		href: "/customer/add",
 	},
 	{
 		name: "Add Product",
 		icon: Shirt,
 		className: "bg-indigo-600 text-primary-foreground",
+		href: "/product/add",
 	},
 ];
 function RouteComponent() {
 	const { data } = useStore();
 
+	const res = useAPIQuery(apiClient.v1.merchant.dashboard, "$get", {});
+
 	return (
 		<div className="h-full">
-			<div className="flex gap-4 px-4 py-4 items-center border-b">
-				<Avatar className="size-12 rounded bg-primary">
-					<AvatarImage
-						alt=""
-						className="object-cover"
-						src={
-							data?.image ||
-							"https://cdn.logojoy.com/wp-content/uploads/2018/05/18143901/8102.png"
-						}
-					/>
-					<AvatarFallback className="bg-primary text-primary-foreground">
-						<Store />
-					</AvatarFallback>
-				</Avatar>
-				<div>
-					<p>Welcome to,</p>
-					<h1 className="text-2xl">{data?.name || "Store"}</h1>
-				</div>
-			</div>
-
-			<div className="min-h-screen grid lg:grid-cols-12 divide-x">
-				<div className="col-span-8 py-4 divide-y">
-					<div className="grid grid-cols-3 gap-2 lg:gap-4 p-4">
-						{btns.map((d, i) => (
-							<div
-								key={i}
-								className={cn(
-									"px-2 py-4 lg:p-6 flex flex-col gap-2 items-center rounded text-center",
-									d.className,
-								)}
-							>
-								<div>
-									<d.icon className="size-8" />
-								</div>
-								<p className="text-sm lg:text-base">{d.name}</p>
-							</div>
-						))}
+			<div className="grid lg:grid-cols-12 divide-x">
+				<div className="col-span-8 px-4 pb-4 flex gap-4 md:h-screen flex-col md:sticky md:top-0">
+					<div className="flex gap-4 px-4 py-4 items-center border-b">
+						<Avatar className="size-12 rounded bg-primary">
+							<AvatarImage
+								alt=""
+								className="object-cover"
+								src={
+									data?.image ||
+									"https://cdn.logojoy.com/wp-content/uploads/2018/05/18143901/8102.png"
+								}
+							/>
+							<AvatarFallback className="bg-primary text-primary-foreground">
+								<Store />
+							</AvatarFallback>
+						</Avatar>
+						<div>
+							<p>Welcome to,</p>
+							<h1 className="text-2xl">{data?.name || "Store"}</h1>
+						</div>
 					</div>
-					<ShopSetupStatus />
+					<Card className="">
+						<CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4">
+							{btns.map((d, i) => (
+								<Link
+									key={i}
+									className={cn(
+										"p-4 flex flex-col gap-2 items-center rounded justify-center text-center md:aspect-square cursor-pointer hover:opacity-85",
+										d.className,
+									)}
+									to={d.href}
+								>
+									<div>
+										<d.icon className="size-8" />
+									</div>
+									<p className="text-sm lg:text-base">{d.name}</p>
+								</Link>
+							))}
+						</CardContent>
+					</Card>
+					<ChartBarInteractive
+						data={res.data?.counts}
+						isLoading={res.isLoading}
+					/>
 
 					<div className="lg:hidden">
-						<Orders />
+						<Orders data={res.data?.pendingOrders} isLoading={res.isLoading} />
 					</div>
 				</div>
-				<div className="col-span-4 hidden lg:block h-screen overflow-y-auto">
-					<Orders />
+				<div className="col-span-4 hidden lg:flex flex-col p-4">
+					<Orders data={res.data?.pendingOrders} isLoading={res.isLoading} />
 				</div>
 			</div>
 		</div>
 	);
 }
 
-function Orders() {
+function Orders({
+	data,
+	isLoading,
+}: {
+	data:
+		| InferResponseType<
+				typeof apiClient.v1.merchant.dashboard.$get
+		  >["pendingOrders"]
+		| undefined;
+	isLoading: boolean;
+}) {
+	if (isLoading) {
+		return <Skeleton className="flex-1" />;
+	}
+
+	if (!data || data.length === 0) {
+		return (
+			<Card className="">
+				<CardHeader>
+					<CardTitle>No Incoming Orders.</CardTitle>
+				</CardHeader>
+			</Card>
+		);
+	}
+
 	return (
-		<>
+		<Card>
+			<CardHeader>
+				<CardTitle>Pending Orders</CardTitle>
+			</CardHeader>
 			{/* <DashboardHeader title="Recent Orders" hideBackBtn /> */}
-			<div className="bg-background divide-y">
-				{[...Array(40)].map((_, index) => (
-					<div className="flex p-4" key={index}>
-						<div className="flex w-full gap-4 justify-between text-base lg:text-sm">
-							<div className="flex-1">
-								<p className="text-xs font-light">#2564432</p>
-								<p className="font-medium inline-flex items-center truncate ">
-									Kundan Bhosale
-								</p>
-								<p className="font-light">932554253424</p>
-							</div>
+			<CardContent className="divide-y">
+				{data.map((v, i) => {
+					return (
+						<div key={i} className="py-4 space-y-2">
+							<div className="flex">
+								<div className="flex w-full gap-4 justify-between text-base lg:text-sm">
+									<div className="flex-1 flex gap-2">
+										<div
+											className={cn(
+												"border size-12 text-[7px] break-words text-center text-balance flex flex-col items-center justify-center",
 
-							<div className="w-fit text-right">
-								<p className="font-semibold text-lg">
-									{formatAmount("inr", 320)}
-								</p>
-								<Badge>Delivery in 20 mins</Badge>
-							</div>
+												v.status === "ordered" &&
+													"text-primary-foreground bg-red-800",
+												v.status === "accepted" &&
+													"text-primary-foreground bg-blue-700",
+												v.status === "packed" && "text-foreground bg-amber-400",
+												v.status === "out_for_delivery" &&
+													"text-primary-foreground bg-green-700",
+											)}
+										>
+											<span className="uppercase">
+												{v.status?.replaceAll("_", " ")}
+											</span>
+										</div>
+										<div className="flex-1">
+											<p className="text-xs font-light">{v.id}</p>
+											<p className="font-medium truncate ">
+												{v.customerDetails?.name}
+											</p>
+										</div>
+									</div>
 
-							{/* <Link
-								to="/"
-								className={cn(
-									buttonVariants({ variant: "outline", size: "icon" }),
-								)}
-							>
-								<ArrowRight />
-							</Link> */}
+									<div className="w-fit text-right">
+										<p className="font-semibold">
+											{formatAmount("inr", v.totalAmount || 0)}
+										</p>
+									</div>
+								</div>
+							</div>
+							<p className="text-xs">
+								{formatAddress(v.customerDetails?.address as any)}
+							</p>
 						</div>
-					</div>
-				))}
-			</div>
-		</>
+					);
+				})}
+			</CardContent>
+		</Card>
 	);
 }
 
 export function ShopSetupStatus() {
 	return (
-		<Card className="p-4 m-4">
+		<Card className="p-4">
 			<CardHeader className="">
 				<CardTitle>Complete your store setup</CardTitle>
 				<CardDescription>
@@ -196,18 +270,12 @@ export function ShopSetupStatus() {
 							<div className="relative">
 								{index !== setupSteps.length - 1 && (
 									<div
-										className={cn(
-											"absolute w-0.5 z-0  top-full left-1/2",
-											item.completed ? "bg-primary" : "bg-muted-foreground",
-										)}
+										className={cn("absolute w-0.5 z-0  top-full left-1/2")}
 									/>
 								)}
 								<div
 									className={cn(
 										"size-10 flex items-center justify-center rounded-full",
-										item.completed
-											? "bg-primary"
-											: "bg-background border-2 border-muted-foreground",
 									)}
 								>
 									{item.completed ? (
@@ -228,6 +296,79 @@ export function ShopSetupStatus() {
 						</div>
 					</div>
 				))}
+			</CardContent>
+		</Card>
+	);
+}
+
+export function ChartBarInteractive({
+	data,
+	isLoading,
+}: {
+	data:
+		| InferResponseType<typeof apiClient.v1.merchant.dashboard.$get>["counts"]
+		| undefined;
+	isLoading: boolean;
+}) {
+	const chartConfig = {
+		views: {
+			label: "Page Views",
+		},
+		pending: {
+			label: "Pending",
+			color: "var(--chart-1)",
+		},
+		completed: {
+			label: "Completed",
+			color: "var(--chart-2)",
+		},
+		returned: {
+			label: "Returned",
+			color: "var(--chart-3)",
+		},
+	} satisfies ChartConfig;
+
+	if (isLoading) {
+		return <Skeleton />;
+	}
+
+	return (
+		<Card className="w-full flex flex-col">
+			<CardHeader>
+				<CardTitle>Orders</CardTitle>
+				<CardDescription>Last 30 days</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<ChartContainer config={chartConfig} className="max-h-[300px] w-full">
+					<BarChart accessibilityLayer data={data || []}>
+						<CartesianGrid vertical={false} />
+						<XAxis
+							dataKey="date"
+							minTickGap={10}
+							tickFormatter={(v) => format(v, "dd MMM")}
+						/>
+						<ChartTooltip content={<ChartTooltipContent hideLabel />} />
+						<ChartLegend content={<ChartLegendContent />} />
+						<Bar
+							dataKey="pending"
+							stackId="a"
+							fill="var(--color-pending)"
+							radius={[0, 0, 4, 4]}
+						/>
+						<Bar
+							dataKey="completed"
+							stackId="a"
+							fill="var(--color-completed)"
+							radius={[0, 0, 4, 4]}
+						/>
+						<Bar
+							dataKey="returned"
+							stackId="a"
+							fill="var(--color-returned)"
+							radius={[0, 0, 4, 4]}
+						/>
+					</BarChart>
+				</ChartContainer>
 			</CardContent>
 		</Card>
 	);

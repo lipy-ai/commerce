@@ -1,16 +1,18 @@
 import { db } from "@/db";
 import { STORE_TYPE } from "@/db/schema";
+import { updateSession } from "@/helpers/session";
 import { HTTPError } from "@/lib/exception";
 import { idGenerate } from "@/lib/generateId";
 import { zValidator } from "@/middlewares/validator";
 import { emailSchema, listZodSchema, phoneSchema } from "@/schema/common";
 import type { ServerContext } from "@/types";
+import { isBefore } from "date-fns";
 import { Hono } from "hono";
 import { sql } from "kysely";
-import { jsonBuildObject } from "kysely/helpers/postgres"; // Use 'mysql' or 'sqlite' if needed
+import { jsonBuildObject } from "kysely/helpers/postgres";
 import slugify from "slugify";
 import { z } from "zod";
-import { coreAddressSchema } from "./address";
+import { coreAddressSchema } from "../loggedRoutes/address";
 
 export const storeSchema = z.object({
 	name: z.string(),
@@ -137,6 +139,8 @@ const route = new Hono<ServerContext>()
 	)
 	.post("/", zValidator("json", storeSchema), async (c) => {
 		const session = c.get("session");
+		const user = c.get("user");
+
 		const { payments, ...vals } = c.req.valid("json");
 
 		const oldStore = await db
@@ -154,13 +158,14 @@ const route = new Hono<ServerContext>()
 					...vals,
 					id: crypto.randomUUID(),
 					handle: `${slugify(vals.name)}-${idGenerate()}`,
-					createdAt: new Date(),
+					createdAt: sql`now()`,
 				})
 				.returningAll()
 				.executeTakeFirst();
 
-			if (!store)
+			if (!store) {
 				throw new HTTPError(400, { message: "Failed to create store." });
+			}
 
 			await trx
 				.insertInto("storePayments")
@@ -178,14 +183,83 @@ const route = new Hono<ServerContext>()
 					storeId: store.id,
 					userId: session?.userId!,
 					role: "owner",
-					createdAt: new Date(),
+					createdAt: sql`now()`,
 				})
 				.executeTakeFirst();
 
+			await updateSession(session?.token!, {
+				session: {
+					...(session as any),
+					activeStoreId: store.id,
+					activeStoreRole: "owner",
+				},
+				user,
+			});
+
 			return store;
 		});
+
 		c.get("emitter").emit(c, "store:created", store);
 		return c.json(store);
-	});
+	})
+	.post(
+		"/invitation/:id/:type",
+		zValidator(
+			"param",
+			z.object({ id: z.string().uuid(), type: z.enum(["accept", "reject"]) }),
+		),
+		async (c) => {
+			const user = c.get("user");
+			const session = c.get("session");
+
+			const { id, type } = c.req.valid("param");
+
+			const inv = await db
+				.selectFrom("storeInvitation")
+				.where("id", "=", id)
+				.selectAll()
+				.executeTakeFirst();
+
+			if (!inv) {
+				throw new HTTPError(404, { message: "Invitation not found!" });
+			}
+			if (user?.email !== inv.email) {
+				throw new HTTPError(404, {
+					message: "User email mismatch!",
+				});
+			}
+
+			if (isBefore(new Date(inv.expiresAt), new Date())) {
+				throw new HTTPError(404, { message: "Invitation expired!" });
+			}
+
+			await db.transaction().execute(async (trx) => {
+				await trx.deleteFrom("storeInvitation").where("id", "=", id).execute();
+				if (type === "accept") {
+					await trx
+						.insertInto("storeMember")
+						.values({
+							id: crypto.randomUUID(),
+							storeId: inv.storeId,
+							userId: user.id,
+							role: inv.role as any,
+							createdAt: sql`now()`,
+						})
+						.execute();
+
+					await updateSession(session?.token!, {
+						session: {
+							...(session as any),
+							activeStoreId: inv.storeId,
+							activeStoreRole: inv.role,
+						},
+						user,
+					});
+				}
+			});
+
+			return c.json({ success: true });
+		},
+	);
 
 export { route as shopRoute };

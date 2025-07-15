@@ -25,12 +25,14 @@ export default function QueryProvider({
 			new QueryClient({
 				defaultOptions: {
 					queries: {
-						networkMode: "offlineFirst",
+						// networkMode: "offlineFirst",
 						staleTime: 60 * 1000,
 						retry: 1,
+						retryDelay: (attemptIndex) =>
+							Math.min(1000 * 2 ** attemptIndex, 30000),
 					},
 					mutations: {
-						networkMode: "offlineFirst",
+						// networkMode: "offlineFirst",
 						onError: handleThrowOnError,
 					},
 				},

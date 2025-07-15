@@ -1,4 +1,7 @@
-import type { addressSchema, coreAddressSchema } from "@/routes/address";
+import type {
+	addressSchema,
+	coreAddressSchema,
+} from "@/routes/loggedRoutes/address";
 import { sql } from "drizzle-orm";
 import {
 	bigint,
@@ -185,7 +188,7 @@ export const storeMember = schema.table(
 
 export const storeInvitation = schema.table("storeInvitation", {
 	id: uuid("id").primaryKey(),
-	organizationId: uuid("storeId")
+	storeId: uuid("storeId")
 		.notNull()
 		.references(() => store.id, { onDelete: "cascade" }),
 	email: text("email").notNull(),
@@ -217,14 +220,8 @@ export const upload = schema.table("upload", {
 	name: text("name").notNull(),
 	path: text("path"),
 	url: text("url"),
-	uploadedBy: uuid("uploadedBy")
-		.notNull()
-		.references(() => user.id, { onDelete: "cascade" }),
-	storeId: uuid("storeId").references(() => store.id, {
-		onDelete: "cascade",
-	}),
+	deletedAt: timestamp("deletedAt"),
 	createdAt: timestamp("createdAt").notNull(),
-	updatedAt: timestamp("updatedAt").notNull(),
 });
 
 export const category = schema.table("category", {

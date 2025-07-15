@@ -10,6 +10,7 @@ import { cn } from "@lipy/web-ui/lib/utils";
 type T = Parameters<typeof Button>[0];
 interface CopyButtonProps extends T {
 	value: string;
+	icon?: React.ReactNode;
 }
 
 export async function copyToClipboardWithMeta(value: string) {
@@ -19,11 +20,14 @@ export async function copyToClipboardWithMeta(value: string) {
 export function CopyButton({
 	value,
 	className,
+	size = "icon-sm",
 	variant = "ghost",
+	icon,
 	...props
 }: CopyButtonProps) {
 	const [hasCopied, setHasCopied] = React.useState(false);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	React.useEffect(() => {
 		setTimeout(() => {
 			setHasCopied(false);
@@ -32,10 +36,10 @@ export function CopyButton({
 
 	return (
 		<Button
-			size="icon"
+			size={size}
 			type="button"
 			variant={variant}
-			className={cn("relative z-10 h-6 w-6 ", className)}
+			className={cn("relative z-10", className)}
 			onClick={() => {
 				copyToClipboardWithMeta(value);
 				setHasCopied(true);
@@ -43,11 +47,7 @@ export function CopyButton({
 			{...props}
 		>
 			<span className="sr-only">Copy</span>
-			{hasCopied ? (
-				<CheckIcon className="size-4" />
-			) : (
-				<ClipboardIcon className="size-4" />
-			)}
+			{hasCopied ? <CheckIcon /> : icon ? icon : <ClipboardIcon />}
 		</Button>
 	);
 }

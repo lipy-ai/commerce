@@ -94,7 +94,7 @@ export function AccountPage() {
 	return (
 		<>
 			{isPending ? (
-				<Loading hideDefault />
+				<Loading />
 			) : (
 				<div>
 					<DashboardHeader title="Settings" className="lg:hidden" />

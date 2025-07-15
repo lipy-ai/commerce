@@ -1,11 +1,10 @@
 import { schema as s } from "@/db/schema";
+import { redis } from "@/services/cache";
 import { plunkSendEmail } from "@/services/ses";
 import { sendSMS } from "@/services/sns";
-import { type BetterAuthPlugin, betterAuth } from "better-auth";
+import { betterAuth } from "better-auth";
 import { emailOTP } from "better-auth/plugins";
 import { phoneNumber } from "better-auth/plugins";
-import { organization } from "better-auth/plugins";
-import { redis } from "../cache";
 import { db } from "../db";
 import env from "../env";
 import emailHarmony from "./plugins/emailValidator";
@@ -53,60 +52,61 @@ const socialProviders = {
 };
 
 const schema = s.schemaName;
-const organizationsPlugin = organization({
-	schema: {
-		session: {
-			fields: {
-				activeOrganizationId: "activeStoreId",
-			},
-		},
-		organization: {
-			modelName: `${schema}.store`,
-			fields: {
-				name: "name",
-				slug: "handle",
-				logo: "image",
-				metadata: "metadata",
-				createdAt: "createdAt",
-			},
-		},
-		member: {
-			modelName: `${schema}.storeMember`,
-			fields: {
-				userId: "userId",
-				organizationId: "storeId",
-				role: "role",
-				createdAt: "createdAt",
-			},
-		},
-		invitation: {
-			modelName: `${schema}.storeInvitation`,
-			fields: {
-				organizationId: "storeId",
-				email: "email",
-				role: "role",
-				status: "status",
-				expiresAt: "expiresAt",
-				inviterId: "inviterId",
-			},
-		},
-	},
 
-	async sendInvitationEmail(data) {
-		const inviteLink = `${env.VITE_MERCHANT_URL}/accept-invitation/${data.id}`;
-		// await sendTransactionalEmail({
-		// 	to: [data.email],
-		// 	subject: `Invitation to join ${data.organization.name}`,
-		// 	html: `You have been invited to join ${data.organization.name} as ${data.role}. Click the link to join: ${inviteLink}`,
-		// });
+// const organizationsPlugin = organization({
+// 	schema: {
+// 		session: {
+// 			fields: {
+// 				activeOrganizationId: "activeStoreId",
+// 			},
+// 		},
+// 		organization: {
+// 			modelName: `${schema}.store`,
+// 			fields: {
+// 				name: "name",
+// 				slug: "handle",
+// 				logo: "image",
+// 				metadata: "metadata",
+// 				createdAt: "createdAt",
+// 			},
+// 		},
+// 		member: {
+// 			modelName: `${schema}.storeMember`,
+// 			fields: {
+// 				userId: "userId",
+// 				organizationId: "storeId",
+// 				role: "role",
+// 				createdAt: "createdAt",
+// 			},
+// 		},
+// 		invitation: {
+// 			modelName: `${schema}.storeInvitation`,
+// 			fields: {
+// 				organizationId: "storeId",
+// 				email: "email",
+// 				role: "role",
+// 				status: "status",
+// 				expiresAt: "expiresAt",
+// 				inviterId: "inviterId",
+// 			},
+// 		},
+// 	},
 
-		await plunkSendEmail({
-			to: data.email,
-			subject: `Invitation to join ${data.organization.name}`,
-			body: `You have been invited to join ${data.organization.name} as ${data.role}. Click the link to join: ${inviteLink}`,
-		});
-	},
-}) as BetterAuthPlugin;
+// 	async sendInvitationEmail(data) {
+// 		const inviteLink = `${env.VITE_MERCHANT_URL}/accept-invitation/${data.id}`;
+// 		// await sendTransactionalEmail({
+// 		// 	to: [data.email],
+// 		// 	subject: `Invitation to join ${data.organization.name}`,
+// 		// 	html: `You have been invited to join ${data.organization.name} as ${data.role}. Click the link to join: ${inviteLink}`,
+// 		// });
+
+// 		await plunkSendEmail({
+// 			to: data.email,
+// 			subject: `Invitation to join ${data.organization.name}`,
+// 			body: `You have been invited to join ${data.organization.name} as ${data.role}. Click the link to join: ${inviteLink}`,
+// 		});
+// 	},
+// }) as BetterAuthPlugin;
 
 export const auth = betterAuth({
 	disabledPaths: ["/error"],
@@ -118,7 +118,7 @@ export const auth = betterAuth({
 
 	socialProviders,
 	plugins: [
-		organizationsPlugin,
+		// organizationsPlugin,
 		emailOTPPlugin,
 		phoneOTPPlugin,
 		emailHarmony(),
@@ -167,44 +167,7 @@ export const auth = betterAuth({
 			await redis.del(key);
 		},
 	},
-	databaseHooks: {
-		session: {
-			create: {
-				before: async (session) => {
-					const store = await db
-						.selectFrom("store")
-						.innerJoin("storeMember", "storeMember.storeId", "store.id")
-						.innerJoin("user", "user.id", "storeMember.userId")
-						.where("user.id", "=", session.userId)
-						.select(["store.id", "storeMember.role"])
-						.limit(1)
-						.executeTakeFirst();
 
-					return {
-						data: {
-							...session,
-							activeStoreId: store?.id || null,
-							activeStoreRole: store?.role || null,
-							activeOrganizationId: store?.id || null,
-						},
-					};
-				},
-			},
-			update: {
-				before: async (session) => {
-					return {
-						data: {
-							...session,
-							...((session as any)?.activeOrganizationId && {
-								// activeOrganizationId: undefined,
-								activeStoreId: (session as any).activeOrganizationId,
-							}),
-						},
-					};
-				},
-			},
-		},
-	},
 	session: {
 		modelName: `${schema}.authSession`,
 
@@ -239,6 +202,31 @@ export const auth = betterAuth({
 
 	verification: {
 		modelName: `${schema}.authVerification`,
+	},
+	databaseHooks: {
+		session: {
+			create: {
+				before: async (session, context) => {
+					const store = await db
+						.selectFrom("store")
+						.innerJoin("storeMember", "storeMember.storeId", "store.id")
+						.innerJoin("user", "user.id", "storeMember.userId")
+						.where("user.id", "=", session.userId)
+						.select(["store.id", "storeMember.role"])
+						.limit(1)
+						.executeTakeFirst();
+
+					return {
+						data: {
+							...session,
+							activeStoreId: store?.id || null,
+							activeStoreRole: store?.role || null,
+							activeOrganizationId: store?.id || null,
+						},
+					};
+				},
+			},
+		},
 	},
 });
 

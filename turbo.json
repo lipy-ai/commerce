@@ -1,12 +1,46 @@
 {
 	"$schema": "https://turbo.build/schema.json",
 	"ui": "tui",
-	"globalEnv": ["*"],
+	"globalEnv": [
+		"NODE_ENV",
+		"VITE_AUTH_URL",
+		"VITE_MERCHANT_URL",
+		"VITE_WEB_URL",
+		"VITE_API_URL",
+		"VITE_CDN_URL",
+		"VITE_ALLOWED_HOSTS",
+		"DATABASE_URL",
+		"REDIS_URL",
+		"LOG_LEVEL",
+		"BETTER_AUTH_SECRET",
+		"BETTER_AUTH_URL",
+		"TRUSTED_ORIGINS",
+		"GOOGLE_CLIENT_ID",
+		"GOOGLE_CLIENT_SECRET",
+		"VITE_GOOGLE_MAP_API_KEY",
+		"TRANSACTIONAL_EMAIL",
+		"REPLY_EMAIL",
+		"AWS_SNS_REGION",
+		"AWS_SES_REGION",
+		"AWS_S3_REGION",
+		"AWS_S3_BUCKET",
+		"AWS_ACCESS_KEY",
+		"AWS_SECRET_KEY",
+		"PLUNK_SECRET_KEY",
+		"RESEND_SECRET_KEY",
+		"DISCORD_WEBHOOK"
+	],
 	"tasks": {
 		"build": {
 			"dependsOn": ["^build"],
 			"inputs": ["$TURBO_DEFAULT$", ".env*"],
-			"outputs": [".output/**", ".nitro/**", "dist/**", "build/**"]
+			"outputs": [
+				".output/**",
+				".nitro/**",
+				".tanstack/**",
+				"dist/**",
+				"build/**"
+			]
 		},
 		"start": {
 			"cache": true,

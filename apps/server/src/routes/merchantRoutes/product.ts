@@ -61,8 +61,8 @@ const route = new Hono<ServerContext>()
 					.onRef("si.productVariant", "=", "pv.id")
 					.on("si.storeId", "=", activeStoreId!),
 			)
-			.$if(!!category, (qb) => qb.where("category", "=", category!));
-		// .$if(!showAll, (qb) => qb.where("si.storeId", "=", activeStoreId!));
+			.$if(!!category, (qb) => qb.where("category", "=", category!))
+			.$if(!showAll, (qb) => qb.where("si.storeId", "=", activeStoreId!));
 
 		const countPromise = query
 			.select(sql<number>`count(*)`.as("total_count"))
@@ -123,8 +123,6 @@ const route = new Hono<ServerContext>()
 		async (c) => {
 			const { id } = c.req.valid("param");
 			const activeStoreId = c.var.session?.activeStoreId!;
-
-			// const activeStoreId = "be2973d8-1df7-442f-9893-3a153f7988ff";
 
 			const result = await db
 				.selectFrom("product as p")

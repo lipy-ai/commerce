@@ -7,11 +7,10 @@
 		"url": "https://x.com/kundanmbhosale"
 	},
 	"scripts": {
-		"env": "dotenv --",
-		"build": "bun run env turbo run build",
-		"start": "bun run env turbo run start",
-		"dev": "bun run env turbo run dev",
-		"docker-dev": "docker compose up -d && bun run dev",
+		"build": "turbo run build",
+		"start": "turbo run start",
+		"dev": "dotenv -- turbo run dev",
+		"docker-dev": "dotenv -- docker compose up -d && bun run dev",
 		"lint": "turbo run lint",
 		"format": "biome format \"**/*.{ts,tsx}\"  --write",
 		"check-types": "turbo run check-types",
@@ -20,13 +19,13 @@
 	"devDependencies": {
 		"@commitlint/cli": "^19.8.1",
 		"@commitlint/config-conventional": "^19.8.1",
-		"@vitejs/plugin-react": "^4.6.0",
 		"husky": "^9.1.7",
-		"prettier": "^3.6.2",
 		"turbo": "^2.5.4",
 		"typescript": "5.8.2",
-		"vite-tsconfig-paths": "^5.1.4",
-		"@types/bun": "latest"
+		"@types/bun": "latest",
+		"vite": "^6.3.5",
+		"dotenv-cli": "^8.0.0",
+		"lint-staged": "^15.5.2"
 	},
 	"engines": {
 		"node": ">=18"
@@ -34,25 +33,7 @@
 	"packageManager": "bun@1.2.18",
 	"workspaces": ["apps/*", "packages/*"],
 	"lockfileVersion": 0,
-	"dependencies": {
-		"@radix-ui/react-accordion": "^1.2.11",
-		"@radix-ui/react-alert-dialog": "^1.1.14",
-		"@radix-ui/react-progress": "^1.1.7",
-		"@react-google-maps/api": "^2.20.7",
-		"@tanstack/react-router": "^1.127.3",
-		"@tanstack/react-start": "^1.127.4",
-		"@vis.gl/react-google-maps": "^1.5.4",
-		"dotenv-cli": "^8.0.0",
-		"embla-carousel-react": "^8.6.0",
-		"lint-staged": "^15.5.2",
-		"lucide-react": "^0.492.0",
-		"nuqs": "^2.4.3",
-		"react-checkmark": "^2.1.1",
-		"react-google-maps": "^9.4.5",
-		"resend": "^4.6.0",
-		"vaul": "^1.1.2",
-		"vinxi": "^0.5.8"
-	},
+	"dependencies": {},
 	"trustedDependencies": [
 		"@biomejs/biome",
 		"@parcel/watcher",

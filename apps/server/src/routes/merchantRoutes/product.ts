@@ -61,8 +61,8 @@ const route = new Hono<ServerContext>()
 					.onRef("si.productVariant", "=", "pv.id")
 					.on("si.storeId", "=", activeStoreId!),
 			)
-			.$if(!!category, (qb) => qb.where("category", "=", category!))
-			.$if(!showAll, (qb) => qb.where("si.storeId", "=", activeStoreId!));
+			.$if(!!category, (qb) => qb.where("category", "=", category!));
+		// .$if(!showAll, (qb) => qb.where("si.storeId", "=", activeStoreId!));
 
 		const countPromise = query
 			.select(sql<number>`count(*)`.as("total_count"))

@@ -2,11 +2,12 @@ import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import type { STORE_TYPE } from "@lipy/server/db/schema";
 import { ScrollingTabs } from "@lipy/web-ui/components/custom-ui/scrollable-tabs";
-import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
 import ComingSoonPage from "@lipy/web-ui/components/pages/coming-soon";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
+import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import Loading from "@lipy/web-ui/components/ui/loading";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
+import { cn } from "@lipy/web-ui/lib/utils";
 import { Link } from "@tanstack/react-router";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import {
@@ -14,6 +15,7 @@ import {
 	BriefcaseMedical,
 	Coffee,
 	MapPin,
+	Search,
 	Star,
 	Utensils,
 } from "lucide-react";
@@ -73,12 +75,19 @@ export default function NearByShops() {
 						}}
 					/>
 
-					<div className="relative z-10 space-y-2 ">
-						<SearchBar
-							placeholder="Search for shop, grocery, fruits..."
-							defaultValue=""
-							className="px-4 "
-						/>
+					<div className="relative z-10 space-y-2">
+						<div className="px-4 py-2">
+							<Link
+								className={cn(
+									buttonVariants({ variant: "tertiary" }),
+									"w-full justify-start text-muted-foreground border",
+								)}
+								to="/"
+							>
+								<Search />
+								Search for stores near you
+							</Link>
+						</div>
 
 						<div>
 							<ScrollingTabs

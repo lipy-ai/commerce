@@ -123,7 +123,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 						<NuqsAdapter>
 							<EventsProvider />
 
-							{isPending ? <Loading hideDefault /> : children}
+							{isPending ? <Loading /> : children}
 						</NuqsAdapter>
 						<Toaster />
 					</QueryProvider>

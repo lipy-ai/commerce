@@ -1,11 +1,12 @@
 import * as React from "react";
 
-import { useUpload } from "@lipy/lib/hooks/use-upload";
+import { useDeleteUpload, useUpload } from "@lipy/lib/hooks/use-upload";
 import { createResizedImage } from "@lipy/web-ui/lib/resizer";
 import { cn } from "@lipy/web-ui/lib/utils";
-import { Plus } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { toast } from "sonner";
-import CircularProgress from "./circular-progress";
+import { Button } from "../ui/button";
+import CircularProgress from "../ui/circular-progress";
 
 export type SingleImageProps = {
 	url?: string;
@@ -15,18 +16,36 @@ export type SingleImageProps = {
 	wrapperClassName?: string;
 	imageClassName?: string;
 	onSuccess?: (data: ReturnType<typeof useUpload>["data"]) => void;
+	onDelete?: () => void;
 };
 
 const SingleImage = (
 	props: SingleImageProps & React.ComponentProps<"input">,
 ) => {
+	const { deleteFile } = useDeleteUpload({
+		onSuccess: () => {
+			return props.onDelete?.();
+		},
+	});
+
 	return (
 		<div
 			className={cn(
-				"rounded overflow-hidden relative bg-muted/40 border border-input flex justify-center items-center cursor-pointer pointer-events-auto hover:bg-muted aspect-square",
+				"rounded relative bg-muted/40 border group border-input flex justify-center items-center cursor-pointer pointer-events-auto hover:bg-muted aspect-square",
 				props.wrapperClassName,
 			)}
 		>
+			{props.url && (
+				<Button
+					type={"button"}
+					variant={"outline"}
+					size={"icon-sm"}
+					className="absolute -right-2 -top-2 group-hover:flex hidden transition-all ease-in-out"
+					onClick={() => deleteFile(props.url!)}
+				>
+					<X />
+				</Button>
+			)}
 			{props.url ? (
 				<img
 					src={props.url}
@@ -68,7 +87,7 @@ const Input = ({ onSuccess, accept }: SingleImageProps) => {
 			file, // File object
 			800, // maxWidth
 			800, // maxHeight
-			"jpeg", // compressFormat
+			"webp", // compressFormat
 			80, // quality
 			0, // rotation
 			(resized) => {

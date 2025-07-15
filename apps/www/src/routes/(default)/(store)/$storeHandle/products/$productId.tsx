@@ -65,7 +65,7 @@ function RouteComponent() {
 	return (
 		<>
 			{isLoading ? (
-				<Loading hideDefault />
+				<Loading />
 			) : !product ? (
 				<EmptyPage
 					title="Product Not Found"

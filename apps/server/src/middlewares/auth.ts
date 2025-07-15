@@ -14,9 +14,20 @@ export const authMiddleware: MiddlewareHandler<ServerContext> = async (
 		c.set("session", null);
 		return next();
 	}
+	c.set("user", session.user as ServerContext["Variables"]["user"]);
 
-	c.set("user", session.user);
 	c.set("session", session.session as ServerContext["Variables"]["session"]);
+	return next();
+};
+
+export const isLoggedIn: MiddlewareHandler<ServerContext> = async (c, next) => {
+	const sess = c.get("session");
+
+	if (!sess?.userId) {
+		throw new HTTPError(401, {
+			code: ERR_CODES.NOT_LOGGED_IN,
+		});
+	}
 	return next();
 };
 

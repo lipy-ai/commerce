@@ -1,8 +1,8 @@
 import React from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import type { ProductImage as Type } from "../forms/types";
+import { SingleImage } from "../uploads/image";
 import { FormField } from "./form";
-import { SingleImage } from "./single-image";
 
 export default function ProductImage(props: Type) {
 	const form = useFormContext();

@@ -85,7 +85,7 @@ function RouteComponent() {
 		},
 	);
 
-	if (fetchingShopData || fetchingProduct) return <Loading hideDefault />;
+	if (fetchingShopData || fetchingProduct) return <Loading />;
 
 	return (
 		<div className="relative max-w-screen-xl mx-auto w-full">
@@ -122,28 +122,6 @@ function RouteComponent() {
 
 			{fetchedShopData && shopData && <StoreHeroSection storeInfo={shopData} />}
 
-			{/* {fetchedProduct && productData && productData.items.length > 0 && (
-				<div className="border border-t-0 rounded-b-xl grid grid-cols-3 lg:grid-cols-8 gap-x-8 gap-y-8  bg-amber-100 p-4">
-					{productData.items.map((item) => (
-						<Link
-							key={item.id}
-							className="text-center"
-							to="/$storeHandle/products/category/$categorySlug"
-							params={{ storeHandle, categorySlug: item.slug as string }}
-						>
-							<div className="relative w-full aspect-square rounded-xl overflow-hidden  bg-accent">
-								<img
-									src={item?.image || "./assets/maggy.jpeg"}
-									alt={item?.title || ""}
-									className="rounded-xl aspect-square bg-gray-200"
-								/>
-							</div>
-
-							<p className="font-medium  text-xs">{item?.title}</p>
-						</Link>
-					))}
-				</div>
-			)} */}
 
 			<div className="mb-32">
 				{fetchedProduct &&

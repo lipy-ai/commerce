@@ -1,11 +1,6 @@
 import { cn } from "@lipy/web-ui/lib/utils";
-<<<<<<< HEAD
-import { useNavigate } from "@tanstack/react-router";
-import { Search, X } from "lucide-react";
-=======
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ChevronLeft, Search, X } from "lucide-react";
->>>>>>> 3323559 (basic problems fixed)
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { Button, buttonVariants } from "../ui/button";
@@ -57,9 +52,6 @@ export default function SearchBar({
 					setValue(e.currentTarget.value);
 				}}
 				placeholder={placeholder || "Search"}
-<<<<<<< HEAD
-				prefixEl={<Search />}
-=======
 				prefixEl={
 					fullPageSearch ? (
 						<Link
@@ -74,7 +66,6 @@ export default function SearchBar({
 						<Search />
 					)
 				}
->>>>>>> 3323559 (basic problems fixed)
 				suffixEl={
 					value && (
 						<Button

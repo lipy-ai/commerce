@@ -4,7 +4,6 @@
     "": {
       "name": "lipy-commerce",
       "dependencies": {
-        "@lottiefiles/dotlottie-react": "^0.13.5",
         "@lottiefiles/react-lottie-player": "^3.6.0",
         "@radix-ui/react-accordion": "^1.2.11",
         "@radix-ui/react-alert-dialog": "^1.1.14",
@@ -611,10 +610,6 @@
     "@lipy/server": ["@lipy/server@workspace:apps/server"],
 
     "@lipy/web-ui": ["@lipy/web-ui@workspace:packages/web-ui"],
-
-    "@lottiefiles/dotlottie-react": ["@lottiefiles/dotlottie-react@0.13.5", "", { "dependencies": { "@lottiefiles/dotlottie-web": "0.44.0" }, "peerDependencies": { "react": "^17 || ^18 || ^19" } }, "sha512-4U5okwjRqDPkjB572hfZtLXJ/LGfCo6vDwUB2KIPEUoSgqbIlw+UrbnaqVp3GS+dRvhMD27F2JObpHpYRlpF0Q=="],
-
-    "@lottiefiles/dotlottie-web": ["@lottiefiles/dotlottie-web@0.44.0", "", {}, "sha512-IUWKVciDJI/BMWDWnh7j0Ngd0N8q9ySRAwm84aDqIE07qpmdZ7x1rkIpBaU1yHSNqNYHeh1Rxsl+LC3CY4f0KA=="],
 
     "@lottiefiles/react-lottie-player": ["@lottiefiles/react-lottie-player@3.6.0", "", { "dependencies": { "lottie-web": "^5.12.2" }, "peerDependencies": { "react": "16 - 19" } }, "sha512-WK5TriLJT93VF3w4IjSVyveiedraZCnDhKzCPhpbeLgQeMi6zufxa3dXNc4HmAFRXq+LULPAy+Idv1rAfkReMA=="],
 

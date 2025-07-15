@@ -20,7 +20,7 @@ import Loading from "@lipy/web-ui/components/ui/loading";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import type { VariantProps } from "class-variance-authority";
 import { format } from "date-fns";
-import { Store } from "lucide-react";
+import { Package2, Store } from "lucide-react";
 
 export const Route = createFileRoute("/(default)/account/orders/")({
 	component: RouteComponent,
@@ -64,6 +64,7 @@ function RouteComponent() {
 				<EmptyPage
 					title={"You have no orders yet"}
 					label="Place an order to start"
+					icon={Package2}
 				/>
 			) : (
 				<div className="w-full">

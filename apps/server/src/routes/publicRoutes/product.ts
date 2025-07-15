@@ -118,6 +118,34 @@ const route = new Hono<ServerContext>()
 
 			return c.json(data);
 		},
+	)
+	.get(
+		"/:id/search",
+		zValidator("param", z.object({ id: z.string().uuid() })),
+		zValidator("query", z.object({ q: z.string().optional() })),
+		async (c) => {
+			const { q } = c.req.valid("query");
+			const { id } = c.req.valid("param");
+			const query = db
+				.selectFrom("storeInventory as si")
+				.where("si.storeId", "=", id)
+				.rightJoin("productVariant as pv", "pv.id", "si.productVariant")
+				.rightJoin("product as p", "p.id", "pv.productId")
+				.$if(!!q, (qb) => {
+					const words = q!.trim().split(/\s+/);
+					return words.reduce(
+						(acc, word) => acc.where("p.title", "ilike", `%${word}%`),
+						qb,
+					);
+				});
+
+			const data = await query
+				.select(["p.id as id", "p.title", "p.thumbnail"])
+				.groupBy(["p.id"])
+				.limit(10)
+				.execute();
+			return c.json(data);
+		},
 	);
 
 export { route as productRoute };

@@ -1,9 +1,9 @@
 import { cn } from "@lipy/web-ui/lib/utils";
-import { useNavigate, useRouter } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { ChevronLeft, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { Input } from "../ui/input";
 
 export default function SearchBar({
@@ -11,16 +11,17 @@ export default function SearchBar({
 	defaultValue,
 	className,
 	fullPageSearch,
+	backBtnReturnUrl,
 }: {
 	placeholder?: string;
 	defaultValue?: string;
 	className?: string;
 	fullPageSearch?: boolean;
+	backBtnReturnUrl?: string;
 }) {
 	const [value, setValue] = useState(defaultValue || "");
 	const [debounced] = useDebounce(value, 300);
 	const navigate = useNavigate();
-	const router = useRouter();
 
 	const onSearch = (q: string) =>
 		navigate({
@@ -53,18 +54,14 @@ export default function SearchBar({
 				placeholder={placeholder || "Search"}
 				prefixEl={
 					fullPageSearch ? (
-						<Button
-							type="button"
-							variant={"ghost"}
-							size="icon-xs"
-							onClick={(e) => {
-								e.preventDefault();
-								router.history.back();
-								return false;
-							}}
+						<Link
+							className={cn(
+								buttonVariants({ variant: "ghost", size: "icon-xs" }),
+							)}
+							to={backBtnReturnUrl || "/"}
 						>
 							<ChevronLeft className="size-6" />
-						</Button>
+						</Link>
 					) : (
 						<Search />
 					)
@@ -81,6 +78,7 @@ export default function SearchBar({
 						</Button>
 					)
 				}
+				autoFocus={fullPageSearch}
 			/>
 		</form>
 	);

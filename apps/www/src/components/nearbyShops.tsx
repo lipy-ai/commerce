@@ -2,7 +2,7 @@ import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import type { STORE_TYPE } from "@lipy/server/db/schema";
 import { ScrollingTabs } from "@lipy/web-ui/components/custom-ui/scrollable-tabs";
-import ComingSoonPage from "@lipy/web-ui/components/pages/coming-soon";
+import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import Loading from "@lipy/web-ui/components/ui/loading";
@@ -113,7 +113,17 @@ export default function NearByShops() {
 			{isFetching ? (
 				<Loading />
 			) : !shops || shops.length === 0 ? (
-				<ComingSoonPage />
+				<EmptyPage
+					title="Coming soon to your doorstep!"
+					label="We are currently not available at your location. We will be in your
+					service soon."
+				>
+					<img
+						src="/assets/online-shopping-store.png"
+						alt=""
+						className="aspect-square object-cover size-40"
+					/>
+				</EmptyPage>
 			) : (
 				<div>
 					<div className="m-auto max-w-screen-2xl px-2 ">

@@ -44,15 +44,14 @@ function RouteComponent() {
 	);
 
 	return (
-		<div className="w-full">
-			<DashboardHeader className="border-b-0 pl-0" hideBackBtn>
-				<SearchBar
-					className="w-full "
-					fullPageSearch
-					placeholder={`Search in ${storeInfo?.name}`}
-					backBtnReturnUrl={`/${storeHandle}`}
-				/>
-			</DashboardHeader>
+		<div className="w-full relative">
+			<DashboardHeader className="bg-background" title="Search products" />
+
+			<SearchBar
+				className="w-full p-4 sticky top-0 z-50 bg-background"
+				fullPageSearch
+				placeholder={`Search in ${storeInfo?.name}`}
+			/>
 
 			<div>
 				{isFetching ? (
@@ -76,7 +75,7 @@ function RouteComponent() {
 									src={product.thumbnail || ""}
 									className="w-full h-full object-cover"
 								/>
-								<div className="absolute bottom-0 w-full px-2 py-1 bg-black/50 backdrop-blur-md text-white text-sm font-medium line-clamp-1">
+								<div className="absolute bottom-0 w-full px-2 py-1 bg-black/70 backdrop-blur-md text-white text-sm font-medium line-clamp-1">
 									{product.title}
 								</div>
 							</Link>

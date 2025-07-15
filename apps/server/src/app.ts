@@ -21,6 +21,7 @@ import {
 } from "./middlewares/auth";
 import { corsMiddleware } from "./middlewares/cors";
 import { globalMiddleware } from "./middlewares/global";
+import { adminProductRoute } from "./routes/adminRoutes/products";
 import { addressRoute } from "./routes/loggedRoutes/address";
 import { cartRoute } from "./routes/loggedRoutes/cart";
 import { orderRoute } from "./routes/loggedRoutes/order";
@@ -72,6 +73,11 @@ app.on(["POST", "GET"], "/api/auth/*", (c) => {
 
 // app.use(compress());
 
+const adminRouter = new Hono()
+	.basePath("/admin")
+	.use(isLoggedIn)
+	.route("/product", adminProductRoute);
+
 const merchantRouter = new Hono()
 	.basePath("/merchant")
 	.use(isLoggedIn) //Check if logged In
@@ -100,8 +106,8 @@ export const routes = app
 	.route("/public/products", productRoute)
 	.route("/public/shops", shopRoute)
 	.route("/", loggedRouter)
-	.route("/", merchantRouter);
-
+	.route("/", merchantRouter)
+	.route("/", adminRouter);
 // routes.basePath("/admin").route("/category", categoryRouter);
 
 app.onError(globalError);

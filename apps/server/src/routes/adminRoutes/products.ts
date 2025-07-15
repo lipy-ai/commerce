@@ -37,10 +37,9 @@ const listZodValidator = zValidator(
 	}),
 );
 
-const route = new Hono<ServerContext>()
+export const adminProductRoute = new Hono<ServerContext>()
 	.get("/", listZodValidator, async (c) => {
 		const { limit, page, q, category } = c.req.valid("query");
-		const activeStoreId = c.var.session?.activeStoreId!;
 		const offset = limit * (page - 1);
 
 		const query = db
@@ -55,11 +54,6 @@ const route = new Hono<ServerContext>()
 			.leftJoin("productVariant as pv", "pv.productId", "p.id")
 			.leftJoin("category as c", "p.category", "c.id")
 
-			.leftJoin("storeInventory as si", (join) =>
-				join
-					.onRef("si.productVariant", "=", "pv.id")
-					.on("si.storeId", "=", activeStoreId!),
-			)
 			.$if(!!category, (qb) => qb.where("category", "=", category!));
 
 		const countPromise = query
@@ -80,15 +74,10 @@ const route = new Hono<ServerContext>()
 					.jsonAgg(
 						jsonBuildObject({
 							id: eb.ref("pv.id"),
-							inventoryId: eb.ref("si.id"),
-
 							images: eb.ref("pv.images"),
 							price: eb.ref("pv.price"),
 							unit: eb.ref("pv.unit"),
 							productId: eb.ref("pv.productId"),
-							stock: eb.fn.coalesce(eb.ref("si.stock")),
-							sku: eb.fn.coalesce(eb.ref("si.sku")),
-							storePrice: eb.fn.coalesce(eb.ref("si.price")),
 						}),
 					)
 					.filterWhere("pv.id", "is not", null)
@@ -228,5 +217,3 @@ const route = new Hono<ServerContext>()
 			return c.json({ success: true });
 		},
 	);
-
-export { route as merchantProductRoute };

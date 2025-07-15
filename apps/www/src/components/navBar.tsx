@@ -26,11 +26,10 @@ export default function NavBar() {
 						<Link to={"/account/addresses/deliveryAddress"}>
 							<div className="flex items-center gap-2">
 								{<MapPin className="fill-secondary/60" />}
-								<p className="truncate max-w-[250px] font-bold text-lg">
+								<p className="truncate max-w-[250px] font-bold text-lg capitalize">
 									{deliveryLocation?.line1 === ""
 										? "Locating"
-										: (deliveryLocation?.tag ?? "").charAt(0).toUpperCase() +
-											(deliveryLocation?.tag ?? "").slice(1)}
+										: deliveryLocation?.tag}
 								</p>
 								<ChevronDown className="size-5" />
 							</div>

@@ -321,9 +321,7 @@ export const CartMainContent = () => {
 									<div>
 										<div className="flex items-center gap-2">
 											<p className="font-semibold">
-												Delivering to{" "}
-												{deliveryLocation?.tag?.charAt(0).toUpperCase() +
-													deliveryLocation?.tag?.slice(1)}
+												Delivering to {deliveryLocation?.tag}
 											</p>
 											<ChevronDown className="size-5" />
 										</div>

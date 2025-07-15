@@ -34,7 +34,7 @@ export const Route = createFileRoute("/admin/product/")({
 	}),
 });
 
-type Response = InferResponseType<typeof apiClient.v1.merchant.product.$get>;
+type Response = InferResponseType<typeof apiClient.v1.admin.product.$get>;
 
 function RouteComponent() {
 	const { isMobile } = useViewport();

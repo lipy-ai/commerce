@@ -122,7 +122,6 @@ function RouteComponent() {
 
 			{fetchedShopData && shopData && <StoreHeroSection storeInfo={shopData} />}
 
-
 			<div className="mb-32">
 				{fetchedProduct &&
 					productData &&
@@ -172,7 +171,7 @@ function RouteComponent() {
 			</div>
 
 			{fetchedProduct && productData && productData.items.length === 0 && (
-				<EmptyPage title={"No products found"} className="-mt-20 -mr-4">
+				<EmptyPage title={"No products found"}>
 					<img
 						src="/assets/no-product.png"
 						alt="no-product"

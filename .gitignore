@@ -22,6 +22,8 @@ coverage
 # Turbo
 .turbo
 .vinxi
+.nitro
+.tanstack
 .output
 stats.html
 

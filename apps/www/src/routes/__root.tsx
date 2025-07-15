@@ -45,10 +45,13 @@ export const Route = createRootRoute({
 				content: "yes",
 			},
 			{
+<<<<<<< HEAD
 				name: "mobile-web-app-status-bar-style",
 				content: "default",
 			},
 			{
+=======
+>>>>>>> 3323559 (basic problems fixed)
 				name: "apple-mobile-web-app-capable",
 				content: "yes",
 			},
@@ -87,7 +90,11 @@ export const Route = createRootRoute({
 				sizes: "16x16",
 				href: "/favicon/favicon-16x16.png",
 			},
+<<<<<<< HEAD
 			{ rel: "manifest", href: "/favicon/site.webmanifest", color: "#FFFFFF" },
+=======
+			{ rel: "manifest", href: "/favicon/site.webmanifest", color: "#000000" },
+>>>>>>> 3323559 (basic problems fixed)
 			{ rel: "icon", href: "/favicon/favicon.ico" },
 		],
 	}),

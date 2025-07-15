@@ -9,7 +9,10 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
-
+.nitro
+.tanstack
+.output
+.turbo
 # Caches
 
 .cache

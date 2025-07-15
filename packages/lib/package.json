@@ -14,7 +14,7 @@
 	"license": "ISC",
 	"devDependencies": {
 		"@lipy/server": "workspace:*",
-		"@tanstack/react-query-devtools": "^5.81.5",
+		"@tanstack/react-query-devtools": "^5.66.0",
 		"@types/node": "^22.16.0",
 		"@types/react": "^19.1.0",
 		"@types/react-dom": "^19.1.0",
@@ -23,7 +23,7 @@
 		"tailwindcss": "^4.1.11"
 	},
 	"dependencies": {
-		"@tanstack/react-query": "^5.74.4",
+		"@tanstack/react-query": "^5.66.0",
 		"hono": "^4.8.3",
 		"mobile-detect": "^1.4.5",
 		"react-cookie": "^8.0.1"

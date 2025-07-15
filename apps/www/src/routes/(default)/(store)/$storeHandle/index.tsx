@@ -1,5 +1,6 @@
 import { PrimaryCartFooter } from "@/components/cart/cartFooter";
 import ProductCard from "@/components/productCard"; // Fixed the path
+import { StoreHeroSection } from "@/components/store/storeHeroSection";
 import { env } from "@envClient";
 import { apiClient } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
@@ -12,14 +13,20 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@lipy/web-ui/components/ui/dropdown-menu";
-import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
+import Loading from "@lipy/web-ui/components/ui/loading";
 import { shareContent } from "@lipy/web-ui/lib/share";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import type { InferResponseType } from "hono/client";
-import { ChevronRight, EllipsisVertical, Info, Share } from "lucide-react";
+import {
+	ChevronRight,
+	EllipsisVertical,
+	Info,
+	Search,
+	Share,
+} from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/(default)/(store)/$storeHandle/")({
@@ -78,14 +85,10 @@ function RouteComponent() {
 		},
 	);
 
-	if (fetchingShopData || fetchingProduct)
-		return (
-			<div className="w-full">
-				<ShopLoadingSkeleton />
-			</div>
-		);
+	if (fetchingShopData || fetchingProduct) return <Loading hideDefault />;
+
 	return (
-		<div className="relative max-w-screen-xl mx-auto ">
+		<div className="relative max-w-screen-xl mx-auto w-full">
 			<DashboardHeader
 				titleChildren={
 					<motion.h1
@@ -99,30 +102,27 @@ function RouteComponent() {
 						{shopData?.name}
 					</motion.h1>
 				}
-				className={cn(
-					!visibleShopName ? "bg-amber-100 border-b-0 shadow-none" : "bg-card",
-					"border-x",
-				)}
+				className="bg-card shadow-none border-b-0"
 			>
+				{visibleShopName && (
+					<Link
+						className={cn(
+							buttonVariants({ variant: "outline", size: "icon" }),
+							"rounded-full border-none",
+						)}
+						to="/$storeHandle/products/search"
+						params={{ storeHandle }}
+					>
+						<Search className="size-5 stroke-2" />
+					</Link>
+				)}
+
 				{shopData && <ShopOptions shop={shopData} />}
 			</DashboardHeader>
 
-			{fetchedShopData && shopData && (
-				<div className="text-center  bg-amber-100 p-4 border-x">
-					<Link
-						className="text-3xl lg:text-5xl font-extrabold tracking-wide"
-						to="/$storeHandle/details"
-						params={{ storeHandle }}
-					>
-						{shopData.name.toUpperCase()}
-					</Link>
-					<div className="mt-2 text-sm lg:text-base text-muted-foreground capitalize">
-						{shopData?.type?.replace("_", " ")}
-					</div>
-				</div>
-			)}
+			{fetchedShopData && shopData && <StoreHeroSection storeInfo={shopData} />}
 
-			{fetchedProduct && productData && productData.items.length > 0 && (
+			{/* {fetchedProduct && productData && productData.items.length > 0 && (
 				<div className="border border-t-0 rounded-b-xl grid grid-cols-3 lg:grid-cols-8 gap-x-8 gap-y-8  bg-amber-100 p-4">
 					{productData.items.map((item) => (
 						<Link
@@ -143,7 +143,7 @@ function RouteComponent() {
 						</Link>
 					))}
 				</div>
-			)}
+			)} */}
 
 			<div className="mb-32">
 				{fetchedProduct &&
@@ -194,10 +194,13 @@ function RouteComponent() {
 			</div>
 
 			{fetchedProduct && productData && productData.items.length === 0 && (
-				<EmptyPage
-					title="No products found"
-					label="This shop has no products yet."
-				/>
+				<EmptyPage title={"No products found"} className="-mt-20 -mr-4">
+					<img
+						src="/assets/no-product.png"
+						alt="no-product"
+						className="w-[250px] h-[250px] object-cover"
+					/>
+				</EmptyPage>
 			)}
 
 			<div className="lg:hidden">
@@ -207,7 +210,7 @@ function RouteComponent() {
 	);
 }
 
-function ShopOptions({
+export function ShopOptions({
 	shop,
 }: {
 	shop: InferResponseType<typeof apiClient.v1.shops.$get>[number];
@@ -252,45 +255,5 @@ function ShopOptions({
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
-	);
-}
-
-function ShopLoadingSkeleton() {
-	return (
-		<div className="relative max-w-screen-xl mx-auto">
-			<DashboardHeader
-				titleChildren={<Skeleton className="h-6 w-32" />}
-				className="bg-amber-100"
-			>
-				<Skeleton className="size-5" />
-			</DashboardHeader>
-
-			<div className="text-center bg-amber-100 p-4">
-				<Skeleton className="h-8 w-48 mx-auto mb-2" />
-				<Skeleton className="h-4 w-32 mx-auto" />
-			</div>
-
-			<div className="border border-t-0 rounded-b-xl grid grid-cols-3 lg:grid-cols-6 gap-x-8 gap-y-8 bg-amber-100 p-4">
-				{Array.from({ length: 6 }).map((_, i) => (
-					<div key={i} className="text-center">
-						<Skeleton className="w-full aspect-square rounded-xl mb-2" />
-						<Skeleton className="h-3 w-full" />
-					</div>
-				))}
-			</div>
-
-			<div className="my-10 mx-4">
-				<Skeleton className="h-6 w-40 my-4" />
-				<div className="grid grid-cols-2 lg:grid-cols-6  gap-x-4 gap-y-6 w-full">
-					{Array.from({ length: 6 }).map((_, j) => (
-						<div key={j} className="w-full">
-							<Skeleton className="aspect-square w-full rounded-lg mb-2" />
-							<Skeleton className="h-4 w-full mb-1" />
-							<Skeleton className="h-3 w-16" />
-						</div>
-					))}
-				</div>
-			</div>
-		</div>
 	);
 }

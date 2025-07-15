@@ -20,14 +20,20 @@ export default function EmptyPage(props: {
 				props.className,
 			)}
 		>
-			<Icon className="size-24 lg:size-28 opacity-70" strokeWidth={1.1} />
-			<p className="text-xl lg:text-3xl font-medium">
-				{props.title || "Feels Light & Empty"}
-			</p>
-			<Label className="text-md font-light">
-				{props.label || "We couldn't find any records!"}
-			</Label>
 			{props.children}
+			{props.icon && (
+				<Icon className="size-24 lg:size-28 opacity-70" strokeWidth={1.1} />
+			)}
+			{props.title && (
+				<p className="text-xl lg:text-3xl font-medium">
+					{props.title || "Feels Light & Empty"}
+				</p>
+			)}
+			{props.label && (
+				<Label className="text-md font-light">
+					{props.label || "We couldn't find any records!"}
+				</Label>
+			)}
 		</div>
 	);
 }

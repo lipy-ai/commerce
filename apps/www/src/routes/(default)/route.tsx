@@ -1,6 +1,7 @@
 import NavBar from "@/components/navBar";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
-import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(default)")({
 	component: RouteComponent,
@@ -8,7 +9,6 @@ export const Route = createFileRoute("/(default)")({
 
 function RouteComponent() {
 	const { isMobile } = useViewport();
-
 	return (
 		<>
 			{!isMobile && <NavBar />}

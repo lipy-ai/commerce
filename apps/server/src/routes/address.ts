@@ -1,4 +1,5 @@
 import { db } from "@/db";
+import { HTTPError } from "@/lib/exception";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
@@ -101,6 +102,22 @@ const route = new Hono<ServerContext>()
 				.executeTakeFirst();
 			return c.json(address);
 		},
-	);
+	)
+	.get("/primary", async (c) => {
+		const user = c.get("user");
+
+		if (!user) {
+			return c.json(null);
+		}
+
+		const result = await db
+			.selectFrom("user")
+			.leftJoin("address", "address.id", "user.address")
+			.where("user.id", "=", user?.id!)
+			.selectAll(["address"])
+			.executeTakeFirstOrThrow();
+
+		return c.json(result);
+	});
 
 export { route as addressRoute };

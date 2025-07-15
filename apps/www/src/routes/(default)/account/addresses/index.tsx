@@ -133,9 +133,7 @@ export function AddressComponent({
 			</div>
 
 			<div>
-				<h2 className="text-lg font-semibold">
-					{address.tag.charAt(0).toUpperCase() + address.tag.slice(1)}
-				</h2>
+				<h2 className="text-lg font-semibold capitalize">{address?.tag}</h2>
 				<p className="text-muted-foreground">
 					{[address?.name, address?.metadata?.building, address?.line1]
 						.filter(Boolean)

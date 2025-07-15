@@ -8,7 +8,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default defineConfig({
-	plugins: [tailwindcss(), tanstackStart()],
+	plugins: [tailwindcss(), tanstackStart() as any],
+
 	build: {
 		minify: false,
 		sourcemap: true,
@@ -16,6 +17,7 @@ export default defineConfig({
 
 	server: {
 		port: 3000,
+		host: process.env.NODE_ENV !== "development",
 		proxy: {
 			"/api/**": {
 				target: `${process.env.VITE_API_URL}/api/**`,

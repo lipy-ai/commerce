@@ -1,9 +1,12 @@
-import type { address } from "@lipy/server/db/schema";
-import type { InferSelectModel } from "drizzle-orm";
+import type { apiClient } from "@lipy/lib/api";
+import type { InferResponseType } from "hono/client";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-export type DeliveryLocation = InferSelectModel<typeof address>;
+export type DeliveryLocation = Exclude<
+	InferResponseType<typeof apiClient.v1.address.primary.$get>,
+	null
+>;
 type LocationStore = {
 	deliveryLocation: DeliveryLocation;
 	setDeliveryLocation: (deliveryLocation: DeliveryLocation) => void;
@@ -13,18 +16,18 @@ type LocationStore = {
 
 export const defaultDeliveryLocationState: LocationStore = {
 	deliveryLocation: {
-		lat: 0,
-		lng: 0,
-		phone: null,
-		tag: "home",
+		id: "",
+		name: "",
+		tag: "other",
+		line1: "",
+		line2: "",
 		city: "",
 		state: "",
 		country: "",
 		postalCode: "",
-		line1: "",
-		line2: "",
-		name: "",
-		id: "",
+		phone: "",
+		lat: 0,
+		lng: 0,
 		metadata: { building: "" },
 	},
 	hasHydrated: false,

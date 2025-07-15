@@ -18,6 +18,8 @@
 	--primary-foreground: rgb(255, 255, 255);
 	--secondary: rgb(201, 100, 66);
 	--secondary-foreground: rgb(250, 245, 244);
+	--tertiary: rgb(230, 230, 230);
+	--tertiary-foreground: rgb(0, 0, 0);
 	--muted: rgb(237, 233, 222);
 	--muted-foreground: rgb(131, 130, 125);
 	--accent: rgb(233, 230, 220);
@@ -129,6 +131,8 @@
 	--color-primary-foreground: var(--primary-foreground);
 	--color-secondary: var(--secondary);
 	--color-secondary-foreground: var(--secondary-foreground);
+	--color-tertiary: var(--tertiary);
+	--color-tertiary-foreground: var(--tertiary-foreground);
 	--color-tertiary: var(--tertiary);
 	--color-muted: var(--muted);
 	--color-muted-foreground: var(--muted-foreground);

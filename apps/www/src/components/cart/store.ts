@@ -16,6 +16,8 @@ export type CartStore = {
 	instructions: {
 		deliveryInstruction: string;
 	};
+	uploadedImages: File[];
+	setUploadedImages: (images: File[]) => void;
 };
 
 const defaultValues = {
@@ -24,6 +26,7 @@ const defaultValues = {
 	instructions: {
 		deliveryInstruction: "",
 	},
+	uploadedImages: [],
 };
 
 export const useCartStore = create<CartStore>()(
@@ -71,7 +74,12 @@ export const useCartStore = create<CartStore>()(
 				set({
 					instructions: instructions,
 				}),
+			setUploadedImages: (images) =>
+				set({
+					uploadedImages: images,
+				}),
 		}),
+
 		{
 			name: "lipy-cart-state",
 			storage: createJSONStorage(() => localStorage),

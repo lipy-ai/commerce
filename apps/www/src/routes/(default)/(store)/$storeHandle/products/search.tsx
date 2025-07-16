@@ -4,7 +4,6 @@ import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { AnimatePresence, motion } from "framer-motion";
 import { z } from "zod";
 
 export const Route = createFileRoute(
@@ -45,22 +44,14 @@ function RouteComponent() {
 	);
 
 	return (
-		<AnimatePresence>
-			<motion.div
-				initial={{ opacity: 0, y: 1000 }}
-				animate={{ opacity: 1, y: 0 }}
-				transition={{ duration: 0.5 }}
-				className="w-full"
-				exit={{ opacity: 0, y: 1000 }}
-			>
-				<DashboardHeader className="border-b-0 pl-0" hideBackBtn>
-					<SearchBar
-						className="w-full "
-						fullPageSearch
-						placeholder={`Search in ${storeInfo?.name}`}
-						backBtnReturnUrl={`/${storeHandle}`}
-					/>
-				</DashboardHeader>
+		<div className="w-full relative">
+			<DashboardHeader className="bg-background px-0" hideBackBtn>
+				<SearchBar
+					className="w-full pr-4"
+					fullPageSearch
+					placeholder={`Search in ${storeInfo?.name}`}
+				/>
+			</DashboardHeader>
 
 				<div>
 					{isFetching ? (
@@ -92,8 +83,9 @@ function RouteComponent() {
 						</div>
 					)}
 				</div>
-			</motion.div>
-		</AnimatePresence>
+
+		</div>
+	
 	);
 }
 

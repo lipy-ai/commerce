@@ -37,9 +37,9 @@ echo "Starting apps/merchant on PORT=3001..."
   PORT=3001 node .output/server/index.mjs &
 )
 
-# # Start server with Bun (foreground)
-# echo "Starting apps/server with Bun..."
-# (
-#   cd ../apps/server || { echo "Directory apps/server not found"; exit 1; }
-#   bun run dev
-# )
+# Start server with Bun (foreground)
+echo "Starting apps/server with Bun..."
+(
+  cd ../apps/server || { echo "Directory apps/server not found"; exit 1; }
+  bun run dev
+)

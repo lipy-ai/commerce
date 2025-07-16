@@ -16,6 +16,7 @@ import {
 	AlertDialogTitle,
 } from "@lipy/web-ui/components/ui/alert-dialog";
 import { Button } from "@lipy/web-ui/components/ui/button";
+import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { createFileRoute } from "@tanstack/react-router";
 import { Camera, ChevronRight, Images, X } from "lucide-react";
 import { useState } from "react";
@@ -124,7 +125,16 @@ function OptionsDrawer(props: {
 	onOpenChange: (open: boolean) => void;
 }) {
 	const { setUploadedImages } = useCartStore();
+
 	const handleUploadClick = () => {
+		const currentImages = useCartStore.getState().uploadedImages;
+		const remainingSlots = 4 - currentImages.length;
+
+		if (remainingSlots <= 0) {
+			alert("You can upload up to 4 images only.");
+			return;
+		}
+
 		const input = document.createElement("input");
 		input.type = "file";
 		input.accept = "image/*";
@@ -132,8 +142,18 @@ function OptionsDrawer(props: {
 		input.onchange = (e: Event) => {
 			const target = e.target as HTMLInputElement;
 			if (target.files && target.files.length > 0) {
-				const currentImages = useCartStore.getState().uploadedImages;
-				setUploadedImages([...currentImages, ...Array.from(target.files)]);
+				const selectedFiles = Array.from(target.files);
+
+				// restrict to remainingSlots only
+				const allowedFiles = selectedFiles.slice(0, remainingSlots);
+
+				setUploadedImages([...currentImages, ...allowedFiles]);
+
+				if (selectedFiles.length > allowedFiles.length) {
+					toast.info(
+						`Only ${remainingSlots} image${remainingSlots > 1 ? "s" : ""} can be added.`,
+					);
+				}
 			}
 			props.onOpenChange(false);
 		};
@@ -148,10 +168,7 @@ function OptionsDrawer(props: {
 				</DrawerDialogHeader>
 
 				<div className="cursor-pointer divide-y divide-dashed bg-card rounded-xl px-2">
-					<div
-						className="flex items-center justify-between py-4"
-						// TODO: handle camera logic
-					>
+					<div className="flex items-center justify-between py-4">
 						<div className="flex items-center gap-4">
 							<Camera className="size-5 flex-shrink-0" />
 							<p className="font-medium text-sm">Capture from camera</p>

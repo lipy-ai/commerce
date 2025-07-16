@@ -20,7 +20,7 @@ import Loading from "@lipy/web-ui/components/ui/loading";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import type { VariantProps } from "class-variance-authority";
 import { format } from "date-fns";
-import { Package2, Store } from "lucide-react";
+import { Package2, Paperclip, Store } from "lucide-react";
 
 export const Route = createFileRoute("/(default)/account/orders/")({
 	component: RouteComponent,
@@ -136,7 +136,29 @@ function RouteComponent() {
 																alt={""}
 															/>
 														))}
+														{order?.customerInstructions?.attachments?.map(
+															(item, index) => (
+																<img
+																	key={index}
+																	src={item || ""}
+																	className="aspect-square object-cover size-12 rounded-sm border border-border/40 bg-accent/40"
+																	alt={""}
+																/>
+															),
+														)}
 													</div>
+													{order?.customerInstructions?.attachments &&
+														order?.customerInstructions?.attachments?.length >
+															0 && (
+															<div className="inline-flex items-center gap-2 text-muted-foreground pt-2">
+																<Paperclip className="size-4" />
+																{
+																	order?.customerInstructions?.attachments
+																		?.length
+																}{" "}
+																attachments
+															</div>
+														)}
 												</CardContent>
 												<CardFooter className="flex items-center justify-between border-t border-dashed">
 													<p className="text-muted-foreground text-sm">

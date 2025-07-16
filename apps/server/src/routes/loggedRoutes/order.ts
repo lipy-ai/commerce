@@ -191,6 +191,7 @@ const route = new Hono<ServerContext>()
 				"s.handle as storeHandle",
 				"o.customerId",
 				"o.customerDetails",
+				"o.customerInstructions",
 				eb.fn.toJson("s").as("store"),
 			])
 			.orderBy("o.orderedAt", "desc")

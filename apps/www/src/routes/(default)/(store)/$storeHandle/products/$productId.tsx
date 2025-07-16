@@ -32,6 +32,12 @@ export const Route = createFileRoute(
 function RouteComponent() {
 	const { productId, storeHandle } = Route.useParams();
 
+	const { data: storeInfo, isLoading: isStoreLoading } = useAPIQuery(
+		apiClient.v1.shops[":handle"],
+		"$get",
+		{ param: { handle: storeHandle } },
+	);
+
 	const { data: product, isLoading } = useAPIQuery(
 		apiClient.v1.products[":id"],
 		"$get",
@@ -64,7 +70,7 @@ function RouteComponent() {
 
 	return (
 		<>
-			{isLoading ? (
+			{isLoading || isStoreLoading ? (
 				<Loading />
 			) : !product ? (
 				<EmptyPage
@@ -128,6 +134,7 @@ function RouteComponent() {
 												storeHandle: storeHandle || "",
 												storeName: "",
 												storeLogo: null,
+												storeId: storeInfo?.id || "",
 											}}
 											variant="secondary"
 											activeVariant="secondary-active"

@@ -72,17 +72,20 @@ function RouteComponent() {
 			) : (
 				<div className="w-full">
 					<div className="p-4 mb-20 space-y-2">
-						{data.map((address) => (
-							<div
-								key={address.id}
-								onClick={() => {
-									setOptionsDrawerOpen(true);
-									setSelectedAddress(address);
-								}}
-							>
-								<AddressComponent address={address} />
-							</div>
-						))}
+						{data.map((address) => {
+							const { id, ...restAddress } = address;
+							return (
+								<div
+									key={address.id}
+									onClick={() => {
+										setOptionsDrawerOpen(true);
+										setSelectedAddress(address);
+									}}
+								>
+									<AddressComponent address={restAddress as DeliveryLocation} />
+								</div>
+							);
+						})}
 					</div>
 				</div>
 			)}

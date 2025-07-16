@@ -30,6 +30,14 @@ function RouteComponent() {
 		},
 	);
 
+	const { data: storeInfo } = useAPIQuery(
+		apiClient.v1.shops[":handle"],
+		"$get",
+		{
+			param: { handle: storeHandle },
+		},
+	);
+
 	return (
 		<>
 			{isLoading ? (
@@ -52,6 +60,7 @@ function RouteComponent() {
 									product={product as ProductType}
 									className={{ classNameImg: "h-full" }}
 									storeHandle={storeHandle}
+									storeId={storeInfo?.id as string}
 								/>
 							</div>
 						))}

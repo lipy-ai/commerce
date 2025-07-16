@@ -58,7 +58,6 @@ function RouteComponent() {
 			...parsedAddress,
 			metadata: { building: "" },
 			tag: "other",
-			id: "",
 		});
 		navigate({ to: "/" });
 	}, [setDeliveryLocation, navigate]);
@@ -130,15 +129,22 @@ function RouteComponent() {
 									Saved addresses
 								</p>
 								<div className="mb-10 space-y-2">
-									{data.map((address) => (
-										<div
-											key={address.id}
-											className="cursor-pointer "
-											onClick={() => handleAddressSelect(address)}
-										>
-											<AddressComponent address={address} />
-										</div>
-									))}
+									{data.map((address) => {
+										const { id, ...restAddress } = address;
+										return (
+											<div
+												key={address.id}
+												className="cursor-pointer "
+												onClick={() =>
+													handleAddressSelect(restAddress as DeliveryLocation)
+												}
+											>
+												<AddressComponent
+													address={restAddress as DeliveryLocation}
+												/>
+											</div>
+										);
+									})}
 								</div>
 							</section>
 						)}

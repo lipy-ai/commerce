@@ -28,6 +28,7 @@ export default function ProductCard({
 	className,
 	variant = "default",
 	storeHandle,
+	storeId,
 }: {
 	className?: {
 		classNameBox?: string;
@@ -36,6 +37,7 @@ export default function ProductCard({
 	product: ProductType;
 	variant?: "default" | "horizontal";
 	storeHandle?: string;
+	storeId?: string;
 }) {
 	const discountPercentage = discountCalculator(
 		product.variants[0]?.price as number,
@@ -101,6 +103,7 @@ export default function ProductCard({
 									<AddToCart
 										product={
 											{
+												storeId: storeId ?? null,
 												storeLogo: null,
 												storeHandle: storeHandle ?? null,
 												thumbnail: product.thumbnail ?? null,
@@ -215,6 +218,7 @@ export default function ProductCard({
 							onOpenChange={setVariantDrawer}
 							product={product}
 							storeHandle={storeHandle}
+							storeId={storeId}
 						/>
 					)}
 				</div>
@@ -228,11 +232,13 @@ function VariantList({
 	onOpenChange,
 	product,
 	storeHandle,
+	storeId,
 }: {
 	open?: boolean;
 	onOpenChange?: (open: boolean) => void;
 	product: ProductType;
 	storeHandle?: string;
+	storeId?: string;
 }) {
 	return (
 		<DrawerDialogSwitcher open={open} onOpenChange={onOpenChange}>
@@ -264,6 +270,7 @@ function VariantList({
 						<AddToCart
 							product={
 								{
+									storeId: storeId ?? null,
 									storeLogo: null,
 									title: product.title ?? null,
 									thumbnail: product.thumbnail ?? null,

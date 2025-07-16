@@ -16,6 +16,8 @@ export default defineConfig({
 	server: {
 		allowedHosts: true,
 		port: 3003,
+		host: process.env.NODE_ENV !== "development",
+
 		proxy: {
 			"/api/**": {
 				target: `${process.env.VITE_API_URL}/api/**`,

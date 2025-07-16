@@ -11,13 +11,14 @@ export default defineConfig({
 
 	build: {
 		minify: true,
-		sourcemap: process.env.NODE_ENV === "development",
+		sourcemap: true,
 	},
 
 	server: {
 		allowedHosts: [".lipy.in"],
 		port: 3001,
-		host: true,
+		host: process.env.NODE_ENV !== "development",
+
 		proxy: {
 			"/api/**": {
 				target: `${process.env.VITE_API_URL}/api/**`,

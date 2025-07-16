@@ -161,7 +161,6 @@ export function DetailedAddress({
 						>
 							<FormInputWithAnimatedLabel
 								name="building"
-								placeholder="Flat No. 18, Vasant Apartment"
 								label="Flat No. / House No. / Building Name *"
 								required
 							/>
@@ -188,13 +187,11 @@ export function DetailedAddress({
 
 							<FormInputWithAnimatedLabel
 								name="receiverName"
-								placeholder="Joe Doe"
 								label="Receiver's Name (optional)"
 							/>
 
 							<FormInputWithAnimatedLabel
 								name="receiverPhone"
-								placeholder="example@gmail.com"
 								label="Receiver's Phone"
 								required
 								type="tel"

@@ -1,162 +1,268 @@
 import { apiClient } from "@lipy/lib/api";
+import { useUpload } from "@lipy/lib/hooks/use-upload";
 import { authClient } from "@lipy/lib/providers/auth";
-import { useAPIMutation } from "@lipy/lib/utils/useQueryClient";
-// import { discordNotification } from "@lipy/server/notification/discord";
-import type { addressSchema } from "@lipy/server/routes/loggedRoutes/address";
-import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
-import { Button } from "@lipy/web-ui/components/ui/button";
 import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-} from "@lipy/web-ui/components/ui/dialog";
-import { Progress } from "@lipy/web-ui/components/ui/progress";
+	apiQueryOptions,
+	useAPIMutation,
+} from "@lipy/lib/utils/useQueryClient";
+import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
+import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
+import { Dialog, DialogContent } from "@lipy/web-ui/components/ui/dialog";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
-import { useNavigate } from "@tanstack/react-router";
-import { StepForward } from "lucide-react";
-import { useEffect, useState } from "react";
-import type { z } from "zod";
+import { cn } from "@lipy/web-ui/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useCartStore } from "../cart/store";
 
-function ProgressDialog({
-	showDialog,
-	setShowDialog,
-}: {
-	showDialog: boolean;
-	setShowDialog: (showDialog: boolean) => void;
-}) {
-	const [progress, setProgress] = useState(0);
-
-	const navigate = useNavigate();
-
-	const { deliveryLocation } = useLocationStore();
-	const { instructions, resetCart } = useCartStore();
-
-	const mutation = useAPIMutation(apiClient.v1.order, "$post", {
-		onSuccess: async (data: {
-			orders: string[];
-		}) => {
-			setShowDialog(false);
-
-			if (data.orders.length > 1) {
-				navigate({
-					to: "/account/orders",
-				});
-			} else if (data.orders.length === 1) {
-				navigate({
-					to: `/account/orders/${data.orders[0]}`,
-				});
-			}
-
-			resetCart();
-		},
-
-		onError: () => {
-			toast.error("Failed to place order", {
-				description: "Something went wrong while placing your order.",
-			});
-		},
-	});
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		const interval = setInterval(() => {
-			setProgress((prev) => {
-				if (prev >= 100) {
-					clearInterval(interval);
-					return 100;
-				}
-				return prev + 1;
-			});
-		}, 100); // run for 10s
-
-		const timeout = setTimeout(() => {
-			mutation.mutateAsync({
-				json: {
-					address: deliveryLocation as z.infer<typeof addressSchema>,
-					deliveryInstruction: instructions.deliveryInstruction,
-					storeInstruction: null,
-				},
-			});
-		}, 10000);
-
-		// Cleanup
-		return () => {
-			clearInterval(interval);
-			clearTimeout(timeout);
-		};
-	}, [deliveryLocation]);
-
-	return (
-		<Dialog open={showDialog} onOpenChange={setShowDialog}>
-			<DialogContent>
-				<DialogHeader>
-					<DialogTitle />
-					<DialogDescription className="flex justify-start">
-						Placing order...
-					</DialogDescription>
-					<Progress value={progress} />
-				</DialogHeader>
-				<div className="flex justify-end mt-4">
-					<Button variant="outline" onClick={() => setShowDialog(false)}>
-						Cancel
-					</Button>
-				</div>
-			</DialogContent>
-		</Dialog>
-	);
+interface PlaceOrderProps {
+	setOpen: (open: boolean) => void;
+	customOrder?: boolean;
+	storeId?: string;
 }
 
 export default function PlaceOrder({
 	setOpen,
-}: {
-	setOpen: (open: boolean) => void;
-}) {
-	const { data } = authClient.useSession();
-	const [showDialog, setShowDialog] = useState(false);
+	customOrder = false,
+	storeId,
+}: PlaceOrderProps) {
+	const [orderPlaced, setOrderPlaced] = useState(false);
+	const { data: session } = authClient.useSession();
 	const { deliveryLocation } = useLocationStore();
 
-	const handlePlaceOrder = () => {
-		if (!data) {
+	const validateOrder = useCallback(() => {
+		if (!session) {
 			toast("You are not logged in", {
 				description: "Please log in to place an order",
 				action: (
-					<Button
-						onClick={() => {
-							window.location.href = "/login";
-						}}
-					>
+					<Link to="/login" className={cn(buttonVariants({ size: "sm" }))}>
 						Login
-					</Button>
+					</Link>
 				),
 			});
-		} else {
-			if (!deliveryLocation?.metadata?.building) {
-				toast("Please give delivery location details.");
-				setOpen(true);
-			} else {
-				setShowDialog(true);
-			}
+			return;
 		}
-	};
+
+		if (!deliveryLocation?.metadata?.building) {
+			toast("Please give delivery location details.");
+			setOpen(true);
+			return;
+		}
+
+		setOrderPlaced(true);
+	}, [session, deliveryLocation?.metadata?.building, setOpen]);
 
 	return (
-		<>
-			<div className="flex items-center gap-4 my-2 justify-between">
-				<div className="flex-1 text-center">
-					<p className="font-medium">Pay Cash/UPI</p>
-					<p>(on delivery)</p>
-				</div>
-				<Button onClick={handlePlaceOrder} className="flex-2" size="lg">
-					Place Order
-					<StepForward className="fill-card" />
-				</Button>
+		<div className="flex items-center gap-4 my-2 justify-between">
+			<div className="flex-1 text-center">
+				<p className="font-medium">Pay Cash/UPI</p>
+				<p>(on delivery)</p>
 			</div>
 
-			{showDialog && (
-				<ProgressDialog showDialog={showDialog} setShowDialog={setShowDialog} />
+			<Button
+				onClick={validateOrder}
+				className="flex-2"
+				size="lg"
+				disabled={orderPlaced}
+			>
+				Place order
+			</Button>
+
+			{orderPlaced && (
+				<PlaceOrderProgress
+					customOrder={customOrder}
+					storeId={storeId}
+					onComplete={() => setOrderPlaced(false)}
+				/>
 			)}
-		</>
+		</div>
+	);
+}
+
+interface PlaceOrderProgressProps {
+	customOrder?: boolean;
+	storeId?: string;
+	onComplete: () => void;
+}
+
+function PlaceOrderProgress({
+	customOrder = false,
+	storeId,
+	onComplete,
+}: PlaceOrderProgressProps) {
+	const { uploadedImages, instructions, resetCart, setUploadedImages, cart } =
+		useCartStore();
+	const navigate = useNavigate();
+	const { deliveryLocation } = useLocationStore();
+	const [showLoadingDialog, setShowLoadingDialog] = useState(true);
+	const [isProcessing, setIsProcessing] = useState(false);
+	const orderProcessedRef = useRef(false);
+	const queryClient = useQueryClient();
+
+	// Memoize store list to prevent re-renders
+	const storeList = useMemo(() => {
+		const storeIds = [
+			...new Set(cart.map((item) => item.storeId).filter(Boolean)),
+		];
+		return storeIds.map((id) => ({
+			id: id as string,
+			instruction: "",
+			attachments: [] as string[],
+		}));
+	}, [cart]);
+
+	const uploadResults = uploadedImages.map((image) =>
+		useUpload({ file: image }),
+	);
+
+	const uploadedUrls = useMemo(
+		() =>
+			uploadResults
+				.filter((result) => result.status === "success" && result.data?.url)
+				.map((result) => result.data?.url),
+		[uploadResults],
+	);
+
+	const orderMutation = useAPIMutation(
+		customOrder ? apiClient.v1.order.custom : apiClient.v1.order,
+		"$post",
+		{
+			onSuccess: (data: { orders: string[] }) => {
+				const { orders } = data;
+				setShowLoadingDialog(false);
+				setIsProcessing(false);
+				onComplete();
+
+				if (orders.length === 1) {
+					navigate({
+						to: "/account/orders/$orderId",
+						params: { orderId: orders[0] },
+					});
+				} else {
+					navigate({ to: "/account/orders" });
+				}
+				queryClient.invalidateQueries({
+					queryKey: apiQueryOptions(apiClient.v1.cart, "$get", {}).queryKey,
+				});
+
+				resetCart();
+				setUploadedImages([]);
+			},
+			onError: () => {
+				setShowLoadingDialog(false);
+				setIsProcessing(false);
+				onComplete();
+				toast.error("Failed to place order", {
+					description: "Something went wrong while placing your order.",
+				});
+			},
+		},
+	);
+
+	const handlePlaceOrder = useCallback(async () => {
+		if (isProcessing || orderProcessedRef.current) return;
+
+		setIsProcessing(true);
+		orderProcessedRef.current = true;
+
+		try {
+			await orderMutation.mutateAsync({
+				json: {
+					address: {
+						...deliveryLocation,
+						phone: deliveryLocation?.phone as string,
+						lat: deliveryLocation?.lat as number,
+						lng: deliveryLocation?.lng as number,
+						metadata: deliveryLocation?.metadata as { building: string },
+					},
+					deliveryInstruction: instructions.deliveryInstruction,
+					stores: customOrder
+						? [
+								{
+									id: storeId as string,
+									attachments: uploadedUrls as string[],
+									instruction: "",
+								},
+							]
+						: storeList,
+				},
+			});
+		} catch (error) {
+			setIsProcessing(false);
+			orderProcessedRef.current = false;
+		}
+	}, [
+		isProcessing,
+		orderMutation,
+		deliveryLocation,
+		instructions.deliveryInstruction,
+		customOrder,
+		storeId,
+		uploadedUrls,
+		storeList,
+	]);
+
+	const isUploading = uploadResults.some(
+		(result) => result.status === "pending",
+	);
+
+	useEffect(() => {
+		if (orderProcessedRef.current) return;
+
+		if (uploadResults.length === 0) {
+			handlePlaceOrder();
+			return;
+		}
+
+		const allUploadsComplete = uploadResults.every(
+			(result) => result.status === "success" || result.status === "error",
+		);
+
+		if (allUploadsComplete) {
+			const hasFailedUploads = uploadResults.some(
+				(result) => result.status === "error",
+			);
+
+			if (hasFailedUploads) {
+				setShowLoadingDialog(false);
+				onComplete();
+				toast.error("Upload failed", {
+					description: "Some files failed to upload. Please try again.",
+				});
+				return;
+			}
+
+			handlePlaceOrder();
+		}
+	}, [uploadResults, handlePlaceOrder, onComplete]);
+
+	const uploadProgress = useMemo(() => {
+		const completed = uploadResults.filter(
+			(r) => r.status === "success",
+		).length;
+		return { completed, total: uploadResults.length };
+	}, [uploadResults]);
+
+	return (
+		<Dialog open={showLoadingDialog} onOpenChange={() => {}}>
+			<DialogContent className="sm:max-w-md">
+				<div className="flex flex-col items-center text-center py-6">
+					<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4" />
+					<h3 className="text-lg font-semibold mb-2">
+						{isUploading ? "Uploading files..." : "Placing your order..."}
+					</h3>
+					<p className="text-muted-foreground text-sm">
+						{isUploading
+							? "Please wait while we upload your files"
+							: "Your order is being processed"}
+					</p>
+					{isUploading && (
+						<div className="mt-3 text-xs text-muted-foreground">
+							{uploadProgress.completed} / {uploadProgress.total} files uploaded
+						</div>
+					)}
+				</div>
+			</DialogContent>
+		</Dialog>
 	);
 }

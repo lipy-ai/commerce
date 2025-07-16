@@ -71,7 +71,13 @@ function RouteComponent() {
 					<CardContent>
 						<Label>Your uploaded prescriptions</Label>
 
-						<div className=" flex gap-4 overflow-x-auto scrollbar-hide -mx-4 p-4">
+						<div
+							className=" flex gap-4 overflow-x-auto scrollbar-hide -mx-4 p-4"
+							style={{
+								scrollbarWidth: "none",
+								msOverflowStyle: "none",
+							}}
+						>
 							{uploadedImages.map((file, index) => {
 								const objectUrl = URL.createObjectURL(file);
 

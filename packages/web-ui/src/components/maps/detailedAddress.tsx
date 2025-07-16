@@ -195,7 +195,7 @@ export function DetailedAddress({
 							<FormInputWithAnimatedLabel
 								name="receiverPhone"
 								placeholder="example@gmail.com"
-								label="Receiver's Phone (optional)"
+								label="Receiver's Phone"
 								required
 								type="tel"
 							/>

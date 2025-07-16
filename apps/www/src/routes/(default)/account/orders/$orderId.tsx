@@ -107,10 +107,12 @@ function RouteComponent() {
 						titleChildren={
 							<div>
 								<p className="font-semibold">Order Details</p>
-								<p className="text-muted-foreground text-xs">
-									{order?.items?.length || 0} item(s) |{" "}
-									{formatAmount(order.currency, totalPrice || 0)}{" "}
-								</p>
+								{order.items && order.items.length > 0 && (
+									<p className="text-muted-foreground text-xs">
+										{order?.items?.length || 0} item(s) |{" "}
+										{formatAmount(order.currency, totalPrice || 0)}{" "}
+									</p>
+								)}
 							</div>
 						}
 					>

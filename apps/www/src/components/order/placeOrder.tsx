@@ -12,9 +12,9 @@ import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { CircleCheck } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useCartStore } from "../cart/store";
-
 interface PlaceOrderProps {
 	setOpen: (open: boolean) => void;
 	customOrder?: boolean;
@@ -98,6 +98,7 @@ function PlaceOrderProgress({
 	const [isProcessing, setIsProcessing] = useState(false);
 	const orderProcessedRef = useRef(false);
 	const queryClient = useQueryClient();
+	const [isSuccess, setIsSuccess] = useState(false);
 
 	// Memoize store list to prevent re-renders
 	const storeList = useMemo(() => {
@@ -128,26 +129,29 @@ function PlaceOrderProgress({
 		"$post",
 		{
 			onSuccess: (data: { orders: string[] }) => {
-				const { orders } = data;
-				setShowLoadingDialog(false);
-				setIsProcessing(false);
-				onComplete();
+				setIsSuccess(true);
+				setTimeout(() => {
+					setShowLoadingDialog(false);
+					setIsProcessing(false);
+					onComplete();
 
-				if (orders.length === 1) {
-					navigate({
-						to: "/account/orders/$orderId",
-						params: { orderId: orders[0] },
+					const { orders } = data;
+					if (orders.length === 1) {
+						navigate({
+							to: "/account/orders/$orderId",
+							params: { orderId: orders[0] },
+						});
+					} else {
+						navigate({ to: "/account/orders" });
+					}
+					queryClient.invalidateQueries({
+						queryKey: apiQueryOptions(apiClient.v1.cart, "$get", {}).queryKey,
 					});
-				} else {
-					navigate({ to: "/account/orders" });
-				}
-				queryClient.invalidateQueries({
-					queryKey: apiQueryOptions(apiClient.v1.cart, "$get", {}).queryKey,
-				});
-
-				resetCart();
-				setUploadedImages([]);
+					resetCart();
+					setUploadedImages([]);
+				}, 2500);
 			},
+
 			onError: () => {
 				setShowLoadingDialog(false);
 				setIsProcessing(false);
@@ -166,6 +170,7 @@ function PlaceOrderProgress({
 		orderProcessedRef.current = true;
 
 		try {
+			await new Promise((resolve) => setTimeout(resolve, 5000));
 			await orderMutation.mutateAsync({
 				json: {
 					address: {
@@ -247,14 +252,25 @@ function PlaceOrderProgress({
 		<Dialog open={showLoadingDialog} onOpenChange={() => {}}>
 			<DialogContent className="sm:max-w-md">
 				<div className="flex flex-col items-center text-center py-6">
-					<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4" />
+					{isSuccess ? (
+						<CircleCheck className="size-12 text-emerald-600 stroke-2" />
+					) : (
+						<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4" />
+					)}
+
 					<h3 className="text-lg font-semibold mb-2">
-						{isUploading ? "Uploading files..." : "Placing your order..."}
+						{isUploading
+							? "Uploading files..."
+							: isSuccess
+								? "Order placed successfully!"
+								: "Placing your order..."}
 					</h3>
 					<p className="text-muted-foreground text-sm">
 						{isUploading
 							? "Please wait while we upload your files"
-							: "Your order is being processed"}
+							: isSuccess
+								? "Redirecting you to your orders..."
+								: "Your order is being processed"}
 					</p>
 					{isUploading && (
 						<div className="mt-3 text-xs text-muted-foreground">

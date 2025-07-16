@@ -196,6 +196,8 @@ export function DetailedAddress({
 								name="receiverPhone"
 								placeholder="example@gmail.com"
 								label="Receiver's Phone (optional)"
+								required
+								type="tel"
 							/>
 
 							<div className="fixed bottom-0 left-0 right-0 bg-card p-4 shadow-t z-10 w-full">

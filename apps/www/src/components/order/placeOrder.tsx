@@ -32,7 +32,7 @@ function ProgressDialog({
 	const navigate = useNavigate();
 
 	const { deliveryLocation } = useLocationStore();
-	const { instructions } = useCartStore();
+	const { instructions, resetCart } = useCartStore();
 
 	const mutation = useAPIMutation(apiClient.v1.order, "$post", {
 		onSuccess: async (data: {
@@ -49,34 +49,8 @@ function ProgressDialog({
 					to: `/account/orders/${data.orders[0]}`,
 				});
 			}
-			/**
-			 * What is this server function doing in client? Remove it
-			 */
 
-			// discordNotification({
-			// 	type: "orderPlaced",
-			// 	fields: [
-			// 		{
-			// 			name: "Order ID",
-			// 			value: data.orders.toString(),
-			// 		},
-			// 		{
-			// 			name: "Customer",
-			// 			value: session?.user.email || session?.session.userId || "",
-			// 		},
-			// 		{
-			// 			name: "Total Bill",
-			// 			value: `₹ ${cart.reduce(
-			// 				(sum, item) => sum + Number(item.price ?? 0),
-			// 				0,
-			// 			)}`,
-			// 		},
-			// 		{
-			// 			name: "Delivery Address",
-			// 			value: `${deliveryLocation?.metadata?.building}, ${deliveryLocation?.line1}`,
-			// 		},
-			// 	],
-			// });
+			resetCart();
 		},
 
 		onError: () => {

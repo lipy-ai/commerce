@@ -1,6 +1,6 @@
 import { cn } from "@lipy/web-ui/lib/utils";
 import { useNavigate } from "@tanstack/react-router";
-import { Search, X } from "lucide-react";
+import { ChevronLeft, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { Button } from "../ui/button";
@@ -50,7 +50,22 @@ export default function SearchBar({
 					setValue(e.currentTarget.value);
 				}}
 				placeholder={placeholder || "Search"}
-				prefixEl={<Search />}
+				prefixEl={
+					fullPageSearch ? (
+						<Button
+							variant="ghost"
+							size="icon-xs"
+							onClick={(e) => {
+								e.preventDefault();
+								window.history.back();
+							}}
+						>
+							<ChevronLeft className="stroke-2 size-5" />
+						</Button>
+					) : (
+						<Search />
+					)
+				}
 				suffixEl={
 					value && (
 						<Button

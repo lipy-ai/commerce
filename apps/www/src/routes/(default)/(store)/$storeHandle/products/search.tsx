@@ -45,13 +45,13 @@ function RouteComponent() {
 
 	return (
 		<div className="w-full relative">
-			<DashboardHeader className="bg-background" title="Search products" />
-
-			<SearchBar
-				className="w-full p-4 sticky top-0 z-50 bg-background"
-				fullPageSearch
-				placeholder={`Search in ${storeInfo?.name}`}
-			/>
+			<DashboardHeader className="bg-background px-0" hideBackBtn>
+				<SearchBar
+					className="w-full pr-4"
+					fullPageSearch
+					placeholder={`Search in ${storeInfo?.name}`}
+				/>
+			</DashboardHeader>
 
 			<div>
 				{isFetching ? (

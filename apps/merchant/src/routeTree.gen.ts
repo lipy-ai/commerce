@@ -10,18 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ErrorRouteImport } from './routes/error'
+import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as dashboardRouteRouteImport } from './routes/(dashboard)/route'
 import { Route as RegisterIndexRouteImport } from './routes/register/index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as dashboardIndexRouteImport } from './routes/(dashboard)/index'
 import { Route as authLogoutRouteImport } from './routes/(auth)/logout'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as dashboardAccountRouteRouteImport } from './routes/(dashboard)/account/route'
+import { Route as AdminProductIndexRouteImport } from './routes/admin/product/index'
 import { Route as AcceptInvitationIdIndexRouteImport } from './routes/accept-invitation/$id/index'
 import { Route as dashboardStoreIndexRouteImport } from './routes/(dashboard)/store/index'
 import { Route as dashboardProductIndexRouteImport } from './routes/(dashboard)/product/index'
 import { Route as dashboardOrderIndexRouteImport } from './routes/(dashboard)/order/index'
 import { Route as dashboardCustomerIndexRouteImport } from './routes/(dashboard)/customer/index'
 import { Route as dashboardAccountIndexRouteImport } from './routes/(dashboard)/account/index'
+import { Route as AdminProductCreateRouteImport } from './routes/admin/product/create'
+import { Route as AdminProductAddRouteImport } from './routes/admin/product/add'
+import { Route as AdminProductIdRouteImport } from './routes/admin/product/$id'
 import { Route as dashboardStoreStaffRouteImport } from './routes/(dashboard)/store/staff'
 import { Route as dashboardProductCreateRouteImport } from './routes/(dashboard)/product/create'
 import { Route as dashboardProductAddRouteImport } from './routes/(dashboard)/product/add'
@@ -39,6 +45,11 @@ const ErrorRoute = ErrorRouteImport.update({
   path: '/error',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRouteRoute = AdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const dashboardRouteRoute = dashboardRouteRouteImport.update({
   id: '/(dashboard)',
   getParentRoute: () => rootRouteImport,
@@ -47,6 +58,11 @@ const RegisterIndexRoute = RegisterIndexRouteImport.update({
   id: '/register/',
   path: '/register/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const dashboardIndexRoute = dashboardIndexRouteImport.update({
   id: '/',
@@ -67,6 +83,11 @@ const dashboardAccountRouteRoute = dashboardAccountRouteRouteImport.update({
   id: '/account',
   path: '/account',
   getParentRoute: () => dashboardRouteRoute,
+} as any)
+const AdminProductIndexRoute = AdminProductIndexRouteImport.update({
+  id: '/product/',
+  path: '/product/',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AcceptInvitationIdIndexRoute = AcceptInvitationIdIndexRouteImport.update({
   id: '/accept-invitation/$id/',
@@ -97,6 +118,21 @@ const dashboardAccountIndexRoute = dashboardAccountIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => dashboardAccountRouteRoute,
+} as any)
+const AdminProductCreateRoute = AdminProductCreateRouteImport.update({
+  id: '/product/create',
+  path: '/product/create',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminProductAddRoute = AdminProductAddRouteImport.update({
+  id: '/product/add',
+  path: '/product/add',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminProductIdRoute = AdminProductIdRouteImport.update({
+  id: '/product/$id',
+  path: '/product/$id',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const dashboardStoreStaffRoute = dashboardStoreStaffRouteImport.update({
   id: '/store/staff',
@@ -158,10 +194,12 @@ const dashboardOrderIdIndexRoute = dashboardOrderIdIndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof dashboardIndexRoute
+  '/admin': typeof AdminRouteRouteWithChildren
   '/error': typeof ErrorRoute
   '/account': typeof dashboardAccountRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
+  '/admin/': typeof AdminIndexRoute
   '/register': typeof RegisterIndexRoute
   '/account/preferences': typeof dashboardAccountPreferencesRoute
   '/account/profile': typeof dashboardAccountProfileRoute
@@ -173,12 +211,16 @@ export interface FileRoutesByFullPath {
   '/product/add': typeof dashboardProductAddRoute
   '/product/create': typeof dashboardProductCreateRoute
   '/store/staff': typeof dashboardStoreStaffRoute
+  '/admin/product/$id': typeof AdminProductIdRoute
+  '/admin/product/add': typeof AdminProductAddRoute
+  '/admin/product/create': typeof AdminProductCreateRoute
   '/account/': typeof dashboardAccountIndexRoute
   '/customer': typeof dashboardCustomerIndexRoute
   '/order': typeof dashboardOrderIndexRoute
   '/product': typeof dashboardProductIndexRoute
   '/store': typeof dashboardStoreIndexRoute
   '/accept-invitation/$id': typeof AcceptInvitationIdIndexRoute
+  '/admin/product': typeof AdminProductIndexRoute
   '/order/$id': typeof dashboardOrderIdIndexRoute
 }
 export interface FileRoutesByTo {
@@ -186,6 +228,7 @@ export interface FileRoutesByTo {
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
   '/': typeof dashboardIndexRoute
+  '/admin': typeof AdminIndexRoute
   '/register': typeof RegisterIndexRoute
   '/account/preferences': typeof dashboardAccountPreferencesRoute
   '/account/profile': typeof dashboardAccountProfileRoute
@@ -197,22 +240,28 @@ export interface FileRoutesByTo {
   '/product/add': typeof dashboardProductAddRoute
   '/product/create': typeof dashboardProductCreateRoute
   '/store/staff': typeof dashboardStoreStaffRoute
+  '/admin/product/$id': typeof AdminProductIdRoute
+  '/admin/product/add': typeof AdminProductAddRoute
+  '/admin/product/create': typeof AdminProductCreateRoute
   '/account': typeof dashboardAccountIndexRoute
   '/customer': typeof dashboardCustomerIndexRoute
   '/order': typeof dashboardOrderIndexRoute
   '/product': typeof dashboardProductIndexRoute
   '/store': typeof dashboardStoreIndexRoute
   '/accept-invitation/$id': typeof AcceptInvitationIdIndexRoute
+  '/admin/product': typeof AdminProductIndexRoute
   '/order/$id': typeof dashboardOrderIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(dashboard)': typeof dashboardRouteRouteWithChildren
+  '/admin': typeof AdminRouteRouteWithChildren
   '/error': typeof ErrorRoute
   '/(dashboard)/account': typeof dashboardAccountRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/logout': typeof authLogoutRoute
   '/(dashboard)/': typeof dashboardIndexRoute
+  '/admin/': typeof AdminIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/(dashboard)/account/preferences': typeof dashboardAccountPreferencesRoute
   '/(dashboard)/account/profile': typeof dashboardAccountProfileRoute
@@ -224,22 +273,28 @@ export interface FileRoutesById {
   '/(dashboard)/product/add': typeof dashboardProductAddRoute
   '/(dashboard)/product/create': typeof dashboardProductCreateRoute
   '/(dashboard)/store/staff': typeof dashboardStoreStaffRoute
+  '/admin/product/$id': typeof AdminProductIdRoute
+  '/admin/product/add': typeof AdminProductAddRoute
+  '/admin/product/create': typeof AdminProductCreateRoute
   '/(dashboard)/account/': typeof dashboardAccountIndexRoute
   '/(dashboard)/customer/': typeof dashboardCustomerIndexRoute
   '/(dashboard)/order/': typeof dashboardOrderIndexRoute
   '/(dashboard)/product/': typeof dashboardProductIndexRoute
   '/(dashboard)/store/': typeof dashboardStoreIndexRoute
   '/accept-invitation/$id/': typeof AcceptInvitationIdIndexRoute
+  '/admin/product/': typeof AdminProductIndexRoute
   '/(dashboard)/order/$id/': typeof dashboardOrderIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/error'
     | '/account'
     | '/login'
     | '/logout'
+    | '/admin/'
     | '/register'
     | '/account/preferences'
     | '/account/profile'
@@ -251,12 +306,16 @@ export interface FileRouteTypes {
     | '/product/add'
     | '/product/create'
     | '/store/staff'
+    | '/admin/product/$id'
+    | '/admin/product/add'
+    | '/admin/product/create'
     | '/account/'
     | '/customer'
     | '/order'
     | '/product'
     | '/store'
     | '/accept-invitation/$id'
+    | '/admin/product'
     | '/order/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -264,6 +323,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/logout'
     | '/'
+    | '/admin'
     | '/register'
     | '/account/preferences'
     | '/account/profile'
@@ -275,21 +335,27 @@ export interface FileRouteTypes {
     | '/product/add'
     | '/product/create'
     | '/store/staff'
+    | '/admin/product/$id'
+    | '/admin/product/add'
+    | '/admin/product/create'
     | '/account'
     | '/customer'
     | '/order'
     | '/product'
     | '/store'
     | '/accept-invitation/$id'
+    | '/admin/product'
     | '/order/$id'
   id:
     | '__root__'
     | '/(dashboard)'
+    | '/admin'
     | '/error'
     | '/(dashboard)/account'
     | '/(auth)/login'
     | '/(auth)/logout'
     | '/(dashboard)/'
+    | '/admin/'
     | '/register/'
     | '/(dashboard)/account/preferences'
     | '/(dashboard)/account/profile'
@@ -301,17 +367,22 @@ export interface FileRouteTypes {
     | '/(dashboard)/product/add'
     | '/(dashboard)/product/create'
     | '/(dashboard)/store/staff'
+    | '/admin/product/$id'
+    | '/admin/product/add'
+    | '/admin/product/create'
     | '/(dashboard)/account/'
     | '/(dashboard)/customer/'
     | '/(dashboard)/order/'
     | '/(dashboard)/product/'
     | '/(dashboard)/store/'
     | '/accept-invitation/$id/'
+    | '/admin/product/'
     | '/(dashboard)/order/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   dashboardRouteRoute: typeof dashboardRouteRouteWithChildren
+  AdminRouteRoute: typeof AdminRouteRouteWithChildren
   ErrorRoute: typeof ErrorRoute
   authLoginRoute: typeof authLoginRoute
   authLogoutRoute: typeof authLogoutRoute
@@ -328,6 +399,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ErrorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/(dashboard)': {
       id: '/(dashboard)'
       path: '/'
@@ -341,6 +419,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/register'
       preLoaderRoute: typeof RegisterIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/(dashboard)/': {
       id: '/(dashboard)/'
@@ -369,6 +454,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/account'
       preLoaderRoute: typeof dashboardAccountRouteRouteImport
       parentRoute: typeof dashboardRouteRoute
+    }
+    '/admin/product/': {
+      id: '/admin/product/'
+      path: '/product'
+      fullPath: '/admin/product'
+      preLoaderRoute: typeof AdminProductIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/accept-invitation/$id/': {
       id: '/accept-invitation/$id/'
@@ -411,6 +503,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/account/'
       preLoaderRoute: typeof dashboardAccountIndexRouteImport
       parentRoute: typeof dashboardAccountRouteRoute
+    }
+    '/admin/product/create': {
+      id: '/admin/product/create'
+      path: '/product/create'
+      fullPath: '/admin/product/create'
+      preLoaderRoute: typeof AdminProductCreateRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/product/add': {
+      id: '/admin/product/add'
+      path: '/product/add'
+      fullPath: '/admin/product/add'
+      preLoaderRoute: typeof AdminProductAddRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/product/$id': {
+      id: '/admin/product/$id'
+      path: '/product/$id'
+      fullPath: '/admin/product/$id'
+      preLoaderRoute: typeof AdminProductIdRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/(dashboard)/store/staff': {
       id: '/(dashboard)/store/staff'
@@ -549,8 +662,29 @@ const dashboardRouteRouteWithChildren = dashboardRouteRoute._addFileChildren(
   dashboardRouteRouteChildren,
 )
 
+interface AdminRouteRouteChildren {
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminProductIdRoute: typeof AdminProductIdRoute
+  AdminProductAddRoute: typeof AdminProductAddRoute
+  AdminProductCreateRoute: typeof AdminProductCreateRoute
+  AdminProductIndexRoute: typeof AdminProductIndexRoute
+}
+
+const AdminRouteRouteChildren: AdminRouteRouteChildren = {
+  AdminIndexRoute: AdminIndexRoute,
+  AdminProductIdRoute: AdminProductIdRoute,
+  AdminProductAddRoute: AdminProductAddRoute,
+  AdminProductCreateRoute: AdminProductCreateRoute,
+  AdminProductIndexRoute: AdminProductIndexRoute,
+}
+
+const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
+  AdminRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   dashboardRouteRoute: dashboardRouteRouteWithChildren,
+  AdminRouteRoute: AdminRouteRouteWithChildren,
   ErrorRoute: ErrorRoute,
   authLoginRoute: authLoginRoute,
   authLogoutRoute: authLogoutRoute,

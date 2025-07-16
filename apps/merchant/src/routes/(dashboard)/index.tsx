@@ -21,7 +21,7 @@ import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
-import { Check, StoreIcon } from "lucide-react";
+import { Check, Clock10, StoreIcon } from "lucide-react";
 import { Shirt, ShoppingCart, SquareUser, Store } from "lucide-react";
 
 import {
@@ -32,6 +32,7 @@ import {
 	ChartTooltip,
 	ChartTooltipContent,
 } from "@lipy/web-ui/components/ui/chart";
+import { Label } from "@lipy/web-ui/components/ui/label";
 import { format } from "date-fns";
 import type { InferResponseType } from "hono";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
@@ -189,10 +190,11 @@ function Orders({
 
 	if (!data || data.length === 0) {
 		return (
-			<Card className="">
-				<CardHeader>
-					<CardTitle>No Incoming Orders.</CardTitle>
-				</CardHeader>
+			<Card className="flex-1 py-8">
+				<CardContent className="flex flex-1 justify-center flex-col gap-4 text-muted-foreground items-center">
+					<Clock10 className="size-16" />
+					<Label className="text-lg">No Incoming Orders.</Label>
+				</CardContent>
 			</Card>
 		);
 	}

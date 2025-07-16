@@ -359,6 +359,7 @@ export const orders = schema.table("orders", {
 	customerInstructions: jsonb("customerInstructions").$type<{
 		delivery?: string | null;
 		store?: string | null;
+		attachments?: Array<string> | null;
 	}>(),
 	paymentMethod: text("paymentMethod", { enum: ["cod", "upi", "card"] }),
 	orderedAt: timestamp("orderedAt").notNull(),

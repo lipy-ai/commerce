@@ -143,6 +143,7 @@ function RouteComponent() {
 													classNameBox: "w-full h-full",
 												}}
 												storeHandle={storeHandle}
+												storeId={shopData?.id}
 											/>
 										</div>
 									))}

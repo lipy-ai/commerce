@@ -1,12 +1,9 @@
-import type { apiClient } from "@lipy/lib/api";
-import type { InferResponseType } from "hono/client";
+import type { addressSchema } from "@lipy/server/routes/loggedRoutes/address";
+import type { z } from "zod";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-export type DeliveryLocation = Exclude<
-	InferResponseType<typeof apiClient.v1.address.primary.$get>,
-	null
->;
+export type DeliveryLocation = z.infer<typeof addressSchema>;
 type LocationStore = {
 	deliveryLocation: DeliveryLocation;
 	setDeliveryLocation: (deliveryLocation: DeliveryLocation) => void;
@@ -16,7 +13,6 @@ type LocationStore = {
 
 export const defaultDeliveryLocationState: LocationStore = {
 	deliveryLocation: {
-		id: "",
 		name: "",
 		tag: "other",
 		line1: "",
@@ -25,7 +21,7 @@ export const defaultDeliveryLocationState: LocationStore = {
 		state: "",
 		country: "",
 		postalCode: "",
-		phone: "",
+		phone: undefined,
 		lat: 0,
 		lng: 0,
 		metadata: { building: "" },

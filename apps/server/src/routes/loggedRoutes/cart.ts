@@ -42,6 +42,7 @@ const route = new Hono<ServerContext>()
 				"s.handle as storeHandle",
 				"s.name as storeName",
 				"s.image as storeLogo",
+				"s.id as storeId",
 			])
 			.execute();
 

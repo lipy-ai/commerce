@@ -12,17 +12,150 @@ const paramSchema = z.object({
 });
 
 const orderSchema = z.object({
-	address: addressSchema,
+	stores: z.array(
+		z.object({
+			id: z.string().uuid(),
+			instruction: z.string(),
+			attachments: z.array(z.string()).max(10),
+			coupon: z.string().optional(),
+		}),
+	),
+	address: addressSchema.required(),
 	deliveryInstruction: z.string().nullable(),
-	storeInstruction: z
-		.array(z.object({ id: z.string().uuid(), instruction: z.string() }))
-		.nullable(),
-	coupon: z.string().optional(),
 });
 
 const querySchema = z.object({
 	view: z.enum(["active", "all"]).default("all"),
 });
+
+const getCart = async (userId: string) => {
+	return await db
+		.selectFrom("cart as c")
+		.where("c.userId", "=", userId!)
+		.rightJoin("storeInventory as si", "si.id", "c.inventoryId")
+		.rightJoin("productVariant as pv", "pv.id", "si.productVariant")
+		.rightJoin("product as p", "p.id", "pv.productId")
+		.select((eb) => [
+			eb.fn.toJson("c").as("cart"),
+			eb.fn.toJson("p").as("product"),
+			eb.fn.toJson("pv").as("variant"),
+			eb.fn.toJson("si").as("inventory"),
+		])
+		.execute();
+};
+
+const generateOrders = ({
+	stores,
+	cart,
+	address,
+	deliveryInstruction,
+	user,
+}: {
+	cart: Awaited<ReturnType<typeof getCart>>;
+	user: ServerContext["Variables"]["user"];
+} & Pick<
+	z.infer<typeof orderSchema>,
+	"stores" | "address" | "deliveryInstruction"
+>): DBTypes["orders"][] => {
+	const orders: DBTypes["orders"][] = [];
+
+	for (const s of stores) {
+		const items: NonNullable<DBTypes["orders"]["items"]> = [];
+
+		const taxes: DBTypes["orders"]["taxes"] = [];
+		const discounts: DBTypes["orders"]["discounts"] = [];
+
+		for (const c of cart) {
+			if (c.inventory.storeId === s.id) {
+				items.push({
+					id: c.product.id!,
+					title: c.product.title!,
+					quantity: c.cart.quantity!,
+					thumbnail: c.variant.images?.[0] || c.product.thumbnail!,
+					variant: {
+						id: c.variant.id!,
+						inventoryId: c.inventory.id!,
+						maxPrice: c.variant.price || 0,
+						price: c.inventory.price || 0,
+						unit: c.variant.unit!,
+					},
+				} satisfies NonNullable<DBTypes["orders"]["items"]>[0]);
+			}
+		}
+
+		if (items.length === 0 && !s.instruction && s.attachments.length === 0) {
+			throw new HTTPError(400, {
+				message: "No cart items nor instructions order!",
+			});
+		}
+
+		let itemTotalAmount = 0;
+		let maxItemTotalAmount = 0;
+		let totalTaxAmount = 0;
+		let totalDiscountAmount = 0;
+
+		for (const t of items) {
+			itemTotalAmount = t.quantity * t.variant.price + itemTotalAmount;
+			maxItemTotalAmount = t.quantity * t.variant.maxPrice + maxItemTotalAmount;
+		}
+		for (const t of taxes || []) {
+			totalTaxAmount = totalTaxAmount + t.amount;
+			itemTotalAmount = itemTotalAmount + t.amount;
+			maxItemTotalAmount = maxItemTotalAmount + t.amount;
+		}
+
+		for (const t of discounts || []) {
+			totalDiscountAmount = totalDiscountAmount + t.amount;
+			itemTotalAmount = itemTotalAmount - t.amount;
+			maxItemTotalAmount = maxItemTotalAmount - t.amount;
+		}
+
+		orders.push({
+			id: idGenerate({ prefix: "ORD", timestamp: true }),
+			pk: crypto.randomUUID(),
+			status: "ordered",
+			items,
+			taxes,
+			discounts,
+			currency: "inr",
+			storeId: s.id!,
+			customerId: user?.id!,
+			customerDetails: {
+				name: user?.name!,
+				phone: user?.phoneNumber!,
+				email: user?.email!,
+				address: address,
+			},
+			customerInstructions: {
+				delivery: deliveryInstruction,
+				store: s.instruction,
+				attachments: s.attachments,
+			},
+			paymentMethod: "cod",
+			orderedAt: new Date(),
+			itemTotalAmount,
+			totalAmount: maxItemTotalAmount - itemTotalAmount,
+			amountSaved: maxItemTotalAmount - itemTotalAmount,
+			totalTaxAmount,
+			totalDiscountAmount,
+			maxItemTotalAmount,
+			delivery: null,
+			cancelledAt: null,
+			refundedAt: null,
+			deliveredAt: null,
+			deliveryAgentAssignedAt: null,
+		} satisfies NonNullable<DBTypes["orders"]>);
+	}
+
+	if (!orders || orders.length === 0) {
+		throw new HTTPError(400, {
+			message: "Empty order!",
+		});
+	}
+
+	return orders;
+};
+
 const route = new Hono<ServerContext>()
 	.get("/", zValidator("query", querySchema), async (c) => {
 		const session = c.get("session");
@@ -95,114 +228,9 @@ const route = new Hono<ServerContext>()
 		if (!values.address)
 			throw new HTTPError(404, { message: "Address not found!" });
 
-		const cart = await db
-			.selectFrom("cart as c")
-			.where("c.userId", "=", session?.userId!)
-			.rightJoin("storeInventory as si", "si.id", "c.inventoryId")
-			.rightJoin("productVariant as pv", "pv.id", "si.productVariant")
-			.rightJoin("product as p", "p.id", "pv.productId")
-			.select((eb) => [
-				eb.fn.toJson("c").as("cart"),
-				eb.fn.toJson("p").as("product"),
-				eb.fn.toJson("pv").as("variant"),
-				eb.fn.toJson("si").as("inventory"),
-			])
-			.execute();
+		const cart = await getCart(session?.userId!);
 
-		const orders: DBTypes["orders"][] = [];
-
-		for (const c of cart) {
-			const item = {
-				id: c.product.id!,
-				title: c.product.title!,
-				quantity: c.cart.quantity!,
-				thumbnail: c.variant.images?.[0] || c.product.thumbnail!,
-				variant: {
-					id: c.variant.id!,
-					inventoryId: c.inventory.id!,
-					maxPrice: c.variant.price || 0,
-					price: c.inventory.price || 0,
-					unit: c.variant.unit!,
-				},
-			} satisfies NonNullable<DBTypes["orders"]["items"]>[0];
-
-			const store = orders.find((s) => s?.storeId === c.inventory.storeId);
-
-			if (store) {
-				store.items?.push(item);
-			} else {
-				orders.push({
-					id: idGenerate({ prefix: "ORD", timestamp: true }),
-					pk: crypto.randomUUID(),
-					status: "ordered",
-					items: [item],
-					taxes: [],
-					discounts: [],
-					currency: "inr",
-					storeId: c.inventory.storeId!,
-					customerId: session?.userId!,
-					customerDetails: {
-						name: user?.name!,
-						phone: user?.phoneNumber!,
-						email: user?.email!,
-						address: values?.address,
-					},
-					customerInstructions: {
-						delivery: values.deliveryInstruction,
-						store: values.storeInstruction?.find(
-							(s) => s.id === c.inventory.storeId,
-						)?.instruction,
-					},
-					paymentMethod: "cod",
-					orderedAt: new Date(),
-					itemTotalAmount: 0,
-					totalAmount: 0,
-					amountSaved: 0,
-					totalTaxAmount: 0,
-					totalDiscountAmount: 0,
-					maxItemTotalAmount: 0,
-					delivery: null,
-					cancelledAt: null,
-					refundedAt: null,
-					deliveredAt: null,
-					deliveryAgentAssignedAt: null,
-				} satisfies NonNullable<DBTypes["orders"]>);
-			}
-		}
-
-		for (let index = 0; index < orders.length; index++) {
-			const el = orders[index];
-
-			let itemTotalAmount = 0;
-			let maxItemTotalAmount = 0;
-			let totalTaxAmount = 0;
-			let totalDiscountAmount = 0;
-
-			if (!el?.items) return;
-			for (const t of el.items) {
-				itemTotalAmount = t.quantity * t.variant.price + itemTotalAmount;
-				maxItemTotalAmount =
-					t.quantity * t.variant.maxPrice + maxItemTotalAmount;
-			}
-			for (const t of el.taxes || []) {
-				totalTaxAmount = totalTaxAmount + t.amount;
-				itemTotalAmount = itemTotalAmount + t.amount;
-				maxItemTotalAmount = maxItemTotalAmount + t.amount;
-			}
-
-			for (const t of el.discounts || []) {
-				totalDiscountAmount = totalDiscountAmount + t.amount;
-				itemTotalAmount = itemTotalAmount - t.amount;
-				maxItemTotalAmount = maxItemTotalAmount - t.amount;
-			}
-
-			el.amountSaved = maxItemTotalAmount - itemTotalAmount;
-			el.totalAmount = maxItemTotalAmount - itemTotalAmount;
-			el.itemTotalAmount = itemTotalAmount;
-			el.maxItemTotalAmount = maxItemTotalAmount;
-			el.totalTaxAmount = totalTaxAmount;
-			el.totalDiscountAmount = totalDiscountAmount;
-		}
+		const orders = generateOrders({ cart, user, ...values });
 
 		await db.insertInto("orders").values(orders).execute();
 
@@ -227,6 +255,21 @@ const route = new Hono<ServerContext>()
 			.set({ status: "cancelled" })
 			.execute();
 		return c.json({ success: true });
+	})
+	.post("/custom", zValidator("json", orderSchema), async (c) => {
+		const user = c.get("user");
+		const values = c.req.valid("json");
+		if (!values?.address)
+			throw new HTTPError(404, { message: "Address not found!" });
+
+		const orders = generateOrders({ cart: [], user, ...values });
+
+		await db.insertInto("orders").values(orders).execute();
+
+		for (const ord of orders) {
+			c.get("emitter").emit(c, "order:created", ord);
+		}
+		return c.json({ orders: orders.map((o) => o.id) });
 	});
 
 export { route as orderRoute };

@@ -185,84 +185,127 @@ function RouteComponent() {
 								</CardContent>
 							</Card>
 
-							<Card>
-								<CardHeader>
-									<CardTitle>Item(s) ordered</CardTitle>
-								</CardHeader>
-								<CardContent className="space-y-6">
-									{order?.items?.map((product, i) => (
-										<div key={i} className="flex gap-2 items-center">
-											<Link
-												to="/$storeHandle/products/$productId"
-												params={{
-													storeHandle: order?.storeHandle ?? "",
-													productId: product?.id ?? "",
+							{order?.items && order?.items.length > 0 && (
+								<Card>
+									<CardHeader>
+										<CardTitle>Item(s) ordered</CardTitle>
+									</CardHeader>
+									<CardContent className="space-y-6">
+										{order?.items?.map((product, i) => (
+											<div key={i} className="flex gap-2 items-center">
+												<Link
+													to="/$storeHandle/products/$productId"
+													params={{
+														storeHandle: order?.storeHandle ?? "",
+														productId: product?.id ?? "",
+													}}
+												>
+													<img
+														src={
+															product.thumbnail || "https://picsum.photos/200"
+														}
+														alt=""
+														className="size-12 border rounded bg-accent"
+													/>
+												</Link>
+
+												<div className="flex-1">
+													<h2 className="leading-4 line-clamp-2">
+														{product.title}
+													</h2>
+													<p className="text-muted-foreground text-xs">
+														{product.variant.unit}
+													</p>
+												</div>
+												<div className="text-right">
+													<p className="font-medium">
+														{formatAmount(
+															order.currency,
+															product.variant.price || 0,
+														)}
+													</p>
+													<p className="text-sm text-muted-foreground">
+														Qty {product.quantity || 0}
+													</p>
+												</div>
+											</div>
+										))}
+									</CardContent>
+								</Card>
+							)}
+
+							{order?.customerInstructions?.attachments &&
+								order?.customerInstructions?.attachments?.length > 0 && (
+									<Card>
+										<CardHeader>
+											<CardTitle>Your attachments</CardTitle>
+										</CardHeader>
+
+										<CardContent>
+											<div
+												className=" flex gap-4 overflow-x-auto scrollbar-hide -mx-4 p-4"
+												style={{
+													scrollbarWidth: "none",
+													msOverflowStyle: "none",
 												}}
 											>
-												<img
-													src={product.thumbnail || "https://picsum.photos/200"}
-													alt=""
-													className="size-12 border rounded bg-accent"
-												/>
-											</Link>
-
-											<div className="flex-1">
-												<h2 className="leading-4 line-clamp-2">
-													{product.title}
-												</h2>
-												<p className="text-muted-foreground text-xs">
-													{product.variant.unit}
-												</p>
+												{order?.customerInstructions?.attachments?.map(
+													(file, index) => {
+														return (
+															<div
+																key={index}
+																className="relative flex-shrink-0"
+															>
+																<img
+																	src={file}
+																	alt={`Prescription ${index + 1}`}
+																	className="object-cover w-32 h-44 border rounded-xl"
+																/>
+															</div>
+														);
+													},
+												)}
 											</div>
-											<div className="text-right">
-												<p className="font-medium">
-													{formatAmount(
-														order.currency,
-														product.variant.price || 0,
-													)}
-												</p>
-												<p className="text-sm text-muted-foreground">
-													Qty {product.quantity || 0}
-												</p>
-											</div>
-										</div>
-									))}
-								</CardContent>
-							</Card>
+										</CardContent>
+									</Card>
+								)}
 						</div>
 
 						<div className="col-span-5 space-y-4 p-4 -mt-4">
-							<Card>
-								<CardHeader>
-									<CardTitle>Bill Summary</CardTitle>
-								</CardHeader>
-								<CardContent className="space-y-2">
-									<div className="flex justify-between text-sm">
-										<p>Item Total ({order.items?.length ?? 0})</p>
-										<p className="font-medium">
-											{formatAmount(order?.currency, totalPrice || 0)}
+							{order?.items && order?.items.length > 0 && (
+								<Card>
+									<CardHeader>
+										<CardTitle>Bill Summary</CardTitle>
+									</CardHeader>
+									<CardContent className="space-y-2">
+										<div className="flex justify-between text-sm">
+											<p>Item Total ({order.items?.length ?? 0})</p>
+											<p className="font-medium">
+												{formatAmount(order?.currency, totalPrice || 0)}
+											</p>
+										</div>
+										<div className="flex justify-between text-sm">
+											<p>Delivery Charges</p>
+											<p className="font-medium">
+												{formatAmount(order?.currency, deliveryCharges)}
+											</p>
+										</div>
+										<div className="flex justify-between text-sm">
+											<p>Taxes</p>
+											<p className="font-medium">
+												{formatAmount(order?.currency, totalTaxAmount)}
+											</p>
+										</div>
+									</CardContent>
+									<CardFooter className="flex justify-between items-center border-t border-dashed">
+										<p className="font-semibold text-base">Total Payable</p>
+										<p className="font-semibold text-xl">
+											{formatAmount(order?.currency, totalPayableAmount)}
 										</p>
-									</div>
-									<div className="flex justify-between text-sm">
-										<p>Delivery Charges</p>
-										<p className="font-medium">
-											{formatAmount(order?.currency, deliveryCharges)}
-										</p>
-									</div>
-									<div className="flex justify-between text-sm">
-										<p>Taxes</p>
-										<p className="font-medium">
-											{formatAmount(order?.currency, totalTaxAmount)}
-										</p>
-									</div>
-								</CardContent>
-								<CardFooter className="flex justify-between items-center border-t border-dashed">
-									<p className="font-semibold text-base">Total Payable</p>
-									<p className="font-semibold text-xl">
-										{formatAmount(order?.currency, totalPayableAmount)}
-									</p>
-								</CardFooter>
-							</Card>
+									</CardFooter>
+								</Card>
+							)}
+
 							<div className="divide-y divide-dashed bg-card rounded-xl mb-20">
 								{infos.map((info) => {
 									if (!info.value) return;

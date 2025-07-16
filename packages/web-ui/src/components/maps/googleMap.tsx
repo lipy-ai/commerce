@@ -234,7 +234,6 @@ export default function GoogleMapImage({
 									line2: "",
 									name: "",
 									tag: "home",
-									id: "",
 									metadata: { building: "" },
 								});
 

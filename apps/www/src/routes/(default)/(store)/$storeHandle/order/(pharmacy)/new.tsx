@@ -37,7 +37,7 @@ function RouteComponent() {
 	return (
 		<>
 			<DashboardHeader title="Upload prescription" />
-			<div className="mb-16">
+			<div className="mb-20">
 				{uploadedImages.length > 0 && (
 					<div className="flex flex-col items-center">
 						<div className="grid grid-cols-2 gap-4 p-4">

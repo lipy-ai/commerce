@@ -7,8 +7,8 @@
 		"url": "https://x.com/kundanmbhosale"
 	},
 	"scripts": {
-		"build": "turbo run build",
-		"start": "turbo run start",
+		"build": "dotenv -- turbo run build",
+		"start": "dotenv -- turbo run start",
 		"dev": "dotenv -- turbo run dev",
 		"docker-dev": "dotenv -- docker compose up -d && bun run dev",
 		"lint": "turbo run lint",

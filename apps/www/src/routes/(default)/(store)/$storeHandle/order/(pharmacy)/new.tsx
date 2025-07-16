@@ -37,44 +37,46 @@ function RouteComponent() {
 	return (
 		<>
 			<DashboardHeader title="Upload prescription" />
-			{uploadedImages.length > 0 && (
-				<div className="flex flex-col items-center">
-					<div className="grid grid-cols-2 gap-4 p-4">
-						{uploadedImages.map((file, index) => (
-							<div key={index} className="relative">
-								<img
-									src={URL.createObjectURL(file)}
-									alt={`Prescription ${index + 1}`}
-									className="object-cover w-40 h-48 border rounded-xl"
-								/>
-								<div>
-									<Button
-										variant={"outline"}
-										className="absolute top-2 right-2 rounded-full bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground"
-										size="icon-sm"
-										onClick={() => {
-											setUploadedImages(
-												uploadedImages.filter((_, i) => i !== index),
-											);
-										}}
-									>
-										<X />
-									</Button>
+			<div className="mb-16">
+				{uploadedImages.length > 0 && (
+					<div className="flex flex-col items-center">
+						<div className="grid grid-cols-2 gap-4 p-4">
+							{uploadedImages.map((file, index) => (
+								<div key={index} className="relative">
+									<img
+										src={URL.createObjectURL(file)}
+										alt={`Prescription ${index + 1}`}
+										className="object-cover w-40 h-48 border rounded-xl"
+									/>
+									<div>
+										<Button
+											variant={"outline"}
+											className="absolute top-2 right-2 rounded-full bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground"
+											size="icon-sm"
+											onClick={() => {
+												setUploadedImages(
+													uploadedImages.filter((_, i) => i !== index),
+												);
+											}}
+										>
+											<X />
+										</Button>
+									</div>
 								</div>
-							</div>
-						))}
+							))}
+						</div>
 					</div>
-				</div>
-			)}
-			{uploadedImages.length > 0 && uploadedImages.length < 4 && (
-				<Button
-					className="text-secondary font-medium"
-					variant="ghost"
-					onClick={() => setOpenOptions(true)}
-				>
-					Upload more prescriptions
-				</Button>
-			)}
+				)}
+				{uploadedImages.length > 0 && uploadedImages.length < 10 && (
+					<Button
+						className="text-secondary font-medium w-full"
+						variant="ghost"
+						onClick={() => setOpenOptions(true)}
+					>
+						Upload more prescriptions
+					</Button>
+				)}
+			</div>
 
 			<div className="flex flex-col items-center justify-center h-full m-auto">
 				{uploadedImages.length === 0 && (
@@ -126,12 +128,13 @@ function OptionsDrawer(props: {
 }) {
 	const { setUploadedImages } = useCartStore();
 
-	const handleUploadClick = () => {
+	const triggerFileInput = (options?: { capture?: boolean }) => {
 		const currentImages = useCartStore.getState().uploadedImages;
-		const remainingSlots = 4 - currentImages.length;
+		const maxImages = 10;
+		const remainingSlots = maxImages - currentImages.length;
 
 		if (remainingSlots <= 0) {
-			alert("You can upload up to 4 images only.");
+			toast.info(`You can upload up to ${maxImages} images only.`);
 			return;
 		}
 
@@ -139,12 +142,16 @@ function OptionsDrawer(props: {
 		input.type = "file";
 		input.accept = "image/*";
 		input.multiple = true;
+
+		// If capture mode requested, add attribute
+		if (options?.capture) {
+			input.setAttribute("capture", "environment");
+		}
+
 		input.onchange = (e: Event) => {
 			const target = e.target as HTMLInputElement;
 			if (target.files && target.files.length > 0) {
 				const selectedFiles = Array.from(target.files);
-
-				// restrict to remainingSlots only
 				const allowedFiles = selectedFiles.slice(0, remainingSlots);
 
 				setUploadedImages([...currentImages, ...allowedFiles]);
@@ -157,6 +164,7 @@ function OptionsDrawer(props: {
 			}
 			props.onOpenChange(false);
 		};
+
 		input.click();
 	};
 
@@ -168,7 +176,10 @@ function OptionsDrawer(props: {
 				</DrawerDialogHeader>
 
 				<div className="cursor-pointer divide-y divide-dashed bg-card rounded-xl px-2">
-					<div className="flex items-center justify-between py-4">
+					<div
+						className="flex items-center justify-between py-4"
+						onClick={() => triggerFileInput({ capture: true })}
+					>
 						<div className="flex items-center gap-4">
 							<Camera className="size-5 flex-shrink-0" />
 							<p className="font-medium text-sm">Capture from camera</p>
@@ -177,7 +188,7 @@ function OptionsDrawer(props: {
 					</div>
 					<div
 						className="flex items-center justify-between py-4"
-						onClick={handleUploadClick}
+						onClick={() => triggerFileInput()}
 					>
 						<div className="flex items-center gap-4">
 							<Images className="size-5 flex-shrink-0" />

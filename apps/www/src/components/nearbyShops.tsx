@@ -99,7 +99,7 @@ export default function NearByShops() {
 					</div>
 				</div>
 			) : (
-				<div className="sticky top-0 z-100 bg-background border-b">
+				<div className="sticky top-0 bg-background border-b">
 					<div className="bg-accent/20 px-12">
 						<ScrollingTabs
 							tabs={CATEGORIES}

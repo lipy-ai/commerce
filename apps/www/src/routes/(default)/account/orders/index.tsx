@@ -67,7 +67,7 @@ function RouteComponent() {
 					icon={Package2}
 				/>
 			) : (
-				<div className="w-full">
+				<div>
 					<div className="p-4 space-y-4 mb-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:gap-4">
 						{(() => {
 							let lastMonth = "";
@@ -84,7 +84,7 @@ function RouteComponent() {
 											</h2>
 										)}
 
-										<Card className="border border-border/40">
+										<Card className="border border-border/40 lg:border-border ">
 											<CardHeader className="flex items-start justify-between gap-4 border-b ">
 												<Link
 													className="flex items-center gap-2"
@@ -93,7 +93,7 @@ function RouteComponent() {
 														storeHandle: order?.storeHandle as string,
 													}}
 												>
-													<Avatar className="rounded-md size-10">
+													<Avatar className="rounded-md size-10 ">
 														<AvatarImage src={order?.store.image || ""} />
 														<AvatarFallback>
 															<Store />

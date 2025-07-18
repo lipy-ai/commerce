@@ -54,8 +54,8 @@ export const StoreHeroSection = ({
 }) => {
 	const typeInfo = storeType[storeInfo?.type as keyof typeof storeType];
 	return (
-		<div className="space-y-2">
-			<div className="bg-card p-4 space-y-2">
+		<div className="space-y-2 lg:divide-y">
+			<div className="bg-card lg:bg-background p-4 space-y-2">
 				<div className="flex items-start justify-between">
 					<div className="space-y-1">
 						<div
@@ -105,11 +105,11 @@ export const StoreHeroSection = ({
 				</Link>
 			</div>
 			{storeInfo?.type === "pharmacy" && (
-				<div className="bg-card flex gap-2 items-start justify-between p-4">
+				<div className="bg-card lg:bg-background flex gap-2 items-start justify-between p-4">
 					<img
 						src="/assets/prescription.svg"
 						alt="prescription"
-						className="size-16 object-cover"
+						className="size-16 object-cover bg-card"
 					/>
 					<div className="flex flex-col items-end mr-auto">
 						<p className="font-semibold mr-auto">Order with prescription</p>

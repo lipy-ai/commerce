@@ -77,7 +77,7 @@ export default function ProductCard({
 						to="/$storeHandle/products/$productId"
 						params={{ storeHandle: storeHandle ?? "", productId: product.id }}
 					>
-						<div className=" relative aspect-square ">
+						<div className="relative aspect-square ">
 							<div className="relative w-full">
 								<img
 									alt=""

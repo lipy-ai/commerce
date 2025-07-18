@@ -52,12 +52,12 @@ export default function NavBar() {
 	}
 
 	return (
-		<div className="sticky top-0 z-100  bg-background">
+		<div className="sticky top-0   bg-background border-b z-10">
 			<div className="px-16 p-6 bg-accent/20 ">
 				<div className="flex items-center  gap-8">
 					<Link to="/" className="overflow-hidden">
 						<img
-							src={"/logo/logo.png"} // Replace with your logo path
+							src={"/logo/logo.png"}
 							alt={"lipy-logo"}
 							width={100}
 							height={200}

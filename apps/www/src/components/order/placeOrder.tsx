@@ -207,10 +207,6 @@ function PlaceOrderProgress({
 		storeList,
 	]);
 
-	const isUploading = uploadResults.some(
-		(result) => result.status === "pending",
-	);
-
 	useEffect(() => {
 		if (orderProcessedRef.current) return;
 
@@ -241,42 +237,24 @@ function PlaceOrderProgress({
 		}
 	}, [uploadResults, handlePlaceOrder, onComplete]);
 
-	const uploadProgress = useMemo(() => {
-		const completed = uploadResults.filter(
-			(r) => r.status === "success",
-		).length;
-		return { completed, total: uploadResults.length };
-	}, [uploadResults]);
-
 	return (
 		<Dialog open={showLoadingDialog} onOpenChange={() => {}}>
-			<DialogContent className="sm:max-w-md">
+			<DialogContent className="sm:max-w-md w-[400px]">
 				<div className="flex flex-col items-center text-center py-6">
 					{isSuccess ? (
-						<CircleCheck className="size-12 text-emerald-600 stroke-2" />
+						<CircleCheck className="size-16 text-emerald-600 stroke-2" />
 					) : (
 						<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4" />
 					)}
 
 					<h3 className="text-lg font-semibold mb-2">
-						{isUploading
-							? "Uploading files..."
-							: isSuccess
-								? "Order placed successfully!"
-								: "Placing your order..."}
+						{isSuccess ? "Order placed successfully!" : "Placing your order..."}
 					</h3>
 					<p className="text-muted-foreground text-sm">
-						{isUploading
-							? "Please wait while we upload your files"
-							: isSuccess
-								? "Redirecting you to your orders..."
-								: "Your order is being processed"}
+						{isSuccess
+							? "Redirecting you to your orders..."
+							: "Your order is being processed"}
 					</p>
-					{isUploading && (
-						<div className="mt-3 text-xs text-muted-foreground">
-							{uploadProgress.completed} / {uploadProgress.total} files uploaded
-						</div>
-					)}
 				</div>
 			</DialogContent>
 		</Dialog>

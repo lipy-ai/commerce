@@ -21,6 +21,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import type { InferResponseType } from "hono/client";
 import {
+	ArrowLeft,
 	ChevronRight,
 	EllipsisVertical,
 	Info,
@@ -88,7 +89,7 @@ function RouteComponent() {
 	if (fetchingShopData || fetchingProduct) return <Loading />;
 
 	return (
-		<div className="relative max-w-screen-xl mx-auto w-full">
+		<div>
 			<DashboardHeader
 				titleChildren={
 					<motion.h1
@@ -102,7 +103,7 @@ function RouteComponent() {
 						{shopData?.name}
 					</motion.h1>
 				}
-				className="bg-card shadow-none border-b-0"
+				className="bg-card shadow-none border-b-0 lg:hidden"
 			>
 				{visibleShopName && (
 					<Link
@@ -120,66 +121,81 @@ function RouteComponent() {
 				{shopData && <ShopOptions shop={shopData} />}
 			</DashboardHeader>
 
-			{fetchedShopData && shopData && <StoreHeroSection storeInfo={shopData} />}
-
-			<div className="mb-32">
-				{fetchedProduct &&
-					productData &&
-					productData.items.length > 0 &&
-					productData.items.map((productGroup, _idx) => {
-						const productArray = productGroup.products;
-
-						return (
-							<div key={_idx} className="my-10 mx-4">
-								<p className="text-xl font-bold my-4">{productGroup.title}</p>
-
-								<div className="grid grid-cols-2 lg:grid-cols-6  gap-x-4 gap-y-6 w-full">
-									{productArray?.map((product) => (
-										<div key={product.id}>
-											<ProductCard
-												product={product}
-												className={{
-													classNameImg: "aspect-square h-full",
-													classNameBox: "w-full h-full",
-												}}
-												storeHandle={storeHandle}
-												storeId={shopData?.id}
-											/>
-										</div>
-									))}
-								</div>
-								{productArray.length === 6 && (
-									<Link
-										className={cn(
-											buttonVariants({
-												variant: "outline",
-												className: "w-full my-2 font-semibold",
-											}),
-										)}
-										to="/$storeHandle/products/category/$categorySlug"
-										params={{
-											storeHandle,
-											categorySlug: productGroup.slug as string,
-										}}
-									>
-										See more products
-										<ChevronRight />
-									</Link>
-								)}
-							</div>
-						);
-					})}
-			</div>
-
-			{fetchedProduct && productData && productData.items.length === 0 && (
-				<EmptyPage title={"No products found"}>
-					<img
-						src="/assets/no-product.png"
-						alt="no-product"
-						className="w-[250px] h-[250px] object-cover"
+			<div className="lg:grid lg:grid-cols-12 lg:px-8 m-auto lg:divide-x">
+				{/* Left Sidebar */}
+				<div className="lg:col-span-3 lg:px-2 lg:space-y-4 lg:py-4 lg:sticky lg:top-0 lg:self-start lg:h-screen lg:overflow-y-auto">
+					<ArrowLeft
+						className="size-9 cursor-pointer hidden lg:block"
+						onClick={(e) => {
+							e.preventDefault();
+							window.history.back();
+						}}
 					/>
-				</EmptyPage>
-			)}
+					{fetchedShopData && shopData && (
+						<StoreHeroSection storeInfo={shopData} />
+					)}
+				</div>
+
+				{/* Right Content */}
+				<div className="mb-32 lg:col-span-9 lg:h-screen lg:overflow-y-auto px-4">
+					{fetchedProduct &&
+						productData &&
+						productData.items.length > 0 &&
+						productData.items.map((productGroup, _idx) => {
+							const productArray = productGroup.products;
+
+							return (
+								<div key={_idx} className="my-10">
+									<p className="text-xl font-bold my-4">{productGroup.title}</p>
+
+									<div className="grid grid-cols-2 lg:grid-cols-6 gap-x-4 gap-y-6 w-full">
+										{productArray?.map((product) => (
+											<div key={product.id}>
+												<ProductCard
+													product={product}
+													className={{
+														classNameImg: "aspect-square h-full",
+														classNameBox: "w-full h-full",
+													}}
+													storeHandle={storeHandle}
+													storeId={shopData?.id}
+												/>
+											</div>
+										))}
+									</div>
+									{productArray.length === 6 && (
+										<Link
+											className={cn(
+												buttonVariants({
+													variant: "outline",
+													className: "w-full my-2 font-semibold",
+												}),
+											)}
+											to="/$storeHandle/products/category/$categorySlug"
+											params={{
+												storeHandle,
+												categorySlug: productGroup.slug as string,
+											}}
+										>
+											See more products
+											<ChevronRight />
+										</Link>
+									)}
+								</div>
+							);
+						})}
+
+					{fetchedProduct && productData && productData.items.length === 0 && (
+						<EmptyPage title={"No products found"}>
+							<img
+								src="/assets/no-product.png"
+								alt="no-product"
+								className="w-[250px] h-[250px] object-cover"
+							/>
+						</EmptyPage>
+					)}
+				</div>
+			</div>
 
 			<div className="lg:hidden">
 				<PrimaryCartFooter />

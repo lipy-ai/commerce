@@ -223,7 +223,7 @@ export const CartMainContent = () => {
 				<EmptyPage icon={ShoppingBag} title="Your Cart is Empty" label=" " />
 			) : (
 				<div>
-					<div className="relative p-4">
+					<div className="relative py-4">
 						<div className="space-y-4">
 							{Array.from(storeWiseItems.entries()).map(
 								([storeHandle, storeData]) => (

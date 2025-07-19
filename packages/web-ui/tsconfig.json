@@ -32,6 +32,11 @@
 			"@lipy/server/*": ["../../apps/server/src/*"]
 		}
 	},
-	"include": ["**/*.ts", "**/*.tsx", "src/components/maps/detailedAddress.tsx"],
+	"include": [
+		"**/*.ts",
+		"**/*.tsx",
+		"src/components/maps/detailedAddress.tsx",
+		"../../apps/www/src/routes/(default)/account/addresses/-deliveryAddressAlert.tsx"
+	],
 	"references": [{ "path": "../../apps/server" }]
 }

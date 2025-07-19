@@ -13,6 +13,7 @@ export const env = {
 	CDN_URL: e.VITE_CDN_URL,
 	GOOGLE_MAP_API_KEY: e.VITE_GOOGLE_MAP_API_KEY,
 	SHOW_DEV_TOOLS: true,
+	GOOGLE_MAP_LIBRARIES: e.VITE_GOOGLE_MAP_LIBRARIES?.split(","),
 };
 
 if (env.VITE_USE_IP) {

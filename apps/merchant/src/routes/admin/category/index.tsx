@@ -46,7 +46,7 @@ function Component() {
 				</CategoryFormEdit>
 			</div>
 			<DesktopView />
-			<Pagination {...data} />
+			{data && <Pagination {...data} />}
 		</div>
 	);
 }
@@ -67,7 +67,7 @@ export const DesktopView = () => {
 
 	return (
 		<div className="grid divide-y border rounded">
-			{data?.items.map((m, i) => (
+			{data?.items.map((m) => (
 				<div
 					key={m.id}
 					className="h-full flex flex-row gap-4 px-3 py-3 items-center"
@@ -83,7 +83,7 @@ export const DesktopView = () => {
 						{m.summary && <p>{m.summary}</p>}
 					</div>
 					<div className="flex gap-2">
-						<CategoryFormEdit data={m}>
+						<CategoryFormEdit type="update" data={m as any}>
 							<Button className="" variant={"default"} size="icon-sm">
 								<PenLine />
 							</Button>

@@ -49,7 +49,7 @@ export default function FormEdit({
 	children,
 }: {
 	data?:
-		| InferResponseType<(typeof apiClient.v1.merchant.product)[":id"]["$get"]>
+		| InferResponseType<(typeof apiClient.v1.admin.product)["$get"]>["items"][0]
 		| undefined;
 	type: "create" | "update";
 	children: ReactNode;

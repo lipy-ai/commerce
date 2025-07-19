@@ -88,6 +88,7 @@ export const AddressSetter = ({
 		}
 	}, 400);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (gmapLoaded && input) {
 			fetchPredictions(input);

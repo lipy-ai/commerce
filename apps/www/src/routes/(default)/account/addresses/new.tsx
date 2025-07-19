@@ -70,6 +70,7 @@ function RouteComponent() {
 		}
 	};
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (isLoaded && mapCenter) {
 			handleMapCenterChange();

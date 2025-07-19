@@ -80,6 +80,7 @@ function LocationComponent() {
 		setDrawerOpen(true);
 	};
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (primaryAddress?.id && !isLoading) {
 			setDeliveryLocation(primaryAddress as AddressType);

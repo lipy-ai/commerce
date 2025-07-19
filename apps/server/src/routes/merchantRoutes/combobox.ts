@@ -80,7 +80,6 @@ const route = new Hono<ServerContext>().get(
 			(await exec()
 				?.$if(type !== "categories", (qb: any) => qb.limit(50))
 				?.execute()) || [];
-		data.unshift({ value: "", label: "All", icon: null });
 		return c.json(data);
 	},
 );

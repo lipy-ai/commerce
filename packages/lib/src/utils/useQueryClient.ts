@@ -78,7 +78,7 @@ export const getAPIQueryKey = <
 >(
 	endpoint: T,
 	method: M,
-	params: Params,
+	params?: Params,
 ): APIQueryKey<T, M, Params> => {
 	const urlString = endpoint.$url().toString();
 	const path = getPathFromUrl(urlString);
@@ -222,7 +222,6 @@ export const apiMutationOptions = <
 				cause: Record<string, any>;
 				message?: string;
 			};
-
 			if (errorData?.code === "VALIDATION_ERR" && options?.form?.setError) {
 				for (const [field, message] of Object.entries(errorData.cause.issues)) {
 					options?.form.setError(field as any, {
@@ -282,7 +281,6 @@ export const useAPIQuery = <
 			options,
 		),
 	);
-	console.log((q.error as any)?.data?.code);
 	handleNavigate((q.error as any)?.data?.code);
 
 	return q;

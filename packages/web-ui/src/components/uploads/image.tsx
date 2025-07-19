@@ -106,7 +106,9 @@ const Input = ({ onSuccess, accept }: SingleImageProps) => {
 				id="upload-input"
 				type={"file"}
 				accept={mimeTypes}
-				className={cn("opacity-0 absolute size-full")}
+				className={cn(
+					"opacity-0 absolute left-0 top-0 size-full cursor-pointer",
+				)}
 				onChange={onFileSelect}
 			/>
 			{status === "pending" ? (

@@ -6,8 +6,6 @@ import {
 	DashboardBody,
 	DashboardLayout,
 } from "@lipy/web-ui/components/layouts/dashboard";
-import LocationComponent from "@lipy/web-ui/components/maps/deliveryAddress";
-import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { createFileRoute } from "@tanstack/react-router";
 import {
@@ -24,8 +22,6 @@ export const Route = createFileRoute("/(default)/")({
 
 function Home() {
 	const { cart, initialized } = useCartStore();
-
-	const { deliveryLocation, hasHydrated } = useLocationStore();
 	const { isMobile } = useViewport();
 	const mobileNav = [
 		{
@@ -75,10 +71,6 @@ function Home() {
 				<DashboardBody>
 					{isMobile && <NavBar />}
 					<NearByShops />
-
-					{hasHydrated && deliveryLocation.line1 === "" && (
-						<LocationComponent />
-					)}
 
 					{!initialized && <AppCartInitializer />}
 				</DashboardBody>

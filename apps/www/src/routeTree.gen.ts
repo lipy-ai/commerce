@@ -22,7 +22,6 @@ import { Route as defaultAccountAddressesIndexRouteImport } from './routes/(defa
 import { Route as defaultstoreStoreHandleIndexRouteImport } from './routes/(default)/(store)/$storeHandle/index'
 import { Route as defaultAccountOrdersOrderIdRouteImport } from './routes/(default)/account/orders/$orderId'
 import { Route as defaultAccountAddressesNewRouteImport } from './routes/(default)/account/addresses/new'
-import { Route as defaultAccountAddressesDeliveryAddressRouteImport } from './routes/(default)/account/addresses/deliveryAddress'
 import { Route as defaultstoreStoreHandleDetailsRouteImport } from './routes/(default)/(store)/$storeHandle/details'
 import { Route as defaultstoreStoreHandleProductsIndexRouteImport } from './routes/(default)/(store)/$storeHandle/products/index'
 import { Route as defaultstoreStoreHandleProductsSearchRouteImport } from './routes/(default)/(store)/$storeHandle/products/search'
@@ -100,12 +99,6 @@ const defaultAccountAddressesNewRoute =
     path: '/addresses/new',
     getParentRoute: () => defaultAccountRouteRoute,
   } as any)
-const defaultAccountAddressesDeliveryAddressRoute =
-  defaultAccountAddressesDeliveryAddressRouteImport.update({
-    id: '/addresses/deliveryAddress',
-    path: '/addresses/deliveryAddress',
-    getParentRoute: () => defaultAccountRouteRoute,
-  } as any)
 const defaultstoreStoreHandleDetailsRoute =
   defaultstoreStoreHandleDetailsRouteImport.update({
     id: '/(store)/$storeHandle/details',
@@ -158,7 +151,6 @@ export interface FileRoutesByFullPath {
   '/account/': typeof defaultAccountIndexRoute
   '/cart': typeof defaultCartIndexRoute
   '/$storeHandle/details': typeof defaultstoreStoreHandleDetailsRoute
-  '/account/addresses/deliveryAddress': typeof defaultAccountAddressesDeliveryAddressRoute
   '/account/addresses/new': typeof defaultAccountAddressesNewRoute
   '/account/orders/$orderId': typeof defaultAccountOrdersOrderIdRoute
   '/$storeHandle': typeof defaultstoreStoreHandleIndexRoute
@@ -179,7 +171,6 @@ export interface FileRoutesByTo {
   '/account': typeof defaultAccountIndexRoute
   '/cart': typeof defaultCartIndexRoute
   '/$storeHandle/details': typeof defaultstoreStoreHandleDetailsRoute
-  '/account/addresses/deliveryAddress': typeof defaultAccountAddressesDeliveryAddressRoute
   '/account/addresses/new': typeof defaultAccountAddressesNewRoute
   '/account/orders/$orderId': typeof defaultAccountOrdersOrderIdRoute
   '/$storeHandle': typeof defaultstoreStoreHandleIndexRoute
@@ -203,7 +194,6 @@ export interface FileRoutesById {
   '/(default)/account/': typeof defaultAccountIndexRoute
   '/(default)/cart/': typeof defaultCartIndexRoute
   '/(default)/(store)/$storeHandle/details': typeof defaultstoreStoreHandleDetailsRoute
-  '/(default)/account/addresses/deliveryAddress': typeof defaultAccountAddressesDeliveryAddressRoute
   '/(default)/account/addresses/new': typeof defaultAccountAddressesNewRoute
   '/(default)/account/orders/$orderId': typeof defaultAccountOrdersOrderIdRoute
   '/(default)/(store)/$storeHandle/': typeof defaultstoreStoreHandleIndexRoute
@@ -227,7 +217,6 @@ export interface FileRouteTypes {
     | '/account/'
     | '/cart'
     | '/$storeHandle/details'
-    | '/account/addresses/deliveryAddress'
     | '/account/addresses/new'
     | '/account/orders/$orderId'
     | '/$storeHandle'
@@ -248,7 +237,6 @@ export interface FileRouteTypes {
     | '/account'
     | '/cart'
     | '/$storeHandle/details'
-    | '/account/addresses/deliveryAddress'
     | '/account/addresses/new'
     | '/account/orders/$orderId'
     | '/$storeHandle'
@@ -271,7 +259,6 @@ export interface FileRouteTypes {
     | '/(default)/account/'
     | '/(default)/cart/'
     | '/(default)/(store)/$storeHandle/details'
-    | '/(default)/account/addresses/deliveryAddress'
     | '/(default)/account/addresses/new'
     | '/(default)/account/orders/$orderId'
     | '/(default)/(store)/$storeHandle/'
@@ -384,13 +371,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof defaultAccountAddressesNewRouteImport
       parentRoute: typeof defaultAccountRouteRoute
     }
-    '/(default)/account/addresses/deliveryAddress': {
-      id: '/(default)/account/addresses/deliveryAddress'
-      path: '/addresses/deliveryAddress'
-      fullPath: '/account/addresses/deliveryAddress'
-      preLoaderRoute: typeof defaultAccountAddressesDeliveryAddressRouteImport
-      parentRoute: typeof defaultAccountRouteRoute
-    }
     '/(default)/(store)/$storeHandle/details': {
       id: '/(default)/(store)/$storeHandle/details'
       path: '/$storeHandle/details'
@@ -446,7 +426,6 @@ declare module '@tanstack/react-router' {
 interface defaultAccountRouteRouteChildren {
   defaultAccountProfileRoute: typeof defaultAccountProfileRoute
   defaultAccountIndexRoute: typeof defaultAccountIndexRoute
-  defaultAccountAddressesDeliveryAddressRoute: typeof defaultAccountAddressesDeliveryAddressRoute
   defaultAccountAddressesNewRoute: typeof defaultAccountAddressesNewRoute
   defaultAccountOrdersOrderIdRoute: typeof defaultAccountOrdersOrderIdRoute
   defaultAccountAddressesIndexRoute: typeof defaultAccountAddressesIndexRoute
@@ -456,8 +435,6 @@ interface defaultAccountRouteRouteChildren {
 const defaultAccountRouteRouteChildren: defaultAccountRouteRouteChildren = {
   defaultAccountProfileRoute: defaultAccountProfileRoute,
   defaultAccountIndexRoute: defaultAccountIndexRoute,
-  defaultAccountAddressesDeliveryAddressRoute:
-    defaultAccountAddressesDeliveryAddressRoute,
   defaultAccountAddressesNewRoute: defaultAccountAddressesNewRoute,
   defaultAccountOrdersOrderIdRoute: defaultAccountOrdersOrderIdRoute,
   defaultAccountAddressesIndexRoute: defaultAccountAddressesIndexRoute,

@@ -15,6 +15,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { CircleCheck } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useCartStore } from "../cart/store";
+
 interface PlaceOrderProps {
 	setOpen: (open: boolean) => void;
 	customOrder?: boolean;
@@ -175,10 +176,15 @@ function PlaceOrderProgress({
 				json: {
 					address: {
 						...deliveryLocation,
-						phone: deliveryLocation?.phone as string,
-						lat: deliveryLocation?.lat as number,
-						lng: deliveryLocation?.lng as number,
-						metadata: deliveryLocation?.metadata as { building: string },
+						country: deliveryLocation?.country ?? "",
+						phone: deliveryLocation?.phone ?? "",
+						lat: deliveryLocation?.lat ?? 0,
+						lng: deliveryLocation?.lng ?? 0,
+						line2: deliveryLocation?.line2 ?? "",
+						postalCode: deliveryLocation?.postalCode ?? "",
+						metadata: {
+							building: deliveryLocation?.metadata?.building ?? "",
+						},
 					},
 					deliveryInstruction: instructions.deliveryInstruction,
 					stores: customOrder

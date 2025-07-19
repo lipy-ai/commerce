@@ -24,7 +24,7 @@ export default function SearchBar({
 	const onSearch = (q: string) =>
 		navigate({
 			// @ts-ignore -- I want it to set on any route -- Should fix this though
-			search: (p) => ({
+			search: (p: any) => ({
 				...p,
 				page: p?.q !== q ? 1 : p.page,
 				q,

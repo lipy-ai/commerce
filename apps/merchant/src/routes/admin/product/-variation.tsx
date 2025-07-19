@@ -39,14 +39,16 @@ export default function ProductVariationForm({
 	const [open, setOpen] = useState(false);
 
 	const defaultValues: { items: Response } = {
-		items: [],
+		items: data || [],
 	};
 
 	const form = useForm<typeof defaultValues>({
 		defaultValues,
 	});
 
-	const handle = async (d: typeof defaultValues) => {};
+	const handle = async (d: typeof defaultValues) => {
+		console.log(d);
+	};
 
 	return (
 		<>

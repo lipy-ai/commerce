@@ -7,16 +7,7 @@ import {
 
 import { useStore } from "@lipy/lib/hooks/use-store";
 import Loading from "@lipy/web-ui/components/ui/loading";
-import {
-	CircleUser,
-	Home,
-	LayoutDashboard,
-	LogOut,
-	Settings,
-	Shirt,
-	ShoppingBag,
-	Users,
-} from "lucide-react";
+import { CircleUser, LogOut, Settings, Shirt, ShoppingBag } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
 	component: RouteComponent,

@@ -1,4 +1,3 @@
-import type { apiClient } from "@lipy/lib/api";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
 import { SearchInput } from "@lipy/web-ui/components/forms/searchInput";
@@ -6,24 +5,11 @@ import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Pagination } from "@lipy/web-ui/components/pages/pagination";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
-import {
-	Drawer,
-	DrawerContent,
-	DrawerTrigger,
-} from "@lipy/web-ui/components/ui/drawer";
-import { Separator } from "@lipy/web-ui/components/ui/separator";
+
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { cn } from "@lipy/web-ui/lib/utils";
-import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
-import type { InferResponseType } from "hono/client";
-import {
-	ArrowUpRight,
-	CircleDotDashed,
-	Eye,
-	PenLine,
-	Tickets,
-	Trash,
-} from "lucide-react";
+import { Link, createFileRoute } from "@tanstack/react-router";
+import { ArrowUpRight, PenLine, Tickets, Trash } from "lucide-react";
 import { z } from "zod";
 import FormDelete from "./-form-delete";
 import FormEdit from "./-form.edit";
@@ -39,7 +25,7 @@ export const Route = createFileRoute("/admin/product/")({
 	}),
 });
 
-type Response = InferResponseType<typeof apiClient.v1.admin.product.$get>;
+// type Response = InferResponseType<typeof apiClient.v1.admin.product.$get>;
 
 function RouteComponent() {
 	const { q, page } = Route.useSearch();
@@ -85,7 +71,7 @@ function Component() {
 				</div>
 			</div>
 			<DesktopView />
-			<Pagination {...data} />
+			{data && <Pagination {...data} />}
 		</div>
 	);
 }
@@ -159,80 +145,79 @@ function Component() {
 // 	);
 // }
 
-function MobileView({ items }: { items: Response["items"] }) {
-	return (
-		<div className="bg-background border divide-y">
-			{items.map((m) => (
-				<Drawer key={m.id}>
-					<DrawerTrigger className="flex p-4" key={m.id}>
-						<div className="flex w-full gap-4 justify-between text-base text-start">
-							<div className="grid grid-cols-[75px_auto] gap-2">
-								<img
-									src={m.thumbnail || ""}
-									alt={m.title || ""}
-									className="aspect-square border rounded bg-accent"
-								/>
-								<div className="block break-words">
-									<p className="font-medium line-clamp-2">{m.title}</p>
-									<p className="font-light line-clamp-1">{m.summary}</p>
-									<p className="font-medium line-clamp-1">
-										{formatAmount("inr", m?.price || 0)}
-										{m.maxPrice && (
-											<span className="text-muted-foreground text-xs line-through px-1">
-												{formatAmount("inr", m?.maxPrice || 0)}
-											</span>
-										)}
-									</p>
-								</div>
-							</div>
-						</div>
-					</DrawerTrigger>
+// function MobileView({ items }: { items: Response["items"] }) {
+// 	return (
+// 		<div className="bg-background border divide-y">
+// 			{items.map((m) => (
+// 				<Drawer key={m.id}>
+// 					<DrawerTrigger className="flex p-4" key={m.id}>
+// 						<div className="flex w-full gap-4 justify-between text-base text-start">
+// 							<div className="grid grid-cols-[75px_auto] gap-2">
+// 								<img
+// 									src={m.thumbnail || ""}
+// 									alt={m.title || ""}
+// 									className="aspect-square border rounded bg-accent"
+// 								/>
+// 								<div className="block break-words">
+// 									<p className="font-medium line-clamp-2">{m.title}</p>
+// 									<p className="font-light line-clamp-1">{m.summary}</p>
+// 									<p className="font-medium line-clamp-1">
+// 										{formatAmount("inr", m?.price || 0)}
+// 										{m.maxPrice && (
+// 											<span className="text-muted-foreground text-xs line-through px-1">
+// 												{formatAmount("inr", m?.maxPrice || 0)}
+// 											</span>
+// 										)}
+// 									</p>
+// 								</div>
+// 							</div>
+// 						</div>
+// 					</DrawerTrigger>
 
-					<DrawerContent>
-						<div className="grid">
-							<Link
-								className={cn(
-									buttonVariants({ size: "lg", variant: "ghost" }),
-									"justify-start",
-								)}
-								to={"/admin/product/$id"}
-								params={{ id: m.id }}
-							>
-								<Eye />
-								View Product
-							</Link>
-							<Separator />
+// 					<DrawerContent>
+// 						<div className="grid">
+// 							<Link
+// 								className={cn(
+// 									buttonVariants({ size: "lg", variant: "ghost" }),
+// 									"justify-start",
+// 								)}
+// 								to={"/admin/product/$id"}
+// 								params={{ id: m.id }}
+// 							>
+// 								<Eye />
+// 								View Product
+// 							</Link>
+// 							<Separator />
 
-							<ToggleProductActive>
-								<Button size={"lg"} variant={"ghost"} className="justify-start">
-									<CircleDotDashed />
-									Change Status ({m.status})
-								</Button>
-							</ToggleProductActive>
-							<Separator />
+// 							<ToggleProductActive>
+// 								<Button size={"lg"} variant={"ghost"} className="justify-start">
+// 									<CircleDotDashed />
+// 									Change Status ({m.status})
+// 								</Button>
+// 							</ToggleProductActive>
+// 							<Separator />
 
-							<FormEdit type="update" data={m} key={`edit-${m.id}`}>
-								<Button size={"lg"} variant={"ghost"} className="justify-start">
-									<PenLine /> Edit Product
-								</Button>
-							</FormEdit>
-							<Separator />
+// 							<FormEdit type="update" data={m} key={`edit-${m.id}`}>
+// 								<Button size={"lg"} variant={"ghost"} className="justify-start">
+// 									<PenLine /> Edit Product
+// 								</Button>
+// 							</FormEdit>
+// 							<Separator />
 
-							<FormDelete id={m.id} key={`del-${m.id}`}>
-								<Button size={"lg"} variant={"ghost"} className="justify-start">
-									<Trash /> Delete Product
-								</Button>
-							</FormDelete>
-						</div>
-					</DrawerContent>
-				</Drawer>
-			))}
-		</div>
-	);
-}
+// 							<FormDelete id={m.id} key={`del-${m.id}`}>
+// 								<Button size={"lg"} variant={"ghost"} className="justify-start">
+// 									<Trash /> Delete Product
+// 								</Button>
+// 							</FormDelete>
+// 						</div>
+// 					</DrawerContent>
+// 				</Drawer>
+// 			))}
+// 		</div>
+// 	);
+// }
 
 function DesktopView() {
-	const navigate = useNavigate();
 	const { data, isLoading } = useProduct();
 
 	if (isLoading) {
@@ -248,7 +233,7 @@ function DesktopView() {
 
 	return (
 		<div className="grid divide-y border rounded overflow-y-auto">
-			{data.items.map((m, i) => (
+			{data.items.map((m) => (
 				<div
 					key={m.id}
 					className="h-full grid grid-cols-[50px_1fr_fit-content(100px)_fit-content(100px)_200px_fit-content(150px)] gap-4 px-3 py-3 items-center"

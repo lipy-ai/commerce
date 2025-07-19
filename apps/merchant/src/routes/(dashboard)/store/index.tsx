@@ -5,12 +5,6 @@ import {
 	useAPIMutation,
 	useAPIQuery,
 } from "@lipy/lib/utils/useQueryClient";
-import type { coreAddressSchema } from "@lipy/server/routes/loggedRoutes/address";
-import {
-	DrawerDialogHeader,
-	DrawerDialogSwitcher,
-	DrawerDialogTitle,
-} from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
 import {
 	FormButton,
 	FormImage,
@@ -19,21 +13,17 @@ import {
 } from "@lipy/web-ui/components/forms/elements";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import VerticalListSkeleton from "@lipy/web-ui/components/layouts/skeletons/verticalListSkeleton";
-import GoogleMaps from "@lipy/web-ui/components/maps/googleMap";
 import { Form } from "@lipy/web-ui/components/ui/form";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import type { z } from "zod";
 export const Route = createFileRoute("/(dashboard)/store/")({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-	const [isOpenMap, setIsOpenMap] = useState(false);
-
 	const { data, isLoading } = useAPIQuery(
 		apiClient.v1.merchant.store,
 		"$get",
@@ -50,18 +40,10 @@ function RouteComponent() {
 			description: "",
 			email: "",
 			phone: "",
-			address: {},
 		},
 	});
 
 	// Set store address when user selects it from GoogleMaps
-	const handleStoreAddress = (address: z.infer<typeof coreAddressSchema>) => {
-		form.setValue("address", address, {
-			shouldValidate: true,
-			shouldDirty: true,
-		});
-		setIsOpenMap(false);
-	};
 
 	// Update form when API data loads
 	useEffect(() => {
@@ -73,7 +55,6 @@ function RouteComponent() {
 				description: data.description || "",
 				email: data.email || "",
 				phone: data.phone || "",
-				address: data.address || {},
 			});
 		}
 	}, [data, form.reset]);
@@ -145,18 +126,6 @@ function RouteComponent() {
 								<FormInput name="email" label="Email" />
 								<FormInput name="phone" label="Phone Number" />
 							</div>
-
-							<FormTextarea
-								name="address.line1"
-								label="Address"
-								className="cursor-pointer hover:bg-accent"
-								value={
-									(form.watch("address") as { line1?: string })?.line1 || ""
-								}
-								onClick={() => setIsOpenMap(true)}
-								readOnly
-								required
-							/>
 						</div>
 
 						<div className="p-4">
@@ -165,26 +134,6 @@ function RouteComponent() {
 					</div>
 				</div>
 			</form>
-
-			<DrawerDialogSwitcher
-				open={isOpenMap}
-				onOpenChange={setIsOpenMap}
-				className="p-0 lg:min-w-4xl"
-			>
-				<DrawerDialogHeader className="p-4 lg:-mb-8">
-					<DrawerDialogTitle>Save your store address</DrawerDialogTitle>
-				</DrawerDialogHeader>
-
-				<GoogleMaps
-					type="saveAddress"
-					useCase="merchant"
-					setStoreAddress={handleStoreAddress} // this updates the form
-					center={{
-						lat: (form.watch("address") as { lat: number })?.lat,
-						lng: (form.watch("address") as { lng: number })?.lng,
-					}}
-				/>
-			</DrawerDialogSwitcher>
 		</Form>
 	);
 }

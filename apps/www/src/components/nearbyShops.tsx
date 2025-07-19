@@ -80,7 +80,7 @@ export default function NearByShops() {
 							<Link
 								className={cn(
 									buttonVariants({ variant: "tertiary" }),
-									"w-full justify-start text-muted-foreground border",
+									"w-full justify-start text-muted-foreground border bg-tertiary/50d",
 								)}
 								to="/"
 							>

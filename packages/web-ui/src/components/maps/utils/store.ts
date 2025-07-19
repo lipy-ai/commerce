@@ -1,31 +1,37 @@
-import type { addressSchema } from "@lipy/server/routes/loggedRoutes/address";
-import type { z } from "zod";
+import type { apiClient } from "@lipy/lib/api";
+import type { InferResponseType } from "hono/client";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-export type DeliveryLocation = z.infer<typeof addressSchema>;
+export type AddressType = InferResponseType<
+	typeof apiClient.v1.address.$get
+>[number];
+
+export const defaultAddress = {
+	id: "",
+	name: "",
+	tag: "other",
+	line1: "",
+	line2: "",
+	city: "",
+	state: "",
+	country: "",
+	postalCode: "",
+	phone: "",
+	lat: 0,
+	lng: 0,
+	metadata: { building: "" },
+};
+
 type LocationStore = {
-	deliveryLocation: DeliveryLocation;
-	setDeliveryLocation: (deliveryLocation: DeliveryLocation) => void;
+	deliveryLocation: AddressType;
+	setDeliveryLocation: (deliveryLocation: AddressType) => void;
 	hasHydrated: boolean;
 	setHasHydrated: (state: boolean) => void;
 };
 
 export const defaultDeliveryLocationState: LocationStore = {
-	deliveryLocation: {
-		name: "",
-		tag: "other",
-		line1: "",
-		line2: "",
-		city: "",
-		state: "",
-		country: "",
-		postalCode: "",
-		phone: undefined,
-		lat: 0,
-		lng: 0,
-		metadata: { building: "" },
-	},
+	deliveryLocation: defaultAddress as AddressType,
 	hasHydrated: false,
 	setDeliveryLocation: () => {},
 	setHasHydrated: () => {},

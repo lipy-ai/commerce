@@ -11,7 +11,6 @@ import {
 	AvatarFallback,
 	AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
-import { Button } from "@lipy/web-ui/components/ui/button";
 import { Card, CardContent, CardHeader } from "@lipy/web-ui/components/ui/card";
 import { Label } from "@lipy/web-ui/components/ui/label";
 import { Link } from "@tanstack/react-router";
@@ -22,7 +21,6 @@ import {
 	Package2,
 	PhoneCall,
 	Store,
-	X,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -37,7 +35,7 @@ function RouteComponent() {
 	const [detailedAddressDrawerOpen, setDetailedAddressDrawerOpen] =
 		useState(false);
 	const { storeHandle } = Route.useParams();
-	const { uploadedImages, setUploadedImages } = useCartStore();
+	const { uploadedImages } = useCartStore();
 
 	const { data: storeInfo } = useAPIQuery(
 		apiClient.v1.shops[":handle"],
@@ -92,26 +90,13 @@ function RouteComponent() {
 										const objectUrl = URL.createObjectURL(file);
 
 										return (
-											<div key={index} className="relative flex-shrink-0">
-												<img
-													src={objectUrl}
-													alt={`Prescription ${index + 1}`}
-													className="object-cover w-32 h-44 border rounded-xl"
-													onLoad={() => URL.revokeObjectURL(objectUrl)}
-												/>
-												<Button
-													variant="outline"
-													className="absolute top-2 right-2 rounded-full bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground p-1 "
-													size="icon-sm"
-													onClick={() => {
-														setUploadedImages(
-															uploadedImages.filter((_, i) => i !== index),
-														);
-													}}
-												>
-													<X className="w-4 h-4" />
-												</Button>
-											</div>
+											<img
+												key={index}
+												src={objectUrl}
+												alt={`Prescription ${index + 1}`}
+												className="object-cover w-32 h-44 border rounded-xl"
+												onLoad={() => URL.revokeObjectURL(objectUrl)}
+											/>
 										);
 									})}
 								</div>

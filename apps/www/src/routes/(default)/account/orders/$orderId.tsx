@@ -129,8 +129,8 @@ function RouteComponent() {
 						</Badge>
 					</DashboardHeader>
 
-					<div className="lg:grid lg:grid-cols-12 divide-x flex-1">
-						<div className="col-span-7 p-4 space-y-4">
+					<div className="lg:grid lg:grid-cols-12 divide-x flex-1 mt-4">
+						<div className="col-span-7  space-y-4">
 							<Card>
 								<CardHeader className="flex items-center justify-between gap-4 border-b -mx-4 px-4">
 									<Link
@@ -273,7 +273,7 @@ function RouteComponent() {
 								)}
 						</div>
 
-						<div className="col-span-5 space-y-4 p-4 -mt-4">
+						<div className="col-span-5 space-y-4 mt-4">
 							{order?.items && order?.items.length > 0 && (
 								<Card>
 									<CardHeader>

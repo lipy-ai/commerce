@@ -84,7 +84,7 @@ function RouteComponent() {
 											</h2>
 										)}
 
-										<Card className="border border-border/40 lg:border-border ">
+										<Card className="border border-border/40 lg:border-border rounded-xl">
 											<CardHeader className="flex items-start justify-between gap-4 border-b ">
 												<Link
 													className="flex items-center gap-2"

@@ -95,7 +95,7 @@ export const StoreHeroSection = ({
 				<Link
 					className={cn(
 						buttonVariants({ variant: "tertiary" }),
-						"w-full justify-start text-muted-foreground",
+						"w-full justify-start text-muted-foreground bg-tertiary/50",
 					)}
 					to="/$storeHandle/products/search"
 					params={{ storeHandle: storeInfo?.handle || "" }}

@@ -58,7 +58,7 @@ function RouteComponent() {
 							<div key={product.id}>
 								<ProductCard
 									product={product as ProductType}
-									className={{ classNameImg: "h-full" }}
+									className={{ classNameImg: "aspect-square h-full" }}
 									storeHandle={storeHandle}
 									storeId={storeInfo?.id as string}
 								/>

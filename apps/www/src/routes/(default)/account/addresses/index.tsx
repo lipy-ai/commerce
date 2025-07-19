@@ -8,13 +8,17 @@ import {
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { DeleteAddress } from "@lipy/web-ui/components/maps/deleteAdderess";
 import { DetailedAddress } from "@lipy/web-ui/components/maps/detailedAddress";
-import type { DeliveryLocation } from "@lipy/web-ui/components/maps/utils/store";
+import type { AddressType } from "@lipy/web-ui/components/maps/utils/store";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import Loading from "@lipy/web-ui/components/ui/loading";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import {
+	type FileRoutesByPath,
+	Link,
+	createFileRoute,
+} from "@tanstack/react-router";
 import {
 	Building,
 	ChevronRight,
@@ -27,7 +31,9 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-export const Route = createFileRoute("/(default)/account/addresses/")({
+export const Route = createFileRoute(
+	"/(default)/account/addresses/" as keyof FileRoutesByPath,
+)({
 	component: RouteComponent,
 });
 
@@ -82,7 +88,7 @@ function RouteComponent() {
 										setSelectedAddress(address);
 									}}
 								>
-									<AddressComponent address={restAddress as DeliveryLocation} />
+									<AddressComponent address={restAddress as AddressType} />
 								</div>
 							);
 						})}
@@ -121,7 +127,7 @@ function RouteComponent() {
 export function AddressComponent({
 	address,
 }: {
-	address: DeliveryLocation;
+	address: AddressType;
 }) {
 	return (
 		<div className="bg-card p-4 flex  gap-2  items-start rounded-xl">

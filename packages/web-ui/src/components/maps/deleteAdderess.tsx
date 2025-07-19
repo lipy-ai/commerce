@@ -4,7 +4,6 @@ import {
 	useAPIMutation,
 } from "@lipy/lib/utils/useQueryClient";
 import { useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import {
 	AlertDialog,
@@ -24,7 +23,6 @@ interface DeleteAddressProps {
 }
 
 export const DeleteAddress = (props: DeleteAddressProps) => {
-	const navigator = useNavigate();
 	const queryClient = useQueryClient();
 
 	const deleteMutation = useAPIMutation(
@@ -44,7 +42,7 @@ export const DeleteAddress = (props: DeleteAddressProps) => {
 			{
 				loading: "Deleting address...",
 				success: () => {
-					navigator({ to: "/account/addresses", replace: true });
+					props.onOpenChange?.(false);
 					return "Address deleted successfully";
 				},
 				error: "Something went wrong",

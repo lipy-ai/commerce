@@ -3,7 +3,7 @@ import * as React from "react";
 
 export interface InputProps
 	extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
-	size?: "lg" | "default";
+	size?: "sm" | "lg" | "default";
 	prefixEl?: React.ReactNode;
 	prefixClassName?: string;
 	inputClassName?: string;
@@ -60,7 +60,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 					"relative flex items-center overflow-hidden rounded-md border text-base",
 					"bg-background border-input focus-within:ring-1 focus-within:ring-ring focus-within:border-ring",
 					"transition-colors focus-within:outline-none",
-					size === "lg" ? "h-12 text-lg" : "h-10",
+					size === "sm" ? "h-8" : size === "lg" ? "h-12 text-lg" : "h-10",
 					noStyle && "border-none bg-transparent rounded-none",
 					className,
 					(prefixEl || suffixEl) && "opacity-0",
@@ -71,7 +71,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 						className={cn(
 							"inline-flex text-muted-foreground items-center pl-2.5 [&>svg]:w-5 absolute appearance-none h-10",
 							"text-base leading-0 align-middle ",
-							size === "lg" && "text-lg h-12",
+							size === "sm" ? "text-sm h-8" : size === "lg" && "text-lg h-12",
 
 							prefixClassName,
 							"prefix-el",
@@ -89,7 +89,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 						"aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
 						"placeholder:text-muted-foreground flex-1 flex h-full px-2 shadow-none w-full bg-transparent py-1 text-base outline-none transition-colors file:border-0 file:bg-transparent file:text-base file:font-medium disabled:cursor-not-allowed disabled:opacity-50",
 
-						size === "lg" && "text-lg",
+						size === "sm" ? "text-sm " : size === "lg" && "text-lg",
 						noStyle && "h-fit w-fit",
 						inputClassName,
 					)}
@@ -101,7 +101,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 						className={cn(
 							"inline-flex text-muted-foreground items-center px-2.5 [&>svg]:w-5 absolute right-0 appearance-none h-10",
 							"text-base leading-0 align-middle ",
-							size === "lg" && "text-lg h-12",
+							size === "sm" ? "text-sm h-8" : size === "lg" && "text-lg h-12",
 
 							suffixClassName,
 							"suffix-el",

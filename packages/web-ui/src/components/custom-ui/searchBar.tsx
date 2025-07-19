@@ -26,6 +26,7 @@ export default function SearchBar({
 			// @ts-ignore -- I want it to set on any route -- Should fix this though
 			search: (p) => ({
 				...p,
+				page: p?.q !== q ? 1 : p.page,
 				q,
 			}),
 		});

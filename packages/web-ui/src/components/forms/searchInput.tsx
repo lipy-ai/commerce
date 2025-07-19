@@ -28,6 +28,7 @@ export function SearchInput({
 	value,
 	onChange,
 	className,
+	showAll,
 }: {
 	value: string;
 	onChange: (v: string | null) => void;
@@ -36,6 +37,7 @@ export function SearchInput({
 	disabled?: boolean;
 	type: Type;
 	className?: string;
+	showAll?: boolean;
 }) {
 	const [open, setOpen] = React.useState(false);
 	const ref = React.useRef<HTMLButtonElement>(null);
@@ -49,7 +51,10 @@ export function SearchInput({
 		{ placeholderData: (p) => p },
 	);
 
-	const list = data ?? [];
+	const list = [
+		...(showAll ? [{ value: "", label: "All", icon: null }] : []),
+		...(data ?? []),
+	];
 
 	const selected = React.useMemo(() => {
 		return list.find((f) => f.value === value) || "";

@@ -21,7 +21,9 @@ import {
 } from "./middlewares/auth";
 import { corsMiddleware } from "./middlewares/cors";
 import { globalMiddleware } from "./middlewares/global";
+import { adminCategoryRoute } from "./routes/adminRoutes";
 import { adminProductRoute } from "./routes/adminRoutes/products";
+import { adminVariantRoute } from "./routes/adminRoutes/variant";
 import { addressRoute } from "./routes/loggedRoutes/address";
 import { cartRoute } from "./routes/loggedRoutes/cart";
 import { orderRoute } from "./routes/loggedRoutes/order";
@@ -34,7 +36,6 @@ import { merchantInventoryRoute } from "./routes/merchantRoutes/inventory";
 import { merchantOrderRoute } from "./routes/merchantRoutes/order";
 import { merchantProductRoute } from "./routes/merchantRoutes/product";
 import { merchantStoreRoute } from "./routes/merchantRoutes/store";
-import { merchantVariantRoute } from "./routes/merchantRoutes/variant";
 import { productRoute } from "./routes/publicRoutes/product";
 import { shopRoute } from "./routes/publicRoutes/shop";
 import type { ServerContext } from "./types";
@@ -76,7 +77,9 @@ app.on(["POST", "GET"], "/api/auth/*", (c) => {
 const adminRouter = new Hono()
 	.basePath("/admin")
 	.use(isLoggedIn)
-	.route("/product", adminProductRoute);
+	.route("/product", adminProductRoute)
+	.route("/category", adminCategoryRoute)
+	.route("/variant", adminVariantRoute);
 
 const merchantRouter = new Hono()
 	.basePath("/merchant")
@@ -84,7 +87,6 @@ const merchantRouter = new Hono()
 	.use(hasStorePermission(["owner", "admin"])) // check if staff role is "owner" || "admin"
 	.route("/store", merchantStoreRoute)
 	.route("/product", merchantProductRoute)
-	.route("/variant", merchantVariantRoute)
 	.route("/order", merchantOrderRoute)
 	.route("/customer", merchantCustomerRoute)
 	.route("/combobox", merchantComboboxRoute)

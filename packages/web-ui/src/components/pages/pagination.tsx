@@ -34,7 +34,7 @@ export function Pagination({
 	};
 
 	return (
-		<div className="text-center md:text-start flex justify-between gap-8 p-4 md:p-0 items-center">
+		<div className="text-center md:text-start flex justify-between gap-8 p-4 md:p-0 items-center mt-auto">
 			<div className="hidden md:block">
 				<span className="text-muted-foreground flex gap-1 items-center">
 					<Info className="size-4" />
@@ -44,7 +44,7 @@ export function Pagination({
 			<div className="flex justify-between md:justify-end  gap-4 flex-1">
 				<div className="flex items-center">
 					<span className="text-muted-foreground">
-						Page {page} of {totalPages}
+						Page {page} of {totalPages || 1}
 					</span>
 				</div>
 				<div className="flex gap-4">

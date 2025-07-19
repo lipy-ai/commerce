@@ -40,6 +40,8 @@ export const PRODUCT_TYPE = [
 	"fruits",
 ] as const;
 
+export const PRODUCT_STATUS = ["draft", "published", "archived"] as const;
+
 export const STORE_TYPE = [
 	"grocery",
 	"pharmacy",
@@ -262,6 +264,7 @@ export const product = schema.table("product", {
 		.array()
 		.$type<{ label: string; value: string }[]>(),
 	keywords: text("keywords").array(),
+	status: text("status", { enum: PRODUCT_STATUS }).default("draft"),
 });
 
 export const productVariant = schema.table("productVariant", {

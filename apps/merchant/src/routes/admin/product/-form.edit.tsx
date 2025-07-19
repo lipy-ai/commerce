@@ -6,13 +6,9 @@ import {
 	DrawerDialogTitle,
 } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
 import { Form, FormItem, FormLabel } from "@lipy/web-ui/components/ui/form";
-import { useQueryClient } from "@tanstack/react-query";
 
 import { apiClient } from "@lipy/lib/api";
-import {
-	apiQueryOptions,
-	useAPIMutation,
-} from "@lipy/lib/utils/useQueryClient";
+import { useAPIMutation } from "@lipy/lib/utils/useQueryClient";
 import {
 	FormButton,
 	FormImage,
@@ -20,7 +16,7 @@ import {
 	FormSelect,
 	FormTextarea,
 } from "@lipy/web-ui/components/forms/elements";
-import type { InferResponseType } from "hono";
+import type { InferRequestType, InferResponseType } from "hono";
 
 import {
 	Accordion,
@@ -44,21 +40,25 @@ import {
 	useFormContext,
 	useWatch,
 } from "react-hook-form";
+import { useProductInvalidate } from "./-hook-invalidate";
+import { VariantForm } from "./-variation";
 
 export default function FormEdit({
 	type,
 	data,
 	children,
 }: {
-	data?: InferResponseType<
-		(typeof apiClient.v1.merchant.product)[":id"]["$get"]
-	>;
+	data?:
+		| InferResponseType<(typeof apiClient.v1.merchant.product)[":id"]["$get"]>
+		| undefined;
 	type: "create" | "update";
 	children: ReactNode;
 }) {
 	const [open, setOpen] = useState(false);
 
-	const defaultValues = {
+	const defaultValues: InferRequestType<
+		typeof apiClient.v1.admin.product.$post
+	>["json"] = {
 		title: data?.title || "",
 		category: data?.category?.id || "",
 		price: data?.price || 0,
@@ -67,41 +67,46 @@ export default function FormEdit({
 		images: data?.images || [],
 		highlights: data?.highlights || [],
 		information: data?.information || [],
+		variants: (data?.variants || []) as any,
 	};
 
 	const form = useForm({
 		defaultValues,
 	});
-	const queryClient = useQueryClient();
+
+	const opts = {
+		onMutate: () => {
+			setOpen(false);
+		},
+		onError: () => {
+			invalidate();
+		},
+	};
 
 	const mutation = useAPIMutation(
-		apiClient.v1.merchant.product[":id"],
+		apiClient.v1.admin.product[":id"],
 		"$patch",
+		opts,
 	);
 
+	const createMutation = useAPIMutation(
+		apiClient.v1.admin.product,
+		"$post",
+		opts,
+	);
+
+	const { invalidate } = useProductInvalidate();
+
 	const onSubmit = async (body: typeof defaultValues) => {
-		if (!data?.id) return;
-		await mutation.mutateAsync(
-			{ param: { id: data.id }, json: body },
-			{
-				onSuccess: () => {
-					queryClient.invalidateQueries({
-						queryKey: apiQueryOptions(
-							apiClient.v1.merchant.product[":id"],
-							"$get",
-							{ param: { id: data.id } },
-						).queryKey,
-					});
-					setOpen(false);
-				},
-			},
-		);
+		if (!data?.id) return await createMutation.mutateAsync({ json: body });
+
+		await mutation.mutateAsync({ param: { id: data.id }, json: body });
 	};
 
 	return (
 		<>
 			<DrawerDialogSwitcher
-				className=""
+				className="sm:max-w-5xl"
 				open={open}
 				onOpenChange={setOpen}
 				trigger={children}
@@ -113,7 +118,7 @@ export default function FormEdit({
 				</DrawerDialogHeader>
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-8">
-						<div className="grid">
+						<div>
 							<FormInput
 								name="title"
 								label="Title"
@@ -163,6 +168,8 @@ export default function FormEdit({
 									))}
 								</div>
 							</FormItem>
+							<br />
+							<VariantForm />
 							<br />
 							<SortableForm name="highlights" label="Highlights" />
 							<br />
@@ -242,7 +249,7 @@ function SortableForm({ name, label }: { name: string; label: string }) {
 														</p>
 													</div>
 													<Button
-														variant="secondary"
+														variant="outline"
 														size="sm"
 														type="button"
 														onClick={() => {

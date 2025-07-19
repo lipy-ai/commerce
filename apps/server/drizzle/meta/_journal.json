@@ -22,6 +22,13 @@
       "when": 1752496028550,
       "tag": "0002_young_la_nuit",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1752741878423,
+      "tag": "0003_careless_mad_thinker",
+      "breakpoints": true
     }
   ]
 }

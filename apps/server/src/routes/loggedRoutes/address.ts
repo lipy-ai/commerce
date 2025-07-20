@@ -92,14 +92,20 @@ const route = new Hono<ServerContext>()
 
 			const address = await db
 				.updateTable("address")
+				.set({ ...values })
 				.where("id", "=", id)
-				.rightJoin("userAddress", "address.id", "userAddress.id")
-				.where("userAddress.userId", "=", session?.userId!)
-				.set({
-					...values,
-				})
+				.where((eb) =>
+					eb.exists(
+						db
+							.selectFrom("userAddress")
+							.select("id")
+							.where("userAddress.id", "=", id)
+							.where("userAddress.userId", "=", session?.userId!),
+					),
+				)
 				.returning(["id"])
 				.executeTakeFirst();
+
 			return c.json(address);
 		},
 	)

@@ -101,10 +101,12 @@ export const AddressSetter = ({
 		<DrawerDialogSwitcher
 			open={open}
 			onOpenChange={onOpenChange}
-			className="h-[85%]"
+			className="h-[90%]"
 		>
-			<DrawerDialogHeader className="space-y-6 sticky top-0 z-10 bg-background">
-				<DrawerDialogTitle>Set delivery location</DrawerDialogTitle>
+			<DrawerDialogHeader className="space-y-4 fixed top-4 bg-background  right-4 left-4">
+				<DrawerDialogTitle>
+					{autocompleteOnly ? "Set address" : "Set delivery location"}
+				</DrawerDialogTitle>
 				<Input
 					value={input}
 					type="text"
@@ -112,6 +114,7 @@ export const AddressSetter = ({
 					prefixEl={<Search className="mr-2" />}
 					placeholder="Search your location"
 					suffixEl={loadingPrediction && <Loader2 className="animate-spin" />}
+					className="w-full"
 				/>
 			</DrawerDialogHeader>
 
@@ -119,11 +122,11 @@ export const AddressSetter = ({
 				<PlacesSuggestionList
 					predictions={predictions}
 					onOpenChange={onOpenChange}
-					autocompleteOnly
+					autocompleteOnly={autocompleteOnly}
 					setMapCenter={setMapCenter}
 				/>
 			) : !autocompleteOnly ? (
-				<div className="space-y-8">
+				<div className="space-y-8 mt-24">
 					<Link
 						to="/account/addresses/new"
 						search={{
@@ -153,13 +156,13 @@ export const AddressSetter = ({
 								Saved addresses
 							</p>
 							<div className="mb-10 space-y-2">
-								{savedAddresses.map(({ id, ...rest }) => (
+								{savedAddresses.map((address) => (
 									<div
-										key={id}
+										key={address.id}
 										className="cursor-pointer"
-										onClick={() => handleAddressSelect(rest as AddressType)}
+										onClick={() => handleAddressSelect(address)}
 									>
-										<AddressComponent address={rest as AddressType} />
+										<AddressComponent address={address} />
 									</div>
 								))}
 							</div>
@@ -195,6 +198,7 @@ function PlacesSuggestionList({
 	) => {
 		try {
 			const { result } = await geocode(prediction.description);
+
 			if (!autocompleteOnly) {
 				setDeliveryLocation({
 					...defaultDeliveryLocationState.deliveryLocation,

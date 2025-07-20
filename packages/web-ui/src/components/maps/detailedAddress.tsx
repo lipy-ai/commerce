@@ -27,7 +27,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { useLocationStore } from "./utils/store";
+import { type AddressType, useLocationStore } from "./utils/store";
 const addressTypesItems = [
 	{ value: "home", label: "Home" },
 	{ value: "work", label: "Work" },
@@ -41,7 +41,7 @@ export function DetailedAddress({
 	onOpenChange,
 	isDeliveryAddress,
 }: {
-	fullAddress: any;
+	fullAddress: AddressType;
 	label: "Edit" | "Add";
 	open?: boolean;
 	onOpenChange?: (open: boolean) => void;
@@ -70,6 +70,7 @@ export function DetailedAddress({
 
 	const mutation = useAPIMutation(apiClient.v1.address, "$post", {
 		onSuccess: () => {
+			toast.success("Address saved successfully");
 			queryClient.invalidateQueries({
 				queryKey: apiQueryOptions(apiClient.v1.address, "$get", {}).queryKey,
 			});
@@ -82,6 +83,8 @@ export function DetailedAddress({
 
 	const editMutation = useAPIMutation(apiClient.v1.address[":id"], "$patch", {
 		onSuccess: () => {
+			toast.success("Address updated successfully");
+
 			queryClient.invalidateQueries({
 				queryKey: apiQueryOptions(apiClient.v1.address, "$get", {}).queryKey,
 			});
@@ -93,15 +96,15 @@ export function DetailedAddress({
 	const handleSubmit = async (values: z.infer<typeof formSchema>) => {
 		const basePayload = {
 			name: values.receiverName || fullAddress.name,
-			country: fullAddress.country,
+			country: fullAddress.country ?? "",
 			tag: values.addressType,
 			line2: "",
 			city: fullAddress.city,
 			state: fullAddress.state,
-			postalCode: fullAddress.postalCode,
+			postalCode: fullAddress.postalCode ?? "",
 			phone: values.receiverPhone,
-			lat: fullAddress.lat,
-			lng: fullAddress.lng,
+			lat: fullAddress.lat ?? undefined,
+			lng: fullAddress.lng ?? undefined,
 			line1: fullAddress.line1,
 			metadata: {
 				building: values.building,
@@ -192,12 +195,12 @@ export function DetailedAddress({
 
 							<FormInputWithAnimatedLabel
 								name="receiverPhone"
-								label="Receiver's Phone"
+								label="Receiver's Phone *"
 								required
 								type="tel"
 							/>
 
-							<div className="fixed bottom-0 left-0 right-0 bg-card p-4 shadow-t z-10 w-full">
+							<div className="fixed bottom-0 left-0 right-0 bg-card py-4 px-8 shadow-t z-10 w-full ">
 								<FormButton
 									type="submit"
 									className="w-full"

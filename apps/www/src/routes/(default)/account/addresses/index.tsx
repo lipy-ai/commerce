@@ -117,7 +117,7 @@ function RouteComponent() {
 				<OptionsDrawer
 					open={optionsDrawerOpen}
 					onOpenChange={setOptionsDrawerOpen}
-					address={selectedAddress}
+					address={selectedAddress as AddressType}
 				/>
 			)}
 		</>
@@ -159,7 +159,7 @@ export function AddressComponent({
 function OptionsDrawer(props: {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
-	address?: any;
+	address: AddressType;
 }) {
 	const [deleteAddressDialogOpen, setDeleteAddressDialogOpen] = useState(false);
 	const [detailedAddressDrawerOpen, setDetailedAddressDrawerOpen] =
@@ -223,7 +223,7 @@ function OptionsDrawer(props: {
 					fullAddress={props.address}
 					open={detailedAddressDrawerOpen}
 					onOpenChange={setDetailedAddressDrawerOpen}
-					label="Edit"
+					label={"Edit"}
 				/>
 			)}
 		</div>

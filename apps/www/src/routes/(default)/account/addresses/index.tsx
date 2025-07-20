@@ -31,7 +31,9 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-export const Route = createFileRoute("/(default)/account/addresses/")({
+export const Route = createFileRoute(
+  "/(default)/account/addresses/" as keyof FileRoutesByPath
+)({
   component: RouteComponent,
 });
 

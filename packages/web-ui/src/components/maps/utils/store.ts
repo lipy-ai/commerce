@@ -1,10 +1,10 @@
-import type { apiClient } from "@lipy/lib/api";
+import type { loggedInAddressApi } from "@lipy/lib/api";
 import type { InferResponseType } from "hono/client";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 export type AddressType = InferResponseType<
-	typeof apiClient.v1.address.$get
+	typeof loggedInAddressApi.index.$get
 >[number];
 
 export const defaultAddress = {

@@ -25,17 +25,14 @@ interface DeleteAddressProps {
 export const DeleteAddress = (props: DeleteAddressProps) => {
   const queryClient = useQueryClient();
 
-  const deleteMutation = useAPIMutation(
-    apiClient.v1.address[":id"],
-    "$delete",
-    {
-      onSuccess() {
-        queryClient.invalidateQueries({
-          queryKey: apiQueryOptions(apiClient.v1.address, "$get", {}).queryKey,
-        });
-      },
-    }
-  );
+  const deleteMutation = useAPIMutation(loggedInAddressApi[":id"], "$delete", {
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: apiQueryOptions(loggedInAddressApi.index, "$get", {})
+          .queryKey,
+      });
+    },
+  });
   const handleDeleteAddress = () => {
     toast.promise(
       deleteMutation.mutateAsync({ param: { id: props.addressId } }),
@@ -52,13 +49,6 @@ export const DeleteAddress = (props: DeleteAddressProps) => {
 
   return (
     <AlertDialog open={props.open} onOpenChange={props.onOpenChange}>
-      {/* <AlertDialogTrigger asChild>
-				<Avatar className="w-8 h-8 cursor-pointer">
-					<AvatarFallback>
-						<Trash className="size-4 text-muted-foreground" />
-					</AvatarFallback>
-				</Avatar>
-			</AlertDialogTrigger> */}
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>

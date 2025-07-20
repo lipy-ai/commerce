@@ -22,18 +22,18 @@ import { Check, Clock10, StoreIcon } from "lucide-react";
 import { Shirt, ShoppingCart, SquareUser, Store } from "lucide-react";
 
 import { merchantDashboardApi } from "@lipy/lib/api";
-import {
-  type ChartConfig,
-  ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@lipy/web-ui/components/ui/chart";
+// import {
+//   type ChartConfig,
+//   ChartContainer,
+//   ChartLegend,
+//   ChartLegendContent,
+//   ChartTooltip,
+//   ChartTooltipContent,
+// } from "@lipy/web-ui/components/ui/chart";
 import { Label } from "@lipy/web-ui/components/ui/label";
-import { format } from "date-fns";
+// import { format } from "date-fns";
 import type { InferResponseType } from "hono";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+// import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 const setupSteps = [
   {
@@ -154,10 +154,10 @@ function RouteComponent() {
               ))}
             </CardContent>
           </Card>
-          <ChartBarInteractive
+          {/* <ChartBarInteractive
             data={res.data?.counts}
             isLoading={res.isLoading}
-          />
+          /> */}
           <div className="lg:hidden">
             <Orders data={res.data?.pendingOrders} isLoading={res.isLoading} />
           </div>
@@ -300,75 +300,75 @@ export function ShopSetupStatus() {
   );
 }
 
-export function ChartBarInteractive({
-  data,
-  isLoading,
-}: {
-  data:
-    | InferResponseType<typeof merchantDashboardApi.index.$get>["counts"]
-    | undefined;
-  isLoading: boolean;
-}) {
-  const chartConfig = {
-    views: {
-      label: "Page Views",
-    },
-    pending: {
-      label: "Pending",
-      color: "var(--chart-1)",
-    },
-    completed: {
-      label: "Completed",
-      color: "var(--chart-2)",
-    },
-    returned: {
-      label: "Returned",
-      color: "var(--chart-3)",
-    },
-  } satisfies ChartConfig;
+// export function ChartBarInteractive({
+//   data,
+//   isLoading,
+// }: {
+//   data:
+//     | InferResponseType<typeof merchantDashboardApi.index.$get>["counts"]
+//     | undefined;
+//   isLoading: boolean;
+// }) {
+//   const chartConfig = {
+//     views: {
+//       label: "Page Views",
+//     },
+//     pending: {
+//       label: "Pending",
+//       color: "var(--chart-1)",
+//     },
+//     completed: {
+//       label: "Completed",
+//       color: "var(--chart-2)",
+//     },
+//     returned: {
+//       label: "Returned",
+//       color: "var(--chart-3)",
+//     },
+//   } satisfies ChartConfig;
 
-  if (isLoading) {
-    return <Skeleton />;
-  }
+//   if (isLoading) {
+//     return <Skeleton />;
+//   }
 
-  return (
-    <Card className="w-full flex flex-col">
-      <CardHeader>
-        <CardTitle>Orders</CardTitle>
-        <CardDescription>Last 30 days</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig} className="max-h-[300px] w-full">
-          <BarChart accessibilityLayer data={data || []}>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="date"
-              minTickGap={10}
-              tickFormatter={(v) => format(v, "dd MMM")}
-            />
-            <ChartTooltip content={<ChartTooltipContent hideLabel />} />
-            <ChartLegend content={<ChartLegendContent />} />
-            <Bar
-              dataKey="pending"
-              stackId="a"
-              fill="var(--color-pending)"
-              radius={[0, 0, 4, 4]}
-            />
-            <Bar
-              dataKey="completed"
-              stackId="a"
-              fill="var(--color-completed)"
-              radius={[0, 0, 4, 4]}
-            />
-            <Bar
-              dataKey="returned"
-              stackId="a"
-              fill="var(--color-returned)"
-              radius={[0, 0, 4, 4]}
-            />
-          </BarChart>
-        </ChartContainer>
-      </CardContent>
-    </Card>
-  );
-}
+//   return (
+//     <Card className="w-full flex flex-col">
+//       <CardHeader>
+//         <CardTitle>Orders</CardTitle>
+//         <CardDescription>Last 30 days</CardDescription>
+//       </CardHeader>
+//       <CardContent>
+//         <ChartContainer config={chartConfig} className="max-h-[300px] w-full">
+//           <BarChart accessibilityLayer data={data || []}>
+//             <CartesianGrid vertical={false} />
+//             <XAxis
+//               dataKey="date"
+//               minTickGap={10}
+//               tickFormatter={(v) => format(v, "dd MMM")}
+//             />
+//             <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+//             <ChartLegend content={<ChartLegendContent />} />
+//             <Bar
+//               dataKey="pending"
+//               stackId="a"
+//               fill="var(--color-pending)"
+//               radius={[0, 0, 4, 4]}
+//             />
+//             <Bar
+//               dataKey="completed"
+//               stackId="a"
+//               fill="var(--color-completed)"
+//               radius={[0, 0, 4, 4]}
+//             />
+//             <Bar
+//               dataKey="returned"
+//               stackId="a"
+//               fill="var(--color-returned)"
+//               radius={[0, 0, 4, 4]}
+//             />
+//           </BarChart>
+//         </ChartContainer>
+//       </CardContent>
+//     </Card>
+//   );
+// }

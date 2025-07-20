@@ -87,7 +87,7 @@ function LocationComponent() {
 		} else if (gmapLoaded) {
 			handleGeolocation();
 		}
-	}, [primaryAddress]);
+	}, [primaryAddress, gmapLoaded]);
 
 	if (error) {
 		return (

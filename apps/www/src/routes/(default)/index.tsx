@@ -23,6 +23,7 @@ export const Route = createFileRoute("/(default)/")({
 function Home() {
 	const { cart, initialized } = useCartStore();
 	const { isMobile } = useViewport();
+
 	const mobileNav = [
 		{
 			label: "Home",
@@ -63,18 +64,16 @@ function Home() {
 	];
 
 	return (
-		<div>
-			<DashboardLayout
-				mobileNav={mobileNav}
-				logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
-			>
-				<DashboardBody>
-					{isMobile && <NavBar />}
-					<NearByShops />
+		<DashboardLayout
+			mobileNav={mobileNav}
+			logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
+		>
+			<DashboardBody>
+				{isMobile && <NavBar />}
+				<NearByShops />
 
-					{!initialized && <AppCartInitializer />}
-				</DashboardBody>
-			</DashboardLayout>
-		</div>
+				{!initialized && <AppCartInitializer />}
+			</DashboardBody>
+		</DashboardLayout>
 	);
 }

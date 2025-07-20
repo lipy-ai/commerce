@@ -14,11 +14,7 @@ import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import Loading from "@lipy/web-ui/components/ui/loading";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
-import {
-  type FileRoutesByPath,
-  Link,
-  createFileRoute,
-} from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import {
   Building,
   ChevronRight,
@@ -31,9 +27,8 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-export const Route = createFileRoute(
-  "/(default)/account/addresses/" as keyof FileRoutesByPath
-)({
+//@ts-ignore
+export const Route = createFileRoute("/(default)/account/addresses/")({
   component: RouteComponent,
 });
 

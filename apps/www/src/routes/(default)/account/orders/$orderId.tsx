@@ -20,6 +20,7 @@ import {
   CardTitle,
 } from "@lipy/web-ui/components/ui/card";
 import Loading from "@lipy/web-ui/components/ui/loading";
+import ZoomImg from "@lipy/web-ui/components/veiwers/zoomableImage";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
@@ -258,11 +259,7 @@ function RouteComponent() {
                                 key={index}
                                 className="relative flex-shrink-0"
                               >
-                                <img
-                                  src={file}
-                                  alt={`Prescription ${index + 1}`}
-                                  className="object-cover w-32 h-44 border rounded-xl"
-                                />
+                                <ZoomImg src={file} />
                               </div>
                             );
                           }

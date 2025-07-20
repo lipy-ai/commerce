@@ -27,7 +27,7 @@ import { adminVariantRoute } from "./routes/adminRoutes/variant";
 import { addressRoute } from "./routes/loggedRoutes/address";
 import { cartRoute } from "./routes/loggedRoutes/cart";
 import { orderRoute } from "./routes/loggedRoutes/order";
-import { uploadRouter } from "./routes/loggedRoutes/upload";
+import { uploadRoute } from "./routes/loggedRoutes/upload";
 import { merchantComboboxRoute } from "./routes/merchantRoutes/combobox";
 import { merchantCustomerRoute } from "./routes/merchantRoutes/customer";
 import { merchantDashboardRoute } from "./routes/merchantRoutes/dashboard";
@@ -96,7 +96,7 @@ const merchantRouter = new Hono()
 
 const loggedRouter = new Hono()
 	.use(isLoggedIn) //Check if logged In
-	.route("/upload", uploadRouter)
+	.route("/upload", uploadRoute)
 	.route("/address", addressRoute)
 	.route("/cart", cartRoute)
 	.route("/products", productRoute)
@@ -123,5 +123,3 @@ const shutdown = async () => {
 
 process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);
-
-export type AppType = any;

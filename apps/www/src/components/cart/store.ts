@@ -1,8 +1,8 @@
-import type { apiClient } from "@lipy/lib/api";
+import type { loggedInCartApi } from "@lipy/lib/api";
 import type { InferResponseType } from "hono";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-type ProductInCart = InferResponseType<typeof apiClient.v1.cart.$get>[0];
+type ProductInCart = InferResponseType<typeof loggedInCartApi.index.$get>[0];
 
 export type Operation = "increment" | "decrement" | "add";
 

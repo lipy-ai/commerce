@@ -10,8 +10,6 @@ export function formatAddress(address: DBTypes["address"]) {
 		state,
 		postalCode,
 		country,
-		// phone,
-		// metadata,
 	} = address;
 
 	const parts = [

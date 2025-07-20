@@ -3,7 +3,6 @@ import { MapPinOff, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { env } from "@envClient";
-import { loggedInAddressApi } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 
 import {
@@ -25,6 +24,7 @@ import {
 } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
 import { AddressSetter } from "./-addressSetter";
 
+import { loggedInAddressApi } from "@lipy/lib/api";
 import { Button } from "@lipy/web-ui/components/ui/button";
 
 function LocationComponent() {

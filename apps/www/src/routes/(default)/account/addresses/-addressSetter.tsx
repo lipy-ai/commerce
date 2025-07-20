@@ -163,7 +163,16 @@ export const AddressSetter = ({
             </section>
           )}
         </div>
-      ) : null}
+      ) : (
+        <div className="m-auto text-center  mt-40 space-y-4">
+          <img
+            src={"/assets/finding-location.png"}
+            alt="location"
+            className="w-[300px] h-[200px]"
+          />
+          <p className="font-medium text-lg">Please search a location</p>
+        </div>
+      )}
     </DrawerDialogSwitcher>
   );
 };

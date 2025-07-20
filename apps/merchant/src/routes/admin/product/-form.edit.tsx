@@ -1,286 +1,278 @@
 import {
-	DrawerDialogClose,
-	DrawerDialogFooter,
-	DrawerDialogHeader,
-	DrawerDialogSwitcher,
-	DrawerDialogTitle,
+  DrawerDialogClose,
+  DrawerDialogFooter,
+  DrawerDialogHeader,
+  DrawerDialogSwitcher,
+  DrawerDialogTitle,
 } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
 import { Form, FormItem, FormLabel } from "@lipy/web-ui/components/ui/form";
 
-import { apiClient } from "@lipy/lib/api";
+import { adminProductApi } from "@lipy/lib/api";
 import { useAPIMutation } from "@lipy/lib/utils/useQueryClient";
 import {
-	FormButton,
-	FormImage,
-	FormInput,
-	FormSelect,
-	FormTextarea,
+  FormButton,
+  FormImage,
+  FormInput,
+  FormSelect,
+  FormTextarea,
 } from "@lipy/web-ui/components/forms/elements";
 import type { InferRequestType, InferResponseType } from "hono";
 
 import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
 } from "@lipy/web-ui/components/ui/accordion";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import {
-	Sortable,
-	SortableContent,
-	SortableItem,
-	SortableItemHandle,
-	SortableOverlay,
+  Sortable,
+  SortableContent,
+  SortableItem,
+  SortableItemHandle,
+  SortableOverlay,
 } from "@lipy/web-ui/components/ui/sortable";
 import { GripVertical, Trash } from "lucide-react";
 import { Fragment, type ReactNode, useState } from "react";
 import {
-	useFieldArray,
-	useForm,
-	useFormContext,
-	useWatch,
+  useFieldArray,
+  useForm,
+  useFormContext,
+  useWatch,
 } from "react-hook-form";
 import { useProductInvalidate } from "./-hook-invalidate";
 import { VariantForm } from "./-variation";
 
 export default function FormEdit({
-	type,
-	data,
-	children,
+  type,
+  data,
+  children,
 }: {
-	data?:
-		| InferResponseType<(typeof apiClient.v1.admin.product)["$get"]>["items"][0]
-		| undefined;
-	type: "create" | "update";
-	children: ReactNode;
+  data?:
+    | InferResponseType<(typeof adminProductApi.index)["$get"]>["items"][0]
+    | undefined;
+  type: "create" | "update";
+  children: ReactNode;
 }) {
-	const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
-	const defaultValues: InferRequestType<
-		typeof apiClient.v1.admin.product.$post
-	>["json"] = {
-		title: data?.title || "",
-		category: data?.category?.id || "",
-		price: data?.price || 0,
-		maxPrice: data?.maxPrice || 0,
-		summary: data?.summary || "",
-		images: data?.images || [],
-		highlights: data?.highlights || [],
-		information: data?.information || [],
-		variants: (data?.variants || []) as any,
-	};
+  const defaultValues: InferRequestType<
+    typeof adminProductApi.index.$post
+  >["json"] = {
+    title: data?.title || "",
+    category: data?.category?.id || "",
+    price: data?.price || 0,
+    maxPrice: data?.maxPrice || 0,
+    summary: data?.summary || "",
+    images: data?.images || [],
+    highlights: data?.highlights || [],
+    information: data?.information || [],
+    variants: (data?.variants || []) as any,
+  };
 
-	const form = useForm({
-		defaultValues,
-	});
+  const form = useForm({
+    defaultValues,
+  });
 
-	const opts = {
-		onMutate: () => {
-			setOpen(false);
-		},
-		onError: () => {
-			invalidate();
-		},
-	};
+  const opts = {
+    onMutate: () => {
+      setOpen(false);
+    },
+    onError: () => {
+      invalidate();
+    },
+  };
 
-	const mutation = useAPIMutation(
-		apiClient.v1.admin.product[":id"],
-		"$patch",
-		opts,
-	);
+  const mutation = useAPIMutation(adminProductApi[":id"], "$patch", opts);
 
-	const createMutation = useAPIMutation(
-		apiClient.v1.admin.product,
-		"$post",
-		opts,
-	);
+  const createMutation = useAPIMutation(adminProductApi.index, "$post", opts);
 
-	const { invalidate } = useProductInvalidate();
+  const { invalidate } = useProductInvalidate();
 
-	const onSubmit = async (body: typeof defaultValues) => {
-		if (!data?.id) return await createMutation.mutateAsync({ json: body });
+  const onSubmit = async (body: typeof defaultValues) => {
+    if (!data?.id) return await createMutation.mutateAsync({ json: body });
 
-		await mutation.mutateAsync({ param: { id: data.id }, json: body });
-	};
+    await mutation.mutateAsync({ param: { id: data.id }, json: body });
+  };
 
-	return (
-		<>
-			<DrawerDialogSwitcher
-				className="sm:max-w-5xl"
-				open={open}
-				onOpenChange={setOpen}
-				trigger={children}
-			>
-				<DrawerDialogHeader>
-					<DrawerDialogTitle>
-						{type === "create" ? "Create Product" : "Edit Product"}
-					</DrawerDialogTitle>
-				</DrawerDialogHeader>
-				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-8">
-						<div>
-							<FormInput
-								name="title"
-								label="Title"
-								placeholder="Product Title"
-							/>
+  return (
+    <>
+      <DrawerDialogSwitcher
+        className="sm:max-w-5xl"
+        open={open}
+        onOpenChange={setOpen}
+        trigger={children}
+      >
+        <DrawerDialogHeader>
+          <DrawerDialogTitle>
+            {type === "create" ? "Create Product" : "Edit Product"}
+          </DrawerDialogTitle>
+        </DrawerDialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-8">
+            <div>
+              <FormInput
+                name="title"
+                label="Title"
+                placeholder="Product Title"
+              />
 
-							<FormSelect
-								name="category"
-								type="categories"
-								label="Category"
-								placeholder="Search Categories"
-							/>
-							<div className="grid grid-cols-2 gap-4">
-								<FormInput
-									label="Selling Price"
-									name="price"
-									type="number"
-									placeholder="0.00"
-									className="col-span-6"
-									prefixEl={<span>₹</span>}
-								/>
-								<FormInput
-									label="Max Retail Price (MRP)"
-									name="maxPrice"
-									type="number"
-									placeholder="0.00"
-									className="col-span-6"
-									prefixEl={<span>₹</span>}
-								/>
-							</div>
+              <FormSelect
+                name="category"
+                type="categories"
+                label="Category"
+                placeholder="Search Categories"
+              />
+              <div className="grid grid-cols-2 gap-4">
+                <FormInput
+                  label="Selling Price"
+                  name="price"
+                  type="number"
+                  placeholder="0.00"
+                  className="col-span-6"
+                  prefixEl={<span>₹</span>}
+                />
+                <FormInput
+                  label="Max Retail Price (MRP)"
+                  name="maxPrice"
+                  type="number"
+                  placeholder="0.00"
+                  className="col-span-6"
+                  prefixEl={<span>₹</span>}
+                />
+              </div>
 
-							<FormTextarea
-								name="summary"
-								label="Summary"
-								placeholder="Brief summary about this product..."
-							/>
-							<FormItem>
-								<FormLabel>Images</FormLabel>
+              <FormTextarea
+                name="summary"
+                label="Summary"
+                placeholder="Brief summary about this product..."
+              />
+              <FormItem>
+                <FormLabel>Images</FormLabel>
 
-								<div className="grid grid-cols-3 lg:grid-cols-6 gap-4">
-									{[...Array(6)].map((m, i) => (
-										<FormImage
-											key={m}
-											name={`images.${i}`}
-											wrapperClassName="size-full"
-										/>
-									))}
-								</div>
-							</FormItem>
-							<br />
-							<VariantForm />
-							<br />
-							<SortableForm name="highlights" label="Highlights" />
-							<br />
-							<SortableForm name="information" label="More Information" />
-						</div>
-						<DrawerDialogFooter>
-							<DrawerDialogClose />
-							<FormButton>Save Changes</FormButton>
-						</DrawerDialogFooter>
-					</form>
-				</Form>
-			</DrawerDialogSwitcher>
-		</>
-	);
+                <div className="grid grid-cols-3 lg:grid-cols-6 gap-4">
+                  {[...Array(6)].map((m, i) => (
+                    <FormImage
+                      key={m}
+                      name={`images.${i}`}
+                      wrapperClassName="size-full"
+                    />
+                  ))}
+                </div>
+              </FormItem>
+              <br />
+              <VariantForm />
+              <br />
+              <SortableForm name="highlights" label="Highlights" />
+              <br />
+              <SortableForm name="information" label="More Information" />
+            </div>
+            <DrawerDialogFooter>
+              <DrawerDialogClose />
+              <FormButton>Save Changes</FormButton>
+            </DrawerDialogFooter>
+          </form>
+        </Form>
+      </DrawerDialogSwitcher>
+    </>
+  );
 }
 
 function SortableForm({ name, label }: { name: string; label: string }) {
-	const form = useFormContext();
+  const form = useFormContext();
 
-	const arr = useFieldArray({
-		name,
-		control: form.control,
-		keyName: "kid",
-	});
+  const arr = useFieldArray({
+    name,
+    control: form.control,
+    keyName: "kid",
+  });
 
-	const watch = useWatch({ name });
+  const watch = useWatch({ name });
 
-	return (
-		<div>
-			<div className="flex justify-between p-4 bg-accent/50">
-				<FormLabel>{label}</FormLabel>
+  return (
+    <div>
+      <div className="flex justify-between p-4 bg-accent/50">
+        <FormLabel>{label}</FormLabel>
 
-				<Button
-					variant={"outline"}
-					size={"sm"}
-					type="button"
-					onClick={() => {
-						arr.prepend({ label: "Untitled", value: "Untitled" });
-					}}
-				>
-					Add New
-				</Button>
-			</div>
+        <Button
+          variant={"outline"}
+          size={"sm"}
+          type="button"
+          onClick={() => {
+            arr.prepend({ label: "Untitled", value: "Untitled" });
+          }}
+        >
+          Add New
+        </Button>
+      </div>
 
-			<Sortable
-				value={arr.fields}
-				onValueChange={(v) =>
-					form.setValue(name as any, v, { shouldValidate: true })
-				}
-				getItemValue={(item) => item.kid}
-			>
-				<SortableContent asChild>
-					<Accordion type="single" collapsible>
-						{arr.fields.map((f: any, i) => {
-							return (
-								<Fragment key={f.kid}>
-									<SortableItem key={f.kid} value={f.kid} asChild>
-										<AccordionItem
-											value={f.kid}
-											className="hover:bg-accent/50 data-[state=open]:bg-accent/20 data-[state=open]:border"
-										>
-											<AccordionTrigger className="data-[state=open]:border-b">
-												<div className="flex gap-2 items-center w-full">
-													<SortableItemHandle asChild>
-														<Button
-															variant="ghost"
-															size="icon"
-															className="size-8"
-														>
-															<GripVertical className="h-4 w-4" />
-														</Button>
-													</SortableItemHandle>
-													<div className="text-start flex-1">
-														<p>{watch[i]?.label}</p>
-														<p className="text-sm text-muted-foreground">
-															{watch[i]?.value}
-														</p>
-													</div>
-													<Button
-														variant="outline"
-														size="sm"
-														type="button"
-														onClick={() => {
-															arr.remove(i);
-														}}
-													>
-														<Trash />
-													</Button>
-												</div>
-											</AccordionTrigger>
-											<AccordionContent className="p-4">
-												<FormInput
-													name={`${name}.${i}.label`}
-													placeholder={`${name} Key`}
-												/>
-												<FormTextarea
-													name={`${name}.${i}.value`}
-													placeholder={`${name} Value`}
-												/>
-											</AccordionContent>
-										</AccordionItem>
-									</SortableItem>
-								</Fragment>
-							);
-						})}
-					</Accordion>
-				</SortableContent>
-				<SortableOverlay>
-					<div className="size-full rounded-none bg-primary/10" />
-				</SortableOverlay>
-			</Sortable>
-		</div>
-	);
+      <Sortable
+        value={arr.fields}
+        onValueChange={(v) =>
+          form.setValue(name as any, v, { shouldValidate: true })
+        }
+        getItemValue={(item) => item.kid}
+      >
+        <SortableContent asChild>
+          <Accordion type="single" collapsible>
+            {arr.fields.map((f: any, i) => {
+              return (
+                <Fragment key={f.kid}>
+                  <SortableItem key={f.kid} value={f.kid} asChild>
+                    <AccordionItem
+                      value={f.kid}
+                      className="hover:bg-accent/50 data-[state=open]:bg-accent/20 data-[state=open]:border"
+                    >
+                      <AccordionTrigger className="data-[state=open]:border-b">
+                        <div className="flex gap-2 items-center w-full">
+                          <SortableItemHandle asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="size-8"
+                            >
+                              <GripVertical className="h-4 w-4" />
+                            </Button>
+                          </SortableItemHandle>
+                          <div className="text-start flex-1">
+                            <p>{watch[i]?.label}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {watch[i]?.value}
+                            </p>
+                          </div>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            type="button"
+                            onClick={() => {
+                              arr.remove(i);
+                            }}
+                          >
+                            <Trash />
+                          </Button>
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent className="p-4">
+                        <FormInput
+                          name={`${name}.${i}.label`}
+                          placeholder={`${name} Key`}
+                        />
+                        <FormTextarea
+                          name={`${name}.${i}.value`}
+                          placeholder={`${name} Value`}
+                        />
+                      </AccordionContent>
+                    </AccordionItem>
+                  </SortableItem>
+                </Fragment>
+              );
+            })}
+          </Accordion>
+        </SortableContent>
+        <SortableOverlay>
+          <div className="size-full rounded-none bg-primary/10" />
+        </SortableOverlay>
+      </Sortable>
+    </div>
+  );
 }

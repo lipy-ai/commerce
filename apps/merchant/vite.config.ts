@@ -12,6 +12,9 @@ export default defineConfig({
 	build: {
 		minify: true,
 		sourcemap: true,
+		commonjsOptions: {
+			include: [/node_modules/],
+		},
 	},
 
 	server: {
@@ -24,6 +27,9 @@ export default defineConfig({
 				target: `${process.env.VITE_API_URL}/api/**`,
 			},
 		},
+	},
+	optimizeDeps: {
+		include: ["recharts"],
 	},
 
 	resolve: {

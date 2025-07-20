@@ -1,4 +1,4 @@
-import { apiClient } from "@lipy/lib/api";
+import { publicProductApi, publicShopApi } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
@@ -7,94 +7,90 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 
 export const Route = createFileRoute(
-	"/(default)/(store)/$storeHandle/products/search",
+  "/(default)/(store)/$storeHandle/products/search"
 )({
-	component: RouteComponent,
-	validateSearch: z.object({
-		q: z.string().default(""),
-	}),
+  component: RouteComponent,
+  validateSearch: z.object({
+    q: z.string().default(""),
+  }),
 });
 
 function RouteComponent() {
-	const { storeHandle } = Route.useParams();
-	const { q } = Route.useSearch();
+  const { storeHandle } = Route.useParams();
+  const { q } = Route.useSearch();
 
-	const { data: storeInfo } = useAPIQuery(
-		apiClient.v1.shops[":handle"],
-		"$get",
-		{ param: { handle: storeHandle } },
-	);
+  const { data: storeInfo } = useAPIQuery(publicShopApi[":handle"], "$get", {
+    param: { handle: storeHandle },
+  });
 
-	const { data: products, isFetching } = useAPIQuery(
-		apiClient.v1.public.products[":id"].search,
-		"$get",
-		{
-			param: {
-				id: storeInfo?.id as string,
-			},
-			query: {
-				q: q,
-			},
-		},
+  const { data: products, isFetching } = useAPIQuery(
+    publicProductApi[":id"].search,
+    "$get",
+    {
+      param: {
+        id: storeInfo?.id as string,
+      },
+      query: {
+        q: q,
+      },
+    },
 
-		{
-			enabled: !!storeInfo?.id,
-			placeholderData: (p) => p,
-		},
-	);
+    {
+      enabled: !!storeInfo?.id,
+      placeholderData: (p) => p,
+    }
+  );
 
-	return (
-		<div className="w-full relative">
-			<DashboardHeader className="bg-background px-0" hideBackBtn>
-				<SearchBar
-					className="w-full pr-4"
-					fullPageSearch
-					placeholder={`Search in ${storeInfo?.name}`}
-				/>
-			</DashboardHeader>
+  return (
+    <div className="w-full relative">
+      <DashboardHeader className="bg-background px-0" hideBackBtn>
+        <SearchBar
+          className="w-full pr-4"
+          fullPageSearch
+          placeholder={`Search in ${storeInfo?.name}`}
+        />
+      </DashboardHeader>
 
-				<div>
-					{isFetching ? (
-						<ProductSkeleton />
-					) : !products || products.length === 0 ? (
-						<p className="p-4 font-medium text-lg">No result found for "{q}"</p>
-					) : (
-						<div className="grid grid-cols-2 gap-4 p-4">
-							{products.map((product) => (
-								<Link
-									key={product.id}
-									className="relative aspect-square rounded-xl overflow-hidden"
-									to="/$storeHandle/products/$productId"
-									params={{
-										storeHandle: storeHandle,
-										productId: product.id,
-									}}
-								>
-									<img
-										alt={product.title || ""}
-										src={product.thumbnail || ""}
-										className="w-full h-full object-cover"
-									/>
-									<div className="absolute bottom-0 w-full px-2 py-1 bg-black/50 backdrop-blur-md text-white text-sm font-medium line-clamp-1">
-										{product.title}
-									</div>
-								</Link>
-							))}
-						</div>
-					)}
-				</div>
-
-		</div>
-	
-	);
+      <div>
+        {isFetching ? (
+          <ProductSkeleton />
+        ) : !products || products.length === 0 ? (
+          <p className="p-4 font-medium text-lg">No result found for "{q}"</p>
+        ) : (
+          <div className="grid grid-cols-2 gap-4 p-4">
+            {products.map((product) => (
+              <Link
+                key={product.id}
+                className="relative aspect-square rounded-xl overflow-hidden"
+                to="/$storeHandle/products/$productId"
+                params={{
+                  storeHandle: storeHandle,
+                  productId: product.id,
+                }}
+              >
+                <img
+                  alt={product.title || ""}
+                  src={product.thumbnail || ""}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute bottom-0 w-full px-2 py-1 bg-black/50 backdrop-blur-md text-white text-sm font-medium line-clamp-1">
+                  {product.title}
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 function ProductSkeleton() {
-	return (
-		<div className="grid grid-cols-2 gap-4 p-4">
-			{[...Array(8)].map((m) => (
-				<Skeleton key={m} className="h-36" />
-			))}
-		</div>
-	);
+  return (
+    <div className="grid grid-cols-2 gap-4 p-4">
+      {[...Array(8)].map((m) => (
+        <Skeleton key={m} className="h-36" />
+      ))}
+    </div>
+  );
 }

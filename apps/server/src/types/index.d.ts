@@ -4,11 +4,27 @@ import { DBTypes } from "@/db";
 import type { Context, Env } from "hono";
 export * from "./auth";
 import type { AvailableEvents } from "@/events";
-import type { routes } from "../app";
-export type AppType = typeof routes;
 import type { ErrCode } from "@/lib/exception";
 import type { STORE_ROLES } from "@/middlewares/auth";
+import type { adminCategoryRoute } from "@/routes/adminRoutes";
+import type { adminProductRoute } from "@/routes/adminRoutes/products";
+import type { adminVariantRoute } from "@/routes/adminRoutes/variant";
+import type { addressRoute } from "@/routes/loggedRoutes/address";
+import type { cartRoute } from "@/routes/loggedRoutes/cart";
+import type { orderRoute } from "@/routes/loggedRoutes/order";
+import type { uploadRoute } from "@/routes/loggedRoutes/upload";
+import type { merchantComboboxRoute } from "@/routes/merchantRoutes/combobox";
+import type { merchantCustomerRoute } from "@/routes/merchantRoutes/customer";
+import type { merchantDashboardRoute } from "@/routes/merchantRoutes/dashboard";
+import type { eventsRoute } from "@/routes/merchantRoutes/events";
+import type { merchantInventoryRoute } from "@/routes/merchantRoutes/inventory";
+import type { merchantOrderRoute } from "@/routes/merchantRoutes/order";
+import type { merchantProductRoute } from "@/routes/merchantRoutes/product";
+import type { merchantStoreRoute } from "@/routes/merchantRoutes/store";
+import type { productRoute } from "@/routes/publicRoutes/product";
+import type { shopRoute } from "@/routes/publicRoutes/shop";
 import type { Emitter } from "@hono/event-emitter";
+import type { routes } from "../app";
 
 // import type {
 // 	EmitAsyncOptions,
@@ -66,3 +82,29 @@ export type AwaitedReturn<T extends (...args: any) => any> = Awaited<
 >;
 
 export type HonoContext = Context;
+
+// Admin Routes
+
+export type AdminProductRoute = typeof adminProductRoute;
+export type AdminCategoryRoute = typeof adminCategoryRoute;
+export type AdminVariantRoute = typeof adminVariantRoute;
+
+// Merchant Routes
+export type MerchantStoreRoute = typeof merchantStoreRoute;
+export type MerchantProductRoute = typeof merchantProductRoute;
+export type MerchantOrderRoute = typeof merchantOrderRoute;
+export type MerchantCustomerRoute = typeof merchantCustomerRoute;
+export type MerchantComboboxRoute = typeof merchantComboboxRoute;
+export type MerchantInventoryRoute = typeof merchantInventoryRoute;
+export type MerchantEventsRoute = typeof eventsRoute;
+export type MerchantDashboardRoute = typeof merchantDashboardRoute;
+
+// Logged In Routes
+export type LoggedInUploadRoute = typeof uploadRoute;
+export type LoggedInAddressRoute = typeof addressRoute;
+export type LoggedInCartRoute = typeof cartRoute;
+export type LoggedIOrderRoute = typeof orderRoute;
+
+// Public Routes
+export type PublicProductRoute = typeof productRoute;
+export type PublicShopRoute = typeof shopRoute;

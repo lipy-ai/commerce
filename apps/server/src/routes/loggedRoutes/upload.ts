@@ -70,4 +70,4 @@ const route = new Hono<ServerContext>()
 		return c.json({ success: true });
 	});
 
-export { route as uploadRouter };
+export { route as uploadRoute };

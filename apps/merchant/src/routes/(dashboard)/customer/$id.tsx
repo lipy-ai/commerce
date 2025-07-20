@@ -9,59 +9,56 @@ import { PenLine, Trash } from "lucide-react";
 import DeleteCustomer from "./-delete";
 import { CustomerForm } from "./-form";
 export const Route = createFileRoute("/(dashboard)/customer/$id")({
-	component: RouteComponent,
+  component: RouteComponent,
 });
 
 function RouteComponent() {
-	// const { q, page } = Route.useSearch();
-	const isMobile = useViewport();
-	// const product = useAPIQuery(apiClient.v1.merchant.customer, "$get", {
-	// 	query: { q, page },
-	// });
+  // const { q, page } = Route.useSearch();
+  const isMobile = useViewport();
 
-	return (
-		<>
-			<DashboardHeader title="Customer Details" />
-			<Card className="m-4 max-w-5xl">
-				<CardContent className="space-y-8">
-					<CardAction className={cn("flex gap-2")}>
-						<DeleteCustomer>
-							<Button variant={"outline"} size={"sm"}>
-								<Trash /> {!isMobile && "Delete"}
-							</Button>
-						</DeleteCustomer>
-						<CustomerForm type="create">
-							<Button className="" size={"sm"} variant={"outline"}>
-								<PenLine /> {!isMobile && "Edit"}
-							</Button>
-						</CustomerForm>
-					</CardAction>
-					<div>
-						<div className="relative">
-							<img
-								src={""}
-								alt={"Untitled"}
-								className="size-24 aspect-square object-cover bg-accent border rounded"
-							/>
-						</div>
-					</div>
-					<div className="grid grid-cols-[120px_auto] gap-x-4 gap-y-8 items-start [&_label]:leading-snug [&_p]:text-muted-foreground">
-						{/* {data?.highlights.map((d, i) => (
+  return (
+    <>
+      <DashboardHeader title="Customer Details" />
+      <Card className="m-4 max-w-5xl">
+        <CardContent className="space-y-8">
+          <CardAction className={cn("flex gap-2")}>
+            <DeleteCustomer>
+              <Button variant={"outline"} size={"sm"}>
+                <Trash /> {!isMobile && "Delete"}
+              </Button>
+            </DeleteCustomer>
+            <CustomerForm type="create">
+              <Button className="" size={"sm"} variant={"outline"}>
+                <PenLine /> {!isMobile && "Edit"}
+              </Button>
+            </CustomerForm>
+          </CardAction>
+          <div>
+            <div className="relative">
+              <img
+                src={""}
+                alt={"Untitled"}
+                className="size-24 aspect-square object-cover bg-accent border rounded"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-[120px_auto] gap-x-4 gap-y-8 items-start [&_label]:leading-snug [&_p]:text-muted-foreground">
+            {/* {data?.highlights.map((d, i) => (
 								<Fragment key={i}>
 									<Label>{d.label}</Label>
 									<p>{d.value}</p>
 								</Fragment>
 							))} */}
-						<Label>Name</Label>
-						<p>Kundan Bhosale</p>
-						<Label>Email</Label>
-						<p>kunadan@gmail.com</p>
-						<Label>Phone</Label>
-						<p>+91423567546345</p>
-						<Label>Address</Label>
-						<p>Ulwe, Navi Mumbai, Maharashtra</p>
-					</div>
-					{/* <div className="flex gap-4">
+            <Label>Name</Label>
+            <p>Kundan Bhosale</p>
+            <Label>Email</Label>
+            <p>kunadan@gmail.com</p>
+            <Label>Phone</Label>
+            <p>+91423567546345</p>
+            <Label>Address</Label>
+            <p>Ulwe, Navi Mumbai, Maharashtra</p>
+          </div>
+          {/* <div className="flex gap-4">
 									<div className="relative">
 										<img
 											src={data?.thumbnail || ""}
@@ -82,7 +79,7 @@ function RouteComponent() {
 											</p>
 			
 											{/* <p className="text-sm text-muted-foreground">{data.summary}</p> */}
-					{/* </div>
+          {/* </div>
 										<div>
 											<Badge variant={"success"}>
 												{formatAmount("inr", mrp - sp)} Off
@@ -96,8 +93,8 @@ function RouteComponent() {
 										</div>
 									</div>
 								</div>  */}
-				</CardContent>
-			</Card>
-		</>
-	)
+        </CardContent>
+      </Card>
+    </>
+  );
 }

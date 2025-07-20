@@ -1,9 +1,9 @@
-import { apiClient } from "@lipy/lib/api";
+import { loggedIOrderApi, loggedInCartApi } from "@lipy/lib/api";
 import { useUpload } from "@lipy/lib/hooks/use-upload";
 import { authClient } from "@lipy/lib/providers/auth";
 import {
-	apiQueryOptions,
-	useAPIMutation,
+  apiQueryOptions,
+  useAPIMutation,
 } from "@lipy/lib/utils/useQueryClient";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
@@ -17,252 +17,253 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useCartStore } from "../cart/store";
 
 interface PlaceOrderProps {
-	setOpen: (open: boolean) => void;
-	customOrder?: boolean;
-	storeId?: string;
+  setOpen: (open: boolean) => void;
+  customOrder?: boolean;
+  storeId?: string;
 }
 
 export default function PlaceOrder({
-	setOpen,
-	customOrder = false,
-	storeId,
+  setOpen,
+  customOrder = false,
+  storeId,
 }: PlaceOrderProps) {
-	const [orderPlaced, setOrderPlaced] = useState(false);
-	const { data: session } = authClient.useSession();
-	const { deliveryLocation } = useLocationStore();
+  const [orderPlaced, setOrderPlaced] = useState(false);
+  const { data: session } = authClient.useSession();
+  const { deliveryLocation } = useLocationStore();
 
-	const validateOrder = useCallback(() => {
-		if (!session) {
-			toast("You are not logged in", {
-				description: "Please log in to place an order",
-				action: (
-					<Link to="/login" className={cn(buttonVariants({ size: "sm" }))}>
-						Login
-					</Link>
-				),
-			});
-			return;
-		}
+  const validateOrder = useCallback(() => {
+    if (!session) {
+      toast("You are not logged in", {
+        description: "Please log in to place an order",
+        action: (
+          <Link to="/login" className={cn(buttonVariants({ size: "sm" }))}>
+            Login
+          </Link>
+        ),
+      });
+      return;
+    }
 
-		if (!deliveryLocation?.metadata?.building) {
-			toast("Please give delivery location details.");
-			setOpen(true);
-			return;
-		}
+    if (!deliveryLocation?.metadata?.building) {
+      toast("Please give delivery location details.");
+      setOpen(true);
+      return;
+    }
 
-		setOrderPlaced(true);
-	}, [session, deliveryLocation?.metadata?.building, setOpen]);
+    setOrderPlaced(true);
+  }, [session, deliveryLocation?.metadata?.building, setOpen]);
 
-	return (
-		<div className="flex items-center gap-4 my-2 justify-between">
-			<div className="flex-1 text-center">
-				<p className="font-medium">Pay Cash/UPI</p>
-				<p>(on delivery)</p>
-			</div>
+  return (
+    <div className="flex items-center gap-4 my-2 justify-between">
+      <div className="flex-1 text-center">
+        <p className="font-medium">Pay Cash/UPI</p>
+        <p>(on delivery)</p>
+      </div>
 
-			<Button
-				onClick={validateOrder}
-				className="flex-2"
-				size="lg"
-				disabled={orderPlaced}
-			>
-				Place order
-			</Button>
+      <Button
+        onClick={validateOrder}
+        className="flex-2"
+        size="lg"
+        disabled={orderPlaced}
+      >
+        Place order
+      </Button>
 
-			{orderPlaced && (
-				<PlaceOrderProgress
-					customOrder={customOrder}
-					storeId={storeId}
-					onComplete={() => setOrderPlaced(false)}
-				/>
-			)}
-		</div>
-	);
+      {orderPlaced && (
+        <PlaceOrderProgress
+          customOrder={customOrder}
+          storeId={storeId}
+          onComplete={() => setOrderPlaced(false)}
+        />
+      )}
+    </div>
+  );
 }
 
 interface PlaceOrderProgressProps {
-	customOrder?: boolean;
-	storeId?: string;
-	onComplete: () => void;
+  customOrder?: boolean;
+  storeId?: string;
+  onComplete: () => void;
 }
 
 function PlaceOrderProgress({
-	customOrder = false,
-	storeId,
-	onComplete,
+  customOrder = false,
+  storeId,
+  onComplete,
 }: PlaceOrderProgressProps) {
-	const { uploadedImages, instructions, resetCart, setUploadedImages, cart } =
-		useCartStore();
-	const navigate = useNavigate();
-	const { deliveryLocation } = useLocationStore();
-	const [showLoadingDialog, setShowLoadingDialog] = useState(true);
-	const [isProcessing, setIsProcessing] = useState(false);
-	const orderProcessedRef = useRef(false);
-	const queryClient = useQueryClient();
-	const [isSuccess, setIsSuccess] = useState(false);
+  const { uploadedImages, instructions, resetCart, setUploadedImages, cart } =
+    useCartStore();
+  const navigate = useNavigate();
+  const { deliveryLocation } = useLocationStore();
+  const [showLoadingDialog, setShowLoadingDialog] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const orderProcessedRef = useRef(false);
+  const queryClient = useQueryClient();
+  const [isSuccess, setIsSuccess] = useState(false);
 
-	// Memoize store list to prevent re-renders
-	const storeList = useMemo(() => {
-		const storeIds = [
-			...new Set(cart.map((item) => item.storeId).filter(Boolean)),
-		];
-		return storeIds.map((id) => ({
-			id: id as string,
-			instruction: "",
-			attachments: [] as string[],
-		}));
-	}, [cart]);
+  // Memoize store list to prevent re-renders
+  const storeList = useMemo(() => {
+    const storeIds = [
+      ...new Set(cart.map((item) => item.storeId).filter(Boolean)),
+    ];
+    return storeIds.map((id) => ({
+      id: id as string,
+      instruction: "",
+      attachments: [] as string[],
+    }));
+  }, [cart]);
 
-	const uploadResults = uploadedImages.map((image) =>
-		useUpload({ file: image }),
-	);
+  const uploadResults = uploadedImages.map((image) =>
+    useUpload({ file: image })
+  );
 
-	const uploadedUrls = useMemo(
-		() =>
-			uploadResults
-				.filter((result) => result.status === "success" && result.data?.url)
-				.map((result) => result.data?.url),
-		[uploadResults],
-	);
+  const uploadedUrls = useMemo(
+    () =>
+      uploadResults
+        .filter((result) => result.status === "success" && result.data?.url)
+        .map((result) => result.data?.url),
+    [uploadResults]
+  );
 
-	const orderMutation = useAPIMutation(
-		customOrder ? apiClient.v1.order.custom : apiClient.v1.order,
-		"$post",
-		{
-			onSuccess: (data: { orders: string[] }) => {
-				setIsSuccess(true);
-				setTimeout(() => {
-					setShowLoadingDialog(false);
-					setIsProcessing(false);
-					onComplete();
+  const orderMutation = useAPIMutation(
+    customOrder ? loggedIOrderApi.custom : loggedIOrderApi.index,
+    "$post",
+    {
+      onSuccess: (data: { orders: string[] }) => {
+        setIsSuccess(true);
+        setTimeout(() => {
+          setShowLoadingDialog(false);
+          setIsProcessing(false);
+          onComplete();
 
-					const { orders } = data;
-					if (orders.length === 1) {
-						navigate({
-							to: "/account/orders/$orderId",
-							params: { orderId: orders[0] },
-						});
-					} else {
-						navigate({ to: "/account/orders" });
-					}
-					queryClient.invalidateQueries({
-						queryKey: apiQueryOptions(apiClient.v1.cart, "$get", {}).queryKey,
-					});
-					resetCart();
-					setUploadedImages([]);
-				}, 2500);
-			},
+          const { orders } = data;
+          if (orders.length === 1) {
+            navigate({
+              to: "/account/orders/$orderId",
+              params: { orderId: orders[0] },
+            });
+          } else {
+            navigate({ to: "/account/orders" });
+          }
+          queryClient.invalidateQueries({
+            queryKey: apiQueryOptions(loggedInCartApi.index, "$get", {})
+              .queryKey,
+          });
+          resetCart();
+          setUploadedImages([]);
+        }, 2500);
+      },
 
-			onError: () => {
-				setShowLoadingDialog(false);
-				setIsProcessing(false);
-				onComplete();
-				toast.error("Failed to place order", {
-					description: "Something went wrong while placing your order.",
-				});
-			},
-		},
-	);
+      onError: () => {
+        setShowLoadingDialog(false);
+        setIsProcessing(false);
+        onComplete();
+        toast.error("Failed to place order", {
+          description: "Something went wrong while placing your order.",
+        });
+      },
+    }
+  );
 
-	const handlePlaceOrder = useCallback(async () => {
-		if (isProcessing || orderProcessedRef.current) return;
+  const handlePlaceOrder = useCallback(async () => {
+    if (isProcessing || orderProcessedRef.current) return;
 
-		setIsProcessing(true);
-		orderProcessedRef.current = true;
+    setIsProcessing(true);
+    orderProcessedRef.current = true;
 
-		try {
-			await new Promise((resolve) => setTimeout(resolve, 5000));
-			await orderMutation.mutateAsync({
-				json: {
-					address: {
-						...deliveryLocation,
-						country: deliveryLocation?.country ?? "",
-						phone: deliveryLocation?.phone ?? "",
-						lat: deliveryLocation?.lat ?? 0,
-						lng: deliveryLocation?.lng ?? 0,
-						line2: deliveryLocation?.line2 ?? "",
-						postalCode: deliveryLocation?.postalCode ?? "",
-						metadata: {
-							building: deliveryLocation?.metadata?.building ?? "",
-						},
-					},
-					deliveryInstruction: instructions.deliveryInstruction,
-					stores: customOrder
-						? [
-								{
-									id: storeId as string,
-									attachments: uploadedUrls as string[],
-									instruction: "",
-								},
-							]
-						: storeList,
-				},
-			});
-		} catch (error) {
-			setIsProcessing(false);
-			orderProcessedRef.current = false;
-		}
-	}, [
-		isProcessing,
-		orderMutation,
-		deliveryLocation,
-		instructions.deliveryInstruction,
-		customOrder,
-		storeId,
-		uploadedUrls,
-		storeList,
-	]);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+      await orderMutation.mutateAsync({
+        json: {
+          address: {
+            ...deliveryLocation,
+            country: deliveryLocation?.country ?? "",
+            phone: deliveryLocation?.phone ?? "",
+            lat: deliveryLocation?.lat ?? 0,
+            lng: deliveryLocation?.lng ?? 0,
+            line2: deliveryLocation?.line2 ?? "",
+            postalCode: deliveryLocation?.postalCode ?? "",
+            metadata: {
+              building: deliveryLocation?.metadata?.building ?? "",
+            },
+          },
+          deliveryInstruction: instructions.deliveryInstruction,
+          stores: customOrder
+            ? [
+                {
+                  id: storeId as string,
+                  attachments: uploadedUrls as string[],
+                  instruction: "",
+                },
+              ]
+            : storeList,
+        },
+      });
+    } catch (error) {
+      setIsProcessing(false);
+      orderProcessedRef.current = false;
+    }
+  }, [
+    isProcessing,
+    orderMutation,
+    deliveryLocation,
+    instructions.deliveryInstruction,
+    customOrder,
+    storeId,
+    uploadedUrls,
+    storeList,
+  ]);
 
-	useEffect(() => {
-		if (orderProcessedRef.current) return;
+  useEffect(() => {
+    if (orderProcessedRef.current) return;
 
-		if (uploadResults.length === 0) {
-			handlePlaceOrder();
-			return;
-		}
+    if (uploadResults.length === 0) {
+      handlePlaceOrder();
+      return;
+    }
 
-		const allUploadsComplete = uploadResults.every(
-			(result) => result.status === "success" || result.status === "error",
-		);
+    const allUploadsComplete = uploadResults.every(
+      (result) => result.status === "success" || result.status === "error"
+    );
 
-		if (allUploadsComplete) {
-			const hasFailedUploads = uploadResults.some(
-				(result) => result.status === "error",
-			);
+    if (allUploadsComplete) {
+      const hasFailedUploads = uploadResults.some(
+        (result) => result.status === "error"
+      );
 
-			if (hasFailedUploads) {
-				setShowLoadingDialog(false);
-				onComplete();
-				toast.error("Upload failed", {
-					description: "Some files failed to upload. Please try again.",
-				});
-				return;
-			}
+      if (hasFailedUploads) {
+        setShowLoadingDialog(false);
+        onComplete();
+        toast.error("Upload failed", {
+          description: "Some files failed to upload. Please try again.",
+        });
+        return;
+      }
 
-			handlePlaceOrder();
-		}
-	}, [uploadResults, handlePlaceOrder, onComplete]);
+      handlePlaceOrder();
+    }
+  }, [uploadResults, handlePlaceOrder, onComplete]);
 
-	return (
-		<Dialog open={showLoadingDialog} onOpenChange={() => {}}>
-			<DialogContent className="sm:max-w-md w-[400px]">
-				<div className="flex flex-col items-center text-center py-6">
-					{isSuccess ? (
-						<CircleCheck className="size-16 text-emerald-600 stroke-2" />
-					) : (
-						<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4" />
-					)}
+  return (
+    <Dialog open={showLoadingDialog} onOpenChange={() => {}}>
+      <DialogContent className="sm:max-w-md w-[400px]">
+        <div className="flex flex-col items-center text-center py-6">
+          {isSuccess ? (
+            <CircleCheck className="size-16 text-emerald-600 stroke-2" />
+          ) : (
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4" />
+          )}
 
-					<h3 className="text-lg font-semibold mb-2">
-						{isSuccess ? "Order placed successfully!" : "Placing your order..."}
-					</h3>
-					<p className="text-muted-foreground text-sm">
-						{isSuccess
-							? "Redirecting you to your orders..."
-							: "Your order is being processed"}
-					</p>
-				</div>
-			</DialogContent>
-		</Dialog>
-	);
+          <h3 className="text-lg font-semibold mb-2">
+            {isSuccess ? "Order placed successfully!" : "Placing your order..."}
+          </h3>
+          <p className="text-muted-foreground text-sm">
+            {isSuccess
+              ? "Redirecting you to your orders..."
+              : "Your order is being processed"}
+          </p>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
 }

@@ -63,8 +63,8 @@ export const user = schema.table("user", {
 	phoneNumber: text("phoneNumber"),
 	phoneNumberVerified: boolean("phoneNumberVerified"),
 	image: text("image"),
-	createdAt: timestamp("createdAt").notNull(),
-	updatedAt: timestamp("updatedAt").notNull(),
+	createdAt: timestamp("createdAt",{withTimezone:true}).notNull(),
+	updatedAt: timestamp("updatedAt",{withTimezone:true}).notNull(),
 	country: text("country"),
 	onboarded: boolean("onboarded").notNull().default(false),
 	address: uuid("address").references((): any => user?.id, {
@@ -112,21 +112,21 @@ export const account = schema.table("authAccount", {
 	accessToken: text("accessToken"),
 	refreshToken: text("refreshToken"),
 	idToken: text("idToken"),
-	accessTokenExpiresAt: timestamp("accessTokenExpiresAt"),
-	refreshTokenExpiresAt: timestamp("refreshTokenExpiresAt"),
+	accessTokenExpiresAt: timestamp("accessTokenExpiresAt",{withTimezone:true}),
+	refreshTokenExpiresAt: timestamp("refreshTokenExpiresAt",{withTimezone:true}),
 	scope: text("scope"),
 	password: text("password"),
-	createdAt: timestamp("createdAt").notNull(),
-	updatedAt: timestamp("updatedAt").notNull(),
+	createdAt: timestamp("createdAt",{withTimezone:true}).notNull(),
+	updatedAt: timestamp("updatedAt",{withTimezone:true}).notNull(),
 });
 
 export const verification = schema.table("authVerification", {
 	id: uuid("id").primaryKey(),
 	identifier: text("identifier").notNull(),
 	value: text("value").notNull(),
-	expiresAt: timestamp("expiresAt").notNull(),
-	createdAt: timestamp("createdAt"),
-	updatedAt: timestamp("updatedAt"),
+	expiresAt: timestamp("expiresAt",{withTimezone:true}).notNull(),
+	createdAt: timestamp("createdAt",{withTimezone:true}),
+	updatedAt: timestamp("updatedAt",{withTimezone:true}),
 });
 
 export const session = schema.table("authSession", {
@@ -136,9 +136,9 @@ export const session = schema.table("authSession", {
 		.references(() => user.id, { onDelete: "cascade" }),
 	sessionToken: text("sessionToken").notNull().unique(),
 	activeStoreId: text("activeStoreId"),
-	expires: timestamp("expires").notNull(),
-	createdAt: timestamp("createdAt").notNull(),
-	updatedAt: timestamp("updatedAt").notNull(),
+	expires: timestamp("expires",{withTimezone:true}).notNull(),
+	createdAt: timestamp("createdAt",{withTimezone:true}).notNull(),
+	updatedAt: timestamp("updatedAt",{withTimezone:true}).notNull(),
 });
 
 export const store = schema.table("store", {
@@ -147,7 +147,7 @@ export const store = schema.table("store", {
 	handle: text("handle").unique(),
 	image: text("image"),
 	description: text("description"),
-	createdAt: timestamp("createdAt").notNull(),
+	createdAt: timestamp("createdAt",{withTimezone:true}).notNull(),
 	metadata: text("metadata"),
 	address: jsonb("address").$type<z.infer<typeof coreAddressSchema>>(),
 	email: text("email"),
@@ -180,7 +180,7 @@ export const storeMember = schema.table(
 		role: text("role", {
 			enum: ["owner", "admin", "delivery", "staff"],
 		}).notNull(),
-		createdAt: timestamp("createdAt").notNull(),
+		createdAt: timestamp("createdAt",{withTimezone:true}).notNull(),
 	},
 	(table) => [
 		// 👇 This enforces uniqueness on the combination
@@ -196,7 +196,7 @@ export const storeInvitation = schema.table("storeInvitation", {
 	email: text("email").notNull(),
 	role: text("role"),
 	status: text("status").notNull(),
-	expiresAt: timestamp("expiresAt").notNull(),
+	expiresAt: timestamp("expiresAt",{withTimezone:true}).notNull(),
 	inviterId: uuid("inviterId")
 		.notNull()
 		.references(() => user.id, { onDelete: "cascade" }),
@@ -222,8 +222,8 @@ export const upload = schema.table("upload", {
 	name: text("name").notNull(),
 	path: text("path"),
 	url: text("url"),
-	deletedAt: timestamp("deletedAt"),
-	createdAt: timestamp("createdAt").notNull(),
+	deletedAt: timestamp("deletedAt",{withTimezone:true}),
+	createdAt: timestamp("createdAt",{withTimezone:true}).notNull(),
 });
 
 export const category = schema.table("category", {
@@ -348,8 +348,10 @@ export const orders = schema.table("orders", {
 
 	delivery: jsonb("delivery").$type<{
 		trackingId?: string;
-		partnerName?: string;
-		partnerId?: string;
+		name?: string;
+		agentId?: string;
+		image?:string;
+		phone?:string
 	}>(),
 	customerId: text("customerId"),
 	customerDetails: jsonb("customerDetails").$type<{
@@ -365,11 +367,11 @@ export const orders = schema.table("orders", {
 		attachments?: Array<string> | null;
 	}>(),
 	paymentMethod: text("paymentMethod", { enum: ["cod", "upi", "card"] }),
-	orderedAt: timestamp("orderedAt").notNull(),
-	cancelledAt: timestamp("cancelledAt"),
-	refundedAt: timestamp("refundedAt"),
-	deliveredAt: timestamp("deliveredAt"),
-	deliveryAgentAssignedAt: timestamp("deliveryAgentAssignedAt"),
+	orderedAt: timestamp("orderedAt", {withTimezone:true}).notNull(),
+	cancelledAt: timestamp("cancelledAt",{withTimezone:true}),
+	refundedAt: timestamp("refundedAt",{withTimezone:true}),
+	deliveredAt: timestamp("deliveredAt",{withTimezone:true}),
+	deliveryAgentAssignedAt: timestamp("deliveryAgentAssignedAt",{withTimezone:true}),
 	status: text("status", {
 		enum: ORDER_STATUS,
 	}),

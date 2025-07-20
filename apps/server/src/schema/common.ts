@@ -3,7 +3,7 @@ import Mailchecker from "mailchecker";
 import { z } from "zod";
 
 export const listZodSchema = z.object({
-	limit: z.coerce.number().max(50),
+	limit: z.coerce.number().max(100),
 	page: z.coerce.number().min(1),
 	q: z.string().optional(),
 });

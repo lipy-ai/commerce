@@ -1,131 +1,156 @@
-import { apiClient } from "@lipy/lib/api";
+import type { adminProductApi } from "@lipy/lib/api";
+import { formatAmount } from "@lipy/lib/utils/intl";
+
 import {
-	apiQueryOptions,
-	useAPIMutation,
-} from "@lipy/lib/utils/useQueryClient";
-import {
-	DrawerDialogClose,
-	DrawerDialogFooter,
-	DrawerDialogHeader,
-	DrawerDialogSwitcher,
-	DrawerDialogTitle,
+  DrawerDialogClose,
+  DrawerDialogFooter,
+  DrawerDialogHeader,
+  DrawerDialogSwitcher,
+  DrawerDialogTitle,
 } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
 import { FormButton, FormInput } from "@lipy/web-ui/components/forms/elements";
-import { Form } from "@lipy/web-ui/components/ui/form";
-import { cn } from "@lipy/web-ui/lib/utils";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@lipy/web-ui/components/ui/accordion";
+import { Button } from "@lipy/web-ui/components/ui/button";
+import { Form, FormLabel } from "@lipy/web-ui/components/ui/form";
 import type { InferResponseType } from "hono";
-import { Plus } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { ArrowRight, Trash } from "lucide-react";
+import { type ReactNode, useState } from "react";
+import { useFieldArray, useForm, useFormContext } from "react-hook-form";
 
-import { useQueryClient } from "@tanstack/react-query";
+type Response = Pick<
+  InferResponseType<
+    (typeof adminProductApi.index)["$get"]
+  >["items"][0]["variants"][0],
+  "id" | "images" | "price" | "unit"
+>[];
 
 export default function ProductVariationForm({
-	data,
+  data,
+  children,
 }: {
-	data?: Partial<
-		InferResponseType<
-			(typeof apiClient.v1.merchant.product)[":id"]["$get"]
-		>["variants"][0]
-	>;
+  data: Response;
+  children: ReactNode;
 }) {
-	const [open, setOpen] = useState(false);
-	const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
 
-	const onSuccess = () => {
-		queryClient.invalidateQueries({
-			queryKey: apiQueryOptions(apiClient.v1.merchant.product[":id"], "$get", {
-				param: { id: data?.productId! },
-			}).queryKey,
-		});
-		setOpen(false);
-	};
+  const defaultValues: { items: Response } = {
+    items: data || [],
+  };
 
-	const updateMutation = useAPIMutation(
-		apiClient.v1.merchant.variant[":id"],
-		"$patch",
-		{ onSuccess },
-	);
-	const insertMutation = useAPIMutation(
-		apiClient.v1.merchant.variant,
-		"$post",
-		{ onSuccess },
-	);
+  const form = useForm<typeof defaultValues>({
+    defaultValues,
+  });
 
-	const defaultValues = {
-		price: data?.price || 0,
-		unit: data?.unit || "",
-		images: data?.images || [],
-	};
+  const handle = async (d: typeof defaultValues) => {
+    console.log(d);
+  };
 
-	const form = useForm({
-		defaultValues,
-	});
+  return (
+    <>
+      <DrawerDialogSwitcher
+        open={open}
+        onOpenChange={setOpen}
+        trigger={children}
+      >
+        <DrawerDialogHeader>
+          <DrawerDialogTitle>Variants</DrawerDialogTitle>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(handle)} className="grid gap-8">
+              <DrawerDialogFooter>
+                <DrawerDialogClose />
+                <FormButton>Save Changes</FormButton>
+              </DrawerDialogFooter>
+            </form>
+          </Form>
+        </DrawerDialogHeader>
+      </DrawerDialogSwitcher>
+    </>
+  );
+}
 
-	const handle = async (d: typeof defaultValues) => {
-		const json = { ...d, productId: data?.productId! };
-		data?.id
-			? await updateMutation.mutateAsync({ json, param: { id: data?.id! } })
-			: await insertMutation.mutateAsync({ json });
-	};
+export function VariantForm() {
+  const label = "Variants";
+  const name = "variants";
+  const form = useFormContext();
+  const arr = useFieldArray({
+    name,
+    control: form.control,
+    keyName: "kid",
+  });
+  const watch = form.watch(name);
 
-	return (
-		<>
-			<div
-				onClick={() => setOpen(true)}
-				className={cn(
-					"text-sm border relative cursor-pointer hover:bg-accent p-4",
-					!data?.id && "border-dashed",
-				)}
-			>
-				<div className="text-sm md:text-base flex justify-between items-center">
-					{data?.images?.[0] && (
-						<div>
-							<img
-								className=""
-								src={data?.images?.[0]}
-								alt={`Variant - ${data?.unit}`}
-							/>
-						</div>
-					)}
-					{data?.unit && (
-						<div>
-							<span>{data?.unit}</span>
-						</div>
-					)}
-					<div className={cn("flex gap-1")}>
-						{!data?.id ? <Plus /> : "₹"}
-						<span>{!data?.id ? "Add New Variant" : data?.price}</span>
-					</div>
-				</div>
-			</div>
-			<DrawerDialogSwitcher open={open} onOpenChange={setOpen}>
-				<DrawerDialogHeader>
-					<DrawerDialogTitle>
-						{!data ? "Add Variant" : "Edit Variant"}
-					</DrawerDialogTitle>
-					<Form {...form}>
-						<form onSubmit={form.handleSubmit(handle)} className="grid gap-8">
-							<div className="grid">
-								<>
-									<FormInput name="unit" label="Unit" placeholder="500 ml" />
-									<FormInput
-										name="price"
-										label="Price"
-										placeholder="0"
-										type="number"
-										min={0}
-									/>
-								</>
-							</div>
-							<DrawerDialogFooter>
-								<DrawerDialogClose />
-								<FormButton>Save Changes</FormButton>
-							</DrawerDialogFooter>
-						</form>
-					</Form>
-				</DrawerDialogHeader>
-			</DrawerDialogSwitcher>
-		</>
-	);
+  return (
+    <>
+      <div className="mt-8">
+        <div className="flex justify-between p-4 bg-accent/50">
+          <FormLabel>{label}</FormLabel>
+
+          <Button
+            variant={"outline"}
+            size={"sm"}
+            type="button"
+            onClick={() => {
+              arr.prepend({
+                unit: "Untitled",
+                price: 0,
+                id: crypto.randomUUID(),
+                images: [],
+              });
+            }}
+          >
+            Add New
+          </Button>
+        </div>
+        <Accordion type="single" collapsible>
+          {arr.fields.map((m, i) => (
+            <AccordionItem
+              key={m.kid}
+              value={m.kid}
+              className="hover:bg-accent/50 data-[state=open]:bg-accent/20 data-[state=open]:border"
+            >
+              <AccordionTrigger className="data-[state=open]:border-b">
+                <div className="flex gap-2 items-center w-full">
+                  <div className="text-start flex gap-2 flex-1 px-4">
+                    <p className="">{watch[i]?.unit}</p> <ArrowRight />
+                    <p className="text-muted-foreground">
+                      {formatAmount("INR", watch[i]?.price || 0)}
+                    </p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    type="button"
+                    onClick={() => {
+                      arr.remove(i);
+                    }}
+                  >
+                    <Trash />
+                  </Button>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="p-4">
+                <FormInput
+                  name={`${name}.${i}.unit`}
+                  label="Unit"
+                  placeholder="500 ml"
+                />
+                <FormInput
+                  name={`${name}.${i}.price`}
+                  label="Price"
+                  placeholder="0"
+                  type="number"
+                  min={0}
+                />
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
+    </>
+  );
 }

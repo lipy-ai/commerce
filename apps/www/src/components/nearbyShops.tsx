@@ -25,9 +25,9 @@ const CATEGORIES = [
   { id: "all", name: "All Stores", icon: Store },
   { id: "grocery", name: "Grocery", icon: ShoppingBasket },
   { id: "pharmacy", name: "Pharmacy", icon: BriefcaseMedical },
-  { id: "fruits_and_vegetables", name: "Fruits & Vegetables", icon: Cherry },
   { id: "restaurant", name: "Restaurant", icon: Utensils },
   { id: "cafe", name: "Cafe", icon: Coffee },
+  { id: "fruits_and_vegetables", name: "Fruits & Vegetables", icon: Cherry },
   { id: "hardware", name: "Hardware", icon: BrickWall },
 ];
 

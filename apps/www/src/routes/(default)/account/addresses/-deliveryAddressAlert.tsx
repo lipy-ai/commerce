@@ -33,7 +33,7 @@ function LocationComponent() {
   const { setDeliveryLocation } = useLocationStore();
   const [deliveryAddressSetter, setDeliveryAddressSetter] = useState(false);
 
-  const { isLoaded: gmapLoaded } = useJsApiLoader({
+  const { isLoaded: mapLoaded } = useJsApiLoader({
     googleMapsApiKey: env.GOOGLE_MAP_API_KEY,
     libraries: env.GOOGLE_MAP_LIBRARIES,
   });
@@ -53,7 +53,7 @@ function LocationComponent() {
     navigator.geolocation.getCurrentPosition(
       async ({ coords }) => {
         const { latitude: lat, longitude: lng } = coords;
-        if (!lat || !lng || !gmapLoaded) {
+        if (!lat || !lng || !mapLoaded) {
           handleError("Unable to retrieve coordinates.");
           return;
         }
@@ -84,10 +84,10 @@ function LocationComponent() {
   useEffect(() => {
     if (primaryAddress?.id && !isLoading) {
       setDeliveryLocation(primaryAddress as AddressType);
-    } else if (gmapLoaded) {
+    } else if (mapLoaded) {
       handleGeolocation();
     }
-  }, [primaryAddress, gmapLoaded]);
+  }, [isLoading, mapLoaded]);
 
   if (error) {
     return (

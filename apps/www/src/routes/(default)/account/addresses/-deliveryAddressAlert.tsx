@@ -84,10 +84,10 @@ function LocationComponent() {
 	useEffect(() => {
 		if (primaryAddress?.id && !isLoading) {
 			setDeliveryLocation(primaryAddress as AddressType);
-		} else if (gmapLoaded && primaryAddress?.id) {
+		} else if (gmapLoaded) {
 			handleGeolocation();
 		}
-	}, []);
+	}, [primaryAddress]);
 
 	if (error) {
 		return (

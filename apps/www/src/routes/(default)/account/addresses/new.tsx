@@ -11,6 +11,7 @@ import {
 	useLocationStore,
 } from "@lipy/web-ui/components/maps/utils/store";
 import { Button } from "@lipy/web-ui/components/ui/button";
+import Loading from "@lipy/web-ui/components/ui/loading";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
@@ -77,6 +78,7 @@ function RouteComponent() {
 		}
 	}, [isLoaded, mapCenter]);
 
+	if (!isLoaded) return <Loading />;
 	return (
 		<div>
 			<DashboardHeader

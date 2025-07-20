@@ -16,8 +16,8 @@ export default function Loading({
 				className,
 			)}
 		>
-			{!title && <h1 className="text-xl font-medium">{title}</h1>}
-			{!description && (
+			{title && <h1 className="text-xl font-medium">{title}</h1>}
+			{description && (
 				<h1 className="text-md text-muted-foreground">{description}</h1>
 			)}
 			<div className="loader" />

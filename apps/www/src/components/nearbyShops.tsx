@@ -9,7 +9,6 @@ import Loading from "@lipy/web-ui/components/ui/loading";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link } from "@tanstack/react-router";
-import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import {
   BrickWall,
   BriefcaseMedical,
@@ -50,31 +49,11 @@ export default function NearByShops() {
       // enabled: activeCategory !== "all",
     }
   );
-  const [navBarColorChange, setNavBarColorChange] = useState(false);
-  const { scrollY } = useScroll();
-
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    if (latest > 80) {
-      setNavBarColorChange(true);
-    } else {
-      setNavBarColorChange(false);
-    }
-  });
 
   return (
     <>
       {isMobile ? (
-        <div className=" border-b sticky top-0 z-50 bg-card  overflow-hidden">
-          <motion.div
-            className="absolute inset-0 bg-chart-3/30"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: navBarColorChange ? 1 : 0 }}
-            transition={{
-              duration: 1,
-              ease: "easeInOut",
-            }}
-          />
-
+        <div className=" border-b sticky top-0 z-50 bg-card  overflow-hidden shadow-xs">
           <div className="relative z-10 space-y-2">
             <div className="px-4 py-2">
               <Link

@@ -111,7 +111,7 @@ const generateOrders = ({
 		}
 
 		orders.push({
-			id: idGenerate({ prefix: "ORD", timestamp: true }),
+			id: idGenerate(),
 			pk: crypto.randomUUID(),
 			status: "ordered",
 			items,
@@ -134,7 +134,7 @@ const generateOrders = ({
 			paymentMethod: "cod",
 			orderedAt: new Date(),
 			itemTotalAmount,
-			totalAmount: maxItemTotalAmount - itemTotalAmount,
+			totalAmount: (itemTotalAmount + totalTaxAmount) - totalDiscountAmount,
 			amountSaved: maxItemTotalAmount - itemTotalAmount,
 			totalTaxAmount,
 			totalDiscountAmount,

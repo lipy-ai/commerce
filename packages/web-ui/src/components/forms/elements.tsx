@@ -21,7 +21,7 @@ import {
 	SelectValue,
 } from "../ui/select";
 import { Switch } from "../ui/switch";
-import { Textarea } from "../ui/textarea";
+import { Textarea, type TextareaProps } from "../ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 import { SingleImage, type SingleImageProps } from "../uploads/image";
 import { SearchInput } from "./searchInput";
@@ -52,9 +52,9 @@ export const FormItemWrapper = ({
 	fieldType?: string;
 }) => {
 	return (
-		<FormItem className={cn("w-full gap-1 mb-3", wrapperClassName)}>
+		<FormItem className={cn("w-full gap-1 mb-3 last:mb-0", wrapperClassName)}>
 			<div>
-				{!(fieldType === "InputWithAnimatedLabel") && (
+				{label && !(fieldType === "InputWithAnimatedLabel") && (
 					<div className="flex items-start py-2">
 						<FormLabel
 							className={cn(
@@ -237,9 +237,7 @@ export const FormSelect = (
 	);
 };
 
-export const FormTextarea = ({
-	...props
-}: React.ComponentProps<"textarea"> & SharedFormProps) => {
+export const FormTextarea = ({ ...props }: TextareaProps & SharedFormProps) => {
 	const form = useFormContext();
 
 	return (
@@ -288,7 +286,7 @@ export const FormImage = ({
 							field.onChange(data?.url || undefined);
 						}}
 						onDelete={() => {
-							field.onChange(undefined);
+							field.onChange(null);
 						}}
 					/>
 				);

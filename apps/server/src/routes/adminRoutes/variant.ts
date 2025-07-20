@@ -11,7 +11,7 @@ const schema = z.object({
 	images: z.array(z.string()),
 });
 
-export const merchantVariantRoute = new Hono<ServerContext>()
+export const adminVariantRoute = new Hono<ServerContext>()
 	.post("/", zValidator("json", schema), async (c) => {
 		const { unit, price, productId, images } = c.req.valid("json");
 

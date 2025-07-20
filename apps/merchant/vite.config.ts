@@ -12,9 +12,6 @@ export default defineConfig({
 	build: {
 		minify: true,
 		sourcemap: true,
-		commonjsOptions: {
-			include: [/node_modules/],
-		},
 	},
 
 	server: {
@@ -28,9 +25,7 @@ export default defineConfig({
 			},
 		},
 	},
-	optimizeDeps: {
-		include: ["recharts"],
-	},
+
 
 	resolve: {
 		alias: [

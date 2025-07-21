@@ -188,7 +188,7 @@ function RouteComponent() {
                 });
               }}
             >
-              <LocateFixed className="text-primary mr-2" />
+              <LocateFixed className="stroke-2" />
               Use current location
             </Button>
           </div>

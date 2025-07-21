@@ -29,7 +29,7 @@ import {
   CircleUser,
   MapPin,
   MessageSquareText,
-  Phone,
+  PhoneCall,
   Store,
 } from "lucide-react";
 import { ORDER_STATUS_BADGE_VARIANT } from ".";
@@ -63,12 +63,12 @@ function RouteComponent() {
     {
       title: "Receiver's Info",
       icon: CircleUser,
-      value: [
-        order?.customerDetails?.address?.name,
-        order?.customerDetails?.address?.phone,
-      ]
-        .filter(Boolean)
-        .join(" | "),
+      value: (
+        <div>
+          <p>{order?.customerDetails?.address?.name}</p>
+          <p>{order?.customerDetails?.address?.phone}</p>
+        </div>
+      ),
     },
     {
       title: "Delivery Address",
@@ -93,6 +93,44 @@ function RouteComponent() {
     },
   ];
 
+  const billingInfo = [
+    {
+      title: `Item Total (${order?.items?.length ?? 0})`,
+      value: formatAmount("inr", order?.itemTotalAmount ?? 0),
+    },
+    {
+      title: "Delivery Charges",
+      value: formatAmount("inr", deliveryCharges),
+    },
+    {
+      title: "Tax",
+      value: formatAmount("inr", order?.totalTaxAmount ?? 0),
+    },
+  ];
+
+  const orderDetails = [
+    {
+      title: "Order Id",
+      value: order?.id,
+    },
+    {
+      title: order?.deliveredAt
+        ? "Delivered At"
+        : order?.cancelledAt
+          ? "Cancelled At"
+          : order?.refundedAt
+            ? "Refunded At"
+            : "Ordered At",
+      value: order?.deliveredAt
+        ? format(new Date(order?.deliveredAt), "PPp")
+        : order?.cancelledAt
+          ? format(new Date(order?.cancelledAt), "PPp")
+          : order?.refundedAt
+            ? format(new Date(order?.refundedAt), "PPp")
+            : format(new Date(order?.orderedAt as string), "PPp"),
+    },
+  ];
+
   return (
     <>
       {isLoading ? (
@@ -107,7 +145,7 @@ function RouteComponent() {
           <DashboardHeader
             titleChildren={
               <div>
-                <p className="font-semibold">Order Details</p>
+                <p className="font-semibold text-xs">{order?.id}</p>
                 {order.items && order.items.length > 0 && (
                   <p className="text-muted-foreground text-xs">
                     {order?.items?.length || 0} item(s) |{" "}
@@ -130,8 +168,8 @@ function RouteComponent() {
             </Badge>
           </DashboardHeader>
 
-          <div className="lg:grid lg:grid-cols-12 divide-x flex-1 mt-4">
-            <div className="col-span-7  space-y-4">
+          <div className="lg:grid lg:grid-cols-12 divide-x flex-1 mt-3">
+            <div className="col-span-7  space-y-3">
               <Card>
                 <CardHeader className="flex items-center justify-between gap-4 border-b -mx-4 px-4">
                   <Link
@@ -141,16 +179,18 @@ function RouteComponent() {
                       storeHandle: order.storeHandle ?? "",
                     }}
                   >
-                    <Avatar>
+                    <Avatar className="rounded-md size-8">
                       <AvatarImage src={order.storeLogo || ""} />
                       <AvatarFallback>
                         <Store />
                       </AvatarFallback>
                     </Avatar>
-                    <div>
+                    <div className="leading-4">
                       <p className="font-medium text-base">{order.storeName}</p>
                       <p className="text-muted-foreground line-clamp-1">
-                        {order.storeAddress?.line1 || ""}
+                        {[order.storeAddress?.line2, order.storeAddress?.city]
+                          .filter(Boolean)
+                          .join(", ")}
                       </p>
                     </div>
                   </Link>
@@ -159,34 +199,37 @@ function RouteComponent() {
                     href={`tel:${order?.storePhone}`}
                     className={cn(
                       buttonVariants({ variant: "outline", size: "icon" }),
-                      "rounded-full"
+                      "rounded-full p-0.5"
                     )}
                   >
-                    <Phone className="text-ring size-5" />
+                    <PhoneCall className="text-ring size-5" />
                   </a>
                 </CardHeader>
-                <CardContent>
-                  <p className="font-medium text-base">Order ID : {order.id}</p>
-
-                  {order.deliveredAt ? (
-                    <p className="text-muted-foreground text-sm">
-                      Delivered on {format(new Date(order?.deliveredAt), "PPp")}
-                    </p>
-                  ) : order?.cancelledAt ? (
-                    <p className="text-muted-foreground text-sm">
-                      Cancelled on {format(new Date(order?.cancelledAt), "PPp")}
-                    </p>
-                  ) : order?.refundedAt ? (
-                    <p className="text-muted-foreground text-sm">
-                      Refunded on {format(new Date(order?.refundedAt), "PPp")}
-                    </p>
-                  ) : (
-                    <p className="text-muted-foreground text-sm">
-                      Ordered on {format(new Date(order?.orderedAt), "PPp")}
-                    </p>
-                  )}
+                <CardContent className="space-y-2">
+                  <p className="font-medium text-base pb-2">Order Details</p>
+                  {orderDetails.map((item, i) => (
+                    <div className="flex items-center justify-between" key={i}>
+                      <p className="">{item.title}</p>
+                      <p className="text-muted-foreground">{item.value}</p>
+                    </div>
+                  ))}
                 </CardContent>
               </Card>
+
+              {order?.status !== "delivered" && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Your delivery OTP</CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-center tracking-[0.6em] text-2xl font-semibold text-spa">
+                    <p>12345</p>
+                  </CardContent>
+                  <CardFooter className="text-muted-foreground text-xs">
+                    * Share this OTP with delivery partner while receiving your
+                    order
+                  </CardFooter>
+                </Card>
+              )}
 
               {order?.items && order?.items.length > 0 && (
                 <Card>
@@ -270,31 +313,19 @@ function RouteComponent() {
                 )}
             </div>
 
-            <div className="col-span-5 space-y-4 mt-4">
+            <div className="col-span-5 space-y-3 mt-3">
               {order?.items && order?.items.length > 0 && (
                 <Card>
                   <CardHeader>
                     <CardTitle>Bill Summary</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <p>Item Total ({order.items?.length ?? 0})</p>
-                      <p className="font-medium">
-                        {formatAmount(order?.currency, totalPrice || 0)}
-                      </p>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <p>Delivery Charges</p>
-                      <p className="font-medium">
-                        {formatAmount(order?.currency, deliveryCharges)}
-                      </p>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <p>Taxes</p>
-                      <p className="font-medium">
-                        {formatAmount(order?.currency, totalTaxAmount)}
-                      </p>
-                    </div>
+                    {billingInfo.map((item, index) => (
+                      <div className="flex justify-between text-sm" key={index}>
+                        <p>{item.title}</p>
+                        <p className="font-medium">{item.value}</p>
+                      </div>
+                    ))}
                   </CardContent>
                   <CardFooter className="flex justify-between items-center border-t border-dashed">
                     <p className="font-semibold text-base">Total Payable</p>

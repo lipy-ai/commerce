@@ -125,20 +125,24 @@ function RouteComponent() {
                         )}
                       </div>
                     </div>
-                    <AddToCart
-                      product={{
-                        ...selectedVariant,
-                        quantity: null,
-                        thumbnail: product.thumbnail || "",
-                        title: product.title || "",
-                        storeHandle: storeHandle || "",
-                        storeName: "",
-                        storeLogo: null,
-                        storeId: storeInfo?.id || "",
-                      }}
-                      variant="secondary"
-                      activeVariant="secondary-active"
-                    />
+                    {selectedVariant?.inStock ? (
+                      <AddToCart
+                        product={{
+                          ...selectedVariant,
+                          quantity: null,
+                          thumbnail: product.thumbnail || "",
+                          title: product.title || "",
+                          storeHandle: storeHandle || "",
+                          storeName: "",
+                          storeLogo: null,
+                          storeId: storeInfo?.id || "",
+                        }}
+                        variant="secondary"
+                        activeVariant="secondary-active"
+                      />
+                    ) : (
+                      <Button disabled>Out of stock</Button>
+                    )}
                   </div>
                 </div>
               )}

@@ -147,6 +147,7 @@ export const CartMainContent = () => {
   const { totalPrice, totalMaxPrice } = useMemo(() => {
     return cart.reduce(
       (acc, item) => {
+        if (!item.inStock) return acc;
         acc.totalPrice += (item.price || 0) * (item.quantity || 0);
         acc.totalMaxPrice += (item.maxPrice || 0) * (item.quantity || 0);
         return acc;
@@ -264,11 +265,34 @@ export const CartMainContent = () => {
                     </CardHeader>
 
                     <CardContent className="space-y-8">
-                      {storeData.map((product) => (
-                        <div key={product.inventoryId}>
-                          <ProductComp product={product} />
-                        </div>
-                      ))}
+                      {storeData
+                        .sort((a, b) =>
+                          a.inStock === b.inStock ? 0 : a.inStock ? -1 : 1
+                        )
+                        .map((product, index, array) => {
+                          const isFirstOutOfStock =
+                            !product.inStock &&
+                            (index === 0 || array[index - 1].inStock);
+
+                          return (
+                            <div
+                              key={product.inventoryId}
+                              className={`${isFirstOutOfStock ? "border-t pt-4" : ""} `}
+                            >
+                              {isFirstOutOfStock && (
+                                <p className="pb-2 text-destructive font-medium text-base">
+                                  Out of stock
+                                </p>
+                              )}
+
+                              <ProductComp
+                                product={product}
+                                inStock={product.inStock}
+                                className={`${!product.inStock ? "opacity-50" : ""}`}
+                              />
+                            </div>
+                          );
+                        })}
                     </CardContent>
                   </Card>
                 )
@@ -357,9 +381,17 @@ export const CartMainContent = () => {
   );
 };
 
-export function ProductComp({ product }: { product: CartStore["cart"][0] }) {
+export function ProductComp({
+  product,
+  inStock = true,
+  className,
+}: {
+  product: CartStore["cart"][0];
+  inStock: boolean;
+  className?: string;
+}) {
   return (
-    <div className={cn("flex items-center justify-between gap-4")}>
+    <div className={cn("flex items-center justify-between gap-4", className)}>
       <div className="flex items-start gap-2">
         <div className=" relative aspect-square size-12">
           <Link
@@ -385,12 +417,17 @@ export function ProductComp({ product }: { product: CartStore["cart"][0] }) {
         </div>
       </div>
       <div className="flex flex-col items-end gap-1">
-        <AddToCart
-          product={product}
-          variant={"primary"}
-          activeVariant="tertiary-active"
-        />
-        <div className="flex items-center gap-2">
+        {inStock && (
+          <AddToCart
+            product={product}
+            variant={"primary"}
+            activeVariant="tertiary-active"
+          />
+        )}
+
+        <div
+          className={cn(inStock ? "flex items-center gap-2" : "flex flex-col")}
+        >
           {product.maxPrice && product.maxPrice > (product.price ?? 0) && (
             <p className="line-through text-muted-foreground">
               {formatAmount(

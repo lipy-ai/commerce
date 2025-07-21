@@ -108,28 +108,28 @@ function RouteComponent() {
     },
   ];
 
-  const orderDetails = [
-    {
-      title: "Order Id",
-      value: order?.id,
-    },
-    {
-      title: order?.deliveredAt
-        ? "Delivered At"
-        : order?.cancelledAt
-          ? "Cancelled At"
-          : order?.refundedAt
-            ? "Refunded At"
-            : "Ordered At",
-      value: order?.deliveredAt
-        ? format(new Date(order?.deliveredAt), "PPp")
-        : order?.cancelledAt
-          ? format(new Date(order?.cancelledAt), "PPp")
-          : order?.refundedAt
-            ? format(new Date(order?.refundedAt), "PPp")
-            : format(new Date(order?.orderedAt as string), "PPp"),
-    },
-  ];
+  // const orderDetails = [
+  //   {
+  //     title: "Order Id",
+  //     value: order?.id,
+  //   },
+  //   {
+  //     title: order?.deliveredAt
+  //       ? "Delivered At"
+  //       : order?.cancelledAt
+  //         ? "Cancelled At"
+  //         : order?.refundedAt
+  //           ? "Refunded At"
+  //           : "Ordered At",
+  //     value: order?.deliveredAt
+  //       ? format(new Date(order?.deliveredAt), "PPp")
+  //       : order?.cancelledAt
+  //         ? format(new Date(order?.cancelledAt), "PPp")
+  //         : order?.refundedAt
+  //           ? format(new Date(order?.refundedAt), "PPp")
+  //           : format(new Date(order?.orderedAt as string), "PPp"),
+  //   },
+  // ];
 
   return (
     <>
@@ -207,12 +207,33 @@ function RouteComponent() {
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <p className="font-medium text-base pb-2">Order Details</p>
-                  {orderDetails.map((item, i) => (
-                    <div className="flex items-center justify-between" key={i}>
-                      <p className="">{item.title}</p>
-                      <p className="text-muted-foreground">{item.value}</p>
-                    </div>
-                  ))}
+                  <div className="flex items-center justify-between">
+                    <p className="">Order Id</p>
+                    <p className="text-muted-foreground">{order?.id}</p>
+                  </div>{" "}
+                  <div className="flex items-center justify-between">
+                    <p className="">
+                      {order?.deliveredAt
+                        ? "Delivered At"
+                        : order?.cancelledAt
+                          ? "Cancelled At"
+                          : order?.refundedAt
+                            ? "Refunded At"
+                            : "Ordered At"}
+                    </p>
+                    <p className="text-muted-foreground text-sm">
+                      {order?.deliveredAt
+                        ? format(new Date(order?.deliveredAt), "PPp")
+                        : order?.cancelledAt
+                          ? format(new Date(order?.cancelledAt), "PPp")
+                          : order?.refundedAt
+                            ? format(new Date(order?.refundedAt), "PPp")
+                            : format(
+                                new Date(order?.orderedAt as string),
+                                "PPp"
+                              )}
+                    </p>
+                  </div>
                 </CardContent>
               </Card>
 

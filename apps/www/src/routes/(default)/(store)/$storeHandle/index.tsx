@@ -5,7 +5,6 @@ import { env } from "@envClient";
 import { publicShopApi } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
-import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 import {
   DropdownMenu,
@@ -138,9 +137,7 @@ function RouteComponent() {
 
         {/* Right Content */}
         <div className="mb-32 lg:col-span-9 lg:h-screen lg:overflow-y-auto px-4">
-          {fetchedProduct &&
-            productData &&
-            productData.items.length > 0 &&
+          {fetchedProduct && productData && productData.items.length > 0 ? (
             productData.items.map((productGroup, _idx) => {
               const productArray = productGroup.products;
 
@@ -183,16 +180,12 @@ function RouteComponent() {
                   )}
                 </div>
               );
-            })}
-
-          {fetchedProduct && productData && productData.items.length === 0 && (
-            <EmptyPage title={"No products found"}>
-              <img
-                src="/assets/no-product.png"
-                alt="no-product"
-                className="w-[250px] h-[250px] object-cover"
-              />
-            </EmptyPage>
+            })
+          ) : (
+            <div className="flex justify-center flex-col items-center m-auto flex-1 text-center">
+              <img src={"/assets/no-product.png"} alt="no-product" />
+              <p className="font-medium text-lg">No products found</p>
+            </div>
           )}
         </div>
       </div>

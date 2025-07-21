@@ -100,22 +100,24 @@ export default function ProductCard({
 
               <div className="absolute bottom-1 right-1">
                 {product?.variants && product?.variants.length <= 1 ? (
-                  <AddToCart
-                    product={
-                      {
-                        storeId: storeId ?? null,
-                        storeLogo: null,
-                        storeHandle: storeHandle ?? null,
-                        thumbnail: product.thumbnail ?? null,
-                        title: product.title ?? null,
-                        storeName: null,
-                        quantity: null,
-                        ...product.variants[0],
-                      } as CartStore["cart"][0]
-                    }
-                    variant={"primary"}
-                    activeVariant={"primary-active"}
-                  />
+                  product?.variants[0].inStock && (
+                    <AddToCart
+                      product={
+                        {
+                          storeId: storeId ?? null,
+                          storeLogo: null,
+                          storeHandle: storeHandle ?? null,
+                          thumbnail: product.thumbnail ?? null,
+                          title: product.title ?? null,
+                          storeName: null,
+                          quantity: null,
+                          ...product.variants[0],
+                        } as CartStore["cart"][0]
+                      }
+                      variant={"primary"}
+                      activeVariant={"primary-active"}
+                    />
+                  )
                 ) : cartCount === 0 ? (
                   <Button
                     onClick={(e) => {

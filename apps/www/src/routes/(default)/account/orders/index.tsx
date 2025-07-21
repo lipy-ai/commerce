@@ -104,8 +104,12 @@ function RouteComponent() {
                               {order?.store?.name || "Unknown store"}
                             </p>
                             <p className="text-xs text-muted-foreground line-clamp-1">
-                              {order?.store?.address?.line1 ||
-                                "Mumbai, Maharashtra"}
+                              {[
+                                order.storeAddress?.line2,
+                                order.storeAddress?.city,
+                              ]
+                                .filter(Boolean)
+                                .join(", ")}
                             </p>
                           </div>
                         </Link>
@@ -143,6 +147,7 @@ function RouteComponent() {
                                   src={item || ""}
                                   className="aspect-square object-cover size-12 rounded-sm border border-border/40 bg-accent/40"
                                   alt={""}
+                                  loading="lazy"
                                 />
                               )
                             )}

@@ -24,6 +24,7 @@ import type { merchantStoreRoute } from "@/routes/merchantRoutes/store";
 import type { productRoute } from "@/routes/publicRoutes/product";
 import type { shopRoute } from "@/routes/publicRoutes/shop";
 import type { Emitter } from "@hono/event-emitter";
+import type { Session, User } from "better-auth";
 import type { routes } from "../app";
 
 // import type {
@@ -57,9 +58,14 @@ import type { routes } from "../app";
 export interface ServerContext extends Env {
 	Variables: {
 		emitter: Emitter<AvailableEvents>;
-		user: typeof auth.$Infer.Session.user | null;
+		user:
+			| (User & {
+					phoneNumber?: string;
+					phoneNumberVerified?: boolean;
+			  })
+			| null;
 		session:
-			| (typeof auth.$Infer.Session.session & {
+			| (Session & {
 					activeStoreId: string | null;
 					activeStoreRole: (typeof STORE_ROLES)[number] | null;
 			  })

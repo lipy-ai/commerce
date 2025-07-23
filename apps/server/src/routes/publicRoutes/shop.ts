@@ -46,22 +46,21 @@ const route = new Hono<ServerContext>()
 
 		return c.json(d || []);
 	})
-
 	.get(
 		"/:handle",
 		zValidator("param", z.object({ handle: z.string() })),
 		async (c) => {
 			const { handle } = c.req.valid("param");
-			const d = await db
+			const data = await db
 				.selectFrom("store")
 				.where("handle", "=", handle)
 				.selectAll()
 				.executeTakeFirst();
 
-			if (!d) {
+			if (!data) {
 				throw new HTTPError(404, { message: "Store not found!" });
 			}
-			return c.json(d || []);
+			return c.json(data);
 		},
 	)
 	.get(

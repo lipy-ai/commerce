@@ -26,7 +26,7 @@ export const discordNotification = async (
 						value:
 							params.payload?.customerDetails.email ||
 							params.payload?.customerDetails.phone ||
-							params.payload?.customerId ||
+							params.payload?.userId ||
 							"Unknown",
 					},
 					{

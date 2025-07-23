@@ -242,10 +242,12 @@ export function OrderEdit({ data }: { data?: Order }) {
                     {data ? (
                       "Update Order"
                     ) : (
-                      <>
-                        {formatAmount("INR", calcs.totalAmount || 0)}{" "}
-                        <ArrowRight /> Checkout
-                      </>
+                      <span className="flex gap-2 items-center">
+                        <span>
+                          {formatAmount("INR", calcs.totalAmount || 0)}
+                        </span>{" "}
+                        <ArrowRight /> <span>Checkout</span>
+                      </span>
                     )}
                   </FormButton>
                 </div>

@@ -7,11 +7,9 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
-import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@lipy/web-ui/components/ui/card";
@@ -20,54 +18,54 @@ import { cn } from "@lipy/web-ui/lib/utils";
 import { Link } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
-import { Check, Clock10, StoreIcon } from "lucide-react";
+import { Clock10, StoreIcon } from "lucide-react";
 import { Shirt, ShoppingCart, SquareUser, Store } from "lucide-react";
 
 import { OrderChart } from "@lipy/web-ui/components/charts/orderChart";
 import { Label } from "@lipy/web-ui/components/ui/label";
 import type { InferResponseType } from "hono";
 
-const setupSteps = [
-  {
-    name: "shopDetailsComplete",
-    completed: true,
-    title: "Fill necessary information about your shop",
-    description: "These information will help you run your shop smoothly.",
-    action: (
-      <Link
-        className={cn(
-          buttonVariants({ variant: "link" }),
-          "h-fit p-0 underline"
-        )}
-        to="/store"
-      >
-        Complete store details
-      </Link>
-    ),
-  },
-  {
-    name: "productAdded",
-    completed: false,
-    title: "List products at your shop",
-    description: "Add products in your shop.",
-    action: (
-      <Link className={cn(buttonVariants())} to="/product/add">
-        Add products
-      </Link>
-    ),
-  },
-  {
-    name: "productAdded",
-    completed: false,
-    title: "List products at your shop",
-    description: "Add products in your shop.",
-    action: (
-      <Link className={cn(buttonVariants())} to="/product/add">
-        Add products
-      </Link>
-    ),
-  },
-];
+// const setupSteps = [
+//   {
+//     name: "shopDetailsComplete",
+//     completed: true,
+//     title: "Fill necessary information about your shop",
+//     description: "These information will help you run your shop smoothly.",
+//     action: (
+//       <Link
+//         className={cn(
+//           buttonVariants({ variant: "link" }),
+//           "h-fit p-0 underline"
+//         )}
+//         to="/store"
+//       >
+//         Complete store details
+//       </Link>
+//     ),
+//   },
+//   {
+//     name: "productAdded",
+//     completed: false,
+//     title: "List products at your shop",
+//     description: "Add products in your shop.",
+//     action: (
+//       <Link className={cn(buttonVariants())} to="/product/add">
+//         Add products
+//       </Link>
+//     ),
+//   },
+//   {
+//     name: "productAdded",
+//     completed: false,
+//     title: "List products at your shop",
+//     description: "Add products in your shop.",
+//     action: (
+//       <Link className={cn(buttonVariants())} to="/product/add">
+//         Add products
+//       </Link>
+//     ),
+//   },
+// ];
 
 export const Route = createFileRoute("/(dashboard)/")({
   component: RouteComponent,
@@ -106,17 +104,14 @@ function RouteComponent() {
 
   return (
     <div className="h-full">
-      <div className="grid lg:grid-cols-12 divide-x">
+      <div className="grid lg:grid-cols-12 md:divide-x">
         <div className="col-span-8 px-4 pb-4 flex gap-4 md:h-screen flex-col md:sticky md:top-0">
           <div className="flex gap-4 px-4 py-4 items-center border-b">
             <Avatar className="size-12 rounded bg-primary">
               <AvatarImage
                 alt=""
                 className="object-cover"
-                src={
-                  data?.image ||
-                  "https://cdn.logojoy.com/wp-content/uploads/2018/05/18143901/8102.png"
-                }
+                src={data?.image || ""}
               />
               <AvatarFallback className="bg-primary text-primary-foreground">
                 <Store />
@@ -151,6 +146,7 @@ function RouteComponent() {
             <Orders data={res.data?.pendingOrders} isLoading={res.isLoading} />
           </div>
         </div>
+
         <div className="col-span-4 hidden lg:flex flex-col p-4">
           <Orders data={res.data?.pendingOrders} isLoading={res.isLoading} />
         </div>
@@ -184,7 +180,7 @@ function Orders({
   }
 
   return (
-    <Card>
+    <Card className="flex-1">
       <CardHeader>
         <CardTitle>Pending Orders</CardTitle>
       </CardHeader>
@@ -199,7 +195,7 @@ function Orders({
                 key={i}
                 className="leading-none flex py-3 space-y-2"
               >
-                <div className="flex w-full gap-4 justify-between text-base lg:text-sm">
+                <div className="flex gap-4 flex-1 justify-between text-base lg:text-sm">
                   <div className="flex-1 flex gap-2">
                     <div
                       className={cn(
@@ -221,14 +217,15 @@ function Orders({
                       </span>
                     </div>
                     <div className="flex-1">
-                      <p className="font-medium truncate ">{v.id}</p>
-                      <p className="font-light truncate">
+                      <p className="text-xs md:text-sm font-medium truncate leading-none md:leading-normal">
+                        #{v.id}
+                      </p>
+                      <p className="font-light break-words">
                         <span className="text-sm">
-                          {" "}
                           {v.customerDetails?.name}
-                        </span>{" "}
-                        <span className="text-xs text-muted-foreground">
-                          on {format(v.orderedAt, "Pp")}
+                        </span>
+                        <span className="text-xs text-muted-foreground w-full block md:w-fit md:inline-flex">
+                          &nbsp;on {format(v.orderedAt, "Pp")}
                         </span>
                       </p>
                     </div>
@@ -244,54 +241,6 @@ function Orders({
             );
           })}
         </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-export function ShopSetupStatus() {
-  return (
-    <Card className="p-4">
-      <CardHeader className="">
-        <CardTitle>Complete your store setup</CardTitle>
-        <CardDescription>
-          Fill basic details of your shop and add products you wish to sell in
-          easy steps.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="relative space-y-8 lg:space-y-12">
-        {setupSteps.map((item, index) => (
-          <div key={index} className="">
-            <div className="flex items-start gap-3 lg:gap-4">
-              <div className="relative">
-                {index !== setupSteps.length - 1 && (
-                  <div
-                    className={cn("absolute w-0.5 z-0  top-full left-1/2")}
-                  />
-                )}
-                <div
-                  className={cn(
-                    "size-10 flex items-center justify-center rounded-full"
-                  )}
-                >
-                  {item.completed ? (
-                    <Check className="size-4 lg:size-6 text-background stroke-3" />
-                  ) : (
-                    <p className="font-medium">{index + 1}</p>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex-1 flex flex-col md:flex-row gap-2 justify-between">
-                <div>
-                  <p className="font-medium leading-tight">{item.title}</p>
-                  <p className="text-muted-foreground">{item.description}</p>
-                </div>
-                <div className="">{item.action}</div>
-              </div>
-            </div>
-          </div>
-        ))}
       </CardContent>
     </Card>
   );

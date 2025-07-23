@@ -61,7 +61,6 @@ const create = async (user: DBTypes["user"]) => {
 		.execute();
 
 	const customers = users.map((u) => ({
-		id: crypto.randomUUID(),
 		userId: u.id,
 		storeId: org.id,
 	}));
@@ -210,7 +209,7 @@ const create = async (user: DBTypes["user"]) => {
 						amount: faker.number.int({ min: 1, max: 100 }),
 					})),
 					storeId: org.id,
-					customerId: user.id,
+					userId: user.id,
 					currency: "inr",
 					delivery: {
 						trackingId: crypto.randomUUID(),

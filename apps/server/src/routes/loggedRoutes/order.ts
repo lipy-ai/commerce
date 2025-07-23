@@ -63,13 +63,14 @@ const generateOrders = async ({
 		let customer = await db
 			.selectFrom("customer")
 			.where("storeId", "=", s.id)
+			.where("userId", "=", user?.id!)
 			.selectAll()
 			.executeTakeFirst();
-		console.log(customer);
+
 		if (!customer) {
 			customer = await db
 				.insertInto("customer")
-				.values({ id: crypto.randomUUID(), userId: user?.id, storeId: s.id })
+				.values({ userId: user?.id, storeId: s.id })
 				.returningAll()
 				.executeTakeFirstOrThrow()
 				.catch(() => {
@@ -134,7 +135,7 @@ const generateOrders = async ({
 			discounts,
 			currency: "inr",
 			storeId: s.id!,
-			customerId: customer.id,
+			userId: customer.userId,
 			customerDetails: {
 				name: user?.name!,
 				phone: user?.phoneNumber!,
@@ -184,7 +185,7 @@ const route = new Hono<ServerContext>()
 		const q = c.req.valid("query");
 		const data = await db
 			.selectFrom("orders as o")
-			.where("o.customerId", "=", session?.userId!)
+			.where("o.userId", "=", session?.userId!)
 			.$if(q.view === "active", (qb) =>
 				qb.where((eb) =>
 					eb.or([
@@ -211,7 +212,7 @@ const route = new Hono<ServerContext>()
 				"s.id as storeId",
 				"s.address as storeAddress",
 				"s.handle as storeHandle",
-				"o.customerId",
+				"o.userId",
 				"o.customerDetails",
 				"o.customerInstructions",
 				eb.fn.toJson("s").as("store"),
@@ -227,7 +228,7 @@ const route = new Hono<ServerContext>()
 
 		const data = await db
 			.selectFrom("orders as o")
-			.where("o.customerId", "=", session?.userId!)
+			.where("o.userId", "=", session?.userId!)
 			.where("o.id", "=", id)
 			.leftJoin("store as s", "s.id", "o.storeId")
 			.selectAll(["o"])
@@ -274,7 +275,7 @@ const route = new Hono<ServerContext>()
 		await db
 			.updateTable("orders")
 			.where("id", "=", id)
-			.where("customerId", "=", session?.userId!)
+			.where("userId", "=", session?.userId!)
 			.set({ status: "cancelled" })
 			.execute();
 		return c.json({ success: true });

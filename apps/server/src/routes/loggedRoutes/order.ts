@@ -202,7 +202,7 @@ const route = new Hono<ServerContext>()
 			.leftJoin("store as s", "s.id", "o.storeId")
 			.select((eb) => [
 				"o.id",
-				"o.itemTotalAmount",
+				"o.totalAmount",
 				"o.currency",
 				"o.status",
 				"o.items",

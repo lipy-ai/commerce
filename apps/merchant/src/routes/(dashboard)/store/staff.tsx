@@ -71,6 +71,7 @@ import { format, isBefore } from "date-fns";
 import { Link, Plus, SendHorizonal, X } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { StoreNav } from "./-nav";
 export const Route = createFileRoute("/(dashboard)/store/staff")({
   component: RouteComponent,
 });
@@ -79,20 +80,21 @@ function RouteComponent() {
   const { data } = useAPIQuery(merchantStoreApi.members, "$get", {});
 
   return (
-    <div>
+    <>
       <DashboardHeader title="My Staff">
         <InviteMember />
       </DashboardHeader>
-
-      <div className="p-4 lg:p-8">
-        <div className="space-y-4">
-          {data?.invitations && data.invitations.length > 0 && (
-            <Invitation data={data} />
-          )}
-          {data?.members && <Members data={data} />}
+      <StoreNav>
+        <div className="p-4 lg:p-8">
+          <div className="space-y-4">
+            {data?.invitations && data.invitations.length > 0 && (
+              <Invitation data={data} />
+            )}
+            {data?.members && <Members data={data} />}
+          </div>
         </div>
-      </div>
-    </div>
+      </StoreNav>
+    </>
   );
 }
 

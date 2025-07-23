@@ -28,7 +28,11 @@ import { Route as dashboardOrderIndexRouteImport } from './routes/(dashboard)/or
 import { Route as dashboardCustomerIndexRouteImport } from './routes/(dashboard)/customer/index'
 import { Route as dashboardAccountIndexRouteImport } from './routes/(dashboard)/account/index'
 import { Route as AdminProductIdRouteImport } from './routes/admin/product/$id'
+import { Route as dashboardStoreTaxesRouteImport } from './routes/(dashboard)/store/taxes'
 import { Route as dashboardStoreStaffRouteImport } from './routes/(dashboard)/store/staff'
+import { Route as dashboardStorePoliciesRouteImport } from './routes/(dashboard)/store/policies'
+import { Route as dashboardStoreGeneralRouteImport } from './routes/(dashboard)/store/general'
+import { Route as dashboardStoreDiscountsRouteImport } from './routes/(dashboard)/store/discounts'
 import { Route as dashboardProductCreateRouteImport } from './routes/(dashboard)/product/create'
 import { Route as dashboardProductAddRouteImport } from './routes/(dashboard)/product/add'
 import { Route as dashboardProductIdRouteImport } from './routes/(dashboard)/product/$id'
@@ -134,9 +138,29 @@ const AdminProductIdRoute = AdminProductIdRouteImport.update({
   path: '/product/$id',
   getParentRoute: () => AdminRouteRoute,
 } as any)
+const dashboardStoreTaxesRoute = dashboardStoreTaxesRouteImport.update({
+  id: '/store/taxes',
+  path: '/store/taxes',
+  getParentRoute: () => dashboardRouteRoute,
+} as any)
 const dashboardStoreStaffRoute = dashboardStoreStaffRouteImport.update({
   id: '/store/staff',
   path: '/store/staff',
+  getParentRoute: () => dashboardRouteRoute,
+} as any)
+const dashboardStorePoliciesRoute = dashboardStorePoliciesRouteImport.update({
+  id: '/store/policies',
+  path: '/store/policies',
+  getParentRoute: () => dashboardRouteRoute,
+} as any)
+const dashboardStoreGeneralRoute = dashboardStoreGeneralRouteImport.update({
+  id: '/store/general',
+  path: '/store/general',
+  getParentRoute: () => dashboardRouteRoute,
+} as any)
+const dashboardStoreDiscountsRoute = dashboardStoreDiscountsRouteImport.update({
+  id: '/store/discounts',
+  path: '/store/discounts',
   getParentRoute: () => dashboardRouteRoute,
 } as any)
 const dashboardProductCreateRoute = dashboardProductCreateRouteImport.update({
@@ -211,7 +235,11 @@ export interface FileRoutesByFullPath {
   '/product/$id': typeof dashboardProductIdRoute
   '/product/add': typeof dashboardProductAddRoute
   '/product/create': typeof dashboardProductCreateRoute
+  '/store/discounts': typeof dashboardStoreDiscountsRoute
+  '/store/general': typeof dashboardStoreGeneralRoute
+  '/store/policies': typeof dashboardStorePoliciesRoute
   '/store/staff': typeof dashboardStoreStaffRoute
+  '/store/taxes': typeof dashboardStoreTaxesRoute
   '/admin/product/$id': typeof AdminProductIdRoute
   '/account/': typeof dashboardAccountIndexRoute
   '/customer': typeof dashboardCustomerIndexRoute
@@ -240,7 +268,11 @@ export interface FileRoutesByTo {
   '/product/$id': typeof dashboardProductIdRoute
   '/product/add': typeof dashboardProductAddRoute
   '/product/create': typeof dashboardProductCreateRoute
+  '/store/discounts': typeof dashboardStoreDiscountsRoute
+  '/store/general': typeof dashboardStoreGeneralRoute
+  '/store/policies': typeof dashboardStorePoliciesRoute
   '/store/staff': typeof dashboardStoreStaffRoute
+  '/store/taxes': typeof dashboardStoreTaxesRoute
   '/admin/product/$id': typeof AdminProductIdRoute
   '/account': typeof dashboardAccountIndexRoute
   '/customer': typeof dashboardCustomerIndexRoute
@@ -273,7 +305,11 @@ export interface FileRoutesById {
   '/(dashboard)/product/$id': typeof dashboardProductIdRoute
   '/(dashboard)/product/add': typeof dashboardProductAddRoute
   '/(dashboard)/product/create': typeof dashboardProductCreateRoute
+  '/(dashboard)/store/discounts': typeof dashboardStoreDiscountsRoute
+  '/(dashboard)/store/general': typeof dashboardStoreGeneralRoute
+  '/(dashboard)/store/policies': typeof dashboardStorePoliciesRoute
   '/(dashboard)/store/staff': typeof dashboardStoreStaffRoute
+  '/(dashboard)/store/taxes': typeof dashboardStoreTaxesRoute
   '/admin/product/$id': typeof AdminProductIdRoute
   '/(dashboard)/account/': typeof dashboardAccountIndexRoute
   '/(dashboard)/customer/': typeof dashboardCustomerIndexRoute
@@ -306,7 +342,11 @@ export interface FileRouteTypes {
     | '/product/$id'
     | '/product/add'
     | '/product/create'
+    | '/store/discounts'
+    | '/store/general'
+    | '/store/policies'
     | '/store/staff'
+    | '/store/taxes'
     | '/admin/product/$id'
     | '/account/'
     | '/customer'
@@ -335,7 +375,11 @@ export interface FileRouteTypes {
     | '/product/$id'
     | '/product/add'
     | '/product/create'
+    | '/store/discounts'
+    | '/store/general'
+    | '/store/policies'
     | '/store/staff'
+    | '/store/taxes'
     | '/admin/product/$id'
     | '/account'
     | '/customer'
@@ -367,7 +411,11 @@ export interface FileRouteTypes {
     | '/(dashboard)/product/$id'
     | '/(dashboard)/product/add'
     | '/(dashboard)/product/create'
+    | '/(dashboard)/store/discounts'
+    | '/(dashboard)/store/general'
+    | '/(dashboard)/store/policies'
     | '/(dashboard)/store/staff'
+    | '/(dashboard)/store/taxes'
     | '/admin/product/$id'
     | '/(dashboard)/account/'
     | '/(dashboard)/customer/'
@@ -526,11 +574,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminProductIdRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/(dashboard)/store/taxes': {
+      id: '/(dashboard)/store/taxes'
+      path: '/store/taxes'
+      fullPath: '/store/taxes'
+      preLoaderRoute: typeof dashboardStoreTaxesRouteImport
+      parentRoute: typeof dashboardRouteRoute
+    }
     '/(dashboard)/store/staff': {
       id: '/(dashboard)/store/staff'
       path: '/store/staff'
       fullPath: '/store/staff'
       preLoaderRoute: typeof dashboardStoreStaffRouteImport
+      parentRoute: typeof dashboardRouteRoute
+    }
+    '/(dashboard)/store/policies': {
+      id: '/(dashboard)/store/policies'
+      path: '/store/policies'
+      fullPath: '/store/policies'
+      preLoaderRoute: typeof dashboardStorePoliciesRouteImport
+      parentRoute: typeof dashboardRouteRoute
+    }
+    '/(dashboard)/store/general': {
+      id: '/(dashboard)/store/general'
+      path: '/store/general'
+      fullPath: '/store/general'
+      preLoaderRoute: typeof dashboardStoreGeneralRouteImport
+      parentRoute: typeof dashboardRouteRoute
+    }
+    '/(dashboard)/store/discounts': {
+      id: '/(dashboard)/store/discounts'
+      path: '/store/discounts'
+      fullPath: '/store/discounts'
+      preLoaderRoute: typeof dashboardStoreDiscountsRouteImport
       parentRoute: typeof dashboardRouteRoute
     }
     '/(dashboard)/product/create': {
@@ -635,7 +711,11 @@ interface dashboardRouteRouteChildren {
   dashboardProductIdRoute: typeof dashboardProductIdRoute
   dashboardProductAddRoute: typeof dashboardProductAddRoute
   dashboardProductCreateRoute: typeof dashboardProductCreateRoute
+  dashboardStoreDiscountsRoute: typeof dashboardStoreDiscountsRoute
+  dashboardStoreGeneralRoute: typeof dashboardStoreGeneralRoute
+  dashboardStorePoliciesRoute: typeof dashboardStorePoliciesRoute
   dashboardStoreStaffRoute: typeof dashboardStoreStaffRoute
+  dashboardStoreTaxesRoute: typeof dashboardStoreTaxesRoute
   dashboardCustomerIndexRoute: typeof dashboardCustomerIndexRoute
   dashboardOrderIndexRoute: typeof dashboardOrderIndexRoute
   dashboardProductIndexRoute: typeof dashboardProductIndexRoute
@@ -651,7 +731,11 @@ const dashboardRouteRouteChildren: dashboardRouteRouteChildren = {
   dashboardProductIdRoute: dashboardProductIdRoute,
   dashboardProductAddRoute: dashboardProductAddRoute,
   dashboardProductCreateRoute: dashboardProductCreateRoute,
+  dashboardStoreDiscountsRoute: dashboardStoreDiscountsRoute,
+  dashboardStoreGeneralRoute: dashboardStoreGeneralRoute,
+  dashboardStorePoliciesRoute: dashboardStorePoliciesRoute,
   dashboardStoreStaffRoute: dashboardStoreStaffRoute,
+  dashboardStoreTaxesRoute: dashboardStoreTaxesRoute,
   dashboardCustomerIndexRoute: dashboardCustomerIndexRoute,
   dashboardOrderIndexRoute: dashboardOrderIndexRoute,
   dashboardProductIndexRoute: dashboardProductIndexRoute,

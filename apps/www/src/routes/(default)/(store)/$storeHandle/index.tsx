@@ -56,8 +56,6 @@ function RouteComponent() {
       param: { handle: storeHandle },
     },
     {
-      staleTime: Number.POSITIVE_INFINITY,
-      cacheTime: Number.POSITIVE_INFINITY,
       placeholderData: (p) => p,
     }
   );

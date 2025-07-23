@@ -6,7 +6,7 @@
 		"baseUrl": "./",
 		"module": "ESNext",
 		"strict": true,
-		"strictNullChecks": true,
+		// "strictNullChecks": true,
 
 		"moduleResolution": "Bundler",
 		"noImplicitAny": true,

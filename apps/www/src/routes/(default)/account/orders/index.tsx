@@ -30,7 +30,7 @@ export const ORDER_STATUS_BADGE_VARIANT: Record<
   (typeof ORDER_STATUS)[number],
   VariantProps<typeof badgeVariants>["variant"]
 > = {
-  ordered: "info",
+  created: "info",
   accepted: "accent",
   packed: "accent",
   out_for_delivery: "warning",
@@ -39,6 +39,8 @@ export const ORDER_STATUS_BADGE_VARIANT: Record<
   refunded: "destructive",
   replaced: "brand",
   cancelled: "destructive",
+  awaiting_customer_confirmation: "warning",
+  completed: "success",
 };
 
 function RouteComponent() {
@@ -134,7 +136,7 @@ function RouteComponent() {
                           <div className="grid grid-cols-5 gap-y-1.5">
                             {order?.items?.map((item) => (
                               <img
-                                key={item.variant.inventoryId}
+                                key={item.inventoryId}
                                 src={item.thumbnail || ""}
                                 className="aspect-square object-cover size-12 rounded-sm border border-border/40 bg-accent/40"
                                 alt={""}

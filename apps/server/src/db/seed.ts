@@ -60,7 +60,11 @@ const create = async (user: DBTypes["user"]) => {
 		.returning("id")
 		.execute();
 
-	const customers = users.map((u) => ({ userId: u.id, storeId: org.id }));
+	const customers = users.map((u) => ({
+		id: crypto.randomUUID(),
+		userId: u.id,
+		storeId: org.id,
+	}));
 
 	await db.insertInto("customer").values(customers).execute();
 
@@ -164,23 +168,22 @@ const create = async (user: DBTypes["user"]) => {
 					items: Array.from({
 						length: faker.number.int({ min: 1, max: 5 }),
 					}).map(() => ({
-						id: crypto.randomUUID(),
+						inventoryId: crypto.randomUUID(),
+						variantId: crypto.randomUUID(),
+						productId: crypto.randomUUID(),
+
 						title: faker.commerce.productName(),
-						quantity: faker.number.int({ min: 1, max: 100 }),
+						qty: faker.number.int({ min: 1, max: 100 }),
 						thumbnail: faker.image.urlPicsumPhotos(),
-						variant: {
-							id: crypto.randomUUID(),
-							inventoryId: crypto.randomUUID(),
-							unit: faker.helpers.arrayElement([
-								"1kg",
-								"4 packs",
-								"1 piece",
-								"500gm",
-								"1L",
-							]),
-							maxPrice: faker.number.int({ min: 1, max: 100 }),
-							price: faker.number.int({ min: 1, max: 100 }),
-						},
+						unit: faker.helpers.arrayElement([
+							"1kg",
+							"4 packs",
+							"1 piece",
+							"500gm",
+							"1L",
+						]),
+						maxPrice: faker.number.int({ min: 1, max: 100 }),
+						price: faker.number.int({ min: 1, max: 100 }),
 					})),
 					taxes: Array.from({
 						length: faker.number.int({ min: 0, max: 5 }),
@@ -255,6 +258,7 @@ const create = async (user: DBTypes["user"]) => {
 					itemTotalAmount: faker.number.int({ min: 1, max: 1000 }),
 					totalAmount: faker.number.int({ min: 1, max: 1000 }),
 					amountSaved: faker.number.int({ min: 1, max: 1000 }),
+					timeline: [],
 				}),
 			),
 		)

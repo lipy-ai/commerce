@@ -36,6 +36,8 @@ import { merchantInventoryRoute } from "./routes/merchantRoutes/inventory";
 import { merchantOrderRoute } from "./routes/merchantRoutes/order";
 import { merchantProductRoute } from "./routes/merchantRoutes/product";
 import { merchantStoreRoute } from "./routes/merchantRoutes/store";
+import { posOrderRoute } from "./routes/posRoutes/order";
+import { posProductRoute } from "./routes/posRoutes/product";
 import { productRoute } from "./routes/publicRoutes/product";
 import { shopRoute } from "./routes/publicRoutes/shop";
 import type { ServerContext } from "./types";
@@ -94,6 +96,13 @@ const merchantRouter = new Hono()
 	.route("/events", eventsRoute)
 	.route("/dashboard", merchantDashboardRoute);
 
+const posRouter = new Hono()
+	.basePath("/pos")
+	.use(isLoggedIn) //Check if logged In
+	.use(hasStorePermission(["owner", "admin", "staff"]))
+	.route("/product", posProductRoute)
+	.route("/order", posOrderRoute);
+
 const loggedRouter = new Hono()
 	.use(isLoggedIn) //Check if logged In
 	.route("/upload", uploadRoute)
@@ -109,7 +118,8 @@ export const routes = app
 	.route("/public/shops", shopRoute)
 	.route("/", loggedRouter)
 	.route("/", merchantRouter)
-	.route("/", adminRouter);
+	.route("/", adminRouter)
+	.route("/", posRouter);
 // routes.basePath("/admin").route("/category", categoryRouter);
 
 app.onError(globalError);

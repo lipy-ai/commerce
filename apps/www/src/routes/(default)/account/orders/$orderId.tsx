@@ -264,7 +264,7 @@ function RouteComponent() {
                           to="/$storeHandle/products/$productId"
                           params={{
                             storeHandle: order?.storeHandle ?? "",
-                            productId: product?.id ?? "",
+                            productId: product.productId || "",
                           }}
                         >
                           <img
@@ -281,18 +281,15 @@ function RouteComponent() {
                             {product.title}
                           </h2>
                           <p className="text-muted-foreground text-xs">
-                            {product.variant.unit}
+                            {product.unit}
                           </p>
                         </div>
                         <div className="text-right">
                           <p className="font-medium">
-                            {formatAmount(
-                              order.currency,
-                              product.variant.price || 0
-                            )}
+                            {formatAmount(order.currency, product.price || 0)}
                           </p>
                           <p className="text-sm text-muted-foreground">
-                            Qty {product.quantity || 0}
+                            Qty {product.qty || 0}
                           </p>
                         </div>
                       </div>

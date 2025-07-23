@@ -2,12 +2,10 @@ import type { merchantDashboardApi } from "@lipy/lib/api";
 import {
   type ChartConfig,
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@lipy/web-ui/components/ui/chart";
-import { format } from "date-fns";
+import { eachDayOfInterval, endOfMonth, format, startOfMonth } from "date-fns";
 import type { InferResponseType } from "hono";
 import {
   Card,
@@ -28,21 +26,35 @@ export function OrderChart({
     | undefined;
   isLoading: boolean;
 }) {
+  const monthStart = startOfMonth(new Date());
+  const monthEnd = endOfMonth(new Date());
+
+  const daysOfMonth = eachDayOfInterval({
+    start: monthStart,
+    end: monthEnd,
+  });
+
+  const chartMap: Array<{ date: string; count: number }> = [];
+
+  for (const day of daysOfMonth) {
+    const date = format(day, "yyyy-MM-dd");
+    const v = data?.find(
+      (f) => format(new Date(f.date), "yyyy-MM-dd") === date
+    );
+
+    chartMap.push({
+      date,
+      count: v?.count || 0,
+    });
+  }
+
   const chartConfig = {
     views: {
       label: "Page Views",
     },
-    pending: {
-      label: "Pending",
+    count: {
+      label: "Orders",
       color: "var(--chart-1)",
-    },
-    completed: {
-      label: "Completed",
-      color: "var(--chart-2)",
-    },
-    returned: {
-      label: "Returned",
-      color: "var(--chart-3)",
     },
   } satisfies ChartConfig;
 
@@ -54,11 +66,13 @@ export function OrderChart({
     <Card className="w-full flex flex-col">
       <CardHeader>
         <CardTitle>Orders</CardTitle>
-        <CardDescription>Last 30 days</CardDescription>
+        <CardDescription>
+          This {format(new Date(), "LLLL yyyy")}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="max-h-[300px] w-full">
-          <BarChart accessibilityLayer data={data || []}>
+          <BarChart accessibilityLayer data={chartMap || []}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="date"
@@ -66,23 +80,10 @@ export function OrderChart({
               tickFormatter={(v) => format(v, "dd MMM")}
             />
             <ChartTooltip content={<ChartTooltipContent hideLabel />} />
-            <ChartLegend content={<ChartLegendContent />} />
             <Bar
-              dataKey="pending"
+              dataKey="count"
               stackId="a"
-              fill="var(--color-pending)"
-              radius={[0, 0, 4, 4]}
-            />
-            <Bar
-              dataKey="completed"
-              stackId="a"
-              fill="var(--color-completed)"
-              radius={[0, 0, 4, 4]}
-            />
-            <Bar
-              dataKey="returned"
-              stackId="a"
-              fill="var(--color-returned)"
+              fill="var(--color-count)"
               radius={[0, 0, 4, 4]}
             />
           </BarChart>

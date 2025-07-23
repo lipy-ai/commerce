@@ -46,29 +46,6 @@ const route = new Hono<ServerContext>()
 
 		return c.json({ items, page, limit, totalPages, totalResults: totalCount });
 	})
-	.get(
-		"/:id",
-		zValidator(
-			"param",
-			z.object({
-				id: z.string(),
-			}),
-		),
-		async (c) => {
-			const { id } = c.req.valid("param");
-			const activeStoreId = c.var.session?.activeStoreId!;
-
-			const result = await db
-				.selectFrom("orders as o")
-				.where("o.id", "=", id)
-				.where("o.storeId", "=", activeStoreId)
-				.selectAll(["o"])
-				// .select((eb) => [eb.fn.toJson("c").as("category")])
-				.executeTakeFirstOrThrow();
-
-			return c.json(result);
-		},
-	)
 	.patch(
 		"/:id",
 		zValidator(

@@ -29,6 +29,20 @@
       "when": 1752741878423,
       "tag": "0003_careless_mad_thinker",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1753017025097,
+      "tag": "0004_yielding_golden_guardian",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1753258216147,
+      "tag": "0005_cuddly_frightful_four",
+      "breakpoints": true
     }
   ]
 }

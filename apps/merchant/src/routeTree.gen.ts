@@ -13,6 +13,7 @@ import { Route as ErrorRouteImport } from './routes/error'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as dashboardRouteRouteImport } from './routes/(dashboard)/route'
 import { Route as RegisterIndexRouteImport } from './routes/register/index'
+import { Route as PosIndexRouteImport } from './routes/pos/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as dashboardIndexRouteImport } from './routes/(dashboard)/index'
 import { Route as authLogoutRouteImport } from './routes/(auth)/logout'
@@ -56,6 +57,11 @@ const dashboardRouteRoute = dashboardRouteRouteImport.update({
 const RegisterIndexRoute = RegisterIndexRouteImport.update({
   id: '/register/',
   path: '/register/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PosIndexRoute = PosIndexRouteImport.update({
+  id: '/pos/',
+  path: '/pos/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -194,6 +200,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
   '/admin/': typeof AdminIndexRoute
+  '/pos': typeof PosIndexRoute
   '/register': typeof RegisterIndexRoute
   '/account/preferences': typeof dashboardAccountPreferencesRoute
   '/account/profile': typeof dashboardAccountProfileRoute
@@ -222,6 +229,7 @@ export interface FileRoutesByTo {
   '/logout': typeof authLogoutRoute
   '/': typeof dashboardIndexRoute
   '/admin': typeof AdminIndexRoute
+  '/pos': typeof PosIndexRoute
   '/register': typeof RegisterIndexRoute
   '/account/preferences': typeof dashboardAccountPreferencesRoute
   '/account/profile': typeof dashboardAccountProfileRoute
@@ -254,6 +262,7 @@ export interface FileRoutesById {
   '/(auth)/logout': typeof authLogoutRoute
   '/(dashboard)/': typeof dashboardIndexRoute
   '/admin/': typeof AdminIndexRoute
+  '/pos/': typeof PosIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/(dashboard)/account/preferences': typeof dashboardAccountPreferencesRoute
   '/(dashboard)/account/profile': typeof dashboardAccountProfileRoute
@@ -286,6 +295,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/logout'
     | '/admin/'
+    | '/pos'
     | '/register'
     | '/account/preferences'
     | '/account/profile'
@@ -314,6 +324,7 @@ export interface FileRouteTypes {
     | '/logout'
     | '/'
     | '/admin'
+    | '/pos'
     | '/register'
     | '/account/preferences'
     | '/account/profile'
@@ -345,6 +356,7 @@ export interface FileRouteTypes {
     | '/(auth)/logout'
     | '/(dashboard)/'
     | '/admin/'
+    | '/pos/'
     | '/register/'
     | '/(dashboard)/account/preferences'
     | '/(dashboard)/account/profile'
@@ -374,6 +386,7 @@ export interface RootRouteChildren {
   ErrorRoute: typeof ErrorRoute
   authLoginRoute: typeof authLoginRoute
   authLogoutRoute: typeof authLogoutRoute
+  PosIndexRoute: typeof PosIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
   AcceptInvitationIdIndexRoute: typeof AcceptInvitationIdIndexRoute
 }
@@ -406,6 +419,13 @@ declare module '@tanstack/react-router' {
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof RegisterIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pos/': {
+      id: '/pos/'
+      path: '/pos'
+      fullPath: '/pos'
+      preLoaderRoute: typeof PosIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
@@ -667,6 +687,7 @@ const rootRouteChildren: RootRouteChildren = {
   ErrorRoute: ErrorRoute,
   authLoginRoute: authLoginRoute,
   authLogoutRoute: authLogoutRoute,
+  PosIndexRoute: PosIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
   AcceptInvitationIdIndexRoute: AcceptInvitationIdIndexRoute,
 }

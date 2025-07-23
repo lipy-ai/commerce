@@ -166,13 +166,15 @@ export const store = schema.table("store", {
 			end: number; // 24 hrs format
 		};
 		deliveryDistance: number;
-		taxes: Array<{
+	}>(),
+	taxes: jsonb("taxes").array().$type<
+		Array<{
 			id: string;
 			name: string;
 			value: number;
 			calculationType: "percent" | "sum";
-		}>;
-	}>(),
+		}>
+	>(),
 });
 
 export const storePayments = schema.table("storePayments", {

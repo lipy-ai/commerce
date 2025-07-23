@@ -174,7 +174,7 @@ function RouteComponent() {
                           <p className="font-bold text-base">
                             {formatAmount(
                               order?.currency,
-                              order?.itemTotalAmount as number
+                              order?.totalAmount as number
                             )}
                           </p>
                         </CardFooter>

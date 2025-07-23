@@ -1,41 +1,48 @@
 {
-  "version": "7",
-  "dialect": "postgresql",
-  "entries": [
-    {
-      "idx": 0,
-      "version": "7",
-      "when": 1752127281682,
-      "tag": "0000_orange_slayback",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1752303213011,
-      "tag": "0001_wooden_centennial",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1752496028550,
-      "tag": "0002_young_la_nuit",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1752741878423,
-      "tag": "0003_careless_mad_thinker",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1753196861551,
-      "tag": "0004_calm_black_crow",
-      "breakpoints": true
-    }
-  ]
+	"version": "7",
+	"dialect": "postgresql",
+	"entries": [
+		{
+			"idx": 0,
+			"version": "7",
+			"when": 1752127281682,
+			"tag": "0000_orange_slayback",
+			"breakpoints": true
+		},
+		{
+			"idx": 1,
+			"version": "7",
+			"when": 1752303213011,
+			"tag": "0001_wooden_centennial",
+			"breakpoints": true
+		},
+		{
+			"idx": 2,
+			"version": "7",
+			"when": 1752496028550,
+			"tag": "0002_young_la_nuit",
+			"breakpoints": true
+		},
+		{
+			"idx": 3,
+			"version": "7",
+			"when": 1752741878423,
+			"tag": "0003_careless_mad_thinker",
+			"breakpoints": true
+		},
+		{
+			"idx": 4,
+			"version": "7",
+			"when": 1753017025097,
+			"tag": "0004_yielding_golden_guardian",
+			"breakpoints": true
+		},
+		{
+			"idx": 5,
+			"version": "7",
+			"when": 1753258216147,
+			"tag": "0005_cuddly_frightful_four",
+			"breakpoints": true
+		}
+	]
 }

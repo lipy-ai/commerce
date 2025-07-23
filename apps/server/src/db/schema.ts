@@ -11,7 +11,6 @@ import {
 	jsonb,
 	numeric,
 	pgSchema,
-	primaryKey,
 	smallint,
 	text,
 	timestamp,
@@ -21,7 +20,8 @@ import {
 import type { z } from "zod";
 
 export const ORDER_STATUS = [
-	"ordered",
+	"created",
+	"awaiting_customer_confirmation",
 	"accepted",
 	"packed",
 	"out_for_delivery",
@@ -30,6 +30,7 @@ export const ORDER_STATUS = [
 	"refunded",
 	"replaced",
 	"cancelled",
+	"completed",
 ] as const;
 
 export const PRODUCT_TYPE = [
@@ -188,7 +189,7 @@ export const storeMember = schema.table(
 	},
 	(table) => [
 		// 👇 This enforces uniqueness on the combination
-		unique("user_store_unique").on(table.userId, table.storeId),
+		unique("member_user_store_unique_key").on(table.userId, table.storeId),
 	],
 );
 
@@ -209,6 +210,7 @@ export const storeInvitation = schema.table("storeInvitation", {
 export const customer = schema.table(
 	"customer",
 	{
+		id: uuid("id").primaryKey(),
 		storeId: uuid("storeId").references(() => store.id, {
 			onDelete: "cascade",
 		}),
@@ -216,7 +218,7 @@ export const customer = schema.table(
 			onDelete: "set null",
 		}),
 	},
-	(t) => [primaryKey({ columns: [t.storeId, t.userId] })],
+	(t) => [unique("customer_user_store_unique_key").on(t.userId, t.storeId)],
 );
 
 export const upload = schema.table("upload", {
@@ -288,13 +290,13 @@ export const storeInventory = schema.table(
 		variantId: uuid("productVariant").references(() => productVariant.id, {
 			onDelete: "cascade",
 		}),
+		active: boolean("active").default(true),
 		storeId: uuid("storeId").references(() => store.id, {
 			onDelete: "cascade",
 		}),
 		price: numeric("price", { precision: 10, scale: 2, mode: "number" }),
 		stock: integer("stock").default(0),
 		sku: text("sku"),
-		active: boolean("active").default(true),
 	},
 	(table) => [
 		// 👇 This enforces uniqueness on the combination
@@ -318,17 +320,15 @@ export const orders = schema.table("orders", {
 	id: text().unique().notNull(),
 	items: jsonb("items").array().$type<
 		Array<{
-			id: string;
+			inventoryId?: string | null;
+			variantId?: string | null;
+			productId?: string | null;
 			title: string;
-			quantity: number;
 			thumbnail: string;
-			variant: {
-				id: string;
-				inventoryId: string;
-				price: number;
-				maxPrice: number;
-				unit: string;
-			};
+			unit: string;
+			qty: number;
+			price: number;
+			maxPrice: number;
 		}>
 	>(),
 	currency: text("currency", { enum: ["inr"] }).notNull(),
@@ -352,6 +352,7 @@ export const orders = schema.table("orders", {
 		.references(() => store.id, { onDelete: "cascade" }),
 
 	delivery: jsonb("delivery").$type<{
+		otp?: string;
 		trackingId?: string;
 		name?: string;
 		agentId?: string;
@@ -371,6 +372,17 @@ export const orders = schema.table("orders", {
 		store?: string | null;
 		attachments?: Array<string> | null;
 	}>(),
+	timeline: jsonb("timeline")
+		.array()
+		.$type<
+			Array<{
+				content: string;
+				userId: string;
+				createdAt: string;
+			}>
+		>()
+		.notNull()
+		.default([]),
 	paymentMethod: text("paymentMethod", { enum: ["cod", "upi", "card"] }),
 	orderedAt: timestamp("orderedAt", { withTimezone: true }).notNull(),
 	cancelledAt: timestamp("cancelledAt", { withTimezone: true }),

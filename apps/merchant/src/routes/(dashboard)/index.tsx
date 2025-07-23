@@ -1,3 +1,4 @@
+import { merchantDashboardApi } from "@lipy/lib/api";
 import { useStore } from "@lipy/lib/hooks/use-store";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
@@ -18,10 +19,9 @@ import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
+import { format } from "date-fns";
 import { Check, Clock10, StoreIcon } from "lucide-react";
 import { Shirt, ShoppingCart, SquareUser, Store } from "lucide-react";
-
-import { merchantDashboardApi } from "@lipy/lib/api";
 
 import { OrderChart } from "@lipy/web-ui/components/charts/orderChart";
 import { Label } from "@lipy/web-ui/components/ui/label";
@@ -205,11 +205,13 @@ function Orders({
                       className={cn(
                         "border size-12 text-[7px] break-words text-center text-balance flex flex-col items-center justify-center",
 
-                        v.status === "ordered" &&
+                        v.status === "created" &&
                           "text-primary-foreground bg-red-800",
                         v.status === "accepted" &&
                           "text-primary-foreground bg-blue-700",
-                        v.status === "packed" && "text-foreground bg-amber-400",
+                        ["packed", "awaiting_customer_confirmation"].includes(
+                          v.status || ""
+                        ) && "text-foreground bg-amber-400",
                         v.status === "out_for_delivery" &&
                           "text-primary-foreground bg-green-700"
                       )}
@@ -219,9 +221,15 @@ function Orders({
                       </span>
                     </div>
                     <div className="flex-1">
-                      <p className="text-xs font-light">{v.id}</p>
-                      <p className="font-medium truncate ">
-                        {v.customerDetails?.name}
+                      <p className="font-medium truncate ">{v.id}</p>
+                      <p className="font-light truncate">
+                        <span className="text-sm">
+                          {" "}
+                          {v.customerDetails?.name}
+                        </span>{" "}
+                        <span className="text-xs text-muted-foreground">
+                          on {format(v.orderedAt, "Pp")}
+                        </span>
                       </p>
                     </div>
                   </div>

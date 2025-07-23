@@ -1,10 +1,11 @@
+import { OrderEdit } from "@/components/order.edit";
 import { env } from "@envClient";
-import { merchantOrderApi } from "@lipy/lib/api";
+import { type merchantOrderApi, posOrderApi } from "@lipy/lib/api";
 import { formatAddress } from "@lipy/lib/utils/address";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import {
-  apiQueryOptions,
-  useAPIMutation,
+  // apiQueryOptions,
+  // useAPIMutation,
   useAPIQuery,
 } from "@lipy/lib/utils/useQueryClient";
 import { GoogleMapsIcon } from "@lipy/web-ui/components/icons";
@@ -16,29 +17,41 @@ import {
 } from "@lipy/web-ui/components/ui/avatar";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Card, CardContent } from "@lipy/web-ui/components/ui/card";
+
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@lipy/web-ui/components/ui/collapsible";
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogTrigger,
+// } from "@lipy/web-ui/components/ui/dialog";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@lipy/web-ui/components/ui/hover-card";
 import { Label } from "@lipy/web-ui/components/ui/label";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@lipy/web-ui/components/ui/select";
+// import { Separator } from "@lipy/web-ui/components/ui/separator";
+// import { useQueryClient } from "@tanstack/react-query";
+
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@lipy/web-ui/components/ui/select";
-import { Separator } from "@lipy/web-ui/components/ui/separator";
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@lipy/web-ui/components/ui/sheet";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import ZoomImg from "@lipy/web-ui/components/veiwers/zoomableImage";
 import { cn } from "@lipy/web-ui/lib/utils";
-import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
 import type { InferRequestType } from "hono";
@@ -50,52 +63,64 @@ export const Route = createFileRoute("/(dashboard)/order/$id/")({
 type PatchTypes = InferRequestType<(typeof merchantOrderApi)[":id"]["$patch"]>;
 function RouteComponent() {
   const { id }: any = Route.useParams();
-  const queryClient = useQueryClient();
-  const q = apiQueryOptions(merchantOrderApi[":id"], "$get", {
+  // const queryClient = useQueryClient();
+  // const q = apiQueryOptions(posOrderApi[":id"], "$get", {
+  //   param: { id },
+  // });
+
+  const { data: initial, isLoading } = useAPIQuery(posOrderApi[":id"], "$get", {
     param: { id },
   });
+  const data = initial?.data;
 
-  const { data, isLoading } = useAPIQuery(merchantOrderApi[":id"], "$get", {
-    param: { id },
-  });
-  const mutation = useAPIMutation(merchantOrderApi[":id"], "$patch", {
-    onMutate: ({ json }) => {
-      queryClient.setQueryData(q.queryKey, (p: typeof data) => ({
-        ...p,
-        status: json.status,
-      }));
-    },
-    onError() {
-      queryClient.invalidateQueries({ queryKey: q.queryKey });
-    },
-  });
+  // const mutation = useAPIMutation(posOrderApi[":id"], "$patch", {
+  //   onMutate: ({ json }) => {
+  //     queryClient.setQueryData(q.queryKey, (p: typeof data) => ({
+  //       ...p,
+  //       status: json.status,
+  //     }));
+  //   },
+  //   onError() {
+  //     queryClient.invalidateQueries({ queryKey: q.queryKey });
+  //   },
+  // });
 
-  const handlePrint = () => {
-    const printContents = document.getElementById("invoice-content")?.innerHTML;
-    if (!printContents) return;
+  // const handlePrint = () => {
+  //   const printContents = document.getElementById("invoice-content")?.innerHTML;
+  //   if (!printContents) return;
 
-    const originalContents = document.body.innerHTML;
-    document.body.innerHTML = printContents;
-    window.print();
-    document.body.innerHTML = originalContents;
-    window.location.reload();
-  };
+  //   const originalContents = document.body.innerHTML;
+  //   document.body.innerHTML = printContents;
+  //   window.print();
+  //   document.body.innerHTML = originalContents;
+  //   window.location.reload();
+  // };
 
-  const status = [
-    "ordered",
+  const baseStatus = [
+    "created",
     "accepted",
     "packed",
     "out_for_delivery",
     "delivered",
-    "return_requested",
-    "refunded",
-    "replaced",
-    "cancelled",
+    "completed",
   ] satisfies PatchTypes["json"]["status"][];
 
-  const handlePatch = async (status: PatchTypes["json"]["status"]) => {
-    await mutation.mutateAsync({ param: { id }, json: { status } });
-  };
+  // const status = [
+  //   ...baseStatus,
+  //   "return_requested",
+  //   "refunded",
+  //   "replaced",
+  //   "cancelled",
+  //   "awaiting_customer_confirmation",
+  // ] satisfies PatchTypes["json"]["status"][];
+
+  // const handlePatch = async (status: PatchTypes["json"]["status"]) => {
+  //   await mutation.mutateAsync({ param: { id }, json: { status } });
+  // };
+
+  // const idx = status.indexOf(data?.status || status[0]);
+  // const currentStatuses = status.filter((_, i) => i <= idx);
+  // const remainingStatuses = status.filter((_, i) => i > idx);
 
   return (
     <>
@@ -104,8 +129,9 @@ function RouteComponent() {
       ) : (
         <>
           <div className="min-h-screen flex flex-col">
-            <DashboardHeader title="Edit Order" />{" "}
+            <DashboardHeader title="Edit Order" />
             {/* Hidden iframe for printing */}
+
             <div
               className="lg:grid lg:grid-cols-12 flex-1 md:p-4 gap-8 print:p-0"
               id={"invoice-content"}
@@ -121,7 +147,7 @@ function RouteComponent() {
                       </div>
                       <div className="flex flex-col md:flex-row gap-2">
                         <p>
-                          Order Date:{" "}
+                          Order Date:
                           <span className="font-medium">
                             {data?.orderedAt && format(data?.orderedAt, "PPpp")}
                           </span>
@@ -132,61 +158,60 @@ function RouteComponent() {
                         </p>
                       </div>
                     </div>
-                    <div className="flex flex-col md:flex-row gap-4 print:hidden">
-                      <Button variant={"outline"} onClick={() => handlePrint()}>
+                    <div className="flex flex-col flex-wrap md:flex-row gap-4 print:hidden">
+                      {/* <Button variant={"outline"} onClick={() => handlePrint()}>
                         Invoice
-                      </Button>
-                      <Select
-                        defaultValue={data?.status || status[0]}
-                        onValueChange={(v) => handlePatch(v as any)}
-                        disabled={mutation.isPending}
-                      >
-                        <SelectTrigger className="capitalize pl-0">
-                          <span className={buttonVariants()}>
-                            Change Status
-                          </span>
-                          <Separator orientation="vertical" />
-                          <SelectValue placeholder="Order Status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {status.map((s) => (
-                            <SelectItem
-                              key={s}
-                              value={s}
-                              className={cn(
-                                "capitalize",
-                                status.indexOf(s) <=
-                                  status.indexOf(data?.status as any) &&
-                                  "pointer-events-none bg-muted/30 text-muted-foreground my-1"
-                              )}
-                            >
-                              {s.replaceAll("_", " ")}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      </Button> */}
+
+                      <Sheet>
+                        <SheetTrigger>
+                          <Button variant={"outline"}>Edit Order</Button>
+                        </SheetTrigger>
+                        <SheetContent className="sm:max-w-[1200px] w-full">
+                          {data && <OrderEdit data={data} />}
+                        </SheetContent>
+                      </Sheet>
                     </div>
+                  </div>
+                  <div className="flex overflow-x-auto w-full">
+                    {baseStatus.map((m) => (
+                      <div
+                        key={m}
+                        id={m}
+                        className="flex flex-col justify-between capitalize bg-primary/10 border-r border-primary-foreground w-full"
+                      >
+                        <div className="px-4 py-4 flex items-center text-center justify-center flex-col">
+                          <Label className="block text-xs sm:text-sm min-w-24">
+                            {m.replaceAll("_", " ")}
+                          </Label>
+                          <span className="text-xs sm:text-sm">-</span>
+                        </div>
+                        <span className="h-1 sm:h-2 w-full bg-primary" />
+                      </div>
+                    ))}
                   </div>
                   {data?.customerInstructions?.store && (
                     <div className="p-4 space-y-4">
                       <Label>Store Instruction</Label>
-
                       <p>{data?.customerInstructions?.store || "-"}</p>
                     </div>
                   )}
-                  <div className="p-4 space-y-4">
-                    <Label>Customer Attachments</Label>
-
-                    <div>
-                      {data?.customerInstructions?.attachments?.map((a, i) => (
-                        <ZoomImg src={a} key={i} />
-                      ))}
-                    </div>
-                  </div>
+                  {data?.customerInstructions?.attachments &&
+                    data.customerInstructions.attachments.length > 0 && (
+                      <div className="p-4 space-y-4">
+                        <Label>Customer Attachments</Label>
+                        <div>
+                          {data?.customerInstructions?.attachments?.map(
+                            (a, i) => (
+                              <ZoomImg src={a} key={i} />
+                            )
+                          )}
+                        </div>
+                      </div>
+                    )}
                   {data?.customerInstructions?.store && (
                     <div className="p-4 space-y-4">
                       <Label>Delivery Instruction</Label>
-
                       <p>{data?.customerInstructions?.delivery || "-"}</p>
                     </div>
                   )}
@@ -205,15 +230,15 @@ function RouteComponent() {
                         <div className="flex-1">
                           <h2 className="font-semibold">{m.title}</h2>
                           <p className="text-sm text-muted-foreground">
-                            {m.variant.unit}
+                            {m.unit}
                           </p>
                         </div>
                         <div className="text-right">
                           <p className="font-medium">
-                            {formatAmount("inr", m.variant.price)}
+                            {formatAmount("inr", m.price)}
                           </p>
                           <p className="text-sm text-muted-foreground">
-                            Qty {m.quantity}
+                            Qty {m.qty}
                           </p>
                         </div>
                       </div>
@@ -319,7 +344,7 @@ function RouteComponent() {
                   </div>
                   {data?.customerDetails?.address?.lat &&
                     data?.customerDetails?.address?.lng && (
-                      <div className="space-y-4 p-4">
+                      <div className="space-y-4 p-4 print:hidden">
                         <a
                           href={`https://www.google.com/maps/dir/?api=1&destination=${data.customerDetails?.address.lat},${data.customerDetails?.address.lng}`}
                           rel="noopener noreferrer"

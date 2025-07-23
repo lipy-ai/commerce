@@ -108,7 +108,7 @@ const schema = s.schemaName;
 // 	},
 // }) as BetterAuthPlugin;
 
-export const auth = betterAuth({
+export const auth: any = betterAuth({
 	disabledPaths: ["/error"],
 	database: {
 		db,

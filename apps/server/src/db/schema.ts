@@ -11,6 +11,7 @@ import {
 	jsonb,
 	numeric,
 	pgSchema,
+	primaryKey,
 	smallint,
 	text,
 	timestamp,
@@ -159,6 +160,19 @@ export const store = schema.table("store", {
 	phone: text("phone"),
 	type: text("type"),
 	active: boolean("active").default(false),
+	policies: jsonb("policies").array().$type<{
+		operationalHours: {
+			start: number; // 24 hrs format
+			end: number; // 24 hrs format
+		};
+		deliveryDistance: number;
+		taxes: Array<{
+			id: string;
+			name: string;
+			value: number;
+			calculationType: "percent" | "sum";
+		}>;
+	}>(),
 });
 
 export const storePayments = schema.table("storePayments", {
@@ -210,7 +224,6 @@ export const storeInvitation = schema.table("storeInvitation", {
 export const customer = schema.table(
 	"customer",
 	{
-		id: uuid("id").primaryKey(),
 		storeId: uuid("storeId").references(() => store.id, {
 			onDelete: "cascade",
 		}),
@@ -218,7 +231,12 @@ export const customer = schema.table(
 			onDelete: "set null",
 		}),
 	},
-	(t) => [unique("customer_user_store_unique_key").on(t.userId, t.storeId)],
+	(t) => [
+		primaryKey({
+			name: "customer_store_user_p_key",
+			columns: [t.userId, t.storeId],
+		}),
+	],
 );
 
 export const upload = schema.table("upload", {
@@ -359,7 +377,7 @@ export const orders = schema.table("orders", {
 		image?: string;
 		phone?: string;
 	}>(),
-	customerId: text("customerId"),
+	userId: uuid("userId"),
 	customerDetails: jsonb("customerDetails").$type<{
 		name: string;
 		phone: string;

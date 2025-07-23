@@ -37,7 +37,7 @@ export const merchantDashboardRoute = new Hono<ServerContext>().get(
                     ELSE 5
                 END`,
 			)
-			.orderBy("orderedAt")
+			.orderBy("orderedAt", "desc")
 			.selectAll()
 			.execute();
 

@@ -14,10 +14,11 @@ import type { merchantInventoryRoute } from "@lipy/server/routes/merchantRoutes/
 import type { merchantOrderRoute } from "@lipy/server/routes/merchantRoutes/order";
 import type { merchantProductRoute } from "@lipy/server/routes/merchantRoutes/product";
 import type { merchantStoreRoute } from "@lipy/server/routes/merchantRoutes/store";
+import type { posOrderRoute } from "@lipy/server/routes/posRoutes/order";
+import type { posProductRoute } from "@lipy/server/routes/posRoutes/product";
 import type { productRoute } from "@lipy/server/routes/publicRoutes/product";
 import type { shopRoute } from "@lipy/server/routes/publicRoutes/shop";
 import { type ClientRequestOptions, hc } from "hono/client";
-
 const opts: ClientRequestOptions = {
   init: {
     credentials: "include",
@@ -78,6 +79,18 @@ export const merchantEventsApi = hc<typeof eventsRoute>(
 );
 export const merchantDashboardApi = hc<typeof merchantDashboardRoute>(
   `${basepath}/merchant/dashboard`,
+  opts
+);
+
+// POS
+
+export const posProductApi = hc<typeof posProductRoute>(
+  `${basepath}/pos/product`,
+  opts
+);
+
+export const posOrderApi = hc<typeof posOrderRoute>(
+  `${basepath}/pos/order`,
   opts
 );
 

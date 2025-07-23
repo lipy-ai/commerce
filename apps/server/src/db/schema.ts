@@ -11,7 +11,6 @@ import {
 	jsonb,
 	numeric,
 	pgSchema,
-	primaryKey,
 	smallint,
 	text,
 	timestamp,
@@ -21,7 +20,8 @@ import {
 import type { z } from "zod";
 
 export const ORDER_STATUS = [
-	"ordered",
+	"created",
+	"awaiting_customer_confirmation",
 	"accepted",
 	"packed",
 	"out_for_delivery",
@@ -30,6 +30,7 @@ export const ORDER_STATUS = [
 	"refunded",
 	"replaced",
 	"cancelled",
+	"completed",
 ] as const;
 
 export const PRODUCT_TYPE = [
@@ -63,8 +64,8 @@ export const user = schema.table("user", {
 	phoneNumber: text("phoneNumber"),
 	phoneNumberVerified: boolean("phoneNumberVerified"),
 	image: text("image"),
-	createdAt: timestamp("createdAt",{withTimezone:true}).notNull(),
-	updatedAt: timestamp("updatedAt",{withTimezone:true}).notNull(),
+	createdAt: timestamp("createdAt", { withTimezone: true }).notNull(),
+	updatedAt: timestamp("updatedAt", { withTimezone: true }).notNull(),
 	country: text("country"),
 	onboarded: boolean("onboarded").notNull().default(false),
 	address: uuid("address").references((): any => user?.id, {
@@ -112,21 +113,25 @@ export const account = schema.table("authAccount", {
 	accessToken: text("accessToken"),
 	refreshToken: text("refreshToken"),
 	idToken: text("idToken"),
-	accessTokenExpiresAt: timestamp("accessTokenExpiresAt",{withTimezone:true}),
-	refreshTokenExpiresAt: timestamp("refreshTokenExpiresAt",{withTimezone:true}),
+	accessTokenExpiresAt: timestamp("accessTokenExpiresAt", {
+		withTimezone: true,
+	}),
+	refreshTokenExpiresAt: timestamp("refreshTokenExpiresAt", {
+		withTimezone: true,
+	}),
 	scope: text("scope"),
 	password: text("password"),
-	createdAt: timestamp("createdAt",{withTimezone:true}).notNull(),
-	updatedAt: timestamp("updatedAt",{withTimezone:true}).notNull(),
+	createdAt: timestamp("createdAt", { withTimezone: true }).notNull(),
+	updatedAt: timestamp("updatedAt", { withTimezone: true }).notNull(),
 });
 
 export const verification = schema.table("authVerification", {
 	id: uuid("id").primaryKey(),
 	identifier: text("identifier").notNull(),
 	value: text("value").notNull(),
-	expiresAt: timestamp("expiresAt",{withTimezone:true}).notNull(),
-	createdAt: timestamp("createdAt",{withTimezone:true}),
-	updatedAt: timestamp("updatedAt",{withTimezone:true}),
+	expiresAt: timestamp("expiresAt", { withTimezone: true }).notNull(),
+	createdAt: timestamp("createdAt", { withTimezone: true }),
+	updatedAt: timestamp("updatedAt", { withTimezone: true }),
 });
 
 export const session = schema.table("authSession", {
@@ -136,9 +141,9 @@ export const session = schema.table("authSession", {
 		.references(() => user.id, { onDelete: "cascade" }),
 	sessionToken: text("sessionToken").notNull().unique(),
 	activeStoreId: text("activeStoreId"),
-	expires: timestamp("expires",{withTimezone:true}).notNull(),
-	createdAt: timestamp("createdAt",{withTimezone:true}).notNull(),
-	updatedAt: timestamp("updatedAt",{withTimezone:true}).notNull(),
+	expires: timestamp("expires", { withTimezone: true }).notNull(),
+	createdAt: timestamp("createdAt", { withTimezone: true }).notNull(),
+	updatedAt: timestamp("updatedAt", { withTimezone: true }).notNull(),
 });
 
 export const store = schema.table("store", {
@@ -147,7 +152,7 @@ export const store = schema.table("store", {
 	handle: text("handle").unique(),
 	image: text("image"),
 	description: text("description"),
-	createdAt: timestamp("createdAt",{withTimezone:true}).notNull(),
+	createdAt: timestamp("createdAt", { withTimezone: true }).notNull(),
 	metadata: text("metadata"),
 	address: jsonb("address").$type<z.infer<typeof coreAddressSchema>>(),
 	email: text("email"),
@@ -180,11 +185,11 @@ export const storeMember = schema.table(
 		role: text("role", {
 			enum: ["owner", "admin", "delivery", "staff"],
 		}).notNull(),
-		createdAt: timestamp("createdAt",{withTimezone:true}).notNull(),
+		createdAt: timestamp("createdAt", { withTimezone: true }).notNull(),
 	},
 	(table) => [
 		// 👇 This enforces uniqueness on the combination
-		unique("user_store_unique").on(table.userId, table.storeId),
+		unique("member_user_store_unique_key").on(table.userId, table.storeId),
 	],
 );
 
@@ -196,7 +201,7 @@ export const storeInvitation = schema.table("storeInvitation", {
 	email: text("email").notNull(),
 	role: text("role"),
 	status: text("status").notNull(),
-	expiresAt: timestamp("expiresAt",{withTimezone:true}).notNull(),
+	expiresAt: timestamp("expiresAt", { withTimezone: true }).notNull(),
 	inviterId: uuid("inviterId")
 		.notNull()
 		.references(() => user.id, { onDelete: "cascade" }),
@@ -205,6 +210,7 @@ export const storeInvitation = schema.table("storeInvitation", {
 export const customer = schema.table(
 	"customer",
 	{
+		id: uuid("id").primaryKey(),
 		storeId: uuid("storeId").references(() => store.id, {
 			onDelete: "cascade",
 		}),
@@ -212,7 +218,7 @@ export const customer = schema.table(
 			onDelete: "set null",
 		}),
 	},
-	(t) => [primaryKey({ columns: [t.storeId, t.userId] })],
+	(t) => [unique("customer_user_store_unique_key").on(t.userId, t.storeId)],
 );
 
 export const upload = schema.table("upload", {
@@ -222,8 +228,8 @@ export const upload = schema.table("upload", {
 	name: text("name").notNull(),
 	path: text("path"),
 	url: text("url"),
-	deletedAt: timestamp("deletedAt",{withTimezone:true}),
-	createdAt: timestamp("createdAt",{withTimezone:true}).notNull(),
+	deletedAt: timestamp("deletedAt", { withTimezone: true }),
+	createdAt: timestamp("createdAt", { withTimezone: true }).notNull(),
 });
 
 export const category = schema.table("category", {
@@ -284,6 +290,7 @@ export const storeInventory = schema.table(
 		variantId: uuid("productVariant").references(() => productVariant.id, {
 			onDelete: "cascade",
 		}),
+		active: boolean("active").default(true),
 		storeId: uuid("storeId").references(() => store.id, {
 			onDelete: "cascade",
 		}),
@@ -313,17 +320,15 @@ export const orders = schema.table("orders", {
 	id: text().unique().notNull(),
 	items: jsonb("items").array().$type<
 		Array<{
-			id: string;
+			inventoryId?: string | null;
+			variantId?: string | null;
+			productId?: string | null;
 			title: string;
-			quantity: number;
 			thumbnail: string;
-			variant: {
-				id: string;
-				inventoryId: string;
-				price: number;
-				maxPrice: number;
-				unit: string;
-			};
+			unit: string;
+			qty: number;
+			price: number;
+			maxPrice: number;
 		}>
 	>(),
 	currency: text("currency", { enum: ["inr"] }).notNull(),
@@ -347,11 +352,12 @@ export const orders = schema.table("orders", {
 		.references(() => store.id, { onDelete: "cascade" }),
 
 	delivery: jsonb("delivery").$type<{
+		otp?: string;
 		trackingId?: string;
 		name?: string;
 		agentId?: string;
-		image?:string;
-		phone?:string
+		image?: string;
+		phone?: string;
 	}>(),
 	customerId: text("customerId"),
 	customerDetails: jsonb("customerDetails").$type<{
@@ -366,12 +372,25 @@ export const orders = schema.table("orders", {
 		store?: string | null;
 		attachments?: Array<string> | null;
 	}>(),
+	timeline: jsonb("timeline")
+		.array()
+		.$type<
+			Array<{
+				content: string;
+				userId: string;
+				createdAt: string;
+			}>
+		>()
+		.notNull()
+		.default([]),
 	paymentMethod: text("paymentMethod", { enum: ["cod", "upi", "card"] }),
-	orderedAt: timestamp("orderedAt", {withTimezone:true}).notNull(),
-	cancelledAt: timestamp("cancelledAt",{withTimezone:true}),
-	refundedAt: timestamp("refundedAt",{withTimezone:true}),
-	deliveredAt: timestamp("deliveredAt",{withTimezone:true}),
-	deliveryAgentAssignedAt: timestamp("deliveryAgentAssignedAt",{withTimezone:true}),
+	orderedAt: timestamp("orderedAt", { withTimezone: true }).notNull(),
+	cancelledAt: timestamp("cancelledAt", { withTimezone: true }),
+	refundedAt: timestamp("refundedAt", { withTimezone: true }),
+	deliveredAt: timestamp("deliveredAt", { withTimezone: true }),
+	deliveryAgentAssignedAt: timestamp("deliveryAgentAssignedAt", {
+		withTimezone: true,
+	}),
 	status: text("status", {
 		enum: ORDER_STATUS,
 	}),

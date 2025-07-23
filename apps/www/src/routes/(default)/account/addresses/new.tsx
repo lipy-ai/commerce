@@ -85,14 +85,16 @@ function RouteComponent() {
         title={type === "deliveryAddress" ? "Delivery Address" : "New Address"}
       />
       <div className="relative">
-        <Button
-          className="absolute top-4   text-muted-foreground  z-10 left-4 right-4 m-0 justify-start bg-card"
-          variant={"outline"}
-          onClick={() => setAutocomplpeteDrawer(true)}
-        >
-          <Search />
-          Search your location
-        </Button>
+        <div className="p-2 lg:p-4">
+          <Button
+            className="w-full justify-start text-muted-foreground bg-tertiary/50 border"
+            variant={"tertiary"}
+            onClick={() => setAutocomplpeteDrawer(true)}
+          >
+            <Search />
+            Search your location
+          </Button>
+        </div>
 
         <GoogleMap
           zoom={15}
@@ -121,13 +123,28 @@ function RouteComponent() {
             }}
           />
         </GoogleMap>
+        <div className="absolute bottom-16 lg:bottom-24 left-1/2 transform -translate-x-1/2 z-10">
+          <Button
+            className="text-primary border-primary font-semibold shadow-md hover:bg-primary/10"
+            variant="outline"
+            onClick={() => {
+              navigator.geolocation.getCurrentPosition((position) => {
+                const { latitude, longitude } = position.coords;
+                setMapCenter({ lat: latitude, lng: longitude });
+              });
+            }}
+          >
+            <LocateFixed className="text-primary mr-2" />
+            Use current location
+          </Button>
+        </div>
 
-        <div className="relative border-t  bg-background  p-4  z-20  lg:absolute bottom-0 right-0  w-full ">
+        <div className="border-t  bg-background  p-4 shadow-md z-20 fixed lg:absolute bottom-0 right-0  w-full ">
           <div
             className={cn(
               "flex items-center gap-4 ",
               isMobile
-                ? "flex-col w-full  justify-between"
+                ? "flex-col w-full justify-start"
                 : "flex-row justify-between"
             )}
           >
@@ -149,48 +166,38 @@ function RouteComponent() {
             </div>
 
             {type === "saveAddress" && (
-              <div className="lg:w-fit   fixed bottom-4 right-4 left-4">
+              <div className="lg:w-fit  w-full">
                 <Button
-                  className="font-semibold w-full"
+                  className="font-semibold px-6 w-full"
                   onClick={() => {
                     setIsConfirm(true);
                   }}
                 >
                   Confirm this address
-                  <StepForward className="ml-2 h-4 w-4 fill-card" />
+                  <StepForward className="ml-2 h-4 w-4" />
                 </Button>
               </div>
             )}
             {type === "deliveryAddress" && (
-              <div className="lg:w-fit   fixed bottom-4 right-4 left-4">
-                <Button
-                  className="font-semibold w-full lg:w-fit"
-                  onClick={() => {
-                    setDeliveryLocation(fullAddress);
+              <Button
+                className="font-semibold w-full lg:w-fit"
+                onClick={() => {
+                  setDeliveryLocation(fullAddress);
 
-                    navigate({ to: "/" });
-                  }}
-                >
-                  Confirm & Proceed
-                </Button>
-              </div>
+                  navigate({ to: "/" });
+                }}
+              >
+                Confirm & Proceed
+              </Button>
             )}
-          </div>
-
-          <div className="absolute -top-12 lg:bottom-24 left-1/2 transform -translate-x-1/2 z-10">
-            <Button
-              className="text-primary border-primary font-semibold shadow-md "
-              variant="outline"
-              onClick={() => {
-                navigator.geolocation.getCurrentPosition((position) => {
-                  const { latitude, longitude } = position.coords;
-                  setMapCenter({ lat: latitude, lng: longitude });
-                });
-              }}
-            >
-              <LocateFixed className="stroke-2" />
-              Use current location
-            </Button>
+            {isConfirm && (
+              <DetailedAddress
+                fullAddress={fullAddress}
+                label="Add"
+                open={isConfirm}
+                onOpenChange={setIsConfirm}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -201,14 +208,6 @@ function RouteComponent() {
           onOpenChange={setAutocomplpeteDrawer}
           autocompleteOnly
           setMapCenter={setMapCenter}
-        />
-      )}
-      {isConfirm && (
-        <DetailedAddress
-          fullAddress={fullAddress}
-          label="Add"
-          open={isConfirm}
-          onOpenChange={setIsConfirm}
         />
       )}
     </div>

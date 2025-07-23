@@ -22,7 +22,8 @@ const route = new Hono<ServerContext>()
 			.rightJoin("product as p", "p.id", "pv.productId")
 			.rightJoin("category as c", "p.category", "c.id")
 			.groupBy(["p.id", "c.title", "c.id", "c.slug"]) // <-- fix here
-			.orderBy("c.id");
+			.orderBy("c.id")
+			.where("si.active", "=", true);
 
 		if (q.categorySlug) {
 			query = query.where("c.slug", "=", q.categorySlug);
@@ -83,6 +84,7 @@ const route = new Hono<ServerContext>()
 				.rightJoin("product as p", "p.id", "pv.productId")
 				.groupBy(["p.id", "si.storeId"])
 				.where("p.id", "=", q.id)
+				.where("si.active", "=", true)
 				.select((eb) => [
 					"p.id as id",
 					"p.title as title",

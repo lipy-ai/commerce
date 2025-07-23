@@ -54,11 +54,6 @@ function RouteComponent() {
     }
   );
 
-  const totalPrice = order?.itemTotalAmount ?? 0;
-  const deliveryCharges = 0;
-  const totalTaxAmount = order?.totalTaxAmount ?? 0;
-  const totalPayableAmount = totalPrice + deliveryCharges + totalTaxAmount;
-
   const infos = [
     {
       title: "Receiver's Info",
@@ -100,7 +95,7 @@ function RouteComponent() {
     },
     {
       title: "Delivery Charges",
-      value: formatAmount("inr", deliveryCharges),
+      value: formatAmount("inr", 0),
     },
     {
       title: "Tax",
@@ -149,7 +144,7 @@ function RouteComponent() {
                 {order.items && order.items.length > 0 && (
                   <p className="text-muted-foreground text-xs">
                     {order?.items?.length || 0} item(s) |{" "}
-                    {formatAmount(order.currency, totalPrice || 0)}{" "}
+                    {formatAmount(order.currency, order?.totalAmount || 0)}{" "}
                   </p>
                 )}
               </div>
@@ -348,7 +343,7 @@ function RouteComponent() {
                   <CardFooter className="flex justify-between items-center border-t border-dashed">
                     <p className="font-semibold text-base">Total Payable</p>
                     <p className="font-semibold text-xl">
-                      {formatAmount(order?.currency, totalPayableAmount)}
+                      {formatAmount(order?.currency, order?.totalAmount || 0)}
                     </p>
                   </CardFooter>
                 </Card>

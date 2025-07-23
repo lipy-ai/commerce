@@ -44,7 +44,7 @@ const getCart = async (userId: string) => {
 		.execute();
 };
 
-const generateOrders = ({
+const generateOrders = async ({
 	stores,
 	cart,
 	address,
@@ -56,10 +56,27 @@ const generateOrders = ({
 } & Pick<
 	z.infer<typeof orderSchema>,
 	"stores" | "address" | "deliveryInstruction"
->): DBTypes["orders"][] => {
+>): Promise<DBTypes["orders"][]> => {
 	const orders: DBTypes["orders"][] = [];
 
 	for (const s of stores) {
+		let customer = await db
+			.selectFrom("customer")
+			.where("storeId", "=", s.id)
+			.selectAll()
+			.executeTakeFirst();
+		console.log(customer);
+		if (!customer) {
+			customer = await db
+				.insertInto("customer")
+				.values({ id: crypto.randomUUID(), userId: user?.id, storeId: s.id })
+				.returningAll()
+				.executeTakeFirstOrThrow()
+				.catch(() => {
+					throw new HTTPError(400, { message: "Failed to create customer" });
+				});
+		}
+
 		const items: NonNullable<DBTypes["orders"]["items"]> = [];
 
 		const taxes: DBTypes["orders"]["taxes"] = [];
@@ -68,17 +85,15 @@ const generateOrders = ({
 		for (const c of cart) {
 			if (c.inventory.storeId === s.id) {
 				items.push({
-					id: c.product.id!,
+					inventoryId: c.inventory.id,
+					variantId: c.variant.id,
+					productId: c.product.id!,
 					title: c.product.title!,
-					quantity: c.cart.quantity!,
 					thumbnail: c.variant.images?.[0] || c.product.thumbnail!,
-					variant: {
-						id: c.variant.id!,
-						inventoryId: c.inventory.id!,
-						maxPrice: c.variant.price || 0,
-						price: c.inventory.price || 0,
-						unit: c.variant.unit!,
-					},
+					maxPrice: c.variant.price || 0,
+					price: c.inventory.price || 0,
+					unit: c.variant.unit!,
+					qty: c.cart.quantity || 1,
 				} satisfies NonNullable<DBTypes["orders"]["items"]>[0]);
 			}
 		}
@@ -95,8 +110,8 @@ const generateOrders = ({
 		let totalDiscountAmount = 0;
 
 		for (const t of items) {
-			itemTotalAmount = t.quantity * t.variant.price + itemTotalAmount;
-			maxItemTotalAmount = t.quantity * t.variant.maxPrice + maxItemTotalAmount;
+			itemTotalAmount = t.qty * t.price + itemTotalAmount;
+			maxItemTotalAmount = t.qty * t.maxPrice + maxItemTotalAmount;
 		}
 		for (const t of taxes || []) {
 			totalTaxAmount = totalTaxAmount + t.amount;
@@ -113,13 +128,13 @@ const generateOrders = ({
 		orders.push({
 			id: idGenerate(),
 			pk: crypto.randomUUID(),
-			status: "ordered",
+			status: "created",
 			items,
 			taxes,
 			discounts,
 			currency: "inr",
 			storeId: s.id!,
-			customerId: user?.id!,
+			customerId: customer.id,
 			customerDetails: {
 				name: user?.name!,
 				phone: user?.phoneNumber!,
@@ -134,7 +149,7 @@ const generateOrders = ({
 			paymentMethod: "cod",
 			orderedAt: new Date(),
 			itemTotalAmount,
-			totalAmount: (itemTotalAmount + totalTaxAmount) - totalDiscountAmount,
+			totalAmount: itemTotalAmount + totalTaxAmount - totalDiscountAmount,
 			amountSaved: maxItemTotalAmount - itemTotalAmount,
 			totalTaxAmount,
 			totalDiscountAmount,
@@ -144,6 +159,13 @@ const generateOrders = ({
 			refundedAt: null,
 			deliveredAt: null,
 			deliveryAgentAssignedAt: null,
+			timeline: [
+				{
+					content: "Order was created!",
+					userId: user?.id!,
+					createdAt: new Date().toISOString(),
+				},
+			],
 		} satisfies NonNullable<DBTypes["orders"]>);
 	}
 
@@ -167,7 +189,7 @@ const route = new Hono<ServerContext>()
 				qb.where((eb) =>
 					eb.or([
 						eb("o.status", "in", [
-							"ordered",
+							"created",
 							"accepted",
 							"out_for_delivery",
 							"packed",
@@ -231,7 +253,7 @@ const route = new Hono<ServerContext>()
 
 		const cart = await getCart(session?.userId!);
 
-		const orders = generateOrders({ cart, user, ...values });
+		const orders = await generateOrders({ cart, user, ...values });
 
 		await db.insertInto("orders").values(orders).execute();
 
@@ -263,7 +285,7 @@ const route = new Hono<ServerContext>()
 		if (!values?.address)
 			throw new HTTPError(404, { message: "Address not found!" });
 
-		const orders = generateOrders({ cart: [], user, ...values });
+		const orders = await generateOrders({ cart: [], user, ...values });
 
 		await db.insertInto("orders").values(orders).execute();
 

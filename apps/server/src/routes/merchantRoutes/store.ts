@@ -1,5 +1,4 @@
 import { db } from "@/db";
-import { STORE_TYPE } from "@/db/schema";
 import env from "@/env";
 import { updateSession } from "@/helpers/session";
 import { getStore } from "@/helpers/store";
@@ -34,11 +33,10 @@ const route = new Hono<ServerContext>()
 		if (!session?.activeStoreId) {
 			throw new HTTPError(401, { code: ERR_CODES.NO_ACTIVE_STORE });
 		}
+
 		const result = await db
 			.selectFrom("store")
-
 			.where("id", "=", session?.activeStoreId!)
-
 			.selectAll()
 			.executeTakeFirst();
 

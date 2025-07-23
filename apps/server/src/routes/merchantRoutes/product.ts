@@ -91,6 +91,7 @@ const route = new Hono<ServerContext>()
 							stock: eb.fn.coalesce(eb.ref("si.stock")),
 							sku: eb.fn.coalesce(eb.ref("si.sku")),
 							storePrice: eb.fn.coalesce(eb.ref("si.price")),
+							active: eb.fn.coalesce(eb.ref("si.active")),
 						}),
 					)
 					.filterWhere("pv.id", "is not", null)
@@ -148,6 +149,7 @@ const route = new Hono<ServerContext>()
 								stock: eb.ref("si.stock"),
 								sku: eb.ref("si.sku"),
 								storePrice: eb.ref("si.price"),
+								active: eb.fn.coalesce(eb.ref("si.active")),
 							}),
 						)
 						.filterWhere("pv.id", "is not", null)

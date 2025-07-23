@@ -79,6 +79,7 @@ const route = new Hono<ServerContext>()
 				.rightJoin("productVariant as pv", "pv.id", "si.productVariant")
 				.rightJoin("product as p", "p.id", "pv.productId")
 				.groupBy("p.id")
+				.where("si.active", "=", true)
 				.select((eb) => [
 					"p.id",
 					"p.title",

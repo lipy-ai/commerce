@@ -245,6 +245,13 @@
 			transform: rotate(1turn);
 		}
 	}
+	input[type="number"]::-webkit-inner-spin-button,
+	input[type="number"]::-webkit-outer-spin-button {
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+		margin: 0;
+	}
 
 	/* Slide Left Transition */
 	html::active-view-transition-type(slide-left) {

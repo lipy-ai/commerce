@@ -6,18 +6,17 @@ import { SearchInput } from "@lipy/web-ui/components/forms/searchInput";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Pagination } from "@lipy/web-ui/components/pages/pagination";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
-import { Button } from "@lipy/web-ui/components/ui/button";
+import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@lipy/web-ui/components/ui/card";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import type { InferResponseType } from "hono/client";
 import { Edit, Plus, Trash } from "lucide-react";
 import { z } from "zod";
 import FormDeleteInventory from "./-form-delete-inventory";
 import FormEditInventory from "./-form-edit-inventory";
-import FormEdit from "./-form.edit";
 
 export const Route = createFileRoute("/(dashboard)/product/")({
   component: RouteComponent,
@@ -49,13 +48,17 @@ function RouteComponent() {
   return (
     <>
       <DashboardHeader title="Products">
-        <FormEdit type="create">
+        {/* <FormEdit type="create">
           <Button size={"sm"}>
             <Plus />
             New Product
-            {/* {isMobile ? "" : "New Product"} */}
+            {isMobile ? "" : "New Product"}
           </Button>
-        </FormEdit>
+        </FormEdit> */}
+        <Link className={cn(buttonVariants())} to="/product/add">
+          <Plus />
+          New Product
+        </Link>
       </DashboardHeader>
 
       <div className="lg:p-8 lg:space-y-8 flex flex-col flex-1">

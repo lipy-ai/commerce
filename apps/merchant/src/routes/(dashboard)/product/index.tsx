@@ -13,7 +13,7 @@ import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import type { InferResponseType } from "hono/client";
-import { Edit, EllipsisVertical, Plus, Trash } from "lucide-react";
+import { Edit, Plus, Trash } from "lucide-react";
 import { z } from "zod";
 import FormDeleteInventory from "./-form-delete-inventory";
 import FormEditInventory from "./-form-edit-inventory";
@@ -101,49 +101,41 @@ function RouteComponent() {
 
 function MobileView({ items }: { items: Response["items"] }) {
   return (
-    <div className="bg-background border divide-y">
+    <div className="bg-card border-y divide-y divide-dashed">
       {items?.map((m) =>
         m.variants?.map((v) => (
           <div
-            className={cn(
-              !v.active && "bg-muted-foreground/10 opacity-80",
-              "p-4"
-            )}
+            className={cn(v?.active ? "opacity-100" : "opacity-80", "p-4 py-6")}
             key={v.id}
           >
-            <div className="flex w-full gap-4 justify-between text-base">
-              <div className="flex  gap-2">
-                <div className="flex-shrink-0">
-                  <img
-                    src={m.thumbnail || ""}
-                    alt={m.title || ""}
-                    className="size-16 border border-border/50 rounded-lg bg-accent object-cover shadow-sm"
-                  />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-base leading-5 mb-1 line-clamp-2 break-words">
-                    {m.title}
-                  </h3>
-
-                  <p className="text-muted-foreground text-sm truncate mb-2">
-                    {m.category}
-                  </p>
-
-                  <Badge variant={"subtle"} className="mr-4">
-                    {v?.unit}
-                  </Badge>
-                  <Badge
-                    variant={v?.stock === 0 ? "destructive" : "success"}
-                    className="mr-4"
-                  >
-                    {v?.stock === -1
-                      ? "Unlimited"
-                      : v?.stock === 0
-                        ? "Out of"
-                        : "In"}{" "}
-                    stock
-                  </Badge>
-                  {!v?.active && <Badge variant="accent">Hidden</Badge>}
+            <div className="flex items-start gap-4 justify-between">
+              <div className="space-y-3">
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-1">
+                    <div
+                      className={cn(
+                        "size-1.5 rounded-full",
+                        v?.active ? "bg-green-700" : "bg-muted-foreground"
+                      )}
+                    />
+                    <span
+                      className={cn(
+                        "text-xs",
+                        v?.active ? "text-green-700" : "text-muted-foreground",
+                        "font-medium"
+                      )}
+                    >
+                      {v?.active ? "Active" : "Hidden"}
+                    </span>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-foreground text-base line-clamp-2 break-words">
+                      {m.title}
+                    </h3>
+                    <p className="text-muted-foreground text-xs truncate">
+                      {m.category}
+                    </p>
+                  </div>
 
                   <div className="flex items-baseline gap-2">
                     <span className="font-medium text-base text-foreground">
@@ -155,14 +147,50 @@ function MobileView({ items }: { items: Response["items"] }) {
                       </span>
                     )}
                   </div>
+                  <p className="text-muted-foreground">{v?.unit}</p>
+                </div>
+
+                <div className="flex gap-3 ">
+                  <FormEditInventory type="update" data={m} variantId={v.id!}>
+                    <Button size="icon-sm" className="rounded-full">
+                      <Edit />
+                    </Button>
+                  </FormEditInventory>
+
+                  <FormDeleteInventory inventory={v}>
+                    <Button
+                      size="icon-sm"
+                      variant={"outline"}
+                      className="rounded-full"
+                    >
+                      <Trash />
+                    </Button>
+                  </FormDeleteInventory>
                 </div>
               </div>
 
-              <FormEditInventory type="update" data={m} variantId={v.id!}>
-                <Button size="icon-xs" variant="ghost">
-                  <EllipsisVertical />
-                </Button>
-              </FormEditInventory>
+              <div className="w-28 flex-shrink-0 space-y-1.5 text-center">
+                <img
+                  src={m.thumbnail || ""}
+                  alt={m.title || ""}
+                  className={cn(
+                    v?.active ? "grayscale-0" : "grayscale-100",
+                    "size-full border border-border/50 rounded-xl bg-accent object-cover"
+                  )}
+                />
+                <p
+                  className={cn(
+                    v?.stock === 0 ? "text-destructive" : "text-ring"
+                  )}
+                >
+                  {v?.stock === -1
+                    ? "Unlimited"
+                    : v?.stock === 0
+                      ? "Out of"
+                      : "In"}{" "}
+                  stock
+                </p>
+              </div>
             </div>
           </div>
         ))

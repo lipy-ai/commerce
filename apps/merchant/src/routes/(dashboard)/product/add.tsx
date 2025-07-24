@@ -1,4 +1,5 @@
 import { merchantInventoryApi, merchantProductApi } from "@lipy/lib/api";
+import { formatAmount } from "@lipy/lib/utils/intl";
 import {
   apiQueryOptions,
   useAPIMutation,
@@ -18,6 +19,7 @@ import {
   FormInput,
   FormSwitch,
 } from "@lipy/web-ui/components/forms/elements";
+import { SearchInput } from "@lipy/web-ui/components/forms/searchInput";
 import {
   DashboardHeader,
   useLayout,
@@ -35,12 +37,13 @@ import {
   FormDescription,
   FormLabel,
 } from "@lipy/web-ui/components/ui/form";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import type { InferResponseType } from "hono";
 import { produce } from "immer";
-import { CheckCircle, XCircle } from "lucide-react";
+import { CheckCircle, PenLine, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -49,21 +52,25 @@ export const Route = createFileRoute("/(dashboard)/product/add")({
   validateSearch: z.object({
     page: z.coerce.number().int().min(1).catch(1),
     q: z.string().default(""),
+    category: z.string().optional(),
   }),
 });
 
 type Response = InferResponseType<typeof merchantProductApi.index.$get>;
 
 function RouteComponent() {
-  const { page, q } = Route.useSearch();
+  const { page, q, category } = Route.useSearch();
   const { addFooter, removeFooter } = useLayout();
   const queryClient = useQueryClient();
+  const navigate = Route.useNavigate();
+  const { isMobile } = useViewport();
 
   const query = {
     page: String(page),
     limit: String(3 * 3),
     q,
     showAll: "true",
+    category,
   };
   const { data, isLoading } = useAPIQuery(
     merchantProductApi.index,
@@ -124,7 +131,7 @@ function RouteComponent() {
   });
 
   const onSubmit = async (
-    m: Response["items"][0]["variants"][0] & { active: boolean }
+    m: Response["items"][0]["variants"][0] & { inStore: boolean }
   ) => {
     await mutation.mutateAsync({
       json: {
@@ -135,7 +142,7 @@ function RouteComponent() {
         stock: m.stock === null ? undefined : Number(m.stock),
         operation: m.inventoryId
           ? "update"
-          : m.inventoryId && !m.active
+          : m.inventoryId && !m.inStore
             ? "delete"
             : "create",
       },
@@ -184,7 +191,23 @@ function RouteComponent() {
 
       <div className="lg:p-8 lg:space-y-8">
         <div className="p-4 lg:p-0">
-          <SearchBar placeholder="Search products" defaultValue={q} />
+          <div className="p-4 lg:p-0 flex flex-col lg:flex-row items-center gap-2">
+            <SearchInput
+              type="categories"
+              value={category || ""}
+              onChange={(v) =>
+                navigate({ search: (p) => ({ ...p, category: v || "" }) })
+              }
+              placeholder={"Select Category"}
+              name={"Category"}
+              className="lg:w-fit"
+            />
+            <SearchBar
+              placeholder="Search products"
+              defaultValue={q}
+              className="flex-1 w-full lg:w-auto p-0"
+            />
+          </div>
         </div>
         {isLoading ? null : !data || data.items.length === 0 ? (
           <Card>
@@ -194,16 +217,221 @@ function RouteComponent() {
           </Card>
         ) : (
           <>
-            <div className="grid md:grid-cols-3 2xl:grid-cols-3  divide-x divide-y border">
-              {data.items.map((m, i) => (
-                <SingProduct product={m} key={i} onSubmit={onSubmit} />
-              ))}
-            </div>
+            {isMobile ? (
+              <div className="grid md:grid-cols-3 2xl:grid-cols-3  divide-x divide-y border">
+                {data.items.map((m, i) => (
+                  <SingProduct product={m} key={i} onSubmit={onSubmit} />
+                ))}
+              </div>
+            ) : (
+              <DesktopView items={data.items} onSubmit={onSubmit} />
+            )}
             <Pagination {...data} />
           </>
         )}
       </div>
     </div>
+  );
+}
+
+// function MobileView({
+//   items,
+//   onSubmit,
+// }: {
+//   items: Response["items"];
+//   onSubmit: (
+//     v: Response["items"][0]["variants"][0] & { inStore: boolean }
+//   ) => void;
+// }) {
+//   return (
+//     <div className="bg-card border-y divide-y divide-dashed">
+//       {items?.map((m) => (
+//         <div key={m.id} className="p-4 py-6 space-y-2">
+//           <div className=" flex justify-between gap-4">
+//             <div>
+//               <div>
+//                 <h3 className="font-semibold text-foreground text-base line-clamp-2 break-words">
+//                   {m.title}
+//                 </h3>
+//                 <p className="text-muted-foreground text-xs truncate">
+//                   {m.category}
+//                 </p>
+//               </div>
+//             </div>
+//             <div className="flex-shrink-0 w-20">
+//               <img
+//                 src={m.thumbnail || ""}
+//                 alt={m.title || ""}
+//                 className={
+//                   "w-full h-20 border border-border/50 rounded-xl bg-accent object-cover ml-auto"
+//                 }
+//               />
+//             </div>
+//           </div>
+//           <div className="space-y-2">
+//             {m.variants?.map((v) => (
+//               <div
+//                 key={v.id}
+//                 className="border rounded p-2 flex items-center justify-between gap-8 bg-accent/20"
+//               >
+//                 <div>
+//                   <div className="flex items-center gap-1">
+//                     <p className="font-medium">Pack:</p>
+//                     <p>{v?.unit}</p>
+//                   </div>
+//                   <div className="flex items-center  gap-1">
+//                     <p className="font-medium">MRP:</p>
+//                     <p>{formatAmount("inr", v?.price!)}</p>
+//                   </div>
+//                 </div>
+//                 <EditInventory variant={v} onSubmit={onSubmit} />
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+//       ))}
+//     </div>
+//   );
+// }
+function DesktopView({
+  items,
+  onSubmit,
+}: {
+  items: Response["items"];
+  onSubmit: (
+    v: Response["items"][0]["variants"][0] & { inStore: boolean }
+  ) => void;
+}) {
+  return (
+    <div className="border rounded overflow-y-auto">
+      {items.length > 0 && (
+        <div className="border-b px-4 text-base font-medium py-2 bg-accent/30">
+          <div className="flex px-4 gap-4">
+            <p className="w-24" />
+            <p className="flex-2">Products</p>
+            <div className="flex-3 grid grid-cols-5  px-6 gap-6">
+              <p>Pack size</p>
+              <p>MRP</p>
+              <p>Price</p>
+              <p className="ml-auto">Stock</p>
+            </div>
+          </div>
+        </div>
+      )}
+      {items.map((m) => (
+        <div
+          key={m.id}
+          className={cn(
+            !m.variants ? "py-2" : "",
+            "border-b last:border-b-0 px-4"
+          )}
+        >
+          <div className="flex items-center gap-4">
+            <div>
+              <img
+                src={m.thumbnail || ""}
+                alt={m.title || ""}
+                className="size-12 border rounded bg-accent object-cover"
+              />
+            </div>
+            <div className="flex-2">
+              <p className="font-medium break-words">{m.title}</p>
+              <p className="text-muted-foreground text-sm">{m.category}</p>
+            </div>
+            <div className="flex-3">
+              {m?.variants && m.variants.length > 0 && (
+                <div
+                  className={cn(
+                    m?.variants?.length > 1 && "border-l ",
+                    "divide-y"
+                  )}
+                >
+                  {m.variants.map((v) => (
+                    <div key={v.id} className="py-4">
+                      <EditInventory variant={v} onSubmit={onSubmit} />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function EditInventory({
+  variant,
+  onSubmit,
+}: {
+  variant: Response["items"][0]["variants"][0];
+  onSubmit: (
+    v: Response["items"][0]["variants"][0] & { inStore: boolean }
+  ) => void;
+}) {
+  const { isMobile } = useViewport();
+  const defaultValues = {
+    price: variant?.storePrice || variant?.price || 0,
+    inStore: !!variant?.inventoryId || false,
+    inStock: variant?.stock !== 0,
+  };
+  const form = useForm({ defaultValues });
+  const handleSubmit = async (v: typeof defaultValues) => {
+    if (v.inStock) {
+      variant.stock = -1;
+    } else {
+      variant.stock = 0;
+    }
+
+    onSubmit({ ...variant, price: v.price, inStore: v.inStore });
+  };
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(handleSubmit)}
+        className="grid grid-cols-2 lg:grid-cols-5 items-center lg:px-6  gap-6"
+      >
+        <p className="hidden lg:block">{variant?.unit}</p>
+        <p className="hidden lg:block">
+          {formatAmount("inr", variant?.price!)}
+        </p>
+
+        <FormInput
+          type="number"
+          name="price"
+          min={0}
+          placeholder="0"
+          suffixEl={<PenLine className="size-4 hidden lg:blocks" />}
+          prefixEl={<span>₹</span>}
+          wrapperClassName="-mb-1 "
+          className="h-8 lg:h-10"
+          required
+        />
+        {!isMobile && (
+          <FormSwitch
+            name="inStock"
+            wrapperClassName="flex justify-end pr-3 items-center -mb-2 "
+          />
+        )}
+
+        <Button
+          type="submit"
+          className="ml-auto"
+          disabled={
+            variant?.inventoryId
+              ? form.formState.isSubmitting ||
+                form.formState.isSubmitSuccessful ||
+                !form.formState.isDirty
+              : false
+          }
+          variant={variant?.inventoryId ? "secondary" : "default"}
+          size={isMobile ? "sm" : "default"}
+        >
+          {variant?.inventoryId ? "Update" : "Add"}
+        </Button>
+      </form>
+    </Form>
   );
 }
 
@@ -213,7 +441,7 @@ function SingProduct({
 }: {
   product: Response["items"][0];
   onSubmit: (
-    v: Response["items"][0]["variants"][0] & { active: boolean }
+    v: Response["items"][0]["variants"][0] & { inStore: boolean }
   ) => void;
 }) {
   const m = product;
@@ -282,13 +510,13 @@ function EditVariation({
 }: {
   data: Response["items"][0]["variants"][0];
   onSubmit: (
-    v: Response["items"][0]["variants"][0] & { active: boolean }
+    v: Response["items"][0]["variants"][0] & { inStore: boolean }
   ) => void;
 }) {
   const [open, setOpen] = useState(false);
 
   const defaultValues = {
-    active: !!data.inventoryId || false,
+    inStore: !!data.inventoryId || false,
     price: data?.storePrice || data?.price || 0,
     stock: data?.stock || 0,
     sku: data?.sku || "",
@@ -298,7 +526,7 @@ function EditVariation({
     defaultValues,
   });
 
-  const isActivated = form.watch("active");
+  const isActivated = form.watch("inStore");
 
   const handle = async (body: typeof defaultValues) => {
     onSubmit({ ...data, ...body });
@@ -394,7 +622,7 @@ function EditVariation({
                     <FormLabel>Activate / Deactivate</FormLabel>
                     <FormDescription>Do you sell this variant?</FormDescription>
                   </div>
-                  <FormSwitch name="active" wrapperClassName="w-fit" />
+                  <FormSwitch name="inStore" wrapperClassName="w-fit" />
                 </div>
                 {isActivated && (
                   <>

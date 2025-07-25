@@ -60,13 +60,19 @@ const getDistanceMatrix = async (
 	const response = await fetch(url);
 
 	if (!response.ok) {
-		throw new Error("Something went wrong while fetching the shops");
+		console.log("Response", response);
+		throw new Error(
+			`Something went wrong while fetching the shops, ${response.status}`,
+		);
 	}
 
 	const data = await response.json();
 
 	if (data.status !== "OK") {
-		throw new Error("Something went wrong while fetching the shops");
+		console.log("Data", data);
+		throw new Error(
+			`Something went wrong while fetching the shops, ${data.status}`,
+		);
 	}
 
 	return data;

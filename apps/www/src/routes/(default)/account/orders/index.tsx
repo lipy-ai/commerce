@@ -121,9 +121,9 @@ function RouteComponent() {
                               order.status as (typeof ORDER_STATUS)[number]
                             ] || "neutral"
                           }
-                          className="capitalize"
+                          className="capitalize line-clamp-1 block break-words"
                         >
-                          {order.status || "Unknown"}
+                          {order.status?.replaceAll("_", " ") || "Unknown"}
                         </Badge>
                       </CardHeader>
 

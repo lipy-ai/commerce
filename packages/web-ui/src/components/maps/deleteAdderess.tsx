@@ -54,13 +54,13 @@ export const DeleteAddress = (props: DeleteAddressProps) => {
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
             This action cannot be undone. This address will be permanently
-            deleted.
+            deleted.f
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={handleDeleteAddress}>
-            Continue
+            Delete
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

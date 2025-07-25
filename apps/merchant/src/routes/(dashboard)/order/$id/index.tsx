@@ -8,7 +8,6 @@ import {
   // useAPIMutation,
   useAPIQuery,
 } from "@lipy/lib/utils/useQueryClient";
-import { GoogleMapsIcon } from "@lipy/web-ui/components/icons";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import {
   Avatar,
@@ -362,8 +361,7 @@ function RouteComponent() {
                             className="border rounded w-full bg-card"
                           />
                           <Button className="w-full mb-4" variant={"outline"}>
-                            <GoogleMapsIcon className="size-5" /> View
-                            Directions
+                            d View Directions
                           </Button>
                         </a>
                         <a

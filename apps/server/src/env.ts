@@ -52,6 +52,7 @@ const EnvSchema = z.object({
 	TRANSACTIONAL_EMAIL: z.string(),
 	DISCORD_WEBHOOK: z.string(),
 	RESEND_SECRET_KEY: z.string(),
+	GOOGLE_MAPS_API_KEY: z.string(),
 	TRUSTED_ORIGINS: z
 		.string()
 		.transform((t) => t.split(",").map((e) => e.trim())),

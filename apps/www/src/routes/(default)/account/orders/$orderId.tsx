@@ -103,29 +103,6 @@ function RouteComponent() {
     },
   ];
 
-  // const orderDetails = [
-  //   {
-  //     title: "Order Id",
-  //     value: order?.id,
-  //   },
-  //   {
-  //     title: order?.deliveredAt
-  //       ? "Delivered At"
-  //       : order?.cancelledAt
-  //         ? "Cancelled At"
-  //         : order?.refundedAt
-  //           ? "Refunded At"
-  //           : "Ordered At",
-  //     value: order?.deliveredAt
-  //       ? format(new Date(order?.deliveredAt), "PPp")
-  //       : order?.cancelledAt
-  //         ? format(new Date(order?.cancelledAt), "PPp")
-  //         : order?.refundedAt
-  //           ? format(new Date(order?.refundedAt), "PPp")
-  //           : format(new Date(order?.orderedAt as string), "PPp"),
-  //   },
-  // ];
-
   return (
     <>
       {isLoading ? (
@@ -156,7 +133,7 @@ function RouteComponent() {
                   order.status as (typeof ORDER_STATUS)[number]
                 ] || "neutral"
               }
-              className="capitalize"
+              className="capitalize line-clamp-1 max-w-44 break-words"
               size="spacious"
             >
               {order.status || "Unknown"}

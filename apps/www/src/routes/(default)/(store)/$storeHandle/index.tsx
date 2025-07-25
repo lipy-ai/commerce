@@ -198,7 +198,7 @@ function RouteComponent() {
 export function ShopOptions({
   shop,
 }: {
-  shop: InferResponseType<typeof publicShopApi.index.$get>[number];
+  shop: InferResponseType<(typeof publicShopApi)[":handle"]["$get"]>;
 }) {
   const navigate = useNavigate();
   return (

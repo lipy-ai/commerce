@@ -2,6 +2,7 @@ import { PrimaryCartFooter } from "@/components/cart/cartFooter";
 import { env } from "@envClient";
 import { publicShopApi } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
+import { GoogleMapsIcon } from "@lipy/web-ui/components/icons";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
@@ -9,7 +10,7 @@ import Loading from "@lipy/web-ui/components/ui/loading";
 import { shareContent } from "@lipy/web-ui/lib/share";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
-import { Clock, Mail, MapPin, Phone, Share } from "lucide-react";
+import { Clock, Mail, Phone, Share2 } from "lucide-react";
 
 export const Route = createFileRoute("/(default)/(store)/$storeHandle/details")(
   {
@@ -44,7 +45,7 @@ function RouteComponent() {
         <div className="max-w-screen-lg mx-auto mb-20 w-full">
           <DashboardHeader>
             <Button
-              size="sm"
+              variant={"ghost"}
               onClick={() => {
                 shareContent({
                   title: data?.name as string,
@@ -53,25 +54,36 @@ function RouteComponent() {
                 });
               }}
             >
-              <Share />
-              Share
+              <Share2 className="stroke-2" />
             </Button>
           </DashboardHeader>
-          <div className="relative w-full aspect-[16/9] bg-gray-200">
+          <div className="relative w-full aspect-[16/9]">
             <img
               src={data?.image || "/logo/logo.png"}
               alt={data?.name}
-              className="absolute inset-0 w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover bg-accent/30"
               loading="lazy"
             />
           </div>
-          <div className="bg-card my-4 p-4 space-y-4">
+          <div className="bg-card my-4 p-4 space-y-2">
             <div className="space-y-0.5">
-              <h1 className="text-xl font-bold">{data?.name}</h1>
-              <p className=" text-xs text-muted-foreground">
-                {data?.address?.line1}
+              <h1 className="text-xl font-bold ">{data?.name}</h1>
+              <p className="text-muted-foreground text-sm capitalize">
+                {data?.type}
               </p>
             </div>
+            <p>
+              {[
+                data?.address?.line1,
+                data?.address?.line2,
+                data?.address?.city,
+                data?.address?.state,
+                data?.address?.postalCode,
+                data?.address?.country,
+              ]
+                .filter(Boolean)
+                .join(", ")}
+            </p>
 
             <p className="text-sm font-normal">{data?.description}</p>
             <div className="mt-4 flex items-center gap-4 justify-between">
@@ -101,7 +113,7 @@ function RouteComponent() {
                   "flex items-center gap-2"
                 )}
               >
-                <MapPin className="text-primary" />
+                <GoogleMapsIcon className="size-4" />
                 Directions
               </a>
             </div>

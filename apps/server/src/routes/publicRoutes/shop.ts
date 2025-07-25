@@ -1,5 +1,6 @@
 import { db } from "@/db";
 import { STORE_TYPE } from "@/db/schema";
+import env from "@/env";
 import { updateSession } from "@/helpers/session";
 import { HTTPError } from "@/lib/exception";
 import { idGenerate } from "@/lib/generateId";
@@ -29,23 +30,81 @@ const schema = z.object({
 	type: z.enum([...STORE_TYPE, "all"] as [string, ...string[]]).optional(),
 });
 
+const shopSearchSchema = z.object({
+	originLat: z.coerce.number(),
+	originLng: z.coerce.number(),
+});
+
+type LatLang = {
+	lat: number;
+	lng: number;
+};
+
+const getDistanceMatrix = async (
+	origin: LatLang,
+	destinations: LatLang[],
+	options?: {
+		mode?: "driving" | "walking" | "bicycling" | "transit";
+		units?: "metric" | "imperial";
+	},
+) => {
+	const mode = options?.mode || "driving";
+	const units = options?.units || "metric";
+	const originStr = `${origin.lat},${origin.lng}`;
+	const destinationsStr = destinations
+		.map((d) => `${d.lat},${d.lng}`)
+		.join("|");
+
+	const url = `https://maps.googleapis.com/maps/api/distancematrix/json?units=${units}&origins=${originStr}&destinations=${destinationsStr}&mode=${mode}&key=${env.GOOGLE_MAPS_API_KEY}`;
+
+	const response = await fetch(url);
+
+	if (!response.ok) {
+		throw new Error("Something went wrong while fetching the shops");
+	}
+
+	const data = await response.json();
+
+	if (data.status !== "OK") {
+		throw new Error("Something went wrong while fetching the shops");
+	}
+
+	return data;
+};
+
 const route = new Hono<ServerContext>()
 	/**
 	 * Gets All Shops
 	 */
-	.get("/", zValidator("query", schema), async (c) => {
-		const q = c.req.valid("query");
 
-		let query = db.selectFrom("store").where("active", "=", true);
+	.get("/", zValidator("query", shopSearchSchema), async (c) => {
+		const query = c.req.valid("query");
 
-		if (q.type && q.type !== "all") {
-			query = query.where("type", "=", q.type);
-		}
+		const resp = await db
+			.selectFrom("store")
+			.where("active", "=", true)
+			.where("store.address", "is not", null)
+			.select(["id", "handle", "type", "name", "image", "address", "phone"])
+			.limit(25)
+			.execute();
 
-		const d = await query.selectAll().execute();
+		const distanceMatrix = await getDistanceMatrix(
+			{ lat: query.originLat, lng: query.originLng },
+			resp.map((item) => ({
+				lat: item.address!.lat as number,
+				lng: item.address!.lng as number,
+			})),
+		);
 
-		return c.json(d || []);
+		const shopData = resp.map((shop, i) => ({
+			...shop,
+			distance: distanceMatrix.rows[0].elements[i].distance,
+			duration: distanceMatrix.rows[0].elements[i].duration,
+		}));
+
+		return c.json(shopData);
 	})
+
 	.get(
 		"/:handle",
 		zValidator("param", z.object({ handle: z.string() })),
@@ -55,11 +114,8 @@ const route = new Hono<ServerContext>()
 				.selectFrom("store")
 				.where("handle", "=", handle)
 				.selectAll()
-				.executeTakeFirst();
+				.executeTakeFirstOrThrow();
 
-			if (!data) {
-				throw new HTTPError(404, { message: "Store not found!" });
-			}
 			return c.json(data);
 		},
 	)

@@ -15,7 +15,7 @@ import {
   Utensils,
 } from "lucide-react";
 
-const storeType = {
+export const storeType = {
   pharmacy: {
     icon: BriefcaseMedical,
     label: "Pharmacy",
@@ -50,7 +50,7 @@ const storeType = {
 export const StoreHeroSection = ({
   storeInfo,
 }: {
-  storeInfo: InferResponseType<typeof publicShopApi.index.$get>[number];
+  storeInfo: InferResponseType<(typeof publicShopApi)[":handle"]["$get"]>;
 }) => {
   const typeInfo = storeType[storeInfo?.type as keyof typeof storeType];
   return (

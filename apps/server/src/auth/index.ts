@@ -148,7 +148,7 @@ export const auth: any = betterAuth({
 				secure: env.IN_PROD,
 				httpOnly: env.IN_PROD,
 				sameSite: "none", // Allows CORS-based cookie sharing across subdomains
-				partitioned: true, // New browser standards will mandate this for foreign cookies
+				// partitioned: true, // (top level domain can modify this cookies, no subdomains)
 			},
 		}),
 	},

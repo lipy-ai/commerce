@@ -11,6 +11,7 @@ import {
   useMultiStepForm,
 } from "@lipy/web-ui/components/forms/multi-step";
 
+import { redirectToSessionRefreshURL } from "@lipy/lib/hooks/use-navigate";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, useRouter } from "@tanstack/react-router";
@@ -165,7 +166,7 @@ function RouteComponent() {
 
   const mutation = useAPIMutation(loggedInStoreApi.index, "$post", {
     onSuccess: async () => {
-      // router.navigate({ to: "/", reloadDocument: true });
+      redirectToSessionRefreshURL();
     },
   });
 
@@ -177,8 +178,7 @@ function RouteComponent() {
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (store.isLoading) return;
-    store.data?.id &&
-      router.navigate({ from: "/register", to: "/", reloadDocument: true });
+    store.data?.id && router.navigate({ from: "/register", to: "/" });
   }, [store.isLoading]);
 
   return (

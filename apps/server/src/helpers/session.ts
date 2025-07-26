@@ -23,8 +23,12 @@ export const updateSession = async (
 	);
 	const sessData = (await auth.$context).authCookies.sessionData.name;
 	deleteCookie(c, sessData, {
+		path: "/",
+		maxAge: 0,
+		expires: new Date(0),
 		...(env.IN_PROD && {
 			secure: true,
+
 			domain: `.${env.BETTER_AUTH_URL.split(".").slice(1).join(".")}`,
 		}),
 	});

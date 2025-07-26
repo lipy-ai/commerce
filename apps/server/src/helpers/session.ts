@@ -26,9 +26,10 @@ export const updateSession = async (
 		path: "/",
 		maxAge: 0,
 		expires: new Date(0),
+		sameSite: "None",
 		...(env.IN_PROD && {
 			secure: true,
-
+			httpOnly: true,
 			domain: `.${env.BETTER_AUTH_URL.split(".").slice(1).join(".")}`,
 		}),
 	});

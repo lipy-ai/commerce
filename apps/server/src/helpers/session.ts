@@ -21,18 +21,19 @@ export const updateSession = async (
 			user: data.user,
 		}),
 	);
+};
+
+export const clearSessionDataCookie = async (c: Context<ServerContext>) => {
 	const sessData = (await auth.$context).authCookies.sessionData.name;
-	setCookie(c, sessData, "", {
+	deleteCookie(c, sessData, {
 		path: "/",
 		maxAge: 0,
 		expires: new Date(0),
-		sameSite: "None",
+		sameSite: env.IN_PROD ? "None" : "Lax",
 		...(env.IN_PROD && {
 			secure: true,
 			httpOnly: true,
 			domain: `.${env.BETTER_AUTH_URL.split(".").slice(1).join(".")}`,
 		}),
 	});
-
-	return true;
 };

@@ -6,6 +6,10 @@ export const redirectToLoginURL = () => {
 	window.location.href = `${env.WEB_URL}/login?cb=${btoa(window.location.href)}`;
 };
 
+export const redirectToSessionRefreshURL = () => {
+	window.location.href = `${env.WEB_URL}/refresh?cb=${btoa(window.location.href)}`;
+};
+
 export const useRedirect = () => {
 	const navigate = useNavigate() as any;
 	const handleNavigate = (code?: string) => {

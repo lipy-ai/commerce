@@ -344,6 +344,7 @@
 
 import { usePWAInstall } from "@lipy/web-ui/hooks/use-pwa-install";
 
+import { useStore } from "@lipy/lib/hooks/use-store";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
@@ -401,6 +402,7 @@ export const DashboardLayout = ({
     alt: string;
   };
 }) => {
+  const { isPending } = useStore();
   const [open, setOpen] = useState(false);
   const { isMobile } = useViewport();
   const { isInstallable, promptInstall } = usePWAInstall();
@@ -419,6 +421,8 @@ export const DashboardLayout = ({
       ))}
     </div>
   );
+
+  if (isPending) return null;
 
   return (
     <Context.Provider value={{ addFooter, footer, removeFooter }}>

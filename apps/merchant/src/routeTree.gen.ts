@@ -10,43 +10,47 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ErrorRouteImport } from './routes/error'
+import { Route as PosRouteRouteImport } from './routes/pos/route'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as dashboardRouteRouteImport } from './routes/(dashboard)/route'
 import { Route as RegisterIndexRouteImport } from './routes/register/index'
-import { Route as PosIndexRouteImport } from './routes/pos/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as dashboardIndexRouteImport } from './routes/(dashboard)/index'
 import { Route as authLogoutRouteImport } from './routes/(auth)/logout'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
-import { Route as dashboardAccountRouteRouteImport } from './routes/(dashboard)/account/route'
+import { Route as PosOrderIndexRouteImport } from './routes/pos/order/index'
+import { Route as PosCheckoutIndexRouteImport } from './routes/pos/checkout/index'
 import { Route as AdminProductIndexRouteImport } from './routes/admin/product/index'
 import { Route as AdminCategoryIndexRouteImport } from './routes/admin/category/index'
 import { Route as AcceptInvitationIdIndexRouteImport } from './routes/accept-invitation/$id/index'
 import { Route as dashboardStoreIndexRouteImport } from './routes/(dashboard)/store/index'
 import { Route as dashboardProductIndexRouteImport } from './routes/(dashboard)/product/index'
-import { Route as dashboardOrderIndexRouteImport } from './routes/(dashboard)/order/index'
 import { Route as dashboardCustomerIndexRouteImport } from './routes/(dashboard)/customer/index'
 import { Route as dashboardAccountIndexRouteImport } from './routes/(dashboard)/account/index'
+import { Route as PosOrderCreateRouteImport } from './routes/pos/order/create'
 import { Route as AdminProductIdRouteImport } from './routes/admin/product/$id'
-import { Route as dashboardStoreTaxesRouteImport } from './routes/(dashboard)/store/taxes'
 import { Route as dashboardStoreStaffRouteImport } from './routes/(dashboard)/store/staff'
 import { Route as dashboardStorePoliciesRouteImport } from './routes/(dashboard)/store/policies'
+import { Route as dashboardStorePaymentsRouteImport } from './routes/(dashboard)/store/payments'
 import { Route as dashboardStoreGeneralRouteImport } from './routes/(dashboard)/store/general'
-import { Route as dashboardStoreDiscountsRouteImport } from './routes/(dashboard)/store/discounts'
-import { Route as dashboardProductCreateRouteImport } from './routes/(dashboard)/product/create'
+import { Route as dashboardStoreCouponsRouteImport } from './routes/(dashboard)/store/coupons'
 import { Route as dashboardProductAddRouteImport } from './routes/(dashboard)/product/add'
 import { Route as dashboardProductIdRouteImport } from './routes/(dashboard)/product/$id'
-import { Route as dashboardOrderCreateRouteImport } from './routes/(dashboard)/order/create'
 import { Route as dashboardCustomerIdRouteImport } from './routes/(dashboard)/customer/$id'
 import { Route as dashboardAccountSupportRouteImport } from './routes/(dashboard)/account/support'
 import { Route as dashboardAccountReferralRouteImport } from './routes/(dashboard)/account/referral'
 import { Route as dashboardAccountProfileRouteImport } from './routes/(dashboard)/account/profile'
 import { Route as dashboardAccountPreferencesRouteImport } from './routes/(dashboard)/account/preferences'
-import { Route as dashboardOrderIdIndexRouteImport } from './routes/(dashboard)/order/$id/index'
+import { Route as PosOrderIdIndexRouteImport } from './routes/pos/order/$id/index'
 
 const ErrorRoute = ErrorRouteImport.update({
   id: '/error',
   path: '/error',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PosRouteRoute = PosRouteRouteImport.update({
+  id: '/pos',
+  path: '/pos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRouteRoute = AdminRouteRouteImport.update({
@@ -61,11 +65,6 @@ const dashboardRouteRoute = dashboardRouteRouteImport.update({
 const RegisterIndexRoute = RegisterIndexRouteImport.update({
   id: '/register/',
   path: '/register/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PosIndexRoute = PosIndexRouteImport.update({
-  id: '/pos/',
-  path: '/pos/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -88,10 +87,15 @@ const authLoginRoute = authLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const dashboardAccountRouteRoute = dashboardAccountRouteRouteImport.update({
-  id: '/account',
-  path: '/account',
-  getParentRoute: () => dashboardRouteRoute,
+const PosOrderIndexRoute = PosOrderIndexRouteImport.update({
+  id: '/order/',
+  path: '/order/',
+  getParentRoute: () => PosRouteRoute,
+} as any)
+const PosCheckoutIndexRoute = PosCheckoutIndexRouteImport.update({
+  id: '/checkout/',
+  path: '/checkout/',
+  getParentRoute: () => PosRouteRoute,
 } as any)
 const AdminProductIndexRoute = AdminProductIndexRouteImport.update({
   id: '/product/',
@@ -118,30 +122,25 @@ const dashboardProductIndexRoute = dashboardProductIndexRouteImport.update({
   path: '/product/',
   getParentRoute: () => dashboardRouteRoute,
 } as any)
-const dashboardOrderIndexRoute = dashboardOrderIndexRouteImport.update({
-  id: '/order/',
-  path: '/order/',
-  getParentRoute: () => dashboardRouteRoute,
-} as any)
 const dashboardCustomerIndexRoute = dashboardCustomerIndexRouteImport.update({
   id: '/customer/',
   path: '/customer/',
   getParentRoute: () => dashboardRouteRoute,
 } as any)
 const dashboardAccountIndexRoute = dashboardAccountIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => dashboardAccountRouteRoute,
+  id: '/account/',
+  path: '/account/',
+  getParentRoute: () => dashboardRouteRoute,
+} as any)
+const PosOrderCreateRoute = PosOrderCreateRouteImport.update({
+  id: '/order/create',
+  path: '/order/create',
+  getParentRoute: () => PosRouteRoute,
 } as any)
 const AdminProductIdRoute = AdminProductIdRouteImport.update({
   id: '/product/$id',
   path: '/product/$id',
   getParentRoute: () => AdminRouteRoute,
-} as any)
-const dashboardStoreTaxesRoute = dashboardStoreTaxesRouteImport.update({
-  id: '/store/taxes',
-  path: '/store/taxes',
-  getParentRoute: () => dashboardRouteRoute,
 } as any)
 const dashboardStoreStaffRoute = dashboardStoreStaffRouteImport.update({
   id: '/store/staff',
@@ -153,19 +152,19 @@ const dashboardStorePoliciesRoute = dashboardStorePoliciesRouteImport.update({
   path: '/store/policies',
   getParentRoute: () => dashboardRouteRoute,
 } as any)
+const dashboardStorePaymentsRoute = dashboardStorePaymentsRouteImport.update({
+  id: '/store/payments',
+  path: '/store/payments',
+  getParentRoute: () => dashboardRouteRoute,
+} as any)
 const dashboardStoreGeneralRoute = dashboardStoreGeneralRouteImport.update({
   id: '/store/general',
   path: '/store/general',
   getParentRoute: () => dashboardRouteRoute,
 } as any)
-const dashboardStoreDiscountsRoute = dashboardStoreDiscountsRouteImport.update({
-  id: '/store/discounts',
-  path: '/store/discounts',
-  getParentRoute: () => dashboardRouteRoute,
-} as any)
-const dashboardProductCreateRoute = dashboardProductCreateRouteImport.update({
-  id: '/product/create',
-  path: '/product/create',
+const dashboardStoreCouponsRoute = dashboardStoreCouponsRouteImport.update({
+  id: '/store/coupons',
+  path: '/store/coupons',
   getParentRoute: () => dashboardRouteRoute,
 } as any)
 const dashboardProductAddRoute = dashboardProductAddRouteImport.update({
@@ -178,263 +177,254 @@ const dashboardProductIdRoute = dashboardProductIdRouteImport.update({
   path: '/product/$id',
   getParentRoute: () => dashboardRouteRoute,
 } as any)
-const dashboardOrderCreateRoute = dashboardOrderCreateRouteImport.update({
-  id: '/order/create',
-  path: '/order/create',
-  getParentRoute: () => dashboardRouteRoute,
-} as any)
 const dashboardCustomerIdRoute = dashboardCustomerIdRouteImport.update({
   id: '/customer/$id',
   path: '/customer/$id',
   getParentRoute: () => dashboardRouteRoute,
 } as any)
 const dashboardAccountSupportRoute = dashboardAccountSupportRouteImport.update({
-  id: '/support',
-  path: '/support',
-  getParentRoute: () => dashboardAccountRouteRoute,
+  id: '/account/support',
+  path: '/account/support',
+  getParentRoute: () => dashboardRouteRoute,
 } as any)
 const dashboardAccountReferralRoute =
   dashboardAccountReferralRouteImport.update({
-    id: '/referral',
-    path: '/referral',
-    getParentRoute: () => dashboardAccountRouteRoute,
+    id: '/account/referral',
+    path: '/account/referral',
+    getParentRoute: () => dashboardRouteRoute,
   } as any)
 const dashboardAccountProfileRoute = dashboardAccountProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => dashboardAccountRouteRoute,
+  id: '/account/profile',
+  path: '/account/profile',
+  getParentRoute: () => dashboardRouteRoute,
 } as any)
 const dashboardAccountPreferencesRoute =
   dashboardAccountPreferencesRouteImport.update({
-    id: '/preferences',
-    path: '/preferences',
-    getParentRoute: () => dashboardAccountRouteRoute,
+    id: '/account/preferences',
+    path: '/account/preferences',
+    getParentRoute: () => dashboardRouteRoute,
   } as any)
-const dashboardOrderIdIndexRoute = dashboardOrderIdIndexRouteImport.update({
+const PosOrderIdIndexRoute = PosOrderIdIndexRouteImport.update({
   id: '/order/$id/',
   path: '/order/$id/',
-  getParentRoute: () => dashboardRouteRoute,
+  getParentRoute: () => PosRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof dashboardIndexRoute
   '/admin': typeof AdminRouteRouteWithChildren
+  '/pos': typeof PosRouteRouteWithChildren
   '/error': typeof ErrorRoute
-  '/account': typeof dashboardAccountRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
   '/admin/': typeof AdminIndexRoute
-  '/pos': typeof PosIndexRoute
   '/register': typeof RegisterIndexRoute
   '/account/preferences': typeof dashboardAccountPreferencesRoute
   '/account/profile': typeof dashboardAccountProfileRoute
   '/account/referral': typeof dashboardAccountReferralRoute
   '/account/support': typeof dashboardAccountSupportRoute
   '/customer/$id': typeof dashboardCustomerIdRoute
-  '/order/create': typeof dashboardOrderCreateRoute
   '/product/$id': typeof dashboardProductIdRoute
   '/product/add': typeof dashboardProductAddRoute
-  '/product/create': typeof dashboardProductCreateRoute
-  '/store/discounts': typeof dashboardStoreDiscountsRoute
+  '/store/coupons': typeof dashboardStoreCouponsRoute
   '/store/general': typeof dashboardStoreGeneralRoute
+  '/store/payments': typeof dashboardStorePaymentsRoute
   '/store/policies': typeof dashboardStorePoliciesRoute
   '/store/staff': typeof dashboardStoreStaffRoute
-  '/store/taxes': typeof dashboardStoreTaxesRoute
   '/admin/product/$id': typeof AdminProductIdRoute
-  '/account/': typeof dashboardAccountIndexRoute
+  '/pos/order/create': typeof PosOrderCreateRoute
+  '/account': typeof dashboardAccountIndexRoute
   '/customer': typeof dashboardCustomerIndexRoute
-  '/order': typeof dashboardOrderIndexRoute
   '/product': typeof dashboardProductIndexRoute
   '/store': typeof dashboardStoreIndexRoute
   '/accept-invitation/$id': typeof AcceptInvitationIdIndexRoute
   '/admin/category': typeof AdminCategoryIndexRoute
   '/admin/product': typeof AdminProductIndexRoute
-  '/order/$id': typeof dashboardOrderIdIndexRoute
+  '/pos/checkout': typeof PosCheckoutIndexRoute
+  '/pos/order': typeof PosOrderIndexRoute
+  '/pos/order/$id': typeof PosOrderIdIndexRoute
 }
 export interface FileRoutesByTo {
+  '/pos': typeof PosRouteRouteWithChildren
   '/error': typeof ErrorRoute
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
   '/': typeof dashboardIndexRoute
   '/admin': typeof AdminIndexRoute
-  '/pos': typeof PosIndexRoute
   '/register': typeof RegisterIndexRoute
   '/account/preferences': typeof dashboardAccountPreferencesRoute
   '/account/profile': typeof dashboardAccountProfileRoute
   '/account/referral': typeof dashboardAccountReferralRoute
   '/account/support': typeof dashboardAccountSupportRoute
   '/customer/$id': typeof dashboardCustomerIdRoute
-  '/order/create': typeof dashboardOrderCreateRoute
   '/product/$id': typeof dashboardProductIdRoute
   '/product/add': typeof dashboardProductAddRoute
-  '/product/create': typeof dashboardProductCreateRoute
-  '/store/discounts': typeof dashboardStoreDiscountsRoute
+  '/store/coupons': typeof dashboardStoreCouponsRoute
   '/store/general': typeof dashboardStoreGeneralRoute
+  '/store/payments': typeof dashboardStorePaymentsRoute
   '/store/policies': typeof dashboardStorePoliciesRoute
   '/store/staff': typeof dashboardStoreStaffRoute
-  '/store/taxes': typeof dashboardStoreTaxesRoute
   '/admin/product/$id': typeof AdminProductIdRoute
+  '/pos/order/create': typeof PosOrderCreateRoute
   '/account': typeof dashboardAccountIndexRoute
   '/customer': typeof dashboardCustomerIndexRoute
-  '/order': typeof dashboardOrderIndexRoute
   '/product': typeof dashboardProductIndexRoute
   '/store': typeof dashboardStoreIndexRoute
   '/accept-invitation/$id': typeof AcceptInvitationIdIndexRoute
   '/admin/category': typeof AdminCategoryIndexRoute
   '/admin/product': typeof AdminProductIndexRoute
-  '/order/$id': typeof dashboardOrderIdIndexRoute
+  '/pos/checkout': typeof PosCheckoutIndexRoute
+  '/pos/order': typeof PosOrderIndexRoute
+  '/pos/order/$id': typeof PosOrderIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(dashboard)': typeof dashboardRouteRouteWithChildren
   '/admin': typeof AdminRouteRouteWithChildren
+  '/pos': typeof PosRouteRouteWithChildren
   '/error': typeof ErrorRoute
-  '/(dashboard)/account': typeof dashboardAccountRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/logout': typeof authLogoutRoute
   '/(dashboard)/': typeof dashboardIndexRoute
   '/admin/': typeof AdminIndexRoute
-  '/pos/': typeof PosIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/(dashboard)/account/preferences': typeof dashboardAccountPreferencesRoute
   '/(dashboard)/account/profile': typeof dashboardAccountProfileRoute
   '/(dashboard)/account/referral': typeof dashboardAccountReferralRoute
   '/(dashboard)/account/support': typeof dashboardAccountSupportRoute
   '/(dashboard)/customer/$id': typeof dashboardCustomerIdRoute
-  '/(dashboard)/order/create': typeof dashboardOrderCreateRoute
   '/(dashboard)/product/$id': typeof dashboardProductIdRoute
   '/(dashboard)/product/add': typeof dashboardProductAddRoute
-  '/(dashboard)/product/create': typeof dashboardProductCreateRoute
-  '/(dashboard)/store/discounts': typeof dashboardStoreDiscountsRoute
+  '/(dashboard)/store/coupons': typeof dashboardStoreCouponsRoute
   '/(dashboard)/store/general': typeof dashboardStoreGeneralRoute
+  '/(dashboard)/store/payments': typeof dashboardStorePaymentsRoute
   '/(dashboard)/store/policies': typeof dashboardStorePoliciesRoute
   '/(dashboard)/store/staff': typeof dashboardStoreStaffRoute
-  '/(dashboard)/store/taxes': typeof dashboardStoreTaxesRoute
   '/admin/product/$id': typeof AdminProductIdRoute
+  '/pos/order/create': typeof PosOrderCreateRoute
   '/(dashboard)/account/': typeof dashboardAccountIndexRoute
   '/(dashboard)/customer/': typeof dashboardCustomerIndexRoute
-  '/(dashboard)/order/': typeof dashboardOrderIndexRoute
   '/(dashboard)/product/': typeof dashboardProductIndexRoute
   '/(dashboard)/store/': typeof dashboardStoreIndexRoute
   '/accept-invitation/$id/': typeof AcceptInvitationIdIndexRoute
   '/admin/category/': typeof AdminCategoryIndexRoute
   '/admin/product/': typeof AdminProductIndexRoute
-  '/(dashboard)/order/$id/': typeof dashboardOrderIdIndexRoute
+  '/pos/checkout/': typeof PosCheckoutIndexRoute
+  '/pos/order/': typeof PosOrderIndexRoute
+  '/pos/order/$id/': typeof PosOrderIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/admin'
+    | '/pos'
     | '/error'
-    | '/account'
     | '/login'
     | '/logout'
     | '/admin/'
-    | '/pos'
     | '/register'
     | '/account/preferences'
     | '/account/profile'
     | '/account/referral'
     | '/account/support'
     | '/customer/$id'
-    | '/order/create'
     | '/product/$id'
     | '/product/add'
-    | '/product/create'
-    | '/store/discounts'
+    | '/store/coupons'
     | '/store/general'
+    | '/store/payments'
     | '/store/policies'
     | '/store/staff'
-    | '/store/taxes'
     | '/admin/product/$id'
-    | '/account/'
+    | '/pos/order/create'
+    | '/account'
     | '/customer'
-    | '/order'
     | '/product'
     | '/store'
     | '/accept-invitation/$id'
     | '/admin/category'
     | '/admin/product'
-    | '/order/$id'
+    | '/pos/checkout'
+    | '/pos/order'
+    | '/pos/order/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/pos'
     | '/error'
     | '/login'
     | '/logout'
     | '/'
     | '/admin'
-    | '/pos'
     | '/register'
     | '/account/preferences'
     | '/account/profile'
     | '/account/referral'
     | '/account/support'
     | '/customer/$id'
-    | '/order/create'
     | '/product/$id'
     | '/product/add'
-    | '/product/create'
-    | '/store/discounts'
+    | '/store/coupons'
     | '/store/general'
+    | '/store/payments'
     | '/store/policies'
     | '/store/staff'
-    | '/store/taxes'
     | '/admin/product/$id'
+    | '/pos/order/create'
     | '/account'
     | '/customer'
-    | '/order'
     | '/product'
     | '/store'
     | '/accept-invitation/$id'
     | '/admin/category'
     | '/admin/product'
-    | '/order/$id'
+    | '/pos/checkout'
+    | '/pos/order'
+    | '/pos/order/$id'
   id:
     | '__root__'
     | '/(dashboard)'
     | '/admin'
+    | '/pos'
     | '/error'
-    | '/(dashboard)/account'
     | '/(auth)/login'
     | '/(auth)/logout'
     | '/(dashboard)/'
     | '/admin/'
-    | '/pos/'
     | '/register/'
     | '/(dashboard)/account/preferences'
     | '/(dashboard)/account/profile'
     | '/(dashboard)/account/referral'
     | '/(dashboard)/account/support'
     | '/(dashboard)/customer/$id'
-    | '/(dashboard)/order/create'
     | '/(dashboard)/product/$id'
     | '/(dashboard)/product/add'
-    | '/(dashboard)/product/create'
-    | '/(dashboard)/store/discounts'
+    | '/(dashboard)/store/coupons'
     | '/(dashboard)/store/general'
+    | '/(dashboard)/store/payments'
     | '/(dashboard)/store/policies'
     | '/(dashboard)/store/staff'
-    | '/(dashboard)/store/taxes'
     | '/admin/product/$id'
+    | '/pos/order/create'
     | '/(dashboard)/account/'
     | '/(dashboard)/customer/'
-    | '/(dashboard)/order/'
     | '/(dashboard)/product/'
     | '/(dashboard)/store/'
     | '/accept-invitation/$id/'
     | '/admin/category/'
     | '/admin/product/'
-    | '/(dashboard)/order/$id/'
+    | '/pos/checkout/'
+    | '/pos/order/'
+    | '/pos/order/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   dashboardRouteRoute: typeof dashboardRouteRouteWithChildren
   AdminRouteRoute: typeof AdminRouteRouteWithChildren
+  PosRouteRoute: typeof PosRouteRouteWithChildren
   ErrorRoute: typeof ErrorRoute
   authLoginRoute: typeof authLoginRoute
   authLogoutRoute: typeof authLogoutRoute
-  PosIndexRoute: typeof PosIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
   AcceptInvitationIdIndexRoute: typeof AcceptInvitationIdIndexRoute
 }
@@ -446,6 +436,13 @@ declare module '@tanstack/react-router' {
       path: '/error'
       fullPath: '/error'
       preLoaderRoute: typeof ErrorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pos': {
+      id: '/pos'
+      path: '/pos'
+      fullPath: '/pos'
+      preLoaderRoute: typeof PosRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -467,13 +464,6 @@ declare module '@tanstack/react-router' {
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof RegisterIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/pos/': {
-      id: '/pos/'
-      path: '/pos'
-      fullPath: '/pos'
-      preLoaderRoute: typeof PosIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
@@ -504,12 +494,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(dashboard)/account': {
-      id: '/(dashboard)/account'
-      path: '/account'
-      fullPath: '/account'
-      preLoaderRoute: typeof dashboardAccountRouteRouteImport
-      parentRoute: typeof dashboardRouteRoute
+    '/pos/order/': {
+      id: '/pos/order/'
+      path: '/order'
+      fullPath: '/pos/order'
+      preLoaderRoute: typeof PosOrderIndexRouteImport
+      parentRoute: typeof PosRouteRoute
+    }
+    '/pos/checkout/': {
+      id: '/pos/checkout/'
+      path: '/checkout'
+      fullPath: '/pos/checkout'
+      preLoaderRoute: typeof PosCheckoutIndexRouteImport
+      parentRoute: typeof PosRouteRoute
     }
     '/admin/product/': {
       id: '/admin/product/'
@@ -546,13 +543,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof dashboardProductIndexRouteImport
       parentRoute: typeof dashboardRouteRoute
     }
-    '/(dashboard)/order/': {
-      id: '/(dashboard)/order/'
-      path: '/order'
-      fullPath: '/order'
-      preLoaderRoute: typeof dashboardOrderIndexRouteImport
-      parentRoute: typeof dashboardRouteRoute
-    }
     '/(dashboard)/customer/': {
       id: '/(dashboard)/customer/'
       path: '/customer'
@@ -562,10 +552,17 @@ declare module '@tanstack/react-router' {
     }
     '/(dashboard)/account/': {
       id: '/(dashboard)/account/'
-      path: '/'
-      fullPath: '/account/'
+      path: '/account'
+      fullPath: '/account'
       preLoaderRoute: typeof dashboardAccountIndexRouteImport
-      parentRoute: typeof dashboardAccountRouteRoute
+      parentRoute: typeof dashboardRouteRoute
+    }
+    '/pos/order/create': {
+      id: '/pos/order/create'
+      path: '/order/create'
+      fullPath: '/pos/order/create'
+      preLoaderRoute: typeof PosOrderCreateRouteImport
+      parentRoute: typeof PosRouteRoute
     }
     '/admin/product/$id': {
       id: '/admin/product/$id'
@@ -573,13 +570,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/product/$id'
       preLoaderRoute: typeof AdminProductIdRouteImport
       parentRoute: typeof AdminRouteRoute
-    }
-    '/(dashboard)/store/taxes': {
-      id: '/(dashboard)/store/taxes'
-      path: '/store/taxes'
-      fullPath: '/store/taxes'
-      preLoaderRoute: typeof dashboardStoreTaxesRouteImport
-      parentRoute: typeof dashboardRouteRoute
     }
     '/(dashboard)/store/staff': {
       id: '/(dashboard)/store/staff'
@@ -595,6 +585,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof dashboardStorePoliciesRouteImport
       parentRoute: typeof dashboardRouteRoute
     }
+    '/(dashboard)/store/payments': {
+      id: '/(dashboard)/store/payments'
+      path: '/store/payments'
+      fullPath: '/store/payments'
+      preLoaderRoute: typeof dashboardStorePaymentsRouteImport
+      parentRoute: typeof dashboardRouteRoute
+    }
     '/(dashboard)/store/general': {
       id: '/(dashboard)/store/general'
       path: '/store/general'
@@ -602,18 +599,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof dashboardStoreGeneralRouteImport
       parentRoute: typeof dashboardRouteRoute
     }
-    '/(dashboard)/store/discounts': {
-      id: '/(dashboard)/store/discounts'
-      path: '/store/discounts'
-      fullPath: '/store/discounts'
-      preLoaderRoute: typeof dashboardStoreDiscountsRouteImport
-      parentRoute: typeof dashboardRouteRoute
-    }
-    '/(dashboard)/product/create': {
-      id: '/(dashboard)/product/create'
-      path: '/product/create'
-      fullPath: '/product/create'
-      preLoaderRoute: typeof dashboardProductCreateRouteImport
+    '/(dashboard)/store/coupons': {
+      id: '/(dashboard)/store/coupons'
+      path: '/store/coupons'
+      fullPath: '/store/coupons'
+      preLoaderRoute: typeof dashboardStoreCouponsRouteImport
       parentRoute: typeof dashboardRouteRoute
     }
     '/(dashboard)/product/add': {
@@ -630,13 +620,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof dashboardProductIdRouteImport
       parentRoute: typeof dashboardRouteRoute
     }
-    '/(dashboard)/order/create': {
-      id: '/(dashboard)/order/create'
-      path: '/order/create'
-      fullPath: '/order/create'
-      preLoaderRoute: typeof dashboardOrderCreateRouteImport
-      parentRoute: typeof dashboardRouteRoute
-    }
     '/(dashboard)/customer/$id': {
       id: '/(dashboard)/customer/$id'
       path: '/customer/$id'
@@ -646,101 +629,80 @@ declare module '@tanstack/react-router' {
     }
     '/(dashboard)/account/support': {
       id: '/(dashboard)/account/support'
-      path: '/support'
+      path: '/account/support'
       fullPath: '/account/support'
       preLoaderRoute: typeof dashboardAccountSupportRouteImport
-      parentRoute: typeof dashboardAccountRouteRoute
+      parentRoute: typeof dashboardRouteRoute
     }
     '/(dashboard)/account/referral': {
       id: '/(dashboard)/account/referral'
-      path: '/referral'
+      path: '/account/referral'
       fullPath: '/account/referral'
       preLoaderRoute: typeof dashboardAccountReferralRouteImport
-      parentRoute: typeof dashboardAccountRouteRoute
+      parentRoute: typeof dashboardRouteRoute
     }
     '/(dashboard)/account/profile': {
       id: '/(dashboard)/account/profile'
-      path: '/profile'
+      path: '/account/profile'
       fullPath: '/account/profile'
       preLoaderRoute: typeof dashboardAccountProfileRouteImport
-      parentRoute: typeof dashboardAccountRouteRoute
+      parentRoute: typeof dashboardRouteRoute
     }
     '/(dashboard)/account/preferences': {
       id: '/(dashboard)/account/preferences'
-      path: '/preferences'
+      path: '/account/preferences'
       fullPath: '/account/preferences'
       preLoaderRoute: typeof dashboardAccountPreferencesRouteImport
-      parentRoute: typeof dashboardAccountRouteRoute
-    }
-    '/(dashboard)/order/$id/': {
-      id: '/(dashboard)/order/$id/'
-      path: '/order/$id'
-      fullPath: '/order/$id'
-      preLoaderRoute: typeof dashboardOrderIdIndexRouteImport
       parentRoute: typeof dashboardRouteRoute
+    }
+    '/pos/order/$id/': {
+      id: '/pos/order/$id/'
+      path: '/order/$id'
+      fullPath: '/pos/order/$id'
+      preLoaderRoute: typeof PosOrderIdIndexRouteImport
+      parentRoute: typeof PosRouteRoute
     }
   }
 }
 
-interface dashboardAccountRouteRouteChildren {
+interface dashboardRouteRouteChildren {
+  dashboardIndexRoute: typeof dashboardIndexRoute
   dashboardAccountPreferencesRoute: typeof dashboardAccountPreferencesRoute
   dashboardAccountProfileRoute: typeof dashboardAccountProfileRoute
   dashboardAccountReferralRoute: typeof dashboardAccountReferralRoute
   dashboardAccountSupportRoute: typeof dashboardAccountSupportRoute
+  dashboardCustomerIdRoute: typeof dashboardCustomerIdRoute
+  dashboardProductIdRoute: typeof dashboardProductIdRoute
+  dashboardProductAddRoute: typeof dashboardProductAddRoute
+  dashboardStoreCouponsRoute: typeof dashboardStoreCouponsRoute
+  dashboardStoreGeneralRoute: typeof dashboardStoreGeneralRoute
+  dashboardStorePaymentsRoute: typeof dashboardStorePaymentsRoute
+  dashboardStorePoliciesRoute: typeof dashboardStorePoliciesRoute
+  dashboardStoreStaffRoute: typeof dashboardStoreStaffRoute
   dashboardAccountIndexRoute: typeof dashboardAccountIndexRoute
+  dashboardCustomerIndexRoute: typeof dashboardCustomerIndexRoute
+  dashboardProductIndexRoute: typeof dashboardProductIndexRoute
+  dashboardStoreIndexRoute: typeof dashboardStoreIndexRoute
 }
 
-const dashboardAccountRouteRouteChildren: dashboardAccountRouteRouteChildren = {
+const dashboardRouteRouteChildren: dashboardRouteRouteChildren = {
+  dashboardIndexRoute: dashboardIndexRoute,
   dashboardAccountPreferencesRoute: dashboardAccountPreferencesRoute,
   dashboardAccountProfileRoute: dashboardAccountProfileRoute,
   dashboardAccountReferralRoute: dashboardAccountReferralRoute,
   dashboardAccountSupportRoute: dashboardAccountSupportRoute,
-  dashboardAccountIndexRoute: dashboardAccountIndexRoute,
-}
-
-const dashboardAccountRouteRouteWithChildren =
-  dashboardAccountRouteRoute._addFileChildren(
-    dashboardAccountRouteRouteChildren,
-  )
-
-interface dashboardRouteRouteChildren {
-  dashboardAccountRouteRoute: typeof dashboardAccountRouteRouteWithChildren
-  dashboardIndexRoute: typeof dashboardIndexRoute
-  dashboardCustomerIdRoute: typeof dashboardCustomerIdRoute
-  dashboardOrderCreateRoute: typeof dashboardOrderCreateRoute
-  dashboardProductIdRoute: typeof dashboardProductIdRoute
-  dashboardProductAddRoute: typeof dashboardProductAddRoute
-  dashboardProductCreateRoute: typeof dashboardProductCreateRoute
-  dashboardStoreDiscountsRoute: typeof dashboardStoreDiscountsRoute
-  dashboardStoreGeneralRoute: typeof dashboardStoreGeneralRoute
-  dashboardStorePoliciesRoute: typeof dashboardStorePoliciesRoute
-  dashboardStoreStaffRoute: typeof dashboardStoreStaffRoute
-  dashboardStoreTaxesRoute: typeof dashboardStoreTaxesRoute
-  dashboardCustomerIndexRoute: typeof dashboardCustomerIndexRoute
-  dashboardOrderIndexRoute: typeof dashboardOrderIndexRoute
-  dashboardProductIndexRoute: typeof dashboardProductIndexRoute
-  dashboardStoreIndexRoute: typeof dashboardStoreIndexRoute
-  dashboardOrderIdIndexRoute: typeof dashboardOrderIdIndexRoute
-}
-
-const dashboardRouteRouteChildren: dashboardRouteRouteChildren = {
-  dashboardAccountRouteRoute: dashboardAccountRouteRouteWithChildren,
-  dashboardIndexRoute: dashboardIndexRoute,
   dashboardCustomerIdRoute: dashboardCustomerIdRoute,
-  dashboardOrderCreateRoute: dashboardOrderCreateRoute,
   dashboardProductIdRoute: dashboardProductIdRoute,
   dashboardProductAddRoute: dashboardProductAddRoute,
-  dashboardProductCreateRoute: dashboardProductCreateRoute,
-  dashboardStoreDiscountsRoute: dashboardStoreDiscountsRoute,
+  dashboardStoreCouponsRoute: dashboardStoreCouponsRoute,
   dashboardStoreGeneralRoute: dashboardStoreGeneralRoute,
+  dashboardStorePaymentsRoute: dashboardStorePaymentsRoute,
   dashboardStorePoliciesRoute: dashboardStorePoliciesRoute,
   dashboardStoreStaffRoute: dashboardStoreStaffRoute,
-  dashboardStoreTaxesRoute: dashboardStoreTaxesRoute,
+  dashboardAccountIndexRoute: dashboardAccountIndexRoute,
   dashboardCustomerIndexRoute: dashboardCustomerIndexRoute,
-  dashboardOrderIndexRoute: dashboardOrderIndexRoute,
   dashboardProductIndexRoute: dashboardProductIndexRoute,
   dashboardStoreIndexRoute: dashboardStoreIndexRoute,
-  dashboardOrderIdIndexRoute: dashboardOrderIdIndexRoute,
 }
 
 const dashboardRouteRouteWithChildren = dashboardRouteRoute._addFileChildren(
@@ -765,13 +727,31 @@ const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
   AdminRouteRouteChildren,
 )
 
+interface PosRouteRouteChildren {
+  PosOrderCreateRoute: typeof PosOrderCreateRoute
+  PosCheckoutIndexRoute: typeof PosCheckoutIndexRoute
+  PosOrderIndexRoute: typeof PosOrderIndexRoute
+  PosOrderIdIndexRoute: typeof PosOrderIdIndexRoute
+}
+
+const PosRouteRouteChildren: PosRouteRouteChildren = {
+  PosOrderCreateRoute: PosOrderCreateRoute,
+  PosCheckoutIndexRoute: PosCheckoutIndexRoute,
+  PosOrderIndexRoute: PosOrderIndexRoute,
+  PosOrderIdIndexRoute: PosOrderIdIndexRoute,
+}
+
+const PosRouteRouteWithChildren = PosRouteRoute._addFileChildren(
+  PosRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   dashboardRouteRoute: dashboardRouteRouteWithChildren,
   AdminRouteRoute: AdminRouteRouteWithChildren,
+  PosRouteRoute: PosRouteRouteWithChildren,
   ErrorRoute: ErrorRoute,
   authLoginRoute: authLoginRoute,
   authLogoutRoute: authLogoutRoute,
-  PosIndexRoute: PosIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
   AcceptInvitationIdIndexRoute: AcceptInvitationIdIndexRoute,
 }

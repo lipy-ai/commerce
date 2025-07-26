@@ -165,7 +165,7 @@ function RouteComponent() {
 
   const mutation = useAPIMutation(loggedInStoreApi.index, "$post", {
     onSuccess: async () => {
-      router.navigate({ to: "/", reloadDocument: true });
+      // router.navigate({ to: "/", reloadDocument: true });
     },
   });
 

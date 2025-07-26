@@ -165,7 +165,7 @@ const route = new Hono<ServerContext>()
 			}
 
 			await db.deleteFrom("storeMember").where("id", "=", id).execute();
-			await updateSession(sess?.token!, {
+			await updateSession(c, {
 				session: {
 					...(sess as any),
 					activeStoreId: null,

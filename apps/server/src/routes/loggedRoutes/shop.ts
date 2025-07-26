@@ -28,14 +28,14 @@ export const storeSchema = z.object({
 	closingHour: timeSchema,
 	deliveryDistance: z.number().int().min(0).max(100),
 	freeDeliveryDistance: z.number().int().min(0).max(100),
-	deliveryChargePerKm: z.number().int().min(0).max(50),
+	deliveryChargePerKm: z.number().int().min(0).max(50).optional(),
 	refunds: z.object({
 		enabled: z.boolean(),
-		content: z.string(),
+		content: z.string().optional(),
 	}),
 	replacements: z.object({
 		enabled: z.boolean(),
-		content: z.string(),
+		content: z.string().optional(),
 	}),
 	gstTax: z
 		.enum(["0", "5", "12", "18", "27"])
@@ -93,7 +93,9 @@ export const loggedStoreRoute = new Hono<ServerContext>()
 				})
 				.executeTakeFirst();
 
-			await updateSession(session?.token!, {
+			console.log(session?.token);
+
+			await updateSession(c, {
 				session: {
 					...(session as any),
 					activeStoreId: store.id,
@@ -153,7 +155,7 @@ export const loggedStoreRoute = new Hono<ServerContext>()
 						})
 						.execute();
 
-					await updateSession(session?.token!, {
+					await updateSession(c, {
 						session: {
 							...(session as any),
 							activeStoreId: inv.storeId,

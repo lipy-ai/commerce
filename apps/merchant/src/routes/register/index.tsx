@@ -174,7 +174,8 @@ function RouteComponent() {
 
   useEffect(() => {
     if (store.isLoading) return;
-    store.data?.id && router.navigate({ from: "/register", to: "/" });
+    store.data?.id &&
+      router.navigate({ from: "/register", to: "/", reloadDocument: true });
   }, [store, router.navigate]);
 
   return (

@@ -27,6 +27,7 @@ import { adminVariantRoute } from "./routes/adminRoutes/variant";
 import { addressRoute } from "./routes/loggedRoutes/address";
 import { cartRoute } from "./routes/loggedRoutes/cart";
 import { orderRoute } from "./routes/loggedRoutes/order";
+import { loggedInSessionRoute } from "./routes/loggedRoutes/session";
 import { loggedStoreRoute } from "./routes/loggedRoutes/shop";
 import { uploadRoute } from "./routes/loggedRoutes/upload";
 import { merchantComboboxRoute } from "./routes/merchantRoutes/combobox";
@@ -106,6 +107,7 @@ const posRouter = new Hono()
 
 const loggedRouter = new Hono()
 	.use(isLoggedIn) //Check if logged In
+	.route("/session", loggedInSessionRoute)
 	.route("/upload", uploadRoute)
 	.route("/address", addressRoute)
 	.route("/cart", cartRoute)

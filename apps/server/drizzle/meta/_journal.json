@@ -64,6 +64,55 @@
       "when": 1753273265392,
       "tag": "0008_sparkling_firestar",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1753466368164,
+      "tag": "0009_outstanding_namorita",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1753527941401,
+      "tag": "0010_futuristic_terror",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1753527999348,
+      "tag": "0011_futuristic_namora",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1753529215008,
+      "tag": "0012_cloudy_doctor_doom",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1753529444386,
+      "tag": "0013_orange_angel",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1753529469839,
+      "tag": "0014_abnormal_kabuki",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1753531768519,
+      "tag": "0015_rainy_loners",
+      "breakpoints": true
     }
   ]
 }

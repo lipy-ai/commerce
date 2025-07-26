@@ -1,12 +1,20 @@
-import { authClient } from "@lipy/lib/providers/auth";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
-import { Settings2, UserCircle2, Users } from "lucide-react";
+import {
+  Landmark,
+  ScrollText,
+  Store,
+  Tag,
+  UserCircle2,
+  Users,
+} from "lucide-react";
 
+import { useStore } from "@lipy/lib/hooks/use-store";
 import SettingsCard from "@lipy/web-ui/components/custom-ui/settingsCard";
+import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
@@ -19,29 +27,29 @@ const generalInfo = [
     url: "/store/general",
   },
   {
-    title: "Store Policies",
-    icon: Settings2,
+    title: "Staff",
+    icon: Users,
+    url: "/store/staff",
+  },
+  {
+    title: "Policies",
+    icon: ScrollText,
     url: "/store/policies",
   },
   {
-    title: "Store Discounts",
-    icon: Settings2,
-    url: "/store/discounts",
+    title: "Payments",
+    icon: Landmark,
+    url: "/store/payments",
   },
   {
-    title: "Store Taxes",
-    icon: Settings2,
-    url: "/store/taxes",
-  },
-  {
-    title: "Store Staff",
-    icon: Users,
-    url: "/store/staff",
+    title: "Coupons",
+    icon: Tag,
+    url: "/store/coupons",
   },
 ];
 
 export function StoreNav({ children }: { children?: ReactNode }) {
-  const { data, isPending } = authClient.useSession();
+  const { data, isPending } = useStore();
   const { isMobile } = useViewport();
   if (isPending) return <Spinner />;
 
@@ -49,34 +57,41 @@ export function StoreNav({ children }: { children?: ReactNode }) {
 
   return (
     <div className="flex flex-1">
-      <div
-        className={cn(
-          "max-w-sm px-4 py-8 space-y-8 border-r flex-1",
-          !children && "max-w-2xl border-r-0"
-        )}
-      >
-        {data && (
-          <div className="flex items-center gap-4 p-2">
-            <Avatar className="size-12 rounded">
-              <AvatarImage src={data?.user.image || ""} alt="" />
-              <AvatarFallback className="">
-                <UserCircle2 width={40} height={75} strokeWidth={1.5} />
-              </AvatarFallback>
-            </Avatar>
+      <div className="md:border-r flex-1 md:max-w-sm">
+        <div
+          className={cn(
+            "px-4 py-4 md:py-8 space-y-8 sticky top-10",
+            !children && "max-w-2xl border-r-0"
+          )}
+        >
+          {data && (
+            <div className="flex items-center gap-4 p-2">
+              <Avatar className="size-12 rounded">
+                <AvatarImage src={data?.image || ""} alt={data.name} />
+                <AvatarFallback className="">
+                  <Store width={30} height={30} strokeWidth={1.5} />
+                </AvatarFallback>
+              </Avatar>
 
-            <div>
-              <h1 className="font-semibold text-xl">
-                {data?.user.name || "Hello, User"}
-              </h1>
-              <p className="text-muted-foreground text-base">
-                {data?.user.email || ""}
-              </p>
+              <div>
+                <h1 className="font-semibold text-xl">
+                  {data?.name || "Hello, User"}
+                </h1>
+                <p className="text-muted-foreground text-base">
+                  <Badge
+                    size={"spacious"}
+                    variant={data?.active ? "success" : "destructive"}
+                  >
+                    {data?.active ? "Active" : "Inactive"}
+                  </Badge>
+                </p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        <div className="space-y-2 max-w-2xl w-full">
-          <SettingsCard items={generalInfo} />
+          <div className="space-y-2 max-w-2xl w-full">
+            <SettingsCard items={generalInfo} />
+          </div>
         </div>
       </div>
       {children && <div className="flex-1 flex flex-col">{children}</div>}

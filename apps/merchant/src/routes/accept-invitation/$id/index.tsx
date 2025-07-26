@@ -1,5 +1,5 @@
 import { env } from "@envClient";
-import { merchantStoreApi, publicShopApi } from "@lipy/lib/api";
+import { loggedInStoreApi, merchantStoreApi } from "@lipy/lib/api";
 import { useAuthSession } from "@lipy/lib/hooks/use-auth";
 import { useAPIMutation, useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import {
@@ -35,7 +35,7 @@ function RouteComponent() {
   );
 
   const mutation = useAPIMutation(
-    publicShopApi.invitation[":id"][":type"],
+    loggedInStoreApi.invitation[":id"][":type"],
     "$post"
   );
 
@@ -48,7 +48,7 @@ function RouteComponent() {
 
   const handleInvitation = async (
     type: InferRequestType<
-      (typeof publicShopApi.invitation)[":id"][":type"]["$post"]
+      (typeof loggedInStoreApi.invitation)[":id"][":type"]["$post"]
     >["param"]["type"]
   ) => {
     await mutation.mutateAsync({ param: { type, id } });

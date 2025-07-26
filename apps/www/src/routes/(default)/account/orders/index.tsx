@@ -38,7 +38,7 @@ export const ORDER_STATUS_BADGE_VARIANT: Record<
   return_requested: "warning",
   refunded: "destructive",
   replaced: "brand",
-  cancelled: "destructive",
+  canceled: "destructive",
   awaiting_customer_confirmation: "warning",
   completed: "success",
 };

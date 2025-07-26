@@ -31,40 +31,6 @@ const schema = z.object({
 	),
 });
 
-export function orderCalculator({
-	items,
-	discounts,
-	taxes,
-}: {
-	items: Array<{ price: number; maxPrice?: number; qty: number }>;
-	discounts: Array<{ amount: number }>;
-	taxes: Array<{ amount: number }>;
-}) {
-	const itemsTotal = items.reduce(
-		(sum, item) => sum + item.price * item.qty,
-		0,
-	);
-	const maxItemsTotal = items.reduce(
-		(sum, item) => sum + (item.maxPrice ?? item.price) * item.qty,
-		0,
-	);
-
-	const discountTotal = discounts.reduce((sum, d) => sum + d.amount, 0);
-	const taxTotal = taxes.reduce((sum, t) => sum + t.amount, 0);
-
-	const totalAmount = itemsTotal + taxTotal - discountTotal;
-	const maxTotalAmount = maxItemsTotal + taxTotal - discountTotal;
-
-	return {
-		itemsTotal,
-		maxItemsTotal,
-		discountTotal,
-		taxTotal,
-		totalAmount,
-		totalSaved: maxTotalAmount - totalAmount,
-	};
-}
-
 const listZodValidator = zValidator(
 	"query",
 	z.object({
@@ -77,8 +43,10 @@ const listZodValidator = zValidator(
 	}),
 );
 
-export const posProductRoute = new Hono<ServerContext>()
-	.get("/", listZodValidator, async (c) => {
+export const posProductRoute = new Hono<ServerContext>().get(
+	"/",
+	listZodValidator,
+	async (c) => {
 		const { limit, page, q, category, showAll } = c.req.valid("query");
 		const activeStoreId = c.var.session?.activeStoreId!;
 		const offset = limit * (page - 1);
@@ -150,15 +118,5 @@ export const posProductRoute = new Hono<ServerContext>()
 		const totalPages = Math.ceil(totalCount / limit);
 
 		return c.json({ items, page, limit, totalPages, totalResults: totalCount });
-	})
-	.post("/", zValidator("json", schema), async (c) => {
-		const { items, taxes, discounts } = c.req.valid("json");
-
-		const calcs = orderCalculator({
-			items,
-			taxes,
-			discounts,
-		});
-
-		return c.json({ calcs });
-	});
+	},
+);

@@ -37,3 +37,7 @@ export const phoneSchema = z
 		}
 	})
 	.transform((t) => t.data);
+
+export const timeSchema = z
+	.string()
+	.regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Must be in HH:MM 24-hour format");

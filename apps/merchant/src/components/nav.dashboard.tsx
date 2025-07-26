@@ -48,7 +48,7 @@ const mobileNav = [
     ),
   },
   { label: "Products", url: "/product", icon: Shirt },
-  { label: "Orders", url: "/order", icon: ShoppingBag },
+  { label: "Orders", url: "/pos/order", icon: ShoppingBag },
   { label: "Customers", url: "/customer", icon: Users },
   { label: "Account", url: "/account", icon: CircleUser },
 ];

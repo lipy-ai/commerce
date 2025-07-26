@@ -1,0 +1,1 @@
+ALTER TABLE "lipy-dev"."store" ADD COLUMN "payments" jsonb;

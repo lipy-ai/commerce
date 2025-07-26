@@ -1,14 +1,15 @@
 import { type DBTypes, db } from "@/db";
-import { ORDER_STATUS } from "@/db/schema";
+import { ORDER_STATUS, SUM_TYPE } from "@/db/schema";
 import { HTTPError } from "@/lib/exception";
 import { idGenerate } from "@/lib/generateId";
+import { orderCalculator } from "@/lib/orderCalculators";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
 import type { Updateable } from "kysely";
 import { z } from "zod";
 
-const orderSchema = z.object({
+const updateOrderSchema = z.object({
 	items: z
 		.array(
 			z.object({
@@ -16,59 +17,37 @@ const orderSchema = z.object({
 				variantId: z.string().optional(),
 				productId: z.string().uuid().optional(),
 				title: z.string(),
-				thumbnail: z.string(),
+				thumbnail: z.string().optional(),
 				unit: z.string(),
 				qty: z.coerce.number().min(1),
 				price: z.coerce.number().min(0),
-				maxPrice: z.coerce.number().min(0),
+				maxPrice: z.coerce.number().min(0).optional(),
 			}),
 		)
 		.min(1),
 	taxes: z.array(
-		z.object({ id: z.string(), name: z.string(), amount: z.number() }),
+		z.object({
+			name: z.string(),
+			amount: z.coerce.number(),
+			sum: z.enum(SUM_TYPE),
+		}),
 	),
 	discounts: z.array(
-		z.object({ id: z.string(), name: z.string(), amount: z.number() }),
+		z.object({
+			name: z.string(),
+			amount: z.coerce.number(),
+			sum: z.enum(SUM_TYPE),
+		}),
 	),
+});
+
+const createOrderSchema = z.object({
+	...updateOrderSchema.shape,
 	status: z.enum(ORDER_STATUS),
 });
 
-export function orderCalculator({
-	items,
-	discounts,
-	taxes,
-}: {
-	items: Array<{ price: number; maxPrice?: number; qty: number }>;
-	discounts: Array<{ amount: number }>;
-	taxes: Array<{ amount: number }>;
-}) {
-	const itemsTotal = items.reduce(
-		(sum, item) => sum + item.price * item.qty,
-		0,
-	);
-	const maxItemsTotal = items.reduce(
-		(sum, item) => sum + (item.maxPrice ?? item.price) * item.qty,
-		0,
-	);
-
-	const discountTotal = discounts.reduce((sum, d) => sum + d.amount, 0);
-	const taxTotal = taxes.reduce((sum, t) => sum + t.amount, 0);
-
-	const totalAmount = itemsTotal + taxTotal - discountTotal;
-	const maxTotalAmount = maxItemsTotal + taxTotal - discountTotal;
-
-	return {
-		itemTotalAmount: itemsTotal,
-		maxItemTotalAmount: maxItemsTotal,
-		totalDiscountAmount: discountTotal,
-		totalTaxAmount: taxTotal,
-		totalAmount,
-		amountSaved: maxTotalAmount - totalAmount,
-	};
-}
-
 export const posOrderRoute = new Hono<ServerContext>()
-	.post("/", zValidator("json", orderSchema), async (c) => {
+	.post("/", zValidator("json", createOrderSchema), async (c) => {
 		const sess = c.get("session");
 		const user = c.get("user");
 
@@ -96,6 +75,7 @@ export const posOrderRoute = new Hono<ServerContext>()
 				timeline: [
 					{
 						content: "Order was created!",
+						status: "created",
 						userId: user?.id!,
 						createdAt: new Date().toISOString(),
 					},
@@ -127,17 +107,34 @@ export const posOrderRoute = new Hono<ServerContext>()
 					throw new HTTPError(404, { message: "Order not found!" });
 				});
 
-			return c.json({ data });
+			return c.json(data);
 		},
 	)
 	.patch(
 		"/:id",
-		zValidator("json", orderSchema.partial()),
-		zValidator("param", z.object({ id: z.string() })),
+		zValidator(
+			"param",
+			z.object({
+				id: z.string(),
+			}),
+		),
+		zValidator(
+			"json",
+			z.discriminatedUnion("type", [
+				z.object({ type: z.literal("accept") }),
+				z.object({ type: z.literal("packed") }),
+				z.object({ type: z.literal("out_for_delivery") }),
+				z.object({ type: z.literal("replaced") }),
+				z.object({ type: z.literal("refunded") }),
+				z.object({ type: z.literal("delivered"), otp: z.string() }),
+				z.object({ type: z.literal("cancel"), reason: z.string() }),
+				z.object({ type: z.literal("update"), ...updateOrderSchema.shape }),
+			]),
+		),
 		async (c) => {
 			const { id } = c.req.valid("param");
+			const { type, ...data } = c.req.valid("json");
 			const user = c.get("user");
-			const { items, taxes, discounts, status } = c.req.valid("json");
 
 			const ord = await db
 				.selectFrom("orders")
@@ -148,28 +145,75 @@ export const posOrderRoute = new Hono<ServerContext>()
 					throw new HTTPError(404, { message: "Order not found!" });
 				});
 
-			let newOrd: Updateable<DBTypes["orders"]> = { status };
+			let newOrd: Updateable<DBTypes["orders"]> = {};
 
-			if (["refunded", "delivered"].includes(ord.status!)) {
-				throw new HTTPError(400, { message: "Order completed!" });
+			if (
+				(["canceled"] satisfies (typeof ord.status)[]).includes(
+					ord.status as any,
+				)
+			) {
+				throw new HTTPError(400, { message: "Order canceled!" });
 			}
 
-			if (items || taxes || discounts) {
-				const calcs = orderCalculator({
-					items: items || ord.items || [],
-					taxes: taxes || ord.taxes || [],
-					discounts: discounts || ord.discounts || [],
-				});
+			if (type === "update") {
+				const { items, taxes, discounts } = data as z.infer<
+					typeof updateOrderSchema
+				>;
+				if (items || taxes || discounts) {
+					const calcs = orderCalculator({
+						items: items || ord.items || [],
+						taxes: taxes || ord.taxes || [],
+						discounts: discounts || ord.discounts || [],
+					});
 
-				newOrd = {
-					...newOrd,
-					items,
-					taxes,
-					discounts,
-					status: "awaiting_customer_confirmation",
+					newOrd = {
+						...newOrd,
+						items,
+						taxes,
+						discounts,
+						status: "awaiting_customer_confirmation",
+						...calcs,
+					};
+				}
+			}
 
-					...calcs,
-				};
+			if (type === "accept") {
+				newOrd = { status: "accepted" };
+			}
+			if (type === "packed") {
+				newOrd = { status: "packed" };
+			}
+			if (type === "out_for_delivery") {
+				newOrd = { status: "out_for_delivery" };
+			}
+
+			if (type === "replaced") {
+				newOrd = { status: "replaced" };
+			}
+			if (type === "refunded") {
+				newOrd = { status: "refunded" };
+			}
+
+			if (type === "delivered") {
+				if (
+					ord.confirmationOtp &&
+					"otp" in data &&
+					data.otp !== ord.confirmationOtp
+				) {
+					throw new HTTPError(400, { message: "Invalid OTP!" });
+				}
+
+				newOrd = { status: "delivered" };
+			}
+
+			if (type === "cancel") {
+				if ("reason" in data) {
+					newOrd = {
+						status: "canceled",
+						canceledAt: new Date(),
+						cancelReason: data.reason,
+					};
+				}
 			}
 
 			if (
@@ -184,7 +228,8 @@ export const posOrderRoute = new Hono<ServerContext>()
 						timeline: [
 							...ord.timeline,
 							{
-								content: `Order updated to status - (${newOrd.status?.replaceAll("_", " ")})`,
+								content: "Order updated",
+								status: newOrd.status || ord.status!,
 								userId: user?.id!,
 								createdAt: new Date().toISOString(),
 							},

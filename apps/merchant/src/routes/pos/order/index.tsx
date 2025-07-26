@@ -24,7 +24,7 @@ import type { InferResponseType } from "hono/client";
 import { ArrowUpRight } from "lucide-react";
 import { z } from "zod";
 
-export const Route = createFileRoute("/(dashboard)/order/")({
+export const Route = createFileRoute("/pos/order/")({
   component: RouteComponent,
   validateSearch: z.object({
     page: z.coerce.number().int().min(1).catch(1),
@@ -92,7 +92,7 @@ function MobileView({ items }: { items: Response["items"] }) {
     <div className="bg-background border divide-y">
       {items.map((m) => (
         <Link
-          to={"/order/$id"}
+          to={"/pos/order/$id"}
           params={{ id: m.id }}
           className="flex p-4"
           key={m.id}
@@ -141,7 +141,9 @@ function DesktopView({ items }: { items: Response["items"] }) {
         {items.map((m) => (
           <TableRow
             key={m.id}
-            onClick={() => navigate({ to: "/order/$id", params: { id: m.id } })}
+            onClick={() =>
+              navigate({ to: "/pos/order/$id", params: { id: m.id } })
+            }
             className="cursor-pointer focus:bg-accent"
           >
             <TableCell>{m.id}</TableCell>

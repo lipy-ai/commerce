@@ -5,6 +5,7 @@ import type { adminVariantRoute } from "@lipy/server/routes/adminRoutes/variant"
 import type { addressRoute } from "@lipy/server/routes/loggedRoutes/address";
 import type { cartRoute } from "@lipy/server/routes/loggedRoutes/cart";
 import type { orderRoute } from "@lipy/server/routes/loggedRoutes/order";
+import type { loggedStoreRoute } from "@lipy/server/routes/loggedRoutes/shop";
 import type { uploadRoute } from "@lipy/server/routes/loggedRoutes/upload";
 import type { merchantComboboxRoute } from "@lipy/server/routes/merchantRoutes/combobox";
 import type { merchantCustomerRoute } from "@lipy/server/routes/merchantRoutes/customer";
@@ -105,6 +106,10 @@ export const loggedInAddressApi = hc<typeof addressRoute>(
 );
 export const loggedInCartApi = hc<typeof cartRoute>(`${basepath}/cart`, opts);
 export const loggedIOrderApi = hc<typeof orderRoute>(`${basepath}/order`, opts);
+export const loggedInStoreApi = hc<typeof loggedStoreRoute>(
+  `${basepath}/store`,
+  opts
+);
 
 // Public Routes
 export const publicProductApi = hc<typeof productRoute>(

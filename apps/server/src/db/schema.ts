@@ -174,11 +174,11 @@ export const store = schema.table("store", {
 	}>(),
 	refunds: jsonb("refunds").$type<{
 		enabled: boolean;
-		content: string;
+		content?: string;
 	}>(),
 	replacements: jsonb("replacements").$type<{
 		enabled: boolean;
-		content: string;
+		content?: string;
 	}>(),
 	gstTax: integer("gstTax").notNull().default(0),
 });

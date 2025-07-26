@@ -2,7 +2,6 @@ import { cn } from "@lipy/web-ui/lib/utils";
 import { IterationCcw, Loader2 } from "lucide-react";
 import type { ReactNode } from "react";
 import { type ControllerRenderProps, useFormContext } from "react-hook-form";
-import { RadioGroup, RadioGroupItem } from "../custom-ui/customRadioGroup";
 import InputWithAnimatedLabel from "../custom-ui/inputWithAnimatedLabel";
 import { Button } from "../ui/button";
 import {
@@ -21,6 +20,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input, type InputProps } from "../ui/input";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import {
   Select,
   SelectContent,

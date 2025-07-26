@@ -22,7 +22,7 @@ export const updateSession = async (
 		}),
 	);
 	const sessData = (await auth.$context).authCookies.sessionData.name;
-	deleteCookie(c, sessData, {
+	setCookie(c, sessData, "", {
 		path: "/",
 		maxAge: 0,
 		expires: new Date(0),

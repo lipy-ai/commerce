@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import env from "@/env";
 import { redis } from "@/services/cache";
 import type { ServerContext } from "@/types";
 import type { Context } from "hono";
@@ -21,8 +22,12 @@ export const updateSession = async (
 		}),
 	);
 	const sessData = (await auth.$context).authCookies.sessionData.name;
-	console.log({ sessData });
-	deleteCookie(c, sessData);
+	deleteCookie(c, sessData, {
+		...(env.IN_PROD && {
+			secure: true,
+			domain: `.${env.BETTER_AUTH_URL.split(".").slice(1).join(".")}`,
+		}),
+	});
 
 	return true;
 };

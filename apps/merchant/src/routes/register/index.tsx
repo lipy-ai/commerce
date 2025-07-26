@@ -174,11 +174,12 @@ function RouteComponent() {
     await mutation.mutateAsync({ json: data });
   };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (store.isLoading) return;
     store.data?.id &&
       router.navigate({ from: "/register", to: "/", reloadDocument: true });
-  }, [store, router.navigate]);
+  }, [store.isLoading]);
 
   return (
     <MultiStepLayout

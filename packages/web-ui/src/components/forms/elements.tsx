@@ -2,6 +2,7 @@ import { cn } from "@lipy/web-ui/lib/utils";
 import { IterationCcw, Loader2 } from "lucide-react";
 import type { ReactNode } from "react";
 import { type ControllerRenderProps, useFormContext } from "react-hook-form";
+import { RadioGroup, RadioGroupItem } from "../custom-ui/customRadioGroup";
 import InputWithAnimatedLabel from "../custom-ui/inputWithAnimatedLabel";
 import { Button } from "../ui/button";
 import {
@@ -27,6 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { Slider } from "../ui/slider";
 import { Switch } from "../ui/switch";
 import { Textarea, type TextareaProps } from "../ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
@@ -59,7 +61,9 @@ export const FormItemWrapper = ({
   fieldType?: string;
 }) => {
   return (
-    <FormItem className={cn("w-full gap-1 mb-3 last:mb-0", wrapperClassName)}>
+    <FormItem
+      className={cn("w-full block gap-1 mb-3 last:mb-0", wrapperClassName)}
+    >
       <div>
         {label && !(fieldType === "InputWithAnimatedLabel") && (
           <div className="flex items-start py-2">
@@ -211,6 +215,86 @@ export const FormSwitch = ({
               />
             </FormControl>
           }
+        </FormItemWrapper>
+      )}
+    />
+  );
+};
+
+export const FormRadioInput = ({
+  opts,
+  ...props
+}: Parameters<typeof RadioGroup>[0] &
+  SharedFormProps & { opts: { value: string; label: string }[] }) => {
+  const form = useFormContext();
+  return (
+    <FormField
+      control={form.control}
+      name={props.name}
+      render={({ field }: { field: ControllerRenderProps }) => (
+        <FormItemWrapper {...props}>
+          <FormControl>
+            <RadioGroup
+              value={field.value}
+              onValueChange={field.onChange}
+              defaultValue={field.value}
+            >
+              {opts.map((o) => (
+                <FormItem key={o.value} className="flex items-center gap-3">
+                  <FormControl>
+                    <RadioGroupItem value={o.value} />
+                  </FormControl>
+                  <FormLabel>{o.label}</FormLabel>
+                </FormItem>
+              ))}
+            </RadioGroup>
+          </FormControl>
+        </FormItemWrapper>
+      )}
+    />
+  );
+};
+
+export const FormSlider = (
+  props: SharedFormProps &
+    Parameters<typeof Slider>[0] & {
+      suffix: string;
+      maxLabel?: string;
+      prefix?: string;
+    }
+) => {
+  const form = useFormContext();
+
+  const max = props.max || 100;
+
+  return (
+    <FormField
+      control={form.control}
+      name={props.name}
+      render={({ field }: { field: ControllerRenderProps }) => (
+        <FormItemWrapper {...props}>
+          <div className="relative mt-1">
+            <span className="inline-flex absolute right-0 bottom-full p-2">
+              {props.maxLabel && Number(field.value) === Number(max) ? (
+                props.maxLabel
+              ) : (
+                <>
+                  {props.prefix}&nbsp;
+                  {field.value || 0}&nbsp;
+                  {props.suffix}
+                </>
+              )}
+            </span>
+
+            <FormControl>
+              <Slider
+                max={max}
+                step={props.step || 1}
+                value={[Number(field.value) || 0]}
+                onValueChange={(f) => field.onChange(f[0])}
+              />
+            </FormControl>
+          </div>
         </FormItemWrapper>
       )}
     />

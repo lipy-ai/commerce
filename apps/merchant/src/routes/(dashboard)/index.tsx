@@ -73,28 +73,28 @@ export const Route = createFileRoute("/(dashboard)/")({
 
 const btns = [
   {
-    name: "POS",
+    name: "Store Settings",
     icon: StoreIcon,
     className: "bg-yellow-400 text-foreground",
-    href: "/pos",
+    href: "/store",
   },
   {
-    name: "Checkout",
+    name: "Express Checkout",
     icon: ShoppingCart,
     className: "bg-emerald-600 text-primary-foreground",
-    href: "/checkout",
+    href: "/pos/checkout",
   },
   {
-    name: "Add Customer",
+    name: "My Customers",
     icon: SquareUser,
     className: "bg-amber-600 text-primary-foreground",
-    href: "/customer/add",
+    href: "/customer",
   },
   {
-    name: "Add Product",
+    name: "My Products",
     icon: Shirt,
     className: "bg-indigo-600 text-primary-foreground",
-    href: "/product/add",
+    href: "/product",
   },
 ];
 function RouteComponent() {
@@ -190,7 +190,7 @@ function Orders({
           {data.map((v, i) => {
             return (
               <Link
-                to={"/order/$id"}
+                to={"/pos/order/$id"}
                 params={{ id: v.id }}
                 key={i}
                 className="leading-none flex py-3 space-y-2"

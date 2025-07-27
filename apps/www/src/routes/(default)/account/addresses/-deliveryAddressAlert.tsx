@@ -89,7 +89,7 @@ function LocationComponent() {
     }
   }, [isLoading, mapLoaded]);
 
-  if (error) {
+  if (error && !isLoading) {
     return (
       <>
         <DrawerDialogSwitcher

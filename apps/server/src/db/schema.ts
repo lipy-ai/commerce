@@ -69,7 +69,7 @@ export const user = schema.table("user", {
 	updatedAt: timestamp("updatedAt", { withTimezone: true }).notNull(),
 	country: text("country"),
 	onboarded: boolean("onboarded").notNull().default(false),
-	address: uuid("address").references((): any => user?.id, {
+	address: uuid("address").references((): any => userAddress.id, {
 		onDelete: "set null",
 	}),
 	normalizedEmail: text("normalizedEmail"),

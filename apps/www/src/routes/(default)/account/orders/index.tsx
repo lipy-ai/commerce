@@ -31,13 +31,13 @@ export const ORDER_STATUS_BADGE_VARIANT: Record<
   VariantProps<typeof badgeVariants>["variant"]
 > = {
   created: "info",
-  accepted: "accent",
-  packed: "accent",
+  accepted: "success",
+  packed: "warning",
   out_for_delivery: "warning",
   delivered: "success",
   return_requested: "warning",
   refunded: "destructive",
-  replaced: "brand",
+  replaced: "progress",
   canceled: "destructive",
   awaiting_customer_confirmation: "warning",
   completed: "success",

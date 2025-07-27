@@ -99,7 +99,20 @@ const route = new Hono<ServerContext>()
 			const data = await db
 				.selectFrom("store")
 				.where("handle", "=", handle)
-				.selectAll()
+				.select([
+					"id",
+					"handle",
+					"image",
+					"address",
+					"phone",
+					"email",
+					"openingHour",
+					"closingHour",
+					"name",
+					"description",
+					"createdAt",
+					"type",
+				])
 				.executeTakeFirstOrThrow();
 
 			return c.json(data);

@@ -180,7 +180,7 @@ function Members({
                     <Btn m={m} />
                   </div>
                   <div className="gap-2 flex">
-                    <Badge variant={"accent"} className="capitalize">
+                    <Badge variant={"info"} className="capitalize">
                       {m.role}
                     </Badge>
                     {m.createdAt && (
@@ -344,7 +344,7 @@ function Invitation({
                     <Btn m={m} />
                   </div>
                   <div className="gap-2 flex">
-                    <Badge variant={"accent"} className="capitalize">
+                    <Badge variant={"info"} className="capitalize">
                       {m.role}
                     </Badge>
                     <Badge variant={"success"} className="capitalize">
@@ -387,17 +387,13 @@ function Invitation({
                 </TableCell>
 
                 <TableCell>
-                  <Badge
-                    size={"large"}
-                    variant={"accent"}
-                    className="capitalize"
-                  >
+                  <Badge size={"large"} variant={"info"} className="capitalize">
                     {m.role}
                   </Badge>
                 </TableCell>
 
                 <TableCell>
-                  <Badge variant={"status"} className="capitalize">
+                  <Badge variant={"success"} className="capitalize">
                     {isBefore(new Date(m.expiresAt), new Date())
                       ? "Expired"
                       : m.status}

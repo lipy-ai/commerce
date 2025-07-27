@@ -12,8 +12,10 @@ import {
 	numeric,
 	pgSchema,
 	primaryKey,
+	real,
 	smallint,
 	text,
+	time,
 	timestamp,
 	unique,
 	uuid,
@@ -22,7 +24,6 @@ import type { z } from "zod";
 
 export const ORDER_STATUS = [
 	"created",
-	"awaiting_customer_confirmation",
 	"accepted",
 	"packed",
 	"out_for_delivery",
@@ -30,9 +31,12 @@ export const ORDER_STATUS = [
 	"return_requested",
 	"refunded",
 	"replaced",
-	"cancelled",
+	"canceled",
 	"completed",
+	"awaiting_customer_confirmation",
 ] as const;
+
+export const SUM_TYPE = ["flat", "percent"] as const;
 
 export const PRODUCT_TYPE = [
 	"grocery",
@@ -69,7 +73,7 @@ export const user = schema.table("user", {
 	updatedAt: timestamp("updatedAt", { withTimezone: true }).notNull(),
 	country: text("country"),
 	onboarded: boolean("onboarded").notNull().default(false),
-	address: uuid("address").references((): any => userAddress.id, {
+	address: uuid("address").references((): any => userAddress?.id, {
 		onDelete: "set null",
 	}),
 	normalizedEmail: text("normalizedEmail"),
@@ -160,21 +164,23 @@ export const store = schema.table("store", {
 	phone: text("phone"),
 	type: text("type"),
 	active: boolean("active").default(false),
-	policies: jsonb("policies").array().$type<{
-		operationalHours: {
-			start: number; // 24 hrs format
-			end: number; // 24 hrs format
-		};
-		deliveryDistance: number;
+	openingHour: time("openingHour").notNull().default("00:00"),
+	closingHour: time("closingHour").notNull().default("00:00"),
+	deliveryDistance: real("deliveryDistance").notNull().default(1),
+	freeDeliveryDistance: real("freeDeliveryDistance").notNull().default(1),
+	deliveryChargePerKm: real("deliveryChargePerKm").notNull().default(1),
+	payments: jsonb("payments").$type<{
+		upiIds: Array<{ id: string; name: string }>;
 	}>(),
-	taxes: jsonb("taxes").array().$type<
-		Array<{
-			id: string;
-			name: string;
-			value: number;
-			calculationType: "percent" | "sum";
-		}>
-	>(),
+	refunds: jsonb("refunds").$type<{
+		enabled: boolean;
+		content?: string;
+	}>(),
+	replacements: jsonb("replacements").$type<{
+		enabled: boolean;
+		content?: string;
+	}>(),
+	gstTax: integer("gstTax").notNull().default(0),
 });
 
 export const storePayments = schema.table("storePayments", {
@@ -344,27 +350,27 @@ export const orders = schema.table("orders", {
 			variantId?: string | null;
 			productId?: string | null;
 			title: string;
-			thumbnail: string;
+			thumbnail?: string;
 			unit: string;
 			qty: number;
 			price: number;
-			maxPrice: number;
+			maxPrice?: number;
 		}>
 	>(),
 	currency: text("currency", { enum: ["inr"] }).notNull(),
 
 	taxes: jsonb("taxes").array().$type<
 		Array<{
-			id: string;
 			name: string;
 			amount: number;
+			sum: (typeof SUM_TYPE)[number];
 		}>
 	>(),
 	discounts: jsonb("discounts").array().$type<
 		Array<{
-			id: string;
 			name: string;
 			amount: number;
+			sum: (typeof SUM_TYPE)[number];
 		}>
 	>(),
 	storeId: uuid("storeId")
@@ -372,7 +378,6 @@ export const orders = schema.table("orders", {
 		.references(() => store.id, { onDelete: "cascade" }),
 
 	delivery: jsonb("delivery").$type<{
-		otp?: string;
 		trackingId?: string;
 		name?: string;
 		agentId?: string;
@@ -397,6 +402,7 @@ export const orders = schema.table("orders", {
 		.$type<
 			Array<{
 				content: string;
+				status: (typeof ORDER_STATUS)[number];
 				userId: string;
 				createdAt: string;
 			}>
@@ -405,12 +411,15 @@ export const orders = schema.table("orders", {
 		.default([]),
 	paymentMethod: text("paymentMethod", { enum: ["cod", "upi", "card"] }),
 	orderedAt: timestamp("orderedAt", { withTimezone: true }).notNull(),
-	cancelledAt: timestamp("cancelledAt", { withTimezone: true }),
+	canceledAt: timestamp("canceledAt", { withTimezone: true }),
+	cancelReason: text("cancelReason"),
 	refundedAt: timestamp("refundedAt", { withTimezone: true }),
 	deliveredAt: timestamp("deliveredAt", { withTimezone: true }),
+	paidAt: timestamp("deliveredAt", { withTimezone: true }),
 	deliveryAgentAssignedAt: timestamp("deliveryAgentAssignedAt", {
 		withTimezone: true,
 	}),
+	confirmationOtp: text("confirmationOtp"),
 	status: text("status", {
 		enum: ORDER_STATUS,
 	}),

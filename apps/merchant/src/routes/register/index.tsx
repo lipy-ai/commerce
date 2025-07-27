@@ -1,6 +1,7 @@
-import { publicShopApi } from "@lipy/lib/api";
+import { loggedInStoreApi } from "@lipy/lib/api";
 import { useStore } from "@lipy/lib/hooks/use-store";
 import { useAPIMutation } from "@lipy/lib/utils/useQueryClient";
+import { UPIQRCode } from "@lipy/web-ui/components/custom-ui/upiCard";
 import {
   FormInput,
   FormToggleGroup,
@@ -9,16 +10,16 @@ import {
   MultiStepLayout,
   useMultiStepForm,
 } from "@lipy/web-ui/components/forms/multi-step";
-import { Button } from "@lipy/web-ui/components/ui/button";
-import { CopyButton } from "@lipy/web-ui/components/ui/copy-button";
-import { Label } from "@lipy/web-ui/components/ui/label";
+
+import { redirectToSessionRefreshURL } from "@lipy/lib/hooks/use-navigate";
+import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { cn } from "@lipy/web-ui/lib/utils";
-import { useRouter } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
-import { Info } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
-import QRCode from "react-qr-code";
+import { StorePolicesForm } from "../(dashboard)/store/policies";
 export const Route = createFileRoute("/register/")({
   component: RouteComponent,
 });
@@ -138,51 +139,34 @@ const step3 = {
   },
 };
 
-function UPIQRCode({ upi, name }: { upi: string; name: string }) {
-  const val = `upi://pay?pa=${upi}&pn=${name}`;
-  return (
-    <div className="bg-card p-8 overflow-hidden border drop-shadow-xs rounded w-fit flex flex-col justify-center items-center space-y-4 m-auto transition-all">
-      <img src="/assets/upi-bhim.svg" alt="Upi" width={150} />
+const step4 = {
+  id: "store_policies",
+  title: "Store Policies",
+  description: "Tell us about your store polices.",
 
-      <div className="relative">
-        <QRCode
-          title={name}
-          value={val}
-          level="H"
-          className={cn("transition-all w-full", !upi && "blur")}
-        />
-        {!upi && (
-          <span className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 transition-all">
-            <Button
-              variant={"outline"}
-              size={"sm"}
-              className="rounded-full w-fit text-sm text-muted-foreground"
-            >
-              <Info className="size-4" />
-              <span>No UPI</span>
-            </Button>
-          </span>
-        )}
-      </div>
+  children: () => {
+    const { data } = useMultiStepForm();
+    const form = useFormContext();
 
-      <div className={cn("text-center transition-all", !upi && "hidden")}>
-        <Label className="flex items-center gap-1 text-muted-foreground">
-          {upi}
-          <CopyButton value={val} />
-        </Label>
-        <p className="text-base">{name}</p>
-      </div>
-    </div>
-  );
-}
+    const payments = form.watch("payments");
+
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    useEffect(() => {
+      if (!payments?.upiIds?.[0]?.name) {
+        form.setValue("payments.upiIds.0.name", data?.store_info?.name);
+      }
+    }, [payments]);
+    return <StorePolicesForm />;
+  },
+};
 
 function RouteComponent() {
   const router = useRouter();
   const store = useStore();
 
-  const mutation = useAPIMutation(publicShopApi.index, "$post", {
+  const mutation = useAPIMutation(loggedInStoreApi.index, "$post", {
     onSuccess: async () => {
-      router.navigate({ to: "/", reloadDocument: true });
+      redirectToSessionRefreshURL();
     },
   });
 
@@ -191,15 +175,24 @@ function RouteComponent() {
     await mutation.mutateAsync({ json: data });
   };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (store.isLoading) return;
     store.data?.id && router.navigate({ from: "/register", to: "/" });
-  }, [store, router.navigate]);
+  }, [store.isLoading]);
 
   return (
     <MultiStepLayout
+      customBtn={
+        <Link
+          to="/logout"
+          className={cn(buttonVariants({ variant: "outline" }))}
+        >
+          <LogOut /> Sign out
+        </Link>
+      }
       loading={store.isLoading || !!store.data?.id}
-      steps={[step1, step2, step3]}
+      steps={[step1, step2, step3, step4]}
       onSubmit={handleSubmit}
     />
   );

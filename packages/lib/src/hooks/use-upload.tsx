@@ -106,7 +106,7 @@ export function useUpload(
     },
     onError: (error: any) => {
       if (error.name === "AbortError") {
-        console.log("Upload cancelled");
+        console.log("Upload canceled");
       } else {
         console.error("Upload failed:", error);
       }

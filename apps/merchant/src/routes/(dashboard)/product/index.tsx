@@ -55,7 +55,7 @@ function RouteComponent() {
             {isMobile ? "" : "New Product"}
           </Button>
         </FormEdit> */}
-        <Link className={cn(buttonVariants())} to="/product/add">
+        <Link className={cn(buttonVariants({ size: "sm" }))} to="/product/add">
           <Plus />
           New Product
         </Link>

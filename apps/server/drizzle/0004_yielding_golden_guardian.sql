@@ -5,7 +5,7 @@ ALTER TABLE "lipy-dev"."authAccount" ALTER COLUMN "refreshTokenExpiresAt" SET DA
 ALTER TABLE "lipy-dev"."authAccount" ALTER COLUMN "createdAt" SET DATA TYPE timestamp with time zone;--> statement-breakpoint
 ALTER TABLE "lipy-dev"."authAccount" ALTER COLUMN "updatedAt" SET DATA TYPE timestamp with time zone;--> statement-breakpoint
 ALTER TABLE "lipy-dev"."orders" ALTER COLUMN "orderedAt" SET DATA TYPE timestamp with time zone;--> statement-breakpoint
-ALTER TABLE "lipy-dev"."orders" ALTER COLUMN "cancelledAt" SET DATA TYPE timestamp with time zone;--> statement-breakpoint
+ALTER TABLE "lipy-dev"."orders" ALTER COLUMN "canceledAt" SET DATA TYPE timestamp with time zone;--> statement-breakpoint
 ALTER TABLE "lipy-dev"."orders" ALTER COLUMN "refundedAt" SET DATA TYPE timestamp with time zone;--> statement-breakpoint
 ALTER TABLE "lipy-dev"."orders" ALTER COLUMN "deliveredAt" SET DATA TYPE timestamp with time zone;--> statement-breakpoint
 ALTER TABLE "lipy-dev"."orders" ALTER COLUMN "deliveryAgentAssignedAt" SET DATA TYPE timestamp with time zone;--> statement-breakpoint

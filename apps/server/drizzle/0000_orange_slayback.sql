@@ -69,7 +69,7 @@ CREATE TABLE "lipy-dev"."orders" (
 	"customerInstructions" jsonb,
 	"paymentMethod" text,
 	"orderedAt" timestamp NOT NULL,
-	"cancelledAt" timestamp,
+	"canceledAt" timestamp,
 	"refundedAt" timestamp,
 	"deliveredAt" timestamp,
 	"deliveryAgentAssignedAt" timestamp,

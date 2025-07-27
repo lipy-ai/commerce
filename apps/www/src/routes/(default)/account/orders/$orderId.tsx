@@ -187,8 +187,8 @@ function RouteComponent() {
                     <p className="">
                       {order?.deliveredAt
                         ? "Delivered At"
-                        : order?.cancelledAt
-                          ? "Cancelled At"
+                        : order?.canceledAt
+                          ? "Canceled At"
                           : order?.refundedAt
                             ? "Refunded At"
                             : "Ordered At"}
@@ -196,8 +196,8 @@ function RouteComponent() {
                     <p className="text-muted-foreground text-sm">
                       {order?.deliveredAt
                         ? format(new Date(order?.deliveredAt), "PPp")
-                        : order?.cancelledAt
-                          ? format(new Date(order?.cancelledAt), "PPp")
+                        : order?.canceledAt
+                          ? format(new Date(order?.canceledAt), "PPp")
                           : order?.refundedAt
                             ? format(new Date(order?.refundedAt), "PPp")
                             : format(

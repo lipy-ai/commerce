@@ -51,11 +51,11 @@ export function orderCalculator({
   const maxTotalAmount = maxItemsTotal + maxTaxTotal - maxDiscountTotal;
 
   return {
-    itemsTotal,
-    maxItemsTotal,
-    discountTotal,
-    taxTotal,
+    itemTotalAmount: itemsTotal,
+    maxItemTotalAmount: maxItemsTotal,
+    totalDiscountAmount: discountTotal,
+    totalTaxAmount: taxTotal,
     totalAmount,
-    totalSaved: maxTotalAmount - totalAmount,
+    amountSaved: maxTotalAmount - totalAmount,
   };
 }

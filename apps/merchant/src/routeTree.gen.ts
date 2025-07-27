@@ -16,7 +16,6 @@ import { Route as dashboardRouteRouteImport } from './routes/(dashboard)/route'
 import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as dashboardIndexRouteImport } from './routes/(dashboard)/index'
-import { Route as authRefreshRouteImport } from './routes/(auth)/refresh'
 import { Route as authLogoutRouteImport } from './routes/(auth)/logout'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as PosOrderIndexRouteImport } from './routes/pos/order/index'
@@ -77,11 +76,6 @@ const dashboardIndexRoute = dashboardIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => dashboardRouteRoute,
-} as any)
-const authRefreshRoute = authRefreshRouteImport.update({
-  id: '/(auth)/refresh',
-  path: '/refresh',
-  getParentRoute: () => rootRouteImport,
 } as any)
 const authLogoutRoute = authLogoutRouteImport.update({
   id: '/(auth)/logout',
@@ -223,7 +217,6 @@ export interface FileRoutesByFullPath {
   '/error': typeof ErrorRoute
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
-  '/refresh': typeof authRefreshRoute
   '/admin/': typeof AdminIndexRoute
   '/register': typeof RegisterIndexRoute
   '/account/preferences': typeof dashboardAccountPreferencesRoute
@@ -256,7 +249,6 @@ export interface FileRoutesByTo {
   '/error': typeof ErrorRoute
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
-  '/refresh': typeof authRefreshRoute
   '/': typeof dashboardIndexRoute
   '/admin': typeof AdminIndexRoute
   '/register': typeof RegisterIndexRoute
@@ -293,7 +285,6 @@ export interface FileRoutesById {
   '/error': typeof ErrorRoute
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/logout': typeof authLogoutRoute
-  '/(auth)/refresh': typeof authRefreshRoute
   '/(dashboard)/': typeof dashboardIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/register/': typeof RegisterIndexRoute
@@ -331,7 +322,6 @@ export interface FileRouteTypes {
     | '/error'
     | '/login'
     | '/logout'
-    | '/refresh'
     | '/admin/'
     | '/register'
     | '/account/preferences'
@@ -364,7 +354,6 @@ export interface FileRouteTypes {
     | '/error'
     | '/login'
     | '/logout'
-    | '/refresh'
     | '/'
     | '/admin'
     | '/register'
@@ -400,7 +389,6 @@ export interface FileRouteTypes {
     | '/error'
     | '/(auth)/login'
     | '/(auth)/logout'
-    | '/(auth)/refresh'
     | '/(dashboard)/'
     | '/admin/'
     | '/register/'
@@ -437,7 +425,6 @@ export interface RootRouteChildren {
   ErrorRoute: typeof ErrorRoute
   authLoginRoute: typeof authLoginRoute
   authLogoutRoute: typeof authLogoutRoute
-  authRefreshRoute: typeof authRefreshRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
   AcceptInvitationIdIndexRoute: typeof AcceptInvitationIdIndexRoute
 }
@@ -492,13 +479,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof dashboardIndexRouteImport
       parentRoute: typeof dashboardRouteRoute
-    }
-    '/(auth)/refresh': {
-      id: '/(auth)/refresh'
-      path: '/refresh'
-      fullPath: '/refresh'
-      preLoaderRoute: typeof authRefreshRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/(auth)/logout': {
       id: '/(auth)/logout'
@@ -772,7 +752,6 @@ const rootRouteChildren: RootRouteChildren = {
   ErrorRoute: ErrorRoute,
   authLoginRoute: authLoginRoute,
   authLogoutRoute: authLogoutRoute,
-  authRefreshRoute: authRefreshRoute,
   RegisterIndexRoute: RegisterIndexRoute,
   AcceptInvitationIdIndexRoute: AcceptInvitationIdIndexRoute,
 }

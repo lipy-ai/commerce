@@ -30,8 +30,9 @@ import { Button } from "@lipy/web-ui/components/ui/button";
 function LocationComponent() {
   const [error, setError] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const { setDeliveryLocation } = useLocationStore();
   const [deliveryAddressSetter, setDeliveryAddressSetter] = useState(false);
+
+  const { setDeliveryLocation } = useLocationStore();
 
   const { isLoaded: mapLoaded } = useJsApiLoader({
     googleMapsApiKey: env.GOOGLE_MAP_API_KEY,
@@ -44,7 +45,7 @@ function LocationComponent() {
     {}
   );
 
-  const handleGeolocation = () => {
+  const handleGeolocation = async () => {
     if (!navigator.geolocation) {
       handleError("Location permission not enabled.");
       return;
@@ -60,12 +61,10 @@ function LocationComponent() {
 
         try {
           const { result } = await reverseGeocode(lat, lng);
-
           const newLocation: AddressType = {
             ...defaultDeliveryLocationState.deliveryLocation,
             ...fillBaseAddress(result),
           };
-
           setDeliveryLocation(newLocation);
         } catch {
           handleError("Unable to fetch location details.");
@@ -80,14 +79,16 @@ function LocationComponent() {
     setDrawerOpen(true);
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies:
   useEffect(() => {
-    if (primaryAddress?.id && !isLoading) {
-      setDeliveryLocation(primaryAddress as AddressType);
-    } else if (mapLoaded) {
-      handleGeolocation();
+    if (!isLoading && mapLoaded) {
+      if (primaryAddress?.id) {
+        setDeliveryLocation(primaryAddress as AddressType);
+      } else {
+        handleGeolocation();
+      }
     }
-  }, [isLoading, mapLoaded]);
+  }, [isLoading, mapLoaded, primaryAddress?.id]);
 
   if (error && !isLoading) {
     return (

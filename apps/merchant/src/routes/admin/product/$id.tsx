@@ -113,7 +113,8 @@ function RouteComponent() {
                             />
                             {(data?.images?.length || 0) > 0 && (
                               <Badge
-                                variant={"outline"}
+                                variant={"neutral"}
+                                appearance="outline"
                                 className="absolute -top-1 -right-1"
                               >
                                 {data?.images?.length}+

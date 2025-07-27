@@ -69,7 +69,6 @@ import {
   Info,
   Mail,
   PackageCheck,
-  Pen,
   Phone,
   Truck,
   Undo,
@@ -279,7 +278,9 @@ function RouteComponent() {
       ) : (
         <>
           <div className="min-h-screen flex flex-col">
-            <DashboardHeader title={(!isMobile && `#${data?.id}`) || ""} />
+            <DashboardHeader
+              title={(!isMobile ? `#${data?.id}` : "Edit order") || ""}
+            />
             {/* Hidden iframe for printing */}
 
             <div
@@ -288,20 +289,42 @@ function RouteComponent() {
             >
               <div className="col-span-8 print:shadow-none">
                 <div className="print:border-none">
-                  <div className="flex gap-8 lg:gap-4 px-4 pt-4 justify-between">
-                    <h1 className="text-2xl font-semibold items-center">
-                      # {id}
-                    </h1>
+                  <div className="flex flex-col lg:flex-row gap-4 p-4 justify-between border-b ">
+                    <div>
+                      <h1 className="text-2xl font-semibold mb-2">
+                        Order ID: {id}
+                      </h1>
+                      <div className="text-base">
+                        <p>
+                          Status :{" "}
+                          <span className="font-medium capitalize">
+                            {data?.status?.replaceAll("_", " ")}
+                          </span>
+                        </p>
+                        <p>
+                          Order Date :{" "}
+                          <span className="font-medium capitalize">
+                            {data?.orderedAt && format(data?.orderedAt, "PPpp")}
+                          </span>
+                        </p>
+                        <p>
+                          Total payable :{" "}
+                          <span className="font-medium capitalize">
+                            {formatAmount("inr", data?.totalAmount || 0)}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
 
                     <div className="flex flex-col shrink-0 flex-wrap md:flex-row gap-4 print:hidden">
                       <Sheet>
                         <SheetTrigger asChild>
                           {hasStatus(["created"]) && (
                             <Button
-                              variant={"outline"}
-                              size={isMobile ? "icon" : "default"}
+                              className="w-fit ml-auto"
+                              size={isMobile ? "sm" : "default"}
                             >
-                              {isMobile ? <Pen /> : "Modify Order"}
+                              Modify order
                             </Button>
                           )}
                         </SheetTrigger>
@@ -311,20 +334,7 @@ function RouteComponent() {
                       </Sheet>
                     </div>
                   </div>
-                  <div className="flex flex-col md:flex-row gap-2 p-4">
-                    <Badge variant={"accent"} className="capitalize w-fit">
-                      {data?.status?.replaceAll("_", " ")}
-                    </Badge>
-                    <Badge variant={"accent"} className="capitalize w-fit">
-                      Payable Amount{" "}
-                      {formatAmount("inr", data?.totalAmount || 0)}
-                    </Badge>
-                    <Badge variant={"accent"} className="capitalize w-fit">
-                      Order On{" "}
-                      {data?.orderedAt && format(data?.orderedAt, "PPpp")}
-                    </Badge>
-                  </div>
-                  <Separator />
+
                   <div className="p-4 space-y-4">
                     <Label>Order Actions</Label>
 
@@ -420,7 +430,11 @@ function RouteComponent() {
                             <h2 className="max-w-11/12 line-clamp-2">
                               {m.title}
                             </h2>
-                            <Badge variant={"accent"} size={"small"}>
+                            <Badge
+                              variant={"info"}
+                              size={"small"}
+                              appearance="outline"
+                            >
                               {" "}
                               {m.unit}
                             </Badge>

@@ -4,42 +4,30 @@ import { cn } from "@lipy/web-ui/lib/utils";
 import { type VariantProps, cva } from "class-variance-authority";
 import * as React from "react";
 
-const badgeVariants = cva(
-  "inline-flex items-center rounded text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+export const badgeVariants = cva(
+  "inline-flex items-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
   {
     variants: {
       variant: {
-        default: "bg-primary/40 text-primary ring-primary",
-        warning: "bg-amber-400 ring-amber-400",
-        success: "bg-emerald-600/20 text-emerald-700",
-        destructive: "bg-rose-700 ring-rose-700 text-primary-foreground",
-        secondary: "bg-secondary text-secondary-foreground",
-        outline:
-          "bg-background ring ring-inset text-foreground-light ring-border",
-        info: "bg-blue-50 text-blue-700 ring-blue-200",
-        neutral: "bg-gray-100 text-gray-700 ring-gray-200",
-        premium:
-          "bg-gradient-to-r from-purple-500/10 to-pink-500/10 text-purple-700 ring-purple-200",
-        accent: "bg-indigo-50 text-indigo-700 ring-indigo-200",
-        muted: "bg-slate-100 text-slate-600 ring-slate-200",
-        ghost: "bg-transparent text-foreground hover:bg-accent/50",
-        subtle: "bg-purple-100 text-purple-700 ring-purple-200",
-        elegant: "bg-zinc-900 text-zinc-100 ring-zinc-700",
-        soft: "bg-gray-50 text-gray-600 ring-gray-100 border border-gray-200",
-        professional: "bg-slate-800 text-slate-100 ring-slate-600",
-        brand: "bg-blue-600 text-white ring-blue-500",
-        status:
-          "bg-green-50 text-green-800 ring-green-200 border border-green-100",
+        default: "bg-primary/10 text-primary ring-primary",
+        secondary: "bg-secondary/10 text-secondary ring-secondary",
+        success: "bg-emerald-100 text-emerald-800 ring-emerald-300",
+        warning: "bg-yellow-100 text-yellow-800 ring-yellow-300",
+        info: "bg-blue-100 text-blue-800 ring-blue-300",
+        destructive: "bg-red-100 text-red-800 ring-red-300",
+        progress: "bg-sky-100 text-sky-800 ring-sky-300",
+        neutral: "bg-muted text-muted-foreground ring-border",
+      },
+      appearance: {
+        solid: "",
+        soft: "bg-opacity-20",
+        outline: "border  ring-0 dark:border-white/10 border-gray-300",
+        ghost: "bg-transparent text-muted-foreground ring-0",
       },
       size: {
-        small: "py-0.5 px-1 text-xs",
-        default: "p-1 text-sm",
-        large: "p-1 text-sm",
-        compact: "py-0.5 px-2 text-xs",
-        spacious: "py-1.5 px-3 text-sm",
-      },
-      dot: {
-        true: "pl-1.5",
+        small: "px-2 py-0.5 text-xs",
+        default: "px-2.5 py-0.5 text-sm",
+        large: "px-3 py-1 text-base",
       },
       rounded: {
         none: "rounded-none",
@@ -48,15 +36,50 @@ const badgeVariants = cva(
         lg: "rounded-lg",
         full: "rounded-full",
       },
+      dot: {
+        true: "pl-1.5",
+      },
     },
+    compoundVariants: [
+      {
+        appearance: "solid",
+        variant: "success",
+        className: "bg-emerald-500 text-white ring-emerald-500",
+      },
+      {
+        appearance: "solid",
+        variant: "destructive",
+        className: "bg-red-500 text-white ring-red-500",
+      },
+      {
+        appearance: "solid",
+        variant: "info",
+        className: "bg-blue-500 text-white ring-blue-500",
+      },
+      {
+        appearance: "solid",
+        variant: "warning",
+        className: "bg-yellow-400 text-white ring-yellow-400",
+      },
+      {
+        appearance: "solid",
+        variant: "progress",
+        className: "bg-sky-500 text-white ring-sky-500",
+      },
+      {
+        appearance: "solid",
+        variant: "neutral",
+        className: "bg-gray-500 text-white ring-gray-500",
+      },
+    ],
     defaultVariants: {
       variant: "default",
+      appearance: "soft",
       size: "default",
       rounded: "md",
     },
   }
 );
-
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof badgeVariants> {
@@ -64,18 +87,29 @@ export interface BadgeProps
   pulse?: boolean;
 }
 
-const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
+export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
   (
-    { className, variant, size, dot, rounded, icon, pulse, children, ...props },
+    {
+      className,
+      variant,
+      appearance,
+      size,
+      dot,
+      rounded,
+      icon,
+      pulse,
+      children,
+      ...props
+    },
     ref
   ) => {
     return (
       <div
         ref={ref}
         className={cn(
-          badgeVariants({ variant, size, dot, rounded }),
+          badgeVariants({ variant, appearance, size, dot, rounded }),
           className,
-          "text-sm lg:text-xs leading-tight",
+          "leading-tight",
           pulse && "animate-pulse"
         )}
         {...props}
@@ -84,7 +118,9 @@ const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
           <span
             className={cn(
               "mr-1.5 h-2 w-2 rounded-full",
-              variant === "outline" || variant === "ghost" || variant === "soft"
+              appearance === "outline" ||
+                appearance === "ghost" ||
+                appearance === "soft"
                 ? "bg-foreground"
                 : "bg-current",
               pulse && "animate-pulse"
@@ -97,7 +133,3 @@ const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
     );
   }
 );
-
-Badge.displayName = "Badge";
-
-export { Badge, badgeVariants };

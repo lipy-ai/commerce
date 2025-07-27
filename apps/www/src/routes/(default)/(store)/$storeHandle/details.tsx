@@ -10,6 +10,7 @@ import Loading from "@lipy/web-ui/components/ui/loading";
 import { shareContent } from "@lipy/web-ui/lib/share";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
+import { format, parse } from "date-fns";
 import { Clock, Mail, Phone, Share2 } from "lucide-react";
 
 export const Route = createFileRoute("/(default)/(store)/$storeHandle/details")(
@@ -125,7 +126,17 @@ function RouteComponent() {
                 <Clock className="flex-shrink-0 size-4 mt-1" />
                 <div>
                   <p className="font-medium ">Opening Hours</p>
-                  <p className="text-muted-foreground">9:00 am - 9:00 pm</p>
+                  <p className="text-muted-foreground">
+                    {format(
+                      parse(data?.openingHour, "HH:mm:ss", new Date()),
+                      "hh:mm a"
+                    )}
+                    {" - "}
+                    {format(
+                      parse(data?.closingHour, "HH:mm:ss", new Date()),
+                      "hh:mm a"
+                    )}
+                  </p>
                 </div>
               </div>
             </div>

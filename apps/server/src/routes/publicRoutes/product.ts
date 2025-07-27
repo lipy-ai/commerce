@@ -73,17 +73,22 @@ const route = new Hono<ServerContext>()
 		return c.json(data || []);
 	})
 	.get(
-		"/:id",
-		zValidator("param", z.object({ id: z.string().uuid() })),
+		"/singleProduct",
+		zValidator(
+			"query",
+			z.object({ productId: z.string().uuid(), handle: z.string() }),
+		),
 		async (c) => {
-			const q = c.req.valid("param");
+			const q = c.req.valid("query");
 
 			const data = await db
 				.selectFrom("storeInventory as si")
 				.rightJoin("productVariant as pv", "pv.id", "si.productVariant")
 				.rightJoin("product as p", "p.id", "pv.productId")
+				.rightJoin("store as s", "s.id", "si.storeId")
 				.groupBy(["p.id", "si.storeId"])
-				.where("p.id", "=", q.id)
+				.where("s.handle", "=", q.handle)
+				.where("p.id", "=", q.productId)
 				.where("si.active", "=", true)
 				.select((eb) => [
 					"p.id as id",

@@ -47,11 +47,9 @@ export const storeType = {
     color: "text-cyan-500",
   },
 };
-export const StoreHeroSection = ({
-  storeInfo,
-}: {
-  storeInfo: InferResponseType<(typeof publicShopApi)[":handle"]["$get"]>;
-}) => {
+
+type SingleStore = InferResponseType<(typeof publicShopApi)[":handle"]["$get"]>;
+export const StoreHeroSection = ({ storeInfo }: { storeInfo: SingleStore }) => {
   const typeInfo = storeType[storeInfo?.type as keyof typeof storeType];
   return (
     <div className="space-y-2 lg:divide-y">
@@ -105,30 +103,36 @@ export const StoreHeroSection = ({
         </Link>
       </div>
       {storeInfo?.type === "pharmacy" && (
-        <div className="bg-card lg:bg-background flex gap-2 items-start justify-between p-4">
-          <img
-            src="/assets/prescription.svg"
-            alt="prescription"
-            className="size-16 object-cover bg-card"
-          />
-          <div className="flex flex-col items-end mr-auto">
-            <p className="font-semibold mr-auto">Order with prescription</p>
-            <p className="text-muted-foreground text-xs">
-              and let us arrange your medicines
-            </p>
-          </div>
-          <Link
-            to="/$storeHandle/order/new"
-            params={{ storeHandle: storeInfo?.handle || "" }}
-            className={cn(
-              buttonVariants({ size: "sm" }),
-              "mx-auto m-0 ml-auto mt-auto"
-            )}
-          >
-            Order now
-          </Link>
-        </div>
+        <PharmacyPrescriptionUpload storeInfo={storeInfo} />
       )}
     </div>
   );
 };
+
+function PharmacyPrescriptionUpload({ storeInfo }: { storeInfo: SingleStore }) {
+  return (
+    <div className="bg-card lg:bg-background flex gap-2 items-start justify-between p-4">
+      <img
+        src="/assets/prescription.svg"
+        alt="prescription"
+        className="size-16 object-cover bg-card flex-shrink-0"
+      />
+      <div className="flex flex-col items-end mr-auto">
+        <p className="font-semibold mr-auto">Order with prescription</p>
+        <p className="text-muted-foreground text-xs">
+          and let us arrange your medicines
+        </p>
+      </div>
+      <Link
+        to="/$storeHandle/order/new"
+        params={{ storeHandle: storeInfo?.handle || "" }}
+        className={cn(
+          buttonVariants({ size: "sm" }),
+          "mx-auto m-0 ml-auto mt-auto"
+        )}
+      >
+        Order now
+      </Link>
+    </div>
+  );
+}

@@ -39,17 +39,21 @@ function RouteComponent() {
   );
 
   const { data: product, isLoading } = useAPIQuery(
-    publicProductApi[":id"],
+    publicProductApi.singleProduct,
     "$get",
     {
-      param: {
-        id: productId,
+      query: {
+        productId,
+        handle: storeHandle,
       },
+    },
+    {
+      enabled: !!storeInfo?.id,
     }
   );
 
   type ProductResponse = InferResponseType<
-    (typeof publicProductApi)[":id"]["$get"]
+    typeof publicProductApi.singleProduct.$get
   >;
   type ProductVariant = ProductResponse extends { variants: Array<infer V> }
     ? V

@@ -1,6 +1,5 @@
 import { PrimaryCartFooter } from "@/components/cart/cartFooter";
-import ProductCard from "@/components/productCard"; // Fixed the path
-import { StoreHeroSection } from "@/components/store/storeHeroSection";
+import ProductCard from "@/components/productCard";
 import { env } from "@envClient";
 import { publicShopApi } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
@@ -28,6 +27,7 @@ import {
   Share,
 } from "lucide-react";
 import { useState } from "react";
+import { StoreHeroSection } from "./-storeHeroSection";
 
 export const Route = createFileRoute("/(default)/(store)/$storeHandle/")({
   component: RouteComponent,

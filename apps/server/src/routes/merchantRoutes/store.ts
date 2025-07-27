@@ -127,7 +127,7 @@ const route = new Hono<ServerContext>()
 			}
 
 			if (member.userId === sess?.userId) {
-				throw new HTTPError(400, { message: "You can remove yourself!" });
+				throw new HTTPError(400, { message: "You can't remove yourself!" });
 			}
 			if (
 				!(["owner", "admin"] satisfies (typeof STORE_ROLES)[number][]).includes(

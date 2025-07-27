@@ -1,9 +1,10 @@
 import { db } from "@/db";
-import { HTTPError } from "@/lib/exception";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
+import { sql } from "kysely";
 import { z } from "zod";
+
 export const coreAddressSchema = z.object({
 	line1: z.string().min(1),
 	line2: z.string(),
@@ -14,6 +15,7 @@ export const coreAddressSchema = z.object({
 	lat: z.number().optional(),
 	lng: z.number().optional(),
 });
+
 export const addressSchema = z.object({
 	name: z.string(),
 	tag: z.enum(["home", "work", "other"]),
@@ -34,6 +36,10 @@ const route = new Hono<ServerContext>()
 			.where("userAddress.userId", "=", session?.userId!)
 			.rightJoin("address", "address.id", "userAddress.id")
 			.selectAll(["address"])
+			// .select([
+			// 	sql<number>`ST_Y(location::geometry)`.as("lat"),
+			// 	sql<number>`ST_X(location::geometry)`.as("lng"),
+			// ])
 			.execute();
 		return c.json(address);
 	})
@@ -54,12 +60,13 @@ const route = new Hono<ServerContext>()
 	)
 	.post("/", zValidator("json", addressSchema), async (c) => {
 		const session = c.get("session");
-		const values = c.req.valid("json");
+		const { lat, lng, ...values } = c.req.valid("json");
 		const address = await db.transaction().execute(async (trx) => {
 			const address = await trx
 				.insertInto("address")
 				.values({
 					id: crypto.randomUUID(),
+					// location: sql`ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326)::geography`,
 					...values,
 				})
 				.returning(["id"])
@@ -87,12 +94,15 @@ const route = new Hono<ServerContext>()
 		zValidator("param", z.object({ id: z.string().uuid() })),
 		async (c) => {
 			const session = c.get("session");
-			const values = c.req.valid("json");
+			const { lat, lng, ...values } = c.req.valid("json");
 			const { id } = c.req.valid("param");
 
 			const address = await db
 				.updateTable("address")
-				.set({ ...values })
+				.set({
+					// location: sql`ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326)::geography`,
+					...values,
+				})
 				.where("id", "=", id)
 				.where((eb) =>
 					eb.exists(
@@ -109,6 +119,7 @@ const route = new Hono<ServerContext>()
 			return c.json(address);
 		},
 	)
+	// FIXME: remove this
 	.get("/primary", async (c) => {
 		const user = c.get("user");
 
@@ -121,6 +132,10 @@ const route = new Hono<ServerContext>()
 			.leftJoin("address", "address.id", "user.address")
 			.where("user.id", "=", user?.id!)
 			.selectAll(["address"])
+			// .select([
+			// 	sql<number>`ST_Y(location::geometry)`.as("lat"),
+			// 	sql<number>`ST_X(location::geometry)`.as("lng"),
+			// ])
 			.executeTakeFirstOrThrow();
 
 		return c.json(result);

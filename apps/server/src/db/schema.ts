@@ -3,10 +3,11 @@ import type {
 	coreAddressSchema,
 } from "@/routes/loggedRoutes/address";
 import { sql } from "drizzle-orm";
+import { doublePrecision } from "drizzle-orm/pg-core";
 import {
 	bigint,
 	boolean,
-	doublePrecision,
+	customType,
 	integer,
 	jsonb,
 	numeric,
@@ -59,7 +60,13 @@ export const STORE_TYPE = [
 
 export const schema = pgSchema("lipy-dev");
 
-export const enableUuidExtension = sql`CREATE EXTENSION IF NOT EXISTS "postgis";`;
+// export const enableUuidExtension = sql`CREATE EXTENSION IF NOT EXISTS "postgis";`;
+
+const geography = customType<{ data: unknown }>({
+	dataType() {
+		return "geography";
+	},
+});
 
 export const user = schema.table("user", {
 	id: uuid("id").primaryKey(),
@@ -78,6 +85,8 @@ export const user = schema.table("user", {
 	}),
 	normalizedEmail: text("normalizedEmail"),
 });
+
+// location: geography("location"),
 
 export const address = schema.table("address", {
 	id: uuid("id").primaryKey(),

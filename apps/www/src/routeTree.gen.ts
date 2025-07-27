@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as defaultRouteRouteImport } from './routes/(default)/route'
 import { Route as defaultIndexRouteImport } from './routes/(default)/index'
-import { Route as authRefreshRouteImport } from './routes/(auth)/refresh'
 import { Route as authLogoutRouteImport } from './routes/(auth)/logout'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as defaultAccountRouteRouteImport } from './routes/(default)/account/route'
@@ -39,11 +38,6 @@ const defaultIndexRoute = defaultIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => defaultRouteRoute,
-} as any)
-const authRefreshRoute = authRefreshRouteImport.update({
-  id: '/(auth)/refresh',
-  path: '/refresh',
-  getParentRoute: () => rootRouteImport,
 } as any)
 const authLogoutRoute = authLogoutRouteImport.update({
   id: '/(auth)/logout',
@@ -153,7 +147,6 @@ export interface FileRoutesByFullPath {
   '/account': typeof defaultAccountRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
-  '/refresh': typeof authRefreshRoute
   '/account/profile': typeof defaultAccountProfileRoute
   '/account/': typeof defaultAccountIndexRoute
   '/cart': typeof defaultCartIndexRoute
@@ -173,7 +166,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
-  '/refresh': typeof authRefreshRoute
   '/': typeof defaultIndexRoute
   '/account/profile': typeof defaultAccountProfileRoute
   '/account': typeof defaultAccountIndexRoute
@@ -197,7 +189,6 @@ export interface FileRoutesById {
   '/(default)/account': typeof defaultAccountRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/logout': typeof authLogoutRoute
-  '/(auth)/refresh': typeof authRefreshRoute
   '/(default)/': typeof defaultIndexRoute
   '/(default)/account/profile': typeof defaultAccountProfileRoute
   '/(default)/account/': typeof defaultAccountIndexRoute
@@ -222,7 +213,6 @@ export interface FileRouteTypes {
     | '/account'
     | '/login'
     | '/logout'
-    | '/refresh'
     | '/account/profile'
     | '/account/'
     | '/cart'
@@ -242,7 +232,6 @@ export interface FileRouteTypes {
   to:
     | '/login'
     | '/logout'
-    | '/refresh'
     | '/'
     | '/account/profile'
     | '/account'
@@ -265,7 +254,6 @@ export interface FileRouteTypes {
     | '/(default)/account'
     | '/(auth)/login'
     | '/(auth)/logout'
-    | '/(auth)/refresh'
     | '/(default)/'
     | '/(default)/account/profile'
     | '/(default)/account/'
@@ -288,7 +276,6 @@ export interface RootRouteChildren {
   defaultRouteRoute: typeof defaultRouteRouteWithChildren
   authLoginRoute: typeof authLoginRoute
   authLogoutRoute: typeof authLogoutRoute
-  authRefreshRoute: typeof authRefreshRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -306,13 +293,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof defaultIndexRouteImport
       parentRoute: typeof defaultRouteRoute
-    }
-    '/(auth)/refresh': {
-      id: '/(auth)/refresh'
-      path: '/refresh'
-      fullPath: '/refresh'
-      preLoaderRoute: typeof authRefreshRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/(auth)/logout': {
       id: '/(auth)/logout'
@@ -506,7 +486,6 @@ const rootRouteChildren: RootRouteChildren = {
   defaultRouteRoute: defaultRouteRouteWithChildren,
   authLoginRoute: authLoginRoute,
   authLogoutRoute: authLogoutRoute,
-  authRefreshRoute: authRefreshRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

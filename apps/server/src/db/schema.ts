@@ -6,7 +6,7 @@ import { sql } from "drizzle-orm";
 import {
 	bigint,
 	boolean,
-	doublePrecision,
+	customType,
 	integer,
 	jsonb,
 	numeric,
@@ -59,7 +59,13 @@ export const STORE_TYPE = [
 
 export const schema = pgSchema("lipy-dev");
 
-export const enableUuidExtension = sql`CREATE EXTENSION IF NOT EXISTS "postgis";`;
+// export const enableUuidExtension = sql`CREATE EXTENSION IF NOT EXISTS "postgis";`;
+
+const geography = customType<{ data: unknown }>({
+	dataType() {
+		return "geography";
+	},
+});
 
 export const user = schema.table("user", {
 	id: uuid("id").primaryKey(),
@@ -90,8 +96,7 @@ export const address = schema.table("address", {
 	country: text("country"),
 	postalCode: text("postalCode"),
 	phone: text("phone"),
-	lat: doublePrecision("lat"),
-	lng: doublePrecision("lng"),
+	location: geography("location"),
 	metadata: jsonb("metadata").$type<{
 		building: string;
 	}>(),

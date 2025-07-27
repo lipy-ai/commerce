@@ -10,7 +10,8 @@ export const badgeVariants = cva(
     variants: {
       variant: {
         default: "bg-primary/10 text-primary ring-primary",
-        success: "bg-green-100 text-green-800 ring-green-300",
+        secondary: "bg-secondary/10 text-secondary ring-secondary",
+        success: "bg-emerald-100 text-emerald-800 ring-emerald-300",
         warning: "bg-yellow-100 text-yellow-800 ring-yellow-300",
         info: "bg-blue-100 text-blue-800 ring-blue-300",
         destructive: "bg-red-100 text-red-800 ring-red-300",
@@ -43,7 +44,7 @@ export const badgeVariants = cva(
       {
         appearance: "solid",
         variant: "success",
-        className: "bg-green-500 text-white ring-green-500",
+        className: "bg-emerald-500 text-white ring-emerald-500",
       },
       {
         appearance: "solid",

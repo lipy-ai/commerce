@@ -215,7 +215,7 @@ function RouteComponent() {
                     <CardTitle>Your delivery OTP</CardTitle>
                   </CardHeader>
                   <CardContent className="text-center tracking-[0.6em] text-2xl font-semibold text-spa">
-                    <p>12345</p>
+                    <p>{order?.confirmationOtp}</p>
                   </CardContent>
                   <CardFooter className="text-muted-foreground text-xs">
                     * Share this OTP with delivery partner while receiving your

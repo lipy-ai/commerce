@@ -1,0 +1,1 @@
+ALTER TABLE "lipy-dev"."orders" ADD COLUMN "paidAt" timestamp with time zone;

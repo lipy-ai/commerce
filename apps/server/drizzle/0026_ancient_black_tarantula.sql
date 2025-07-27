@@ -1,0 +1,1 @@
+ALTER TABLE "lipy-dev"."orders" ADD COLUMN "canceledAt" timestamp with time zone;

@@ -62,6 +62,7 @@ export const loggedStoreRoute = new Hono<ServerContext>()
 				.insertInto("store")
 				.values({
 					...vals,
+					deliveryChargePerKm: 10,
 					id: crypto.randomUUID(),
 					handle: `${slugify(vals.name)}-${idGenerate()}`,
 					createdAt: sql`now()`,

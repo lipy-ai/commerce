@@ -69,6 +69,7 @@ import {
   Info,
   Mail,
   PackageCheck,
+  Pen,
   Phone,
   Truck,
   Undo,
@@ -292,15 +293,16 @@ function RouteComponent() {
                       # {id}
                     </h1>
 
-                    <div className="flex flex-col flex-wrap md:flex-row gap-4 print:hidden">
-                      {/* <Button variant={"outline"} onClick={() => handlePrint()}>
-                        Invoice
-                      </Button> */}
-
+                    <div className="flex flex-col shrink-0 flex-wrap md:flex-row gap-4 print:hidden">
                       <Sheet>
                         <SheetTrigger asChild>
                           {hasStatus(["created"]) && (
-                            <Button variant={"outline"}>Modify Order</Button>
+                            <Button
+                              variant={"outline"}
+                              size={isMobile ? "icon" : "default"}
+                            >
+                              {isMobile ? <Pen /> : "Modify Order"}
+                            </Button>
                           )}
                         </SheetTrigger>
                         <SheetContent className="sm:max-w-[1200px] w-full">

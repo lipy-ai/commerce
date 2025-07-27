@@ -310,7 +310,7 @@ function RouteComponent() {
                     </div>
                   </div>
                   <div className="flex flex-col md:flex-row gap-2 p-4">
-                    <Badge variant={"accent"} className="capitalize w-fit">
+                    {/* <Badge variant={"accent"} className="capitalize w-fit">
                       {data?.status?.replaceAll("_", " ")}
                     </Badge>
                     <Badge variant={"accent"} className="capitalize w-fit">
@@ -320,7 +320,7 @@ function RouteComponent() {
                     <Badge variant={"accent"} className="capitalize w-fit">
                       Order On{" "}
                       {data?.orderedAt && format(data?.orderedAt, "PPpp")}
-                    </Badge>
+                    </Badge> */}
                   </div>
                   <Separator />
                   <div className="p-4 space-y-4">
@@ -418,7 +418,11 @@ function RouteComponent() {
                             <h2 className="max-w-11/12 line-clamp-2">
                               {m.title}
                             </h2>
-                            <Badge variant={"accent"} size={"small"}>
+                            <Badge
+                              variant={"info"}
+                              size={"small"}
+                              appearance="outline"
+                            >
                               {" "}
                               {m.unit}
                             </Badge>

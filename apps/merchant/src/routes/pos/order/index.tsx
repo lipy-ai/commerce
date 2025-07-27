@@ -19,7 +19,7 @@ import {
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { formatDistanceToNow } from "date-fns";
+// import { formatDistanceToNow } from "date-fns";
 import type { InferResponseType } from "hono/client";
 import { ArrowUpRight } from "lucide-react";
 import { z } from "zod";
@@ -110,9 +110,9 @@ function MobileView({ items }: { items: Response["items"] }) {
               <p className="font-semibold text-lg">
                 {formatAmount("inr", Number(m.itemTotalAmount))}
               </p>
-              <Badge variant="soft" size="compact">
+              {/* <Badge variant="soft" size="compact">
                 {m.orderedAt && ` ${formatDistanceToNow(m.orderedAt)} ago`}
-              </Badge>
+              </Badge> */}
             </div>
           </div>
         </Link>
@@ -166,9 +166,9 @@ function DesktopView({ items }: { items: Response["items"] }) {
               </Badge>
             </TableCell>
             <TableCell>
-              <Badge className="" variant={"outline"}>
+              {/* <Badge className="" variant={"outline"}>
                 {m.orderedAt && ` ${formatDistanceToNow(m.orderedAt)} ago`}
-              </Badge>
+              </Badge> */}
             </TableCell>
             <TableCell>{formatAmount("inr", m.totalAmount || 0)}</TableCell>
             <TableCell>

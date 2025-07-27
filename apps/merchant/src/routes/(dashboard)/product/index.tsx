@@ -248,8 +248,7 @@ function DesktopView({ items }: { items: Response["items"] }) {
                       className="grid grid-cols-5 items-center px-6 py-4 gap-6 justify-center"
                     >
                       <Badge
-                        variant={v?.active ? "success" : "ghost"}
-                        size="spacious"
+                        variant={v?.active ? "success" : "neutral"}
                         className="w-fit"
                       >
                         {v?.active ? "Active" : "Hidden"}

@@ -78,10 +78,7 @@ export function StoreNav({ children }: { children?: ReactNode }) {
                   {data?.name || "Hello, User"}
                 </h1>
                 <p className="text-muted-foreground text-base">
-                  <Badge
-                    size={"spacious"}
-                    variant={data?.active ? "success" : "destructive"}
-                  >
+                  <Badge variant={data?.active ? "success" : "destructive"}>
                     {data?.active ? "Active" : "Inactive"}
                   </Badge>
                 </p>

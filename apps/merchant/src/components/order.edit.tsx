@@ -204,7 +204,11 @@ export function OrderEdit({ data }: { data?: Order }) {
                       <div className="flex flex-col justify-center flex-1">
                         <p className="line-clamp-1">{p.title}</p>
                         <p className="flex flex-wrap text-muted-foreground items-center truncate">
-                          <Badge variant={"premium"}>
+                          <Badge
+                            variant={"info"}
+                            appearance={"outline"}
+                            size="small"
+                          >
                             {p?.unit || "No Unit"}
                           </Badge>
                           &nbsp;@&nbsp;{formatAmount("INR", p?.price || 0)}
@@ -323,9 +327,14 @@ export function OrderEdit({ data }: { data?: Order }) {
                 <Separator />
                 <div className="flex gap-4 justify-between items-center truncate">
                   <Label className="block">Item Total</Label>
-                  <p className="">
-                    {formatAmount("INR", calcs.itemsTotal || 0)}
-                  </p>
+                  <div className="flex gap-2 items-baseline">
+                    <p className="text-base">
+                      {formatAmount("INR", calcs.itemsTotal || 0)}
+                    </p>
+                    <p className="text-muted-foreground line-through">
+                      {formatAmount("INR", calcs.maxItemsTotal || 0)}
+                    </p>
+                  </div>
                 </div>
                 <div className="flex  gap-4 justify-between items-center truncate">
                   <Label className="block">Taxes</Label>
@@ -343,9 +352,10 @@ export function OrderEdit({ data }: { data?: Order }) {
                     {formatAmount("INR", calcs.totalAmount || 0)}
                     {calcs.totalSaved ? (
                       <Badge
-                        size={"small"}
+                        size={"default"}
                         variant={"success"}
                         className="block"
+                        appearance="solid"
                       >
                         Saved {formatAmount("INR", calcs.totalSaved || 0)}
                       </Badge>
@@ -493,7 +503,13 @@ function ProductList({
                   </div>
                   <div title={d.title || ""} className="text-xs">
                     <p>
-                      <Badge variant={"premium"}>{d.variants[0].unit}</Badge>
+                      <Badge
+                        variant={"info"}
+                        appearance={"outline"}
+                        size="small"
+                      >
+                        {d.variants[0].unit}
+                      </Badge>
                     </p>
                     <p className="truncate">{d.title}</p>
                     <p className="truncate">

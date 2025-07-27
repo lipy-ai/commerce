@@ -5,7 +5,7 @@ console.log(process.env.DATABASE_URL);
 import { defineConfig } from "drizzle-kit";
 
 export default defineConfig({
-	out: "./drizzle",
+	out: `./drizzle-${process.env.DATABASE_URL?.split("/").pop()}`,
 	schema: "./src/db/schema.ts",
 
 	dialect: "postgresql",

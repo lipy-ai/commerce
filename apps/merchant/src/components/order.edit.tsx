@@ -14,7 +14,7 @@ import {
   FormInput,
 } from "@lipy/web-ui/components/forms/elements";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
-import { Button } from "@lipy/web-ui/components/ui/button";
+import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 import {
   Card,
   CardContent,
@@ -25,6 +25,7 @@ import {
 import {
   Drawer,
   DrawerContent,
+  DrawerDescription,
   DrawerTrigger,
 } from "@lipy/web-ui/components/ui/drawer";
 import { Form } from "@lipy/web-ui/components/ui/form";
@@ -33,8 +34,10 @@ import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
+import { cn } from "@lipy/web-ui/lib/utils";
+import { Link } from "@tanstack/react-router";
 import type { InferRequestType, InferResponseType } from "hono";
-import { ArrowRight, Plus, ShoppingBag, X } from "lucide-react";
+import { ArrowRight, Check, Plus, ShoppingBag, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 
@@ -129,6 +132,21 @@ export function OrderEdit({ data }: { data?: Order }) {
 
   return (
     <div className="grid md:grid-cols-[auto_500px] h-screen">
+      <DrawerDialogSwitcher open={form.formState.isSubmitSuccessful}>
+        <DrawerDialogHeader className="flex justify-center items-center">
+          <span className="p-4 bg-primary text-primary-foreground w-fit rounded-full m-auto">
+            <Check />
+          </span>
+          <DrawerDialogTitle>Order Successful</DrawerDialogTitle>
+          <DrawerDescription>Order was successfully created.</DrawerDescription>
+        </DrawerDialogHeader>
+        <div className="grid grid-cols-2 gap-4">
+          <Link to="/" className={cn(buttonVariants({ variant: "outline" }))}>
+            Back
+          </Link>
+          <Button onClick={() => form.reset()}>New Order</Button>
+        </div>
+      </DrawerDialogSwitcher>
       {!isMobile && (
         <div className="overflow-y-auto focus:bg-primary/50 md:p-8">
           {ListComp}
@@ -409,8 +427,8 @@ function ProductList({
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!select) return;
-
-    if (select?.variants?.length > 0) {
+    console.log(select?.variants);
+    if (select?.variants?.length > 1) {
       return setDialog("variant");
     }
 

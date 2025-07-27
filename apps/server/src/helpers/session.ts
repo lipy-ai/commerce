@@ -21,6 +21,8 @@ export const updateSession = async (
 			user: data.user,
 		}),
 	);
+	await clearSessionDataCookie(c);
+	return true;
 };
 
 export const clearSessionDataCookie = async (c: Context<ServerContext>) => {

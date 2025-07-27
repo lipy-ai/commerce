@@ -177,7 +177,12 @@ export default function ProductCard({
 
             <div className="space-y-0.5 my-1">
               <div className="py-1">
-                <Badge className="text-xs" variant="subtle" size="compact">
+                <Badge
+                  className="text-xs"
+                  variant="info"
+                  size="small"
+                  appearance={"outline"}
+                >
                   {product.variants[0].unit}
                 </Badge>
                 <p

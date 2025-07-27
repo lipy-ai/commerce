@@ -134,7 +134,6 @@ function RouteComponent() {
                 ] || "neutral"
               }
               className="capitalize line-clamp-1 max-w-44 break-words"
-              size="spacious"
             >
               {order.status || "Unknown"}
             </Badge>

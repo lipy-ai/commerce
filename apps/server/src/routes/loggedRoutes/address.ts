@@ -36,10 +36,10 @@ const route = new Hono<ServerContext>()
 			.where("userAddress.userId", "=", session?.userId!)
 			.rightJoin("address", "address.id", "userAddress.id")
 			.selectAll(["address"])
-			.select([
-				sql<number>`ST_Y(location::geometry)`.as("lat"),
-				sql<number>`ST_X(location::geometry)`.as("lng"),
-			])
+			// .select([
+			// 	sql<number>`ST_Y(location::geometry)`.as("lat"),
+			// 	sql<number>`ST_X(location::geometry)`.as("lng"),
+			// ])
 			.execute();
 		return c.json(address);
 	})
@@ -66,7 +66,7 @@ const route = new Hono<ServerContext>()
 				.insertInto("address")
 				.values({
 					id: crypto.randomUUID(),
-					location: sql`ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326)::geography`,
+					// location: sql`ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326)::geography`,
 					...values,
 				})
 				.returning(["id"])
@@ -100,7 +100,7 @@ const route = new Hono<ServerContext>()
 			const address = await db
 				.updateTable("address")
 				.set({
-					location: sql`ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326)::geography`,
+					// location: sql`ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326)::geography`,
 					...values,
 				})
 				.where("id", "=", id)
@@ -132,10 +132,10 @@ const route = new Hono<ServerContext>()
 			.leftJoin("address", "address.id", "user.address")
 			.where("user.id", "=", user?.id!)
 			.selectAll(["address"])
-			.select([
-				sql<number>`ST_Y(location::geometry)`.as("lat"),
-				sql<number>`ST_X(location::geometry)`.as("lng"),
-			])
+			// .select([
+			// 	sql<number>`ST_Y(location::geometry)`.as("lat"),
+			// 	sql<number>`ST_X(location::geometry)`.as("lng"),
+			// ])
 			.executeTakeFirstOrThrow();
 
 		return c.json(result);

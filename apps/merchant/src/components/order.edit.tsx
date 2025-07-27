@@ -22,7 +22,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@lipy/web-ui/components/ui/card";
-import { DialogHeader } from "@lipy/web-ui/components/ui/dialog";
 import {
   Drawer,
   DrawerContent,

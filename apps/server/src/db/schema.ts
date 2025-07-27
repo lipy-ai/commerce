@@ -3,6 +3,7 @@ import type {
 	coreAddressSchema,
 } from "@/routes/loggedRoutes/address";
 import { sql } from "drizzle-orm";
+import { doublePrecision } from "drizzle-orm/pg-core";
 import {
 	bigint,
 	boolean,
@@ -85,6 +86,8 @@ export const user = schema.table("user", {
 	normalizedEmail: text("normalizedEmail"),
 });
 
+// location: geography("location"),
+
 export const address = schema.table("address", {
 	id: uuid("id").primaryKey(),
 	name: text("name").notNull(),
@@ -96,7 +99,8 @@ export const address = schema.table("address", {
 	country: text("country"),
 	postalCode: text("postalCode"),
 	phone: text("phone"),
-	location: geography("location"),
+	lat: doublePrecision("lat"),
+	lng: doublePrecision("lng"),
 	metadata: jsonb("metadata").$type<{
 		building: string;
 	}>(),

@@ -4,125 +4,133 @@ import { DialogTrigger } from "@radix-ui/react-dialog";
 import type { ReactNode } from "react";
 import { buttonVariants } from "../ui/button";
 import {
-	Dialog,
-	DialogClose,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "../ui/dialog";
 import {
-	Drawer,
-	DrawerClose,
-	DrawerContent,
-	DrawerDescription,
-	DrawerFooter,
-	DrawerHeader,
-	DrawerTitle,
-	DrawerTrigger,
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
 } from "../ui/drawer";
 
 const DrawerDialogSwitcher = ({
-	open,
-	onOpenChange,
-	children,
-	dismissible = true,
+  open,
+  onOpenChange,
+  children,
+  dismissible = true,
 
-	className,
-	trigger,
+  className,
+  trigger,
 }: {
-	open?: boolean;
-	onOpenChange?: (open: boolean) => void;
-	children?: React.ReactNode;
-	dismissible?: boolean;
-	className?: string;
-	trigger?: ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  children?: React.ReactNode;
+  dismissible?: boolean;
+  className?: string;
+  trigger?: ReactNode;
 }) => {
-	const { isMobile } = useViewport();
-	if (isMobile) {
-		return (
-			<Drawer open={open} onOpenChange={onOpenChange} dismissible={dismissible}>
-				<DrawerTrigger asChild>{trigger}</DrawerTrigger>
+  const { isMobile } = useViewport();
+  if (isMobile) {
+    return (
+      <Drawer open={open} onOpenChange={onOpenChange} dismissible={dismissible}>
+        <DrawerTrigger asChild>{trigger}</DrawerTrigger>
 
-				<DrawerContent className={className}>{children}</DrawerContent>
-			</Drawer>
-		);
-	}
-	return (
-		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogTrigger asChild>{trigger}</DialogTrigger>
-			<DialogContent
-				className={cn(className)}
-				style={{
-					scrollbarWidth: "none",
-					pointerEvents: !dismissible ? "none" : "auto",
-				}}
-				onEscapeKeyDown={(e) => !dismissible && e.preventDefault()}
-				onInteractOutside={(e) => !dismissible && e.preventDefault()}
-				dismissible={dismissible}
-			>
-				{children}
-			</DialogContent>
-		</Dialog>
-	);
+        <DrawerContent className={className}>{children}</DrawerContent>
+      </Drawer>
+    );
+  }
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      <DialogContent
+        className={cn(className)}
+        style={{
+          scrollbarWidth: "none",
+          pointerEvents: !dismissible ? "none" : "auto",
+        }}
+        onEscapeKeyDown={(e) => !dismissible && e.preventDefault()}
+        onInteractOutside={(e) => !dismissible && e.preventDefault()}
+        dismissible={dismissible}
+      >
+        {children}
+      </DialogContent>
+    </Dialog>
+  );
 };
 
 const DrawerDialogHeader = (props: React.HTMLAttributes<HTMLDivElement>) => {
-	const { isMobile } = useViewport();
+  const { isMobile } = useViewport();
 
-	return isMobile ? <DrawerHeader {...props} /> : <DialogHeader {...props} />;
+  return isMobile ? <DrawerHeader {...props} /> : <DialogHeader {...props} />;
 };
 
 const DrawerDialogFooter = (props: React.HTMLAttributes<HTMLDivElement>) => {
-	const { isMobile } = useViewport();
+  const { isMobile } = useViewport();
 
-	return isMobile ? <DrawerFooter {...props} /> : <DialogFooter {...props} />;
+  return isMobile ? <DrawerFooter {...props} /> : <DialogFooter {...props} />;
 };
 
 const DrawerDialogTitle = (props: React.HTMLAttributes<HTMLDivElement>) => {
-	const { isMobile } = useViewport();
+  const { isMobile } = useViewport();
 
-	return isMobile ? <DrawerTitle {...props} /> : <DialogTitle {...props} />;
+  return isMobile ? <DrawerTitle {...props} /> : <DialogTitle {...props} />;
 };
 
 const DrawerDialogDescription = (
-	props: React.HTMLAttributes<HTMLDivElement>,
+  props: React.HTMLAttributes<HTMLDivElement>
 ) => {
-	const { isMobile } = useViewport();
+  const { isMobile } = useViewport();
 
-	return isMobile ? (
-		<DrawerDescription {...props} />
-	) : (
-		<DialogDescription {...props} />
-	);
+  return isMobile ? (
+    <DrawerDescription {...props} />
+  ) : (
+    <DialogDescription {...props} />
+  );
 };
 
-const DrawerDialogClose = ({ children }: { children?: ReactNode }) => {
-	const { isMobile } = useViewport();
-	const Btn = () => {
-		return (
-			<span className={cn(buttonVariants({ variant: "outline" }), "w-full")}>
-				{children ? children : "Cancel"}
-			</span>
-		);
-	};
-	return isMobile ? (
-		<DrawerClose className="[&_button]:w-full">
-			<Btn />
-		</DrawerClose>
-	) : (
-		<DialogClose>
-			<Btn />
-		</DialogClose>
-	);
+const DrawerDialogClose = ({
+  children,
+  className,
+}: {
+  children?: ReactNode;
+  className?: string;
+}) => {
+  const { isMobile } = useViewport();
+  const Btn = () => {
+    return (
+      <span
+        className={cn(buttonVariants({ variant: "outline" }), "w-full flex-1")}
+      >
+        {children ? children : "Cancel"}
+      </span>
+    );
+  };
+  return isMobile ? (
+    <DrawerClose className={cn("[&_button]:w-full", className)}>
+      <Btn />
+    </DrawerClose>
+  ) : (
+    <DialogClose className={className}>
+      <Btn />
+    </DialogClose>
+  );
 };
 
 export {
-	DrawerDialogSwitcher,
-	DrawerDialogClose,
-	DrawerDialogTitle,
-	DrawerDialogFooter,
-	DrawerDialogHeader,
-	DrawerDialogDescription,
+  DrawerDialogSwitcher,
+  DrawerDialogClose,
+  DrawerDialogTitle,
+  DrawerDialogFooter,
+  DrawerDialogHeader,
+  DrawerDialogDescription,
 };

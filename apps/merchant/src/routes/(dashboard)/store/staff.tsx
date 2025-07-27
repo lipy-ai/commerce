@@ -72,6 +72,7 @@ import { Link, Plus, SendHorizonal, X } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { StoreNav } from "./-nav";
+
 export const Route = createFileRoute("/(dashboard)/store/staff")({
   component: RouteComponent,
 });
@@ -85,14 +86,14 @@ function RouteComponent() {
         <InviteMember />
       </DashboardHeader>
       <StoreNav>
-        <div className="p-4 lg:p-8">
-          <div className="space-y-4">
+        <Card className="p-4 flex-1 lg:p-8">
+          <div className="space-y-4 max-w-4xl">
             {data?.invitations && data.invitations.length > 0 && (
               <Invitation data={data} />
             )}
             {data?.members && <Members data={data} />}
           </div>
-        </div>
+        </Card>
       </StoreNav>
     </>
   );
@@ -157,7 +158,7 @@ function Members({
   if (isMobile) {
     return (
       <div>
-        <Card>
+        <Card className="p-0">
           <CardHeader>
             <CardTitle>Members</CardTitle>
           </CardHeader>
@@ -198,7 +199,9 @@ function Members({
   }
   return (
     <div>
-      <h1 className="text-lg font-medium my-4 ">Staff List</h1>
+      <CardHeader>
+        <CardTitle>Staff List</CardTitle>
+      </CardHeader>
       <Table className="border">
         <TableHeader>
           <TableRow className="bg-accent/40">

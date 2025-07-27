@@ -187,7 +187,6 @@ const create = async (user: DBTypes["user"]) => {
 					taxes: Array.from({
 						length: faker.number.int({ min: 0, max: 5 }),
 					}).map(() => ({
-						id: crypto.randomUUID(),
 						name: faker.helpers.arrayElement([
 							"gst",
 							"vat",
@@ -195,17 +194,19 @@ const create = async (user: DBTypes["user"]) => {
 							"handling fee",
 							"packing fee",
 						]),
+						sum: "flat",
+
 						amount: faker.number.int({ min: 1, max: 100 }),
 					})),
 					discounts: Array.from({
 						length: faker.number.int({ min: 0, max: 5 }),
 					}).map(() => ({
-						id: crypto.randomUUID(),
 						name: faker.helpers.arrayElement([
 							"first-order",
 							"Holiday50",
 							"Holi Special",
 						]),
+						sum: "flat",
 						amount: faker.number.int({ min: 1, max: 100 }),
 					})),
 					storeId: org.id,
@@ -244,7 +245,7 @@ const create = async (user: DBTypes["user"]) => {
 					},
 					paymentMethod: faker.helpers.arrayElement(["cod", "upi", "card"]),
 					orderedAt: faker.date.anytime(),
-					cancelledAt: faker.helpers.maybe(() => faker.date.anytime()),
+					canceledAt: faker.helpers.maybe(() => faker.date.anytime()),
 					refundedAt: faker.helpers.maybe(() => faker.date.anytime()),
 					deliveredAt: faker.helpers.maybe(() => faker.date.anytime()),
 					deliveryAgentAssignedAt: faker.helpers.maybe(() =>

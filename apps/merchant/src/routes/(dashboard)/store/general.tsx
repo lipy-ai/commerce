@@ -93,9 +93,9 @@ function RouteComponent() {
       <StoreNav>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex-1 p-4 md:p-8 bg-card"
+          className="flex-1 p-4 md:p-8 bg-card "
         >
-          <div className="grid divide-y lg:gap-4">
+          <div className="grid divide-y lg:gap-4 max-w-2xl">
             <Card>
               <CardHeader>
                 <CardTitle>General Information</CardTitle>

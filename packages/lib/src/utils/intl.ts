@@ -31,3 +31,14 @@ export const currencySymbol = (currency: string) => {
 		.formatToParts(1)
 		.find((part) => part.type === "currency")?.value;
 };
+
+export const formatPercent = (amount: number) => {
+	const formattedAmount = new Intl.NumberFormat("en-US", {
+		style: "percent",
+		minimumFractionDigits: 2, //(amount % 1 !== 0 ? 2 : 0), // Set minimumFractionDigits based on whether there's a decimal part
+	})
+		.format(amount / 100)
+		.replace(/-/, "- ");
+
+	return formattedAmount;
+};

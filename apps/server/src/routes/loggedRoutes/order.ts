@@ -1,6 +1,7 @@
 import { type DBTypes, type Database, db } from "@/db";
 import { HTTPError } from "@/lib/exception";
 import { idGenerate } from "@/lib/generateId";
+import { orderCalculator } from "@/lib/orderCalculators";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
@@ -111,26 +112,7 @@ const generateOrders = async ({
 			});
 		}
 
-		let itemTotalAmount = 0;
-		let maxItemTotalAmount = 0;
-		let totalTaxAmount = 0;
-		let totalDiscountAmount = 0;
-
-		for (const t of items) {
-			itemTotalAmount = t.qty * t.price + itemTotalAmount;
-			maxItemTotalAmount = t.qty * t.maxPrice + maxItemTotalAmount;
-		}
-		for (const t of taxes || []) {
-			totalTaxAmount = totalTaxAmount + t.amount;
-			itemTotalAmount = itemTotalAmount + t.amount;
-			maxItemTotalAmount = maxItemTotalAmount + t.amount;
-		}
-
-		for (const t of discounts || []) {
-			totalDiscountAmount = totalDiscountAmount + t.amount;
-			itemTotalAmount = itemTotalAmount - t.amount;
-			maxItemTotalAmount = maxItemTotalAmount - t.amount;
-		}
+		const calcs = orderCalculator({ items, discounts, taxes });
 
 		orders.push({
 			id: idGenerate(),
@@ -155,22 +137,26 @@ const generateOrders = async ({
 			},
 			paymentMethod: "cod",
 			orderedAt: new Date(),
-			itemTotalAmount,
-			totalAmount: itemTotalAmount + totalTaxAmount - totalDiscountAmount,
-			amountSaved: maxItemTotalAmount - itemTotalAmount,
-			totalTaxAmount,
-			totalDiscountAmount,
-			maxItemTotalAmount,
+			itemTotalAmount: calcs.itemsTotal,
+			totalAmount: calcs.totalAmount,
+			amountSaved: calcs.totalSaved,
+			totalTaxAmount: calcs.taxTotal,
+			totalDiscountAmount: calcs.discountTotal,
+			maxItemTotalAmount: calcs.maxItemsTotal,
 			delivery: null,
-			cancelledAt: null,
+			canceledAt: null,
 			refundedAt: null,
 			deliveredAt: null,
 			deliveryAgentAssignedAt: null,
+			confirmationOtp: idGenerate({ length: 5 }),
+			cancelReason: null,
+			paidAt: null,
 			timeline: [
 				{
 					content: "Order was created!",
 					userId: user?.id!,
 					createdAt: new Date().toISOString(),
+					status: "created",
 				},
 			],
 		} satisfies NonNullable<DBTypes["orders"]>);
@@ -324,7 +310,7 @@ const route = new Hono<ServerContext>()
 			.updateTable("orders")
 			.where("id", "=", id)
 			.where("userId", "=", session?.userId!)
-			.set({ status: "cancelled" })
+			.set({ status: "canceled" })
 			.execute();
 		return c.json({ success: true });
 	})

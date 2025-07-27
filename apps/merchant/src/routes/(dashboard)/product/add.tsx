@@ -67,7 +67,7 @@ function RouteComponent() {
 
   const query = {
     page: String(page),
-    limit: String(3 * 3),
+    limit: String(10),
     q,
     showAll: "true",
     category,

@@ -424,7 +424,7 @@ export const orders = schema.table("orders", {
 	cancelReason: text("cancelReason"),
 	refundedAt: timestamp("refundedAt", { withTimezone: true }),
 	deliveredAt: timestamp("deliveredAt", { withTimezone: true }),
-	paidAt: timestamp("deliveredAt", { withTimezone: true }),
+	paidAt: timestamp("paidAt", { withTimezone: true }),
 	deliveryAgentAssignedAt: timestamp("deliveryAgentAssignedAt", {
 		withTimezone: true,
 	}),

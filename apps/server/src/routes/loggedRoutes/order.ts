@@ -1,9 +1,10 @@
-import { type DBTypes, db } from "@/db";
+import { type DBTypes, type Database, db } from "@/db";
 import { HTTPError } from "@/lib/exception";
 import { idGenerate } from "@/lib/generateId";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
+import type { Transaction } from "kysely";
 import { z } from "zod";
 import { addressSchema } from "./address";
 
@@ -20,7 +21,10 @@ const orderSchema = z.object({
 			coupon: z.string().optional(),
 		}),
 	),
-	address: addressSchema.required(),
+	address: z.object({
+		id: z.string().uuid().optional(),
+		...addressSchema.shape,
+	}),
 	deliveryInstruction: z.string().nullable(),
 });
 
@@ -28,8 +32,8 @@ const querySchema = z.object({
 	view: z.enum(["active", "all"]).default("all"),
 });
 
-const getCart = async (userId: string) => {
-	return await db
+const getCart = async (userId: string, trx: Transaction<Database>) => {
+	return await trx
 		.selectFrom("cart as c")
 		.where("c.userId", "=", userId!)
 		.rightJoin("storeInventory as si", "si.id", "c.inventoryId")
@@ -47,12 +51,14 @@ const getCart = async (userId: string) => {
 const generateOrders = async ({
 	stores,
 	cart,
+	trx,
 	address,
 	deliveryInstruction,
 	user,
 }: {
 	cart: Awaited<ReturnType<typeof getCart>>;
 	user: ServerContext["Variables"]["user"];
+	trx: Transaction<Database>;
 } & Pick<
 	z.infer<typeof orderSchema>,
 	"stores" | "address" | "deliveryInstruction"
@@ -60,7 +66,7 @@ const generateOrders = async ({
 	const orders: DBTypes["orders"][] = [];
 
 	for (const s of stores) {
-		let customer = await db
+		let customer = await trx
 			.selectFrom("customer")
 			.where("storeId", "=", s.id)
 			.where("userId", "=", user?.id!)
@@ -68,7 +74,7 @@ const generateOrders = async ({
 			.executeTakeFirst();
 
 		if (!customer) {
-			customer = await db
+			customer = await trx
 				.insertInto("customer")
 				.values({ userId: user?.id, storeId: s.id })
 				.returningAll()
@@ -179,6 +185,42 @@ const generateOrders = async ({
 	return orders;
 };
 
+const setPrimaryAddress = async (
+	address: z.infer<typeof orderSchema>["address"],
+	userId: string,
+) => {
+	await db.transaction().execute(async (trx) => {
+		let id = address.id;
+
+		if (!address.id) {
+			const addressId = await trx
+				.insertInto("address")
+				.values({
+					id: crypto.randomUUID(),
+					...address,
+				})
+				.returning(["id"])
+				.executeTakeFirst();
+
+			await trx
+				.insertInto("userAddress")
+				.values({
+					id: addressId?.id!,
+					userId: userId!,
+				})
+				.execute();
+
+			id = addressId?.id;
+		}
+
+		return await trx
+			.updateTable("user")
+			.where("id", "=", userId!)
+			.set({ address: id })
+			.executeTakeFirstOrThrow();
+	});
+};
+
 const route = new Hono<ServerContext>()
 	.get("/", zValidator("query", querySchema), async (c) => {
 		const session = c.get("session");
@@ -252,16 +294,22 @@ const route = new Hono<ServerContext>()
 		if (!values.address)
 			throw new HTTPError(404, { message: "Address not found!" });
 
-		const cart = await getCart(session?.userId!);
+		const orders = await db.transaction().execute(async (trx) => {
+			const cart = await getCart(session?.userId!, trx);
 
-		const orders = await generateOrders({ cart, user, ...values });
+			const ordersData = await generateOrders({ cart, user, trx, ...values });
 
-		await db.insertInto("orders").values(orders).execute();
+			await trx.insertInto("orders").values(ordersData).execute();
 
-		await db
-			.deleteFrom("cart")
-			.where("userId", "=", session?.userId!)
-			.execute();
+			await trx
+				.deleteFrom("cart")
+				.where("userId", "=", session?.userId!)
+				.execute();
+
+			return ordersData;
+		});
+
+		await setPrimaryAddress(values.address, user?.id!);
 
 		for (const ord of orders) {
 			c.get("emitter").emit(c, "order:created", ord);
@@ -286,9 +334,19 @@ const route = new Hono<ServerContext>()
 		if (!values?.address)
 			throw new HTTPError(404, { message: "Address not found!" });
 
-		const orders = await generateOrders({ cart: [], user, ...values });
+		const orders = await db.transaction().execute(async (trx) => {
+			const ordersData = await generateOrders({
+				cart: [],
+				user,
+				trx,
+				...values,
+			});
 
-		await db.insertInto("orders").values(orders).execute();
+			await trx.insertInto("orders").values(ordersData).execute();
+
+			return ordersData;
+		});
+		await setPrimaryAddress(values.address, user?.id!);
 
 		for (const ord of orders) {
 			c.get("emitter").emit(c, "order:created", ord);

@@ -129,7 +129,8 @@ const route = new Hono<ServerContext>()
 
 		const result = await db
 			.selectFrom("user")
-			.leftJoin("address", "address.id", "user.address")
+			.leftJoin("userAddress", "userAddress.id", "user.address")
+			.leftJoin("address", "address.id", "userAddress.id")
 			.where("user.id", "=", user?.id!)
 			.selectAll(["address"])
 			// .select([

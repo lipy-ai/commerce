@@ -4,8 +4,6 @@ import {
 } from "@lipy/web-ui/components/layouts/dashboard";
 import { Outlet } from "@tanstack/react-router";
 
-import { useStore } from "@lipy/lib/hooks/use-store";
-import Loading from "@lipy/web-ui/components/ui/loading";
 import {
   CircleUser,
   Home,
@@ -54,14 +52,15 @@ const mobileNav = [
 ];
 
 export function DashboardNav() {
-  const { isPending } = useStore();
   return (
     <DashboardLayout
       dashboardNav={dashboardNav}
       mobileNav={mobileNav}
       logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
     >
-      <DashboardBody>{isPending ? <Loading /> : <Outlet />}</DashboardBody>
+      <DashboardBody>
+        <Outlet />
+      </DashboardBody>
     </DashboardLayout>
   );
 }

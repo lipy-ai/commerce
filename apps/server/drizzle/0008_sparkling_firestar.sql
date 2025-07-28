@@ -1,1 +1,0 @@
-ALTER TABLE "lipy-dev"."store" ADD COLUMN "taxes" jsonb[];

@@ -6,6 +6,7 @@ import { idGenerate } from "@/lib/generateId";
 import { orderCalculator } from "@/lib/orderCalculators";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
+import { sql } from "drizzle-orm";
 import { Hono } from "hono";
 import type { Transaction } from "kysely";
 import { z } from "zod";
@@ -180,7 +181,7 @@ const generateOrders = async ({
 };
 
 const setPrimaryAddress = async (
-	address: z.infer<typeof orderSchema>["address"],
+	{ lat, lng, ...address }: z.infer<typeof orderSchema>["address"],
 	userId: string,
 ) => {
 	await db.transaction().execute(async (trx) => {
@@ -192,6 +193,11 @@ const setPrimaryAddress = async (
 				.values({
 					id: crypto.randomUUID(),
 					...address,
+					...(lat &&
+						lng && {
+							location:
+								sql`ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326)::geography` as any,
+						}),
 				})
 				.returning(["id"])
 				.executeTakeFirst();

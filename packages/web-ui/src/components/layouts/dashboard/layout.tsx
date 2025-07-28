@@ -402,7 +402,6 @@ export const DashboardLayout = ({
     alt: string;
   };
 }) => {
-  const { isPending } = useStore();
   const [open, setOpen] = useState(false);
   const { isMobile } = useViewport();
   const { isInstallable, promptInstall } = usePWAInstall();
@@ -421,8 +420,6 @@ export const DashboardLayout = ({
       ))}
     </div>
   );
-
-  if (isPending) return null;
 
   return (
     <Context.Provider value={{ addFooter, footer, removeFooter }}>

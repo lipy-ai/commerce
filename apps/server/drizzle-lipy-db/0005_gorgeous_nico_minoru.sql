@@ -1,0 +1,1 @@
+DROP TABLE "lipy-dev"."productsToAdd" CASCADE;

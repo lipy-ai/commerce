@@ -39,7 +39,7 @@ export function MultiStepLayout({
   onSuccess,
   customBtn,
 }: {
-  customBtn: ReactNode;
+  customBtn?: ReactNode;
   loading: boolean;
   steps: MultiStepLayoutProps[];
   onSubmit: (data: CtxType) => Promise<void>;

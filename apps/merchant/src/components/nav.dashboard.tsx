@@ -4,7 +4,6 @@ import {
 } from "@lipy/web-ui/components/layouts/dashboard";
 import { Outlet } from "@tanstack/react-router";
 
-import Loading from "@lipy/web-ui/components/ui/loading";
 import {
   CircleUser,
   Home,

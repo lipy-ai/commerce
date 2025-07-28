@@ -1,1 +1,0 @@
-ALTER TABLE "lipy-dev"."orders" DROP COLUMN "remark";

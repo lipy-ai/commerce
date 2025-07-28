@@ -11,14 +11,14 @@ import {
   useMultiStepForm,
 } from "@lipy/web-ui/components/forms/multi-step";
 
-import { buttonVariants } from "@lipy/web-ui/components/ui/button";
-import { cn } from "@lipy/web-ui/lib/utils";
-import { Link, useRouter } from "@tanstack/react-router";
+import { useRouter } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
-import { LogOut } from "lucide-react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
-import { StorePolicesForm } from "../(dashboard)/store/policies";
+import {
+  StorePolicesForm,
+  defaultStorePolicies,
+} from "../(dashboard)/store/policies";
 export const Route = createFileRoute("/register/")({
   component: RouteComponent,
 });
@@ -147,6 +147,11 @@ const step4 = {
     const { data } = useMultiStepForm();
     const form = useFormContext();
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    useEffect(() => {
+      const values = form.getValues();
+      form.reset({ ...values, ...defaultStorePolicies }, { keepDirty: true });
+    }, []);
     const payments = form.watch("payments");
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -183,14 +188,6 @@ function RouteComponent() {
 
   return (
     <MultiStepLayout
-      customBtn={
-        <Link
-          to="/logout"
-          className={cn(buttonVariants({ variant: "outline" }))}
-        >
-          <LogOut /> Sign out
-        </Link>
-      }
       loading={store.isLoading || !!store.data?.id}
       steps={[step1, step2, step3, step4]}
       onSubmit={handleSubmit}

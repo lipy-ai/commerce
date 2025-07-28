@@ -236,11 +236,7 @@ function Members({
               </TableCell>
 
               <TableCell>
-                <Badge
-                  size={"large"}
-                  variant={"success"}
-                  className="capitalize"
-                >
+                <Badge size={"lg"} variant={"success"} className="capitalize">
                   {member.role}
                 </Badge>
               </TableCell>
@@ -387,7 +383,7 @@ function Invitation({
                 </TableCell>
 
                 <TableCell>
-                  <Badge size={"large"} variant={"info"} className="capitalize">
+                  <Badge size={"lg"} variant={"info"} className="capitalize">
                     {m.role}
                   </Badge>
                 </TableCell>

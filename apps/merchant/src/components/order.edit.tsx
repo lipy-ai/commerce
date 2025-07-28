@@ -225,7 +225,7 @@ export function OrderEdit({ data }: { data?: Order }) {
                           <Badge
                             variant={"info"}
                             appearance={"outline"}
-                            size="small"
+                            size="sm"
                           >
                             {p?.unit || "No Unit"}
                           </Badge>
@@ -370,7 +370,6 @@ export function OrderEdit({ data }: { data?: Order }) {
                     {formatAmount("INR", calcs.totalAmount || 0)}
                     {calcs.totalSaved ? (
                       <Badge
-                        size={"default"}
                         variant={"success"}
                         className="block"
                         appearance="solid"
@@ -521,11 +520,7 @@ function ProductList({
                   </div>
                   <div title={d.title || ""} className="text-xs">
                     <p>
-                      <Badge
-                        variant={"info"}
-                        appearance={"outline"}
-                        size="small"
-                      >
+                      <Badge variant={"info"} appearance={"outline"} size="sm">
                         {d.variants[0].unit}
                       </Badge>
                     </p>

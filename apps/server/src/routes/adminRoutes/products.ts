@@ -97,6 +97,38 @@ export const adminProductRoute = new Hono<ServerContext>()
 
 		return c.json({ items, page, limit, totalPages, totalResults: totalCount });
 	})
+	.get("/all", listZodValidator, async (c) => {
+		const { limit, page, q } = c.req.valid("query");
+		const offset = limit * (page - 1);
+		const query = db
+			.selectFrom("productsToAdd as p")
+			.$if(!!q, (qb) =>
+				qb.where(
+					sql<boolean>`p."searchVector" @@ plainto_tsquery('english', ${q})`,
+				),
+			);
+
+		const countPromise = query
+			.select(sql<number>`count(*)`.as("total_count"))
+			.executeTakeFirst();
+
+		const resultsPromise = query
+			.selectAll(["p"])
+			.limit(limit)
+			.offset(offset)
+			.execute();
+
+		const [countResult, items] = await Promise.all([
+			countPromise,
+			resultsPromise,
+		]);
+
+		const totalCount = countResult?.total_count ?? 0;
+
+		const totalPages = Math.ceil(totalCount / limit);
+
+		return c.json({ items, page, limit, totalPages, totalResults: totalCount });
+	})
 	.get(
 		"/:id",
 		zValidator(

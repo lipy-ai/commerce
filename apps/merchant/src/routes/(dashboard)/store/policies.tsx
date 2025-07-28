@@ -63,7 +63,7 @@ export const Route = createFileRoute("/(dashboard)/store/policies")({
   component: RouteComponent,
 });
 
-const defaultValues = {
+export const defaultStorePolicies = {
   refunds: { enabled: false, content: "" },
   replacements: { enabled: false, content: "" },
   deliveryDistance: 1,
@@ -75,7 +75,7 @@ const defaultValues = {
 
 function RouteComponent() {
   const { data } = useStore();
-  const form = useForm({ defaultValues });
+  const form = useForm({ defaultValues: defaultStorePolicies });
 
   const queryClient = useQueryClient();
   const qOpts = apiQueryOptions(merchantStoreApi.index, "$get", {});
@@ -85,7 +85,7 @@ function RouteComponent() {
     },
   });
 
-  const onSubmit = (v: typeof defaultValues) => {
+  const onSubmit = (v: typeof defaultStorePolicies) => {
     mutation.mutateAsync({ json: v as any });
   };
 
@@ -93,11 +93,11 @@ function RouteComponent() {
   useEffect(() => {
     if (!data) return;
     form.reset({
-      refunds: data.refunds || defaultValues.refunds,
-      replacements: data.replacements || defaultValues.replacements,
+      refunds: data.refunds || defaultStorePolicies.refunds,
+      replacements: data.replacements || defaultStorePolicies.replacements,
       deliveryDistance: data.deliveryDistance,
       freeDeliveryDistance: data.freeDeliveryDistance,
-      gstTax: String(data.gstTax) || defaultValues.gstTax,
+      gstTax: String(data.gstTax) || defaultStorePolicies.gstTax,
       openingHour: formatToHrMm(data.openingHour),
       closingHour: formatToHrMm(data.closingHour),
     });
@@ -153,10 +153,25 @@ export function StorePolicesForm() {
       label: "28% Tax",
     },
   ];
-  const [openingHrs, closingHrs] = form.watch(["openingHour", "closingHour"]);
+  const [openingHrs, closingHrs, deliveryDistance, freeDeliveryDistance] =
+    form.watch([
+      "openingHour",
+      "closingHour",
+      "deliveryDistance",
+      "freeDeliveryDistance",
+    ]);
 
   const openNum = timeToDecimal(openingHrs || "00:00");
   const closeNum = timeToDecimal(closingHrs || "00:00");
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (freeDeliveryDistance > deliveryDistance) {
+      form.setValue("freeDeliveryDistance", deliveryDistance, {
+        shouldValidate: true,
+      });
+    }
+  }, [deliveryDistance, freeDeliveryDistance]);
 
   const hrsVal =
     openNum === 0 && closeNum === 0
@@ -197,7 +212,7 @@ export function StorePolicesForm() {
           </div>
 
           <div className="p-4 bg-card">
-            <RadioGroup value={hrsVal} onValueChange={handleValChange}>
+            <RadioGroup value={hrsVal} onValueChange={handleValChange} required>
               <div className="flex items-center gap-3">
                 <RadioGroupItem value="24hrs" id="r1" />
                 <FormLabel htmlFor="r1">24 hours</FormLabel>
@@ -246,6 +261,7 @@ export function StorePolicesForm() {
               label="Distance"
               suffix="kms"
               maxLabel="100+"
+              required
             />
           </div>
         </div>
@@ -259,6 +275,8 @@ export function StorePolicesForm() {
               label="Free Delivery"
               prefix="Till"
               suffix="kms"
+              max={deliveryDistance || 100}
+              required
             />
 
             <FormLabel className="flex pt-2 flex-wrap">
@@ -274,7 +292,7 @@ export function StorePolicesForm() {
             <FormLabel>Goods and Service Tax (GST)</FormLabel>
           </div>
           <div className="p-4 bg-card">
-            <FormRadioInput name="gstTax" opts={gstOpts} />
+            <FormRadioInput name="gstTax" opts={gstOpts} required />
           </div>
         </div>
         <div className="flex items-center justify-between bg-accent/30 rounded border p-4">
@@ -282,14 +300,22 @@ export function StorePolicesForm() {
             <FormLabel>Refunds</FormLabel>
             <FormDescription>Do you provide refunds?</FormDescription>
           </div>
-          <FormSwitch name="refunds.enabled" wrapperClassName="w-fit" />
+          <FormSwitch
+            name="refunds.enabled"
+            wrapperClassName="w-fit"
+            required
+          />
         </div>
         <div className="flex items-center justify-between bg-accent/30 rounded border p-4">
           <div className="space-y-1">
             <FormLabel>Replacements</FormLabel>
             <FormDescription>Do you provide replacements?</FormDescription>
           </div>
-          <FormSwitch name="replacements.enabled" wrapperClassName="w-fit" />
+          <FormSwitch
+            name="replacements.enabled"
+            wrapperClassName="w-fit"
+            required
+          />
         </div>
       </div>
     </>

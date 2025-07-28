@@ -20,6 +20,7 @@ import { Route as authLogoutRouteImport } from './routes/(auth)/logout'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as PosOrderIndexRouteImport } from './routes/pos/order/index'
 import { Route as PosCheckoutIndexRouteImport } from './routes/pos/checkout/index'
+import { Route as AdminReviewProductsIndexRouteImport } from './routes/admin/review-products/index'
 import { Route as AdminProductIndexRouteImport } from './routes/admin/product/index'
 import { Route as AdminCategoryIndexRouteImport } from './routes/admin/category/index'
 import { Route as AcceptInvitationIdIndexRouteImport } from './routes/accept-invitation/$id/index'
@@ -97,6 +98,12 @@ const PosCheckoutIndexRoute = PosCheckoutIndexRouteImport.update({
   path: '/checkout/',
   getParentRoute: () => PosRouteRoute,
 } as any)
+const AdminReviewProductsIndexRoute =
+  AdminReviewProductsIndexRouteImport.update({
+    id: '/review-products/',
+    path: '/review-products/',
+    getParentRoute: () => AdminRouteRoute,
+  } as any)
 const AdminProductIndexRoute = AdminProductIndexRouteImport.update({
   id: '/product/',
   path: '/product/',
@@ -240,6 +247,7 @@ export interface FileRoutesByFullPath {
   '/accept-invitation/$id': typeof AcceptInvitationIdIndexRoute
   '/admin/category': typeof AdminCategoryIndexRoute
   '/admin/product': typeof AdminProductIndexRoute
+  '/admin/review-products': typeof AdminReviewProductsIndexRoute
   '/pos/checkout': typeof PosCheckoutIndexRoute
   '/pos/order': typeof PosOrderIndexRoute
   '/pos/order/$id': typeof PosOrderIdIndexRoute
@@ -273,6 +281,7 @@ export interface FileRoutesByTo {
   '/accept-invitation/$id': typeof AcceptInvitationIdIndexRoute
   '/admin/category': typeof AdminCategoryIndexRoute
   '/admin/product': typeof AdminProductIndexRoute
+  '/admin/review-products': typeof AdminReviewProductsIndexRoute
   '/pos/checkout': typeof PosCheckoutIndexRoute
   '/pos/order': typeof PosOrderIndexRoute
   '/pos/order/$id': typeof PosOrderIdIndexRoute
@@ -309,6 +318,7 @@ export interface FileRoutesById {
   '/accept-invitation/$id/': typeof AcceptInvitationIdIndexRoute
   '/admin/category/': typeof AdminCategoryIndexRoute
   '/admin/product/': typeof AdminProductIndexRoute
+  '/admin/review-products/': typeof AdminReviewProductsIndexRoute
   '/pos/checkout/': typeof PosCheckoutIndexRoute
   '/pos/order/': typeof PosOrderIndexRoute
   '/pos/order/$id/': typeof PosOrderIdIndexRoute
@@ -345,6 +355,7 @@ export interface FileRouteTypes {
     | '/accept-invitation/$id'
     | '/admin/category'
     | '/admin/product'
+    | '/admin/review-products'
     | '/pos/checkout'
     | '/pos/order'
     | '/pos/order/$id'
@@ -378,6 +389,7 @@ export interface FileRouteTypes {
     | '/accept-invitation/$id'
     | '/admin/category'
     | '/admin/product'
+    | '/admin/review-products'
     | '/pos/checkout'
     | '/pos/order'
     | '/pos/order/$id'
@@ -413,6 +425,7 @@ export interface FileRouteTypes {
     | '/accept-invitation/$id/'
     | '/admin/category/'
     | '/admin/product/'
+    | '/admin/review-products/'
     | '/pos/checkout/'
     | '/pos/order/'
     | '/pos/order/$id/'
@@ -507,6 +520,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/pos/checkout'
       preLoaderRoute: typeof PosCheckoutIndexRouteImport
       parentRoute: typeof PosRouteRoute
+    }
+    '/admin/review-products/': {
+      id: '/admin/review-products/'
+      path: '/review-products'
+      fullPath: '/admin/review-products'
+      preLoaderRoute: typeof AdminReviewProductsIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/admin/product/': {
       id: '/admin/product/'
@@ -714,6 +734,7 @@ interface AdminRouteRouteChildren {
   AdminProductIdRoute: typeof AdminProductIdRoute
   AdminCategoryIndexRoute: typeof AdminCategoryIndexRoute
   AdminProductIndexRoute: typeof AdminProductIndexRoute
+  AdminReviewProductsIndexRoute: typeof AdminReviewProductsIndexRoute
 }
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
@@ -721,6 +742,7 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminProductIdRoute: AdminProductIdRoute,
   AdminCategoryIndexRoute: AdminCategoryIndexRoute,
   AdminProductIndexRoute: AdminProductIndexRoute,
+  AdminReviewProductsIndexRoute: AdminReviewProductsIndexRoute,
 }
 
 const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(

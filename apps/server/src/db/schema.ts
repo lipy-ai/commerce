@@ -3,11 +3,15 @@ import type {
 	coreAddressSchema,
 } from "@/routes/loggedRoutes/address";
 import { sql } from "drizzle-orm";
-import { doublePrecision } from "drizzle-orm/pg-core";
+
 import {
+	type AnyPgColumn,
 	bigint,
+	bigserial,
 	boolean,
+	check,
 	customType,
+	index,
 	integer,
 	jsonb,
 	numeric,
@@ -62,9 +66,15 @@ export const schema = pgSchema("lipy-dev");
 
 // export const enableUuidExtension = sql`CREATE EXTENSION IF NOT EXISTS "postgis";`;
 
-const geography = customType<{ data: unknown }>({
+const geography = customType<{ data: string }>({
 	dataType() {
 		return "geography";
+	},
+});
+
+const tsVector = customType<{ data: string }>({
+	dataType() {
+		return "tsvector";
 	},
 });
 
@@ -86,8 +96,6 @@ export const user = schema.table("user", {
 	normalizedEmail: text("normalizedEmail"),
 });
 
-// location: geography("location"),
-
 export const address = schema.table("address", {
 	id: uuid("id").primaryKey(),
 	name: text("name").notNull(),
@@ -99,8 +107,7 @@ export const address = schema.table("address", {
 	country: text("country"),
 	postalCode: text("postalCode"),
 	phone: text("phone"),
-	lat: doublePrecision("lat"),
-	lng: doublePrecision("lng"),
+	location: geography("location"),
 	metadata: jsonb("metadata").$type<{
 		building: string;
 	}>(),
@@ -267,13 +274,25 @@ export const upload = schema.table("upload", {
 	createdAt: timestamp("createdAt", { withTimezone: true }).notNull(),
 });
 
-export const category = schema.table("category", {
-	id: uuid("id").primaryKey(),
-	title: text("title"),
-	summary: text("summary"),
-	slug: text("slug").unique(),
-	image: text("image"),
-});
+export const category = schema.table(
+	"category",
+	{
+		id: uuid("id").primaryKey(),
+		title: text("title"),
+		summary: text("summary"),
+		slug: text("slug").unique(),
+		image: text("image"),
+		parentId: uuid("parent_id").references((): AnyPgColumn => category.id, {
+			onDelete: "cascade",
+		}),
+	},
+	(table) => [
+		check(
+			"no_self_parenting",
+			sql`${table.parentId} IS NULL OR ${table.parentId} != ${table.id}`,
+		),
+	],
+);
 
 export const tags = schema.table("tag", {
 	id: uuid("id").primaryKey(),
@@ -282,6 +301,43 @@ export const tags = schema.table("tag", {
 	slug: text("slug"),
 	image: text("image"),
 });
+
+// TODO Trigger below
+
+// CREATE OR REPLACE FUNCTION update_search_vector() RETURNS trigger AS $$
+// CREATE OR REPLACE FUNCTION update_search_vector() RETURNS trigger AS $$
+// BEGIN
+//   NEW."searchVector" :=
+//     to_tsvector('english', coalesce(NEW.title, ''));
+//   RETURN NEW;
+// END;
+// $$ LANGUAGE plpgsql;
+
+// DROP TRIGGER IF EXISTS trigger_search_vector ON "lipy-dev"."productsToAdd";
+
+// CREATE TRIGGER trigger_search_vector
+// BEFORE INSERT OR UPDATE ON "lipy-dev"."productsToAdd"
+// FOR EACH ROW EXECUTE FUNCTION update_search_vector();
+
+export const productsToAdd = schema.table(
+	"productsToAdd",
+	{
+		id: bigserial("id", { mode: "number" }).primaryKey(),
+		title: text("title"),
+		searchVector: tsVector("searchVector"),
+		thumbnail: text("thumbnail"),
+		category: text("category"),
+		subCategory: text("subCategory"),
+		metadata: jsonb().$type<{
+			table: string;
+			ref_id: string;
+			category: string;
+			images: string[];
+			price: string;
+		}>(),
+	},
+	(t) => [index("productsToAdd_search_idx").using("gin", t.searchVector)],
+);
 
 export const product = schema.table("product", {
 	id: uuid("id").primaryKey(),
@@ -477,6 +533,7 @@ export const dbTables = {
 	customer,
 	product,
 	productVariant,
+	productsToAdd,
 	cart,
 	orders,
 	upload,

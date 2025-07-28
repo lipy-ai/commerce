@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { STORE_TYPE } from "@/db/schema";
 import env from "@/env";
+import { HTTPError } from "@/lib/exception";
 import { zValidator } from "@/middlewares/validator";
 import { listZodSchema } from "@/schema/common";
 
@@ -83,18 +84,22 @@ const route = new Hono<ServerContext>()
 			.limit(25)
 			.execute();
 
+		if (resp.length === 0) {
+			throw new HTTPError(404, { message: "No shops found!" });
+		}
+
 		const distanceMatrix = await getDistanceMatrix(
 			{ lat: query.originLat, lng: query.originLng },
 			resp.map((item) => ({
-				lat: item.address!.lat as number,
-				lng: item.address!.lng as number,
+				lat: (item.address!.lat || 0) as number,
+				lng: (item.address!.lng || 0) as number,
 			})),
 		);
 
 		const shopData = resp.map((shop, i) => ({
 			...shop,
-			distance: distanceMatrix.rows[0].elements[i].distance,
-			duration: distanceMatrix.rows[0].elements[i].duration,
+			distance: distanceMatrix.rows[0].elements[i].distance || 0,
+			duration: distanceMatrix.rows[0].elements[i].duration || 0,
 		}));
 
 		return c.json(shopData);

@@ -11,12 +11,8 @@ import {
   useMultiStepForm,
 } from "@lipy/web-ui/components/forms/multi-step";
 
-import { env } from "@envClient";
-import { buttonVariants } from "@lipy/web-ui/components/ui/button";
-import { cn } from "@lipy/web-ui/lib/utils";
-import { Link, useRouter } from "@tanstack/react-router";
+import { useRouter } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowLeft, LogOut } from "lucide-react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import {

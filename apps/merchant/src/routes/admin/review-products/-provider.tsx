@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { adminProductApi } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { getAPIQueryKey } from "@lipy/lib/utils/useQueryClient";

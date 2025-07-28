@@ -172,7 +172,7 @@ export default function ProductCard({
                 <Badge
                   className="text-xs"
                   variant="info"
-                  size="small"
+                  size="sm"
                   appearance={"outline"}
                 >
                   {product.variants[0].unit}

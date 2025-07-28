@@ -20,14 +20,14 @@ export const badgeVariants = cva(
       },
       appearance: {
         solid: "",
-        soft: "bg-opacity-20",
+        soft: "",
         outline: "border  ring-0 dark:border-white/10 border-gray-300",
         ghost: "bg-transparent text-muted-foreground ring-0",
       },
       size: {
-        small: "px-2 py-0.5 text-xs",
+        sm: "px-2 py-0.5 text-xs",
         default: "px-2.5 py-0.5 text-sm",
-        large: "px-3 py-1 text-base",
+        lg: "px-3 py-1 text-base",
       },
       rounded: {
         none: "rounded-none",

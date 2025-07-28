@@ -432,7 +432,7 @@ function RouteComponent() {
                             </h2>
                             <Badge
                               variant={"info"}
-                              size={"small"}
+                              size={"sm"}
                               appearance="outline"
                             >
                               {" "}

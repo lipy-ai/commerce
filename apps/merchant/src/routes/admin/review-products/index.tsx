@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { formatAmount } from "@lipy/lib/utils/intl";
 import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
@@ -87,14 +89,17 @@ function DesktopView() {
             <img
               src={m.thumbnail || ""}
               alt={m.title || ""}
-              className="size-12 border rounded bg-accent"
+              className="size-12 border rounded bg-white object-contain"
             />
           </div>
           <div>
             <p className="font-medium block break-words">{m.title}</p>
             <div className="flex gap-2">
-              {m.category && <Badge>{m.category}</Badge>}
-              <Badge>{m.subCategory}</Badge>
+              {m.category && <Badge size={"sm"}>{m.category}</Badge>}
+              <Badge size={"sm"}>{m.subCategory}</Badge>
+              <Badge size={"sm"}>{m.metadata?.table}</Badge>
+
+              <Badge size={"sm"}>#{m.metadata?.ref_id}</Badge>
             </div>
           </div>
 

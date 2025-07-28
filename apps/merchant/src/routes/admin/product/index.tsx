@@ -131,7 +131,7 @@ function DesktopView() {
             </p>
             {m?.maxPrice && (
               <p>
-                <Badge size="small" variant="info">
+                <Badge size="sm" variant="info">
                   {formatAmount("inr", m?.maxPrice - (m?.price || 0))} Off
                 </Badge>
               </p>

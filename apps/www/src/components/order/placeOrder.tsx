@@ -1,3 +1,4 @@
+import type { ResponseCart } from "@/routes/(default)/cart";
 import { loggedIOrderApi, loggedInCartApi } from "@lipy/lib/api";
 import { useUpload } from "@lipy/lib/hooks/use-upload";
 import { authClient } from "@lipy/lib/providers/auth";
@@ -20,12 +21,14 @@ interface PlaceOrderProps {
   setOpen: (open: boolean) => void;
   customOrder?: boolean;
   storeId?: string;
+  data?: ResponseCart;
 }
 
 export default function PlaceOrder({
   setOpen,
   customOrder = false,
   storeId,
+  data,
 }: PlaceOrderProps) {
   const [orderPlaced, setOrderPlaced] = useState(false);
   const { data: session } = authClient.useSession();
@@ -74,6 +77,7 @@ export default function PlaceOrder({
           customOrder={customOrder}
           storeId={storeId}
           onComplete={() => setOrderPlaced(false)}
+          data={data}
         />
       )}
     </div>
@@ -84,14 +88,16 @@ interface PlaceOrderProgressProps {
   customOrder?: boolean;
   storeId?: string;
   onComplete: () => void;
+  data?: ResponseCart;
 }
 
 function PlaceOrderProgress({
   customOrder = false,
   storeId,
   onComplete,
+  data,
 }: PlaceOrderProgressProps) {
-  const { uploadedImages, instructions, resetCart, setUploadedImages, cart } =
+  const { uploadedImages, instructions, resetCart, setUploadedImages } =
     useCartStore();
   const navigate = useNavigate();
   const { deliveryLocation } = useLocationStore();
@@ -101,17 +107,13 @@ function PlaceOrderProgress({
   const queryClient = useQueryClient();
   const [isSuccess, setIsSuccess] = useState(false);
 
-  // Memoize store list to prevent re-renders
   const storeList = useMemo(() => {
-    const storeIds = [
-      ...new Set(cart.map((item) => item.storeId).filter(Boolean)),
-    ];
-    return storeIds.map((id) => ({
-      id: id as string,
+    return data?.store.map((item) => ({
+      id: item.storeId,
       instruction: "",
       attachments: [] as string[],
-    }));
-  }, [cart]);
+    })) as Array<{ id: string; instruction: string; attachments: string[] }>;
+  }, [data?.store]);
 
   const uploadResults = uploadedImages.map((image) =>
     useUpload({ file: image })

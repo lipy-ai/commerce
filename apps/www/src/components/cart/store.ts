@@ -1,9 +1,10 @@
-import type { loggedInCartApi } from "@lipy/lib/api";
-import type { InferResponseType } from "hono";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-type ProductInCart = InferResponseType<typeof loggedInCartApi.index.$get>[0];
 
+export type ProductInCart = {
+	inventoryId: string;
+	quantity: number;
+};
 export type Operation = "increment" | "decrement" | "add";
 
 export type CartStore = {

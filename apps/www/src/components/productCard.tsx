@@ -14,7 +14,7 @@ import type { InferResponseType } from "hono";
 import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
 import { AddToCart } from "./cart/addToCart";
-import { type CartStore, useCartStore } from "./cart/store";
+import { useCartStore } from "./cart/store";
 
 export type ProductType = Omit<
   InferResponseType<
@@ -102,18 +102,10 @@ export default function ProductCard({
                 {product?.variants && product?.variants.length <= 1 ? (
                   product?.variants[0].inStock && (
                     <AddToCart
-                      product={
-                        {
-                          storeId: storeId ?? null,
-                          storeLogo: null,
-                          storeHandle: storeHandle ?? null,
-                          thumbnail: product.thumbnail ?? null,
-                          title: product.title ?? null,
-                          storeName: null,
-                          quantity: null,
-                          ...product.variants[0],
-                        } as CartStore["cart"][0]
-                      }
+                      product={{
+                        inventoryId: product?.variants[0].inventoryId as string,
+                        quantity: 1,
+                      }}
                       variant={"primary"}
                       activeVariant={"primary-active"}
                     />
@@ -127,7 +119,7 @@ export default function ProductCard({
                       setVariantDrawer(true);
                       setActiveProduct(product);
                     }}
-                    size="sm"
+                    size="xs"
                     type="button"
                     aria-label="Add to cart"
                     className="text-secondary border border-secondary min-w-16 hover:text-secondary border-b-2 border-r-2 disabled:opacity-100 flex flex-col p-0  gap-0"
@@ -150,7 +142,7 @@ export default function ProductCard({
                     }}
                   >
                     <Button
-                      size="sm"
+                      size="xs"
                       variant="ghost"
                       className="text-primary-foreground hover:bg-secondary hover:text-primary-foreground"
                     >
@@ -164,7 +156,7 @@ export default function ProductCard({
                     </div>
 
                     <Button
-                      size="sm"
+                      size="xs"
                       variant="ghost"
                       className="text-primary-foreground hover:bg-secondary hover:text-primary-foreground"
                     >
@@ -238,8 +230,6 @@ function VariantList({
   open,
   onOpenChange,
   product,
-  storeHandle,
-  storeId,
 }: {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -273,23 +263,20 @@ function VariantList({
                   </span>
                 )}
             </div>
-
-            <AddToCart
-              product={
-                {
-                  storeId: storeId ?? null,
-                  storeLogo: null,
-                  title: product.title ?? null,
-                  thumbnail: product.thumbnail ?? null,
-                  storeHandle: storeHandle ?? null,
-                  storeName: null,
-                  quantity: null,
-                  ...variant,
-                } as CartStore["cart"][0]
-              }
-              variant={"primary"}
-              activeVariant="primary-active"
-            />
+            {variant?.inStock ? (
+              <AddToCart
+                product={{
+                  inventoryId: variant.inventoryId as string,
+                  quantity: 1,
+                }}
+                variant={"primary"}
+                activeVariant="primary-active"
+              />
+            ) : (
+              <Button size="xs" disabled>
+                Out of Stock
+              </Button>
+            )}
           </div>
         ))}
       </div>

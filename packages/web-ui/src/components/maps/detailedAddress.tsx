@@ -40,12 +40,14 @@ export function DetailedAddress({
   open,
   onOpenChange,
   isDeliveryAddress,
+  children,
 }: {
   fullAddress: AddressType;
   label: "Edit" | "Add";
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   isDeliveryAddress?: boolean;
+  children?: React.ReactNode;
 }) {
   const { data } = authClient.useSession();
   const queryClient = useQueryClient();
@@ -144,7 +146,11 @@ export function DetailedAddress({
   };
 
   return (
-    <DrawerDialogSwitcher open={open} onOpenChange={onOpenChange}>
+    <DrawerDialogSwitcher
+      open={open}
+      onOpenChange={onOpenChange}
+      trigger={<p>{children}</p>}
+    >
       <ScrollArea className="overflow-y-auto">
         <div className="p-4">
           <div className="flex items-center justify-between">

@@ -132,14 +132,8 @@ function RouteComponent() {
                     {selectedVariant?.inStock ? (
                       <AddToCart
                         product={{
-                          ...selectedVariant,
-                          quantity: null,
-                          thumbnail: product.thumbnail || "",
-                          title: product.title || "",
-                          storeHandle: storeHandle || "",
-                          storeName: "",
-                          storeLogo: null,
-                          storeId: storeInfo?.id || "",
+                          inventoryId: selectedVariant?.inventoryId as string,
+                          quantity: 1,
                         }}
                         variant="secondary"
                         activeVariant="secondary-active"

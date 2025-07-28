@@ -18,6 +18,7 @@ import {
 	authMiddleware,
 	hasStorePermission,
 	isLoggedIn,
+	isSuperAdmin,
 } from "./middlewares/auth";
 import { corsMiddleware } from "./middlewares/cors";
 import { globalMiddleware } from "./middlewares/global";
@@ -80,7 +81,7 @@ app.on(["POST", "GET"], "/api/auth/*", (c) => {
 
 const adminRouter = new Hono()
 	.basePath("/admin")
-	.use(isLoggedIn)
+	.use(isSuperAdmin)
 	.route("/product", adminProductRoute)
 	.route("/category", adminCategoryRoute)
 	.route("/variant", adminVariantRoute);

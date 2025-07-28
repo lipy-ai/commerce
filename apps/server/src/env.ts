@@ -56,6 +56,7 @@ const EnvSchema = z.object({
 	TRUSTED_ORIGINS: z
 		.string()
 		.transform((t) => t.split(",").map((e) => e.trim())),
+	SUPER_ADMINS: z.string().transform((t) => t.split(",").map((e) => e.trim())),
 });
 // .superRefine((input, ctx) => {
 //   if (input.NODE_ENV === "production" && !input.DATABASE_AUTH_TOKEN) {

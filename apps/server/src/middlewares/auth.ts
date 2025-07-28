@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import env from "@/env";
 import { ERR_CODES, HTTPError } from "@/lib/exception";
 import type { ServerContext } from "@/types";
 import type { MiddlewareHandler } from "hono";
@@ -26,6 +27,27 @@ export const isLoggedIn: MiddlewareHandler<ServerContext> = async (c, next) => {
 	if (!sess?.userId) {
 		throw new HTTPError(401, {
 			code: ERR_CODES.NOT_LOGGED_IN,
+		});
+	}
+	return next();
+};
+
+export const isSuperAdmin: MiddlewareHandler<ServerContext> = async (
+	c,
+	next,
+) => {
+	const sess = c.get("session");
+	const user = c.get("user");
+
+	if (!sess?.userId) {
+		throw new HTTPError(401, {
+			code: ERR_CODES.NOT_LOGGED_IN,
+		});
+	}
+
+	if (!env.SUPER_ADMINS.includes(user?.email || "")) {
+		throw new HTTPError(401, {
+			code: ERR_CODES.INSUFFICIENT_PERMISSION,
 		});
 	}
 	return next();

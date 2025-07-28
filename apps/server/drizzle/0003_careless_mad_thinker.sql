@@ -1,1 +1,0 @@
-ALTER TABLE "lipy-dev"."product" ADD COLUMN "status" text DEFAULT 'draft';

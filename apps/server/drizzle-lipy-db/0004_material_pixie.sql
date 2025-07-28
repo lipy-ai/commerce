@@ -1,0 +1,1 @@
+-- ALTER TABLE "lipy-dev"."productsToAdd" ALTER COLUMN "id" SET DATA TYPE bigserial;

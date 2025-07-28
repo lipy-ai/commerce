@@ -432,12 +432,36 @@ export const orders = schema.table("orders", {
 	status: text("status", {
 		enum: ORDER_STATUS,
 	}),
-	totalTaxAmount: integer("totalTaxAmount").default(0),
-	totalDiscountAmount: integer("totalDiscountAmount").default(0),
-	maxItemTotalAmount: integer("maxItemTotalAmount").default(0),
-	itemTotalAmount: integer("itemTotalAmount").default(0),
-	totalAmount: integer("totalAmount").default(0),
-	amountSaved: integer("amountSaved").default(0),
+	totalTaxAmount: numeric("totalTaxAmount", {
+		precision: 10,
+		scale: 2,
+		mode: "number",
+	}),
+	totalDiscountAmount: numeric("totalDiscountAmount", {
+		precision: 10,
+		scale: 2,
+		mode: "number",
+	}),
+	maxItemTotalAmount: numeric("maxItemTotalAmount", {
+		precision: 10,
+		scale: 2,
+		mode: "number",
+	}),
+	itemTotalAmount: numeric("itemTotalAmount", {
+		precision: 10,
+		scale: 2,
+		mode: "number",
+	}),
+	totalAmount: numeric("totalAmount", {
+		precision: 10,
+		scale: 2,
+		mode: "number",
+	}),
+	amountSaved: numeric("amountSaved", {
+		precision: 10,
+		scale: 2,
+		mode: "number",
+	}),
 });
 
 export const dbTables = {

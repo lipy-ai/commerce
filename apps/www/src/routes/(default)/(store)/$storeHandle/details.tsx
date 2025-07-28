@@ -5,13 +5,22 @@ import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { GoogleMapsIcon } from "@lipy/web-ui/components/icons";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
+import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 import Loading from "@lipy/web-ui/components/ui/loading";
 import { shareContent } from "@lipy/web-ui/lib/share";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
-import { format, parse } from "date-fns";
-import { Clock, Mail, Phone, Share2 } from "lucide-react";
+import { format } from "date-fns";
+import { Bike, Clock, Handshake, Mail, Phone, Share2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { getStoreStatus } from "./-helper";
+
+type StoreStatus = {
+  open: boolean;
+  openTime: string;
+  closeTime: string;
+};
 
 export const Route = createFileRoute("/(default)/(store)/$storeHandle/details")(
   {
@@ -21,6 +30,7 @@ export const Route = createFileRoute("/(default)/(store)/$storeHandle/details")(
 
 function RouteComponent() {
   const { storeHandle } = Route.useParams();
+  const [storeStatus, setStoreStatus] = useState<StoreStatus | null>(null);
   const { data, isLoading } = useAPIQuery(
     publicShopApi[":handle"],
     "$get",
@@ -32,6 +42,17 @@ function RouteComponent() {
       cacheTime: Number.POSITIVE_INFINITY,
     }
   );
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies:
+  useEffect(() => {
+    if (data) {
+      const { isOpen, openTime, closeTime } = getStoreStatus(
+        data.openingHour,
+        data.closingHour
+      );
+      setStoreStatus({ open: isOpen, openTime, closeTime });
+    }
+  }, [isLoading, data]);
 
   return (
     <>
@@ -120,25 +141,33 @@ function RouteComponent() {
             </div>
           </div>
 
-          <div className="bg-card p-4 divide-y divide-dashed">
-            <div>
-              <div className="flex items-start gap-4 p-2">
+          <div className="bg-card p-4 divide-y divide-dashed mb-10">
+            <div className="flex items-start justify-between py-4">
+              <div className="flex items-start gap-2.5">
                 <Clock className="flex-shrink-0 size-4 mt-1" />
                 <div>
                   <p className="font-medium ">Opening Hours</p>
                   <p className="text-muted-foreground">
-                    {format(
-                      parse(data?.openingHour, "HH:mm:ss", new Date()),
-                      "hh:mm a"
-                    )}
-                    {" - "}
-                    {format(
-                      parse(data?.closingHour, "HH:mm:ss", new Date()),
-                      "hh:mm a"
-                    )}
+                    {storeStatus?.openTime} - {storeStatus?.closeTime}
                   </p>
                 </div>
               </div>
+
+              {storeStatus?.open ? (
+                <Badge variant="success">Open Now</Badge>
+              ) : (
+                <Badge variant="neutral">Closed Now</Badge>
+              )}
+            </div>
+            {data?.freeDeliveryDistance > 0 && (
+              <div className="flex items-center  gap-2.5 py-4">
+                <Bike className="flex-shrink-0 size-4" />
+                <p>Free delivery within {data?.freeDeliveryDistance} kms</p>
+              </div>
+            )}
+            <div className="flex gap-2.5 py-4 items-center">
+              <Handshake className="flex-shrink-0 size-4" />
+              Partnered with Lipy since {format(data?.createdAt, "LLL yyy")}
             </div>
           </div>
           <div className="lg:hidden">

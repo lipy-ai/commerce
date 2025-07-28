@@ -70,7 +70,16 @@ const route = new Hono<ServerContext>()
 			.selectFrom("store")
 			.where("active", "=", true)
 			.where("store.address", "is not", null)
-			.select(["id", "handle", "type", "name", "image", "address", "phone"])
+			.select([
+				"id",
+				"handle",
+				"type",
+				"name",
+				"image",
+				"address",
+				"phone",
+				"freeDeliveryDistance",
+			])
 			.limit(25)
 			.execute();
 
@@ -112,6 +121,7 @@ const route = new Hono<ServerContext>()
 					"description",
 					"createdAt",
 					"type",
+					"freeDeliveryDistance",
 				])
 				.executeTakeFirstOrThrow();
 

@@ -117,7 +117,7 @@ function RouteComponent() {
           <DashboardHeader
             titleChildren={
               <div>
-                <p className="font-semibold text-xs">{order?.id}</p>
+                <p className="font-semibold text-xs">#{order?.id}</p>
                 {order.items && order.items.length > 0 && (
                   <p className="text-muted-foreground text-xs">
                     {order?.items?.length || 0} item(s) |{" "}

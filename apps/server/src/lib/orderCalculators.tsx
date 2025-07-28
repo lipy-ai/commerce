@@ -20,42 +20,41 @@ export function orderCalculator({
 
   let maxDiscountTotal = 0;
   let discountTotal = 0;
-  const maxTaxTotal = 0;
+  let maxTaxTotal = 0;
   let taxTotal = 0;
-
-  for (const d of discounts) {
-    let maxAmount = Number(d.amount);
-    let amount = Number(d.amount);
-
-    if (d.sum === "percent") {
-      amount = (itemsTotal * amount) / 100;
-      maxAmount = (maxItemsTotal * amount) / 100;
-    }
-
-    discountTotal = discountTotal + amount;
-    maxDiscountTotal = maxDiscountTotal + maxAmount;
-  }
 
   for (const t of taxes) {
     let maxAmount = Number(t.amount);
     let amount = Number(t.amount);
     if (t.sum === "percent") {
       amount = (itemsTotal * amount) / 100;
-      maxAmount = (maxItemsTotal * amount) / 100;
+      maxAmount = (maxItemsTotal * maxAmount) / 100;
     }
-    maxDiscountTotal = maxTaxTotal + maxAmount;
+    maxTaxTotal = maxTaxTotal + maxAmount;
     taxTotal = taxTotal + amount;
   }
 
+  for (const d of discounts) {
+    let maxAmount = Number(d.amount);
+    let amount = Number(d.amount);
+
+    if (d.sum === "percent") {
+      amount = ((itemsTotal + taxTotal) * amount) / 100;
+      maxAmount = ((maxItemsTotal + maxTaxTotal) * amount) / 100;
+    }
+
+    discountTotal = discountTotal + amount;
+    maxDiscountTotal = maxDiscountTotal + maxAmount;
+  }
   const totalAmount = itemsTotal + taxTotal - discountTotal;
-  const maxTotalAmount = maxItemsTotal + maxTaxTotal - maxDiscountTotal;
+  const maxTotalAmount = maxItemsTotal + maxTaxTotal;
 
   return {
-    itemTotalAmount: itemsTotal,
-    maxItemTotalAmount: maxItemsTotal,
-    totalDiscountAmount: discountTotal,
-    totalTaxAmount: taxTotal,
+    itemsTotal,
+    maxItemsTotal,
+    discountTotal,
+    taxTotal,
     totalAmount,
-    amountSaved: maxTotalAmount - totalAmount,
+    totalSaved: maxTotalAmount - totalAmount,
   };
 }

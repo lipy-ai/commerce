@@ -1,12 +1,15 @@
 import { loggedInCartApi } from "@lipy/lib/api";
-import { useAPIMutation } from "@lipy/lib/utils/useQueryClient";
+import {
+  apiQueryOptions,
+  useAPIMutation,
+} from "@lipy/lib/utils/useQueryClient";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
+import { cn } from "@lipy/web-ui/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
 import { Loader2, Minus, Plus } from "lucide-react";
 import { useCallback, useState } from "react";
-
-import { cn } from "@lipy/web-ui/lib/utils";
-import { type CartStore, type Operation, useCartStore } from "./store";
+import { type Operation, useCartStore } from "./store";
 
 type LoadingState = {
   isLoading: boolean;
@@ -19,7 +22,10 @@ export const AddToCart = ({
   activeVariant,
   disabled = false,
 }: {
-  product: CartStore["cart"][0];
+  product: {
+    inventoryId: string;
+    quantity: number;
+  };
   variant: "primary" | "secondary" | "active";
   activeVariant?: "primary-active" | "secondary-active" | "tertiary-active";
   disabled?: boolean;
@@ -31,11 +37,15 @@ export const AddToCart = ({
     operation: null,
   });
 
+  const queryClient = useQueryClient();
   const mutation = useAPIMutation(loggedInCartApi.index, "$patch", {
     onSuccess: () => {
       if (loadingState.operation) {
         updateCart(product, loadingState.operation);
       }
+      queryClient.invalidateQueries({
+        queryKey: apiQueryOptions(loggedInCartApi.index, "$get", {}).queryKey,
+      });
     },
     onError: () => {
       toast.error("Something went wrong while adding to cart");
@@ -57,11 +67,6 @@ export const AddToCart = ({
     async (operation: Operation, quantity: number) => {
       if (disabled || loadingState.isLoading) return;
 
-      if (!product.inStock) {
-        toast.message("This item is currently out of stock.");
-        return;
-      }
-
       setLoading(operation);
 
       try {
@@ -80,7 +85,6 @@ export const AddToCart = ({
       loadingState.isLoading,
       mutation,
       product.inventoryId,
-      product.inStock,
       setLoading,
     ]
   );
@@ -120,7 +124,7 @@ export const AddToCart = ({
     case "primary":
       return (
         <Button
-          size="sm"
+          size="xs"
           onClick={handleAddToCart}
           disabled={disabled || isLoading}
           type="button"
@@ -138,7 +142,7 @@ export const AddToCart = ({
           onClick={handleAddToCart}
           disabled={disabled || isLoading}
           aria-label="Add to cart"
-          size="lg"
+          size="default"
           className="min-w-32"
         >
           {isLoading ? (
@@ -173,7 +177,7 @@ export const AddToCart = ({
                 ? "lg"
                 : activeVariant === "tertiary-active"
                   ? "icon-xs"
-                  : "sm"
+                  : "xs"
             }
             onClick={handleQuantityChange("decrement")}
             disabled={disabled || isLoading}
@@ -234,7 +238,7 @@ export const AddToCart = ({
                 ? "lg"
                 : activeVariant === "tertiary-active"
                   ? "icon-xs"
-                  : "sm"
+                  : "xs"
             }
             onClick={handleQuantityChange("increment")}
             disabled={disabled || isLoading}

@@ -1,4 +1,4 @@
-import { type CartStore, useCartStore } from "@/components/cart/store";
+import { type ProductInCart, useCartStore } from "@/components/cart/store";
 
 import { AddToCart } from "@/components/cart/addToCart";
 import PlaceOrder from "@/components/order/placeOrder";
@@ -21,21 +21,15 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@lipy/web-ui/components/ui/card";
+import { Card, CardContent, CardHeader } from "@lipy/web-ui/components/ui/card";
 
 import { loggedInCartApi } from "@lipy/lib/api";
 import Loading from "@lipy/web-ui/components/ui/loading";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
+import type { InferResponseType } from "hono/client";
 import {
-  Bike,
   ChevronDown,
   ChevronRight,
   Clock,
@@ -44,11 +38,13 @@ import {
   MapPinned,
   MessageSquareText,
   Phone,
-  ReceiptText,
   ShoppingBag,
   Store,
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+import { Billing } from "./-billing";
+
+export type ResponseCart = InferResponseType<typeof loggedInCartApi.index.$get>;
 
 export const Route = createFileRoute("/(default)/cart/")({
   component: RouteComponent,
@@ -97,21 +93,11 @@ function RouteComponent() {
 }
 
 export const CartMainContent = () => {
-  const { cart, setCart, resetCart } = useCartStore();
-  const {
-    data = [],
-    isLoading,
-    isFetched,
-  } = useAPIQuery(
+  const { setCart, resetCart } = useCartStore();
+  const { data, isLoading, isFetched } = useAPIQuery(
     loggedInCartApi.index,
     "$get",
-    {},
-    {
-      refetchOnMount: true,
-      refetchOnWindowFocus: true,
-      staleTime: 0,
-      cacheTime: 0,
-    }
+    {}
   );
 
   useEffect(() => {
@@ -119,11 +105,23 @@ export const CartMainContent = () => {
   }, [resetCart]);
 
   // Update cart when data changes
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies:
   useEffect(() => {
-    if (isFetched && data.length > 0) {
-      setCart(data);
+    if (isFetched && data) {
+      // setCart(data);
+      const cart: ProductInCart[] = [];
+      for (const item of data.store) {
+        for (const product of item.items) {
+          cart.push({
+            inventoryId: product.inventoryId as string,
+            quantity: product.quantity as number,
+          });
+        }
+      }
+      setCart(cart);
     }
-  }, [isFetched, data, setCart]);
+  }, [isFetched, data]);
 
   const queryClient = useQueryClient();
 
@@ -144,63 +142,6 @@ export const CartMainContent = () => {
 
   const [isRemovingFromCart, setIsRemovingFromCart] = useState(false);
   const [removingShopHandle, setRemovingShopHandle] = useState("");
-  const { totalPrice, totalMaxPrice } = useMemo(() => {
-    return cart.reduce(
-      (acc, item) => {
-        if (!item.inStock) return acc;
-        acc.totalPrice += (item.price || 0) * (item.quantity || 0);
-        acc.totalMaxPrice += (item.maxPrice || 0) * (item.quantity || 0);
-        return acc;
-      },
-      { totalPrice: 0, totalMaxPrice: 0 }
-    );
-  }, [cart]);
-
-  // const totalDiscount = useMemo(() => {
-  // 	return Math.floor(totalMaxPrice - totalPrice);
-  // }, [totalPrice, totalMaxPrice]);
-
-  const billingDetails = [
-    {
-      icon: ReceiptText,
-      title: "Subtotal",
-      value: (
-        <div className="flex items-center gap-2">
-          <p className="text-muted-foreground line-through">
-            {formatAmount("inr", totalMaxPrice)}
-          </p>
-          <p>{formatAmount("inr", totalPrice)}</p>
-        </div>
-      ),
-    },
-    {
-      icon: Bike,
-      title: "Delivery Charge",
-      value: <div className="text-primary">Free</div>,
-    },
-    {
-      icon: ShoppingBag,
-      title: "Handling Charge",
-      value: (
-        <div className="text-muted-foreground">{formatAmount("inr", 0)}</div>
-      ),
-    },
-  ];
-
-  const storeWiseItems = new Map<string, CartStore["cart"]>();
-
-  for (const item of cart) {
-    const storeHandle = item?.storeHandle ?? "";
-
-    let items = storeWiseItems.get(storeHandle);
-
-    if (!items) {
-      items = [];
-      storeWiseItems.set(storeHandle, items);
-    }
-
-    items.push(item);
-  }
 
   const handleRemoveFromCart = async (shopHandle: string) => {
     try {
@@ -220,109 +161,83 @@ export const CartMainContent = () => {
     <>
       {isLoading ? (
         <Loading />
-      ) : !data || data.length === 0 ? (
+      ) : !data ? (
         <EmptyPage icon={ShoppingBag} title="Your Cart is Empty" label=" " />
       ) : (
         <div>
           <div className="relative py-4">
             <div className="space-y-4">
-              {Array.from(storeWiseItems.entries()).map(
-                ([storeHandle, storeData]) => (
-                  <Card key={storeHandle}>
-                    {/* Store name header */}
-                    <CardHeader className="flex items-center justify-between mb-2 border-b -mx-4 ">
-                      <Link
-                        className="flex items-center gap-2 px-4"
-                        to="/$storeHandle"
-                        params={{ storeHandle }}
-                      >
-                        <Avatar className="rounded-md size-10">
-                          <AvatarImage src={storeData[0].storeLogo || ""} />
-                          <AvatarFallback>
-                            <Store />
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="text-base font-semibold">
-                            {storeData[0].storeName}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {storeData.length}{" "}
-                            {storeData.length > 1 ? "items" : "item"}
-                          </p>
-                        </div>
-                      </Link>
-                      <p
-                        className="text-muted-foreground underline decoration-dashed px-4 cursor-pointer"
-                        style={{ textUnderlineOffset: "4px" }}
-                        onClick={() => handleRemoveFromCart(storeHandle)}
-                      >
-                        {isRemovingFromCart &&
-                        removingShopHandle === storeHandle
-                          ? "Removing..."
-                          : "Remove"}
-                      </p>
-                    </CardHeader>
-
-                    <CardContent className="space-y-8">
-                      {storeData
-                        .sort((a, b) =>
-                          a.inStock === b.inStock ? 0 : a.inStock ? -1 : 1
-                        )
-                        .map((product, index, array) => {
-                          const isFirstOutOfStock =
-                            !product.inStock &&
-                            (index === 0 || array[index - 1].inStock);
-
-                          return (
-                            <div
-                              key={product.inventoryId}
-                              className={`${isFirstOutOfStock ? "border-t pt-4" : ""} `}
-                            >
-                              {isFirstOutOfStock && (
-                                <p className="pb-2 text-destructive font-medium text-base">
-                                  Out of stock
-                                </p>
-                              )}
-
-                              <ProductComp
-                                product={product}
-                                inStock={product.inStock}
-                                className={`${!product.inStock ? "opacity-50" : ""}`}
-                              />
-                            </div>
-                          );
-                        })}
-                    </CardContent>
-                  </Card>
-                )
-              )}
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Billing details</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2.5">
-                  {billingDetails.map(({ icon: Icon, title, value }) => (
-                    <div
-                      key={title}
-                      className="flex items-center justify-between"
+              {data?.store.map((s) => (
+                <Card key={s.storeHandle}>
+                  {/* Store name header */}
+                  <CardHeader className="flex items-center justify-between mb-2 border-b -mx-4 ">
+                    <Link
+                      className="flex items-center gap-2 px-4"
+                      to="/$storeHandle"
+                      params={{ storeHandle: s?.storeHandle as string }}
                     >
-                      <div className="flex items-center gap-2">
-                        <Icon className="size-4" />
-                        <p className="text-sm">{title}</p>
+                      <Avatar className="rounded-md size-10">
+                        <AvatarImage src={s.storeImage || ""} />
+                        <AvatarFallback>
+                          <Store />
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="text-base font-semibold">{s.storeName}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {s.items.length}{" "}
+                          {s.items.length > 1 ? "items" : "item"}
+                        </p>
                       </div>
-                      <div className="">{value}</div>
-                    </div>
-                  ))}
-                </CardContent>
-                <CardFooter className="border-t">
-                  <div className=" flex items-center justify-between w-full text-base font-semibold">
-                    <p>Total Payable</p>
-                    <p>₹{totalPrice}</p>
-                  </div>
-                </CardFooter>
-              </Card>
+                    </Link>
+                    <p
+                      className="text-muted-foreground underline decoration-dashed px-4 cursor-pointer"
+                      style={{ textUnderlineOffset: "4px" }}
+                      onClick={() =>
+                        handleRemoveFromCart(s?.storeHandle as string)
+                      }
+                    >
+                      {isRemovingFromCart &&
+                      removingShopHandle === s?.storeHandle
+                        ? "Removing..."
+                        : "Remove"}
+                    </p>
+                  </CardHeader>
+
+                  <CardContent className="space-y-8">
+                    {s.items
+                      .sort((a, b) =>
+                        a.inStock === b.inStock ? 0 : a.inStock ? -1 : 1
+                      )
+                      .map((product, index, array) => {
+                        const isFirstOutOfStock =
+                          !product.inStock &&
+                          (index === 0 || array[index - 1].inStock);
+
+                        return (
+                          <div
+                            key={product.inventoryId}
+                            className={`${isFirstOutOfStock ? "border-t pt-4" : ""} `}
+                          >
+                            {isFirstOutOfStock && (
+                              <p className="pb-2 text-destructive font-medium text-base">
+                                Out of stock
+                              </p>
+                            )}
+
+                            <ProductComp
+                              product={product}
+                              inStock={product.inStock}
+                              className={`${!product.inStock ? "opacity-50" : ""}`}
+                            />
+                          </div>
+                        );
+                      })}
+                  </CardContent>
+                </Card>
+              ))}
+
+              <Billing data={data} />
 
               <div className="mb-40">
                 <DeliveryInstruction />
@@ -362,7 +277,7 @@ export const CartMainContent = () => {
                 </div>
               </div>
 
-              <PlaceOrder setOpen={setDetailedAddressDrawerOpen} />
+              <PlaceOrder setOpen={setDetailedAddressDrawerOpen} data={data} />
             </div>
           </div>
         </div>
@@ -386,7 +301,7 @@ export function ProductComp({
   inStock = true,
   className,
 }: {
-  product: CartStore["cart"][0];
+  product: ResponseCart["store"][number]["items"][number];
   inStock: boolean;
   className?: string;
 }) {
@@ -419,7 +334,10 @@ export function ProductComp({
       <div className="flex flex-col items-end gap-1">
         {inStock && (
           <AddToCart
-            product={product}
+            product={{
+              inventoryId: product.inventoryId as string,
+              quantity: product.quantity as number,
+            }}
             variant={"primary"}
             activeVariant="tertiary-active"
           />

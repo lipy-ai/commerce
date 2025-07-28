@@ -1,4 +1,7 @@
 import { db } from "@/db";
+import type { SUM_TYPE } from "@/db/schema";
+import { getStore } from "@/helpers/store";
+import { orderCalculator } from "@/lib/orderCalculators";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
@@ -12,21 +15,26 @@ const cartSchema = z.object({
 const route = new Hono<ServerContext>()
 	.get("/", async (c) => {
 		const session = c.get("session");
-		const data = await db
+
+		const cartItemsQuery = db
 			.selectFrom("cart as c")
 			.where("c.userId", "=", session?.userId!)
-			.leftJoin("storeInventory as si", "si.id", "c.inventoryId")
+			.rightJoin("storeInventory as si", "si.id", "c.inventoryId")
+			.where("si.active", "=", true)
 			.leftJoin("store as s", "si.storeId", "s.id")
-			.leftJoin("productVariant as pv", "pv.id", "si.productVariant")
-			.leftJoin("product as p", "p.id", "pv.productId")
+			.rightJoin("productVariant as pv", "pv.id", "si.productVariant")
+			.rightJoin("product as p", "p.id", "pv.productId")
 			.select((eb) => [
-				"c.quantity",
-				"c.inventoryId",
 				"p.id as productId",
+				"p.title",
 				"p.thumbnail",
-				"p.title as title",
 				"pv.price as maxPrice",
+				"pv.unit",
 				"si.price as price",
+				"c.quantity",
+				"s.id as storeId",
+				"s.handle as storeHandle",
+				"si.id as inventoryId",
 				eb
 					.case()
 					.when("si.stock", "=", 0)
@@ -38,15 +46,88 @@ const route = new Hono<ServerContext>()
 					.else(false)
 					.end()
 					.as("inStock"),
-				"pv.unit as unit",
-				"s.handle as storeHandle",
-				"s.name as storeName",
-				"s.image as storeLogo",
-				"s.id as storeId",
 			])
+			.as("items");
+
+		const groupedStores = await db
+			.selectFrom(cartItemsQuery)
+			.innerJoin("store as s", "s.id", "items.storeId")
+			.select((eb) => [
+				"s.id",
+				"s.handle",
+				"s.image",
+				"s.name",
+				eb.fn.jsonAgg("items").as("items"),
+			])
+			.groupBy("s.id")
 			.execute();
 
-		return c.json(data || []);
+		let itemsTotal = 0;
+		let maxItemsTotal = 0;
+		let taxTotal = 0;
+		let totalSaved = 0;
+		let totalAmount = 0;
+
+		const storesData = await Promise.all(
+			groupedStores.map(async ({ id, handle, image, name, items }) => {
+				const store = await getStore(id);
+				const taxes: Array<{ amount: number; sum: (typeof SUM_TYPE)[number] }> =
+					[{ amount: store.gstTax, sum: "percent" }];
+
+				const formattedItems = items
+					.filter(
+						(item: (typeof groupedStores)[number]["items"][number]) =>
+							item.inStock === true,
+					)
+					.map((item) => ({
+						price: item.price || 0,
+						maxPrice: item.maxPrice || undefined,
+						qty: item.quantity || 1,
+					}));
+				const calc = orderCalculator({
+					items: formattedItems,
+					taxes,
+					discounts: [],
+				});
+
+				itemsTotal += calc.itemsTotal;
+				maxItemsTotal += calc.maxItemsTotal;
+				taxTotal += calc.taxTotal;
+				totalSaved += calc.totalSaved;
+				totalAmount += calc.totalAmount;
+
+				return {
+					storeId: id,
+					storeHandle: handle,
+					storeImage: image,
+					storeName: name,
+					storeTax: calc.taxTotal,
+					storeItemsTotal: calc.itemsTotal,
+					storeMaxItemsTotal: calc.maxItemsTotal,
+					items,
+				};
+			}),
+		);
+
+		return c.json({
+			itemsTotal,
+			maxItemsTotal,
+			taxTotal,
+			totalSaved,
+			totalAmount,
+			store: storesData,
+		});
+	})
+	.get("/basic", async (c) => {
+		const userId = c.get("session")?.userId!;
+
+		const result = await db
+			.selectFrom("cart")
+			.where("userId", "=", userId)
+			.select(["inventoryId", "quantity"])
+			.execute();
+
+		return c.json(result);
 	})
 	.patch("/", zValidator("json", cartSchema), async (c) => {
 		const session = c.get("session");

@@ -1,4 +1,6 @@
 import { type DBTypes, type Database, db } from "@/db";
+import type { SUM_TYPE } from "@/db/schema";
+import { getStore } from "@/helpers/store";
 import { HTTPError } from "@/lib/exception";
 import { idGenerate } from "@/lib/generateId";
 import { orderCalculator } from "@/lib/orderCalculators";
@@ -38,6 +40,7 @@ const getCart = async (userId: string, trx: Transaction<Database>) => {
 		.selectFrom("cart as c")
 		.where("c.userId", "=", userId!)
 		.rightJoin("storeInventory as si", "si.id", "c.inventoryId")
+		.where("si.stock", "!=", 0)
 		.rightJoin("productVariant as pv", "pv.id", "si.productVariant")
 		.rightJoin("product as p", "p.id", "pv.productId")
 		.select((eb) => [
@@ -84,10 +87,15 @@ const generateOrders = async ({
 					throw new HTTPError(400, { message: "Failed to create customer" });
 				});
 		}
+		const store = await getStore(s.id);
 
 		const items: NonNullable<DBTypes["orders"]["items"]> = [];
 
-		const taxes: DBTypes["orders"]["taxes"] = [];
+		const taxes: Array<{
+			amount: number;
+			sum: (typeof SUM_TYPE)[number];
+			name: string;
+		}> = [{ amount: store.gstTax, sum: "percent", name: "GST" }];
 		const discounts: DBTypes["orders"]["discounts"] = [];
 
 		for (const c of cart) {
@@ -137,7 +145,12 @@ const generateOrders = async ({
 			},
 			paymentMethod: "cod",
 			orderedAt: new Date(),
-			...calcs,
+			totalTaxAmount: calcs.taxTotal,
+			totalDiscountAmount: calcs.discountTotal,
+			maxItemTotalAmount: calcs.maxItemsTotal,
+			itemTotalAmount: calcs.itemsTotal,
+			totalAmount: calcs.totalAmount,
+			amountSaved: calcs.totalSaved,
 			delivery: null,
 			canceledAt: null,
 			refundedAt: null,
@@ -281,7 +294,6 @@ const route = new Hono<ServerContext>()
 			const ordersData = await generateOrders({ cart, user, trx, ...values });
 
 			await trx.insertInto("orders").values(ordersData).execute();
-
 			await trx
 				.deleteFrom("cart")
 				.where("userId", "=", session?.userId!)

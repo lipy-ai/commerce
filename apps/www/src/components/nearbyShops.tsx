@@ -121,10 +121,15 @@ export default function NearByShops() {
                           alt={shop.name}
                           className="size-full object-cover rounded-t-xl bg-accent/30"
                         />
-                        <div className="absolute bottom-2 right-2 backdrop-blur-md bg-black/30 text-white  rounded-md flex items-center gap-1 text-xs px-1.5 py-0.5">
-                          <Bike className="size-3 stroke-2 text-blue-400" />
-                          <p>Free delivery within 5 km</p>
-                        </div>
+                        {shop.freeDeliveryDistance > 0 && (
+                          <div className="absolute bottom-2 right-2 backdrop-blur-md bg-black/30 text-white  rounded-md flex items-center gap-1 text-xs px-1.5 py-0.5">
+                            <Bike className="size-3 stroke-2 text-blue-400" />
+                            <p>
+                              Free delivery within {shop.freeDeliveryDistance}{" "}
+                              km
+                            </p>
+                          </div>
+                        )}
                       </div>
                       <div className="p-3">
                         <div className="flex gap-2 justify-between items-start">

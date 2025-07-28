@@ -1,18 +1,19 @@
 import { loggedInCartApi } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { useEffect } from "react";
-import { useCartStore } from "./store";
+import { type ProductInCart, useCartStore } from "./store";
 
 export const AppCartInitializer = () => {
   const setCart = useCartStore((state) => state.setCart);
 
-  const { data, isFetched } = useAPIQuery(loggedInCartApi.index, "$get", {});
+  const { data, isFetched } = useAPIQuery(loggedInCartApi.basic, "$get", {});
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies:
   useEffect(() => {
     if (isFetched && data) {
-      setCart(data);
+      setCart(data as ProductInCart[]);
     }
-  }, [isFetched, data, setCart]);
+  }, [isFetched, data]);
 
   return null;
 };

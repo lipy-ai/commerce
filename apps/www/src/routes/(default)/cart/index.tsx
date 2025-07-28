@@ -161,7 +161,7 @@ export const CartMainContent = () => {
     <>
       {isLoading ? (
         <Loading />
-      ) : !data ? (
+      ) : (data && data?.store?.length === 0) || !data ? (
         <EmptyPage icon={ShoppingBag} title="Your Cart is Empty" label=" " />
       ) : (
         <div>

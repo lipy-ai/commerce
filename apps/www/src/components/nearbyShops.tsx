@@ -106,7 +106,7 @@ export default function NearByShops() {
         </EmptyPage>
       ) : (
         <div>
-          <div className="m-auto max-w-screen-2xl px-2 ">
+          <div className="m-auto max-w-screen-2xl px-2 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-center gap-4 py-4">
               {shops.map((shop) => (
                 <div key={shop.id} className="space-y-6">

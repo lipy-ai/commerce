@@ -303,7 +303,7 @@ function DesktopView({
   ) => void;
 }) {
   return (
-    <div className="border rounded overflow-y-auto">
+    <div className="border rounded-xl overflow-y-auto bg-card shadow-2xs">
       {items.length > 0 && (
         <div className="border-b px-4 text-base font-medium py-2 bg-accent/30">
           <div className="flex px-4 gap-4">

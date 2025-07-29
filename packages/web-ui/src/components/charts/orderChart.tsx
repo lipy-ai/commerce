@@ -71,12 +71,15 @@ export function OrderChart({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="max-h-[300px] w-full">
+        <ChartContainer
+          config={chartConfig}
+          className="max-h-[calc(50vh-140px)] w-full"
+        >
           <BarChart accessibilityLayer data={chartMap || []}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="date"
-              minTickGap={10}
+              minTickGap={12}
               tickFormatter={(v) => format(v, "dd MMM")}
             />
             <ChartTooltip content={<ChartTooltipContent hideLabel />} />

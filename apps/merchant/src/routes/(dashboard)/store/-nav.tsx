@@ -14,7 +14,6 @@ import {
 
 import { useStore } from "@lipy/lib/hooks/use-store";
 import SettingsCard from "@lipy/web-ui/components/custom-ui/settingsCard";
-import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
@@ -57,7 +56,7 @@ export function StoreNav({ children }: { children?: ReactNode }) {
 
   return (
     <div className="flex flex-1">
-      <div className="md:border-r flex-1 md:max-w-sm">
+      <div className="flex-1 md:max-w-sm">
         <div
           className={cn(
             "px-4 py-4 md:py-8 space-y-8 sticky top-10",
@@ -77,13 +76,8 @@ export function StoreNav({ children }: { children?: ReactNode }) {
                 <h1 className="font-semibold text-xl">
                   {data?.name || "Hello, User"}
                 </h1>
-                <p className="text-muted-foreground text-base">
-                  <Badge
-                    variant={data?.active ? "success" : "destructive"}
-                    appearance="solid"
-                  >
-                    {data?.active ? "Active" : "Inactive"}
-                  </Badge>
+                <p className="text-muted-foreground">
+                  {data?.email || data?.phone}
                 </p>
               </div>
             </div>

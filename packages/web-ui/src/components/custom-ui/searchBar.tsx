@@ -45,7 +45,7 @@ export default function SearchBar({
       className={cn("", className)}
     >
       <Input
-        className="rounded-xl"
+        className="rounded"
         value={value}
         onChange={(e) => {
           setValue(e.currentTarget.value);
@@ -64,7 +64,7 @@ export default function SearchBar({
               <ChevronLeft className="stroke-2 size-5" />
             </Button>
           ) : (
-            <Search />
+            <Search className="mr-2" />
           )
         }
         suffixEl={

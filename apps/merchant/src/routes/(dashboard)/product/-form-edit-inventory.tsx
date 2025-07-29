@@ -2,7 +2,6 @@ import { useInventoryInvalidate } from "@/routes/admin/product/-hook-invalidate"
 import { merchantInventoryApi, type merchantProductApi } from "@lipy/lib/api";
 import { useAPIMutation } from "@lipy/lib/utils/useQueryClient";
 import {
-  DrawerDialogClose,
   DrawerDialogFooter,
   DrawerDialogHeader,
   DrawerDialogSwitcher,
@@ -85,10 +84,10 @@ export default function FormEditInventory({
         <img
           src={data.thumbnail || ""}
           alt={data.title || ""}
-          className="size-18 border rounded bg-accent object-cover aspect-square"
+          className="size-20 border rounded bg-accent object-cover aspect-square"
         />
         <div>
-          <p className=" text-base">{data?.title}</p>
+          <p className=" text-base line-clamp-2 break-words">{data?.title}</p>
           <div>
             <span className="text-base font-medium">Category : </span>
             <span>{data?.category}</span>
@@ -129,7 +128,6 @@ export default function FormEditInventory({
           />
           <FormInput name="sku" label="SKU" min={0} />
           <DrawerDialogFooter>
-            <DrawerDialogClose />
             <FormButton>Save Changes</FormButton>
           </DrawerDialogFooter>
         </form>

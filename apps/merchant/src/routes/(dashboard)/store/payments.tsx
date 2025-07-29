@@ -59,7 +59,7 @@ function RouteComponent() {
     <>
       <DashboardHeader title="Store Payments" />
       <StoreNav>
-        <Card className="flex-1 md:p-8">
+        <Card className="flex-1 lg:m-8 max-w-5xl">
           <CardContent className="flex-1">
             <Form {...form}>
               <form

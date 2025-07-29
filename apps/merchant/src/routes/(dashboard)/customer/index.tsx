@@ -122,44 +122,46 @@ function DesktopView({ items }: { items: Response["items"] }) {
   const navigate = useNavigate();
 
   return (
-    <Table className="border p-8">
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-10">#</TableHead>
-          <TableHead className="">Name</TableHead>
-          <TableHead className="">Phone</TableHead>
-          <TableHead className="">Email</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {items.map((m) => (
-          <TableRow
-            key={m.id}
-            onClick={() =>
-              navigate({ to: "/customer/$id", params: { id: m.id || "" } })
-            }
-            className="cursor-pointer focus:bg-accent"
-          >
-            <TableCell>
-              <Avatar className="size-10">
-                <AvatarImage src={m.image || ""} />
-                <AvatarFallback>{m?.name?.[0]}</AvatarFallback>
-              </Avatar>
-            </TableCell>
-            <TableCell>
-              <div>
-                <p className="font-medium"> {m.name}</p>
-              </div>
-            </TableCell>
-            <TableCell>
-              <p className="font-light">{m.phoneNumber}</p>
-            </TableCell>
-            <TableCell>
-              <p className="font-light">{m.email}</p>
-            </TableCell>
+    <Card>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-10">#</TableHead>
+            <TableHead className="">Name</TableHead>
+            <TableHead className="">Phone</TableHead>
+            <TableHead className="">Email</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {items.map((m) => (
+            <TableRow
+              key={m.id}
+              onClick={() =>
+                navigate({ to: "/customer/$id", params: { id: m.id || "" } })
+              }
+              className="cursor-pointer focus:bg-accent"
+            >
+              <TableCell>
+                <Avatar className="size-10">
+                  <AvatarImage src={m.image || ""} />
+                  <AvatarFallback>{m?.name?.[0]}</AvatarFallback>
+                </Avatar>
+              </TableCell>
+              <TableCell>
+                <div>
+                  <p className="font-medium"> {m.name}</p>
+                </div>
+              </TableCell>
+              <TableCell>
+                <p className="font-light">{m.phoneNumber || "-"}</p>
+              </TableCell>
+              <TableCell>
+                <p className="font-light">{m.email}</p>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </Card>
   );
 }

@@ -86,13 +86,13 @@ function RouteComponent() {
         <InviteMember />
       </DashboardHeader>
       <StoreNav>
-        <Card className="p-4 flex-1 lg:p-8">
-          <div className="space-y-4 max-w-4xl">
+        <Card className="lg:m-8 flex-1 max-w-5xl">
+          <CardContent className="space-y-8 ">
+            {data?.members && <Members data={data} />}
             {data?.invitations && data.invitations.length > 0 && (
               <Invitation data={data} />
             )}
-            {data?.members && <Members data={data} />}
-          </div>
+          </CardContent>
         </Card>
       </StoreNav>
     </>
@@ -157,100 +157,98 @@ function Members({
 
   if (isMobile) {
     return (
-      <div>
-        <Card className="p-0">
-          <CardHeader>
-            <CardTitle>Members</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 divide-y">
-            {data.members.map((m, i) => (
-              <div key={i} className="pb-4">
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <div className="flex gap-2">
-                      <Avatar className="size-10">
-                        <AvatarImage src={m.image || ""} />
-                        <AvatarFallback>A</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="">{m.name || m?.email?.split("@")[0]}</p>
-                        <p className="text-muted-foreground">{m.email}</p>
-                      </div>
+      <Card className="p-0">
+        <CardHeader>
+          <CardTitle>Members</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4 divide-y">
+          {data.members.map((m, i) => (
+            <div key={i} className="pb-4">
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <div className="flex gap-2">
+                    <Avatar className="size-10">
+                      <AvatarImage src={m.image || ""} />
+                      <AvatarFallback>A</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="">{m.name || m?.email?.split("@")[0]}</p>
+                      <p className="text-muted-foreground">{m.email}</p>
                     </div>
-                    <Btn m={m} />
                   </div>
-                  <div className="gap-2 flex">
-                    <Badge variant={"info"} className="capitalize">
-                      {m.role}
+                  <Btn m={m} />
+                </div>
+                <div className="gap-2 flex">
+                  <Badge variant={"info"} className="capitalize">
+                    {m.role}
+                  </Badge>
+                  {m.createdAt && (
+                    <Badge variant={"success"} className="capitalize">
+                      Joined on {format(m.createdAt, "PP")}
                     </Badge>
-                    {m.createdAt && (
-                      <Badge variant={"success"} className="capitalize">
-                        Joined on {format(m.createdAt, "PP")}
-                      </Badge>
-                    )}
-                  </div>
+                  )}
                 </div>
               </div>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
     );
   }
   return (
-    <div>
-      <CardHeader>
-        <CardTitle>Staff List</CardTitle>
-      </CardHeader>
-      <Table className="border">
-        <TableHeader>
-          <TableRow className="bg-accent/40">
-            <TableHead>Name</TableHead>
-            <TableHead>Email</TableHead>
+    <div className="space-y-4">
+      <Label className="text-lg">Staff List</Label>
+      <Card className="p-0">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-accent/40">
+              <TableHead>Name</TableHead>
+              <TableHead>Email</TableHead>
 
-            <TableHead className="w-24">Role</TableHead>
-            <TableHead className="w-64">Joined on</TableHead>
-            <TableHead className="w-24" />
-          </TableRow>
-        </TableHeader>
-        <TableBody className="">
-          {data?.members.map((member, index) => (
-            <TableRow key={index}>
-              <TableCell>
-                <div className="flex items-center gap-2">
-                  <Avatar className="size-6">
-                    <AvatarImage src={member.image || ""} />
-                    <AvatarFallback>A</AvatarFallback>
-                  </Avatar>
-                  <p className="">
-                    {member.name || member?.email?.split("@")[0]}
-                  </p>
-                </div>
-              </TableCell>
-              <TableCell className="">
-                <div>
-                  <p className="text-muted-foreground line-clamp-1">
-                    {member.email}
-                  </p>
-                </div>
-              </TableCell>
-
-              <TableCell>
-                <Badge size={"lg"} variant={"success"} className="capitalize">
-                  {member.role}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                {member.createdAt && format(member.createdAt, "PP")}
-              </TableCell>
-              <TableCell>
-                {" "}
-                <Btn m={member} />
-              </TableCell>
+              <TableHead className="w-24">Role</TableHead>
+              <TableHead className="w-64">Joined on</TableHead>
+              <TableHead className="w-24" />
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody className="">
+            {data?.members.map((member, index) => (
+              <TableRow key={index}>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <Avatar className="size-6">
+                      <AvatarImage src={member.image || ""} />
+                      <AvatarFallback>A</AvatarFallback>
+                    </Avatar>
+                    <p className="">
+                      {member.name || member?.email?.split("@")[0]}
+                    </p>
+                  </div>
+                </TableCell>
+                <TableCell className="">
+                  <div>
+                    <p className="text-muted-foreground line-clamp-1">
+                      {member.email}
+                    </p>
+                  </div>
+                </TableCell>
+
+                <TableCell>
+                  <Badge size={"lg"} variant={"success"} className="capitalize">
+                    {member.role}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  {member.createdAt && format(member.createdAt, "PP")}
+                </TableCell>
+                <TableCell>
+                  {" "}
+                  <Btn m={member} />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Card>
     </div>
   );
 }
@@ -291,9 +289,7 @@ function Invitation({
           variant={"outline"}
           icon={<Link />}
         />
-        {/* <Button variant={"outline"} size={"icon-sm"}>
-				<Mail />
-			</Button> */}
+
         <DrawerDialogSwitcher
           trigger={
             <Button
@@ -326,94 +322,95 @@ function Invitation({
   };
   if (isMobile) {
     return (
-      <div>
-        <Card>
-          <CardHeader>
-            <CardTitle>Invitations</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 divide-y">
-            {data.invitations.map((m, i) => (
-              <div key={i} className="pb-4">
-                <div className="space-y-1">
-                  <div className="flex justify-between items-center">
-                    <p>{m.email}</p>
-                    <Btn m={m} />
-                  </div>
-                  <div className="gap-2 flex">
-                    <Badge variant={"info"} className="capitalize">
-                      {m.role}
-                    </Badge>
-                    <Badge variant={"success"} className="capitalize">
-                      {isBefore(new Date(m.expiresAt), new Date())
-                        ? "Expried"
-                        : m.status}
-                    </Badge>
-                  </div>
+      <Card className="p-0">
+        <CardHeader>
+          <CardTitle>Invitations</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4 divide-y">
+          {data.invitations.map((m, i) => (
+            <div key={i} className="pb-4">
+              <div className="space-y-1">
+                <div className="flex justify-between items-center">
+                  <p>{m.email}</p>
+                  <Btn m={m} />
+                </div>
+                <div className="gap-2 flex">
+                  <Badge variant={"info"} className="capitalize">
+                    {m.role?.replaceAll("_", " ")}
+                  </Badge>
+                  <Badge variant={"success"} className="capitalize">
+                    {isBefore(new Date(m.expiresAt), new Date())
+                      ? "Expried"
+                      : m.status}
+                  </Badge>
                 </div>
               </div>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
     );
   }
   return (
-    <div>
-      <h1 className="text-lg font-medium my-4">Invitations</h1>
-      <Table className="border">
-        <TableHeader>
-          <TableRow className="bg-accent/40">
-            <TableHead>Email</TableHead>
-            <TableHead className="w-24">Role</TableHead>
-            <TableHead className="w-24">Status</TableHead>
-            <TableHead className="w-64">Invited by</TableHead>
-            <TableHead className="w-24" />
-          </TableRow>
-        </TableHeader>
-        <TableBody className="">
-          {data.invitations.map((m, index) => {
-            const inviter = data?.members.find(
-              (member) => member.userId === m.inviterId
-            );
+    <div className="space-y-4">
+      <Label className="text-lg">Invitations</Label>
 
-            return (
-              <TableRow key={index}>
-                <TableCell>
-                  <p className="line-clamp-1">{m.email}</p>
-                </TableCell>
+      <Card className="p-0">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-accent/40">
+              <TableHead>Email</TableHead>
+              <TableHead className="w-24">Role</TableHead>
+              <TableHead className="w-24">Status</TableHead>
+              <TableHead className="w-64">Invited by</TableHead>
+              <TableHead className="w-24" />
+            </TableRow>
+          </TableHeader>
+          <TableBody className="">
+            {data.invitations.map((m, index) => {
+              const inviter = data?.members.find(
+                (member) => member.userId === m.inviterId
+              );
 
-                <TableCell>
-                  <Badge size={"lg"} variant={"info"} className="capitalize">
-                    {m.role}
-                  </Badge>
-                </TableCell>
+              return (
+                <TableRow key={index}>
+                  <TableCell>
+                    <p className="line-clamp-1">{m.email}</p>
+                  </TableCell>
 
-                <TableCell>
-                  <Badge variant={"success"} className="capitalize">
-                    {isBefore(new Date(m.expiresAt), new Date())
-                      ? "Expired"
-                      : m.status}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <Avatar className="size-6">
-                      <AvatarImage src={inviter?.image || ""} />
-                      <AvatarFallback>A</AvatarFallback>
-                    </Avatar>
+                  <TableCell>
+                    <Badge size={"lg"} variant={"info"} className="capitalize">
+                      {m.role?.replaceAll("_", " ")}
+                    </Badge>
+                  </TableCell>
 
-                    <p>{inviter?.name || inviter?.email || "Unknown"}</p>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  {" "}
-                  <Btn m={m} />
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
+                  <TableCell>
+                    <Badge variant={"success"} className="capitalize">
+                      {isBefore(new Date(m.expiresAt), new Date())
+                        ? "Expired"
+                        : m.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Avatar className="size-6">
+                        <AvatarImage src={inviter?.image || ""} />
+                        <AvatarFallback>A</AvatarFallback>
+                      </Avatar>
+
+                      <p>{inviter?.name || inviter?.email || "Unknown"}</p>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    {" "}
+                    <Btn m={m} />
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </Card>
     </div>
   );
 }

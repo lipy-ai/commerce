@@ -13,17 +13,13 @@ import {
   FormSwitch,
 } from "@lipy/web-ui/components/forms/elements";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@lipy/web-ui/components/ui/card";
+
 import {
   Form,
   FormDescription,
   FormLabel,
 } from "@lipy/web-ui/components/ui/form";
+import { Label } from "@lipy/web-ui/components/ui/label";
 import {
   RadioGroup,
   RadioGroupItem,
@@ -107,23 +103,16 @@ function RouteComponent() {
     <>
       <DashboardHeader title="Store Policies" />
       <StoreNav>
-        <Card className="flex-1 lg:m-8 max-w-5xl">
-          <CardHeader>
-            <CardTitle>Store Polices</CardTitle>
-          </CardHeader>
-          <CardContent className="flex-1">
-            <Form {...form}>
-              <form
-                className="max-w-2xl"
-                onSubmit={form.handleSubmit(onSubmit)}
-              >
-                <StorePolicesForm />
-                <br />
-                <FormButton>Save Changes</FormButton>
-              </form>
-            </Form>
-          </CardContent>
-        </Card>
+        <div className="space-y-4">
+          <Label className="text-lg">Policies</Label>
+          <Form {...form}>
+            <form className="max-w-2xl" onSubmit={form.handleSubmit(onSubmit)}>
+              <StorePolicesForm />
+              <br />
+              <FormButton>Save Changes</FormButton>
+            </form>
+          </Form>
+        </div>
       </StoreNav>
     </>
   );

@@ -42,12 +42,6 @@ import {
   DrawerDialogSwitcher,
   DrawerDialogTitle,
 } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@lipy/web-ui/components/ui/card";
 import { CopyButton } from "@lipy/web-ui/components/ui/copy-button";
 import {
   Select,
@@ -86,14 +80,12 @@ function RouteComponent() {
         <InviteMember />
       </DashboardHeader>
       <StoreNav>
-        <Card className="lg:m-8 flex-1 max-w-5xl">
-          <CardContent className="space-y-8 ">
-            {data?.members && <Members data={data} />}
-            {data?.invitations && data.invitations.length > 0 && (
-              <Invitation data={data} />
-            )}
-          </CardContent>
-        </Card>
+        <div className="space-y-8">
+          {data?.members && <Members data={data} />}
+          {data?.invitations && data.invitations.length > 0 && (
+            <Invitation data={data} />
+          )}
+        </div>
       </StoreNav>
     </>
   );
@@ -157,11 +149,9 @@ function Members({
 
   if (isMobile) {
     return (
-      <Card className="p-0">
-        <CardHeader>
-          <CardTitle>Members</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4 divide-y">
+      <div className="space-y-4">
+        <Label className="text-lg">Members</Label>
+        <div className="space-y-4 divide-y">
           {data.members.map((m, i) => (
             <div key={i} className="pb-4">
               <div className="space-y-2">
@@ -191,64 +181,67 @@ function Members({
               </div>
             </div>
           ))}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     );
   }
   return (
     <div className="space-y-4">
       <Label className="text-lg">Staff List</Label>
-      <Card className="p-0">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-accent/40">
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
 
-              <TableHead className="w-24">Role</TableHead>
-              <TableHead className="w-64">Joined on</TableHead>
-              <TableHead className="w-24" />
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead>Email</TableHead>
+
+            <TableHead>Role</TableHead>
+            <TableHead>Joined on</TableHead>
+            <TableHead />
+          </TableRow>
+        </TableHeader>
+        <TableBody className="">
+          {data?.members.map((member, index) => (
+            <TableRow key={index}>
+              <TableCell>
+                <div className="flex items-center gap-2">
+                  <Avatar className="size-6">
+                    <AvatarImage src={member.image || ""} />
+                    <AvatarFallback>A</AvatarFallback>
+                  </Avatar>
+                  <p className="">
+                    {member.name || member?.email?.split("@")[0]}
+                  </p>
+                </div>
+              </TableCell>
+              <TableCell className="">
+                <div>
+                  <p className="text-muted-foreground line-clamp-1">
+                    {member.email}
+                  </p>
+                </div>
+              </TableCell>
+
+              <TableCell>
+                <Badge
+                  size={"default"}
+                  variant={"success"}
+                  className="capitalize"
+                >
+                  {member.role}
+                </Badge>
+              </TableCell>
+              <TableCell>
+                {member.createdAt && format(member.createdAt, "PP")}
+              </TableCell>
+              <TableCell>
+                {" "}
+                <Btn m={member} />
+              </TableCell>
             </TableRow>
-          </TableHeader>
-          <TableBody className="">
-            {data?.members.map((member, index) => (
-              <TableRow key={index}>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <Avatar className="size-6">
-                      <AvatarImage src={member.image || ""} />
-                      <AvatarFallback>A</AvatarFallback>
-                    </Avatar>
-                    <p className="">
-                      {member.name || member?.email?.split("@")[0]}
-                    </p>
-                  </div>
-                </TableCell>
-                <TableCell className="">
-                  <div>
-                    <p className="text-muted-foreground line-clamp-1">
-                      {member.email}
-                    </p>
-                  </div>
-                </TableCell>
-
-                <TableCell>
-                  <Badge size={"lg"} variant={"success"} className="capitalize">
-                    {member.role}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                  {member.createdAt && format(member.createdAt, "PP")}
-                </TableCell>
-                <TableCell>
-                  {" "}
-                  <Btn m={member} />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Card>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 }
@@ -322,11 +315,9 @@ function Invitation({
   };
   if (isMobile) {
     return (
-      <Card className="p-0">
-        <CardHeader>
-          <CardTitle>Invitations</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4 divide-y">
+      <div className="space-y-4">
+        <Label className="text-lg">Invitations</Label>
+        <div className="space-y-4 divide-y">
           {data.invitations.map((m, i) => (
             <div key={i} className="pb-4">
               <div className="space-y-1">
@@ -347,70 +338,72 @@ function Invitation({
               </div>
             </div>
           ))}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     );
   }
   return (
     <div className="space-y-4">
       <Label className="text-lg">Invitations</Label>
 
-      <Card className="p-0">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-accent/40">
-              <TableHead>Email</TableHead>
-              <TableHead className="w-24">Role</TableHead>
-              <TableHead className="w-24">Status</TableHead>
-              <TableHead className="w-64">Invited by</TableHead>
-              <TableHead className="w-24" />
-            </TableRow>
-          </TableHeader>
-          <TableBody className="">
-            {data.invitations.map((m, index) => {
-              const inviter = data?.members.find(
-                (member) => member.userId === m.inviterId
-              );
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Email</TableHead>
+            <TableHead>Role</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Invited by</TableHead>
+            <TableHead />
+          </TableRow>
+        </TableHeader>
+        <TableBody className="">
+          {data.invitations.map((m, index) => {
+            const inviter = data?.members.find(
+              (member) => member.userId === m.inviterId
+            );
 
-              return (
-                <TableRow key={index}>
-                  <TableCell>
-                    <p className="line-clamp-1">{m.email}</p>
-                  </TableCell>
+            return (
+              <TableRow key={index}>
+                <TableCell>
+                  <p className="line-clamp-1">{m.email}</p>
+                </TableCell>
 
-                  <TableCell>
-                    <Badge size={"lg"} variant={"info"} className="capitalize">
-                      {m.role?.replaceAll("_", " ")}
-                    </Badge>
-                  </TableCell>
+                <TableCell>
+                  <Badge
+                    size={"default"}
+                    variant={"info"}
+                    className="capitalize"
+                  >
+                    {m.role?.replaceAll("_", " ")}
+                  </Badge>
+                </TableCell>
 
-                  <TableCell>
-                    <Badge variant={"success"} className="capitalize">
-                      {isBefore(new Date(m.expiresAt), new Date())
-                        ? "Expired"
-                        : m.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Avatar className="size-6">
-                        <AvatarImage src={inviter?.image || ""} />
-                        <AvatarFallback>A</AvatarFallback>
-                      </Avatar>
+                <TableCell>
+                  <Badge variant={"success"} className="capitalize">
+                    {isBefore(new Date(m.expiresAt), new Date())
+                      ? "Expired"
+                      : m.status}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <Avatar className="size-6">
+                      <AvatarImage src={inviter?.image || ""} />
+                      <AvatarFallback>A</AvatarFallback>
+                    </Avatar>
 
-                      <p>{inviter?.name || inviter?.email || "Unknown"}</p>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    {" "}
-                    <Btn m={m} />
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </Card>
+                    <p>{inviter?.name || inviter?.email || "Unknown"}</p>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  {" "}
+                  <Btn m={m} />
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
     </div>
   );
 }

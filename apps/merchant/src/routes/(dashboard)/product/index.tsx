@@ -7,7 +7,8 @@ import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Pagination } from "@lipy/web-ui/components/pages/pagination";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
-import { Card, CardHeader, CardTitle } from "@lipy/web-ui/components/ui/card";
+import { Card, CardContent } from "@lipy/web-ui/components/ui/card";
+import { Label } from "@lipy/web-ui/components/ui/label";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
@@ -75,10 +76,27 @@ function RouteComponent() {
         {isLoading ? (
           <Skeleton className="flex-1 mx-4 lg:mx-0" />
         ) : !data || data.items.length === 0 ? (
-          <Card className="m-4 md:m-0">
-            <CardHeader>
-              <CardTitle>No Products Found...</CardTitle>
-            </CardHeader>
+          <Card>
+            <CardContent className="flex flex-1 justify-center flex-col items-center m-auto min-h-[60vh]  text-center">
+              <img
+                src="/assets/no-product.png"
+                alt="no-product"
+                className="size-54 lg:size-64 object-cover"
+              />
+              <Label className="text-lg lg:text-2xl pb-2">
+                Your inventory will appear here
+              </Label>
+              <p className="text-muted-foreground lg:text-base max-w-[450px] pb-4">
+                View and manage your inventory and add products to your
+                inventory with simple clicks
+              </p>
+              <Link
+                to="/product/add"
+                className={cn(buttonVariants({ size: isMobile ? "sm" : "lg" }))}
+              >
+                Browse and add products
+              </Link>
+            </CardContent>
           </Card>
         ) : (
           <>

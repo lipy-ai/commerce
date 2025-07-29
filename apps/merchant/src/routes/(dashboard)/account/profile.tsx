@@ -5,8 +5,8 @@ import {
   FormInput,
 } from "@lipy/web-ui/components/forms/elements";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
-import { Card } from "@lipy/web-ui/components/ui/card";
 import { Form } from "@lipy/web-ui/components/ui/form";
+import { Label } from "@lipy/web-ui/components/ui/label";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
@@ -22,7 +22,10 @@ function RouteComponent() {
     <>
       <DashboardHeader title="My Profile" />
       <AccountNav>
-        <UserProfile />
+        <div className="space-y-4">
+          <Label className="text-lg">Profile</Label>
+          <UserProfile />
+        </div>
       </AccountNav>
     </>
   );
@@ -61,35 +64,30 @@ export default function UserProfile() {
   if (isPending) return <Spinner />;
 
   return (
-    <Card className="flex-1">
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="p-4 lg:p-8 max-w-2xl "
-        >
-          <div className="space-y-4">
-            <FormImage
-              name="image"
-              label="Image"
-              wrapperClassName="size-24"
-              imageClassName=""
-              alt="Profile image"
-              referrerPolicy="no-referrer"
-            />
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className=" max-w-2xl ">
+        <div className="space-y-4">
+          <FormImage
+            name="image"
+            label="Image"
+            wrapperClassName="size-24"
+            imageClassName=""
+            alt="Profile image"
+            referrerPolicy="no-referrer"
+          />
 
-            <FormInput name="name" label="Name" placeholder="John Doe" />
-            <FormInput
-              type="email"
-              name="email"
-              label="Email"
-              placeholder="jhon@example.com"
-              readOnly
-            />
+          <FormInput name="name" label="Name" placeholder="John Doe" />
+          <FormInput
+            type="email"
+            name="email"
+            label="Email"
+            placeholder="jhon@example.com"
+            readOnly
+          />
 
-            <FormButton className="w-full lg:w-fit">Update profile</FormButton>
-          </div>
-        </form>
-      </Form>
-    </Card>
+          <FormButton className="w-full lg:w-fit">Update profile</FormButton>
+        </div>
+      </form>
+    </Form>
   );
 }

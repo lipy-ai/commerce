@@ -1,7 +1,6 @@
 import { UPIQRCode } from "@lipy/web-ui/components/custom-ui/upiCard";
 import { FormButton, FormInput } from "@lipy/web-ui/components/forms/elements";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
-import { Card, CardContent } from "@lipy/web-ui/components/ui/card";
 import { Form } from "@lipy/web-ui/components/ui/form";
 
 import { merchantStoreApi } from "@lipy/lib/api";
@@ -10,6 +9,7 @@ import {
   apiQueryOptions,
   useAPIMutation,
 } from "@lipy/lib/utils/useQueryClient";
+import { Label } from "@lipy/web-ui/components/ui/label";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
@@ -59,38 +59,37 @@ function RouteComponent() {
     <>
       <DashboardHeader title="Store Payments" />
       <StoreNav>
-        <Card className="flex-1 lg:m-8 max-w-5xl">
-          <CardContent className="flex-1">
-            <Form {...form}>
-              <form
-                className="max-w-2xl space-y-8"
-                onSubmit={form.handleSubmit(onSubmit)}
-              >
-                <div className="">
-                  <FormInput
-                    label="UPI Id"
-                    name="payments.upiIds[0].id"
-                    placeholder="upi@okhdfcbank"
-                    required
+        <div className="space-y-4">
+          <Label className="text-lg">Payment Information</Label>
+          <Form {...form}>
+            <form
+              className="max-w-2xl space-y-8"
+              onSubmit={form.handleSubmit(onSubmit)}
+            >
+              <div className="">
+                <FormInput
+                  label="UPI Id"
+                  name="payments.upiIds[0].id"
+                  placeholder="upi@okhdfcbank"
+                  required
+                />
+                <FormInput
+                  label="Name as per UPI"
+                  name="payments.upiIds[0].name"
+                  placeholder="Store / Receiver Name"
+                  required
+                />
+                <div className="bg-accent/50 rounded p-4">
+                  <UPIQRCode
+                    upi={payments.upiIds?.[0]?.id?.toLowerCase()}
+                    name={payments.upiIds?.[0]?.name}
                   />
-                  <FormInput
-                    label="Name as per UPI"
-                    name="payments.upiIds[0].name"
-                    placeholder="Store / Receiver Name"
-                    required
-                  />
-                  <div className="bg-accent/50 rounded p-4">
-                    <UPIQRCode
-                      upi={payments.upiIds?.[0]?.id?.toLowerCase()}
-                      name={payments.upiIds?.[0]?.name}
-                    />
-                  </div>
                 </div>
-                <FormButton className="w-full">Save Payment</FormButton>
-              </form>
-            </Form>
-          </CardContent>
-        </Card>
+              </div>
+              <FormButton className="w-full">Save Payment</FormButton>
+            </form>
+          </Form>
+        </div>
       </StoreNav>
     </>
   );

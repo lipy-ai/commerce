@@ -1,4 +1,3 @@
-import { env } from "@envClient";
 import { merchantStoreApi } from "@lipy/lib/api";
 import {
   apiQueryOptions,
@@ -80,7 +79,7 @@ function RouteComponent() {
     return (
       <div>
         <DashboardHeader />
-        <div className="p-4 lg:p-8 max-w-4xl">
+        <div className="p-4 lg:p-8 max-w-5xl">
           <VerticalListSkeleton count={8} />
         </div>
       </div>
@@ -93,7 +92,7 @@ function RouteComponent() {
       <StoreNav>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex-1 p-4 md:p-8 bg-card "
+          className="flex-1  md:p-8 "
         >
           <div className="grid divide-y lg:gap-4 max-w-2xl">
             <Card>
@@ -115,7 +114,7 @@ function RouteComponent() {
                 <FormInput
                   name="handle"
                   label="Handle"
-                  prefixEl={`${env.WEB_URL}/@`}
+                  // prefixEl={`${env.WEB_URL}/@`}
                   required
                 />
                 <FormTextarea

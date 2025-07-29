@@ -4,11 +4,11 @@ import { listZodSchema } from "@/schema/common";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
 import { type Expression, type SqlBool, sql } from "kysely";
+import { jsonBuildObject } from "kysely/helpers/postgres";
+import z from "zod";
 
-export const merchantCustomerRoute = new Hono<ServerContext>().get(
-	"/",
-	zValidator("query", listZodSchema),
-	async (c) => {
+export const merchantCustomerRoute = new Hono<ServerContext>()
+	.get("/", zValidator("query", listZodSchema), async (c) => {
 		const { limit, page, q } = c.req.valid("query");
 		const activeStoreId = c.var.session?.activeStoreId!;
 		const offset = limit * (page - 1);
@@ -53,5 +53,26 @@ export const merchantCustomerRoute = new Hono<ServerContext>().get(
 		const totalPages = Math.ceil(totalCount / limit);
 
 		return c.json({ items, page, limit, totalPages, totalResults: totalCount });
-	},
-);
+	})
+	.get(
+		"/:id",
+		zValidator("param", z.object({ id: z.string().uuid() })),
+		async (c) => {
+			const id = c.req.param("id");
+			const customer = await db
+				.selectFrom("user as u")
+				.leftJoin("userAddress as ua", "ua.id", "u.address")
+				.leftJoin("address", "address.id", "ua.id")
+				.select([
+					"u.id",
+					"u.email",
+					"u.phoneNumber",
+					"u.name",
+					"u.image",
+					"address.line1 as address",
+				])
+				.where("u.id", "=", id)
+				.executeTakeFirstOrThrow();
+			return c.json(customer);
+		},
+	);

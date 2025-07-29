@@ -8,7 +8,12 @@ import {
   useAPIMutation,
 } from "@lipy/lib/utils/useQueryClient";
 import { CustomRadioGroup } from "@lipy/web-ui/components/custom-ui/customRadioGroup";
-import { DrawerDialogSwitcher } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
+import {
+  DrawerDialogFooter,
+  DrawerDialogHeader,
+  DrawerDialogSwitcher,
+  DrawerDialogTitle,
+} from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
 import {
   FormButton,
   FormInputWithAnimatedLabel,
@@ -21,8 +26,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@lipy/web-ui/components/ui/form";
-import { ScrollArea } from "@lipy/web-ui/components/ui/scroll-area";
-import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -151,81 +154,75 @@ export function DetailedAddress({
       onOpenChange={onOpenChange}
       trigger={<p>{children}</p>}
     >
-      <ScrollArea className="overflow-y-auto">
-        <div className="p-4">
-          <div className="flex items-center justify-between">
-            <div className="font-semibold text-lg">Add address details</div>
-          </div>
-        </div>
+      <div className="p-4">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-8 w-full"
+          >
+            <DrawerDialogHeader className="pb-0">
+              <DrawerDialogTitle>Add address details</DrawerDialogTitle>
+            </DrawerDialogHeader>
 
-        <Separator />
+            <div className="text-sm rounded-md border p-2 bg-accent/30 font-medium">
+              <p>{fullAddress?.line1}</p>
+            </div>
 
-        <div className="p-4 mb-6">
-          <div className="text-sm rounded-md border p-2 bg-accent font-medium">
-            <p>{fullAddress?.line1}</p>
-          </div>
+            <FormInputWithAnimatedLabel
+              name="building"
+              label="Flat No. / House No. / Building Name *"
+              required
+            />
 
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(handleSubmit)}
-              className="space-y-8 my-10 w-full"
-            >
-              <FormInputWithAnimatedLabel
-                name="building"
-                label="Flat No. / House No. / Building Name *"
-                required
-              />
+            <FormField
+              control={form.control}
+              name="addressType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-muted-foreground font-semibold">
+                    Address type
+                  </FormLabel>
+                  <FormControl>
+                    <CustomRadioGroup {...field} items={addressTypesItems} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              <FormField
-                control={form.control}
-                name="addressType"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-muted-foreground font-semibold">
-                      Address type
-                    </FormLabel>
-                    <FormControl>
-                      <CustomRadioGroup {...field} items={addressTypesItems} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <FormLabel className="text-muted-foreground font-semibold">
+              Receiver's Details
+            </FormLabel>
 
-              <FormLabel className="text-muted-foreground font-semibold">
-                Receiver's Details
-              </FormLabel>
+            <FormInputWithAnimatedLabel
+              name="receiverName"
+              label="Receiver's Name (optional)"
+            />
 
-              <FormInputWithAnimatedLabel
-                name="receiverName"
-                label="Receiver's Name (optional)"
-              />
+            <FormInputWithAnimatedLabel
+              name="receiverPhone"
+              label="Receiver's Phone *"
+              required
+              type="tel"
+            />
 
-              <FormInputWithAnimatedLabel
-                name="receiverPhone"
-                label="Receiver's Phone *"
-                required
-                type="tel"
-              />
-
-              <div className="fixed bottom-0 left-0 right-0 bg-card py-4 px-8 shadow-t z-10 w-full ">
-                <FormButton
-                  type="submit"
-                  className="w-full"
-                  disabled={
-                    form.formState.isSubmitting ||
-                    !form.formState.isValid ||
-                    form.formState.isSubmitSuccessful ||
-                    !form.formState.isDirty
-                  }
-                >
-                  {isDeliveryAddress ? "Save and continue" : "Save"}
-                </FormButton>
-              </div>
-            </form>
-          </Form>
-        </div>
-      </ScrollArea>
+            <DrawerDialogFooter>
+              <FormButton
+                type="submit"
+                className="w-full"
+                disabled={
+                  form.formState.isSubmitting ||
+                  !form.formState.isValid ||
+                  form.formState.isSubmitSuccessful ||
+                  !form.formState.isDirty
+                }
+              >
+                {isDeliveryAddress ? "Save and continue" : "Save"}
+              </FormButton>
+            </DrawerDialogFooter>
+          </form>
+        </Form>
+      </div>
     </DrawerDialogSwitcher>
   );
 }

@@ -18,7 +18,7 @@ function RouteComponent() {
     <>
       <DashboardHeader title="Store Policies" />
       <StoreNav>
-        <Card className="flex-1 p-8">
+        <Card className="flex-1 lg:m-8 max-w-5xl">
           <CardHeader>
             <CardTitle>Coupons</CardTitle>
           </CardHeader>

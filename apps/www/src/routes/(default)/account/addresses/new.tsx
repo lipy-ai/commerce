@@ -123,7 +123,7 @@ function RouteComponent() {
             }}
           />
         </GoogleMap>
-        <div className="absolute bottom-16 lg:bottom-24 left-1/2 transform -translate-x-1/2 z-10">
+        <div className="absolute bottom-20 lg:bottom-24 left-1/2 transform -translate-x-1/2 z-10">
           <Button
             className="text-primary border-primary font-semibold shadow-md hover:bg-primary/10"
             variant="outline"
@@ -134,7 +134,7 @@ function RouteComponent() {
               });
             }}
           >
-            <LocateFixed className="text-primary mr-2" />
+            <LocateFixed className="text-primary mr-1d stroke-2" />
             Use current location
           </Button>
         </div>

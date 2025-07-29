@@ -48,13 +48,6 @@ function RouteComponent() {
   return (
     <>
       <DashboardHeader title="Products">
-        {/* <FormEdit type="create">
-          <Button size={"sm"}>
-            <Plus />
-            New Product
-            {isMobile ? "" : "New Product"}
-          </Button>
-        </FormEdit> */}
         <Link className={cn(buttonVariants({ size: "sm" }))} to="/product/add">
           <Plus />
           New Product
@@ -131,6 +124,7 @@ function MobileView({ items }: { items: Response["items"] }) {
                       {v?.active ? "Active" : "Hidden"}
                     </span>
                   </div>
+
                   <div>
                     <h3 className="font-semibold text-foreground text-base line-clamp-2 break-words">
                       {m.title}
@@ -153,16 +147,20 @@ function MobileView({ items }: { items: Response["items"] }) {
                   <p className="text-muted-foreground">{v?.unit}</p>
                 </div>
 
-                <div className="flex gap-3 ">
+                <div className="flex gap-4 ">
                   <FormEditInventory type="update" data={m} variantId={v.id!}>
-                    <Button size="icon-sm" className="rounded-full">
+                    <Button
+                      size="icon"
+                      className="rounded-full"
+                      variant={"outline"}
+                    >
                       <Edit />
                     </Button>
                   </FormEditInventory>
 
                   <FormDeleteInventory inventory={v}>
                     <Button
-                      size="icon-sm"
+                      size="icon"
                       variant={"outline"}
                       className="rounded-full"
                     >
@@ -204,7 +202,7 @@ function MobileView({ items }: { items: Response["items"] }) {
 
 function DesktopView({ items }: { items: Response["items"] }) {
   return (
-    <div className="border rounded overflow-y-auto">
+    <div className="border rounded-xl overflow-y-auto bg-card shadow-2xs">
       {items.length > 0 && (
         <div className="border-b px-4 text-base font-medium py-2 bg-accent/30">
           <div className="flex px-4 gap-4">

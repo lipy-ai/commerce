@@ -51,16 +51,7 @@ function RouteComponent() {
 
   return (
     <>
-      <DashboardHeader title="Orders">
-        {/* <Link
-					to="/order/$id"
-					params={{ id: "" }}
-					className={cn(buttonVariants({ size: "sm" }))}
-				>
-					<PlusCircle />
-					New Order
-				</Link> */}
-      </DashboardHeader>
+      <DashboardHeader title="Orders" />
 
       <div className="lg:p-8 lg:space-y-8 flex flex-col flex-1">
         <div className="p-4 lg:p-0">
@@ -70,17 +61,25 @@ function RouteComponent() {
           <Skeleton className="flex-1 mx-4 lg:mx-0" />
         ) : !data || data.items.length === 0 ? (
           <Card>
-            <CardContent className="flex flex-1 justify-center flex-col items-center m-auto min-h-[60vh] px-6 text-center">
+            <CardContent className="flex flex-1 justify-center flex-col items-center m-auto min-h-[60vh]  text-center">
               <img
                 src="/assets/no-order.png"
                 alt="no-order"
                 className="size-54 lg:size-64 object-cover"
               />
-              <Label className="text-xl">You have no orders</Label>
-              <p className="text-muted-foreground lg:text-base">
-                You will receive your orders here when your customers place
-                order from your store.
+              <Label className="text-lg lg:text-2xl pb-2">
+                Orders will appear here
+              </Label>
+              <p className="text-muted-foreground lg:text-base max-w-[450px] pb-4">
+                View and manage your orders or create manual order through
+                express checkout
               </p>
+              <Link
+                to="/pos/checkout"
+                className={cn(buttonVariants({ size: isMobile ? "sm" : "lg" }))}
+              >
+                Create manual order
+              </Link>
             </CardContent>
           </Card>
         ) : (
@@ -160,86 +159,84 @@ function DesktopView({ items }: { items: Response["items"] }) {
   const navigate = useNavigate();
 
   return (
-    <Card className="p-0">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-32">#</TableHead>
-            {/* <TableHead className="">Customer</TableHead>
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-32">#</TableHead>
+          {/* <TableHead className="">Customer</TableHead>
 					<TableHead className="">Delivery Partner</TableHead>{" "} */}
-            <TableHead className="w-32">Ordered</TableHead>
-            <TableHead className="w-32">Customer</TableHead>
+          <TableHead className="w-32">Ordered</TableHead>
+          <TableHead className="w-32">Customer</TableHead>
 
-            <TableHead className="w-32">Status</TableHead>
-            <TableHead className="w-32">Items</TableHead>
-            <TableHead className="w-24">Total</TableHead>
-            <TableHead className="w-10" />
+          <TableHead className="w-32">Status</TableHead>
+          <TableHead className="w-32">Items</TableHead>
+          <TableHead className="w-24">Total</TableHead>
+          <TableHead className="w-10" />
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {items.map((m) => (
+          <TableRow
+            key={m.id}
+            onClick={() =>
+              navigate({ to: "/pos/order/$id", params: { id: m.id } })
+            }
+            className="cursor-pointer focus:bg-accent"
+          >
+            <TableCell>{m.id}</TableCell>
+
+            <TableCell>
+              {m.orderedAt && ` ${formatDistanceToNow(m.orderedAt)} ago`}
+            </TableCell>
+
+            <TableCell>
+              {m?.customerDetails?.name ||
+                m?.customerDetails?.email ||
+                m?.customerDetails?.phone}
+            </TableCell>
+            <TableCell>
+              <Badge
+                className="capitalize"
+                size={"default"}
+                variant={
+                  m.status === "created" ||
+                  m.status === "awaiting_customer_confirmation" ||
+                  m.status === "packed" ||
+                  m.status === "out_for_delivery" ||
+                  m.status === "return_requested"
+                    ? "warning"
+                    : m.status === "refunded" || m.status === "replaced"
+                      ? "info"
+                      : m.status === "canceled"
+                        ? "destructive"
+                        : "success"
+                }
+                appearance={"outline"}
+              >
+                {m.status?.replaceAll("_", " ")}
+              </Badge>
+            </TableCell>
+            <TableCell>
+              {m?.items?.length === 0
+                ? "Custom order"
+                : m?.items?.length === 1
+                  ? "1 item"
+                  : `${m?.items?.length} items`}{" "}
+            </TableCell>
+            <TableCell>{formatAmount("inr", m.totalAmount || 0)}</TableCell>
+            <TableCell>
+              <Link
+                to="/"
+                className={cn(
+                  buttonVariants({ size: "icon", variant: "ghost" })
+                )}
+              >
+                <ArrowUpRight />
+              </Link>
+            </TableCell>
           </TableRow>
-        </TableHeader>
-        <TableBody>
-          {items.map((m) => (
-            <TableRow
-              key={m.id}
-              onClick={() =>
-                navigate({ to: "/pos/order/$id", params: { id: m.id } })
-              }
-              className="cursor-pointer focus:bg-accent"
-            >
-              <TableCell>{m.id}</TableCell>
-
-              <TableCell>
-                {m.orderedAt && ` ${formatDistanceToNow(m.orderedAt)} ago`}
-              </TableCell>
-
-              <TableCell>
-                {m?.customerDetails?.name ||
-                  m?.customerDetails?.email ||
-                  m?.customerDetails?.phone}
-              </TableCell>
-              <TableCell>
-                <Badge
-                  className="capitalize"
-                  size={"default"}
-                  variant={
-                    m.status === "created" ||
-                    m.status === "awaiting_customer_confirmation" ||
-                    m.status === "packed" ||
-                    m.status === "out_for_delivery" ||
-                    m.status === "return_requested"
-                      ? "warning"
-                      : m.status === "refunded" || m.status === "replaced"
-                        ? "info"
-                        : m.status === "canceled"
-                          ? "destructive"
-                          : "success"
-                  }
-                  appearance={"outline"}
-                >
-                  {m.status?.replaceAll("_", " ")}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                {m?.items?.length === 0
-                  ? "Custom order"
-                  : m?.items?.length === 1
-                    ? "1 item"
-                    : `${m?.items?.length} items`}{" "}
-              </TableCell>
-              <TableCell>{formatAmount("inr", m.totalAmount || 0)}</TableCell>
-              <TableCell>
-                <Link
-                  to="/"
-                  className={cn(
-                    buttonVariants({ size: "icon", variant: "ghost" })
-                  )}
-                >
-                  <ArrowUpRight />
-                </Link>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </Card>
+        ))}
+      </TableBody>
+    </Table>
   );
 }

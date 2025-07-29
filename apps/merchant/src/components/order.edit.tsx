@@ -170,7 +170,7 @@ export function OrderEdit({ data }: { data?: Order }) {
       <div className="overflow-y-auto">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)}>
-            <Card className="min-h-screen sticky top">
+            <Card className="min-h-screen sticky top lg:rounded-none">
               <CardHeader>
                 <CardTitle>Checkout Summary</CardTitle>
               </CardHeader>

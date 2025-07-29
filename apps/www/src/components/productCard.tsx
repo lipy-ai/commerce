@@ -119,7 +119,7 @@ export default function ProductCard({
                       setVariantDrawer(true);
                       setActiveProduct(product);
                     }}
-                    size="xs"
+                    size="sm"
                     type="button"
                     aria-label="Add to cart"
                     className="text-secondary border border-secondary min-w-16 hover:text-secondary border-b-2 border-r-2 disabled:opacity-100 flex flex-col p-0  gap-0"

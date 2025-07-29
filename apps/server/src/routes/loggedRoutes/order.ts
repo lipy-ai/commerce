@@ -138,6 +138,7 @@ const generateOrders = async ({
 				phone: address.phone || user?.phoneNumber!,
 				email: user?.email!,
 				address: address,
+				image: user?.image!,
 			},
 			customerInstructions: {
 				delivery: deliveryInstruction,

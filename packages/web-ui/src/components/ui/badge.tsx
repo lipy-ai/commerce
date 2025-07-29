@@ -22,7 +22,7 @@ export const badgeVariants = cva(
         solid: "",
         soft: "",
         outline: "border  ring-0 dark:border-white/10 border-gray-300",
-        ghost: "bg-transparent text-muted-foreground ring-0",
+        ghost: "bg-transparent ring-0",
       },
       size: {
         sm: "px-2 py-0.5 text-xs",

@@ -103,53 +103,51 @@ function RouteComponent() {
   const res = useAPIQuery(merchantDashboardApi.index, "$get", {});
 
   return (
-    <div className="h-full">
-      <div className="grid lg:grid-cols-12 md:divide-x">
-        <div className="col-span-8 px-4 pb-4 flex gap-4 md:h-screen flex-col md:sticky md:top-0">
-          <div className="flex gap-4 px-4 py-4 items-center border-b">
-            <Avatar className="size-12 rounded bg-primary">
-              <AvatarImage
-                alt=""
-                className="object-cover"
-                src={data?.image || ""}
-              />
-              <AvatarFallback className="bg-primary text-primary-foreground">
-                <Store />
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <p>Welcome to,</p>
-              <h1 className="text-2xl">{data?.name || "Store"}</h1>
-            </div>
-          </div>
-          <Card className="">
-            <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {btns.map((d, i) => (
-                <Link
-                  key={i}
-                  className={cn(
-                    "p-4 flex flex-col gap-2 items-center rounded justify-center text-center md:aspect-square cursor-pointer hover:opacity-85",
-                    d.className
-                  )}
-                  to={d.href}
-                >
-                  <div>
-                    <d.icon className="size-8" />
-                  </div>
-                  <p className="text-sm lg:text-base">{d.name}</p>
-                </Link>
-              ))}
-            </CardContent>
-          </Card>
-          <OrderChart data={res.data?.counts} isLoading={res.isLoading} />
-          <div className="lg:hidden">
-            <Orders data={res.data?.pendingOrders} isLoading={res.isLoading} />
+    <div className="grid lg:grid-cols-12  lg:p-8 gap-8">
+      <div className="col-span-8  flex gap-4  flex-col md:sticky md:top-0">
+        <div className="flex gap-4  items-center p-4 lg:p-0">
+          <Avatar className="size-12 rounded bg-primary">
+            <AvatarImage
+              alt=""
+              className="object-cover"
+              src={data?.image || ""}
+            />
+            <AvatarFallback className="bg-primary text-primary-foreground">
+              <Store />
+            </AvatarFallback>
+          </Avatar>
+          <div>
+            <p>Welcome to,</p>
+            <h1 className="text-2xl">{data?.name || "Store"}</h1>
           </div>
         </div>
-
-        <div className="col-span-4 hidden lg:flex flex-col p-4">
+        <Card className="">
+          <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {btns.map((d, i) => (
+              <Link
+                key={i}
+                className={cn(
+                  "p-4 flex flex-col gap-2 items-center rounded justify-center text-center md:aspect-square cursor-pointer hover:opacity-85",
+                  d.className
+                )}
+                to={d.href}
+              >
+                <div>
+                  <d.icon className="size-8" />
+                </div>
+                <p className="text-sm lg:text-base">{d.name}</p>
+              </Link>
+            ))}
+          </CardContent>
+        </Card>
+        <OrderChart data={res.data?.counts} isLoading={res.isLoading} />
+        <div className="lg:hidden">
           <Orders data={res.data?.pendingOrders} isLoading={res.isLoading} />
         </div>
+      </div>
+
+      <div className="col-span-4 hidden lg:flex flex-col">
+        <Orders data={res.data?.pendingOrders} isLoading={res.isLoading} />
       </div>
     </div>
   );
@@ -185,62 +183,58 @@ function Orders({
         <CardTitle>Pending Orders</CardTitle>
       </CardHeader>
       {/* <DashboardHeader title="Recent Orders" hideBackBtn /> */}
-      <CardContent className="">
-        <div className="divide-y">
-          {data.map((v, i) => {
-            return (
-              <Link
-                to={"/pos/order/$id"}
-                params={{ id: v.id }}
-                key={i}
-                className="leading-none flex py-3 space-y-2"
-              >
-                <div className="flex gap-4 flex-1 justify-between text-base lg:text-sm">
-                  <div className="flex-1 flex gap-2">
-                    <div
-                      className={cn(
-                        "border size-12 text-[7px] break-words text-center text-balance flex flex-col items-center justify-center",
+      <CardContent className="divide-y">
+        {data.map((v, i) => {
+          return (
+            <Link
+              to={"/pos/order/$id"}
+              params={{ id: v.id }}
+              key={i}
+              className="leading-none flex py-4 space-y-2"
+            >
+              <div className="flex gap-4 flex-1 justify-between text-base lg:text-sm">
+                <div className="flex-1 flex gap-2">
+                  <div
+                    className={cn(
+                      "border size-12 text-[7px] break-words text-center text-balance flex flex-col items-center justify-center",
 
-                        v.status === "created" &&
-                          "text-primary-foreground bg-red-800",
-                        v.status === "accepted" &&
-                          "text-primary-foreground bg-blue-700",
-                        ["packed", "awaiting_customer_confirmation"].includes(
-                          v.status || ""
-                        ) && "text-foreground bg-amber-400",
-                        v.status === "out_for_delivery" &&
-                          "text-primary-foreground bg-green-700"
-                      )}
-                    >
-                      <span className="uppercase">
-                        {v.status?.replaceAll("_", " ")}
-                      </span>
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-xs md:text-sm font-medium truncate leading-none md:leading-normal">
-                        #{v.id}
-                      </p>
-                      <p className="font-light break-words">
-                        <span className="text-sm">
-                          {v.customerDetails?.name}
-                        </span>
-                        <span className="text-xs text-muted-foreground w-full block md:w-fit md:inline-flex">
-                          &nbsp;on {format(v.orderedAt, "Pp")}
-                        </span>
-                      </p>
-                    </div>
+                      v.status === "created" &&
+                        "text-primary-foreground bg-red-800",
+                      v.status === "accepted" &&
+                        "text-primary-foreground bg-blue-700",
+                      ["packed", "awaiting_customer_confirmation"].includes(
+                        v.status || ""
+                      ) && "text-foreground bg-amber-400",
+                      v.status === "out_for_delivery" &&
+                        "text-primary-foreground bg-green-700"
+                    )}
+                  >
+                    <span className="uppercase">
+                      {v.status?.replaceAll("_", " ")}
+                    </span>
                   </div>
-
-                  <div className="w-fit text-right">
-                    <p className="font-semibold">
-                      {formatAmount("inr", v.totalAmount || 0)}
+                  <div className="flex-1">
+                    <p className="text-xs md:text-sm font-medium truncate leading-none md:leading-normal">
+                      #{v.id}
+                    </p>
+                    <p className="font-light break-words">
+                      <span className="text-sm">{v.customerDetails?.name}</span>
+                      <span className="text-xs text-muted-foreground w-full block md:w-fit md:inline-flex">
+                        &nbsp;on {format(v.orderedAt, "Pp")}
+                      </span>
                     </p>
                   </div>
                 </div>
-              </Link>
-            );
-          })}
-        </div>
+
+                <div className="w-fit text-right">
+                  <p className="font-semibold">
+                    {formatAmount("inr", v.totalAmount || 0)}
+                  </p>
+                </div>
+              </div>
+            </Link>
+          );
+        })}
       </CardContent>
     </Card>
   );

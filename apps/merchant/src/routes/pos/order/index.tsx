@@ -6,7 +6,8 @@ import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Pagination } from "@lipy/web-ui/components/pages/pagination";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
-import { Card, CardHeader, CardTitle } from "@lipy/web-ui/components/ui/card";
+import { Card, CardContent } from "@lipy/web-ui/components/ui/card";
+import { Label } from "@lipy/web-ui/components/ui/label";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import {
   Table,
@@ -19,6 +20,7 @@ import {
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
+import { formatDistanceToNow } from "date-fns";
 // import { formatDistanceToNow } from "date-fns";
 import type { InferResponseType } from "hono/client";
 import { ArrowUpRight } from "lucide-react";
@@ -67,10 +69,19 @@ function RouteComponent() {
         {isLoading ? (
           <Skeleton className="flex-1 mx-4 lg:mx-0" />
         ) : !data || data.items.length === 0 ? (
-          <Card className="mx-4 md:m-0">
-            <CardHeader>
-              <CardTitle>No Orders Found...</CardTitle>
-            </CardHeader>
+          <Card>
+            <CardContent className="flex flex-1 justify-center flex-col items-center m-auto min-h-[60vh] px-6 text-center">
+              <img
+                src="/assets/no-order.png"
+                alt="no-order"
+                className="size-54 lg:size-64 object-cover"
+              />
+              <Label className="text-xl">You have no orders</Label>
+              <p className="text-muted-foreground lg:text-base">
+                You will receive your orders here when your customers place
+                order from your store.
+              </p>
+            </CardContent>
           </Card>
         ) : (
           <>
@@ -87,32 +98,56 @@ function RouteComponent() {
   );
 }
 
-function MobileView({ items }: { items: Response["items"] }) {
+export function MobileView({ items }: { items: Response["items"] }) {
   return (
-    <div className="bg-background border divide-y">
+    <div className="divide-y border-y bg-card">
       {items.map((m) => (
         <Link
-          to={"/pos/order/$id"}
-          params={{ id: m.id }}
-          className="flex p-4"
           key={m.id}
+          to="/pos/order/$id"
+          params={{ id: m.id }}
+          className="flex items-start justify-between p-4 "
         >
-          <div className="flex w-full gap-4 justify-between text-base">
-            <div className="flex-1">
-              <p className="text-xs font-light">{m.id}</p>
-              <p className="font-medium inline-flex items-center truncate ">
-                Kundan Bhosale
-              </p>
-              <p className="font-light">932554253424</p>
+          <div className="flex flex-col gap-1">
+            <div className="text-xs text-muted-foreground font-medium">
+              Order #{m.id}
             </div>
 
-            <div className="w-fit text-right">
-              <p className="font-semibold text-lg">
-                {formatAmount("inr", Number(m.itemTotalAmount))}
-              </p>
-              {/* <Badge variant="soft" size="compact">
-                {m.orderedAt && ` ${formatDistanceToNow(m.orderedAt)} ago`}
-              </Badge> */}
+            <div className="text-sm font-medium line-clamp-1">
+              {m?.customerDetails?.name || m?.customerDetails?.email || ""}
+            </div>
+
+            <div className="text-xs text-muted-foreground">
+              {m?.customerDetails?.phone || ""}
+            </div>
+          </div>
+
+          <div className="text-right flex flex-col gap-1">
+            <Badge
+              className="capitalize"
+              size={"sm"}
+              variant={
+                m.status === "created" ||
+                m.status === "awaiting_customer_confirmation" ||
+                m.status === "packed" ||
+                m.status === "out_for_delivery" ||
+                m.status === "return_requested"
+                  ? "warning"
+                  : m.status === "refunded" || m.status === "replaced"
+                    ? "info"
+                    : m.status === "canceled"
+                      ? "destructive"
+                      : "success"
+              }
+              appearance={"outline"}
+            >
+              {m.status?.replaceAll("_", " ")}
+            </Badge>
+            <div className="text-lg font-semibold">
+              {formatAmount("inr", Number(m.itemTotalAmount))}
+            </div>
+            <div className="text-xs text-muted-foreground">
+              {m.orderedAt && `${formatDistanceToNow(m.orderedAt)} ago`}
             </div>
           </div>
         </Link>
@@ -125,65 +160,86 @@ function DesktopView({ items }: { items: Response["items"] }) {
   const navigate = useNavigate();
 
   return (
-    <Table className="bg-background border p-8">
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-32">#</TableHead>
-          {/* <TableHead className="">Customer</TableHead>
+    <Card className="p-0">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-32">#</TableHead>
+            {/* <TableHead className="">Customer</TableHead>
 					<TableHead className="">Delivery Partner</TableHead>{" "} */}
-          <TableHead className="w-32">Status</TableHead>
-          <TableHead className="w-32">Ordered</TableHead>
-          <TableHead className="w-24">Total</TableHead>
-          <TableHead className="w-10" />
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {items.map((m) => (
-          <TableRow
-            key={m.id}
-            onClick={() =>
-              navigate({ to: "/pos/order/$id", params: { id: m.id } })
-            }
-            className="cursor-pointer focus:bg-accent"
-          >
-            <TableCell>{m.id}</TableCell>
-            {/* <TableCell>
-							<div>
-								<p className="font-medium">Kundan Bhosale</p>
-								<p className="font-light">9325029914</p>
-							</div>
-						</TableCell>
-						<TableCell>
-							<div>
-								<p className="font-medium"> Kundan Bhosale</p>
-								<p className="font-light">9325029914</p>
-							</div>
-						</TableCell> */}
+            <TableHead className="w-32">Ordered</TableHead>
+            <TableHead className="w-32">Customer</TableHead>
 
-            <TableCell>
-              <Badge className="" variant={"success"}>
-                {m.status}
-              </Badge>
-            </TableCell>
-            <TableCell>
-              {/* <Badge className="" variant={"outline"}>
-                {m.orderedAt && ` ${formatDistanceToNow(m.orderedAt)} ago`}
-              </Badge> */}
-            </TableCell>
-            <TableCell>{formatAmount("inr", m.totalAmount || 0)}</TableCell>
-            <TableCell>
-              <Link
-                to="/"
-                className={cn(
-                  buttonVariants({ size: "icon", variant: "ghost" })
-                )}
-              >
-                <ArrowUpRight />
-              </Link>
-            </TableCell>
+            <TableHead className="w-32">Status</TableHead>
+            <TableHead className="w-32">Items</TableHead>
+            <TableHead className="w-24">Total</TableHead>
+            <TableHead className="w-10" />
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {items.map((m) => (
+            <TableRow
+              key={m.id}
+              onClick={() =>
+                navigate({ to: "/pos/order/$id", params: { id: m.id } })
+              }
+              className="cursor-pointer focus:bg-accent"
+            >
+              <TableCell>{m.id}</TableCell>
+
+              <TableCell>
+                {m.orderedAt && ` ${formatDistanceToNow(m.orderedAt)} ago`}
+              </TableCell>
+
+              <TableCell>
+                {m?.customerDetails?.name ||
+                  m?.customerDetails?.email ||
+                  m?.customerDetails?.phone}
+              </TableCell>
+              <TableCell>
+                <Badge
+                  className="capitalize"
+                  size={"default"}
+                  variant={
+                    m.status === "created" ||
+                    m.status === "awaiting_customer_confirmation" ||
+                    m.status === "packed" ||
+                    m.status === "out_for_delivery" ||
+                    m.status === "return_requested"
+                      ? "warning"
+                      : m.status === "refunded" || m.status === "replaced"
+                        ? "info"
+                        : m.status === "canceled"
+                          ? "destructive"
+                          : "success"
+                  }
+                  appearance={"outline"}
+                >
+                  {m.status?.replaceAll("_", " ")}
+                </Badge>
+              </TableCell>
+              <TableCell>
+                {m?.items?.length === 0
+                  ? "Custom order"
+                  : m?.items?.length === 1
+                    ? "1 item"
+                    : `${m?.items?.length} items`}{" "}
+              </TableCell>
+              <TableCell>{formatAmount("inr", m.totalAmount || 0)}</TableCell>
+              <TableCell>
+                <Link
+                  to="/"
+                  className={cn(
+                    buttonVariants({ size: "icon", variant: "ghost" })
+                  )}
+                >
+                  <ArrowUpRight />
+                </Link>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </Card>
   );
 }

@@ -52,14 +52,14 @@ export function StoreNav({ children }: { children?: ReactNode }) {
   const { isMobile } = useViewport();
   if (isPending) return <Spinner />;
 
-  if (children && isMobile) return children;
+  if (children && isMobile) return <div className="p-4">{children}</div>;
 
   return (
-    <div className="flex flex-1">
-      <div className="flex-1 md:max-w-sm">
+    <div className="flex flex-1 ">
+      <div className="flex-1 md:max-w-sm border-r min-h-screen">
         <div
           className={cn(
-            "px-4 py-4 md:py-8 space-y-8 sticky top-10",
+            "px-4 py-4 md:py-8 space-y-8 sticky top-10 ",
             !children && "max-w-2xl border-r-0"
           )}
         >
@@ -88,7 +88,9 @@ export function StoreNav({ children }: { children?: ReactNode }) {
           </div>
         </div>
       </div>
-      {children && <div className="flex-1 flex flex-col">{children}</div>}
+      {children && (
+        <div className="flex-1 flex flex-col bg-card p-8">{children}</div>
+      )}
     </div>
   );
 }

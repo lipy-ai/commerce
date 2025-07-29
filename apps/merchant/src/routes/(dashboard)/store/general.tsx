@@ -12,14 +12,8 @@ import {
 } from "@lipy/web-ui/components/forms/elements";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import VerticalListSkeleton from "@lipy/web-ui/components/layouts/skeletons/verticalListSkeleton";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@lipy/web-ui/components/ui/card";
 import { Form } from "@lipy/web-ui/components/ui/form";
+import { Label } from "@lipy/web-ui/components/ui/label";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
@@ -90,50 +84,38 @@ function RouteComponent() {
     <Form {...form}>
       <DashboardHeader title="My Store" />
       <StoreNav>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="flex-1  md:p-8 "
-        >
-          <div className="grid divide-y lg:gap-4 max-w-2xl">
-            <Card>
-              <CardHeader>
-                <CardTitle>General Information</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <FormImage
-                  name="image"
-                  label="Image"
-                  wrapperClassName="size-20 mb-4"
-                />
-                <FormInput
-                  name="name"
-                  label="Name"
-                  placeholder="Flower Mart"
-                  required
-                />
-                <FormInput
-                  name="handle"
-                  label="Handle"
-                  // prefixEl={`${env.WEB_URL}/@`}
-                  required
-                />
-                <FormTextarea
-                  name="description"
-                  label="Bio"
-                  placeholder="Tell us about your shop..."
-                />
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <Label className="text-lg">General Information</Label>
+          <div className="grid  lg:gap-4 max-w-3xl ">
+            <FormImage
+              name="image"
+              label="Image"
+              wrapperClassName="size-20 mb-4"
+            />
+            <FormInput
+              name="name"
+              label="Name"
+              placeholder="Flower Mart"
+              required
+            />
+            <FormInput
+              name="handle"
+              label="Handle"
+              // prefixEl={`${env.WEB_URL}/@`}
+              required
+            />
+            <FormTextarea
+              name="description"
+              label="Bio"
+              placeholder="Tell us about your shop..."
+            />
 
-                <div className="grid lg:grid-cols-2 lg:gap-4">
-                  <FormInput name="email" label="Email" />
-                  <FormInput name="phone" label="Phone Number" />
-                </div>
-              </CardContent>
-
-              <CardFooter className="">
-                <FormButton>Save Changes</FormButton>
-              </CardFooter>
-            </Card>
+            <div className="grid lg:grid-cols-2 lg:gap-4">
+              <FormInput name="email" label="Email" />
+              <FormInput name="phone" label="Phone Number" />
+            </div>
           </div>
+          <FormButton>Save Changes</FormButton>
         </form>
       </StoreNav>
     </Form>

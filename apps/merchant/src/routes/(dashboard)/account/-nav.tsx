@@ -66,13 +66,13 @@ export function AccountNav({ children }: { children?: ReactNode }) {
   const { isMobile } = useViewport();
   if (isPending) return <Spinner />;
 
-  if (children && isMobile) return children;
+  if (children && isMobile) return <div className="p-4">{children}</div>;
 
   return (
     <div className="flex flex-1">
       <div
         className={cn(
-          "max-w-sm px-4 py-8 space-y-8 border-r flex-1",
+          "max-w-sm px-4 py-8 space-y-8 border-r flex-1 min-h-screen",
           !children && "max-w-2xl border-r-0"
         )}
       >
@@ -101,7 +101,9 @@ export function AccountNav({ children }: { children?: ReactNode }) {
           <SettingsCard items={moreInfo} />
         </div>
       </div>
-      {children && <div className="flex-1 flex flex-col">{children}</div>}
+      {children && (
+        <div className="flex-1 flex flex-col p-4 p-8 bg-card">{children}</div>
+      )}
     </div>
   );
 }

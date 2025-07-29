@@ -45,7 +45,7 @@ export default function SearchBar({
       className={cn("", className)}
     >
       <Input
-        className="rounded"
+        className="rounded-lg "
         value={value}
         onChange={(e) => {
           setValue(e.currentTarget.value);

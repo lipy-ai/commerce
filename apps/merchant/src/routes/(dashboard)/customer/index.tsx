@@ -9,7 +9,8 @@ import {
   AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
 import { Button } from "@lipy/web-ui/components/ui/button";
-import { Card, CardHeader, CardTitle } from "@lipy/web-ui/components/ui/card";
+import { Card, CardContent } from "@lipy/web-ui/components/ui/card";
+import { Label } from "@lipy/web-ui/components/ui/label";
 import {
   Table,
   TableBody,
@@ -63,10 +64,20 @@ function RouteComponent() {
           <SearchBar placeholder="Search customers" defaultValue={q} />
         </div>
         {isLoading ? null : !data || data.items.length === 0 ? (
-          <Card className="mx-4 md:m-0">
-            <CardHeader>
-              <CardTitle>No Cusotomers Found...</CardTitle>
-            </CardHeader>
+          <Card>
+            <CardContent className="flex flex-1 justify-center flex-col items-center m-auto min-h-[60vh]  text-center">
+              <img
+                src="/assets/no-results-found.png"
+                alt="no-result-found"
+                className="size-54 lg:size-64 object-cover"
+              />
+              <Label className="text-lg lg:text-2xl pb-2">
+                Customers will appear here
+              </Label>
+              <p className="text-muted-foreground lg:text-base max-w-[450px] pb-4">
+                Learn, track and manage your customers to grow your business
+              </p>
+            </CardContent>
           </Card>
         ) : (
           <>
@@ -105,10 +116,7 @@ function MobileView({ items }: { items: Response["items"] }) {
                   <Dot />
                   <span className="font-light">{m.phoneNumber}</span>
                 </p>
-                {/* <p className="line-clamp-1 text-sm text-muted-foreground">
-									Bhagwan Pur, Chhapra - Rewa - Muzaffarpur Rd, Shrirampuri,
-									Muzaffarpur, Bhagwanpur, Bihar 842001, India
-								</p> */}
+                <p className="text-muted-foreground text-xs">{m.email}</p>
               </div>
             </div>
           </div>
@@ -122,46 +130,44 @@ function DesktopView({ items }: { items: Response["items"] }) {
   const navigate = useNavigate();
 
   return (
-    <Card>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-10">#</TableHead>
-            <TableHead className="">Name</TableHead>
-            <TableHead className="">Phone</TableHead>
-            <TableHead className="">Email</TableHead>
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-10">#</TableHead>
+          <TableHead className="">Name</TableHead>
+          <TableHead className="">Phone</TableHead>
+          <TableHead className="">Email</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {items.map((m) => (
+          <TableRow
+            key={m.id}
+            onClick={() =>
+              navigate({ to: "/customer/$id", params: { id: m.id || "" } })
+            }
+            className="cursor-pointer focus:bg-accent"
+          >
+            <TableCell>
+              <Avatar className="size-10">
+                <AvatarImage src={m.image || ""} />
+                <AvatarFallback>{m?.name?.[0]}</AvatarFallback>
+              </Avatar>
+            </TableCell>
+            <TableCell>
+              <div>
+                <p className="font-medium"> {m.name}</p>
+              </div>
+            </TableCell>
+            <TableCell>
+              <p className="font-light">{m.phoneNumber || "-"}</p>
+            </TableCell>
+            <TableCell>
+              <p className="font-light">{m.email}</p>
+            </TableCell>
           </TableRow>
-        </TableHeader>
-        <TableBody>
-          {items.map((m) => (
-            <TableRow
-              key={m.id}
-              onClick={() =>
-                navigate({ to: "/customer/$id", params: { id: m.id || "" } })
-              }
-              className="cursor-pointer focus:bg-accent"
-            >
-              <TableCell>
-                <Avatar className="size-10">
-                  <AvatarImage src={m.image || ""} />
-                  <AvatarFallback>{m?.name?.[0]}</AvatarFallback>
-                </Avatar>
-              </TableCell>
-              <TableCell>
-                <div>
-                  <p className="font-medium"> {m.name}</p>
-                </div>
-              </TableCell>
-              <TableCell>
-                <p className="font-light">{m.phoneNumber || "-"}</p>
-              </TableCell>
-              <TableCell>
-                <p className="font-light">{m.email}</p>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </Card>
+        ))}
+      </TableBody>
+    </Table>
   );
 }

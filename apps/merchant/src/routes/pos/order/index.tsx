@@ -7,7 +7,6 @@ import { Pagination } from "@lipy/web-ui/components/pages/pagination";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Card, CardContent } from "@lipy/web-ui/components/ui/card";
-import { Label } from "@lipy/web-ui/components/ui/label";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import {
   Table,
@@ -63,23 +62,35 @@ function RouteComponent() {
           <Card>
             <CardContent className="flex flex-1 justify-center flex-col items-center m-auto min-h-[60vh]  text-center">
               <img
-                src="/assets/no-order.png"
+                src={
+                  q ? "/assets/no-results-found.png" : "/assets/no-order.png"
+                }
                 alt="no-order"
                 className="size-54 lg:size-64 object-cover"
               />
-              <Label className="text-lg lg:text-2xl pb-2">
-                Orders will appear here
-              </Label>
-              <p className="text-muted-foreground lg:text-base max-w-[450px] pb-4">
-                View and manage your orders or create manual order through
-                express checkout
-              </p>
-              <Link
-                to="/pos/checkout"
-                className={cn(buttonVariants({ size: isMobile ? "sm" : "lg" }))}
-              >
-                Create manual order
-              </Link>
+              {q ? (
+                <h1 className="text-lg lg:text-2xl pb-2 font-medium">
+                  No results found
+                </h1>
+              ) : (
+                <div>
+                  <h1 className="text-lg lg:text-2xl pb-2 font-medium">
+                    Orders will appear here
+                  </h1>
+                  <p className="text-muted-foreground lg:text-base max-w-[450px] pb-4">
+                    View and manage your orders or create manual order through
+                    express checkout
+                  </p>
+                  <Link
+                    to="/pos/checkout"
+                    className={cn(
+                      buttonVariants({ size: isMobile ? "sm" : "lg" })
+                    )}
+                  >
+                    Create manual order
+                  </Link>
+                </div>
+              )}
             </CardContent>
           </Card>
         ) : (

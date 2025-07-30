@@ -44,7 +44,7 @@ function RouteComponent() {
     <>
       <DashboardHeader title="Place order" />
       {uploadedImages && uploadedImages.length > 0 ? (
-        <div>
+        <div className="max-w-4xl lg:m-auto">
           <div className=" space-y-2 my-4">
             <Card className="rounded-none">
               <CardHeader className="flex items-center justify-between mb-2 border-b -mx-4 border-dashed">
@@ -110,7 +110,7 @@ function RouteComponent() {
             </div>
           </div>
 
-          <div className="fixed bottom-0 left-0 lg:left-auto right-0 border-t w-full bg-card shadow-xl border-2 rounded-t-xl p-2 lg:w-[500px]">
+          <div className="fixed bottom-0  lg:left-auto  border-t w-full bg-card shadow-xl border-2 rounded-t-xl p-2 max-w-4xl m-auto">
             <div
               className="rounded-t-xl  cursor-pointer border-b border-dashed pb-2"
               onClick={() => setDetailedAddressDrawerOpen(true)}

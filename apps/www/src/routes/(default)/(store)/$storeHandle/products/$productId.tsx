@@ -100,7 +100,7 @@ function RouteComponent() {
             </Button>
           </DashboardHeader>
           <Button
-            className="hidden lg:inline-flex mx-20 mt-4"
+            className="hidden lg:inline-flex mx-20 mt-4 sticky top-28"
             variant={"outline"}
             onClick={() => window.history.back()}
           >

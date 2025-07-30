@@ -26,17 +26,13 @@ import {
 } from "@lipy/web-ui/components/layouts/dashboard";
 import { Pagination } from "@lipy/web-ui/components/pages/pagination";
 import { Button } from "@lipy/web-ui/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@lipy/web-ui/components/ui/card";
+import { Card, CardContent } from "@lipy/web-ui/components/ui/card";
 import {
   Form,
   FormDescription,
   FormLabel,
 } from "@lipy/web-ui/components/ui/form";
+import { Label } from "@lipy/web-ui/components/ui/label";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
@@ -211,9 +207,16 @@ function RouteComponent() {
         </div>
         {isLoading ? null : !data || data.items.length === 0 ? (
           <Card>
-            <CardHeader>
-              <CardTitle>No Products Found...</CardTitle>
-            </CardHeader>
+            <CardContent className="flex flex-1 justify-center flex-col items-center m-auto min-h-[60vh]  text-center">
+              <img
+                src="/assets/no-results-found.png"
+                alt="no-result-found"
+                className="size-54 lg:size-64 object-cover"
+              />
+              <Label className="text-lg lg:text-2xl pb-2">
+                No products found {q ? `for "${q}"` : ""}
+              </Label>
+            </CardContent>
           </Card>
         ) : (
           <>

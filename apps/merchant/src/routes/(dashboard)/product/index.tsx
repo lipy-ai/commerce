@@ -8,7 +8,6 @@ import { Pagination } from "@lipy/web-ui/components/pages/pagination";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Card, CardContent } from "@lipy/web-ui/components/ui/card";
-import { Label } from "@lipy/web-ui/components/ui/label";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
@@ -79,23 +78,36 @@ function RouteComponent() {
           <Card>
             <CardContent className="flex flex-1 justify-center flex-col items-center m-auto min-h-[60vh]  text-center">
               <img
-                src="/assets/no-product.png"
+                src={
+                  q ? "/assets/no-results-found.png" : "/assets/no-product.png"
+                }
                 alt="no-product"
                 className="size-54 lg:size-64 object-cover"
               />
-              <Label className="text-lg lg:text-2xl pb-2">
-                Your inventory will appear here
-              </Label>
-              <p className="text-muted-foreground lg:text-base max-w-[450px] pb-4">
-                View and manage your inventory and add products to your
-                inventory with simple clicks
-              </p>
-              <Link
-                to="/product/add"
-                className={cn(buttonVariants({ size: isMobile ? "sm" : "lg" }))}
-              >
-                Browse and add products
-              </Link>
+
+              {q ? (
+                <h1 className="text-lg lg:text-2xl pb-2 font-medium">
+                  No products found for "{q}"
+                </h1>
+              ) : (
+                <div>
+                  <h1 className="text-lg lg:text-2xl pb-2 font-medium">
+                    Your inventory will appear here
+                  </h1>
+                  <p className="text-muted-foreground lg:text-base max-w-[450px] pb-4">
+                    View and manage your inventory and add products to your
+                    inventory with simple clicks
+                  </p>
+                  <Link
+                    to="/product/add"
+                    className={cn(
+                      buttonVariants({ size: isMobile ? "sm" : "lg" })
+                    )}
+                  >
+                    Browse and add products
+                  </Link>
+                </div>
+              )}
             </CardContent>
           </Card>
         ) : (
@@ -188,13 +200,13 @@ function MobileView({ items }: { items: Response["items"] }) {
                 </div>
               </div>
 
-              <div className="w-28 flex-shrink-0 space-y-1.5 text-center">
+              <div className="flex-shrink-0 space-y-1.5 text-center">
                 <img
                   src={m.thumbnail || ""}
                   alt={m.title || ""}
                   className={cn(
                     v?.active ? "grayscale-0" : "grayscale-100",
-                    "size-full border border-border/50 rounded-xl bg-accent object-cover"
+                    "w-28 h-28 border border-border/50 rounded-xl bg-accent object-cover"
                   )}
                 />
                 <p

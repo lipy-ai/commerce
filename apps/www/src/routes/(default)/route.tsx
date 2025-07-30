@@ -1,4 +1,3 @@
-import NavBar from "@/components/navBar";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
@@ -16,7 +15,6 @@ function RouteComponent() {
 
   return (
     <>
-      {!isMobile && <NavBar />}
       {hasHydrated && deliveryLocation.line1 === "" && <LocationComponent />}
       {hasHydrated && deliveryLocation.line1 === "" ? (
         isMobile && <AddressFetchingSkeleton />

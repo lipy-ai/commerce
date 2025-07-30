@@ -6,7 +6,6 @@ import {
   DashboardBody,
   DashboardLayout,
 } from "@lipy/web-ui/components/layouts/dashboard";
-import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   HomeIcon,
@@ -22,7 +21,6 @@ export const Route = createFileRoute("/(default)/")({
 
 function Home() {
   const { cart, initialized } = useCartStore();
-  const { isMobile } = useViewport();
 
   const mobileNav = [
     {
@@ -69,7 +67,7 @@ function Home() {
       logo={{ icon: "/logo/ico.svg", full: "/logo/ico.svg", alt: "" }}
     >
       <DashboardBody>
-        {isMobile && <NavBar />}
+        <NavBar />
         <NearByShops />
 
         {!initialized && <AppCartInitializer />}

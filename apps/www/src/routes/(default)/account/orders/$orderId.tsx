@@ -139,7 +139,7 @@ function RouteComponent() {
             </Badge>
           </DashboardHeader>
 
-          <div className="lg:grid lg:grid-cols-12 divide-x flex-1 mt-3">
+          <div className="lg:grid lg:grid-cols-12 gap-4 flex-1 mt-3 lg:p-6">
             <div className="col-span-7  space-y-3">
               <Card>
                 <CardHeader className="flex items-center justify-between gap-4 border-b -mx-4 px-4">

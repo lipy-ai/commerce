@@ -1,13 +1,25 @@
 import { DashboardNav } from "@/components/nav.dashboard";
+import { useAuthSession } from "@lipy/lib/hooks/use-auth";
 import { useStore } from "@lipy/lib/hooks/use-store";
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/(dashboard)")({
   component: Component,
 });
 
 function Component() {
+  const { isPending: authPending, view } = useAuthSession();
   const { isPending } = useStore();
-  if (isPending) return null;
+  const navigate = Route.useNavigate();
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (view === "staff") {
+      navigate({ to: "/pos" });
+    }
+  }, [view]);
+
+  if (isPending || authPending || view !== "full") return null;
   return <DashboardNav />;
 }

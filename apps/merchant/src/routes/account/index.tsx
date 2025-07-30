@@ -119,7 +119,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useLayoutEffect } from "react";
 import { AccountNav } from "./-nav";
 
-export const Route = createFileRoute("/(dashboard)/account/")({
+export const Route = createFileRoute("/account/")({
   component: RouteComponent,
 });
 
@@ -128,7 +128,7 @@ function RouteComponent() {
   const navigate = Route.useNavigate();
 
   useLayoutEffect(() => {
-    !isMobile && navigate({ to: "/account/profile" });
+    !isMobile && navigate({ to: "/account/profile", replace: true });
   }, [isMobile, navigate]);
 
   if (!isMobile) {

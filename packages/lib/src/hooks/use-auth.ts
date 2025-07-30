@@ -8,5 +8,20 @@ export const useAuthSession = () => {
 		redirectToLoginURL();
 	}
 
-	return res;
+	const role = res.data?.session.activeStoreRole || "";
+	let view: "full" | "staff" | "delivery" | null = null;
+
+	if (["admin", "owner"].includes(role)) {
+		view = "full";
+	}
+
+	if (["staff"].includes(role)) {
+		view = "staff";
+	}
+
+	if (["delivery"].includes(role)) {
+		view = "delivery";
+	}
+
+	return { ...res, view };
 };

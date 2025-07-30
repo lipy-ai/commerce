@@ -157,7 +157,7 @@ function RouteComponent() {
                       <div className="grid grid-cols-[120px_auto] gap-x-4 gap-y-8 items-start [&_label]:leading-snug [&_p]:text-muted-foreground">
                         {data?.highlights.map((d, i) => (
                           <Fragment key={i}>
-                            <Label>{d.label}</Label>
+                            <Label>{d.name}</Label>
                             <p className="break-words overflow-hidden text-ellipsis max-w-full">
                               {d.value}
                             </p>
@@ -176,7 +176,7 @@ function RouteComponent() {
                       <div className="grid grid-cols-[120px_auto] gap-x-4 gap-y-8 items-start [&_label]:leading-snug [&_p]:text-muted-foreground">
                         {data?.information.map((d, i) => (
                           <Fragment key={i}>
-                            <Label>{d.label}</Label>
+                            <Label>{d.name}</Label>
                             <p className="break-words overflow-hidden text-ellipsis max-w-full">
                               {d.value}
                             </p>

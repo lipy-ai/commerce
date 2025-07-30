@@ -1,4 +1,3 @@
-import { authClient } from "@lipy/lib/providers/auth";
 import {
   Avatar,
   AvatarFallback,
@@ -14,60 +13,67 @@ import {
   Users,
 } from "lucide-react";
 
+import { useAuthSession } from "@lipy/lib/hooks/use-auth";
 import SettingsCard from "@lipy/web-ui/components/custom-ui/settingsCard";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import type { ReactNode } from "react";
 
-const generalInfo = [
-  {
-    title: "Profile",
-    icon: UserCircle2,
-    url: "/account/profile",
-  },
-  {
-    title: "My Store",
-    icon: Store,
-    url: "/store",
-  },
-  {
-    title: "Store Staff",
-    icon: Users,
-    url: "/store/staff",
-  },
-  {
-    title: "Preferences",
-    icon: Settings2,
-    url: "/account/preferences",
-  },
-];
-
-const moreInfo = [
-  {
-    title: "Refer and Earn",
-    icon: Share2,
-    url: "/account/referral",
-  },
-  {
-    title: "Customer Support",
-    icon: Headset,
-    url: "/account/support",
-  },
-  {
-    title: "Logout",
-    icon: LogOut,
-    url: "/logout",
-  },
-];
-
 export function AccountNav({ children }: { children?: ReactNode }) {
-  const { data, isPending } = authClient.useSession();
+  const { data, isPending, view } = useAuthSession();
+
   const { isMobile } = useViewport();
   if (isPending) return <Spinner />;
 
   if (children && isMobile)
     return <div className="p-4 bg-card flex-1">{children}</div>;
+
+  const generalInfo = [
+    {
+      title: "Profile",
+      icon: UserCircle2,
+      url: "/account/profile",
+    },
+    ...(view === "full"
+      ? [
+          {
+            title: "My Store",
+            icon: Store,
+            url: "/store",
+          },
+          {
+            title: "Store Staff",
+            icon: Users,
+            url: "/store/staff",
+          },
+        ]
+      : []),
+
+    {
+      title: "Preferences",
+      icon: Settings2,
+      url: "/account/preferences",
+    },
+  ];
+
+  const moreInfo = [
+    {
+      title: "Refer and Earn",
+      icon: Share2,
+      url: "/account/referral",
+    },
+    {
+      title: "Customer Support",
+      icon: Headset,
+      url: "/account/support",
+    },
+    {
+      title: "Logout",
+      icon: LogOut,
+      url: "/logout",
+    },
+  ];
 
   return (
     <div className="flex flex-1">

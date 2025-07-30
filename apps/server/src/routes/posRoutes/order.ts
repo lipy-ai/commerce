@@ -4,9 +4,10 @@ import { HTTPError } from "@/lib/exception";
 import { idGenerate } from "@/lib/generateId";
 import { orderCalculator } from "@/lib/orderCalculators";
 import { zValidator } from "@/middlewares/validator";
+import { listZodSchema } from "@/schema/common";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
-import type { Updateable } from "kysely";
+import { type Expression, type SqlBool, type Updateable, sql } from "kysely";
 import { z } from "zod";
 
 const updateOrderSchema = z.object({
@@ -47,6 +48,53 @@ const createOrderSchema = z.object({
 });
 
 export const posOrderRoute = new Hono<ServerContext>()
+	.get("/", zValidator("query", listZodSchema), async (c) => {
+		const { limit, page, q } = c.req.valid("query");
+		const activeStoreId = c.var.session?.activeStoreId!;
+		const offset = limit * (page - 1);
+		const query = db
+			.selectFrom("orders as o")
+			.where("o.storeId", "=", activeStoreId!)
+			.where("status", "in", [
+				"created",
+				"accepted",
+				"packed",
+				"out_for_delivery",
+			]);
+		const countPromise = query
+			.select(sql<number>`count(*)`.as("total_count"))
+			.executeTakeFirst();
+
+		const resultsPromise = query
+			.orderBy(
+				sql`
+                CASE o.status
+                    WHEN 'created' THEN 1
+					WHEN 'awaiting_customer_confirmation' THEN 1
+					WHEN 'return_requested' THEN 1
+                    WHEN 'accepted' THEN 2
+                    WHEN 'packed' THEN 3
+                    WHEN 'out_for_delivery' THEN 4
+                    ELSE 5
+                END`,
+			)
+			.orderBy("orderedAt", "desc")
+			.selectAll()
+			.limit(limit)
+			.offset(offset)
+			.execute();
+
+		const [countResult, items] = await Promise.all([
+			countPromise,
+			resultsPromise,
+		]);
+
+		const totalCount = countResult?.total_count ?? 0;
+
+		const totalPages = Math.ceil(totalCount / limit);
+
+		return c.json({ items, page, limit, totalPages, totalResults: totalCount });
+	})
 	.post("/", zValidator("json", createOrderSchema), async (c) => {
 		const sess = c.get("session");
 		const user = c.get("user");

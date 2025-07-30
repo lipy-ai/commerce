@@ -17,6 +17,7 @@ export const badgeVariants = cva(
         destructive: "bg-red-100 text-red-800 ring-red-300",
         progress: "bg-sky-100 text-sky-800 ring-sky-300",
         neutral: "bg-muted text-muted-foreground ring-border",
+        white: "bg-white border ring-0 dark:border-white/10 border-gray-300",
       },
       appearance: {
         solid: "",
@@ -25,6 +26,8 @@ export const badgeVariants = cva(
         ghost: "bg-transparent ring-0",
       },
       size: {
+        xs: "px-1 py-0.5 text-[12px]",
+
         sm: "px-2 py-0.5 text-xs",
         default: "px-2.5 py-0.5 text-sm",
         lg: "px-3 py-1 text-base",

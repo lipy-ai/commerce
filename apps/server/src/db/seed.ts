@@ -96,11 +96,11 @@ const create = async (user: DBTypes["user"]) => {
 					category: faker.helpers.arrayElement(catIds),
 					thumbnail: faker.image.urlPicsumPhotos(),
 					highlights: Array.from({ length: 5 }, () => ({
-						label: faker.commerce.productAdjective(),
+						name: faker.commerce.productAdjective(),
 						value: faker.commerce.productAdjective(),
 					})),
 					information: Array.from({ length: 5 }, () => ({
-						label: faker.commerce.productAdjective(),
+						name: faker.commerce.productAdjective(),
 						value: faker.commerce.productAdjective(),
 					})),
 					images: Array.from({ length: 5 }, () =>

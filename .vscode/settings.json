@@ -28,7 +28,7 @@
 		"quickfix.biome": "explicit"
 	},
 	"postman.settings.dotenv-detection-notification-visibility": false,
-	"cSpell.words": ["Mailchecker"]
+	"cSpell.words": ["Mailchecker", "Uncategoriezed"]
 	// "tailwindCSS.experimental.configFile": {
 	// 	"packages/web-ui/src/style.css": [
 	// 		"apps/www/**",

@@ -1,5 +1,5 @@
 import { env } from "@envClient";
-import { loggedInStoreApi, merchantStoreApi } from "@lipy/lib/api";
+import { loggedInSessionApi, loggedInStoreApi } from "@lipy/lib/api";
 import { useAuthSession } from "@lipy/lib/hooks/use-auth";
 import { useAPIMutation, useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import {
@@ -29,7 +29,7 @@ function RouteComponent() {
   const { id } = Route.useParams();
   const sess = useAuthSession();
   const { data, isLoading, isError, error } = useAPIQuery(
-    merchantStoreApi.invitation[":id"],
+    loggedInSessionApi.invitation[":id"],
     "$get",
     { param: { id } }
   );

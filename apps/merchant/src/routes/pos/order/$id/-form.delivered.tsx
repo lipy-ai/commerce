@@ -1,5 +1,5 @@
 import type { posOrderApi } from "@lipy/lib/api";
-import { useStore } from "@lipy/lib/hooks/use-store";
+import { usePosStore } from "@lipy/lib/hooks/use-store";
 import {
   DrawerDialogClose,
   DrawerDialogDescription,
@@ -41,17 +41,7 @@ export default function OrderDeliverForm({
   };
   const form = useForm({ defaultValues });
   const [open, setOpen] = useState(false);
-  const { data } = useStore();
-
-  // useEffect(() => {
-  //   let timer = undefined;
-  //   if (form.formState.isSubmitSuccessful) {
-  //     timer = setTimeout(() => {
-  //       setOpen(false);
-  //     }, 2000);
-  //   }
-  //   return () => clearTimeout(timer);
-  // }, [form.formState.isSubmitSuccessful]);
+  const { data } = usePosStore();
 
   return (
     <DrawerDialogSwitcher

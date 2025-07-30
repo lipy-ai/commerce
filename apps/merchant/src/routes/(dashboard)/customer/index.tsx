@@ -10,7 +10,6 @@ import {
 } from "@lipy/web-ui/components/ui/avatar";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { Card, CardContent } from "@lipy/web-ui/components/ui/card";
-import { Label } from "@lipy/web-ui/components/ui/label";
 import {
   Table,
   TableBody,
@@ -71,12 +70,20 @@ function RouteComponent() {
                 alt="no-result-found"
                 className="size-54 lg:size-64 object-cover"
               />
-              <Label className="text-lg lg:text-2xl pb-2">
-                Customers will appear here
-              </Label>
-              <p className="text-muted-foreground lg:text-base max-w-[450px] pb-4">
-                Learn, track and manage your customers to grow your business
-              </p>
+              {q ? (
+                <h1 className="text-lg lg:text-2xl pb-2 font-medium">
+                  No results found
+                </h1>
+              ) : (
+                <div>
+                  <h1 className="text-lg lg:text-2xl pb-2 font-medium">
+                    Your customers will appear here
+                  </h1>
+                  <p className="text-muted-foreground lg:text-base max-w-[450px] pb-4">
+                    Know , track and manage your customers to grow your business
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
         ) : (

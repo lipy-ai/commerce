@@ -118,9 +118,9 @@ function RouteComponent() {
         {shopData && <ShopOptions shop={shopData} />}
       </DashboardHeader>
 
-      <div className="lg:grid lg:grid-cols-12 lg:px-8 m-auto lg:divide-x">
+      <div className="lg:grid lg:grid-cols-12 lg:px-8 m-auto lg:divide-x ">
         {/* Left Sidebar */}
-        <div className="lg:col-span-3 lg:px-2 lg:space-y-4 lg:py-4 lg:sticky lg:top-0 lg:self-start lg:h-screen lg:overflow-y-auto">
+        <div className="lg:col-span-3 lg:px-2 lg:space-y-4 lg:py-4 lg:sticky lg:top-28 lg:self-start lg:overflow-y-auto lg:h-[calc(100vh-110px)]">
           <ArrowLeft
             className="size-9 cursor-pointer hidden lg:block"
             onClick={(e) => {
@@ -134,7 +134,7 @@ function RouteComponent() {
         </div>
 
         {/* Right Content */}
-        <div className="mb-32 lg:col-span-9 lg:h-screen lg:overflow-y-auto px-4">
+        <div className="mb-32 lg:col-span-9  lg:overflow-y-auto px-4">
           {fetchedProduct && productData && productData.items.length > 0 ? (
             productData.items.map((productGroup, _idx) => {
               const productArray = productGroup.products;

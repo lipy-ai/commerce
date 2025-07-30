@@ -105,9 +105,12 @@ function DesktopView() {
               className="size-12 border rounded bg-accent"
             />
           </div>
-          <div>
+          <div className="min-w-xs">
             <p className="font-medium block break-words">{m.title}</p>
-            <p className="font-light block break-words">{m.summary}</p>
+            <div className="flex gap-2">
+              <Badge variant={"default"}>{m?.category?.title}</Badge>
+              <Badge variant={"default"}>{m?.variants?.length} variants</Badge>
+            </div>
           </div>
 
           <div>
@@ -122,17 +125,21 @@ function DesktopView() {
 
           <div className="pl-4">
             <p className="font-medium">
-              {formatAmount("inr", m?.price || 0)}{" "}
-              {m?.maxPrice && (
+              {formatAmount("inr", m?.variants?.[0]?.price || 0)}{" "}
+              {m?.variants?.[0]?.maxPrice && (
                 <span className="text-muted-foreground text-xs line-through">
-                  {formatAmount("inr", m?.maxPrice || 0)}
+                  {formatAmount("inr", m?.variants?.[0]?.maxPrice || 0)}
                 </span>
               )}
             </p>
-            {m?.maxPrice && (
+            {m?.variants?.[0]?.maxPrice && (
               <p>
                 <Badge size="sm" variant="info">
-                  {formatAmount("inr", m?.maxPrice - (m?.price || 0))} Off
+                  {formatAmount(
+                    "inr",
+                    m?.variants?.[0]?.maxPrice - (m?.variants?.[0]?.price || 0)
+                  )}{" "}
+                  Off
                 </Badge>
               </p>
             )}

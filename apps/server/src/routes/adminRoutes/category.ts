@@ -3,7 +3,7 @@ import { zValidator } from "@/middlewares/validator";
 import { listZodSchema } from "@/schema/common";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
-import { sql } from "kysely";
+
 import { z } from "zod";
 
 const listZodValidator = zValidator(
@@ -14,39 +14,52 @@ const listZodValidator = zValidator(
 );
 export const adminCategoryRoute = new Hono<ServerContext>()
 	.get("/", listZodValidator, async (c) => {
-		const { limit, page, q } = c.req.valid("query");
-		const offset = limit * (page - 1);
+		const { q } = c.req.valid("query");
 
-		const query = db.selectFrom("category as c").$if(!!q, (qb) => {
-			const words = q!.trim().split(/\s+/);
-			return words.reduce(
-				(acc, word) => acc.where("c.title", "ilike", `%${word}%`),
-				qb,
-			);
-		});
-
-		const countPromise = query
-			.select(sql<number>`count(*)`.as("total_count"))
-			.executeTakeFirst();
-
-		const resultsPromise = query
+		const subPromise = db
+			.selectFrom("category as c")
 			.selectAll()
+			.$if(!!q, (qb) => {
+				const words = q!.trim().split(/\s+/);
+				return words.reduce(
+					(acc, word) => acc.where("c.title", "ilike", `%${word}%`),
+					qb,
+				);
+			})
 			.orderBy("c.title asc")
-			.limit(limit)
-			.offset(offset)
-
 			.execute();
 
-		const [countResult, items] = await Promise.all([
-			countPromise,
-			resultsPromise,
+		const primaryPromise = db
+			.selectFrom("category as c")
+			.where("c.parentId", "is", null)
+			.$if(!!q, (qb) => {
+				const words = q!.trim().split(/\s+/);
+				return words.reduce(
+					(acc, word) => acc.where("c.title", "ilike", `%${word}%`),
+					qb,
+				);
+			})
+			.selectAll()
+			.orderBy("c.title asc")
+			.execute();
+
+		const [primaryCats, subCats] = await Promise.all([
+			primaryPromise,
+			subPromise,
 		]);
 
-		const totalCount = countResult?.total_count ?? 0;
+		const items = primaryCats.map((m) => {
+			return {
+				...m,
+				items: subCats.filter((f) => f.parentId === m.id),
+			};
+		});
 
-		const totalPages = Math.ceil(totalCount / limit);
+		// if (q) {
+		// 	items = items.filter((f) => f.items.length !== 0);
+		// }
 
-		return c.json({ items, page, limit, totalPages, totalResults: totalCount });
+		return c.json({ items });
 	})
 	.post(
 		"/",
@@ -56,6 +69,7 @@ export const adminCategoryRoute = new Hono<ServerContext>()
 				title: z.string().optional(),
 				summary: z.string().optional(),
 				image: z.string().nullish(),
+				parentId: z.string().uuid().nullish(),
 			}),
 		),
 		async (c) => {
@@ -79,6 +93,7 @@ export const adminCategoryRoute = new Hono<ServerContext>()
 				title: z.string().optional(),
 				summary: z.string().optional(),
 				image: z.string().nullish(),
+				parentId: z.string().uuid().nullish(),
 			}),
 		),
 		async (c) => {

@@ -22,8 +22,8 @@ const productSchema = z.object({
 		z.array(z.string()),
 	),
 
-	highlights: z.array(z.object({ value: z.string(), label: z.string() })),
-	information: z.array(z.object({ value: z.string(), label: z.string() })),
+	highlights: z.array(z.object({ value: z.string(), name: z.string() })),
+	information: z.array(z.object({ value: z.string(), name: z.string() })),
 });
 
 const listZodValidator = zValidator(

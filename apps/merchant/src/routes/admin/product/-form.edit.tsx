@@ -11,8 +11,8 @@ import { adminProductApi } from "@lipy/lib/api";
 import { useAPIMutation } from "@lipy/lib/utils/useQueryClient";
 import {
   FormButton,
-  FormImage,
   FormInput,
+  FormMultiImage,
   FormSelect,
   FormTextarea,
 } from "@lipy/web-ui/components/forms/elements";
@@ -61,8 +61,6 @@ export default function FormEdit({
   >["json"] = {
     title: data?.title || "",
     category: data?.category?.id || "",
-    price: data?.price || 0,
-    maxPrice: data?.maxPrice || 0,
     summary: data?.summary || "",
     images: data?.images || [],
     highlights: data?.highlights || [],
@@ -75,9 +73,7 @@ export default function FormEdit({
   });
 
   const opts = {
-    onMutate: () => {
-      setOpen(false);
-    },
+    onMutate: () => {},
     onError: () => {
       invalidate();
     },
@@ -123,24 +119,6 @@ export default function FormEdit({
                 label="Category"
                 placeholder="Search Categories"
               />
-              <div className="grid grid-cols-2 gap-4">
-                <FormInput
-                  label="Selling Price"
-                  name="price"
-                  type="number"
-                  placeholder="0.00"
-                  className="col-span-6"
-                  prefixEl={<span>₹</span>}
-                />
-                <FormInput
-                  label="Max Retail Price (MRP)"
-                  name="maxPrice"
-                  type="number"
-                  placeholder="0.00"
-                  className="col-span-6"
-                  prefixEl={<span>₹</span>}
-                />
-              </div>
 
               <FormTextarea
                 name="summary"
@@ -150,15 +128,7 @@ export default function FormEdit({
               <FormItem>
                 <FormLabel>Images</FormLabel>
 
-                <div className="grid grid-cols-3 lg:grid-cols-6 gap-4">
-                  {[...Array(6)].map((m, i) => (
-                    <FormImage
-                      key={m}
-                      name={`images.${i}`}
-                      wrapperClassName="size-full"
-                    />
-                  ))}
-                </div>
+                <FormMultiImage name="images" />
               </FormItem>
               <br />
               <VariantForm />
@@ -199,7 +169,7 @@ function SortableForm({ name, label }: { name: string; label: string }) {
           size={"sm"}
           type="button"
           onClick={() => {
-            arr.prepend({ label: "Untitled", value: "Untitled" });
+            arr.prepend({ name: "Untitled", value: "Untitled" });
           }}
         >
           Add New
@@ -235,7 +205,7 @@ function SortableForm({ name, label }: { name: string; label: string }) {
                             </Button>
                           </SortableItemHandle>
                           <div className="text-start flex-1">
-                            <p>{watch[i]?.label}</p>
+                            <p>{watch[i]?.name}</p>
                             <p className="text-sm text-muted-foreground">
                               {watch[i]?.value}
                             </p>
@@ -254,7 +224,7 @@ function SortableForm({ name, label }: { name: string; label: string }) {
                       </AccordionTrigger>
                       <AccordionContent className="p-4">
                         <FormInput
-                          name={`${name}.${i}.label`}
+                          name={`${name}.${i}.name`}
                           placeholder={`${name} Key`}
                         />
                         <FormTextarea

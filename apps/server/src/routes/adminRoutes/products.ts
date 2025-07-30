@@ -1,31 +1,30 @@
-import { type DBTypes, db } from "@/db";
+import { db } from "@/db";
 import { diffById } from "@/lib/compare";
 import { zValidator } from "@/middlewares/validator";
 import { listZodSchema } from "@/schema/common";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
-import { type Insertable, sql } from "kysely";
+import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { z } from "zod";
 
-const productSchema = z.object({
+export const productSchema = z.object({
 	title: z.string(),
 	category: z.string(),
-	price: z.coerce.number().min(1),
-	maxPrice: z.coerce.number().min(1),
 	summary: z.string(),
 	images: z.preprocess(
 		(e) => (Array.isArray(e) ? e.filter((e) => !!e) : e),
 		z.array(z.string()),
 	) as z.ZodType<string[]>,
-	highlights: z.array(z.object({ value: z.string(), label: z.string() })),
-	information: z.array(z.object({ value: z.string(), label: z.string() })),
+	highlights: z.array(z.object({ value: z.string(), name: z.string() })),
+	information: z.array(z.object({ value: z.string(), name: z.string() })),
 	variants: z.array(
 		z.object({
 			id: z.string().uuid(),
 			unit: z.string(),
-			price: z.coerce.number().min(1),
-			images: z.array(z.string()),
+			price: z.coerce.number().min(0),
+			maxPrice: z.coerce.number().min(0).catch(0),
+			images: z.array(z.string()).nullish(),
 		}),
 	),
 });
@@ -74,6 +73,8 @@ export const adminProductRoute = new Hono<ServerContext>()
 							id: eb.ref("pv.id"),
 							images: eb.ref("pv.images"),
 							price: eb.ref("pv.price"),
+							maxPrice: eb.ref("pv.maxPrice"),
+
 							unit: eb.ref("pv.unit"),
 							productId: eb.ref("pv.productId"),
 						}),
@@ -82,38 +83,6 @@ export const adminProductRoute = new Hono<ServerContext>()
 					.as("variants"),
 			])
 			.groupBy(["p.id", "c.id"])
-			.limit(limit)
-			.offset(offset)
-			.execute();
-
-		const [countResult, items] = await Promise.all([
-			countPromise,
-			resultsPromise,
-		]);
-
-		const totalCount = countResult?.total_count ?? 0;
-
-		const totalPages = Math.ceil(totalCount / limit);
-
-		return c.json({ items, page, limit, totalPages, totalResults: totalCount });
-	})
-	.get("/all", listZodValidator, async (c) => {
-		const { limit, page, q } = c.req.valid("query");
-		const offset = limit * (page - 1);
-		const query = db
-			.selectFrom("productsToAdd as p")
-			.$if(!!q, (qb) =>
-				qb.where(
-					sql<boolean>`p."searchVector" @@ plainto_tsquery('english', ${q})`,
-				),
-			);
-
-		const countPromise = query
-			.select(sql<number>`count(*)`.as("total_count"))
-			.executeTakeFirst();
-
-		const resultsPromise = query
-			.selectAll(["p"])
 			.limit(limit)
 			.offset(offset)
 			.execute();
@@ -162,6 +131,7 @@ export const adminProductRoute = new Hono<ServerContext>()
 								id: eb.ref("pv.id"),
 								images: eb.ref("pv.images"),
 								price: eb.ref("pv.price"),
+								maxPrice: eb.ref("pv.maxPrice"),
 								unit: eb.ref("pv.unit"),
 								productId: eb.ref("pv.productId"),
 								stock: eb.ref("si.stock"),
@@ -234,10 +204,13 @@ export const adminProductRoute = new Hono<ServerContext>()
 				const oldVars = await trx
 					.selectFrom("productVariant")
 					.where("productId", "=", id)
-					.select(["id", "images", "price", "unit"])
+					.select(["id", "images", "price", "unit", "maxPrice"])
 					.execute();
 
-				const diff = diffById(oldVars, variants);
+				const diff = diffById(
+					oldVars,
+					variants.map((v) => ({ ...v, images: v.images || null })),
+				);
 
 				await Promise.all([
 					diff.added.length > 0
@@ -264,7 +237,6 @@ export const adminProductRoute = new Hono<ServerContext>()
 						: Promise.resolve(),
 
 					...diff.updated.map((u) => {
-						console.log(u.updated);
 						return trx
 							.updateTable("productVariant")
 							.where("id", "=", u.updated.id)

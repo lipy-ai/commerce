@@ -13,36 +13,37 @@ import { type ReactNode, useState } from "react";
 // Besides being bad for performance, this also leaks any sensitive data.
 
 export default function QueryProvider({
-	children,
-	handleThrowOnError,
+  children,
+  handleThrowOnError,
 }: {
-	children: ReactNode;
-	handleThrowOnError: (v: Error) => boolean;
+  children: ReactNode;
+  handleThrowOnError: (v: Error) => boolean;
 }) {
-	// Instead do this, which ensures each request has its own cache:
-	const [queryClient] = useState(
-		() =>
-			new QueryClient({
-				defaultOptions: {
-					queries: {
-						// networkMode: "offlineFirst",
-						staleTime: 60 * 1000,
-						retry: 1,
-						retryDelay: (attemptIndex) =>
-							Math.min(1000 * 2 ** attemptIndex, 30000),
-					},
-					mutations: {
-						// networkMode: "offlineFirst",
-						onError: handleThrowOnError,
-					},
-				},
-			}),
-	);
+  // Instead do this, which ensures each request has its own cache:
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            // networkMode: "offlineFirst",
+            staleTime: 60 * 1000,
+            retry: 1,
+          },
+          mutations: {
+            // networkMode: "offlineFirst",
+            onError: (e) => {
+              console.log("Eee", e);
+              handleThrowOnError(e);
+            },
+          },
+        },
+      })
+  );
 
-	return (
-		<QueryClientProvider client={queryClient}>
-			{children}
-			{env.SHOW_DEV_TOOLS && <ReactQueryDevtools initialIsOpen={false} />}
-		</QueryClientProvider>
-	);
+  return (
+    <QueryClientProvider client={queryClient}>
+      {children}
+      {env.SHOW_DEV_TOOLS && <ReactQueryDevtools initialIsOpen={false} />}
+    </QueryClientProvider>
+  );
 }

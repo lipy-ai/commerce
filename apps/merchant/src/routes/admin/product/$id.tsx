@@ -26,12 +26,12 @@ import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
-import { Eye, PenLine } from "lucide-react";
+import { Eye } from "lucide-react";
 import React, { Fragment, type ReactNode } from "react";
 
 import { DrawerDialogSwitcher } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
-import FormEdit from "./-form.edit";
-import AssignProductVariationForm from "./-variation";
+// import FormEdit from "./-form.edit";
+// import AssignProductVariationForm from "./-variation";
 // import ProductVariationForm from "./-variation";
 
 export const Route = createFileRoute("/admin/product/$id")({
@@ -81,7 +81,7 @@ function RouteComponent() {
 						>
 							<Trash /> {!isMobile && (pending ? "Deleting" : "Delete")}
 						</Button> */}
-                      <FormEdit type="update" data={data}>
+                      {/* <FormEdit type="update" data={data}>
                         <Button variant={"outline"} size={"sm"}>
                           <PenLine /> {!isMobile && "Edit"}
                         </Button>
@@ -93,7 +93,7 @@ function RouteComponent() {
                         <Button variant={"outline"} size={"sm"}>
                           Assign Variant
                         </Button>
-                      </AssignProductVariationForm>
+                      </AssignProductVariationForm> */}
                     </CardAction>
                   </CardHeader>
                   <CardContent className="space-y-8">

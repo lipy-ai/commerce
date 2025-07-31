@@ -66,7 +66,8 @@ export function AccountNav({ children }: { children?: ReactNode }) {
   const { isMobile } = useViewport();
   if (isPending) return <Spinner />;
 
-  if (children && isMobile) return <div className="p-4">{children}</div>;
+  if (children && isMobile)
+    return <div className="p-4 bg-card flex-1">{children}</div>;
 
   return (
     <div className="flex flex-1">

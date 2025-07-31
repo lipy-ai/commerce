@@ -63,20 +63,20 @@ function RouteComponent() {
           <SearchBar placeholder="Search customers" defaultValue={q} />
         </div>
         {isLoading ? null : !data || data.items.length === 0 ? (
-          <Card>
+          <Card className="border-border">
             <CardContent className="flex flex-1 justify-center flex-col items-center m-auto min-h-[60vh]  text-center">
               <img
                 src="/assets/no-results-found.png"
                 alt="no-result-found"
-                className="size-54 lg:size-64 object-cover"
+                className="size-40 lg:size-48 object-cover"
               />
               {q ? (
-                <h1 className="text-lg lg:text-2xl pb-2 font-medium">
+                <h1 className="text-lg lg:text-xl font-medium pt-2">
                   No results found
                 </h1>
               ) : (
                 <div>
-                  <h1 className="text-lg lg:text-2xl pb-2 font-medium">
+                  <h1 className="text-lg lg:text-xl font-medium">
                     Your customers will appear here
                   </h1>
                   <p className="text-muted-foreground lg:text-base max-w-[450px] pb-4">

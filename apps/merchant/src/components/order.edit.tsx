@@ -480,8 +480,13 @@ function ProductList({
         {isLoading ? (
           <Skeleton className="size-full flex-1 aspect-square" />
         ) : !data || data?.items?.length === 0 ? (
-          <div>
-            <p> No products found!</p>
+          <div className="flex flex-1 justify-center flex-col items-center m-auto  text-center min-h-full">
+            <img
+              src="/assets/no-results-found.png"
+              alt="no-result-found"
+              className="size-54 lg:size-64 object-cover"
+            />
+            <p className="text-sm">No products found</p>
           </div>
         ) : (
           <div className="grid grid-cols-[repeat(auto-fill,_minmax(100px,_150px))] gap-x-4 gap-y-8">

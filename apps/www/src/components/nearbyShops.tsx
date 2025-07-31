@@ -115,7 +115,7 @@ export default function NearByShops() {
                       to="/$storeHandle"
                       params={{ storeHandle: shop.handle as string }}
                     >
-                      <div className="relative h-44">
+                      <div className="relative h-40 lg:h-44">
                         <img
                           src={shop.image || "/assets/paper-bag-items.webp"}
                           alt={shop.name}

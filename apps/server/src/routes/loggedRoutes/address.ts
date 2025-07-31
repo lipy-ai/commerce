@@ -37,8 +37,8 @@ const route = new Hono<ServerContext>()
 			.rightJoin("address", "address.id", "userAddress.id")
 			.selectAll(["address"])
 			.select([
-				sql<number>`ST_Y(userAddress.location::geometry)`.as("lat"),
-				sql<number>`ST_X(userAddress.location::geometry)`.as("lng"),
+				sql<number>`ST_Y(address.location::geometry)`.as("lat"),
+				sql<number>`ST_X(address.location::geometry)`.as("lng"),
 			])
 			.execute();
 		return c.json(address);

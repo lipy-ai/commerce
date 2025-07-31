@@ -1,10 +1,10 @@
 import { merchantOrderApi } from "@lipy/lib/api";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
+import { OrderStatus } from "@lipy/web-ui/components/custom-ui/orderStatus";
 import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Pagination } from "@lipy/web-ui/components/pages/pagination";
-import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Card, CardContent } from "@lipy/web-ui/components/ui/card";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
@@ -59,22 +59,22 @@ function RouteComponent() {
         {isLoading ? (
           <Skeleton className="flex-1 mx-4 lg:mx-0" />
         ) : !data || data.items.length === 0 ? (
-          <Card>
+          <Card className="border-border">
             <CardContent className="flex flex-1 justify-center flex-col items-center m-auto min-h-[60vh]  text-center">
               <img
                 src={
                   q ? "/assets/no-results-found.png" : "/assets/no-order.png"
                 }
                 alt="no-order"
-                className="size-54 lg:size-64 object-cover"
+                className="size-40 lg:size-48 object-cover"
               />
               {q ? (
-                <h1 className="text-lg lg:text-2xl pb-2 font-medium">
+                <h1 className="text-lg lg:text-xl font-medium pt-2">
                   No results found
                 </h1>
               ) : (
                 <div>
-                  <h1 className="text-lg lg:text-2xl pb-2 font-medium">
+                  <h1 className="text-lg lg:text-xl font-medium">
                     Orders will appear here
                   </h1>
                   <p className="text-muted-foreground lg:text-base max-w-[450px] pb-4">
@@ -84,7 +84,7 @@ function RouteComponent() {
                   <Link
                     to="/pos/checkout"
                     className={cn(
-                      buttonVariants({ size: isMobile ? "sm" : "lg" })
+                      buttonVariants({ size: isMobile ? "sm" : "default" })
                     )}
                   >
                     Create manual order
@@ -132,27 +132,8 @@ export function MobileView({ items }: { items: Response["items"] }) {
             </div>
           </div>
 
-          <div className="text-right flex flex-col gap-1">
-            <Badge
-              className="capitalize"
-              size={"sm"}
-              variant={
-                m.status === "created" ||
-                m.status === "awaiting_customer_confirmation" ||
-                m.status === "packed" ||
-                m.status === "out_for_delivery" ||
-                m.status === "return_requested"
-                  ? "warning"
-                  : m.status === "refunded" || m.status === "replaced"
-                    ? "info"
-                    : m.status === "canceled"
-                      ? "destructive"
-                      : "success"
-              }
-              appearance={"outline"}
-            >
-              {m.status?.replaceAll("_", " ")}
-            </Badge>
+          <div className="text-right flex flex-col gap-1 items-end">
+            <OrderStatus status={m.status || "created"} />
             <div className="text-lg font-semibold">
               {formatAmount("inr", Number(m.itemTotalAmount))}
             </div>
@@ -206,26 +187,7 @@ function DesktopView({ items }: { items: Response["items"] }) {
                 m?.customerDetails?.phone}
             </TableCell>
             <TableCell>
-              <Badge
-                className="capitalize"
-                size={"default"}
-                variant={
-                  m.status === "created" ||
-                  m.status === "awaiting_customer_confirmation" ||
-                  m.status === "packed" ||
-                  m.status === "out_for_delivery" ||
-                  m.status === "return_requested"
-                    ? "warning"
-                    : m.status === "refunded" || m.status === "replaced"
-                      ? "info"
-                      : m.status === "canceled"
-                        ? "destructive"
-                        : "success"
-                }
-                appearance={"outline"}
-              >
-                {m.status?.replaceAll("_", " ")}
-              </Badge>
+              <OrderStatus status={m.status || "created"} size={"sm"} />
             </TableCell>
             <TableCell>
               {m?.items?.length === 0

@@ -52,19 +52,12 @@ function Component() {
   return (
     <div className="px-4 pt-8 md:px-8 space-y-8 flex-1 flex flex-col overflow-x-auto">
       <div className="grid grid-cols-12 items-center gap-2">
-        <SearchInput
-          placeholder={"Select Shop"}
-          type={"stores"}
-          value={shop}
-          onChange={(v) => navigate({ search: (p) => ({ ...p, shop: v }) })}
-          className="col-span-2"
-        />
         <SearchBar
           placeholder="Search products"
           defaultValue={q}
-          className="flex-1 w-full lg:w-auto p-0 col-span-9 "
+          className="flex-1 w-full lg:w-auto p-0 col-span-9 md:col-span-11"
         />
-        <div className="col-span-1">
+        <div className="col-span-3 md:col-span-1">
           <FormEdit type="create">
             <Button className="w-full">Add New</Button>
           </FormEdit>

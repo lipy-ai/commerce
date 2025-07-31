@@ -31,6 +31,7 @@ import React, { Fragment, type ReactNode } from "react";
 
 import { DrawerDialogSwitcher } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
 import FormEdit from "./-form.edit";
+import AssignProductVariationForm from "./-variation";
 // import ProductVariationForm from "./-variation";
 
 export const Route = createFileRoute("/admin/product/$id")({
@@ -47,19 +48,6 @@ function RouteComponent() {
   const mrp = data?.maxPrice || 0;
   const sp = data?.price || 0;
   const { isMobile } = useViewport();
-
-  const variants = (
-    <Card className="">
-      <CardHeader>
-        <CardTitle>Product Variants</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {/* {data?.variants?.map((m, i) => (
-          <ProductVariationForm data={m as any} key={i} />
-        ))} */}
-      </CardContent>
-    </Card>
-  );
 
   return (
     <>
@@ -98,6 +86,14 @@ function RouteComponent() {
                           <PenLine /> {!isMobile && "Edit"}
                         </Button>
                       </FormEdit>
+                      <AssignProductVariationForm
+                        productId={data?.id || ""}
+                        storeId=""
+                      >
+                        <Button variant={"outline"} size={"sm"}>
+                          Assign Variant
+                        </Button>
+                      </AssignProductVariationForm>
                     </CardAction>
                   </CardHeader>
                   <CardContent className="space-y-8">
@@ -146,7 +142,6 @@ function RouteComponent() {
                     </div>
                   </CardContent>
                 </Card>
-                {isMobile && variants}
 
                 <Card>
                   <CardHeader>
@@ -188,7 +183,6 @@ function RouteComponent() {
                 </Card>
               </div>
             </div>
-            {!isMobile && variants}
           </div>
         </>
       )}

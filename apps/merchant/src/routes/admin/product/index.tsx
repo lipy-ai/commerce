@@ -4,10 +4,11 @@ import { SearchInput } from "@lipy/web-ui/components/forms/searchInput";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Pagination } from "@lipy/web-ui/components/pages/pagination";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
-import { Button } from "@lipy/web-ui/components/ui/button";
+import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
-import { createFileRoute } from "@tanstack/react-router";
+import { cn } from "@lipy/web-ui/lib/utils";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { PenLine, Tickets, Trash } from "lucide-react";
 import { z } from "zod";
 import FormDelete from "./-form-delete";
@@ -23,6 +24,8 @@ export const Route = createFileRoute("/admin/product/")({
     q: z.string().default(""),
     category: z.string().optional(),
     shop: z.string().uuid().optional(),
+    product: z.string().uuid().optional(),
+    view: z.enum(["edit", "assign", "delete", "create"]).optional(),
   }),
 });
 
@@ -46,6 +49,10 @@ function Component() {
 
   return (
     <div className="px-4 py-8 md:p-8 space-y-8 flex-1 flex flex-col">
+      <FormEdit />
+      <FormDelete />
+      <AssignProductVariationForm />
+
       <div className="grid grid-cols-12 items-center gap-2">
         <SearchInput
           type="categories"
@@ -66,9 +73,13 @@ function Component() {
           className="flex-1 w-full lg:w-auto p-0 col-span-9"
         />
         <div className="col-span-3 md:col-span-1">
-          <FormEdit type="create">
-            <Button className="w-full">Add New</Button>
-          </FormEdit>
+          <Link
+            to={"/admin/product"}
+            search={(s) => ({ ...s, view: "create" })}
+            className={cn(buttonVariants(), "w-full")}
+          >
+            Add New
+          </Link>
         </div>
       </div>
       <DesktopView />
@@ -79,7 +90,6 @@ function Component() {
 
 function DesktopView() {
   const { data, isLoading } = useProduct();
-  const { shop } = Route.useSearch();
 
   if (isLoading) {
     return <Skeleton className="flex-1" />;
@@ -121,11 +131,13 @@ function DesktopView() {
           </div>
 
           <div>
-            <AssignProductVariationForm productId={m.id} storeId={shop}>
-              <Button size="sm" variant="outline">
-                <Tickets /> Assign Variants
-              </Button>
-            </AssignProductVariationForm>
+            <Link
+              to={"/admin/product"}
+              search={(s) => ({ ...s, view: "assign", product: m.id })}
+              className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+            >
+              <Tickets /> Assign Variants
+            </Link>
           </div>
 
           <div className="pl-4">
@@ -152,17 +164,22 @@ function DesktopView() {
           <div>
             <div>
               <div className="flex gap-2">
-                <FormEdit type="update" data={m}>
-                  <Button size={"icon-sm"}>
-                    <PenLine />
-                  </Button>
-                </FormEdit>
-
-                <FormDelete id={m.id}>
-                  <Button size={"icon-sm"} variant="outline">
-                    <Trash />
-                  </Button>
-                </FormDelete>
+                <Link
+                  to={"/admin/product"}
+                  search={(s) => ({ ...s, view: "edit", product: m.id })}
+                  className={cn(buttonVariants({ size: "icon-sm" }))}
+                >
+                  <PenLine />
+                </Link>
+                <Link
+                  to={"/admin/product"}
+                  search={(s) => ({ ...s, view: "delete", product: m.id })}
+                  className={cn(
+                    buttonVariants({ variant: "outline", size: "icon-sm" })
+                  )}
+                >
+                  <Trash />
+                </Link>
 
                 {/* <Link
 									to="/admin/product/$id"

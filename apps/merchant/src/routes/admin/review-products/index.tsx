@@ -173,9 +173,15 @@ function DesktopView() {
                     </FormDelete>
                   </>
                 ) : (
-                  <Button size={"sm"} variant="outline">
-                    <Globe /> Published
-                  </Button>
+                  <Link
+                    to="/admin/product"
+                    search={{ view: "assign", product: m.productId }}
+                    className={cn(
+                      buttonVariants({ size: "sm", variant: "outline" })
+                    )}
+                  >
+                    <Globe /> Assign
+                  </Link>
                 )}
 
                 <Link

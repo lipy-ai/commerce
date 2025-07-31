@@ -16,7 +16,7 @@ import {
   FormSelect,
   FormTextarea,
 } from "@lipy/web-ui/components/forms/elements";
-import type { InferRequestType, InferResponseType } from "hono";
+import type { InferRequestType } from "hono";
 
 import {
   Accordion,
@@ -25,6 +25,7 @@ import {
   AccordionTrigger,
 } from "@lipy/web-ui/components/ui/accordion";
 import { Button } from "@lipy/web-ui/components/ui/button";
+import { toast } from "@lipy/web-ui/components/ui/sonner";
 import {
   Sortable,
   SortableContent,
@@ -32,8 +33,9 @@ import {
   SortableItemHandle,
   SortableOverlay,
 } from "@lipy/web-ui/components/ui/sortable";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import { GripVertical, Trash } from "lucide-react";
-import { Fragment, type ReactNode, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import {
   useFieldArray,
   useForm,
@@ -41,31 +43,26 @@ import {
   useWatch,
 } from "react-hook-form";
 import { useProductInvalidate, useVariantInvalidate } from "./-hook-invalidate";
+import { useProduct } from "./-provider";
 import { VariantForm } from "./-variation";
 
-export default function FormEdit({
-  type,
-  data,
-  children,
-}: {
-  data?:
-    | InferResponseType<(typeof adminProductApi.index)["$get"]>["items"][0]
-    | undefined;
-  type: "create" | "update";
-  children: ReactNode;
-}) {
+export default function FormEdit() {
   const [open, setOpen] = useState(false);
+  const { view, product } = useSearch({ from: "/admin/product/" });
+  const navigate = useNavigate({ from: "/admin/product" });
+
+  const { data: list } = useProduct();
 
   const defaultValues: InferRequestType<
     typeof adminProductApi.index.$post
   >["json"] = {
-    title: data?.title || "",
-    category: data?.category?.id || "",
-    summary: data?.summary || "",
-    images: data?.images || [],
-    highlights: data?.highlights || [],
-    information: data?.information || [],
-    variants: (data?.variants || []) as any,
+    title: "",
+    category: "",
+    summary: "",
+    images: [],
+    highlights: [],
+    information: [],
+    variants: [],
   };
 
   const { invalidate } = useProductInvalidate();
@@ -74,6 +71,32 @@ export default function FormEdit({
   const form = useForm({
     defaultValues,
   });
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (view === "create") {
+      setOpen(true);
+      form.reset({});
+    }
+
+    if (view === "edit" && list && product) {
+      const data = list?.items.find((l) => l.id === product);
+      if (!data) {
+        toast("No such product found...");
+      } else {
+        setOpen(true);
+        form.reset({
+          title: data?.title || "",
+          category: data?.category?.id || "",
+          summary: data?.summary || "",
+          images: data?.images || [],
+          highlights: data?.highlights || [],
+          information: data?.information || [],
+          variants: (data?.variants || []) as any,
+        });
+      }
+    }
+  }, [view, list, product]);
 
   const opts = {
     onMutate: () => {},
@@ -90,9 +113,9 @@ export default function FormEdit({
   const createMutation = useAPIMutation(adminProductApi.index, "$post", opts);
 
   const onSubmit = async (body: typeof defaultValues) => {
-    if (!data?.id) return await createMutation.mutateAsync({ json: body });
+    if (!product) return await createMutation.mutateAsync({ json: body });
 
-    await mutation.mutateAsync({ param: { id: data.id }, json: body });
+    await mutation.mutateAsync({ param: { id: product }, json: body });
   };
 
   return (
@@ -100,12 +123,20 @@ export default function FormEdit({
       <DrawerDialogSwitcher
         className="sm:max-w-5xl"
         open={open}
-        onOpenChange={setOpen}
-        trigger={children}
+        onOpenChange={(v) => {
+          setOpen(v);
+
+          if (!v) {
+            navigate({
+              search: (s) => ({ ...s, view: undefined, product: undefined }),
+            });
+            form.reset(defaultValues);
+          }
+        }}
       >
         <DrawerDialogHeader>
           <DrawerDialogTitle>
-            {type === "create" ? "Create Product" : "Edit Product"}
+            {view === "create" ? "Create Product" : "Edit Product"}
           </DrawerDialogTitle>
         </DrawerDialogHeader>
         <Form {...form}>

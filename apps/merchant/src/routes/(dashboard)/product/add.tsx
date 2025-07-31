@@ -187,7 +187,7 @@ function RouteComponent() {
 
       <div className="lg:p-8 lg:space-y-8">
         <div className="p-4 lg:p-0">
-          <div className="p-4 lg:p-0 flex flex-col lg:flex-row items-center gap-2">
+          <div className="e lg:p-0 flex flex-col lg:flex-row items-center gap-2">
             <SearchInput
               type="categories"
               value={category || ""}
@@ -206,14 +206,14 @@ function RouteComponent() {
           </div>
         </div>
         {isLoading ? null : !data || data.items.length === 0 ? (
-          <Card>
+          <Card className="border-border">
             <CardContent className="flex flex-1 justify-center flex-col items-center m-auto min-h-[60vh]  text-center">
               <img
                 src="/assets/no-results-found.png"
                 alt="no-result-found"
-                className="size-54 lg:size-64 object-cover"
+                className="size-40 lg:size-48 object-cover"
               />
-              <Label className="text-lg lg:text-2xl pb-2">
+              <Label className="text-lg lg:text-xl pt-2">
                 No products found {q ? `for "${q}"` : ""}
               </Label>
             </CardContent>
@@ -306,7 +306,7 @@ function DesktopView({
   ) => void;
 }) {
   return (
-    <div className="border rounded-xl overflow-y-auto bg-card shadow-2xs">
+    <div className="border rounded-xl overflow-y-auto bg-card shadow-xs">
       {items.length > 0 && (
         <div className="border-b px-4 text-base font-medium py-2 bg-accent/30">
           <div className="flex px-4 gap-4">

@@ -1,7 +1,7 @@
 import { loggedIOrderApi } from "@lipy/lib/api";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
-import type { ORDER_STATUS } from "@lipy/server/db/schema";
+import { OrderStatus } from "@lipy/web-ui/components/custom-ui/orderStatus";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import {
@@ -9,7 +9,6 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
-import { Badge, type badgeVariants } from "@lipy/web-ui/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -18,30 +17,12 @@ import {
 } from "@lipy/web-ui/components/ui/card";
 import Loading from "@lipy/web-ui/components/ui/loading";
 import { Link, createFileRoute } from "@tanstack/react-router";
-import type { VariantProps } from "class-variance-authority";
 import { format } from "date-fns";
 import { Package2, Paperclip, Store } from "lucide-react";
 
 export const Route = createFileRoute("/(default)/account/orders/")({
   component: RouteComponent,
 });
-
-export const ORDER_STATUS_BADGE_VARIANT: Record<
-  (typeof ORDER_STATUS)[number],
-  VariantProps<typeof badgeVariants>["variant"]
-> = {
-  created: "info",
-  accepted: "success",
-  packed: "warning",
-  out_for_delivery: "warning",
-  delivered: "success",
-  return_requested: "warning",
-  refunded: "destructive",
-  replaced: "progress",
-  canceled: "destructive",
-  awaiting_customer_confirmation: "warning",
-  completed: "success",
-};
 
 function RouteComponent() {
   const { data, isLoading } = useAPIQuery(
@@ -115,16 +96,10 @@ function RouteComponent() {
                             </p>
                           </div>
                         </Link>
-                        <Badge
-                          variant={
-                            ORDER_STATUS_BADGE_VARIANT[
-                              order.status as (typeof ORDER_STATUS)[number]
-                            ] || "neutral"
-                          }
-                          className="capitalize line-clamp-1 block break-words"
-                        >
-                          {order.status?.replaceAll("_", " ") || "Unknown"}
-                        </Badge>
+                        <OrderStatus
+                          status={order.status ?? "created"}
+                          size={"sm"}
+                        />
                       </CardHeader>
 
                       <Link

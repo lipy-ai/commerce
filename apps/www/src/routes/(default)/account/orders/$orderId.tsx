@@ -1,15 +1,14 @@
 import { formatAmount } from "@lipy/lib/utils/intl";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
-import type { ORDER_STATUS } from "@lipy/server/db/schema";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
-import { Badge } from "@lipy/web-ui/components/ui/badge";
 
 import { loggedIOrderApi } from "@lipy/lib/api";
+import { OrderStatus } from "@lipy/web-ui/components/custom-ui/orderStatus";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import {
@@ -32,7 +31,6 @@ import {
   PhoneCall,
   Store,
 } from "lucide-react";
-import { ORDER_STATUS_BADGE_VARIANT } from ".";
 
 export const Route = createFileRoute("/(default)/account/orders/$orderId")({
   component: RouteComponent,
@@ -127,16 +125,7 @@ function RouteComponent() {
               </div>
             }
           >
-            <Badge
-              variant={
-                ORDER_STATUS_BADGE_VARIANT[
-                  order.status as (typeof ORDER_STATUS)[number]
-                ] || "neutral"
-              }
-              className="capitalize line-clamp-1 max-w-44 break-words"
-            >
-              {order.status || "Unknown"}
-            </Badge>
+            <OrderStatus status={order.status ?? "created"} />
           </DashboardHeader>
 
           <div className="lg:grid lg:grid-cols-12 gap-4 flex-1 mt-3 lg:p-6">
@@ -302,7 +291,7 @@ function RouteComponent() {
                 )}
             </div>
 
-            <div className="col-span-5 space-y-3 mt-3">
+            <div className="col-span-5 space-y-3 mt-3 lg:mt-0">
               {order?.items && order?.items.length > 0 && (
                 <Card>
                   <CardHeader>

@@ -22,8 +22,8 @@ const productSchema = z.object({
 		z.array(z.string()),
 	),
 
-	highlights: z.array(z.object({ value: z.string(), label: z.string() })),
-	information: z.array(z.object({ value: z.string(), label: z.string() })),
+	highlights: z.array(z.object({ value: z.string(), name: z.string() })),
+	information: z.array(z.object({ value: z.string(), name: z.string() })),
 });
 
 const listZodValidator = zValidator(
@@ -58,7 +58,7 @@ const route = new Hono<ServerContext>()
 
 			.leftJoin("storeInventory as si", (join) =>
 				join
-					.onRef("si.productVariant", "=", "pv.id")
+					.onRef("si.variantId", "=", "pv.id")
 					.on("si.storeId", "=", activeStoreId!),
 			)
 			.$if(!!category, (qb) => qb.where("category", "=", category!))
@@ -132,7 +132,7 @@ const route = new Hono<ServerContext>()
 				.leftJoin("productVariant as pv", "pv.productId", "p.id")
 				.leftJoin("storeInventory as si", (join) =>
 					join
-						.onRef("si.productVariant", "=", "pv.id")
+						.onRef("si.variantId", "=", "pv.id")
 						.on("si.storeId", "=", activeStoreId!),
 				)
 				.selectAll(["p"])

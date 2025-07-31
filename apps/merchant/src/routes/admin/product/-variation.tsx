@@ -1,5 +1,6 @@
-import type { adminProductApi } from "@lipy/lib/api";
+import { adminVariantApi } from "@lipy/lib/api";
 import { formatAmount } from "@lipy/lib/utils/intl";
+import { useAPIMutation, useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 
 import {
   DrawerDialogClose,
@@ -8,47 +9,89 @@ import {
   DrawerDialogSwitcher,
   DrawerDialogTitle,
 } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
-import { FormButton, FormInput } from "@lipy/web-ui/components/forms/elements";
+import {
+  FormButton,
+  FormInput,
+  FormSwitch,
+} from "@lipy/web-ui/components/forms/elements";
+import { SearchInput } from "@lipy/web-ui/components/forms/searchInput";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@lipy/web-ui/components/ui/accordion";
+import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { Form, FormLabel } from "@lipy/web-ui/components/ui/form";
-import type { InferResponseType } from "hono";
+import Loading from "@lipy/web-ui/components/ui/loading";
+import { Separator } from "@lipy/web-ui/components/ui/separator";
+import { useNavigate } from "@tanstack/react-router";
 import { ArrowRight, Trash } from "lucide-react";
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { useFieldArray, useForm, useFormContext } from "react-hook-form";
 
-type Response = Pick<
-  InferResponseType<
-    (typeof adminProductApi.index)["$get"]
-  >["items"][0]["variants"][0],
-  "id" | "images" | "price" | "unit"
->[];
-
-export default function ProductVariationForm({
-  data,
+export default function AssignProductVariationForm({
+  productId,
+  storeId,
   children,
 }: {
-  data: Response;
+  storeId?: string;
+  productId: string;
   children: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate({ from: "/admin/product" });
 
-  const defaultValues: { items: Response } = {
-    items: data || [],
+  const { data, isLoading } = useAPIQuery(
+    adminVariantApi[":productId"],
+    "$get",
+    { param: { productId }, query: { storeId: storeId! } },
+    { enabled: !!productId && !!storeId }
+  );
+
+  const mutation = useAPIMutation(adminVariantApi.inventory, "$patch");
+
+  const d = {
+    id: "",
+    price: 0,
+    stock: 0,
+    active: false,
+    storeId: storeId || "",
+    variantId: "",
   };
+  const defaultValues: { items: Array<typeof d> } = { items: [d] };
 
   const form = useForm<typeof defaultValues>({
     defaultValues,
   });
 
   const handle = async (d: typeof defaultValues) => {
-    console.log(d);
+    const dirtyKeys = form.formState.dirtyFields.items
+      ?.map((_, i) => i)
+      .filter(Boolean);
+    const json = { items: d.items.filter((_, i) => dirtyKeys?.includes(i)) };
+    console.log(json);
+    await mutation.mutateAsync({ json });
   };
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (!data || data?.length === 0) return;
+    form.reset(
+      {
+        items: data?.map((m) => ({
+          id: m?.inventory?.id || crypto.randomUUID(),
+          price: m?.inventory?.price || 0,
+          stock: m?.inventory?.stock || 0,
+          active: m?.inventory?.active || false,
+          storeId: m?.inventory?.storeId || storeId,
+          variantId: m?.id || "",
+        })),
+      },
+      { keepDirtyValues: false }
+    );
+  }, [data]);
 
   return (
     <>
@@ -60,11 +103,51 @@ export default function ProductVariationForm({
         <DrawerDialogHeader>
           <DrawerDialogTitle>Variants</DrawerDialogTitle>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handle)} className="grid gap-8">
-              <DrawerDialogFooter>
-                <DrawerDialogClose />
-                <FormButton>Save Changes</FormButton>
-              </DrawerDialogFooter>
+            <form onSubmit={form.handleSubmit(handle)} className="grid gap-4">
+              <SearchInput
+                name="store-select"
+                type="stores"
+                placeholder="Select Store"
+                value={storeId || ""}
+                onChange={(v) =>
+                  navigate({ search: (s: any) => ({ ...s, shop: v }) } as any)
+                }
+              />
+              <Separator />
+              {isLoading ? (
+                <Loading className="max-h-[300px]" />
+              ) : !data || data.length === 0 ? (
+                <div className="flex">
+                  <p>No Variants found!</p>
+                </div>
+              ) : (
+                data?.map((d, i) => (
+                  <div key={d.id} className="flex items-end gap-4">
+                    <div className="h-full flex-1 flex flex-col gap-2">
+                      <Badge>{d.unit}</Badge>
+                      <Badge variant="info" className="h-10">
+                        Max {formatAmount("inr", d.price)}
+                      </Badge>
+                    </div>
+                    <div className="w-1/3">
+                      <FormInput label="Price" name={`items.${i}.price`} />
+                    </div>
+                    <div className="w-1/4">
+                      <FormInput label="Stock" name={`items.${i}.stock`} />
+                    </div>
+                    <div className="w-14">
+                      <FormSwitch label="Active" name={`items.${i}.active`} />
+                    </div>
+                  </div>
+                ))
+              )}
+
+              {!isLoading && (
+                <DrawerDialogFooter>
+                  <DrawerDialogClose />
+                  <FormButton disabled={isLoading}>Save Changes</FormButton>
+                </DrawerDialogFooter>
+              )}
             </form>
           </Form>
         </DrawerDialogHeader>
@@ -142,6 +225,13 @@ export function VariantForm() {
                 <FormInput
                   name={`${name}.${i}.price`}
                   label="Price"
+                  placeholder="0"
+                  type="number"
+                  min={0}
+                />
+                <FormInput
+                  name={`${name}.${i}.maxPrice`}
+                  label="Max Price"
                   placeholder="0"
                   type="number"
                   min={0}

@@ -1,4 +1,4 @@
-import { db } from "@/db";
+import { type DBTypes, db } from "@/db";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
 import { Hono } from "hono";
@@ -12,6 +12,27 @@ const schema = z.object({
 });
 
 export const adminVariantRoute = new Hono<ServerContext>()
+	.get(
+		"/:productId",
+		zValidator("param", z.object({ productId: z.string().uuid() })),
+		zValidator("query", z.object({ storeId: z.string().uuid() })),
+		async (c) => {
+			const { productId } = c.req.valid("param");
+			const { storeId } = c.req.valid("query");
+			const inv = await db
+				.selectFrom("productVariant as pv")
+				.leftJoin("storeInventory as s", (join) =>
+					join.onRef("s.variantId", "=", "pv.id").on("s.storeId", "=", storeId),
+				)
+				.where("pv.productId", "=", productId)
+
+				.selectAll("pv")
+				.select((eb) => [eb.fn.toJson("s").as("inventory")])
+				.execute();
+
+			return c.json(inv);
+		},
+	)
 	.post("/", zValidator("json", schema), async (c) => {
 		const { unit, price, productId, images } = c.req.valid("json");
 
@@ -28,6 +49,42 @@ export const adminVariantRoute = new Hono<ServerContext>()
 
 		return c.json({ success: true });
 	})
+	.patch(
+		"/inventory",
+		zValidator(
+			"json",
+			z.object({
+				items: z.array(
+					z.object({
+						id: z.string().uuid(),
+						active: z.boolean(),
+						price: z.coerce.number(),
+						stock: z.coerce.number(),
+						storeId: z.string().uuid(),
+						variantId: z.string().uuid(),
+					}),
+				),
+			}),
+		),
+		async (c) => {
+			const { items } = c.req.valid("json");
+			await db
+				.insertInto("storeInventory")
+				.values(items)
+				.onConflict((oc) =>
+					oc.column("id").doUpdateSet((eb) => {
+						const keys = Object.keys(
+							items[0],
+						) as (keyof DBTypes["storeInventory"])[];
+						return Object.fromEntries(
+							keys.map((key) => [key, eb.ref(`excluded.${key}`)]),
+						);
+					}),
+				)
+				.execute();
+			return c.json({ success: true });
+		},
+	)
 	.patch(
 		"/:id",
 		zValidator("param", z.object({ id: z.string().uuid() })),

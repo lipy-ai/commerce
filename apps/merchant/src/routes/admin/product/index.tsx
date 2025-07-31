@@ -14,6 +14,7 @@ import FormDelete from "./-form-delete";
 import FormEdit from "./-form.edit";
 import { ProductProvider, useProduct } from "./-provider";
 import ToggleProductActive from "./-toggle-active";
+import AssignProductVariationForm from "./-variation";
 
 export const Route = createFileRoute("/admin/product/")({
   component: RouteComponent,
@@ -21,6 +22,7 @@ export const Route = createFileRoute("/admin/product/")({
     page: z.coerce.number().int().min(1).catch(1),
     q: z.string().default(""),
     category: z.string().optional(),
+    shop: z.string().uuid().optional(),
   }),
 });
 
@@ -77,6 +79,7 @@ function Component() {
 
 function DesktopView() {
   const { data, isLoading } = useProduct();
+  const { shop } = Route.useSearch();
 
   if (isLoading) {
     return <Skeleton className="flex-1" />;
@@ -105,9 +108,12 @@ function DesktopView() {
               className="size-12 border rounded bg-accent"
             />
           </div>
-          <div>
+          <div className="min-w-xs">
             <p className="font-medium block break-words">{m.title}</p>
-            <p className="font-light block break-words">{m.summary}</p>
+            <div className="flex gap-2">
+              <Badge variant={"default"}>{m?.category?.title}</Badge>
+              <Badge variant={"default"}>{m?.variants?.length} variants</Badge>
+            </div>
           </div>
 
           <div>
@@ -115,26 +121,32 @@ function DesktopView() {
           </div>
 
           <div>
-            <Button size="sm" variant="outline">
-              <Tickets /> {m?.variants?.length || 0} Variants
-            </Button>
+            <AssignProductVariationForm productId={m.id} storeId={shop}>
+              <Button size="sm" variant="outline">
+                <Tickets /> Assign Variants
+              </Button>
+            </AssignProductVariationForm>
           </div>
 
           <div className="pl-4">
             <p className="font-medium">
-              {formatAmount("inr", m?.price || 0)}{" "}
-              {m?.maxPrice && (
+              {formatAmount("inr", m?.variants?.[0]?.price || 0)}{" "}
+              {m?.variants?.[0]?.maxPrice && (
                 <span className="text-muted-foreground text-xs line-through">
-                  {formatAmount("inr", m?.maxPrice || 0)}
+                  {formatAmount("inr", m?.variants?.[0]?.maxPrice || 0)}
                 </span>
               )}
             </p>
-            {m?.maxPrice && (
-              <p>
+            {m?.variants?.[0]?.maxPrice && (
+              <div>
                 <Badge size="sm" variant="info">
-                  {formatAmount("inr", m?.maxPrice - (m?.price || 0))} Off
+                  {formatAmount(
+                    "inr",
+                    m?.variants?.[0]?.maxPrice - (m?.variants?.[0]?.price || 0)
+                  )}{" "}
+                  Off
                 </Badge>
-              </p>
+              </div>
             )}
           </div>
           <div>

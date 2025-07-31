@@ -24,6 +24,7 @@ import { corsMiddleware } from "./middlewares/cors";
 import { globalMiddleware } from "./middlewares/global";
 import { adminCategoryRoute } from "./routes/adminRoutes";
 import { adminProductRoute } from "./routes/adminRoutes/products";
+import { adminReviewProductRoute } from "./routes/adminRoutes/reviewProducts";
 import { adminVariantRoute } from "./routes/adminRoutes/variant";
 import { addressRoute } from "./routes/loggedRoutes/address";
 import { cartRoute } from "./routes/loggedRoutes/cart";
@@ -36,11 +37,11 @@ import { merchantCustomerRoute } from "./routes/merchantRoutes/customer";
 import { merchantDashboardRoute } from "./routes/merchantRoutes/dashboard";
 import { eventsRoute } from "./routes/merchantRoutes/events";
 import { merchantInventoryRoute } from "./routes/merchantRoutes/inventory";
-import { merchantOrderRoute } from "./routes/merchantRoutes/order";
 import { merchantProductRoute } from "./routes/merchantRoutes/product";
 import { merchantStoreRoute } from "./routes/merchantRoutes/store";
 import { posOrderRoute } from "./routes/posRoutes/order";
 import { posProductRoute } from "./routes/posRoutes/product";
+import { posStoreRoute } from "./routes/posRoutes/shop";
 import { productRoute } from "./routes/publicRoutes/product";
 import { shopRoute } from "./routes/publicRoutes/shop";
 import type { ServerContext } from "./types";
@@ -84,7 +85,8 @@ const adminRouter = new Hono()
 	.use(isSuperAdmin)
 	.route("/product", adminProductRoute)
 	.route("/category", adminCategoryRoute)
-	.route("/variant", adminVariantRoute);
+	.route("/variant", adminVariantRoute)
+	.route("/review-products", adminReviewProductRoute);
 
 const merchantRouter = new Hono()
 	.basePath("/merchant")
@@ -92,7 +94,7 @@ const merchantRouter = new Hono()
 	.use(hasStorePermission(["owner", "admin"])) // check if staff role is "owner" || "admin"
 	.route("/store", merchantStoreRoute)
 	.route("/product", merchantProductRoute)
-	.route("/order", merchantOrderRoute)
+	// .route("/order", merchantOrderRoute)
 	.route("/customer", merchantCustomerRoute)
 	.route("/combobox", merchantComboboxRoute)
 	.route("/inventory", merchantInventoryRoute)
@@ -104,7 +106,8 @@ const posRouter = new Hono()
 	.use(isLoggedIn) //Check if logged In
 	.use(hasStorePermission(["owner", "admin", "staff"]))
 	.route("/product", posProductRoute)
-	.route("/order", posOrderRoute);
+	.route("/order", posOrderRoute)
+	.route("/store", posStoreRoute);
 
 const loggedRouter = new Hono()
 	.use(isLoggedIn) //Check if logged In

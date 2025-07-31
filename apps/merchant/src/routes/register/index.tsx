@@ -11,6 +11,12 @@ import {
   useMultiStepForm,
 } from "@lipy/web-ui/components/forms/multi-step";
 
+import { env } from "@envClient";
+import {
+  fillBaseAddress,
+  geocode,
+} from "@lipy/web-ui/components/maps/utils/helper";
+import { useJsApiLoader } from "@react-google-maps/api";
 import { useRouter } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
@@ -19,6 +25,7 @@ import {
   StorePolicesForm,
   defaultStorePolicies,
 } from "../(dashboard)/store/policies";
+
 export const Route = createFileRoute("/register/")({
   component: RouteComponent,
 });
@@ -45,9 +52,10 @@ const step1 = {
         required
       />
       <FormInput
-        label="Support Phone"
+        label="Phone number"
         name="phone"
         placeholder="Your Store Phone Number"
+        type="tel"
         required
       />
       <FormInput
@@ -167,6 +175,17 @@ const step4 = {
 function RouteComponent() {
   const router = useRouter();
   const store = useStore();
+  useJsApiLoader({
+    googleMapsApiKey: env.GOOGLE_MAP_API_KEY,
+    libraries: env.GOOGLE_MAP_LIBRARIES,
+  });
+
+  const geocoder = async (address: string) => {
+    const { result } = await geocode(address);
+    const returnedAddress = fillBaseAddress(result);
+
+    return returnedAddress;
+  };
 
   const mutation = useAPIMutation(loggedInStoreApi.index, "$post", {
     onSuccess: async () => {
@@ -176,7 +195,21 @@ function RouteComponent() {
 
   const handleSubmit = async (data: any) => {
     console.log(data);
-    await mutation.mutateAsync({ json: data });
+
+    const geocodedAddress = await geocoder(
+      `${data.address.line1}, ${data.address.line2}, ${data.address.city}, ${data.address.state}, ${data.address.postalCode}, ${data.address.country}`
+    );
+
+    const payload = {
+      ...data,
+      address: {
+        ...data.address,
+        lat: geocodedAddress.lat,
+        lng: geocodedAddress.lng,
+      },
+    };
+
+    await mutation.mutateAsync({ json: payload });
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>

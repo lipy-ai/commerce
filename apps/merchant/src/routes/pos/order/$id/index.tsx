@@ -50,7 +50,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { scrollToElementHorizontal } from "@lipy/lib/utils/scroll";
 import { ORDER_STATUS } from "@lipy/server/db/schema";
-import { Badge } from "@lipy/web-ui/components/ui/badge";
+import { OrderStatus } from "@lipy/web-ui/components/custom-ui/orderStatus";
 import {
   Sheet,
   SheetContent,
@@ -283,26 +283,7 @@ function RouteComponent() {
         <>
           <div className="flex flex-col">
             <DashboardHeader title={isMobile ? "Edit order" : `#${data?.id}`}>
-              <Badge
-                className="capitalize"
-                size={isMobile ? "default" : "lg"}
-                variant={
-                  data?.status === "created" ||
-                  data?.status === "awaiting_customer_confirmation" ||
-                  data?.status === "packed" ||
-                  data?.status === "out_for_delivery" ||
-                  data?.status === "return_requested"
-                    ? "warning"
-                    : data?.status === "refunded" || data?.status === "replaced"
-                      ? "info"
-                      : data?.status === "canceled"
-                        ? "destructive"
-                        : "success"
-                }
-                appearance={"outline"}
-              >
-                {data?.status?.replaceAll("_", " ")}
-              </Badge>
+              {isMobile && <OrderStatus status={data?.status ?? "created"} />}
             </DashboardHeader>
 
             {/* Hidden iframe for printing */}
@@ -316,10 +297,16 @@ function RouteComponent() {
                   <h1 className="text-3xl font-semibold mb-2">
                     Order ID: {id}
                   </h1>
-                  <p>
-                    Order placed on{" "}
-                    {format(new Date(data?.orderedAt as string), "PPp")}
-                  </p>
+                  <div className="flex items-center gap-4">
+                    <p>
+                      Order placed on{" "}
+                      {format(new Date(data?.orderedAt as string), "PPp")}
+                    </p>
+
+                    <div className="hidden lg:block print:hidden">
+                      <OrderStatus status={data?.status ?? "created"} />
+                    </div>
+                  </div>
                 </div>
 
                 <div className=" flex gap-2 print:hidden">

@@ -163,7 +163,7 @@ function Orders({
   isLoading: boolean;
 }) {
   if (isLoading) {
-    return <Skeleton className="flex-1" />;
+    return <Skeleton className="flex-1 h-screen" />;
   }
 
   if (!data || data.length === 0) {

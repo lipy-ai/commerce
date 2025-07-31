@@ -13,7 +13,7 @@ export default function SettingsCard({
   }[];
 }) {
   return (
-    <div className="rounded-xl border border-border/80 divide-y overflow-hidden divide-dashed bg-card shadow-2xs">
+    <div className="rounded-xl border border-border/20 divide-y overflow-hidden divide-dashed bg-card shadow-xs">
       {items.map((item, index) => {
         return (
           <div key={index} className="">

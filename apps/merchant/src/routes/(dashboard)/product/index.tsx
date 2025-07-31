@@ -75,23 +75,23 @@ function RouteComponent() {
         {isLoading ? (
           <Skeleton className="flex-1 mx-4 lg:mx-0" />
         ) : !data || data.items.length === 0 ? (
-          <Card>
+          <Card className="border-border">
             <CardContent className="flex flex-1 justify-center flex-col items-center m-auto min-h-[60vh]  text-center">
               <img
                 src={
                   q ? "/assets/no-results-found.png" : "/assets/no-product.png"
                 }
                 alt="no-product"
-                className="size-54 lg:size-64 object-cover"
+                className="size-40 lg:size-48 object-cover"
               />
 
               {q ? (
-                <h1 className="text-lg lg:text-2xl pb-2 font-medium">
+                <h1 className="text-lg lg:text-2xl  font-medium pt-2">
                   No products found for "{q}"
                 </h1>
               ) : (
                 <div>
-                  <h1 className="text-lg lg:text-2xl pb-2 font-medium">
+                  <h1 className="text-lg lg:text-xl  font-medium">
                     Your inventory will appear here
                   </h1>
                   <p className="text-muted-foreground lg:text-base max-w-[450px] pb-4">
@@ -101,7 +101,7 @@ function RouteComponent() {
                   <Link
                     to="/product/add"
                     className={cn(
-                      buttonVariants({ size: isMobile ? "sm" : "lg" })
+                      buttonVariants({ size: isMobile ? "sm" : "default" })
                     )}
                   >
                     Browse and add products
@@ -232,7 +232,7 @@ function MobileView({ items }: { items: Response["items"] }) {
 
 function DesktopView({ items }: { items: Response["items"] }) {
   return (
-    <div className="border rounded-xl overflow-y-auto bg-card shadow-2xs">
+    <div className="border rounded-xl overflow-y-auto bg-card shadow-xs">
       {items.length > 0 && (
         <div className="border-b px-4 text-base font-medium py-2 bg-accent/30">
           <div className="flex px-4 gap-4">

@@ -4,7 +4,7 @@ import { Card, CardContent } from "@lipy/web-ui/components/ui/card";
 import { createFileRoute } from "@tanstack/react-router";
 import { Terminal } from "lucide-react";
 import { AccountNav } from "./-nav";
-export const Route = createFileRoute("/(dashboard)/account/support")({
+export const Route = createFileRoute("/account/support")({
   component: RouteComponent,
 });
 

@@ -1,5 +1,6 @@
 // @ts-nocheck
-import { adminProductApi } from "@lipy/lib/api";
+
+import { adminReviewProductApi } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { getAPIQueryKey } from "@lipy/lib/utils/useQueryClient";
 import { useMutationState } from "@tanstack/react-query";
@@ -12,7 +13,7 @@ import {
   useState,
 } from "react";
 export type ProductContext = {
-  data: InferResponseType<typeof adminProductApi.all.$get> | undefined;
+  data: InferResponseType<typeof adminReviewProductApi.index.$get> | undefined;
   isLoading: boolean;
   shouldPrompt: boolean;
   setShouldPrompt: (v: boolean) => void;
@@ -25,12 +26,12 @@ export const ProductProvider = ({
   query,
 }: {
   children: ReactNode;
-  query?: InferRequestType<typeof adminProductApi.all.$get>["query"];
+  query?: InferRequestType<typeof adminReviewProductApi.index.$get>["query"];
 }) => {
   const [shouldPrompt, setShouldPrompt] = useState(false);
 
   const q = useAPIQuery(
-    adminProductApi.all,
+    adminReviewProductApi.index,
     "$get",
     {
       query: query!,
@@ -40,34 +41,34 @@ export const ProductProvider = ({
 
   const deleteVars = useMutationState({
     filters: {
-      mutationKey: getAPIQueryKey(adminProductApi.index, "$delete"),
+      mutationKey: getAPIQueryKey(adminReviewProductApi.index, "$delete"),
       status: "pending",
     },
     select: (mutation) =>
       mutation.state.variables as InferRequestType<
-        typeof adminProductApi.index.$delete
+        typeof adminReviewProductApi.index.$delete
       >,
   });
 
   const updateVars = useMutationState({
     filters: {
-      mutationKey: getAPIQueryKey(adminProductApi[":id"], "$patch"),
+      mutationKey: getAPIQueryKey(adminReviewProductApi[":id"], "$patch"),
       status: "pending",
     },
     select: (mutation) =>
       mutation.state.variables as InferRequestType<
-        (typeof adminProductApi)[":id"]["$patch"]
+        (typeof adminReviewProductApi)[":id"]["$patch"]
       >,
   });
 
   const createVars = useMutationState({
     filters: {
-      mutationKey: getAPIQueryKey(adminProductApi.index, "$post"),
+      mutationKey: getAPIQueryKey(adminReviewProductApi.index, "$post"),
       status: "success",
     },
     select: (mutation) => {
       const d = mutation.state.data as InferResponseType<
-        typeof adminProductApi.index.$post
+        typeof adminReviewProductApi.index.$post
       >;
       return { ...d, category: { id: d.category } as any };
     },

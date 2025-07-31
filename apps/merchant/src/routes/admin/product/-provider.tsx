@@ -83,7 +83,7 @@ export const ProductProvider = ({
     }
 
     if (createVars.length > 0) {
-      result = [...createVars, ...result];
+      result = [...(createVars as any), ...result];
     }
 
     if (updateVars.length > 0) {
@@ -94,7 +94,8 @@ export const ProductProvider = ({
             ...json,
             category: { id: json.category } as any,
             variants:
-              json.variants?.map((m) => ({ ...m, productId: param.id })) || [],
+              json.variants?.map((m) => ({ ...m, productId: param.id })) ||
+              ([] as any),
           } satisfies Partial<(typeof result)[0]>,
         ])
       );

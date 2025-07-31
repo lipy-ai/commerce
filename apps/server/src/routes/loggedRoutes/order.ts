@@ -6,9 +6,8 @@ import { idGenerate } from "@/lib/generateId";
 import { orderCalculator } from "@/lib/orderCalculators";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
-import { sql } from "drizzle-orm";
 import { Hono } from "hono";
-import type { Transaction } from "kysely";
+import { type Transaction, sql } from "kysely";
 import { z } from "zod";
 import { addressSchema } from "./address";
 
@@ -42,7 +41,7 @@ const getCart = async (userId: string, trx: Transaction<Database>) => {
 		.where("c.userId", "=", userId!)
 		.rightJoin("storeInventory as si", "si.id", "c.inventoryId")
 		.where("si.stock", "!=", 0)
-		.rightJoin("productVariant as pv", "pv.id", "si.productVariant")
+		.rightJoin("productVariant as pv", "pv.id", "si.variantId")
 		.rightJoin("product as p", "p.id", "pv.productId")
 		.select((eb) => [
 			eb.fn.toJson("c").as("cart"),
@@ -182,44 +181,43 @@ const generateOrders = async ({
 };
 
 const setPrimaryAddress = async (
+	trx: Transaction<Database>,
 	{ lat, lng, ...address }: z.infer<typeof orderSchema>["address"],
 	userId: string,
 ) => {
-	await db.transaction().execute(async (trx) => {
-		let id = address.id;
+	let id = address.id;
 
-		if (!address.id) {
-			const addressId = await trx
-				.insertInto("address")
-				.values({
-					id: crypto.randomUUID(),
-					...address,
-					...(lat &&
-						lng && {
-							location:
-								sql`ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326)::geography` as any,
-						}),
-				})
-				.returning(["id"])
-				.executeTakeFirst();
+	if (!lng || !lat) {
+		throw new HTTPError(400, { message: "Missing lat & lng from address." });
+	}
 
-			await trx
-				.insertInto("userAddress")
-				.values({
-					id: addressId?.id!,
-					userId: userId!,
-				})
-				.execute();
+	if (!address.id) {
+		const addressId = await trx
+			.insertInto("address")
+			.values({
+				...address,
+				id: crypto.randomUUID(),
+				location: sql`ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326)::geography`,
+			})
+			.returning(["id"])
+			.executeTakeFirst();
 
-			id = addressId?.id;
-		}
+		await trx
+			.insertInto("userAddress")
+			.values({
+				id: addressId?.id!,
+				userId: userId!,
+			})
+			.execute();
 
-		return await trx
-			.updateTable("user")
-			.where("id", "=", userId!)
-			.set({ address: id })
-			.executeTakeFirstOrThrow();
-	});
+		id = addressId?.id;
+	}
+
+	return await trx
+		.updateTable("user")
+		.where("id", "=", userId!)
+		.set({ address: id })
+		.executeTakeFirstOrThrow();
 };
 
 const route = new Hono<ServerContext>()
@@ -305,11 +303,10 @@ const route = new Hono<ServerContext>()
 				.deleteFrom("cart")
 				.where("userId", "=", session?.userId!)
 				.execute();
+			await setPrimaryAddress(trx, values.address, user?.id!);
 
 			return ordersData;
 		});
-
-		await setPrimaryAddress(values.address, user?.id!);
 
 		for (const ord of orders) {
 			c.get("emitter").emit(c, "order:created", ord);
@@ -344,9 +341,9 @@ const route = new Hono<ServerContext>()
 
 			await trx.insertInto("orders").values(ordersData).execute();
 
+			await setPrimaryAddress(trx, values.address, user?.id!);
 			return ordersData;
 		});
-		await setPrimaryAddress(values.address, user?.id!);
 
 		for (const ord of orders) {
 			c.get("emitter").emit(c, "order:created", ord);

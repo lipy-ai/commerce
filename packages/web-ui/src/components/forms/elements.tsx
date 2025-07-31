@@ -33,6 +33,7 @@ import { Switch } from "../ui/switch";
 import { Textarea, type TextareaProps } from "../ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 import { SingleImage, type SingleImageProps } from "../uploads/image";
+import MultiImage from "../uploads/multiImage";
 import { SearchInput } from "./searchInput";
 
 export const RequiredEl = <span className="text-red-700">*</span>;
@@ -86,6 +87,43 @@ export const FormItemWrapper = ({
   );
 };
 
+export const ActionButton = ({
+  children,
+  className,
+  ...props
+}: React.ComponentProps<typeof Button> & {
+  isPending?: boolean;
+  isError?: boolean;
+  isSuccessful?: boolean;
+  children: ReactNode;
+}) => {
+  return (
+    <Button
+      {...props}
+      className={cn(className, "relative flex")}
+      disabled={props.disabled}
+    >
+      {props.isPending ? (
+        <div className="absolute size-full flex justify-center items-center">
+          <Loader2 className="animate-spin" />
+        </div>
+      ) : props.isError ? (
+        <div className="absolute size-full flex justify-center items-center gap-2">
+          <IterationCcw /> <span>Try Again</span>
+        </div>
+      ) : null}
+      <div
+        className={cn(
+          "flex",
+          (props.isPending || props.isError) && "invisible"
+        )}
+      >
+        {children}
+      </div>
+    </Button>
+  );
+};
+
 export const FormButton = ({
   children,
   className,
@@ -94,35 +132,22 @@ export const FormButton = ({
   children: ReactNode;
 }) => {
   const form = useFormContext();
+
   return (
-    <Button
+    <ActionButton
       {...props}
-      className={cn(className, "relative flex")}
       disabled={!form.formState.isDirty || form.formState.isSubmitting}
+      isPending={form.formState.isSubmitting}
+      isError={form.formState.isSubmitted && !form.formState.isSubmitSuccessful}
+      isSuccessful={
+        form.formState.isSubmitted && form.formState.isSubmitSuccessful
+      }
     >
-      {form.formState.isSubmitting ? (
-        <div className="absolute size-full flex justify-center items-center">
-          <Loader2 className="animate-spin" />
-        </div>
-      ) : form.formState.isSubmitted && !form.formState.isSubmitSuccessful ? (
-        <div className="absolute size-full flex justify-center items-center gap-2">
-          <IterationCcw /> <span>Try Again</span>
-        </div>
-      ) : null}
-      <div
-        className={cn(
-          "flex",
-          (form.formState.isSubmitting ||
-            (form.formState.isSubmitted &&
-              !form.formState.isSubmitSuccessful)) &&
-            "invisible"
-        )}
-      >
-        {children}
-      </div>
-    </Button>
+      {children}
+    </ActionButton>
   );
 };
+
 export const FormInput = ({ ...props }: InputProps & SharedFormProps) => {
   const form = useFormContext();
   return (
@@ -384,6 +409,31 @@ export const FormTextarea = ({ ...props }: TextareaProps & SharedFormProps) => {
   );
 };
 
+export const FormMultiImage = ({
+  alt,
+  referrerPolicy,
+  imageClassName,
+  wrapperClassName,
+  ...props
+}: SharedFormProps &
+  Pick<SingleImageProps, "alt" | "referrerPolicy"> & {
+    imageClassName?: string;
+  }) => {
+  const form = useFormContext();
+
+  return (
+    <div>
+      <FormField
+        control={form.control}
+        name={props.name}
+        render={({ field }: { field: ControllerRenderProps }) => {
+          return <MultiImage urls={field.value} setUrls={field.onChange} />;
+        }}
+      />
+    </div>
+  );
+};
+
 export const FormImage = ({
   wrapperClassName,
   imageClassName,
@@ -395,6 +445,7 @@ export const FormImage = ({
     imageClassName?: string;
   }) => {
   const form = useFormContext();
+
   return (
     <FormField
       control={form.control}

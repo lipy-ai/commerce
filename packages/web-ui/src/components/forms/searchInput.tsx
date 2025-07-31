@@ -73,7 +73,7 @@ export function SearchInput({
       {selected ? (
         <>
           {selected.icon && (
-            <span className="bg-muted block size-5 overflow-hidden rounded border">
+            <span className="bg-muted block size-8 overflow-hidden rounded border">
               <span
                 className="block size-full"
                 style={{
@@ -119,7 +119,7 @@ export function SearchInput({
             list?.map((d) => (
               <CommandItem
                 key={d.value}
-                value={d.label || "Untitled"}
+                value={d.value || "Untitled"}
                 onSelect={() => {
                   onChange(d.value);
                   setOpen(false);
@@ -127,7 +127,7 @@ export function SearchInput({
                 className="flex items-center gap-2"
               >
                 {d.icon && (
-                  <span className="bg-muted block size-5 overflow-hidden rounded border">
+                  <span className="bg-muted block size-8 overflow-hidden rounded border">
                     <span
                       className="block size-full"
                       style={{

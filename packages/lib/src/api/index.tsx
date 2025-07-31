@@ -1,6 +1,7 @@
 import { env } from "@envClient";
 import type { adminCategoryRoute } from "@lipy/server/routes/adminRoutes";
 import type { adminProductRoute } from "@lipy/server/routes/adminRoutes/products";
+import type { adminReviewProductRoute } from "@lipy/server/routes/adminRoutes/reviewProducts";
 import type { adminVariantRoute } from "@lipy/server/routes/adminRoutes/variant";
 import type { addressRoute } from "@lipy/server/routes/loggedRoutes/address";
 import type { cartRoute } from "@lipy/server/routes/loggedRoutes/cart";
@@ -13,11 +14,11 @@ import type { merchantCustomerRoute } from "@lipy/server/routes/merchantRoutes/c
 import type { merchantDashboardRoute } from "@lipy/server/routes/merchantRoutes/dashboard";
 import type { eventsRoute } from "@lipy/server/routes/merchantRoutes/events";
 import type { merchantInventoryRoute } from "@lipy/server/routes/merchantRoutes/inventory";
-import type { merchantOrderRoute } from "@lipy/server/routes/merchantRoutes/order";
 import type { merchantProductRoute } from "@lipy/server/routes/merchantRoutes/product";
 import type { merchantStoreRoute } from "@lipy/server/routes/merchantRoutes/store";
 import type { posOrderRoute } from "@lipy/server/routes/posRoutes/order";
 import type { posProductRoute } from "@lipy/server/routes/posRoutes/product";
+import type { posStoreRoute } from "@lipy/server/routes/posRoutes/shop";
 import type { productRoute } from "@lipy/server/routes/publicRoutes/product";
 import type { shopRoute } from "@lipy/server/routes/publicRoutes/shop";
 import { type ClientRequestOptions, hc } from "hono/client";
@@ -47,6 +48,11 @@ export const adminCategoryApi = hc<typeof adminCategoryRoute>(
   opts
 );
 
+export const adminReviewProductApi = hc<typeof adminReviewProductRoute>(
+  `${basepath}/admin/review-products`,
+  opts
+);
+
 // Merchant Routes
 export const merchantStoreApi = hc<typeof merchantStoreRoute>(
   `${basepath}/merchant/store`,
@@ -57,10 +63,7 @@ export const merchantProductApi = hc<typeof merchantProductRoute>(
   `${basepath}/merchant/product`,
   opts
 );
-export const merchantOrderApi = hc<typeof merchantOrderRoute>(
-  `${basepath}/merchant/order`,
-  opts
-);
+
 export const merchantCustomerApi = hc<typeof merchantCustomerRoute>(
   `${basepath}/merchant/customer`,
   opts
@@ -93,6 +96,10 @@ export const posProductApi = hc<typeof posProductRoute>(
 
 export const posOrderApi = hc<typeof posOrderRoute>(
   `${basepath}/pos/order`,
+  opts
+);
+export const posStoreApi = hc<typeof posStoreRoute>(
+  `${basepath}/pos/store`,
   opts
 );
 

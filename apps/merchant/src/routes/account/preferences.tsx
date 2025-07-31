@@ -12,7 +12,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { AccountNav } from "./-nav";
 
-export const Route = createFileRoute("/(dashboard)/account/preferences")({
+export const Route = createFileRoute("/account/preferences")({
   component: RouteComponent,
 });
 

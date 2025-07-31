@@ -1,0 +1,1 @@
+ALTER TABLE "lipy-dev"."productVariant" ADD COLUMN "maxPrice" numeric(10, 2);

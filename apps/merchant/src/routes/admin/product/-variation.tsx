@@ -26,28 +26,21 @@ import { Button } from "@lipy/web-ui/components/ui/button";
 import { Form, FormLabel } from "@lipy/web-ui/components/ui/form";
 import Loading from "@lipy/web-ui/components/ui/loading";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import { ArrowRight, Trash } from "lucide-react";
-import { type ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFieldArray, useForm, useFormContext } from "react-hook-form";
 
-export default function AssignProductVariationForm({
-  productId,
-  storeId,
-  children,
-}: {
-  storeId?: string;
-  productId: string;
-  children: ReactNode;
-}) {
+export default function AssignProductVariationForm() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate({ from: "/admin/product" });
+  const { shop, product, view } = useSearch({ from: "/admin/product/" });
 
   const { data, isLoading } = useAPIQuery(
     adminVariantApi[":productId"],
     "$get",
-    { param: { productId }, query: { storeId: storeId! } },
-    { enabled: !!productId && !!storeId }
+    { param: { productId: product! }, query: { storeId: shop! } },
+    { enabled: !!product && !!shop }
   );
 
   const mutation = useAPIMutation(adminVariantApi.inventory, "$patch");
@@ -57,7 +50,7 @@ export default function AssignProductVariationForm({
     price: 0,
     stock: 0,
     active: false,
-    storeId: storeId || "",
+    storeId: shop || "",
     variantId: "",
   };
   const defaultValues: { items: Array<typeof d> } = { items: [d] };
@@ -85,7 +78,7 @@ export default function AssignProductVariationForm({
           price: m?.inventory?.price || 0,
           stock: m?.inventory?.stock || 0,
           active: m?.inventory?.active || false,
-          storeId: m?.inventory?.storeId || storeId,
+          storeId: m?.inventory?.storeId || shop,
           variantId: m?.id || "",
         })),
       },
@@ -93,12 +86,28 @@ export default function AssignProductVariationForm({
     );
   }, [data]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (view === "assign") {
+      setOpen(true);
+    }
+    return () => form.reset(defaultValues);
+  }, [view]);
+
   return (
     <>
       <DrawerDialogSwitcher
         open={open}
-        onOpenChange={setOpen}
-        trigger={children}
+        onOpenChange={(v) => {
+          setOpen(v);
+
+          if (!v) {
+            navigate({
+              search: (s) => ({ ...s, view: undefined, product: undefined }),
+            });
+            form.reset(defaultValues);
+          }
+        }}
       >
         <DrawerDialogHeader>
           <DrawerDialogTitle>Variants</DrawerDialogTitle>
@@ -108,7 +117,7 @@ export default function AssignProductVariationForm({
                 name="store-select"
                 type="stores"
                 placeholder="Select Store"
-                value={storeId || ""}
+                value={shop || ""}
                 onChange={(v) =>
                   navigate({ search: (s: any) => ({ ...s, shop: v }) } as any)
                 }

@@ -41,7 +41,7 @@ const getCart = async (userId: string, trx: Transaction<Database>) => {
 		.where("c.userId", "=", userId!)
 		.rightJoin("storeInventory as si", "si.id", "c.inventoryId")
 		.where("si.stock", "!=", 0)
-		.rightJoin("productVariant as pv", "pv.id", "si.productVariant")
+		.rightJoin("productVariant as pv", "pv.id", "si.variantId")
 		.rightJoin("product as p", "p.id", "pv.productId")
 		.select((eb) => [
 			eb.fn.toJson("c").as("cart"),

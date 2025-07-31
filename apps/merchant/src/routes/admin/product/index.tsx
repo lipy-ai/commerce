@@ -14,6 +14,7 @@ import FormDelete from "./-form-delete";
 import FormEdit from "./-form.edit";
 import { ProductProvider, useProduct } from "./-provider";
 import ToggleProductActive from "./-toggle-active";
+import AssignProductVariationForm from "./-variation";
 
 export const Route = createFileRoute("/admin/product/")({
   component: RouteComponent,
@@ -21,6 +22,7 @@ export const Route = createFileRoute("/admin/product/")({
     page: z.coerce.number().int().min(1).catch(1),
     q: z.string().default(""),
     category: z.string().optional(),
+    shop: z.string().uuid().optional(),
   }),
 });
 
@@ -77,6 +79,7 @@ function Component() {
 
 function DesktopView() {
   const { data, isLoading } = useProduct();
+  const { shop } = Route.useSearch();
 
   if (isLoading) {
     return <Skeleton className="flex-1" />;
@@ -118,9 +121,11 @@ function DesktopView() {
           </div>
 
           <div>
-            <Button size="sm" variant="outline">
-              <Tickets /> {m?.variants?.length || 0} Variants
-            </Button>
+            <AssignProductVariationForm productId={m.id} storeId={shop}>
+              <Button size="sm" variant="outline">
+                <Tickets /> Assign Variants
+              </Button>
+            </AssignProductVariationForm>
           </div>
 
           <div className="pl-4">
@@ -133,7 +138,7 @@ function DesktopView() {
               )}
             </p>
             {m?.variants?.[0]?.maxPrice && (
-              <p>
+              <div>
                 <Badge size="sm" variant="info">
                   {formatAmount(
                     "inr",
@@ -141,7 +146,7 @@ function DesktopView() {
                   )}{" "}
                   Off
                 </Badge>
-              </p>
+              </div>
             )}
           </div>
           <div>

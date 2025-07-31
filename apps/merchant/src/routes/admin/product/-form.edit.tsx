@@ -40,7 +40,7 @@ import {
   useFormContext,
   useWatch,
 } from "react-hook-form";
-import { useProductInvalidate } from "./-hook-invalidate";
+import { useProductInvalidate, useVariantInvalidate } from "./-hook-invalidate";
 import { VariantForm } from "./-variation";
 
 export default function FormEdit({
@@ -68,6 +68,9 @@ export default function FormEdit({
     variants: (data?.variants || []) as any,
   };
 
+  const { invalidate } = useProductInvalidate();
+  const { invalidate: variantInvalidate } = useVariantInvalidate();
+
   const form = useForm({
     defaultValues,
   });
@@ -77,13 +80,14 @@ export default function FormEdit({
     onError: () => {
       invalidate();
     },
+    onSuccess: () => {
+      variantInvalidate();
+    },
   };
 
   const mutation = useAPIMutation(adminProductApi[":id"], "$patch", opts);
 
   const createMutation = useAPIMutation(adminProductApi.index, "$post", opts);
-
-  const { invalidate } = useProductInvalidate();
 
   const onSubmit = async (body: typeof defaultValues) => {
     if (!data?.id) return await createMutation.mutateAsync({ json: body });

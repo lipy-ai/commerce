@@ -12,6 +12,7 @@ const listZodValidator = zValidator(
 		...listZodSchema.shape,
 	}),
 );
+
 export const adminCategoryRoute = new Hono<ServerContext>()
 	.get("/", listZodValidator, async (c) => {
 		const { q } = c.req.valid("query");
@@ -84,6 +85,7 @@ export const adminCategoryRoute = new Hono<ServerContext>()
 			return c.json(result);
 		},
 	)
+
 	.patch(
 		"/",
 		zValidator(

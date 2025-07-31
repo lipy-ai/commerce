@@ -141,6 +141,20 @@
       "when": 1753820117903,
       "tag": "0019_exotic_hiroim",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1753962297051,
+      "tag": "0020_jazzy_bastion",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1753962495348,
+      "tag": "0021_broken_shiva",
+      "breakpoints": true
     }
   ]
 }

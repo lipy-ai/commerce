@@ -131,7 +131,7 @@ export const DashboardLayout = ({
           />
 
           <div
-            className="w-full"
+            className="w-full flex flex-col flex-1"
             onClick={() => open && setOpen(false)}
             style={{
               viewTransitionName: "main-content",

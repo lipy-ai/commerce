@@ -3,6 +3,7 @@ import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { getAPIQueryKey } from "@lipy/lib/utils/useQueryClient";
 import { useMutationState } from "@tanstack/react-query";
 import type { InferRequestType, InferResponseType } from "hono";
+import { produce } from "immer";
 import {
   type ReactNode,
   createContext,
@@ -81,20 +82,41 @@ export const CategoryProvider = ({
     }
 
     if (createVars.length > 0) {
-      result = [...createVars, ...result];
+      for (const v of createVars) {
+        if (v.parentId) {
+          result = produce(result, (d) => {
+            const findIdx = d.findIndex((f) => f.id === v.parentId);
+            if (findIdx !== -1) {
+              d[findIdx].items = [...d[findIdx].items, v];
+            }
+            return d;
+          });
+        } else {
+          result = [
+            ...result.filter((m) => m.id !== v.id),
+            { ...v, items: [] },
+          ];
+        }
+      }
     }
 
     if (updateVars.length > 0) {
       const patchMap = new Map(updateVars.map((v) => [v.json.id, v.json]));
 
-      result = result.map((item) => {
-        if (patchMap.has(item.id)) {
-          return {
-            ...item,
-            ...patchMap.get(item.id),
-          };
+      result = produce(result, (dr) => {
+        for (let d of dr) {
+          if (patchMap.has(d.id)) {
+            d = { ...d, ...patchMap.get(d.id) };
+          }
+          const idx = d.items.findIndex((i) => patchMap.has(i.id));
+          if (idx !== -1) {
+            d.items[idx] = {
+              ...d.items[idx],
+              ...patchMap.get(d.items[idx].id),
+            };
+          }
         }
-        return item;
+        return dr;
       });
     }
     q.data.items = result;

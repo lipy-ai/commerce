@@ -234,11 +234,11 @@ function RouteComponent() {
                     <AccordionContent className="px-6 pb-6 space-y-4">
                       {product.highlights.map((highlight) => (
                         <div
-                          key={highlight.label}
+                          key={highlight.name}
                           className="flex items-start justify-between"
                         >
                           <span className="font-normal flex-1">
-                            {highlight.label}
+                            {highlight.name}
                           </span>
                           <span className="text-foreground/80 flex-1 text-left">
                             {highlight.value}

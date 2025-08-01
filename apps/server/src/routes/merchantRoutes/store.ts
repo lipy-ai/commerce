@@ -194,6 +194,14 @@ const route = new Hono<ServerContext>()
 
 			const defaultExpiration = 60 * 60 * 48; // 48 hours in seconds
 
+			const staff = await db
+				.selectFrom("storeMember")
+				.leftJoin("user", "user.id", "storeMember.userId")
+				.where("user.email", "=", email)
+				.executeTakeFirst();
+			if (staff) {
+				throw new HTTPError(400, { message: "Already in your team!" });
+			}
 			let data = await db
 				.selectFrom("storeInvitation")
 				.where("email", "=", email)
@@ -235,27 +243,6 @@ const route = new Hono<ServerContext>()
 			return c.json({ success: true });
 		},
 	)
-	.get(
-		"/invitation/:id",
-		zValidator("param", z.object({ id: z.string().uuid() })),
-		async (c) => {
-			const { id } = c.req.valid("param");
-
-			const inv = await db
-				.selectFrom("storeInvitation as si")
-				.where("si.id", "=", id)
-				.leftJoin("store as s", "s.id", "si.storeId")
-				.selectAll(["si"])
-				.select(["s.image as storeImage", "s.name as storeName"])
-				.executeTakeFirst();
-
-			if (!inv) {
-				throw new HTTPError(404, { message: "No invitation found!" });
-			}
-
-			return c.json(inv);
-		},
-	)
 	.delete(
 		"/invitation/:id",
 		zValidator("param", z.object({ id: z.string().uuid() })),
@@ -263,6 +250,7 @@ const route = new Hono<ServerContext>()
 			const { id } = c.req.valid("param");
 
 			await db.deleteFrom("storeInvitation").where("id", "=", id).execute();
+
 			return c.json({ success: true });
 		},
 	);

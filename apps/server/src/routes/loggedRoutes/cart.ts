@@ -22,7 +22,7 @@ const route = new Hono<ServerContext>()
 			.rightJoin("storeInventory as si", "si.id", "c.inventoryId")
 			.where("si.active", "=", true)
 			.leftJoin("store as s", "si.storeId", "s.id")
-			.rightJoin("productVariant as pv", "pv.id", "si.productVariant")
+			.rightJoin("productVariant as pv", "pv.id", "si.variantId")
 			.rightJoin("product as p", "p.id", "pv.productId")
 			.select((eb) => [
 				"p.id as productId",

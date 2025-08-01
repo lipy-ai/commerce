@@ -5,14 +5,14 @@ import {
   DrawerDialogSwitcher,
   DrawerDialogTitle,
 } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
-import { Form } from "@lipy/web-ui/components/ui/form";
-
 import {
   FormButton,
   FormImage,
   FormInput,
+  FormSelect,
   FormTextarea,
 } from "@lipy/web-ui/components/forms/elements";
+import { Form } from "@lipy/web-ui/components/ui/form";
 import type { InferRequestType } from "hono";
 
 import { adminCategoryApi } from "@lipy/lib/api";
@@ -58,6 +58,7 @@ export function CategoryFormEdit({
     title: data?.title || "",
     summary: data?.summary || "",
     image: data?.image || "",
+    parentId: data?.parentId || null,
   };
 
   const form = useForm({
@@ -66,7 +67,9 @@ export function CategoryFormEdit({
 
   const onSubmit = async (body: typeof defaultValues) => {
     if (type === "create") {
-      return await createMutation.mutateAsync({ json: body });
+      return await createMutation.mutateAsync({
+        json: body,
+      });
     }
     await mutation.mutateAsync({ json: body });
   };
@@ -101,6 +104,11 @@ export function CategoryFormEdit({
               label="Summary"
               name="summary"
               placeholder="Write a brief."
+            />
+            <FormSelect
+              type="categories"
+              label="Parent Category"
+              name="parentId"
             />
 
             <DrawerDialogFooter>

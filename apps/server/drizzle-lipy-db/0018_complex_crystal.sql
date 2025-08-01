@@ -1,0 +1,1 @@
+ALTER TABLE "lipy-dev"."reviewProducts" ADD COLUMN "primaryCategory" text;

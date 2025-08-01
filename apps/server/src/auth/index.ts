@@ -206,22 +206,22 @@ export const auth: any = betterAuth({
 	databaseHooks: {
 		session: {
 			create: {
-				before: async (session, context) => {
+				before: async (session) => {
 					const store = await db
 						.selectFrom("store")
 						.innerJoin("storeMember", "storeMember.storeId", "store.id")
 						.innerJoin("user", "user.id", "storeMember.userId")
 						.where("user.id", "=", session.userId)
-						.select(["store.id", "storeMember.role"])
+						.select(["store.id", "storeMember.role", "store.handle"])
 						.limit(1)
 						.executeTakeFirst();
 
 					return {
 						data: {
 							...session,
+							activeStoreHandle: store?.handle || null,
 							activeStoreId: store?.id || null,
 							activeStoreRole: store?.role || null,
-							activeOrganizationId: store?.id || null,
 						},
 					};
 				},

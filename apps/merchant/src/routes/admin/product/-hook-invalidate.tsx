@@ -6,6 +6,21 @@ export const useProductInvalidate = () => {
     queryClient.invalidateQueries({
       queryKey: ["$get", "/v1/admin/product"],
     });
+
+  return { invalidate };
+};
+
+export const useVariantInvalidate = () => {
+  const queryClient = useQueryClient();
+  const invalidate = () =>
+    queryClient.invalidateQueries({
+      predicate: (query) =>
+        Array.isArray(query.queryKey) &&
+        query.queryKey[0] === "$get" &&
+        typeof query.queryKey[1] === "string" &&
+        query.queryKey[1].startsWith("/v1/admin/variant/"),
+    });
+
   return { invalidate };
 };
 

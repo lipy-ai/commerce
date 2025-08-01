@@ -1,19 +1,17 @@
+import { db } from "@/db";
+import { STORE_TYPE } from "@/db/schema";
 import { updateSession } from "@/helpers/session";
+import { HTTPError } from "@/lib/exception";
 import { idGenerate } from "@/lib/generateId";
 import { zValidator } from "@/middlewares/validator";
 import { emailSchema, phoneSchema, timeSchema } from "@/schema/common";
 import type { ServerContext } from "@/types";
+import { isBefore } from "date-fns";
 import { Hono } from "hono";
-import { coreAddressSchema } from "../loggedRoutes/address";
-
+import { sql } from "kysely";
 import slugify from "slugify";
 import { z } from "zod";
-
-import { db } from "@/db";
-import { STORE_TYPE } from "@/db/schema";
-import { HTTPError } from "@/lib/exception";
-import { isBefore } from "date-fns";
-import { sql } from "kysely";
+import { coreAddressSchema } from "../loggedRoutes/address";
 
 export const storeSchema = z.object({
 	name: z.string(),
@@ -62,6 +60,10 @@ export const loggedStoreRoute = new Hono<ServerContext>()
 				.insertInto("store")
 				.values({
 					...vals,
+					...(vals.address.lat &&
+						vals.address.lng && {
+							location: sql`ST_SetSRID(ST_MakePoint(${vals.address.lng}, ${vals.address.lat}), 4326)::geography`,
+						}),
 					deliveryChargePerKm: 10,
 					id: crypto.randomUUID(),
 					handle: `${slugify(vals.name)}-${idGenerate()}`,

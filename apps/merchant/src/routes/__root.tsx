@@ -43,9 +43,9 @@ export const Route = createRootRoute({
       },
 
       ...seo({
-        title: "Lipy Commerce",
+        title: "Lipy Partners",
         description:
-          "Lipy Commerce is a quick commerce platform designed to empower local businesses by connecting them directly with nearby customers. Sell faster, grow smarter, and stay local.",
+          "Lipy Partners is a quick commerce platform designed to empower local businesses by connecting them directly with nearby customers. Sell faster, grow smarter, and stay local.",
       }),
     ],
     links: [
@@ -58,10 +58,10 @@ export const Route = createRootRoute({
       {
         rel: "apple-touch-icon",
         sizes: "180x180",
-        href: "/favicon/apple-touch-icon.png",
+        href: "/icons/apple-touch-icon.png",
       },
-      { rel: "manifest", href: "/favicon/site.webmanifest", color: "#fffff" },
-      { rel: "icon", href: "/favicon/favicon.ico" },
+      { rel: "manifest", href: "/site.webmanifest", color: "#fffff" },
+      { rel: "icon", href: "/favicon.ico" },
     ],
   }),
   errorComponent: (props) => {

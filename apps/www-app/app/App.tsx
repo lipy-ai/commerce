@@ -1,31 +1,32 @@
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
-import { Camera, CameraType } from "expo-camera";
+// import {
+//   DarkTheme,
+//   DefaultTheme,
+//   ThemeProvider,
+// } from "@react-navigation/native";
+import { Camera } from "expo-camera";
 // import "react-native-reanimated";
-import Constants from "expo-constants";
-import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
+// import Constants from "expo-constants";
+// import { useFonts } from "expo-font";
+// import { Stack } from "expo-router";
+// import { StatusBar } from "expo-status-bar";
 import * as WebBrowser from "expo-web-browser";
 import { useEffect, useRef, useState } from "react";
 import {
   KeyboardAvoidingView,
-  Platform,
+  // Platform,
   StyleSheet,
+  Text,
   View,
-  useWindowDimensions,
+  // useWindowDimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
 
 export default function RootLayout() {
   const webViewRef = useRef(null);
-  const windowHeight = useWindowDimensions().height;
+  // const windowHeight = useWindowDimensions().height;
 
-  const handleNavigation = (event) => {
+  const handleNavigation = (event: any) => {
     const url = event.url;
 
     if (
@@ -42,7 +43,7 @@ export default function RootLayout() {
     return true;
   };
 
-  const [hasPermission, setHasPermission] = useState(null);
+  const [hasPermission, setHasPermission] = useState(false);
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
@@ -96,8 +97,8 @@ export default function RootLayout() {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//   },
+// });

@@ -1,4 +1,6 @@
+import { env } from "@envClient";
 import { merchantStoreApi } from "@lipy/lib/api";
+import { formatAddress } from "@lipy/lib/utils/address";
 import {
   apiQueryOptions,
   useAPIMutation,
@@ -20,7 +22,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { StoreNav } from "./-nav";
-
 export const Route = createFileRoute("/(dashboard)/store/general")({
   component: RouteComponent,
 });
@@ -115,7 +116,40 @@ function RouteComponent() {
               <FormInput name="phone" label="Phone Number" />
             </div>
           </div>
+
           <FormButton>Save Changes</FormButton>
+
+          <div className="py-8 max-w-lg space-y-2">
+            <Label className="text-base">Store Address</Label>
+            {data?.address && (
+              <div className="whitespace-pre-line">
+                {formatAddress(data.address as any)}
+              </div>
+            )}
+            {data?.address?.lat && data?.address?.lng && (
+              <div className="">
+                <div className="print:hidden">
+                  <a
+                    href={`https://www.google.com/maps/dir/?api=1&destination=${data?.address.lat},${data?.address.lng}`}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    className="space-y-2"
+                  >
+                    <img
+                      src={
+                        data?.address?.lat && data?.address?.lng
+                          ? `https://maps.googleapis.com/maps/api/staticmap?key=${env.GOOGLE_MAP_API_KEY}&zoom=14&size=500x200&scale=2&markers=size:mid%7Ccolor:red%7C${data?.address?.lat},${data?.address?.lng}`
+                          : undefined
+                      }
+                      alt="Delivery Address Map"
+                      className="border rounded w-full bg-card"
+                    />
+                    <p className="text-end underline">View on Map</p>
+                  </a>
+                </div>
+              </div>
+            )}
+          </div>
         </form>
       </StoreNav>
     </Form>

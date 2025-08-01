@@ -67,10 +67,17 @@ const route = new Hono<ServerContext>()
 	.get("/", zValidator("query", shopSearchSchema), async (c) => {
 		const query = c.req.valid("query");
 
+		const radiusInMeters = 50_000; // 50km
 		const resp = await db
-			.selectFrom("store")
-			.where("active", "=", true)
-			.where("store.address", "is not", null)
+			.selectFrom("store as s")
+			.where("s.active", "=", true)
+			.where("s.address", "is not", null)
+			.where(
+				sql<boolean>`ST_DWithin(s.location, ST_SetSRID(ST_MakePoint(${query.originLng}, ${query.originLat}), 4326)::geography, ${radiusInMeters})`,
+			)
+			.where(
+				sql<boolean>`ST_Distance(s.location, ST_SetSRID(ST_MakePoint(${query.originLng}, ${query.originLat}), 4326)::geography) <= s."deliveryDistance" * 1000`,
+			)
 			.select([
 				"id",
 				"handle",

@@ -96,22 +96,26 @@ export const user = schema.table("user", {
 	normalizedEmail: text("normalizedEmail"),
 });
 
-export const address = schema.table("address", {
-	id: uuid("id").primaryKey(),
-	name: text("name").notNull(),
-	tag: text({ enum: ["home", "work", "other"] }).notNull(),
-	line1: text("line1").notNull(),
-	line2: text("line2"),
-	city: text("city").notNull(),
-	state: text("state").notNull(),
-	country: text("country"),
-	postalCode: text("postalCode"),
-	phone: text("phone"),
-	location: geography("location"),
-	metadata: jsonb("metadata").$type<{
-		building: string;
-	}>(),
-});
+export const address = schema.table(
+	"address",
+	{
+		id: uuid("id").primaryKey(),
+		name: text("name").notNull(),
+		tag: text({ enum: ["home", "work", "other"] }).notNull(),
+		line1: text("line1").notNull(),
+		line2: text("line2"),
+		city: text("city").notNull(),
+		state: text("state").notNull(),
+		country: text("country"),
+		postalCode: text("postalCode"),
+		phone: text("phone"),
+		location: geography("location"),
+		metadata: jsonb("metadata").$type<{
+			building: string;
+		}>(),
+	},
+	(t) => [index("address_spatial_index").using("gist", t.location)],
+);
 
 export const userAddress = schema.table("userAddress", {
 	id: uuid("id")
@@ -167,37 +171,42 @@ export const session = schema.table("authSession", {
 	updatedAt: timestamp("updatedAt", { withTimezone: true }).notNull(),
 });
 
-export const store = schema.table("store", {
-	id: uuid("id").primaryKey(),
-	name: text("name").notNull(),
-	handle: text("handle").unique(),
-	image: text("image"),
-	description: text("description"),
-	createdAt: timestamp("createdAt", { withTimezone: true }).notNull(),
-	metadata: text("metadata"),
-	address: jsonb("address").$type<z.infer<typeof coreAddressSchema>>(),
-	email: text("email"),
-	phone: text("phone"),
-	type: text("type"),
-	active: boolean("active").default(false),
-	openingHour: time("openingHour").notNull().default("00:00"),
-	closingHour: time("closingHour").notNull().default("00:00"),
-	deliveryDistance: real("deliveryDistance").notNull().default(1),
-	freeDeliveryDistance: real("freeDeliveryDistance").notNull().default(1),
-	deliveryChargePerKm: real("deliveryChargePerKm").notNull().default(1),
-	payments: jsonb("payments").$type<{
-		upiIds: Array<{ id: string; name: string }>;
-	}>(),
-	refunds: jsonb("refunds").$type<{
-		enabled: boolean;
-		content?: string;
-	}>(),
-	replacements: jsonb("replacements").$type<{
-		enabled: boolean;
-		content?: string;
-	}>(),
-	gstTax: integer("gstTax").notNull().default(0),
-});
+export const store = schema.table(
+	"store",
+	{
+		id: uuid("id").primaryKey(),
+		name: text("name").notNull(),
+		handle: text("handle").unique(),
+		image: text("image"),
+		description: text("description"),
+		createdAt: timestamp("createdAt", { withTimezone: true }).notNull(),
+		metadata: text("metadata"),
+		address: jsonb("address").$type<z.infer<typeof coreAddressSchema>>(),
+		location: geography("location"),
+		email: text("email"),
+		phone: text("phone"),
+		type: text("type"),
+		active: boolean("active").default(false),
+		openingHour: time("openingHour").notNull().default("00:00"),
+		closingHour: time("closingHour").notNull().default("00:00"),
+		deliveryDistance: real("deliveryDistance").notNull().default(1),
+		freeDeliveryDistance: real("freeDeliveryDistance").notNull().default(1),
+		deliveryChargePerKm: real("deliveryChargePerKm").notNull().default(1),
+		payments: jsonb("payments").$type<{
+			upiIds: Array<{ id: string; name: string }>;
+		}>(),
+		refunds: jsonb("refunds").$type<{
+			enabled: boolean;
+			content?: string;
+		}>(),
+		replacements: jsonb("replacements").$type<{
+			enabled: boolean;
+			content?: string;
+		}>(),
+		gstTax: integer("gstTax").notNull().default(0),
+	},
+	(t) => [index("store_spatial_index").using("gist", t.location)],
+);
 
 export const storePayments = schema.table("storePayments", {
 	id: uuid("id")

@@ -11,7 +11,7 @@ import { z } from "zod";
 export const productSchema = z.object({
 	title: z.string(),
 	category: z.string(),
-	summary: z.string(),
+	summary: z.string().nullish(),
 	images: z.preprocess(
 		(e) => (Array.isArray(e) ? e.filter((e) => !!e) : e),
 		z.array(z.string()),

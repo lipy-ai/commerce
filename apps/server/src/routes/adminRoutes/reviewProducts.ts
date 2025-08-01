@@ -11,7 +11,7 @@ import { productSchema as pSchema } from "./products";
 const productSchema = z.object({
 	title: z.string(),
 	category: z.string().uuid(),
-	summary: z.string(),
+	summary: z.string().nullish(),
 	images: z.preprocess(
 		(e) => (Array.isArray(e) ? e.filter((e) => !!e) : e),
 		z.array(z.string()),
@@ -135,6 +135,7 @@ export const adminReviewProductRoute = new Hono<ServerContext>()
 		),
 		async (c) => {
 			const { id } = c.req.valid("param");
+
 			const user = c.get("user");
 
 			const p = await db

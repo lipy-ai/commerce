@@ -1,20 +1,26 @@
-import { formatAmount } from "@lipy/lib/utils/intl";
 import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
 import { SearchInput } from "@lipy/web-ui/components/forms/searchInput";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Pagination } from "@lipy/web-ui/components/pages/pagination";
-import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@lipy/web-ui/components/ui/table";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { PenLine, Tickets, Trash } from "lucide-react";
+import { useSearch } from "@tanstack/react-router";
+import { PenLine, Store, Tickets, Trash } from "lucide-react";
 import { z } from "zod";
 import FormDelete from "./-form-delete";
 import FormEdit from "./-form.edit";
 import { ProductProvider, useProduct } from "./-provider";
-import ToggleProductActive from "./-toggle-active";
 import AssignProductVariationForm from "./-variation";
 
 export const Route = createFileRoute("/admin/product/")({
@@ -33,10 +39,26 @@ export const Route = createFileRoute("/admin/product/")({
 
 function RouteComponent() {
   const { q, page } = Route.useSearch();
+  const { shop } = useSearch({ from: "/admin/product/" });
+  const navigate = Route.useNavigate();
 
   return (
     <ProductProvider query={{ q, page: String(page), limit: String(100) }}>
-      <DashboardHeader title="Products" />
+      <DashboardHeader title="Products">
+        <div className="flex items-center gap-4">
+          <Store />
+          <SearchInput
+            name="store-select"
+            type="stores"
+            placeholder="Select Store"
+            value={shop || ""}
+            onChange={(v) =>
+              navigate({ search: (s: any) => ({ ...s, shop: v }) } as any)
+            }
+            className="w-fit"
+          />
+        </div>
+      </DashboardHeader>
       <Component />
     </ProductProvider>
   );
@@ -44,6 +66,7 @@ function RouteComponent() {
 
 function Component() {
   const { q, category } = Route.useSearch();
+
   const navigate = Route.useNavigate();
   const { data } = useProduct();
 
@@ -67,6 +90,7 @@ function Component() {
           name={"Category"}
           className="col-span-12 md:col-span-2 order-3 md:order-none"
         />
+
         <SearchBar
           placeholder="Search products"
           defaultValue={q}
@@ -103,98 +127,144 @@ function DesktopView() {
   }
 
   return (
-    <div className="grid divide-y border rounded overflow-y-auto">
-      {data.items.map((m) => (
-        <div
-          key={m.id}
-          className="h-full grid grid-cols-[50px_1fr_fit-content(100px)_fit-content(100px)_200px_fit-content(150px)] gap-4 px-3 py-3 items-center"
-        >
-          {/* <TableCell className="truncate">{m.id}</TableCell> */}
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Product</TableHead>
+          <TableHead>Category</TableHead>
+          <TableHead>Variants</TableHead>
+          <TableHead>Actions</TableHead>
+        </TableRow>
+      </TableHeader>
 
-          <div>
-            <img
-              src={m.thumbnail || ""}
-              alt={m.title || ""}
-              className="size-12 border rounded bg-accent"
-            />
-          </div>
-          <div className="min-w-xs">
-            <p className="font-medium block break-words">{m.title}</p>
-            <div className="flex gap-2">
-              <Badge variant={"default"}>{m?.category?.title}</Badge>
-              <Badge variant={"default"}>{m?.variants?.length} variants</Badge>
-            </div>
-          </div>
-
-          <div>
-            <ToggleProductActive />
-          </div>
-
-          <div>
-            <Link
-              to={"/admin/product"}
-              search={(s) => ({ ...s, view: "assign", product: m.id })}
-              className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
-            >
-              <Tickets /> Assign Variants
-            </Link>
-          </div>
-
-          <div className="pl-4">
-            <p className="font-medium">
-              {formatAmount("inr", m?.variants?.[0]?.price || 0)}{" "}
-              {m?.variants?.[0]?.maxPrice && (
-                <span className="text-muted-foreground text-xs line-through">
-                  {formatAmount("inr", m?.variants?.[0]?.maxPrice || 0)}
-                </span>
-              )}
-            </p>
-            {m?.variants?.[0]?.maxPrice && (
-              <div>
-                <Badge size="sm" variant="info">
-                  {formatAmount(
-                    "inr",
-                    m?.variants?.[0]?.maxPrice - (m?.variants?.[0]?.price || 0)
-                  )}{" "}
-                  Off
-                </Badge>
-              </div>
-            )}
-          </div>
-          <div>
-            <div>
-              <div className="flex gap-2">
-                <Link
-                  to={"/admin/product"}
-                  search={(s) => ({ ...s, view: "edit", product: m.id })}
-                  className={cn(buttonVariants({ size: "icon-sm" }))}
-                >
-                  <PenLine />
-                </Link>
-                <Link
-                  to={"/admin/product"}
-                  search={(s) => ({ ...s, view: "delete", product: m.id })}
-                  className={cn(
-                    buttonVariants({ variant: "outline", size: "icon-sm" })
-                  )}
-                >
-                  <Trash />
-                </Link>
-
-                {/* <Link
-									to="/admin/product/$id"
-									params={{ id: m.id }}
-									className={cn(
-										buttonVariants({ size: "icon-sm", variant: "outline" }),
-									)}
-								>
-									<ArrowUpRight />
-								</Link> */}
-              </div>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
+      <TableBody>
+        {data.items.map((m) => (
+          <TableRow key={m.id}>
+            <TableCell className="flex items-center gap-4">
+              <img
+                src={m.thumbnail || ""}
+                alt={m.title || ""}
+                className="size-12 border rounded bg-accent"
+              />
+              <p className="font-medium block break-words">{m.title}</p>
+            </TableCell>
+            <TableCell>{m?.category?.title}</TableCell>
+            <TableCell>
+              <Link
+                to={"/admin/product"}
+                search={(s) => ({ ...s, view: "assign", product: m.id })}
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "sm" })
+                )}
+              >
+                <Tickets /> Assign Variants
+              </Link>
+            </TableCell>
+            <TableCell className="space-x-2">
+              <Link
+                to={"/admin/product"}
+                search={(s) => ({ ...s, view: "edit", product: m.id })}
+                className={cn(buttonVariants({ size: "icon-sm" }))}
+              >
+                <PenLine />
+              </Link>
+              <Link
+                to={"/admin/product"}
+                search={(s) => ({ ...s, view: "delete", product: m.id })}
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "icon-sm" })
+                )}
+              >
+                <Trash />
+              </Link>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
+
+  // return (
+  //   <div className="grid divide-y border rounded overflow-y-auto">
+  //     {data.items.map((m) => (
+  //       <div
+  //         key={m.id}
+  //         className="h-full grid grid-cols-[50px_1fr_fit-content(100px)_fit-content(100px)_200px_fit-content(150px)] gap-4 px-3 py-3 items-center"
+  //       >
+  //         <div>
+  //           <img
+  //             src={m.thumbnail || ""}
+  //             alt={m.title || ""}
+  //             className="size-12 border rounded bg-accent"
+  //           />
+  //         </div>
+  //         <div className="min-w-xs">
+  //           <p className="font-medium block break-words">{m.title}</p>
+  //           <div className="flex gap-2">
+  //             <Badge variant={"default"}>{m?.category?.title}</Badge>
+  //             <Badge variant={"default"}>{m?.variants?.length} variants</Badge>
+  //           </div>
+  //         </div>
+
+  //         <div>
+  //           <ToggleProductActive />
+  //         </div>
+
+  //         <div>
+  //           <Link
+  //             to={"/admin/product"}
+  //             search={(s) => ({ ...s, view: "assign", product: m.id })}
+  //             className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+  //           >
+  //             <Tickets /> Assign Variants
+  //           </Link>
+  //         </div>
+
+  //         <div className="pl-4">
+  //           <p className="font-medium">
+  //             {formatAmount("inr", m?.variants?.[0]?.price || 0)}{" "}
+  //             {m?.variants?.[0]?.maxPrice && (
+  //               <span className="text-muted-foreground text-xs line-through">
+  //                 {formatAmount("inr", m?.variants?.[0]?.maxPrice || 0)}
+  //               </span>
+  //             )}
+  //           </p>
+  //           {m?.variants?.[0]?.maxPrice && (
+  //             <div>
+  //               <Badge size="sm" variant="info">
+  //                 {formatAmount(
+  //                   "inr",
+  //                   m?.variants?.[0]?.maxPrice - (m?.variants?.[0]?.price || 0)
+  //                 )}{" "}
+  //                 Off
+  //               </Badge>
+  //             </div>
+  //           )}
+  //         </div>
+  //         <div>
+  //           <div>
+  //             <div className="flex gap-2">
+  //               <Link
+  //                 to={"/admin/product"}
+  //                 search={(s) => ({ ...s, view: "edit", product: m.id })}
+  //                 className={cn(buttonVariants({ size: "icon-sm" }))}
+  //               >
+  //                 <PenLine />
+  //               </Link>
+  //               <Link
+  //                 to={"/admin/product"}
+  //                 search={(s) => ({ ...s, view: "delete", product: m.id })}
+  //                 className={cn(
+  //                   buttonVariants({ variant: "outline", size: "icon-sm" })
+  //                 )}
+  //               >
+  //                 <Trash />
+  //               </Link>
+  //             </div>
+  //           </div>
+  //         </div>
+  //       </div>
+  //     ))}
+  //   </div>
+  // );
 }

@@ -13,7 +13,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { AccountNav } from "./-nav";
-export const Route = createFileRoute("/(dashboard)/account/profile")({
+export const Route = createFileRoute("/account/profile")({
   component: RouteComponent,
 });
 

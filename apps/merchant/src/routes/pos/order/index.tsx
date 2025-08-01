@@ -1,4 +1,4 @@
-import { merchantOrderApi } from "@lipy/lib/api";
+import { posOrderApi } from "@lipy/lib/api";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { OrderStatus } from "@lipy/web-ui/components/custom-ui/orderStatus";
@@ -33,14 +33,14 @@ export const Route = createFileRoute("/pos/order/")({
   }),
 });
 
-type Response = InferResponseType<typeof merchantOrderApi.index.$get>;
+type Response = InferResponseType<typeof posOrderApi.index.$get>;
 
 function RouteComponent() {
   const { isMobile } = useViewport();
   const { page, q } = Route.useSearch();
 
   const { data, isLoading } = useAPIQuery(
-    merchantOrderApi.index,
+    posOrderApi.index,
     "$get",
     {
       query: { page: String(page), limit: String(10), q },

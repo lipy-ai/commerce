@@ -18,7 +18,7 @@ const route = new Hono<ServerContext>()
 		let query = db
 			.selectFrom("storeInventory as si")
 			.leftJoin("store as s", "s.id", "si.storeId")
-			.rightJoin("productVariant as pv", "pv.id", "si.productVariant")
+			.rightJoin("productVariant as pv", "pv.id", "si.variantId")
 			.rightJoin("product as p", "p.id", "pv.productId")
 			.rightJoin("category as c", "p.category", "c.id")
 			.groupBy(["p.id", "c.title", "c.id", "c.slug"]) // <-- fix here
@@ -83,7 +83,7 @@ const route = new Hono<ServerContext>()
 
 			const data = await db
 				.selectFrom("storeInventory as si")
-				.rightJoin("productVariant as pv", "pv.id", "si.productVariant")
+				.rightJoin("productVariant as pv", "pv.id", "si.variantId")
 				.rightJoin("product as p", "p.id", "pv.productId")
 				.rightJoin("store as s", "s.id", "si.storeId")
 				.groupBy(["p.id", "si.storeId"])
@@ -136,7 +136,7 @@ const route = new Hono<ServerContext>()
 			const query = db
 				.selectFrom("storeInventory as si")
 				.where("si.storeId", "=", id)
-				.rightJoin("productVariant as pv", "pv.id", "si.productVariant")
+				.rightJoin("productVariant as pv", "pv.id", "si.variantId")
 				.rightJoin("product as p", "p.id", "pv.productId")
 				.$if(!!q, (qb) => {
 					const words = q!.trim().split(/\s+/);

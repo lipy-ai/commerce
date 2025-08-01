@@ -282,7 +282,7 @@ export const category = schema.table(
 		summary: text("summary"),
 		slug: text("slug").unique(),
 		image: text("image"),
-		parentId: uuid("parent_id").references((): AnyPgColumn => category.id, {
+		parentId: uuid("parentId").references((): AnyPgColumn => category.id, {
 			onDelete: "cascade",
 		}),
 	},
@@ -319,24 +319,49 @@ export const tags = schema.table("tag", {
 // BEFORE INSERT OR UPDATE ON "lipy-dev"."productsToAdd"
 // FOR EACH ROW EXECUTE FUNCTION update_search_vector();
 
-export const productsToAdd = schema.table(
-	"productsToAdd",
+export const reviewProducts = schema.table(
+	"reviewProducts",
 	{
 		id: bigserial("id", { mode: "number" }).primaryKey(),
 		title: text("title"),
+		summary: text("summary"),
+		tags: text("tags").array(),
 		searchVector: tsVector("searchVector"),
 		thumbnail: text("thumbnail"),
-		category: text("category"),
+		category: uuid("category").references(() => category.id, {
+			onDelete: "set null",
+		}),
+		primaryCategory: text("primaryCategory"),
 		subCategory: text("subCategory"),
+		storeId: uuid("storeId").references(() => store.id, {
+			onDelete: "cascade",
+		}),
+		variants: jsonb("variants")
+			.array()
+			.$type<
+				Array<{ id: string; unit: string; price: number; maxPrice?: number }>
+			>(),
+		highlights: jsonb("highlights")
+			.array()
+			.$type<Array<{ name: string; value: string }>>(),
+		information: jsonb("information")
+			.array()
+			.$type<Array<{ name: string; value: string }>>(),
+		content: text("content"),
+		images: text("images").array(),
 		metadata: jsonb().$type<{
 			table: string;
 			ref_id: string;
-			category: string;
-			images: string[];
-			price: string;
 		}>(),
+		reviewedAt: timestamp("reviewedAt", { withTimezone: true }),
+		reviewedBy: uuid("reviewedBy").references(() => user.id, {
+			onDelete: "set null",
+		}),
+		productId: uuid("productId").references(() => product.id, {
+			onDelete: "set null",
+		}),
 	},
-	(t) => [index("productsToAdd_search_idx").using("gin", t.searchVector)],
+	(t) => [index("reviewProducts_search_idx").using("gin", t.searchVector)],
 );
 
 export const product = schema.table("product", {
@@ -356,10 +381,10 @@ export const product = schema.table("product", {
 
 	highlights: jsonb("highlights")
 		.array()
-		.$type<{ label: string; value: string }[]>(),
+		.$type<{ name: string; value: string }[]>(),
 	information: jsonb("information")
 		.array()
-		.$type<{ label: string; value: string }[]>(),
+		.$type<{ name: string; value: string }[]>(),
 	keywords: text("keywords").array(),
 	status: text("status", { enum: PRODUCT_STATUS }).default("draft"),
 });
@@ -367,7 +392,16 @@ export const product = schema.table("product", {
 export const productVariant = schema.table("productVariant", {
 	id: uuid("id").primaryKey(),
 	unit: text("unit"),
-	price: numeric("price", { precision: 10, scale: 2, mode: "number" }),
+	price: numeric("price", { precision: 10, scale: 2, mode: "number" })
+		.default(0)
+		.notNull(),
+	maxPrice: numeric("maxPrice", {
+		precision: 10,
+		scale: 2,
+		mode: "number",
+	})
+		.notNull()
+		.default(0),
 	images: text("images").array(),
 	productId: uuid("productId").references(() => product.id, {
 		onDelete: "cascade",
@@ -378,7 +412,7 @@ export const storeInventory = schema.table(
 	"storeInventory",
 	{
 		id: uuid("id").primaryKey(),
-		variantId: uuid("productVariant").references(() => productVariant.id, {
+		variantId: uuid("variantId").references(() => productVariant.id, {
 			onDelete: "cascade",
 		}),
 		active: boolean("active").default(true),
@@ -533,7 +567,7 @@ export const dbTables = {
 	customer,
 	product,
 	productVariant,
-	productsToAdd,
+	reviewProducts,
 	cart,
 	orders,
 	upload,

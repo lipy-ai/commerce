@@ -203,36 +203,13 @@ export const apiMutationOptions = <
 		mutationKey: getAPIQueryKey(endpoint, method, {} as any),
 		mutationFn: async (variables) => {
 			const res = await endpointFn(variables);
-
 			if (res.status >= 200 && res.status < 300) {
 				return (await res.json()) as TResponse;
 			}
-			const errorData = (await res
-				.json()
-				.then((e) => {
-					return e.error;
-				})
-				.catch(
-					async (_e) =>
-						await res
-							.text()
-							.catch((_f) => ({ message: "Failed to decode response..." })),
-				)) as TError & {
-				code?: string;
-				cause: Record<string, any>;
-				message?: string;
-			};
-			if (errorData?.code === "VALIDATION_ERR" && options?.form?.setError) {
-				for (const [field, message] of Object.entries(errorData.cause.issues)) {
-					options?.form.setError(field as any, {
-						type: "server",
-						message: message as string,
-					});
-				}
-			}
+			const errorData = (await res.json()) as TError;
 
 			const error = new Error(
-				errorData.message || `Request failed with status ${res.status}`,
+				`Request failed with status ${res.status}`,
 			) as Error & {
 				status: number;
 				data: TError;
@@ -242,6 +219,46 @@ export const apiMutationOptions = <
 			error.data = errorData;
 
 			throw error;
+			// const res = await endpointFn(variables);
+
+			// if (res.status >= 200 && res.status < 300) {
+			// 	return (await res.json()) as TResponse;
+			// }
+			// const errorData = (await res
+			// 	.json()
+			// 	.then((e) => {
+			// 		return e.error;
+			// 	})
+			// 	.catch(
+			// 		async (_e) =>
+			// 			await res
+			// 				.text()
+			// 				.catch((_f) => ({ message: "Failed to decode response..." })),
+			// 	)) as TError & {
+			// 	code?: string;
+			// 	cause: Record<string, any>;
+			// 	message?: string;
+			// };
+			// if (errorData?.code === "VALIDATION_ERR" && options?.form?.setError) {
+			// 	for (const [field, message] of Object.entries(errorData.cause.issues)) {
+			// 		options?.form.setError(field as any, {
+			// 			type: "server",
+			// 			message: message as string,
+			// 		});
+			// 	}
+			// }
+
+			// const error = new Error(
+			// 	errorData.message || `Request failed with status ${res.status}`,
+			// ) as Error & {
+			// 	status: number;
+			// 	data: TError;
+			// };
+
+			// error.status = res.status;
+			// error.data = errorData;
+
+			// throw errorData;
 		},
 		...options,
 	};
@@ -349,7 +366,22 @@ export const useAPIMutation = <
 			options,
 		),
 	);
-	handleNavigate((q.error as any)?.data?.code);
+
+	const err = (q.error as any)?.data;
+
+	handleNavigate(err);
+
+	if (err?.code === "VALIDATION_ERR" && options?.form) {
+		if (err?.cause?.issues) {
+			const issues = err.cause.issues;
+			for (const [field, message] of Object.entries(issues)) {
+				options?.form.setError(field, {
+					type: "manual",
+					message: message as string,
+				});
+			}
+		}
+	}
 
 	return q;
 };

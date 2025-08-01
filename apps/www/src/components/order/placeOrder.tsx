@@ -175,6 +175,9 @@ function PlaceOrderProgress({
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 5000));
+      if (!deliveryLocation.id) {
+        (deliveryLocation as any).id = undefined;
+      }
       await orderMutation.mutateAsync({
         json: {
           address: {

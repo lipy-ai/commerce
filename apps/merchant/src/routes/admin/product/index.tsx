@@ -4,16 +4,18 @@ import { SearchInput } from "@lipy/web-ui/components/forms/searchInput";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Pagination } from "@lipy/web-ui/components/pages/pagination";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
-import { Button } from "@lipy/web-ui/components/ui/button";
+import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
-import { createFileRoute } from "@tanstack/react-router";
+import { cn } from "@lipy/web-ui/lib/utils";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { PenLine, Tickets, Trash } from "lucide-react";
 import { z } from "zod";
 import FormDelete from "./-form-delete";
 import FormEdit from "./-form.edit";
 import { ProductProvider, useProduct } from "./-provider";
 import ToggleProductActive from "./-toggle-active";
+import AssignProductVariationForm from "./-variation";
 
 export const Route = createFileRoute("/admin/product/")({
   component: RouteComponent,
@@ -21,6 +23,9 @@ export const Route = createFileRoute("/admin/product/")({
     page: z.coerce.number().int().min(1).catch(1),
     q: z.string().default(""),
     category: z.string().optional(),
+    shop: z.string().uuid().optional(),
+    product: z.string().uuid().optional(),
+    view: z.enum(["edit", "assign", "delete", "create"]).optional(),
   }),
 });
 
@@ -44,6 +49,10 @@ function Component() {
 
   return (
     <div className="px-4 py-8 md:p-8 space-y-8 flex-1 flex flex-col">
+      <FormEdit />
+      <FormDelete />
+      <AssignProductVariationForm />
+
       <div className="grid grid-cols-12 items-center gap-2">
         <SearchInput
           type="categories"
@@ -64,9 +73,13 @@ function Component() {
           className="flex-1 w-full lg:w-auto p-0 col-span-9"
         />
         <div className="col-span-3 md:col-span-1">
-          <FormEdit type="create">
-            <Button className="w-full">Add New</Button>
-          </FormEdit>
+          <Link
+            to={"/admin/product"}
+            search={(s) => ({ ...s, view: "create" })}
+            className={cn(buttonVariants(), "w-full")}
+          >
+            Add New
+          </Link>
         </div>
       </div>
       <DesktopView />
@@ -105,9 +118,12 @@ function DesktopView() {
               className="size-12 border rounded bg-accent"
             />
           </div>
-          <div>
+          <div className="min-w-xs">
             <p className="font-medium block break-words">{m.title}</p>
-            <p className="font-light block break-words">{m.summary}</p>
+            <div className="flex gap-2">
+              <Badge variant={"default"}>{m?.category?.title}</Badge>
+              <Badge variant={"default"}>{m?.variants?.length} variants</Badge>
+            </div>
           </div>
 
           <div>
@@ -115,42 +131,55 @@ function DesktopView() {
           </div>
 
           <div>
-            <Button size="sm" variant="outline">
-              <Tickets /> {m?.variants?.length || 0} Variants
-            </Button>
+            <Link
+              to={"/admin/product"}
+              search={(s) => ({ ...s, view: "assign", product: m.id })}
+              className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+            >
+              <Tickets /> Assign Variants
+            </Link>
           </div>
 
           <div className="pl-4">
             <p className="font-medium">
-              {formatAmount("inr", m?.price || 0)}{" "}
-              {m?.maxPrice && (
+              {formatAmount("inr", m?.variants?.[0]?.price || 0)}{" "}
+              {m?.variants?.[0]?.maxPrice && (
                 <span className="text-muted-foreground text-xs line-through">
-                  {formatAmount("inr", m?.maxPrice || 0)}
+                  {formatAmount("inr", m?.variants?.[0]?.maxPrice || 0)}
                 </span>
               )}
             </p>
-            {m?.maxPrice && (
-              <p>
+            {m?.variants?.[0]?.maxPrice && (
+              <div>
                 <Badge size="sm" variant="info">
-                  {formatAmount("inr", m?.maxPrice - (m?.price || 0))} Off
+                  {formatAmount(
+                    "inr",
+                    m?.variants?.[0]?.maxPrice - (m?.variants?.[0]?.price || 0)
+                  )}{" "}
+                  Off
                 </Badge>
-              </p>
+              </div>
             )}
           </div>
           <div>
             <div>
               <div className="flex gap-2">
-                <FormEdit type="update" data={m}>
-                  <Button size={"icon-sm"}>
-                    <PenLine />
-                  </Button>
-                </FormEdit>
-
-                <FormDelete id={m.id}>
-                  <Button size={"icon-sm"} variant="outline">
-                    <Trash />
-                  </Button>
-                </FormDelete>
+                <Link
+                  to={"/admin/product"}
+                  search={(s) => ({ ...s, view: "edit", product: m.id })}
+                  className={cn(buttonVariants({ size: "icon-sm" }))}
+                >
+                  <PenLine />
+                </Link>
+                <Link
+                  to={"/admin/product"}
+                  search={(s) => ({ ...s, view: "delete", product: m.id })}
+                  className={cn(
+                    buttonVariants({ variant: "outline", size: "icon-sm" })
+                  )}
+                >
+                  <Trash />
+                </Link>
 
                 {/* <Link
 									to="/admin/product/$id"

@@ -26,11 +26,12 @@ import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
-import { Eye, PenLine } from "lucide-react";
+import { Eye } from "lucide-react";
 import React, { Fragment, type ReactNode } from "react";
 
 import { DrawerDialogSwitcher } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
-import FormEdit from "./-form.edit";
+// import FormEdit from "./-form.edit";
+// import AssignProductVariationForm from "./-variation";
 // import ProductVariationForm from "./-variation";
 
 export const Route = createFileRoute("/admin/product/$id")({
@@ -47,19 +48,6 @@ function RouteComponent() {
   const mrp = data?.maxPrice || 0;
   const sp = data?.price || 0;
   const { isMobile } = useViewport();
-
-  const variants = (
-    <Card className="">
-      <CardHeader>
-        <CardTitle>Product Variants</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {/* {data?.variants?.map((m, i) => (
-          <ProductVariationForm data={m as any} key={i} />
-        ))} */}
-      </CardContent>
-    </Card>
-  );
 
   return (
     <>
@@ -93,11 +81,19 @@ function RouteComponent() {
 						>
 							<Trash /> {!isMobile && (pending ? "Deleting" : "Delete")}
 						</Button> */}
-                      <FormEdit type="update" data={data}>
+                      {/* <FormEdit type="update" data={data}>
                         <Button variant={"outline"} size={"sm"}>
                           <PenLine /> {!isMobile && "Edit"}
                         </Button>
                       </FormEdit>
+                      <AssignProductVariationForm
+                        productId={data?.id || ""}
+                        storeId=""
+                      >
+                        <Button variant={"outline"} size={"sm"}>
+                          Assign Variant
+                        </Button>
+                      </AssignProductVariationForm> */}
                     </CardAction>
                   </CardHeader>
                   <CardContent className="space-y-8">
@@ -146,7 +142,6 @@ function RouteComponent() {
                     </div>
                   </CardContent>
                 </Card>
-                {isMobile && variants}
 
                 <Card>
                   <CardHeader>
@@ -157,7 +152,7 @@ function RouteComponent() {
                       <div className="grid grid-cols-[120px_auto] gap-x-4 gap-y-8 items-start [&_label]:leading-snug [&_p]:text-muted-foreground">
                         {data?.highlights.map((d, i) => (
                           <Fragment key={i}>
-                            <Label>{d.label}</Label>
+                            <Label>{d.name}</Label>
                             <p className="break-words overflow-hidden text-ellipsis max-w-full">
                               {d.value}
                             </p>
@@ -176,7 +171,7 @@ function RouteComponent() {
                       <div className="grid grid-cols-[120px_auto] gap-x-4 gap-y-8 items-start [&_label]:leading-snug [&_p]:text-muted-foreground">
                         {data?.information.map((d, i) => (
                           <Fragment key={i}>
-                            <Label>{d.label}</Label>
+                            <Label>{d.name}</Label>
                             <p className="break-words overflow-hidden text-ellipsis max-w-full">
                               {d.value}
                             </p>
@@ -188,7 +183,6 @@ function RouteComponent() {
                 </Card>
               </div>
             </div>
-            {!isMobile && variants}
           </div>
         </>
       )}

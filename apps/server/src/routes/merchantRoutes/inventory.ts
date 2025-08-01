@@ -30,7 +30,7 @@ export const merchantInventoryRoute = new Hono<ServerContext>().patch(
 					.insertInto("storeInventory")
 					.values({
 						id: crypto.randomUUID(),
-						productVariant: variantId,
+						variantId,
 						price,
 						stock,
 						sku,
@@ -44,7 +44,7 @@ export const merchantInventoryRoute = new Hono<ServerContext>().patch(
 				await db
 					.updateTable("storeInventory")
 					.set({
-						productVariant: variantId,
+						variantId,
 						price,
 						stock,
 						sku,

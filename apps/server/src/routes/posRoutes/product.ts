@@ -65,7 +65,7 @@ export const posProductRoute = new Hono<ServerContext>().get(
 
 			.leftJoin("storeInventory as si", (join) =>
 				join
-					.onRef("si.productVariant", "=", "pv.id")
+					.onRef("si.variantId", "=", "pv.id")
 					.on("si.storeId", "=", activeStoreId!),
 			)
 			.$if(!!category, (qb) => qb.where("category", "=", category!))

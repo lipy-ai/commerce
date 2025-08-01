@@ -122,6 +122,7 @@ function RouteComponent() {
                     {formatAmount(order.currency, order?.totalAmount || 0)}{" "}
                   </p>
                 )}
+                c
               </div>
             }
           >

@@ -27,6 +27,7 @@ import {
 } from "@lipy/web-ui/components/ui/accordion";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
+import { toast } from "@lipy/web-ui/components/ui/sonner";
 import {
   Sortable,
   SortableContent,
@@ -61,7 +62,7 @@ export default function FormEdit({
   children: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
-
+  const { invalidate } = useProductInvalidate();
   const defaultValues: InferRequestType<
     typeof adminReviewProductApi.index.$post
   >["json"] = {
@@ -79,6 +80,10 @@ export default function FormEdit({
   });
 
   const opts = {
+    onSuccess: () => {
+      invalidate();
+      toast.success("Operation Successful");
+    },
     onMutate: () => {},
     onError: () => {
       invalidate();
@@ -98,8 +103,6 @@ export default function FormEdit({
     "$post",
     opts
   );
-
-  const { invalidate } = useProductInvalidate();
 
   const onSubmit = async (body: typeof defaultValues) => {
     if (!data?.id) return await createMutation.mutateAsync({ json: body });
@@ -186,6 +189,7 @@ export default function FormEdit({
                     isPending={publishMu.isPending}
                     isSuccessful={publishMu.isSuccess}
                     isError={publishMu.isError}
+                    disabled={form.formState.isDirty}
                   >
                     Publish
                   </ActionButton>

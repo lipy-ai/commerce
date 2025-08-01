@@ -76,7 +76,7 @@ const route = new Hono<ServerContext>()
 				sql<boolean>`ST_DWithin(s.location, ST_SetSRID(ST_MakePoint(${query.originLng}, ${query.originLat}), 4326)::geography, ${radiusInMeters})`,
 			)
 			.where(
-				sql<boolean>`ST_Distance(s.location, ST_SetSRID(ST_MakePoint(${query.originLng}, ${query.originLat}), 4326)::geography) <= s."deliveryDistance" * 1000`,
+				sql<boolean>`ST_Distance(s.location, ST_SetSRID(ST_MakePoint(${query.originLng}, ${query.originLat}), 4326)::geography) <= (s."deliveryDistance"+ 5) * 1000`,
 			)
 			.select([
 				"id",
@@ -87,6 +87,7 @@ const route = new Hono<ServerContext>()
 				"address",
 				"phone",
 				"freeDeliveryDistance",
+				"deliveryDistance"
 			])
 			.limit(25)
 			.execute();
@@ -108,6 +109,14 @@ const route = new Hono<ServerContext>()
 			distance: distanceMatrix.rows[0].elements[i].distance || 0,
 			duration: distanceMatrix.rows[0].elements[i].duration || 0,
 		}));
+
+		const nearbyShops = shopData.filter((shop) => {
+			return Number(shop.distance.value) < (shop.deliveryDistance + 5) * 1000;
+		});
+
+		const result = nearbyShops.sort((a, b) => {
+			return Number(a.distance.value) - Number(b.distance.value);
+		});
 
 		return c.json(shopData);
 	})

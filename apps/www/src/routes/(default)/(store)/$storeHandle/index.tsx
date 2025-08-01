@@ -83,10 +83,10 @@ function RouteComponent() {
     }
   );
 
-  if (fetchingShopData || fetchingProduct) return <Loading />;
+  if (!fetchingShopData || fetchingProduct) return <Loading />;
 
   return (
-    <div>
+    <>
       <DashboardHeader
         titleChildren={
           <motion.h1
@@ -191,7 +191,7 @@ function RouteComponent() {
       <div className="lg:hidden">
         <PrimaryCartFooter />
       </div>
-    </div>
+    </>
   );
 }
 

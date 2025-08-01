@@ -10,9 +10,9 @@ function RouteComponent() {
   const { isMobile } = useViewport();
   if (isMobile) return <Outlet />;
   return (
-    <div>
+    <>
       <NavBar />
       <Outlet />
-    </div>
+    </>
   );
 }

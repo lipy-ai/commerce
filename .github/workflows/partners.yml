@@ -31,7 +31,7 @@ jobs:
         run: pnpm i -g dotenv-cli wrangler
 
       - name: Build project
-        run: pnpm run build --filter="www"
+        run: pnpm run build --filter="merchant"
         env:
           # Add your environment variables here
           VITE_USE_IP: ${{ secrets.VITE_USE_IP }}

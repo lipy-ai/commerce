@@ -32,6 +32,17 @@ jobs:
 
       - name: Build project
         run: pnpm run build --filter="www"
+        env:
+          # Add your environment variables here
+          VITE_USE_IP: ${{ secrets.VITE_USE_IP }}
+          VITE_AUTH_URL: ${{ secrets.VITE_AUTH_URL }}
+          VITE_MERCHANT_URL: ${{ secrets.VITE_MERCHANT_URL }}
+          VITE_WEB_URL: ${{ secrets.VITE_WEB_URL }}
+          VITE_NODE_ENV: ${{ secrets.VITE_NODE_ENV }}
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_CDN_URL: ${{ secrets.VITE_CDN_URL }}
+          VITE_GOOGLE_MAP_API_KEY: ${{ secrets.VITE_GOOGLE_MAP_API_KEY }}
+          GOOGLE_MAP_LIBRARIES: ${{ secrets.GOOGLE_MAP_LIBRARIES }}
 
       - name: Deploy
         uses: cloudflare/wrangler-action@v3

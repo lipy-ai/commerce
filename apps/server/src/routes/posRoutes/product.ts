@@ -1,35 +1,35 @@
-import { db } from "@/db";
-import { zValidator } from "@/middlewares/validator";
-import { listZodSchema } from "@/schema/common";
-import type { ServerContext } from "@/types";
 import { Hono } from "hono";
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { z } from "zod";
+import { db } from "@/db";
+import { zValidator } from "@/middlewares/validator";
+import { listZodSchema } from "@/schema/common";
+import type { ServerContext } from "@/types";
 
-const schema = z.object({
-	items: z
-		.array(
-			z.object({
-				inventoryId: z.string().uuid().optional(),
-				variantId: z.string().optional(),
-				productId: z.string().uuid().optional(),
-				title: z.string(),
-				thumbnail: z.string(),
-				unit: z.string(),
-				qty: z.number().min(1),
-				price: z.number().min(0),
-				maxPrice: z.number().min(0),
-			}),
-		)
-		.min(1),
-	taxes: z.array(
-		z.object({ id: z.string(), title: z.string(), amount: z.number() }),
-	),
-	discounts: z.array(
-		z.object({ id: z.string(), title: z.string(), amount: z.number() }),
-	),
-});
+// const schema = z.object({
+// 	items: z
+// 		.array(
+// 			z.object({
+// 				inventoryId: z.string().uuid().optional(),
+// 				variantId: z.string().optional(),
+// 				productId: z.string().uuid().optional(),
+// 				title: z.string(),
+// 				thumbnail: z.string(),
+// 				unit: z.string(),
+// 				qty: z.number().min(1),
+// 				price: z.number().min(0),
+// 				maxPrice: z.number().min(0),
+// 			}),
+// 		)
+// 		.min(1),
+// 	taxes: z.array(
+// 		z.object({ id: z.string(), title: z.string(), amount: z.number() }),
+// 	),
+// 	discounts: z.array(
+// 		z.object({ id: z.string(), title: z.string(), amount: z.number() }),
+// 	),
+// });
 
 const listZodValidator = zValidator(
 	"query",

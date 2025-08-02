@@ -1,7 +1,5 @@
-import { type ProductInCart, useCartStore } from "@/components/cart/store";
-
-import { AddToCart } from "@/components/cart/addToCart";
-import PlaceOrder from "@/components/order/placeOrder";
+import { loggedInCartApi } from "@lipy/lib/api";
+// import PlaceOrder from "@/components/order/placeOrder";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import {
   apiQueryOptions,
@@ -22,12 +20,10 @@ import {
   AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
 import { Card, CardContent, CardHeader } from "@lipy/web-ui/components/ui/card";
-
-import { loggedInCartApi } from "@lipy/lib/api";
 import Loading from "@lipy/web-ui/components/ui/loading";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import type { InferResponseType } from "hono/client";
 import {
   ChevronDown,
@@ -42,6 +38,8 @@ import {
   Store,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { AddToCart } from "@/components/cart/addToCart";
+import { type ProductInCart, useCartStore } from "@/components/cart/store";
 import { Billing } from "./-billing";
 
 export type ResponseCart = InferResponseType<typeof loggedInCartApi.index.$get>;
@@ -106,7 +104,7 @@ export const CartMainContent = () => {
 
   // Update cart when data changes
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies:
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isFetched && data) {
       // setCart(data);
@@ -277,7 +275,7 @@ export const CartMainContent = () => {
                 </div>
               </div>
 
-              <PlaceOrder setOpen={setDetailedAddressDrawerOpen} data={data} />
+              {/* <PlaceOrder setOpen={setDetailedAddressDrawerOpen} data={data} /> */}
             </div>
           </div>
         </div>

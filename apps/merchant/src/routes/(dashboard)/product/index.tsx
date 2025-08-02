@@ -11,7 +11,7 @@ import { Card, CardContent } from "@lipy/web-ui/components/ui/card";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import type { InferResponseType } from "hono/client";
 import { Edit, Plus, Trash } from "lucide-react";
 import { z } from "zod";

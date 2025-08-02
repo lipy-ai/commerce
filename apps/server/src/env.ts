@@ -96,7 +96,7 @@ if (env.VITE_USE_IP) {
 				url.hostname = getServerIpAddress() || "localhost";
 
 				return url.toString().replace(/\/$/, "");
-			} catch (e) {
+			} catch (_e) {
 				console.warn(`Invalid URL ${value}`);
 			}
 		}

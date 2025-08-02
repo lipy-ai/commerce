@@ -1,10 +1,13 @@
-import { useJsApiLoader } from "@react-google-maps/api";
-import { MapPinOff, Search } from "lucide-react";
-import { useEffect, useState } from "react";
-
 import { env } from "@envClient";
+import { loggedInAddressApi } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
-
+import {
+  DrawerDialogDescription,
+  DrawerDialogFooter,
+  DrawerDialogHeader,
+  DrawerDialogSwitcher,
+  DrawerDialogTitle,
+} from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
 import {
   fillBaseAddress,
   reverseGeocode,
@@ -14,18 +17,11 @@ import {
   defaultDeliveryLocationState,
   useLocationStore,
 } from "@lipy/web-ui/components/maps/utils/store";
-
-import {
-  DrawerDialogDescription,
-  DrawerDialogFooter,
-  DrawerDialogHeader,
-  DrawerDialogSwitcher,
-  DrawerDialogTitle,
-} from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
-import { AddressSetter } from "./-addressSetter";
-
-import { loggedInAddressApi } from "@lipy/lib/api";
 import { Button } from "@lipy/web-ui/components/ui/button";
+import { useJsApiLoader } from "@react-google-maps/api";
+import { MapPinOff, Search } from "lucide-react";
+import { useEffect, useState } from "react";
+import { AddressSetter } from "./-addressSetter";
 
 function LocationComponent() {
   const [error, setError] = useState<string | null>(null);
@@ -79,7 +75,7 @@ function LocationComponent() {
     setDrawerOpen(true);
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies:
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!isLoading && mapLoaded) {
       if (primaryAddress?.id) {

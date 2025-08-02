@@ -4,6 +4,7 @@ import type { ColumnSort, Row, RowData } from "@tanstack/react-table";
 import type { LucideIcon } from "lucide-react";
 
 declare module "@tanstack/react-table" {
+	// biome-ignore lint/correctness/noUnusedVariables: <explanation>
 	interface ColumnMeta<TData extends RowData, TValue> {
 		label?: string;
 		placeholder?: string;
@@ -16,6 +17,7 @@ declare module "@tanstack/react-table" {
 }
 
 declare module "@tanstack/react-table" {
+	// biome-ignore lint/correctness/noUnusedVariables: <explanation>
 	interface TableMeta<TData extends RowData> {
 		updateData: (row: Record<string, any>) => void;
 	}

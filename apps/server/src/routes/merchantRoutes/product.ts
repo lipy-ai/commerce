@@ -1,12 +1,12 @@
+import { Hono } from "hono";
+import { type Insertable, sql } from "kysely";
+import { jsonBuildObject } from "kysely/helpers/postgres";
+import { z } from "zod";
 import { type DBTypes, db } from "@/db";
 import { PRODUCT_TYPE } from "@/db/schema";
 import { zValidator } from "@/middlewares/validator";
 import { listZodSchema } from "@/schema/common";
 import type { ServerContext } from "@/types";
-import { Hono } from "hono";
-import { type Insertable, sql } from "kysely";
-import { jsonBuildObject } from "kysely/helpers/postgres";
-import { z } from "zod";
 import { sseEmitter } from "./events";
 
 const productSchema = z.object({
@@ -195,8 +195,7 @@ const route = new Hono<ServerContext>()
 		),
 		zValidator("json", productSchema.partial()),
 		async (c) => {
-			const { id } = c.req.valid("param");
-			const { images, ...values } = c.req.valid("json");
+			const { images: _, ...values } = c.req.valid("json");
 			console.log("emitted msg");
 			sseEmitter.emit("send-to-user", {
 				userId: c.var.session?.userId,

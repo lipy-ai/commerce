@@ -1,17 +1,5 @@
 "use client";
 
-import type { Column, ColumnMeta, Table } from "@tanstack/react-table";
-import {
-  CalendarIcon,
-  Check,
-  ChevronsUpDown,
-  GripVertical,
-  ListFilter,
-  Trash2,
-} from "lucide-react";
-import { parseAsStringEnum, useQueryState } from "nuqs";
-import * as React from "react";
-
 import { DataTableRangeFilter } from "@lipy/web-ui/components/table/range-filter";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Button } from "@lipy/web-ui/components/ui/button";
@@ -70,6 +58,17 @@ import type {
   FilterOperator,
   JoinOperator,
 } from "@lipy/web-ui/types/data-table";
+import type { Column, ColumnMeta, Table } from "@tanstack/react-table";
+import {
+  CalendarIcon,
+  Check,
+  ChevronsUpDown,
+  GripVertical,
+  ListFilter,
+  Trash2,
+} from "lucide-react";
+import { parseAsStringEnum, useQueryState } from "nuqs";
+import * as React from "react";
 
 const FILTERS_KEY = "filters";
 const JOIN_OPERATOR_KEY = "joinOperator";
@@ -359,14 +358,13 @@ function DataTableFilterItem<TData>({
   const [showValueSelector, setShowValueSelector] = React.useState(false);
 
   const column = columns.find((column) => column.id === filter.id);
-  if (!column) return null;
 
   const joinOperatorListboxId = `${filterItemId}-join-operator-listbox`;
   const fieldListboxId = `${filterItemId}-field-listbox`;
   const operatorListboxId = `${filterItemId}-operator-listbox`;
   const inputId = `${filterItemId}-input`;
 
-  const columnMeta = column.columnDef.meta;
+  const columnMeta = column?.columnDef.meta;
   const filterOperators = getFilterOperators(filter.variant);
 
   const onItemKeyDown = React.useCallback(
@@ -395,6 +393,7 @@ function DataTableFilterItem<TData>({
       onFilterRemove,
     ]
   );
+  if (!column) return null;
 
   return (
     <SortableItem value={filter.filterId} asChild>

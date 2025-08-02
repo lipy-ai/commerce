@@ -1,5 +1,4 @@
-import { useCartStore } from "@/components/cart/store";
-import PlaceOrder from "@/components/order/placeOrder";
+// import PlaceOrder from "@/components/order/placeOrder";
 import { publicShopApi } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
@@ -13,8 +12,7 @@ import {
 } from "@lipy/web-ui/components/ui/avatar";
 import { Card, CardContent, CardHeader } from "@lipy/web-ui/components/ui/card";
 import { Label } from "@lipy/web-ui/components/ui/label";
-import { Link } from "@tanstack/react-router";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ChevronDown,
   MapPinned,
@@ -23,6 +21,7 @@ import {
   Store,
 } from "lucide-react";
 import { useState } from "react";
+import { useCartStore } from "@/components/cart/store";
 
 export const Route = createFileRoute(
   "/(default)/(store)/$storeHandle/order/(pharmacy)/checkout"
@@ -142,11 +141,11 @@ function RouteComponent() {
               </div>
             </div>
 
-            <PlaceOrder
+            {/* <PlaceOrder
               setOpen={setDetailedAddressDrawerOpen}
               storeId={storeInfo?.id}
               customOrder
-            />
+            /> */}
           </div>
         </div>
       ) : (

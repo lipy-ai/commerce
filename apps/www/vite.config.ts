@@ -2,7 +2,9 @@ import path, { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import viteReact from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
+
 import { VitePWA } from "vite-plugin-pwa";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -11,13 +13,14 @@ const __dirname = dirname(__filename);
 export default defineConfig({
 	plugins: [
 		tailwindcss(),
-		tanstackStart({ target: "node-server" }) as any,
 		VitePWA({
 			registerType: "autoUpdate",
 			devOptions: {
-				enabled: process.env.NODE_ENV === "development",
+				// enabled: process.env.NODE_ENV === "development",
 			},
 		}),
+		tanstackStart({ target: "cloudflare-module", customViteReactPlugin: true }),
+		viteReact(),
 	],
 
 	build: {

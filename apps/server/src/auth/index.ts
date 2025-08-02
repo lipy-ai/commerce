@@ -1,10 +1,9 @@
+import { betterAuth } from "better-auth";
+import { emailOTP, phoneNumber } from "better-auth/plugins";
 import { schema as s } from "@/db/schema";
 import { redis } from "@/services/cache";
 import { plunkSendEmail } from "@/services/ses";
 import { sendSMS } from "@/services/sns";
-import { betterAuth } from "better-auth";
-import { emailOTP } from "better-auth/plugins";
-import { phoneNumber } from "better-auth/plugins";
 import { db } from "../db";
 import env from "../env";
 import emailHarmony from "./plugins/emailValidator";
@@ -24,7 +23,7 @@ const emailOTPPlugin = emailOTP({
 const phoneOTPPlugin = phoneNumber({
 	otpLength: 6,
 	sendOTP: async ({ phoneNumber, code }, _request) => {
-		const data = await sendSMS({
+		const _data = await sendSMS({
 			phoneNumber: phoneNumber,
 			message: `Login in to Lipy using this OTP: ${code}`,
 		});

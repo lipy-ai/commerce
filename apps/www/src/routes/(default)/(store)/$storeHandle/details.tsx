@@ -1,4 +1,3 @@
-import { PrimaryCartFooter } from "@/components/cart/cartFooter";
 import { env } from "@envClient";
 import { publicShopApi } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
@@ -14,6 +13,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { Bike, Clock, Handshake, Mail, Phone, Share2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { PrimaryCartFooter } from "@/components/cart/cartFooter";
 import { getStoreStatus } from "./-helper";
 
 type StoreStatus = {
@@ -43,7 +43,7 @@ function RouteComponent() {
     }
   );
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies:
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (data) {
       const { isOpen, openTime, closeTime } = getStoreStatus(

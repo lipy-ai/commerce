@@ -1,17 +1,16 @@
 "use client";
 
-import { usePWAInstall } from "@lipy/web-ui/hooks/use-pwa-install";
-
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
+import { usePWAInstall } from "@lipy/web-ui/hooks/use-pwa-install";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, useMatchRoute } from "@tanstack/react-router";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { ArrowDownToLine, type LucideIcon } from "lucide-react";
 import {
+  createContext,
   Fragment,
   type ReactNode,
-  createContext,
   useContext,
   useRef,
   useState,
@@ -185,43 +184,41 @@ function ActiveLinks({
 
   if (isMobile && mobileNav) {
     return (
-      <>
-        <motion.div
-          className={cn(
-            "fixed bottom-0 w-screen z-50 print:hidden transition-all ease-in-out"
-          )}
-          initial="visible"
-          animate={isHidden ? "hidden" : "visible"}
-          variants={{
-            hidden: { y: 77 },
-            visible: { y: 0 },
-          }}
-          transition={{ duration: 0.2, ease: "easeInOut" }}
-          data-state={isHidden ? "hidden" : "visible"}
-        >
-          {footer && footer.length > 0 && (
-            <div className="space-y-4 p-4">
-              {footer?.map((f, i) => (
-                <Fragment key={i}>{f.node}</Fragment>
-              ))}
-            </div>
-          )}
-
-          {/* Mobile Nav */}
-          <div className="bg-background border-t">
-            <div
-              className={cn("grid justify-center px-2")}
-              style={{
-                gridTemplateColumns: `repeat(${mobileNav.length}, 1fr)`,
-              }}
-            >
-              {mobileNav.map((n, i) => (
-                <NavLink key={i} nav={n} mobile matchRoute={matchRoute} />
-              ))}
-            </div>
+      <motion.div
+        className={cn(
+          "fixed bottom-0 w-screen z-50 print:hidden transition-all ease-in-out"
+        )}
+        initial="visible"
+        animate={isHidden ? "hidden" : "visible"}
+        variants={{
+          hidden: { y: 77 },
+          visible: { y: 0 },
+        }}
+        transition={{ duration: 0.2, ease: "easeInOut" }}
+        data-state={isHidden ? "hidden" : "visible"}
+      >
+        {footer && footer.length > 0 && (
+          <div className="space-y-4 p-4">
+            {footer?.map((f, i) => (
+              <Fragment key={i}>{f.node}</Fragment>
+            ))}
           </div>
-        </motion.div>
-      </>
+        )}
+
+        {/* Mobile Nav */}
+        <div className="bg-background border-t">
+          <div
+            className={cn("grid justify-center px-2")}
+            style={{
+              gridTemplateColumns: `repeat(${mobileNav.length}, 1fr)`,
+            }}
+          >
+            {mobileNav.map((n, i) => (
+              <NavLink key={i} nav={n} mobile matchRoute={matchRoute} />
+            ))}
+          </div>
+        </div>
+      </motion.div>
     );
   }
 

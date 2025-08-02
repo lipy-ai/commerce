@@ -1,34 +1,35 @@
-/// <reference types="vite/client" />
-
-import { DefaultCatchBoundary, NotFound } from "@/router";
-import { seo } from "@/utils/seo";
 import { env } from "@envClient";
 import useGlobalVibration from "@lipy/lib/hooks/use-vibrate";
 import QueryProvider from "@lipy/lib/providers/queryProvider";
-import { getIsSsrMobile } from "@lipy/lib/utils/isServerMobile";
 import { Toaster, toast } from "@lipy/web-ui/components/ui/sonner";
 import { ViewportProvider } from "@lipy/web-ui/contexts/viewport";
 import appCss from "@lipy/web-ui/styles.css?url";
 import {
+  createRootRoute,
   HeadContent,
   Outlet,
   Scripts,
-  createRootRoute,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import { createServerFn } from "@tanstack/react-start";
-import { getHeader } from "@tanstack/react-start/server";
+
 import { NuqsAdapter } from "nuqs/adapters/react";
 import * as React from "react";
+import { DefaultCatchBoundary, NotFound } from "@/router";
+import { seo } from "@/utils/seo";
+// import { globalInit } from "./(serverFn)/globalInit";
 
-export const globalInit = createServerFn({ method: "GET" }).handler(
-  async () => {
-    const userAgent = getHeader("User-Agent");
+// import { createServerFn, json } from "@tanstack/react-start";
+// import { getHeader } from "@tanstack/react-start/server";
 
-    const isSsrMobile = getIsSsrMobile(userAgent);
-    return { isSsrMobile, userAgent };
-  }
-);
+// export const globalInit = createServerFn({ method: "GET" }).handler(
+//   async () => {
+//     // const userAgent = getHeader("User-Agent");
+
+//     // const isSsrMobile = getIsSsrMobile(userAgent);
+//     // return { isSsrMobile, userAgent };
+//     return json({ r: "r" });
+//   }
+// );
 
 export const Route = createRootRoute({
   head: () => ({
@@ -96,13 +97,19 @@ export const Route = createRootRoute({
   },
   notFoundComponent: () => <NotFound />,
   loader: async () => {
-    const data = await globalInit();
-    return data;
+    // if (typeof window === "undefined") {
+    //   const data = await globalInit();
+    //   return data;
+    // }
+    // const d = await globalInit();
+    // console.log({ d });
+    return false;
   },
   component: RootComponent,
 });
 
 function RootComponent() {
+  useGlobalVibration();
   return (
     <RootDocument>
       <Outlet />
@@ -115,9 +122,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     toast.error(error?.message || "Something went wrong!");
     return false;
   }, []);
-  useGlobalVibration();
-
-  const data = Route.useLoaderData();
   return (
     <html className="bg-muted/30" lang="en">
       <head suppressHydrationWarning>
@@ -127,10 +131,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         suppressHydrationWarning
         className="m-auto outline-1 outline-border shadow min-h-screen flex flex-col"
       >
-        <ViewportProvider isMobile={data?.isSsrMobile}>
+        <Toaster />
+        <ViewportProvider isMobile={false}>
           <QueryProvider handleThrowOnError={handleThrowOnError}>
             <NuqsAdapter>{children}</NuqsAdapter>
-            <Toaster />
           </QueryProvider>
           {env.SHOW_DEV_TOOLS && (
             <TanStackRouterDevtools position="bottom-right" />

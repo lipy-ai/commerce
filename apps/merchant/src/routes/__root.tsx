@@ -1,35 +1,35 @@
-import EventsProvider from "@/events";
-import { DefaultCatchBoundary, NotFound } from "@/router";
-import { seo } from "@/utils/seo";
 import { env } from "@envClient";
 import { useAuthSession } from "@lipy/lib/hooks/use-auth";
 import useGlobalVibration from "@lipy/lib/hooks/use-vibrate";
 import QueryProvider from "@lipy/lib/providers/queryProvider";
-import { getIsSsrMobile } from "@lipy/lib/utils/isServerMobile";
+// import { getIsSsrMobile } from "@lipy/lib/utils/isServerMobile";
 import Loading from "@lipy/web-ui/components/ui/loading";
 import { Toaster, toast } from "@lipy/web-ui/components/ui/sonner";
 import { ViewportProvider } from "@lipy/web-ui/contexts/viewport";
 import appCss from "@lipy/web-ui/styles.css?url";
 import {
+  createRootRoute,
   HeadContent,
   Outlet,
   Scripts,
-  createRootRoute,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import { createServerFn } from "@tanstack/react-start";
-import { getHeader } from "@tanstack/react-start/server";
+// import { createServerFn } from "@tanstack/react-start";
+// import { getHeader } from "@tanstack/react-start/server";
 import { NuqsAdapter } from "nuqs/adapters/react";
 import * as React from "react";
+// import EventsProvider from "@/events";
+import { DefaultCatchBoundary, NotFound } from "@/router";
+import { seo } from "@/utils/seo";
 
-export const globalInit = createServerFn({ method: "GET" }).handler(
-  async () => {
-    const userAgent = getHeader("User-Agent");
+// export const globalInit = createServerFn({ method: "GET" }).handler(
+//   async () => {
+//     const userAgent = getHeader("User-Agent");
 
-    const isSsrMobile = getIsSsrMobile(userAgent);
-    return { isSsrMobile, userAgent };
-  }
-);
+//     const isSsrMobile = getIsSsrMobile(userAgent);
+//     return { isSsrMobile, userAgent };
+//   }
+// );
 
 export const Route = createRootRoute({
   head: () => ({
@@ -72,10 +72,10 @@ export const Route = createRootRoute({
     );
   },
   notFoundComponent: () => <NotFound />,
-  loader: async () => {
-    const data = await globalInit();
-    return data;
-  },
+  // loader: async () => {
+  //   const data = await globalInit();
+  //   return data;
+  // },
   component: RootComponent,
 });
 
@@ -97,7 +97,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   const { isPending } = useAuthSession();
   useGlobalVibration();
 
-  const data = Route.useLoaderData();
+  // const data = Route.useLoaderData();
   return (
     <html className="not-print:bg-muted/30" lang="en">
       <head suppressHydrationWarning>
@@ -107,10 +107,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         suppressHydrationWarning
         className="m-auto outline-1 outline-border shadow min-h-screen flex flex-col"
       >
-        <ViewportProvider isMobile={data?.isSsrMobile}>
+        <ViewportProvider isMobile={true}>
           <QueryProvider handleThrowOnError={handleThrowOnError}>
             <NuqsAdapter>
-              <EventsProvider />
+              {/* <EventsProvider /> */}
 
               {isPending ? <Loading /> : children}
             </NuqsAdapter>

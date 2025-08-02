@@ -1,20 +1,12 @@
-import { db } from "@/db";
-import type { ServerContext } from "@/types";
-import {
-	eachDayOfInterval,
-	endOfMonth,
-	format,
-	startOfMonth,
-	subDays,
-	subMonths,
-} from "date-fns";
+import { eachDayOfInterval, endOfMonth, format, startOfMonth } from "date-fns";
 import { Hono } from "hono";
 import { sql } from "kysely";
+import { db } from "@/db";
+import type { ServerContext } from "@/types";
 
 export const merchantDashboardRoute = new Hono<ServerContext>().get(
 	async (c) => {
 		const sess = c.get("session");
-		const startDate = subDays(new Date(), 29); // includes today
 
 		const pendingOrdersQuery = db
 			.selectFrom("orders as o")

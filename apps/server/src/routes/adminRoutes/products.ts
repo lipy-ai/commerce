@@ -1,12 +1,12 @@
+import { Hono } from "hono";
+import { sql } from "kysely";
+import { jsonBuildObject } from "kysely/helpers/postgres";
+import { z } from "zod";
 import { db } from "@/db";
 import { diffById } from "@/lib/compare";
 import { zValidator } from "@/middlewares/validator";
 import { listZodSchema } from "@/schema/common";
 import type { ServerContext } from "@/types";
-import { Hono } from "hono";
-import { sql } from "kysely";
-import { jsonBuildObject } from "kysely/helpers/postgres";
-import { z } from "zod";
 
 export const productSchema = z.object({
 	title: z.string(),
@@ -192,7 +192,7 @@ export const adminProductRoute = new Hono<ServerContext>()
 			const { id } = c.req.valid("param");
 			const { variants, ...vals } = c.req.valid("json");
 
-			const result = await db.transaction().execute(async (trx) => {
+			await db.transaction().execute(async (trx) => {
 				const p = await trx
 					.updateTable("product")
 					.where("id", "=", id)

@@ -1,7 +1,7 @@
-import { idGenerate } from "@/lib/generateId";
-import { logger } from "@/lib/logger";
 import { faker } from "@faker-js/faker";
 import { sql } from "kysely";
+import { idGenerate } from "@/lib/generateId";
+import { logger } from "@/lib/logger";
 import { type DBTypes, db, dbClient } from ".";
 import { ORDER_STATUS, PRODUCT_TYPE } from "./schema";
 
@@ -140,7 +140,7 @@ const create = async (user: DBTypes["user"]) => {
 			.returningAll()
 			.execute();
 
-		for (const v of variants) {
+		for (const _v of variants) {
 			await db
 				.insertInto("storeInventory")
 				.values({
@@ -157,7 +157,7 @@ const create = async (user: DBTypes["user"]) => {
 		}
 	}
 
-	const orders = await db
+	const _orders = await db
 		.insertInto("orders")
 		.values(
 			Array.from({ length: faker.number.int({ min: 0, max: 100 }) }).map(

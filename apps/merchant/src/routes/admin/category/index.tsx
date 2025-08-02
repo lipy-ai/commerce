@@ -4,18 +4,18 @@ import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { cn } from "@lipy/web-ui/lib/utils";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { PenLine, Plus, Trash } from "lucide-react";
 import { useEffect } from "react";
 import { z } from "zod";
-import CategoryFormDelete from "./-form-delete";
 import { CategoryFormEdit } from "./-form.edit";
+import CategoryFormDelete from "./-form-delete";
 import { CategoryProvider, useCategory } from "./-provider";
 
 export const Route = createFileRoute("/admin/category/")({
   component: RouteComponent,
   validateSearch: z.object({
-    page: z.coerce.number().int().min(1).catch(1),
+    page: z.coerce.number().int().min(1).catch(1).default(1),
     q: z.string().default(""),
     cat: z.string().default(""),
   }),
@@ -62,7 +62,7 @@ export const DesktopView = () => {
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!currentParent && data) {
-      navigate({ search: { cat: data.items[0].id } });
+      navigate({ search: { cat: data.items[0].id } } as any);
     }
   }, [currentParent]);
 

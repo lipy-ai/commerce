@@ -14,19 +14,18 @@ import {
   TableRow,
 } from "@lipy/web-ui/components/ui/table";
 import { cn } from "@lipy/web-ui/lib/utils";
-import { Link, createFileRoute } from "@tanstack/react-router";
-import { useSearch } from "@tanstack/react-router";
+import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
 import { PenLine, Store, Tickets, Trash } from "lucide-react";
 import { z } from "zod";
-import FormDelete from "./-form-delete";
 import FormEdit from "./-form.edit";
+import FormDelete from "./-form-delete";
 import { ProductProvider, useProduct } from "./-provider";
 import AssignProductVariationForm from "./-variation";
 
 export const Route = createFileRoute("/admin/product/")({
   component: RouteComponent,
   validateSearch: z.object({
-    page: z.coerce.number().int().min(1).catch(1),
+    page: z.coerce.number().int().min(1).catch(1).default(1),
     q: z.string().default(""),
     category: z.string().optional(),
     shop: z.string().uuid().optional(),

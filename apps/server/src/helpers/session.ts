@@ -1,9 +1,9 @@
+import type { Context } from "hono";
+import { deleteCookie } from "hono/cookie";
 import { auth } from "@/auth";
 import env from "@/env";
 import { redis } from "@/services/cache";
 import type { ServerContext } from "@/types";
-import type { Context } from "hono";
-import { deleteCookie, setCookie } from "hono/cookie";
 export const updateSession = async (
 	c: Context<ServerContext>,
 	data: {

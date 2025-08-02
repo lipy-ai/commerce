@@ -24,7 +24,7 @@ jobs:
           cache: "pnpm"
 
       - name: Install dependencies
-        run: pnpm install && pnpm i -g dotenv-cli
+        run: pnpm install && pnpm i -g dotenv-cli wrangler
 
       - name: Deploy
         uses: cloudflare/wrangler-action@v3
@@ -33,3 +33,4 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           packageManager: pnpm
           preCommands: pnpm run build --filter="www"
+          workingDirectory: "apps/www"

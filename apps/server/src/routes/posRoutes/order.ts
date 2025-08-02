@@ -1,3 +1,6 @@
+import { Hono } from "hono";
+import { sql, type Updateable } from "kysely";
+import { z } from "zod";
 import { type DBTypes, db } from "@/db";
 import { ORDER_STATUS, SUM_TYPE } from "@/db/schema";
 import { HTTPError } from "@/lib/exception";
@@ -6,9 +9,6 @@ import { orderCalculator } from "@/lib/orderCalculators";
 import { zValidator } from "@/middlewares/validator";
 import { listZodSchema } from "@/schema/common";
 import type { ServerContext } from "@/types";
-import { Hono } from "hono";
-import { type Expression, type SqlBool, type Updateable, sql } from "kysely";
-import { z } from "zod";
 
 const updateOrderSchema = z.object({
 	items: z
@@ -49,7 +49,7 @@ const createOrderSchema = z.object({
 
 export const posOrderRoute = new Hono<ServerContext>()
 	.get("/", zValidator("query", listZodSchema), async (c) => {
-		const { limit, page, q } = c.req.valid("query");
+		const { limit, page } = c.req.valid("query");
 		const activeStoreId = c.var.session?.activeStoreId!;
 		const offset = limit * (page - 1);
 		const query = db
@@ -151,7 +151,7 @@ export const posOrderRoute = new Hono<ServerContext>()
 				.where("o.storeId", "=", activeStoreId)
 				.selectAll(["o"])
 				.executeTakeFirstOrThrow()
-				.catch((c) => {
+				.catch((_c) => {
 					throw new HTTPError(404, { message: "Order not found!" });
 				});
 

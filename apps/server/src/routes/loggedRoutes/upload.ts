@@ -14,7 +14,7 @@ const presignedSchema = z.object({
 
 function extractIdFromUrl(url: string): string | null {
 	const path = new URL(url).pathname; // "/uploads/1234-uuid.png"
-	const match = path.match(/\/uploads\/([^.\/]+)\./);
+	const match = path.match(/\/uploads\/([^./]+)\./);
 	return match ? match[1] : null;
 }
 

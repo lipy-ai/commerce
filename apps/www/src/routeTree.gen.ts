@@ -8,6 +8,8 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createServerRootRoute } from '@tanstack/react-start/server'
+
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as defaultRouteRouteImport } from './routes/(default)/route'
 import { Route as defaultIndexRouteImport } from './routes/(default)/index'
@@ -30,6 +32,9 @@ import { Route as defaultstoreStoreHandleProductsProductIdRouteImport } from './
 import { Route as defaultstoreStoreHandleProductsCategoryCategorySlugRouteImport } from './routes/(default)/(store)/$storeHandle/products/category/$categorySlug'
 import { Route as defaultstoreStoreHandleOrderpharmacyNewRouteImport } from './routes/(default)/(store)/$storeHandle/order/(pharmacy)/new'
 import { Route as defaultstoreStoreHandleOrderpharmacyCheckoutRouteImport } from './routes/(default)/(store)/$storeHandle/order/(pharmacy)/checkout'
+import { ServerRoute as ApiInitServerRouteImport } from './routes/api/init'
+
+const rootServerRouteImport = createServerRootRoute()
 
 const defaultRouteRoute = defaultRouteRouteImport.update({
   id: '/(default)',
@@ -146,6 +151,11 @@ const defaultstoreStoreHandleOrderpharmacyCheckoutRoute =
     path: '/$storeHandle/order/checkout',
     getParentRoute: () => defaultstoreRouteRoute,
   } as any)
+const ApiInitServerRoute = ApiInitServerRouteImport.update({
+  id: '/api/init',
+  path: '/api/init',
+  getParentRoute: () => rootServerRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof defaultIndexRoute
@@ -283,6 +293,27 @@ export interface RootRouteChildren {
   defaultRouteRoute: typeof defaultRouteRouteWithChildren
   authLoginRoute: typeof authLoginRoute
   authLogoutRoute: typeof authLogoutRoute
+}
+export interface FileServerRoutesByFullPath {
+  '/api/init': typeof ApiInitServerRoute
+}
+export interface FileServerRoutesByTo {
+  '/api/init': typeof ApiInitServerRoute
+}
+export interface FileServerRoutesById {
+  __root__: typeof rootServerRouteImport
+  '/api/init': typeof ApiInitServerRoute
+}
+export interface FileServerRouteTypes {
+  fileServerRoutesByFullPath: FileServerRoutesByFullPath
+  fullPaths: '/api/init'
+  fileServerRoutesByTo: FileServerRoutesByTo
+  to: '/api/init'
+  id: '__root__' | '/api/init'
+  fileServerRoutesById: FileServerRoutesById
+}
+export interface RootServerRouteChildren {
+  ApiInitServerRoute: typeof ApiInitServerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -436,6 +467,17 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+declare module '@tanstack/react-start/server' {
+  interface ServerFileRoutesByPath {
+    '/api/init': {
+      id: '/api/init'
+      path: '/api/init'
+      fullPath: '/api/init'
+      preLoaderRoute: typeof ApiInitServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
+  }
+}
 
 interface defaultstoreRouteRouteChildren {
   defaultstoreStoreHandleDetailsRoute: typeof defaultstoreStoreHandleDetailsRoute
@@ -515,3 +557,9 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+const rootServerRouteChildren: RootServerRouteChildren = {
+  ApiInitServerRoute: ApiInitServerRoute,
+}
+export const serverRouteTree = rootServerRouteImport
+  ._addFileChildren(rootServerRouteChildren)
+  ._addFileTypes<FileServerRouteTypes>()

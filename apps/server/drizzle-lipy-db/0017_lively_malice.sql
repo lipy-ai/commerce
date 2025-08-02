@@ -1,2 +1,0 @@
-ALTER TABLE "lipy-dev"."reviewProducts" ADD COLUMN "productId" uuid;--> statement-breakpoint
-ALTER TABLE "lipy-dev"."reviewProducts" ADD CONSTRAINT "reviewProducts_productId_product_id_fk" FOREIGN KEY ("productId") REFERENCES "lipy-dev"."product"("id") ON DELETE set null ON UPDATE no action;

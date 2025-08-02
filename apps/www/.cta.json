@@ -4,7 +4,7 @@
 	"mode": "file-router",
 	"typescript": true,
 	"tailwind": true,
-	"packageManager": "bun",
+	"packageManager": "pnpm",
 	"toolchain": "biome",
 	"variableValues": {},
 	"git": true,

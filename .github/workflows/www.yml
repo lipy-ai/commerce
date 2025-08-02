@@ -1,0 +1,35 @@
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - apps/www/** # Trigger
+      - .github/workflows/www.yaml
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9.1.1
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.6.1
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install && pnpm i -g dotenv-cli
+
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          packageManager: pnpm
+          preCommands: pnpm run build --filter="www"

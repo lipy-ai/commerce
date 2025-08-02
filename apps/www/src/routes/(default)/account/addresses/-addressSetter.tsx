@@ -75,7 +75,7 @@ export const AddressSetter = ({
       setLoadingPrediction(true);
       const results = await getPlacePredictions(text);
       setPredictions(results);
-    } catch (error) {
+    } catch (_error) {
       setPredictions([]);
     } finally {
       setLoadingPrediction(false);
@@ -205,7 +205,7 @@ function PlacesSuggestionList({
       }
 
       onOpenChange(false);
-    } catch (error) {
+    } catch (_e) {
       return;
     }
   };

@@ -1,15 +1,13 @@
-import { db } from "@/db";
-import { STORE_TYPE } from "@/db/schema";
-import env from "@/env";
-import { HTTPError } from "@/lib/exception";
-import { zValidator } from "@/middlewares/validator";
-import { listZodSchema } from "@/schema/common";
-
-import type { ServerContext } from "@/types";
 import { Hono } from "hono";
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { z } from "zod";
+import { db } from "@/db";
+import env from "@/env";
+import { HTTPError } from "@/lib/exception";
+import { zValidator } from "@/middlewares/validator";
+import { listZodSchema } from "@/schema/common";
+import type { ServerContext } from "@/types";
 
 const shopSearchSchema = z.object({
 	originLat: z.coerce.number(),
@@ -87,7 +85,7 @@ const route = new Hono<ServerContext>()
 				"address",
 				"phone",
 				"freeDeliveryDistance",
-				"deliveryDistance"
+				"deliveryDistance",
 			])
 			.limit(25)
 			.execute();
@@ -114,7 +112,7 @@ const route = new Hono<ServerContext>()
 			return Number(shop.distance.value) < (shop.deliveryDistance + 5) * 1000;
 		});
 
-		const result = nearbyShops.sort((a, b) => {
+		nearbyShops.sort((a, b) => {
 			return Number(a.distance.value) - Number(b.distance.value);
 		});
 

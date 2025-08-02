@@ -4,6 +4,7 @@ on:
     paths:
       - apps/merchant/** # Trigger
       - .github/workflows/partners.yaml
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -24,7 +25,13 @@ jobs:
           cache: "pnpm"
 
       - name: Install dependencies
-        run: pnpm install && pnpm i -g dotenv-cli wrangler
+        run: pnpm install
+
+      - name: Install global dependencies
+        run: pnpm i -g dotenv-cli wrangler
+
+      - name: Build project
+        run: pnpm run build --filter="www"
 
       - name: Deploy
         uses: cloudflare/wrangler-action@v3

@@ -30,28 +30,6 @@ jobs:
       - name: Install global dependencies
         run: pnpm i -g dotenv-cli wrangler
 
-      - name: Log environment variables (masked)
-        run: |
-          echo "VITE_USE_IP: ${VITE_USE_IP:0:3}***"
-          echo "VITE_AUTH_URL: ${VITE_AUTH_URL:0:10}***"
-          echo "VITE_MERCHANT_URL: ${VITE_MERCHANT_URL:0:10}***"
-          echo "VITE_WEB_URL: ${VITE_WEB_URL:0:10}***"
-          echo "VITE_NODE_ENV: $VITE_NODE_ENV"
-          echo "VITE_API_URL: ${VITE_API_URL:0:10}***"
-          echo "VITE_CDN_URL: ${VITE_CDN_URL:0:10}***"
-          echo "VITE_GOOGLE_MAP_API_KEY: ${VITE_GOOGLE_MAP_API_KEY:0:5}***"
-          echo "GOOGLE_MAP_LIBRARIES: $GOOGLE_MAP_LIBRARIES"
-        env:
-          VITE_USE_IP: ${{ secrets.VITE_USE_IP }}
-          VITE_AUTH_URL: ${{ secrets.VITE_AUTH_URL }}
-          VITE_MERCHANT_URL: ${{ secrets.VITE_MERCHANT_URL }}
-          VITE_WEB_URL: ${{ secrets.VITE_WEB_URL }}
-          VITE_NODE_ENV: ${{ secrets.VITE_NODE_ENV }}
-          VITE_API_URL: ${{ secrets.VITE_API_URL }}
-          VITE_CDN_URL: ${{ secrets.VITE_CDN_URL }}
-          VITE_GOOGLE_MAP_API_KEY: ${{ secrets.VITE_GOOGLE_MAP_API_KEY }}
-          GOOGLE_MAP_LIBRARIES: ${{ secrets.GOOGLE_MAP_LIBRARIES }}
-
       - name: Build project
         run: pnpm run build --filter="merchant"
         env:
@@ -66,11 +44,10 @@ jobs:
           VITE_GOOGLE_MAP_API_KEY: ${{ secrets.VITE_GOOGLE_MAP_API_KEY }}
           GOOGLE_MAP_LIBRARIES: ${{ secrets.GOOGLE_MAP_LIBRARIES }}
 
-      - name: Deploy
+      - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           packageManager: pnpm
-          preCommands: pnpm run build --filter="merchant"
           workingDirectory: "apps/merchant"

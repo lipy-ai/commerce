@@ -1,6 +1,7 @@
 import { env } from "@envClient";
 import useGlobalVibration from "@lipy/lib/hooks/use-vibrate";
 import QueryProvider from "@lipy/lib/providers/queryProvider";
+import { getIsSsrMobile } from "@lipy/lib/utils/isServerMobile";
 import { Toaster, toast } from "@lipy/web-ui/components/ui/sonner";
 import { ViewportProvider } from "@lipy/web-ui/contexts/viewport";
 import appCss from "@lipy/web-ui/styles.css?url";
@@ -11,25 +12,21 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-
+import { createServerFn } from "@tanstack/react-start";
+import { getHeader } from "@tanstack/react-start/server";
 import { NuqsAdapter } from "nuqs/adapters/react";
 import * as React from "react";
 import { DefaultCatchBoundary, NotFound } from "@/router";
 import { seo } from "@/utils/seo";
-// import { globalInit } from "./(serverFn)/globalInit";
 
-// import { createServerFn, json } from "@tanstack/react-start";
-// import { getHeader } from "@tanstack/react-start/server";
+export const globalInit = createServerFn({ method: "GET" }).handler(
+  async () => {
+    const userAgent = getHeader("User-Agent");
 
-// export const globalInit = createServerFn({ method: "GET" }).handler(
-//   async () => {
-//     // const userAgent = getHeader("User-Agent");
-
-//     // const isSsrMobile = getIsSsrMobile(userAgent);
-//     // return { isSsrMobile, userAgent };
-//     return json({ r: "r" });
-//   }
-// );
+    const isSsrMobile = getIsSsrMobile(userAgent);
+    return { isSsrMobile, userAgent };
+  }
+);
 
 export const Route = createRootRoute({
   head: () => ({
@@ -97,13 +94,8 @@ export const Route = createRootRoute({
   },
   notFoundComponent: () => <NotFound />,
   loader: async () => {
-    // if (typeof window === "undefined") {
-    //   const data = await globalInit();
-    //   return data;
-    // }
-    // const d = await globalInit();
-    // console.log({ d });
-    return false;
+    const data = await globalInit();
+    return data;
   },
   component: RootComponent,
 });
@@ -122,6 +114,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     toast.error(error?.message || "Something went wrong!");
     return false;
   }, []);
+
+  const data = Route.useLoaderData();
+
   return (
     <html className="bg-muted/30" lang="en">
       <head suppressHydrationWarning>
@@ -132,7 +127,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         className="m-auto outline-1 outline-border shadow min-h-screen flex flex-col"
       >
         <Toaster />
-        <ViewportProvider isMobile={false}>
+        <ViewportProvider isMobile={data.isSsrMobile}>
           <QueryProvider handleThrowOnError={handleThrowOnError}>
             <NuqsAdapter>{children}</NuqsAdapter>
           </QueryProvider>

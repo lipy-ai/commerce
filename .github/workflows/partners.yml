@@ -3,7 +3,7 @@ on:
     branches: ["main"]
     paths:
       - apps/merchant/** # Trigger
-      - .github/workflows/merchant.yaml
+      - .github/workflows/partners.yaml
 
 jobs:
   deploy:

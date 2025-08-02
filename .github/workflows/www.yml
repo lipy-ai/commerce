@@ -1,8 +1,10 @@
+name: Deploy WWW
+
 on:
   push:
     branches: ["main"]
     paths:
-      - apps/www/** # Trigger
+      - apps/www/**
       - .github/workflows/www.yaml
 
 jobs:
@@ -10,7 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Deploy
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup PNPM
         uses: pnpm/action-setup@v3
@@ -24,13 +27,18 @@ jobs:
           cache: "pnpm"
 
       - name: Install dependencies
-        run: pnpm install && pnpm i -g dotenv-cli wrangler
+        run: pnpm install
 
-      - name: Deploy
+      - name: Install global dependencies
+        run: pnpm i -g dotenv-cli wrangler
+
+      - name: Build project
+        run: pnpm run build --filter="www"
+
+      - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           packageManager: pnpm
-          preCommands: pnpm run build --filter="www"
           workingDirectory: "apps/www"

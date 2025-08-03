@@ -1,9 +1,9 @@
-import { db } from "@/db";
-import { zValidator } from "@/middlewares/validator";
-import type { ServerContext } from "@/types";
 import { Hono } from "hono";
 import { sql } from "kysely";
 import { z } from "zod";
+import { db } from "@/db";
+import { zValidator } from "@/middlewares/validator";
+import type { ServerContext } from "@/types";
 
 export const coreAddressSchema = z.object({
 	line1: z.string().min(1),

@@ -74,7 +74,7 @@ export const AddressSetter = ({
     try {
       setLoadingPrediction(true);
       const results = await getPlacePredictions(text);
-      console.log("Predictions", results);
+
       setPredictions(results);
     } catch (_error) {
       setPredictions([]);
@@ -155,9 +155,9 @@ export const AddressSetter = ({
                   <div
                     key={address.id}
                     className="cursor-pointer"
-                    onClick={() => handleAddressSelect(address)}
+                    onClick={() => handleAddressSelect(address as AddressType)}
                   >
-                    <AddressComponent address={address} />
+                    <AddressComponent address={address as AddressType} />
                   </div>
                 ))}
               </div>

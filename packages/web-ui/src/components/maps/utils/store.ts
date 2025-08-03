@@ -1,14 +1,14 @@
-import type { loggedInAddressApi } from "@lipy/lib/api";
-import type { InferResponseType } from "hono/client";
+import type { addressSchema } from "@lipy/server/routes/loggedRoutes/address";
+import type z from "zod";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-export type AddressType = InferResponseType<
-	typeof loggedInAddressApi.index.$get
->[number];
+export type AddressType = z.infer<typeof addressSchema> & {
+	id: string | null;
+};
 
 export const defaultAddress = {
-	id: "",
+	id: null,
 	name: "",
 	tag: "other",
 	line1: "",

@@ -76,7 +76,6 @@ function RouteComponent() {
           <div className="w-full">
             <div className="p-4 mb-20 space-y-2">
               {data.map((address) => {
-                const { id: _, ...restAddress } = address;
                 return (
                   <div
                     key={address.id}
@@ -85,7 +84,7 @@ function RouteComponent() {
                       setSelectedAddress(address);
                     }}
                   >
-                    <AddressComponent address={restAddress as AddressType} />
+                    <AddressComponent address={address as AddressType} />
                   </div>
                 );
               })}
@@ -206,7 +205,7 @@ function OptionsDrawer(props: {
       </DrawerDialogSwitcher>
       {deleteAddressDialogOpen && (
         <DeleteAddress
-          addressId={props.address.id}
+          addressId={props.address.id as string}
           open={deleteAddressDialogOpen}
           onOpenChange={setDeleteAddressDialogOpen}
         />

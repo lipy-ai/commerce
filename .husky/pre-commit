@@ -2,4 +2,4 @@ set -e
 
 pnpm run lint
 
-# bun run build
+# pnpm run build

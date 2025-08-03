@@ -1,3 +1,5 @@
+name: Deploy Partners
+
 on:
   push:
     branches: ["main"]
@@ -42,7 +44,7 @@ jobs:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
           VITE_CDN_URL: ${{ secrets.VITE_CDN_URL }}
           VITE_GOOGLE_MAP_API_KEY: ${{ secrets.VITE_GOOGLE_MAP_API_KEY }}
-          GOOGLE_MAP_LIBRARIES: ${{ secrets.GOOGLE_MAP_LIBRARIES }}
+          GOOGLE_MAP_LIBRARIES: ${{ secrets.VITE_GOOGLE_MAP_LIBRARIES }}
 
       - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3

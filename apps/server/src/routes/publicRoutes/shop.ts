@@ -34,7 +34,7 @@ const getDistanceMatrix = async (
 		.map((d) => `${d.lat},${d.lng}`)
 		.join("|");
 
-	const url = `https://maps.googleapis.com/maps/api/distancematrix/json?units=${units}&origins=${originStr}&destinations=${destinationsStr}&mode=${mode}&key=${env.GOOGLE_MAPS_API_KEY}`;
+	const url = `https://maps.googleapis.com/maps/api/distancematrix/json?units=${units}&origins=${originStr}&destinations=${destinationsStr}&mode=${mode}&key=${env.GOOGLE_MAP_API_KEY}`;
 
 	const response = await fetch(url);
 

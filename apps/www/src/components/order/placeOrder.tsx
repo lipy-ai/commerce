@@ -1,274 +1,258 @@
-// import type { ResponseCart } from "@/routes/(default)/cart";
-// import { loggedIOrderApi, loggedInCartApi } from "@lipy/lib/api";
-// import { useUpload } from "@lipy/lib/hooks/use-upload";
-// import { authClient } from "@lipy/lib/providers/auth";
-// import {
-//   apiQueryOptions,
-//   useAPIMutation,
-// } from "@lipy/lib/utils/useQueryClient";
-// import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
-// import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
-// import { Dialog, DialogContent } from "@lipy/web-ui/components/ui/dialog";
-// import { toast } from "@lipy/web-ui/components/ui/sonner";
-// import { cn } from "@lipy/web-ui/lib/utils";
-// import { useQueryClient } from "@tanstack/react-query";
-// import { Link, useNavigate } from "@tanstack/react-router";
-// import { CircleCheck } from "lucide-react";
-// import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-// import { useCartStore } from "../cart/store";
+import { env } from "@envClient";
+import {
+  loggedInCartApi,
+  loggedInUploadApi,
+  loggedIOrderApi,
+} from "@lipy/lib/api";
+import { authClient } from "@lipy/lib/providers/auth";
+import {
+  apiQueryOptions,
+  useAPIMutation,
+} from "@lipy/lib/utils/useQueryClient";
+import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
+import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
+import { Dialog, DialogContent } from "@lipy/web-ui/components/ui/dialog";
+import { toast } from "@lipy/web-ui/components/ui/sonner";
+import { cn } from "@lipy/web-ui/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { CircleCheck } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { ResponseCart } from "@/routes/(default)/cart";
+import { useCartStore } from "../cart/store";
 
-// interface PlaceOrderProps {
-//   setOpen: (open: boolean) => void;
-//   customOrder?: boolean;
-//   storeId?: string;
-//   data?: ResponseCart;
-// }
+interface PlaceOrderProps {
+  setOpen: (open: boolean) => void;
+  customOrder?: boolean;
+  storeId?: string;
+  data?: ResponseCart;
+}
 
-// export default function PlaceOrder({
-//   setOpen,
-//   customOrder = false,
-//   storeId,
-//   data,
-// }: PlaceOrderProps) {
-//   const [orderPlaced, setOrderPlaced] = useState(false);
-//   const { data: session } = authClient.useSession();
-//   const { deliveryLocation } = useLocationStore();
+export default function PlaceOrder({
+  setOpen,
+  customOrder = false,
+  storeId,
+  data,
+}: PlaceOrderProps) {
+  const [orderPlaced, setOrderPlaced] = useState(false);
+  const { data: session } = authClient.useSession();
+  const { deliveryLocation } = useLocationStore();
 
-//   const validateOrder = useCallback(() => {
-//     if (!session) {
-//       toast("You are not logged in", {
-//         description: "Please log in to place an order",
-//         action: (
-//           <Link to="/login" className={cn(buttonVariants({ size: "sm" }))}>
-//             Login
-//           </Link>
-//         ),
-//       });
-//       return;
-//     }
+  const validateOrder = () => {
+    if (!session) {
+      toast("You are not logged in", {
+        description: "Please log in to place an order",
+        action: (
+          <Link to="/login" className={cn(buttonVariants({ size: "sm" }))}>
+            Login
+          </Link>
+        ),
+      });
+      return;
+    }
 
-//     if (!deliveryLocation?.metadata?.building) {
-//       toast("Please give delivery location details.");
-//       setOpen(true);
-//       return;
-//     }
+    if (!deliveryLocation?.metadata?.building) {
+      toast("Please give delivery location details.");
+      setOpen(true);
+      return;
+    }
 
-//     setOrderPlaced(true);
-//   }, [session, deliveryLocation?.metadata?.building, setOpen]);
+    setOrderPlaced(true);
+  };
 
-//   return (
-//     <div className="flex items-center gap-4 my-2 justify-between">
-//       <div className="flex-1 text-center">
-//         <p className="font-medium">Pay Cash/UPI</p>
-//         <p>(on delivery)</p>
-//       </div>
+  return (
+    <div className="flex items-center gap-4 my-2 justify-between">
+      <div className="flex-1 text-center">
+        <p className="font-medium">Pay Cash/UPI</p>
+        <p>(on delivery)</p>
+      </div>
 
-//       <Button
-//         onClick={validateOrder}
-//         className="flex-2"
-//         size="lg"
-//         disabled={orderPlaced}
-//       >
-//         Place order
-//       </Button>
+      <Button
+        onClick={validateOrder}
+        className="flex-2"
+        size="lg"
+        disabled={orderPlaced}
+      >
+        Place order
+      </Button>
 
-//       {orderPlaced && (
-//         <PlaceOrderProgress
-//           customOrder={customOrder}
-//           storeId={storeId}
-//           onComplete={() => setOrderPlaced(false)}
-//           data={data}
-//         />
-//       )}
-//     </div>
-//   );
-// }
+      {orderPlaced && (
+        <PlaceOrderProgress
+          customOrder={customOrder}
+          storeId={storeId}
+          onComplete={() => setOrderPlaced(false)}
+          data={data}
+        />
+      )}
+    </div>
+  );
+}
 
-// interface PlaceOrderProgressProps {
-//   customOrder?: boolean;
-//   storeId?: string;
-//   onComplete: () => void;
-//   data?: ResponseCart;
-// }
+interface PlaceOrderProgressProps {
+  customOrder?: boolean;
+  storeId?: string;
+  onComplete: () => void;
+  data?: ResponseCart;
+}
 
-// function PlaceOrderProgress({
-//   customOrder = false,
-//   storeId,
-//   onComplete,
-//   data,
-// }: PlaceOrderProgressProps) {
-//   const { uploadedImages, instructions, resetCart, setUploadedImages } =
-//     useCartStore();
-//   const navigate = useNavigate();
-//   const { deliveryLocation } = useLocationStore();
-//   const [showLoadingDialog, setShowLoadingDialog] = useState(true);
-//   const [isProcessing, setIsProcessing] = useState(false);
-//   const orderProcessedRef = useRef(false);
-//   const queryClient = useQueryClient();
-//   const [isSuccess, setIsSuccess] = useState(false);
+function PlaceOrderProgress({
+  customOrder = false,
+  storeId,
+  onComplete,
+  data,
+}: PlaceOrderProgressProps) {
+  const { uploadedImages, instructions, resetCart, setUploadedImages } =
+    useCartStore();
+  const navigate = useNavigate();
+  const { deliveryLocation } = useLocationStore();
+  const queryClient = useQueryClient();
+  const [isSuccess, setIsSuccess] = useState(false);
 
-//   const storeList = useMemo(() => {
-//     return data?.store.map((item) => ({
-//       id: item.storeId,
-//       instruction: "",
-//       attachments: [] as string[],
-//     })) as Array<{ id: string; instruction: string; attachments: string[] }>;
-//   }, [data?.store]);
+  const presignedMutation = useAPIMutation(
+    loggedInUploadApi.presigned,
+    "$post"
+  );
 
-//   const uploadResults = uploadedImages.map((image) =>
-//     useUpload({ file: image })
-//   );
+  const orderMutation = useAPIMutation(
+    customOrder ? loggedIOrderApi.custom : loggedIOrderApi.index,
+    "$post",
+    {
+      onSuccess: (data: { orders: string[] }) => {
+        setIsSuccess(true);
+        setTimeout(() => {
+          onComplete();
 
-//   const uploadedUrls = useMemo(
-//     () =>
-//       uploadResults
-//         .filter((result) => result.status === "success" && result.data?.url)
-//         .map((result) => result.data?.url),
-//     [uploadResults]
-//   );
+          const { orders } = data;
+          if (orders.length === 1) {
+            navigate({
+              to: "/account/orders/$orderId",
+              params: { orderId: orders[0] },
+            });
+          } else {
+            navigate({ to: "/account/orders" });
+          }
+          queryClient.invalidateQueries({
+            queryKey: apiQueryOptions(loggedInCartApi.index, "$get", {})
+              .queryKey,
+          });
+          resetCart();
+          setUploadedImages([]);
+        }, 2500);
+      },
 
-//   const orderMutation = useAPIMutation(
-//     customOrder ? loggedIOrderApi.custom : loggedIOrderApi.index,
-//     "$post",
-//     {
-//       onSuccess: (data: { orders: string[] }) => {
-//         setIsSuccess(true);
-//         setTimeout(() => {
-//           setShowLoadingDialog(false);
-//           setIsProcessing(false);
-//           onComplete();
+      onError: () => {
+        onComplete();
+        toast.error("Failed to place order", {
+          description: "Something went wrong while placing your order.",
+        });
+      },
+    }
+  );
 
-//           const { orders } = data;
-//           if (orders.length === 1) {
-//             navigate({
-//               to: "/account/orders/$orderId",
-//               params: { orderId: orders[0] },
-//             });
-//           } else {
-//             navigate({ to: "/account/orders" });
-//           }
-//           queryClient.invalidateQueries({
-//             queryKey: apiQueryOptions(loggedInCartApi.index, "$get", {})
-//               .queryKey,
-//           });
-//           resetCart();
-//           setUploadedImages([]);
-//         }, 2500);
-//       },
+  const hasPlacedOrder = useRef(false); // ✅ Guard ref
 
-//       onError: () => {
-//         setShowLoadingDialog(false);
-//         setIsProcessing(false);
-//         onComplete();
-//         toast.error("Failed to place order", {
-//           description: "Something went wrong while placing your order.",
-//         });
-//       },
-//     }
-//   );
+  const handlePlaceOrder = useCallback(async () => {
+    if (hasPlacedOrder.current) return; // ✅ Skip if already called
+    hasPlacedOrder.current = true;
 
-//   const handlePlaceOrder = useCallback(async () => {
-//     if (isProcessing || orderProcessedRef.current) return;
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 5000));
 
-//     setIsProcessing(true);
-//     orderProcessedRef.current = true;
+      const uploadedUrls: string[] = [];
 
-//     try {
-//       await new Promise((resolve) => setTimeout(resolve, 5000));
-//       if (!deliveryLocation.id) {
-//         (deliveryLocation as any).id = undefined;
-//       }
-//       await orderMutation.mutateAsync({
-//         json: {
-//           address: {
-//             ...deliveryLocation,
-//             country: deliveryLocation?.country ?? "",
-//             phone: deliveryLocation?.phone ?? "",
-//             lat: deliveryLocation?.lat ?? 0,
-//             lng: deliveryLocation?.lng ?? 0,
-//             line2: deliveryLocation?.line2 ?? "",
-//             postalCode: deliveryLocation?.postalCode ?? "",
-//             metadata: {
-//               building: deliveryLocation?.metadata?.building ?? "",
-//             },
-//           },
-//           deliveryInstruction: instructions.deliveryInstruction,
-//           stores: customOrder
-//             ? [
-//                 {
-//                   id: storeId as string,
-//                   attachments: uploadedUrls as string[],
-//                   instruction: "",
-//                 },
-//               ]
-//             : storeList,
-//         },
-//       });
-//     } catch (error) {
-//       setIsProcessing(false);
-//       orderProcessedRef.current = false;
-//     }
-//   }, [
-//     isProcessing,
-//     orderMutation,
-//     deliveryLocation,
-//     instructions.deliveryInstruction,
-//     customOrder,
-//     storeId,
-//     uploadedUrls,
-//     storeList,
-//   ]);
+      if (customOrder) {
+        for (const file of uploadedImages) {
+          const response = await presignedMutation.mutateAsync({
+            json: {
+              contentLength: file.size,
+              contentType: file.type,
+              filename: file.name,
+            },
+          });
 
-//   useEffect(() => {
-//     if (orderProcessedRef.current) return;
+          await fetch(response.presigned_url, {
+            method: "PUT",
+            body: file,
+            headers: {
+              "Content-Type": file.type,
+            },
+          });
 
-//     if (uploadResults.length === 0) {
-//       handlePlaceOrder();
-//       return;
-//     }
+          uploadedUrls.push(`${env.CDN_URL}/${response.path}`);
+        }
+      }
 
-//     const allUploadsComplete = uploadResults.every(
-//       (result) => result.status === "success" || result.status === "error"
-//     );
+      const stores = customOrder
+        ? [
+            {
+              id: storeId as string,
+              attachments: uploadedUrls,
+              instruction: "",
+            },
+          ]
+        : (data?.store ?? []).map((item) => ({
+            id: item.storeId,
+            instruction: "",
+            attachments: [],
+          }));
 
-//     if (allUploadsComplete) {
-//       const hasFailedUploads = uploadResults.some(
-//         (result) => result.status === "error"
-//       );
+      await orderMutation.mutateAsync({
+        json: {
+          address: {
+            ...deliveryLocation,
+            country: deliveryLocation?.country ?? "",
+            phone: deliveryLocation?.phone ?? "",
+            lat: deliveryLocation?.lat ?? 0,
+            lng: deliveryLocation?.lng ?? 0,
+            line2: deliveryLocation?.line2 ?? "",
+            postalCode: deliveryLocation?.postalCode ?? "",
+            metadata: {
+              building: deliveryLocation?.metadata?.building ?? "",
+            },
+          },
+          deliveryInstruction: instructions.deliveryInstruction,
+          stores,
+        },
+      });
+    } catch {
+      onComplete();
+    }
+  }, [
+    uploadedImages,
+    presignedMutation,
+    orderMutation,
+    customOrder,
+    storeId,
+    data?.store,
+    deliveryLocation,
+    instructions.deliveryInstruction,
+    onComplete,
+  ]);
 
-//       if (hasFailedUploads) {
-//         setShowLoadingDialog(false);
-//         onComplete();
-//         toast.error("Upload failed", {
-//           description: "Some files failed to upload. Please try again.",
-//         });
-//         return;
-//       }
+  // biome-ignore lint/correctness/useExhaustiveDependencies: false positive
+  useEffect(() => {
+    handlePlaceOrder();
+  }, []);
 
-//       handlePlaceOrder();
-//     }
-//   }, [uploadResults, handlePlaceOrder, onComplete]);
-
-//   return (
-//     <Dialog open={showLoadingDialog} onOpenChange={() => {}}>
-//       <DialogContent className="sm:max-w-md w-[400px]">
-//         <div className="flex flex-col items-center text-center py-6">
-//           {isSuccess ? (
-//             <CircleCheck className="size-16 text-emerald-600 stroke-2" />
-//           ) : (
-//             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4" />
-//           )}
-
-//           <h3 className="text-lg font-semibold mb-2">
-//             {isSuccess ? "Order placed successfully!" : "Placing your order..."}
-//           </h3>
-//           <p className="text-muted-foreground text-sm">
-//             {isSuccess
-//               ? "Redirecting you to your orders..."
-//               : "Your order is being processed"}
-//           </p>
-//         </div>
-//       </DialogContent>
-//     </Dialog>
-//   );
-// }
+  return (
+    <Dialog open>
+      <DialogContent className="sm:max-w-md w-[400px]">
+        <div className="flex flex-col items-center text-center py-6">
+          {isSuccess ? (
+            <CircleCheck className="size-16 text-emerald-600 stroke-2" />
+          ) : (
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4" />
+          )}
+          <h3 className="text-lg font-semibold mb-2">
+            {isSuccess ? "Order placed successfully!" : "Placing your order..."}
+          </h3>
+          <p className="text-muted-foreground text-sm">
+            {isSuccess
+              ? "Redirecting you to your orders..."
+              : "Your order is being processed"}
+          </p>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}

@@ -40,6 +40,7 @@ import {
 import { useEffect, useState } from "react";
 import { AddToCart } from "@/components/cart/addToCart";
 import { type ProductInCart, useCartStore } from "@/components/cart/store";
+import PlaceOrder from "@/components/order/placeOrder";
 import { Billing } from "./-billing";
 
 export type ResponseCart = InferResponseType<typeof loggedInCartApi.index.$get>;
@@ -275,7 +276,7 @@ export const CartMainContent = () => {
                 </div>
               </div>
 
-              {/* <PlaceOrder setOpen={setDetailedAddressDrawerOpen} data={data} /> */}
+              <PlaceOrder setOpen={setDetailedAddressDrawerOpen} data={data} />
             </div>
           </div>
         </div>

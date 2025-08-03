@@ -75,7 +75,7 @@ function LocationComponent() {
     setDrawerOpen(true);
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: false positive
   useEffect(() => {
     if (!isLoading && mapLoaded) {
       if (primaryAddress?.id) {

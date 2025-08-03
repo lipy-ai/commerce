@@ -1,5 +1,5 @@
 set -e
 
-# bun run lint
+pnpm run lint
 
 # bun run build

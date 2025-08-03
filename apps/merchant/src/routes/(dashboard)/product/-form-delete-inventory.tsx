@@ -13,6 +13,7 @@ import {
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { Checkbox } from "@lipy/web-ui/components/ui/checkbox";
 import { Label } from "@lipy/web-ui/components/ui/label";
+import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { useDebouncedCallback } from "@lipy/web-ui/hooks/use-debounced-callback";
 import { cn } from "@lipy/web-ui/lib/utils";
 import type { InferResponseType } from "hono/client";
@@ -40,6 +41,7 @@ export default function FormDeleteInventory({
       invalidate();
     },
     onSuccess: () => {
+      toast.success("Item deleted from inventory");
       invalidate();
     },
   });
@@ -48,12 +50,8 @@ export default function FormDeleteInventory({
     await mutation.mutateAsync({
       json: {
         id: inventory.inventoryId!,
-        active: inventory.active!,
         operation: "delete",
-        sku: inventory.sku!,
         variantId: inventory.id!,
-        price: inventory.storePrice!,
-        stock: inventory.stock!,
       },
     });
   }, 100);

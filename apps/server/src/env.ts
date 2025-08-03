@@ -29,11 +29,10 @@ const EnvSchema = z.object({
 	DATABASE_URL: z.string().url(),
 	// DATABASE_AUTH_TOKEN: z.string().optional(),
 	GOOGLE_CLIENT_ID: z.string(),
-	// biome-ignore lint/suspicious/noDoubleEquals: <explanation>
 	VITE_USE_IP: z
 		.string()
 		.optional()
-		// biome-ignore lint/suspicious/noDoubleEquals: <explanation>
+		// biome-ignore lint/suspicious/noDoubleEquals:false positive
 		.transform((t) => t && t == "true"),
 	GOOGLE_CLIENT_SECRET: z.string(),
 	BETTER_AUTH_SECRET: z.string(),

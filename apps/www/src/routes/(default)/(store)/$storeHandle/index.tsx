@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@lipy/web-ui/components/ui/dropdown-menu";
 import Loading from "@lipy/web-ui/components/ui/loading";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { shareContent } from "@lipy/web-ui/lib/share";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link, useNavigate } from "@tanstack/react-router";
@@ -19,7 +20,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import type { InferResponseType } from "hono/client";
 import {
-  ArrowLeft,
   ChevronRight,
   EllipsisVertical,
   Info,
@@ -27,6 +27,7 @@ import {
   Share,
 } from "lucide-react";
 import { useState } from "react";
+import { StoreNav } from "./-nav";
 import { StoreHeroSection } from "./-storeHeroSection";
 
 export const Route = createFileRoute("/(default)/(store)/$storeHandle/")({
@@ -37,6 +38,7 @@ function RouteComponent() {
   const { storeHandle } = Route.useParams();
   const { scrollY } = useScroll();
   const [visibleShopName, setVisibleShopName] = useState(false);
+  const { isMobile } = useViewport();
   useMotionValueEvent(scrollY, "change", (current) => {
     if (current > 24) {
       setVisibleShopName(true);
@@ -86,7 +88,7 @@ function RouteComponent() {
   if (fetchingShopData || fetchingProduct) return <Loading />;
 
   return (
-    <div>
+    <>
       <DashboardHeader
         titleChildren={
           <motion.h1
@@ -117,33 +119,21 @@ function RouteComponent() {
 
         {shopData && <ShopOptions shop={shopData} />}
       </DashboardHeader>
+      <StoreNav storeHandle={storeHandle}>
+        {fetchedShopData && shopData && isMobile && (
+          <StoreHeroSection storeInfo={shopData} />
+        )}
 
-      <div className="lg:grid lg:grid-cols-12 lg:px-8 m-auto lg:divide-x ">
-        {/* Left Sidebar */}
-        <div className="lg:col-span-3 lg:px-2 lg:space-y-4 lg:py-4 lg:sticky lg:top-28 lg:self-start lg:overflow-y-auto lg:h-[calc(100vh-110px)]">
-          <ArrowLeft
-            className="size-9 cursor-pointer hidden lg:block"
-            onClick={(e) => {
-              e.preventDefault();
-              window.history.back();
-            }}
-          />
-          {fetchedShopData && shopData && (
-            <StoreHeroSection storeInfo={shopData} />
-          )}
-        </div>
-
-        {/* Right Content */}
-        <div className="mb-32 lg:col-span-9  lg:overflow-y-auto px-4">
-          {fetchedProduct && productData && productData.items.length > 0 ? (
-            productData.items.map((productGroup, _idx) => {
+        {fetchedProduct && productData && productData.items.length > 0 && (
+          <div className="mb-32 px-4 lg:px-8">
+            {productData.items.map((productGroup, _idx) => {
               const productArray = productGroup.products;
 
               return (
                 <div key={_idx} className="my-10">
                   <p className="text-xl font-bold my-4">{productGroup.title}</p>
 
-                  <div className="grid grid-cols-2 lg:grid-cols-6 gap-x-4 gap-y-6 w-full">
+                  <div className="grid grid-cols-2 lg:grid-cols-5 gap-x-4 lg:gap-x-6 gap-y-6 w-full">
                     {productArray?.map((product) => (
                       <div key={product.id}>
                         <ProductCard
@@ -178,20 +168,26 @@ function RouteComponent() {
                   )}
                 </div>
               );
-            })
-          ) : (
-            <div className="flex justify-center flex-col items-center m-auto flex-1 text-center">
-              <img src={"/assets/no-product.png"} alt="no-product" />
-              <p className="font-medium text-lg">No products found</p>
-            </div>
-          )}
-        </div>
-      </div>
+            })}
+          </div>
+        )}
+
+        {fetchedProduct && productData && productData.items.length === 0 && (
+          <div className="flex flex-1 flex-col justify-center items-center  m-auto  text-center space-y-2">
+            <img
+              src="/assets/no-results-found.png"
+              alt="no-result-found"
+              className="size-54 lg:size-64 object-cover"
+            />
+            <p className="font-medium text-lg">No products found</p>
+          </div>
+        )}
+      </StoreNav>
 
       <div className="lg:hidden">
         <PrimaryCartFooter />
       </div>
-    </div>
+    </>
   );
 }
 

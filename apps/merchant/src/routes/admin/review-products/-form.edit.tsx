@@ -189,7 +189,6 @@ export default function FormEdit({
                     isPending={publishMu.isPending}
                     isSuccessful={publishMu.isSuccess}
                     isError={publishMu.isError}
-                    disabled={form.formState.isDirty}
                   >
                     Publish
                   </ActionButton>

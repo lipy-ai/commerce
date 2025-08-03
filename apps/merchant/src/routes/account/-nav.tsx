@@ -109,7 +109,7 @@ export function AccountNav({ children }: { children?: ReactNode }) {
         </div>
       </div>
       {children && (
-        <div className="flex-1 flex flex-col p-4 p-8 bg-card">{children}</div>
+        <div className="flex-1 flex flex-col  p-8 bg-card">{children}</div>
       )}
     </div>
   );

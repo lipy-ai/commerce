@@ -1,10 +1,24 @@
+import Loading from "@lipy/web-ui/components/ui/loading";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { createFileRoute } from "@tanstack/react-router";
-import { AccountPage } from "./-account";
+import { useLayoutEffect } from "react";
+import { AccountNav } from "./-nav";
 
 export const Route = createFileRoute("/(default)/account/")({
-	component: RouteComponent,
+  component: RouteComponent,
 });
 
 function RouteComponent() {
-	return <AccountPage />;
+  const { isMobile } = useViewport();
+
+  const navigate = Route.useNavigate();
+
+  useLayoutEffect(() => {
+    !isMobile && navigate({ to: "/account/profile" });
+  }, [isMobile, navigate]);
+
+  if (!isMobile) {
+    return <Loading />;
+  }
+  return <AccountNav />;
 }

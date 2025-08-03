@@ -1,6 +1,5 @@
-import { buttonVariants } from "@lipy/web-ui/components/ui/button";
-import { cn } from "@lipy/web-ui/lib/utils";
-import type { ErrorComponentProps } from "@tanstack/react-router";
+// biome-ignore assist/source/organizeImports: <explanation>
+import { routeTree } from "./routeTree.gen";
 import {
   createRouter as createTanStackRouter,
   ErrorComponent,
@@ -8,8 +7,11 @@ import {
   rootRouteId,
   useMatch,
   useRouter,
+  type ErrorComponentProps,
 } from "@tanstack/react-router";
-import { routeTree } from "./routeTree.gen";
+import { buttonVariants } from "@lipy/web-ui/components/ui/button";
+import { cn } from "@lipy/web-ui/lib/utils";
+
 export function createRouter() {
   const router = createTanStackRouter({
     routeTree,

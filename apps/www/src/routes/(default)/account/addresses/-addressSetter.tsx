@@ -74,7 +74,7 @@ export const AddressSetter = ({
     try {
       setLoadingPrediction(true);
       const results = await getPlacePredictions(text);
-      console.log("Predictions", results);
+
       setPredictions(results);
     } catch (_error) {
       setPredictions([]);

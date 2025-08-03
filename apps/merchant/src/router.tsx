@@ -1,4 +1,5 @@
 import { BProgress } from "@bprogress/core";
+import { trackPageView } from "@lipy/lib/utils/trackers";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { cn } from "@lipy/web-ui/lib/utils";
 import type { ErrorComponentProps } from "@tanstack/react-router";
@@ -39,7 +40,8 @@ export function createRouter() {
     // Don't show the progress bar on initial page load, seems like the onLoad event doesn't fire in that case
     fromLocation && pathChanged && BProgress.start();
   });
-  router.subscribe("onLoad", () => {
+  router.subscribe("onLoad", (location) => {
+    trackPageView(location.toLocation.href);
     BProgress.done();
   });
 

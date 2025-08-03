@@ -115,7 +115,7 @@ const route = new Hono<ServerContext>()
 			return Number(a.distance.value) - Number(b.distance.value);
 		});
 
-		return c.json(shopData);
+		return c.json(nearbyShops);
 	})
 
 	.get(

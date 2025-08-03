@@ -2,6 +2,7 @@ const e = import.meta.env;
 
 export const env = {
 	IN_PROD: e.NODE_ENV === "production",
+	GTAG_ID: e.VITE_GTAG_ID,
 	// biome-ignore lint/suspicious/noDoubleEquals: <explanation>
 	VITE_USE_IP: e.VITE_USE_IP == "true",
 	AUTH_URL: e.VITE_AUTH_URL,

@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useCartStore } from "@/components/cart/store";
+import PlaceOrder from "@/components/order/placeOrder";
 import { StoreNav } from "../../-nav";
 
 export const Route = createFileRoute(
@@ -147,13 +148,12 @@ function RouteComponent() {
                 </div>
 
                 {/* Uncomment and use this when PlaceOrder component is available */}
-                {/* 
+
                 <PlaceOrder
                   setOpen={setDetailedAddressDrawerOpen}
                   storeId={storeInfo?.id}
                   customOrder
                 />
-                */}
               </div>
             </div>
           ) : (

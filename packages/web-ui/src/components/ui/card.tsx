@@ -1,13 +1,12 @@
-import type * as React from "react";
-
 import { cn } from "@lipy/web-ui/lib/utils";
+import type * as React from "react";
 
 function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card"
       className={cn(
-        "bg-card text-card-foreground flex flex-col gap-4 p-4 md:rounded-xl md:border md:shadow-xs border-border/30 lg:p-6",
+        "bg-card text-card-foreground flex flex-col gap-4 p-4 md:rounded-xl md:border md:shadow-xs border-border/50 lg:p-6",
         className
       )}
       {...props}

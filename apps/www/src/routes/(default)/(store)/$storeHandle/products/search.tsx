@@ -5,6 +5,7 @@ import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
+import { StoreNav } from "../-nav";
 
 export const Route = createFileRoute(
   "/(default)/(store)/$storeHandle/products/search"
@@ -42,7 +43,7 @@ function RouteComponent() {
   );
 
   return (
-    <div className="w-full relative">
+    <StoreNav storeHandle={storeHandle}>
       <DashboardHeader className="bg-background px-0" hideBackBtn>
         <SearchBar
           className="w-full pr-4"
@@ -57,7 +58,7 @@ function RouteComponent() {
         ) : !products || products.length === 0 ? (
           <p className="p-4 font-medium text-lg">No result found for "{q}"</p>
         ) : (
-          <div className="grid grid-cols-2 gap-4 p-4">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 p-4">
             {products.map((product) => (
               <Link
                 key={product.id}
@@ -81,15 +82,15 @@ function RouteComponent() {
           </div>
         )}
       </div>
-    </div>
+    </StoreNav>
   );
 }
 
 function ProductSkeleton() {
   return (
-    <div className="grid grid-cols-2 gap-4 p-4">
+    <div className="grid grid-cols-2 md:grid-cols-5 gap-4 p-4">
       {[...Array(8)].map((m) => (
-        <Skeleton key={m} className="h-36" />
+        <Skeleton key={m} className="h-36 md:h-54" />
       ))}
     </div>
   );

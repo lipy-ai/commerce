@@ -5,6 +5,7 @@ import {
 } from "@lipy/lib/utils/useQueryClient";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { Loader2, Minus, Plus } from "lucide-react";
@@ -32,6 +33,7 @@ export const AddToCart = ({
   thumbnail?: string;
 }) => {
   const { cart, updateCart } = useCartStore();
+  const { isMobile } = useViewport();
   const [loadingState, setLoadingState] = useState<LoadingState>({
     isLoading: false,
     operation: null,
@@ -124,7 +126,7 @@ export const AddToCart = ({
     case "primary":
       return (
         <Button
-          size="xs"
+          size={isMobile ? "xs" : "sm"}
           onClick={handleAddToCart}
           disabled={disabled || isLoading}
           type="button"
@@ -177,7 +179,9 @@ export const AddToCart = ({
                 ? "lg"
                 : activeVariant === "tertiary-active"
                   ? "icon-xs"
-                  : "xs"
+                  : isMobile
+                    ? "xs"
+                    : "sm"
             }
             onClick={handleQuantityChange("decrement")}
             disabled={disabled || isLoading}
@@ -238,7 +242,9 @@ export const AddToCart = ({
                 ? "lg"
                 : activeVariant === "tertiary-active"
                   ? "icon-xs"
-                  : "xs"
+                  : isMobile
+                    ? "xs"
+                    : "sm"
             }
             onClick={handleQuantityChange("increment")}
             disabled={disabled || isLoading}

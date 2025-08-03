@@ -102,6 +102,20 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     <html className="not-print:bg-muted/30" lang="en">
       <head suppressHydrationWarning>
         <HeadContent />
+        <script
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=${env.GTAG_ID}`}
+        ></script>
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtmlWithChildren: <explanation>
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
+          dangerouslySetInnerHTML={{
+            __html: ` window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '${env.GTAG_ID}');`,
+          }}
+        ></script>
       </head>
       <body
         suppressHydrationWarning

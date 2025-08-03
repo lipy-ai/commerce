@@ -2,7 +2,7 @@
 	"name": "landing",
 	"private": true,
 	"type": "module",
-	"packageManager": "bun@1.2.18",
+	"packageManager": "pnpm@9.1.1",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",

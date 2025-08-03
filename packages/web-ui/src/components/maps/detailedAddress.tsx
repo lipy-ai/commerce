@@ -31,6 +31,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { type AddressType, useLocationStore } from "./utils/store";
+
 const addressTypesItems = [
   { value: "home", label: "Home" },
   { value: "work", label: "Work" },
@@ -126,7 +127,7 @@ export function DetailedAddress({
       });
     } else if (!isDeliveryAddress && label === "Edit") {
       await editMutation.mutateAsync({
-        param: { id: fullAddress.id },
+        param: { id: fullAddress.id as string },
         json: {
           ...basePayload,
         },

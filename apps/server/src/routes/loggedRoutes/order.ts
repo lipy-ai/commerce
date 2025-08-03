@@ -1,4 +1,7 @@
-import { type DBTypes, type Database, db } from "@/db";
+import { Hono } from "hono";
+import { sql, type Transaction } from "kysely";
+import { z } from "zod";
+import { type Database, type DBTypes, db } from "@/db";
 import type { SUM_TYPE } from "@/db/schema";
 import { getStore } from "@/helpers/store";
 import { HTTPError } from "@/lib/exception";
@@ -6,9 +9,6 @@ import { idGenerate } from "@/lib/generateId";
 import { orderCalculator } from "@/lib/orderCalculators";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
-import { Hono } from "hono";
-import { type Transaction, sql } from "kysely";
-import { z } from "zod";
 import { addressSchema } from "./address";
 
 const paramSchema = z.object({
@@ -25,7 +25,7 @@ const orderSchema = z.object({
 		}),
 	),
 	address: z.object({
-		id: z.string().uuid().optional(),
+		id: z.string().uuid().nullable(),
 		...addressSchema.shape,
 	}),
 	deliveryInstruction: z.string().nullable(),
@@ -185,7 +185,7 @@ const setPrimaryAddress = async (
 	{ lat, lng, ...address }: z.infer<typeof orderSchema>["address"],
 	userId: string,
 ) => {
-	let id = address.id;
+	let id = address?.id;
 
 	if (!lng || !lat) {
 		throw new HTTPError(400, { message: "Missing lat & lng from address." });
@@ -210,7 +210,7 @@ const setPrimaryAddress = async (
 			})
 			.execute();
 
-		id = addressId?.id;
+		id = addressId?.id!;
 	}
 
 	return await trx
@@ -289,6 +289,8 @@ const route = new Hono<ServerContext>()
 		const session = c.get("session");
 		const user = c.get("user");
 		const values = c.req.valid("json");
+
+		console.log("values", values);
 
 		if (!values.address)
 			throw new HTTPError(404, { message: "Address not found!" });

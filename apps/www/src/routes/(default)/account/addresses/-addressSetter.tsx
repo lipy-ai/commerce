@@ -155,9 +155,9 @@ export const AddressSetter = ({
                   <div
                     key={address.id}
                     className="cursor-pointer"
-                    onClick={() => handleAddressSelect(address)}
+                    onClick={() => handleAddressSelect(address as AddressType)}
                   >
-                    <AddressComponent address={address} />
+                    <AddressComponent address={address as AddressType} />
                   </div>
                 ))}
               </div>

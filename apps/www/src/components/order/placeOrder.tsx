@@ -140,7 +140,8 @@ function PlaceOrderProgress({
         }, 2500);
       },
 
-      onError: () => {
+      onError: (err) => {
+        console.log(err);
         onComplete();
         toast.error("Failed to place order", {
           description: "Something went wrong while placing your order.",
@@ -196,22 +197,14 @@ function PlaceOrderProgress({
             attachments: [],
           }));
 
+      console.log("location", deliveryLocation);
+      console.log(stores);
+
       await orderMutation.mutateAsync({
         json: {
-          address: {
-            ...deliveryLocation,
-            country: deliveryLocation?.country ?? "",
-            phone: deliveryLocation?.phone ?? "",
-            lat: deliveryLocation?.lat ?? 0,
-            lng: deliveryLocation?.lng ?? 0,
-            line2: deliveryLocation?.line2 ?? "",
-            postalCode: deliveryLocation?.postalCode ?? "",
-            metadata: {
-              building: deliveryLocation?.metadata?.building ?? "",
-            },
-          },
+          address: deliveryLocation,
           deliveryInstruction: instructions.deliveryInstruction,
-          stores,
+          stores: stores,
         },
       });
     } catch {

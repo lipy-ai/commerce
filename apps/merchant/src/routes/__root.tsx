@@ -1,6 +1,3 @@
-import EventsProvider from "@/events";
-import { DefaultCatchBoundary, NotFound } from "@/router";
-import { seo } from "@/utils/seo";
 import { env } from "@envClient";
 import { useAuthSession } from "@lipy/lib/hooks/use-auth";
 import useGlobalVibration from "@lipy/lib/hooks/use-vibrate";
@@ -11,16 +8,19 @@ import { Toaster, toast } from "@lipy/web-ui/components/ui/sonner";
 import { ViewportProvider } from "@lipy/web-ui/contexts/viewport";
 import appCss from "@lipy/web-ui/styles.css?url";
 import {
+  createRootRoute,
   HeadContent,
   Outlet,
   Scripts,
-  createRootRoute,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { createServerFn } from "@tanstack/react-start";
 import { getHeader } from "@tanstack/react-start/server";
 import { NuqsAdapter } from "nuqs/adapters/react";
 import * as React from "react";
+// import EventsProvider from "@/events";
+import { DefaultCatchBoundary, NotFound } from "@/router";
+import { seo } from "@/utils/seo";
 
 export const globalInit = createServerFn({ method: "GET" }).handler(
   async () => {
@@ -107,10 +107,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         suppressHydrationWarning
         className="m-auto outline-1 outline-border shadow min-h-screen flex flex-col"
       >
-        <ViewportProvider isMobile={data?.isSsrMobile}>
+        <ViewportProvider isMobile={data.isSsrMobile}>
           <QueryProvider handleThrowOnError={handleThrowOnError}>
             <NuqsAdapter>
-              <EventsProvider />
+              {/* <EventsProvider /> */}
 
               {isPending ? <Loading /> : children}
             </NuqsAdapter>

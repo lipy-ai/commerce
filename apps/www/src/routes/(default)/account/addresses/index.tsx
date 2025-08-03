@@ -14,7 +14,7 @@ import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import Loading from "@lipy/web-ui/components/ui/loading";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Building,
   ChevronRight,
@@ -64,7 +64,6 @@ function RouteComponent() {
             Add New Address
           </Link>
         </DashboardHeader>
-
         {isLoading ? (
           <Loading />
         ) : !data || data.length === 0 ? (
@@ -77,7 +76,7 @@ function RouteComponent() {
           <div className="w-full">
             <div className="p-4 mb-20 space-y-2">
               {data.map((address) => {
-                const { id, ...restAddress } = address;
+                const { id: _, ...restAddress } = address;
                 return (
                   <div
                     key={address.id}

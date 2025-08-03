@@ -1,11 +1,10 @@
+import { Hono } from "hono";
+import { sql } from "kysely";
+import z from "zod";
 import { db } from "@/db";
 import { zValidator } from "@/middlewares/validator";
 import { listZodSchema } from "@/schema/common";
 import type { ServerContext } from "@/types";
-import { Hono } from "hono";
-import { type Expression, type SqlBool, sql } from "kysely";
-import { jsonBuildObject } from "kysely/helpers/postgres";
-import z from "zod";
 
 export const merchantCustomerRoute = new Hono<ServerContext>()
 	.get("/", zValidator("query", listZodSchema), async (c) => {

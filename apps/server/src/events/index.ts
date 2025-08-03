@@ -1,6 +1,6 @@
+import { defineHandlers } from "@hono/event-emitter";
 import type { DBTypes } from "@/db";
 import { discordNotification } from "@/notification/discord";
-import { defineHandlers } from "@hono/event-emitter";
 
 export type AvailableEvents = {
 	"user:created": Pick<DBTypes["user"], "id">;
@@ -14,7 +14,7 @@ export type AvailableEvents = {
 // Define event handlers
 export const handlers = defineHandlers<AvailableEvents>({
 	"order:created": [
-		(c, payload) => {
+		(_c, payload) => {
 			discordNotification({
 				type: "order:created",
 				payload: payload,
@@ -22,7 +22,7 @@ export const handlers = defineHandlers<AvailableEvents>({
 		}, // c is current Context, payload will be correctly inferred as Order
 	],
 	"store:created": [
-		(c, payload) => {
+		(_c, payload) => {
 			discordNotification({
 				type: "store:created",
 				payload: payload,
@@ -30,6 +30,6 @@ export const handlers = defineHandlers<AvailableEvents>({
 		},
 	],
 	"store:deleted": [
-		async (c, payload) => {}, // c is current Context, payload will be inferred as string
+		async (_c, _payload) => {}, // c is current Context, payload will be inferred as string
 	],
 });

@@ -46,7 +46,7 @@ import { z } from "zod";
 export const Route = createFileRoute("/(dashboard)/product/add")({
   component: RouteComponent,
   validateSearch: z.object({
-    page: z.coerce.number().int().min(1).catch(1),
+    page: z.coerce.number().int().min(1).catch(1).default(1),
     q: z.string().default(""),
     category: z.string().optional(),
   }),

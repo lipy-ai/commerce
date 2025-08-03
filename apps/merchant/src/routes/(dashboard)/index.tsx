@@ -162,79 +162,75 @@ function Orders({
     | undefined;
   isLoading: boolean;
 }) {
-  if (isLoading) {
-    return <Skeleton className="flex-1 h-screen" />;
-  }
-
-  if (!data || data.length === 0) {
-    return (
-      <Card className="flex-1 py-8">
-        <CardContent className="flex flex-1 justify-center flex-col gap-4 text-muted-foreground items-center">
-          <Clock10 className="size-16" />
-          <Label className="text-lg">No Incoming Orders.</Label>
-        </CardContent>
-      </Card>
-    );
-  }
-
   return (
     <Card className="flex-1">
       <CardHeader>
         <CardTitle>Pending Orders</CardTitle>
       </CardHeader>
-      {/* <DashboardHeader title="Recent Orders" hideBackBtn /> */}
+
       <CardContent className="divide-y">
-        {data.map((v, i) => {
-          return (
-            <Link
-              to={"/pos/order/$id"}
-              params={{ id: v.id }}
-              key={i}
-              className="leading-none flex py-4 space-y-2"
-            >
-              <div className="flex gap-4 flex-1 justify-between text-base lg:text-sm">
-                <div className="flex-1 flex gap-2">
-                  <div
-                    className={cn(
-                      "border size-12 text-[7px] break-words text-center text-balance flex flex-col items-center justify-center",
+        {isLoading ? (
+          <Skeleton className="flex-1 h-screen" />
+        ) : !data || data?.length === 0 ? (
+          <div className="flex flex-1 justify-center flex-col gap-4 text-muted-foreground items-center">
+            <Clock10 className="size-16" />
+            <Label className="text-lg">No Incoming Orders.</Label>
+          </div>
+        ) : (
+          data.map((v, i) => {
+            return (
+              <Link
+                to={"/pos/order/$id"}
+                params={{ id: v.id }}
+                key={i}
+                className="leading-none flex py-4 space-y-2"
+              >
+                <div className="flex gap-4 flex-1 justify-between text-base lg:text-sm">
+                  <div className="flex-1 flex gap-2">
+                    <div
+                      className={cn(
+                        "border size-12 text-[7px] break-words text-center text-balance flex flex-col items-center justify-center",
 
-                      v.status === "created" &&
-                        "text-primary-foreground bg-red-800",
-                      v.status === "accepted" &&
-                        "text-primary-foreground bg-blue-700",
-                      ["packed", "awaiting_customer_confirmation"].includes(
-                        v.status || ""
-                      ) && "text-foreground bg-amber-400",
-                      v.status === "out_for_delivery" &&
-                        "text-primary-foreground bg-green-700"
-                    )}
-                  >
-                    <span className="uppercase">
-                      {v.status?.replaceAll("_", " ")}
-                    </span>
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-xs md:text-sm font-medium truncate leading-none md:leading-normal">
-                      #{v.id}
-                    </p>
-                    <p className="font-light break-words">
-                      <span className="text-sm">{v.customerDetails?.name}</span>
-                      <span className="text-xs text-muted-foreground w-full block md:w-fit md:inline-flex">
-                        &nbsp;on {format(v.orderedAt, "Pp")}
+                        v.status === "created" &&
+                          "text-primary-foreground bg-red-800",
+                        v.status === "accepted" &&
+                          "text-primary-foreground bg-blue-700",
+                        ["packed", "awaiting_customer_confirmation"].includes(
+                          v.status || ""
+                        ) && "text-foreground bg-amber-400",
+                        v.status === "out_for_delivery" &&
+                          "text-primary-foreground bg-green-700"
+                      )}
+                    >
+                      <span className="uppercase">
+                        {v.status?.replaceAll("_", " ")}
                       </span>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-xs md:text-sm font-medium truncate leading-none md:leading-normal">
+                        #{v.id}
+                      </p>
+                      <p className="font-light break-words">
+                        <span className="text-sm">
+                          {v.customerDetails?.name}
+                        </span>
+                        <span className="text-xs text-muted-foreground w-full block md:w-fit md:inline-flex">
+                          &nbsp;on {format(v.orderedAt, "Pp")}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="w-fit text-right">
+                    <p className="font-semibold">
+                      {formatAmount("inr", v.totalAmount || 0)}
                     </p>
                   </div>
                 </div>
-
-                <div className="w-fit text-right">
-                  <p className="font-semibold">
-                    {formatAmount("inr", v.totalAmount || 0)}
-                  </p>
-                </div>
-              </div>
-            </Link>
-          );
-        })}
+              </Link>
+            );
+          })
+        )}
       </CardContent>
     </Card>
   );

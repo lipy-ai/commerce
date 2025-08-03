@@ -20,6 +20,7 @@ import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { createFileRoute } from "@tanstack/react-router";
 import { Camera, ChevronRight, Images, X } from "lucide-react";
 import { useState } from "react";
+import { StoreNav } from "../../-nav";
 
 export const Route = createFileRoute(
   "/(default)/(store)/$storeHandle/order/(pharmacy)/new"
@@ -36,81 +37,82 @@ function RouteComponent() {
 
   return (
     <>
-      <DashboardHeader title="Upload prescription" />
-      <div className="mb-20">
-        {uploadedImages.length > 0 && (
-          <div className="flex flex-col items-center">
-            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 p-4">
+      <StoreNav storeHandle={storeHandle}>
+        <DashboardHeader title="Upload prescription" />
+
+        <div className="lg:p-8">
+          {uploadedImages.length > 0 && (
+            <div className="grid grid-cols-2 lg:grid-cols-6 gap-4 p-4 mb-32">
               {uploadedImages.map((file, index) => (
-                <div key={index} className="relative">
+                <div key={index} className="relative w-40 h-48">
                   <img
                     src={URL.createObjectURL(file)}
                     alt={`Prescription ${index + 1}`}
-                    className="object-cover w-40 h-48 border rounded-xl"
+                    className="object-cover w-full h-full border rounded-xl"
                   />
-                  <div>
-                    <Button
-                      variant={"outline"}
-                      className="absolute top-2 right-2 rounded-full bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground"
-                      size="icon-sm"
-                      onClick={() => {
-                        setUploadedImages(
-                          uploadedImages.filter((_, i) => i !== index)
-                        );
-                      }}
-                    >
-                      <X />
-                    </Button>
-                  </div>
+
+                  <Button
+                    variant={"outline"}
+                    className="absolute top-2 right-2 rounded-full bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground"
+                    size="icon-sm"
+                    onClick={() => {
+                      setUploadedImages(
+                        uploadedImages.filter((_, i) => i !== index)
+                      );
+                    }}
+                  >
+                    <X />
+                  </Button>
                 </div>
               ))}
             </div>
+          )}
+
+          {uploadedImages.length > 0 && uploadedImages.length < 10 && (
+            <Button
+              className="text-secondary font-medium w-full"
+              variant="ghost"
+              onClick={() => setOpenOptions(true)}
+            >
+              Upload more prescriptions
+            </Button>
+          )}
+
+          <div className="flex flex-1 flex-col items-center justify-center m-auto">
+            {uploadedImages.length === 0 && (
+              <img
+                src="/assets/prescription.svg"
+                alt="prescription"
+                className="size-64 object-cover "
+              />
+            )}
           </div>
-        )}
-        {uploadedImages.length > 0 && uploadedImages.length < 10 && (
-          <Button
-            className="text-secondary font-medium w-full"
-            variant="ghost"
-            onClick={() => setOpenOptions(true)}
-          >
-            Upload more prescriptions
-          </Button>
-        )}
-      </div>
 
-      <div className="flex flex-col items-center justify-center h-full m-auto">
-        {uploadedImages.length === 0 && (
-          <img
-            src="/assets/prescription.svg"
-            alt="prescription"
-            className="size-64 object-cover pl-10 -mt-16"
-          />
-        )}
-      </div>
-
-      <div className="fixed bottom-0 w-full bg-card p-4 flex items-center gap-10 justify-center">
-        <p className="text-base font-medium hidden lg:block">
-          We will review your prescriptions and arrange your medicines
-        </p>
-        <Button
-          className="w-full lg:w-fit"
-          onClick={() => {
-            if (uploadedImages.length === 0) setOpenOptions(true);
-            else {
-              navigate({
-                to: "/$storeHandle/order/checkout",
-                params: {
-                  storeHandle: storeHandle,
-                },
-              });
-            }
-          }}
-        >
-          {uploadedImages.length > 0
-            ? "Proceed to order"
-            : "Upload Prescription"}
-        </Button>
-      </div>
+          <div className="fixed bottom-0 w-full bg-card p-4 flex items-center gap-10 justify-center">
+            <p className="text-base font-medium hidden lg:block">
+              We will review your prescriptions and arrange your medicines
+            </p>
+            <Button
+              className="w-full lg:w-fit"
+              onClick={() => {
+                if (uploadedImages.length === 0) setOpenOptions(true);
+                else {
+                  navigate({
+                    to: "/$storeHandle/order/checkout",
+                    params: {
+                      storeHandle: storeHandle,
+                    },
+                  });
+                }
+              }}
+            >
+              {uploadedImages.length > 0
+                ? "Proceed to order"
+                : "Upload Prescription"}
+            </Button>
+          </div>
+        </div>
+      </StoreNav>
 
       {openOptions && (
         <OptionsDrawer open={openOptions} onOpenChange={setOpenOptions} />

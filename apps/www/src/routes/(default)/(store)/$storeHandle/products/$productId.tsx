@@ -16,12 +16,14 @@ import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { Label } from "@lipy/web-ui/components/ui/label";
 import Loading from "@lipy/web-ui/components/ui/loading";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { shareContent } from "@lipy/web-ui/lib/share";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import type { InferResponseType } from "hono/client";
-import { ArrowLeft, Share } from "lucide-react";
+import { Share } from "lucide-react";
 import { useEffect, useState } from "react";
+import { StoreNav } from "../-nav";
 
 export const Route = createFileRoute(
   "/(default)/(store)/$storeHandle/products/$productId"
@@ -31,6 +33,7 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const { productId, storeHandle } = Route.useParams();
+  const { isMobile } = useViewport();
 
   const { data: storeInfo, isLoading: isStoreLoading } = useAPIQuery(
     publicShopApi[":handle"],
@@ -73,7 +76,7 @@ function RouteComponent() {
   );
 
   return (
-    <>
+    <StoreNav storeHandle={storeHandle}>
       {isLoading || isStoreLoading ? (
         <Loading />
       ) : !product ? (
@@ -83,7 +86,7 @@ function RouteComponent() {
         />
       ) : (
         <div>
-          <DashboardHeader title={product.title || ""} className="lg:hidden">
+          <DashboardHeader title={product.title || ""}>
             <Button
               onClick={() => {
                 shareContent({
@@ -99,63 +102,16 @@ function RouteComponent() {
               <Share className="size-4 stroke-2" />
             </Button>
           </DashboardHeader>
-          <Button
-            className="hidden lg:inline-flex mx-20 mt-4 sticky top-28"
-            variant={"outline"}
-            onClick={() => window.history.back()}
-          >
-            <ArrowLeft /> Back
-          </Button>
 
-          <div className="lg:grid lg:grid-cols-12 max-w-screen-xl mx-auto lg:p-6">
-            <div className="lg:col-span-6 lg:px-4 lg:space-y-4">
+          <div className="lg:grid lg:grid-cols-12  lg:p-8">
+            <div className="lg:col-span-6">
               <ImageCarousel images={product.images || []} />
-              {selectedVariant && (
-                <div className="fixed bottom-0  lg:static lg:bottom-auto w-full bg-card shadow-xl   border-t border-border/50 divide-y divide-muted-foreground/10 lg:rounded-xl lg:shadow-none">
-                  <div className="flex items-center justify-between p-4">
-                    <div>
-                      <p className="font-medium">{selectedVariant?.unit}</p>
-                      <div>
-                        <span className="font-bold text-lg pr-2">
-                          {formatAmount("inr", selectedVariant?.price || 0)}
-                        </span>
-                        {selectedVariant?.maxPrice && (
-                          <span className="text line-through text-muted-foreground pr-2">
-                            {formatAmount("inr", selectedVariant?.maxPrice)}
-                          </span>
-                        )}
-                        {discount > 0 && (
-                          <Badge variant="info">{discount}% OFF</Badge>
-                        )}
-                      </div>
-                    </div>
-                    {selectedVariant?.inStock ? (
-                      <AddToCart
-                        product={{
-                          inventoryId: selectedVariant?.inventoryId as string,
-                          quantity: 1,
-                        }}
-                        variant="secondary"
-                        activeVariant="secondary-active"
-                      />
-                    ) : (
-                      <Button disabled>Out of stock</Button>
-                    )}
-                  </div>
-                </div>
-              )}
             </div>
 
-            <div
-              className="lg:col-span-6 lg:p-4 lg:space-y-4 lg:overflow-y-auto lg:h-[calc(100vh-64px)] "
-              style={{
-                scrollbarWidth: "none",
-                msOverflowStyle: "none",
-              }}
-            >
+            <div className="lg:col-span-6 lg:p-4 lg:space-y-4 ">
               <div className="bg-card rounded-xl  mx-2 border border-border/40">
                 <h3 className="font-bold text-lg px-4 pt-2">{product.title}</h3>
-                {product.variants?.length === 1 && (
+                {product.variants?.length === 1 ? (
                   <div className="px-4 py-2">
                     <p className="font-medium text-base">
                       {product.variants[0]?.unit}
@@ -174,9 +130,7 @@ function RouteComponent() {
                       )}
                     </div>
                   </div>
-                )}
-
-                {product.variants?.length > 1 && (
+                ) : (
                   <div className="px-4 py-2">
                     <Label className="text-muted-foreground">
                       Select variant
@@ -217,13 +171,54 @@ function RouteComponent() {
                     </div>
                   </div>
                 )}
+
+                {selectedVariant && (
+                  <div
+                    className={cn(
+                      isMobile
+                        ? "fixed bottom-0 left-0 right-0  bg-card shadow-xl border-t border-border/50"
+                        : "bg-accent/30"
+                    )}
+                  >
+                    <div className="flex items-center justify-between p-4">
+                      <div>
+                        <p className="font-medium">{selectedVariant?.unit}</p>
+                        <div>
+                          <span className="font-bold text-lg pr-2">
+                            {formatAmount("inr", selectedVariant?.price || 0)}
+                          </span>
+                          {selectedVariant?.maxPrice && (
+                            <span className="text line-through text-muted-foreground pr-2">
+                              {formatAmount("inr", selectedVariant?.maxPrice)}
+                            </span>
+                          )}
+                          {discount > 0 && (
+                            <Badge variant="info">{discount}% OFF</Badge>
+                          )}
+                        </div>
+                      </div>
+                      {selectedVariant?.inStock ? (
+                        <AddToCart
+                          product={{
+                            inventoryId: selectedVariant?.inventoryId as string,
+                            quantity: 1,
+                          }}
+                          variant="secondary"
+                          activeVariant="secondary-active"
+                        />
+                      ) : (
+                        <Button disabled>Out of stock</Button>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {product?.highlights && product?.highlights?.length > 0 && (
                 <Accordion
                   type="single"
                   collapsible
-                  className="bg-card rounded-xl m-2 mb-40 "
+                  className="bg-card rounded-xl m-2 mb-36 lg:border  border-border/40"
                   defaultValue="item-1"
                 >
                   <AccordionItem value="item-1" className="border-b-0">
@@ -253,6 +248,6 @@ function RouteComponent() {
           </div>
         </div>
       )}
-    </>
+    </StoreNav>
   );
 }

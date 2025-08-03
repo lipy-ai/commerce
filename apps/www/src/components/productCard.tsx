@@ -8,6 +8,7 @@ import {
 } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Button } from "@lipy/web-ui/components/ui/button";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link } from "@tanstack/react-router";
 import type { InferResponseType } from "hono";
@@ -39,6 +40,7 @@ export default function ProductCard({
   storeHandle?: string;
   storeId?: string;
 }) {
+  const { isMobile } = useViewport();
   const discountPercentage = discountCalculator(
     product.variants[0]?.price as number,
     product.variants[0]?.maxPrice as number
@@ -142,7 +144,7 @@ export default function ProductCard({
                     }}
                   >
                     <Button
-                      size="xs"
+                      size={isMobile ? "xs" : "sm"}
                       variant="ghost"
                       className="text-primary-foreground hover:bg-secondary hover:text-primary-foreground"
                     >
@@ -156,7 +158,7 @@ export default function ProductCard({
                     </div>
 
                     <Button
-                      size="xs"
+                      size={isMobile ? "xs" : "sm"}
                       variant="ghost"
                       className="text-primary-foreground hover:bg-secondary hover:text-primary-foreground"
                     >

@@ -1,6 +1,4 @@
 import { authClient } from "@lipy/lib/providers/auth";
-import { useViewport } from "@lipy/web-ui/contexts/viewport";
-import { cn } from "@lipy/web-ui/lib/utils";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -15,7 +13,6 @@ import { Spinner } from "../ui/spinner";
 
 export default function UserProfile() {
   const { data, isPending } = authClient.useSession();
-  const { isMobile } = useViewport();
 
   const defaultValues = {
     image: data?.user.image,
@@ -78,16 +75,8 @@ export default function UserProfile() {
             wrapperClassName="my-6"
             readOnly
           />
-        </div>
 
-        <div
-          className={cn(
-            isMobile ? "fixed bg-card bottom-0 left-0 right-0 w-full p-4" : ""
-          )}
-        >
-          <FormButton className="w-full lg:w-fit mt-6">
-            Update profile
-          </FormButton>
+          <FormButton className="w-full lg:w-fit ">Update profile</FormButton>
         </div>
       </form>
     </Form>

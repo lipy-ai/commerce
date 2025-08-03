@@ -26,6 +26,7 @@ import {
   Trash,
 } from "lucide-react";
 import { useState } from "react";
+import { AccountNav } from "../-nav";
 
 //@ts-ignore
 export const Route = createFileRoute("/(default)/account/addresses/")({
@@ -49,64 +50,66 @@ function RouteComponent() {
 
   return (
     <>
-      <DashboardHeader title="Saved addresses">
-        <Link
-          className={cn(
-            buttonVariants({ variant: "default" }),
-            "hidden md:inline-flex"
-          )}
-          to="/account/addresses/new"
-          search={{ type: "saveAddress" }}
-        >
-          <CirclePlus />
-          Add New Address
-        </Link>
-      </DashboardHeader>
-      {isLoading ? (
-        <Loading />
-      ) : !data || data.length === 0 ? (
-        <EmptyPage
-          icon={MapPinHouse}
-          title="You have no saved addresses"
-          label="Add a new address to get started"
-        />
-      ) : (
-        <div className="w-full">
-          <div className="p-4 mb-20 space-y-2">
-            {data.map((address) => {
-              const { id: _, ...restAddress } = address;
-              return (
-                <div
-                  key={address.id}
-                  onClick={() => {
-                    setOptionsDrawerOpen(true);
-                    setSelectedAddress(address);
-                  }}
-                >
-                  <AddressComponent address={restAddress as AddressType} />
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {isMobile && (
-        <div className="fixed bottom-0 w-full p-4 bg-background">
+      <AccountNav>
+        <DashboardHeader title="Saved addresses">
           <Link
             className={cn(
               buttonVariants({ variant: "default" }),
-              "w-full font-semibold"
+              "hidden md:inline-flex"
             )}
             to="/account/addresses/new"
-            search={{
-              type: "saveAddress",
-            }}
+            search={{ type: "saveAddress" }}
           >
+            <CirclePlus />
             Add New Address
           </Link>
-        </div>
-      )}
+        </DashboardHeader>
+        {isLoading ? (
+          <Loading />
+        ) : !data || data.length === 0 ? (
+          <EmptyPage
+            icon={MapPinHouse}
+            title="You have no saved addresses"
+            label="Add a new address to get started"
+          />
+        ) : (
+          <div className="w-full">
+            <div className="p-4 mb-20 space-y-2">
+              {data.map((address) => {
+                const { id: _, ...restAddress } = address;
+                return (
+                  <div
+                    key={address.id}
+                    onClick={() => {
+                      setOptionsDrawerOpen(true);
+                      setSelectedAddress(address);
+                    }}
+                  >
+                    <AddressComponent address={restAddress as AddressType} />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {isMobile && (
+          <div className="fixed bottom-0 w-full p-4 bg-background">
+            <Link
+              className={cn(
+                buttonVariants({ variant: "default" }),
+                "w-full font-semibold"
+              )}
+              to="/account/addresses/new"
+              search={{
+                type: "saveAddress",
+              }}
+            >
+              Add New Address
+            </Link>
+          </div>
+        )}
+      </AccountNav>
 
       {optionsDrawerOpen && (
         <OptionsDrawer
@@ -121,7 +124,7 @@ function RouteComponent() {
 
 export function AddressComponent({ address }: { address: AddressType }) {
   return (
-    <div className="bg-card p-4 flex  gap-2  items-start rounded-xl">
+    <div className="bg-card md:bg-background p-4 flex  gap-2  items-start rounded-xl cursor-pointer">
       <div className="mt-1">
         {address.tag === "home" ? (
           <House className=" flex-shrink-0 text-foreground " />

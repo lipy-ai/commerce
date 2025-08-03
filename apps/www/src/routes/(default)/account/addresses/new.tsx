@@ -18,6 +18,7 @@ import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { LocateFixed, MapPinned, Search, StepForward } from "lucide-react";
 import { useEffect, useState } from "react";
+import { AccountNav } from "../-nav";
 import { AddressSetter } from "./-addressSetter";
 
 export const Route = createFileRoute("/(default)/account/addresses/new")({
@@ -80,11 +81,11 @@ function RouteComponent() {
 
   if (!isLoaded) return <Loading />;
   return (
-    <div>
+    <AccountNav>
       <DashboardHeader
         title={type === "deliveryAddress" ? "Delivery Address" : "New Address"}
       />
-      <div className="relative">
+      <div className="flex flex-col flex-1 relative">
         <div className="p-2 lg:p-4">
           <Button
             className="w-full justify-start text-muted-foreground bg-tertiary/50 border"
@@ -101,7 +102,7 @@ function RouteComponent() {
           center={mapCenter}
           mapContainerStyle={{
             width: "100%",
-            height: "calc(100vh - 220px)",
+            height: "100%",
           }}
           options={{
             zoomControl: false,
@@ -210,6 +211,6 @@ function RouteComponent() {
           setMapCenter={setMapCenter}
         />
       )}
-    </div>
+    </AccountNav>
   );
 }

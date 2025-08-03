@@ -16,7 +16,7 @@ export default function EmptyPage(props: {
   return (
     <div
       className={cn(
-        "m-auto flex flex-1 flex-col space-y-1 items-center justify-center p-6 text-center lg:min-h-[calc(100vh-160px)]",
+        "m-auto flex flex-1 flex-col space-y-1 items-center justify-center p-6 text-center",
         props.className
       )}
     >

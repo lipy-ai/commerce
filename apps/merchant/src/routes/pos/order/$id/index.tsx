@@ -190,12 +190,12 @@ function RouteComponent() {
 
   const statusIdx = ORDER_STATUS.indexOf(data?.status as any);
   const isCurrStatusAfterIdx = (s: (typeof ORDER_STATUS)[number]) => {
-    console.log(
-      statusIdx,
-      ORDER_STATUS.indexOf(s),
-      s,
-      statusIdx >= ORDER_STATUS.indexOf(s)
-    );
+    // console.log(
+    //   statusIdx,
+    //   ORDER_STATUS.indexOf(s),
+    //   s,
+    //   statusIdx >= ORDER_STATUS.indexOf(s)
+    // );
     if (statusIdx >= ORDER_STATUS.indexOf(s)) return true;
     return false;
   };

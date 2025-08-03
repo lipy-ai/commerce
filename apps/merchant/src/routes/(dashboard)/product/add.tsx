@@ -124,6 +124,10 @@ function RouteComponent() {
           })
       );
     },
+
+    onError(err) {
+      console.error(err);
+    },
   });
 
   const onSubmit = async (
@@ -382,9 +386,15 @@ function EditInventory({
   const form = useForm({ defaultValues });
   const handleSubmit = async (v: typeof defaultValues) => {
     if (v.inStock) {
-      variant.stock = -1;
+      variant = {
+        ...variant,
+        stock: -1,
+      };
     } else {
-      variant.stock = 0;
+      variant = {
+        ...variant,
+        stock: 0,
+      };
     }
 
     onSubmit({ ...variant, price: v.price, inStore: v.inStore });

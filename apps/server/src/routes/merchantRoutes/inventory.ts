@@ -9,7 +9,7 @@ export const merchantInventoryRoute = new Hono<ServerContext>().patch(
 	zValidator(
 		"json",
 		z.object({
-			id: z.string(),
+			id: z.string().uuid(),
 			variantId: z.string().uuid(),
 			price: z.coerce.number().min(1).optional(),
 			stock: z.coerce.number().min(-1).optional(),

@@ -36,15 +36,15 @@ function Component() {
   const { q } = Route.useSearch();
 
   return (
-    <div className="px-4 py-8 md:p-8 space-y-8 flex-1 flex flex-col">
-      <div className="flex flex-row items-center gap-2">
+    <div className="m-8 space-y-8">
+      <div className="flex items-center gap-2 w-full">
         <SearchBar
           placeholder="Search category"
           defaultValue={q}
-          className="flex-1 w-full lg:w-auto p-0"
+          className="w-full p-0 "
         />
         <CategoryFormEdit type="create">
-          <Button>Add New</Button>
+          <Button className="w-fit">Add New</Button>
         </CategoryFormEdit>
       </div>
       <DesktopView />

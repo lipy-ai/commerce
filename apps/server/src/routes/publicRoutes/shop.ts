@@ -85,9 +85,8 @@ const route = new Hono<ServerContext>()
 				"name",
 				"image",
 				"address",
-				"phone",
 				"freeDeliveryDistance",
-				"deliveryDistance"
+				"deliveryDistance",
 			])
 			.limit(25)
 			.execute();

@@ -26,6 +26,7 @@ import { Button } from "@lipy/web-ui/components/ui/button";
 import { Form, FormLabel } from "@lipy/web-ui/components/ui/form";
 import Loading from "@lipy/web-ui/components/ui/loading";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
+import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { ArrowRight, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -43,7 +44,11 @@ export default function AssignProductVariationForm() {
     { enabled: !!product && !!shop }
   );
 
-  const mutation = useAPIMutation(adminVariantApi.inventory, "$patch");
+  const mutation = useAPIMutation(adminVariantApi.inventory, "$patch", {
+    onSuccess: () => {
+      toast.success("Inventory updated");
+    },
+  });
 
   const d = {
     id: "",
@@ -60,14 +65,14 @@ export default function AssignProductVariationForm() {
   });
 
   const handle = async (d: typeof defaultValues) => {
-    const dirtyKeys = form.formState.dirtyFields.items
-      ?.map((_, i) => i)
-      .filter(Boolean);
-    const json = { items: d.items.filter((_, i) => dirtyKeys?.includes(i)) };
-    console.log(json);
+    const dirtyItems = form.formState.dirtyFields.items;
+
+    const json = {
+      items: d.items.filter((_, i) => !!dirtyItems?.[i]),
+    };
+
     await mutation.mutateAsync({ json });
   };
-
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!data || data?.length === 0) return;

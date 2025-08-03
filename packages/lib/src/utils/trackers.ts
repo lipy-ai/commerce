@@ -7,7 +7,6 @@ declare global {
 }
 
 export const trackPageView = (url: string) => {
-	console.log(env.GTAG_ID);
 	if (typeof window !== "undefined" && window.gtag) {
 		window.gtag("config", env.GTAG_ID, {
 			page_path: url,

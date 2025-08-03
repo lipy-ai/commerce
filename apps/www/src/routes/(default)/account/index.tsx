@@ -1,3 +1,4 @@
+import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import Loading from "@lipy/web-ui/components/ui/loading";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { createFileRoute } from "@tanstack/react-router";
@@ -20,5 +21,10 @@ function RouteComponent() {
   if (!isMobile) {
     return <Loading />;
   }
-  return <AccountNav />;
+  return (
+    <>
+      <DashboardHeader title="Settings" />
+      <AccountNav />
+    </>
+  );
 }

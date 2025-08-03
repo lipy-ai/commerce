@@ -74,6 +74,7 @@ export const AddressSetter = ({
     try {
       setLoadingPrediction(true);
       const results = await getPlacePredictions(text);
+      console.log("Predictions", results);
       setPredictions(results);
     } catch (_error) {
       setPredictions([]);
@@ -82,7 +83,7 @@ export const AddressSetter = ({
     }
   }, 400);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: false positive
   useEffect(() => {
     if (gmapLoaded && input) {
       fetchPredictions(input);

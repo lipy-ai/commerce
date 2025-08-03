@@ -1,5 +1,6 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+	"root": false,
+	"$schema": "https://biomejs.dev/schemas/2.1.3/schema.json",
 	"vcs": {
 		"enabled": false,
 		"clientKind": "git",
@@ -7,22 +8,22 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": ["src/routeTree.gen.ts", "**/*.css", "**/*.json"],
-		"include": [
-			"src/**/*.ts",
-			"src/**/*.tsx",
-			".vscode/*",
-			"index.html",
-			"vite.config.js"
+		"includes": [
+			"**/src/**/*.ts",
+			"**/src/**/*.tsx",
+			"**/.vscode/**/*",
+			"**/index.html",
+			"**/vite.config.js",
+			"!**/src/routeTree.gen.ts",
+			"!**/*.css",
+			"!**/*.json"
 		]
 	},
 	"formatter": {
 		"enabled": true,
 		"indentStyle": "tab"
 	},
-	"organizeImports": {
-		"enabled": true
-	},
+	"assist": { "actions": { "source": { "organizeImports": "on" } } },
 	"linter": {
 		"enabled": true,
 		"rules": {
@@ -33,7 +34,9 @@
 				"useSemanticElements": "off",
 				"noSvgWithoutTitle": "off",
 				"useFocusableInteractive": "off",
-				"useAltText": "off"
+				"useAltText": "off",
+				"noStaticElementInteractions":"off"
+				
 			},
 			"style": {
 				"noNonNullAssertion": "off",

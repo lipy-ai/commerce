@@ -4,11 +4,11 @@ import { useEffect } from "react";
 import { type ProductInCart, useCartStore } from "./store";
 
 export const AppCartInitializer = () => {
-  const setCart = useCartStore((state) => state.setCart);
+  const setCart = useCartStore((state: any) => state.setCart);
 
   const { data, isFetched } = useAPIQuery(loggedInCartApi.basic, "$get", {});
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies:
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isFetched && data) {
       setCart(data as ProductInCart[]);

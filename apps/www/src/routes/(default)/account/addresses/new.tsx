@@ -66,7 +66,7 @@ function RouteComponent() {
         ...fillBaseAddress(result),
       };
       setFullAddress(newLocation);
-    } catch (error) {
+    } catch (_error) {
     } finally {
       setFetchingAddress(false);
     }

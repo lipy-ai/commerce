@@ -1,5 +1,4 @@
-import { useCartStore } from "@/components/cart/store";
-import PlaceOrder from "@/components/order/placeOrder";
+// import PlaceOrder from "@/components/order/placeOrder";
 import { publicShopApi } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
@@ -13,8 +12,7 @@ import {
 } from "@lipy/web-ui/components/ui/avatar";
 import { Card, CardContent, CardHeader } from "@lipy/web-ui/components/ui/card";
 import { Label } from "@lipy/web-ui/components/ui/label";
-import { Link } from "@tanstack/react-router";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ChevronDown,
   MapPinned,
@@ -23,6 +21,7 @@ import {
   Store,
 } from "lucide-react";
 import { useState } from "react";
+import { useCartStore } from "@/components/cart/store";
 import { StoreNav } from "../../-nav";
 
 export const Route = createFileRoute(
@@ -41,6 +40,7 @@ function RouteComponent() {
   const { data: storeInfo } = useAPIQuery(publicShopApi[":handle"], "$get", {
     param: { handle: storeHandle },
   });
+
   return (
     <>
       <StoreNav storeHandle={storeHandle}>
@@ -48,7 +48,7 @@ function RouteComponent() {
         <div className="lg:p-8">
           {uploadedImages && uploadedImages.length > 0 ? (
             <div className="max-w-4xl">
-              <div className=" space-y-2 mb-32">
+              <div className="space-y-2 mb-32">
                 <Card>
                   <CardHeader className="flex items-center justify-between mb-2 border-b border-dashed">
                     <Link
@@ -83,7 +83,7 @@ function RouteComponent() {
                     <Label>Your uploaded prescriptions</Label>
 
                     <div
-                      className=" flex gap-4 overflow-x-auto scrollbar-hide -mx-4 p-4"
+                      className="flex gap-4 overflow-x-auto scrollbar-hide -mx-4 p-4"
                       style={{
                         scrollbarWidth: "none",
                         msOverflowStyle: "none",
@@ -91,7 +91,6 @@ function RouteComponent() {
                     >
                       {uploadedImages.map((file, index) => {
                         const objectUrl = URL.createObjectURL(file);
-
                         return (
                           <img
                             key={index}
@@ -106,7 +105,7 @@ function RouteComponent() {
                   </CardContent>
                 </Card>
 
-                <div className=" px-4 py-2 flex items-center gap-2 justify-between ">
+                <div className="px-4 py-2 flex items-center gap-2 justify-between">
                   <p className="text-muted-foreground">
                     We may call you to confirm your medicines, delivery details
                     in case of any confusion.
@@ -115,9 +114,9 @@ function RouteComponent() {
                 </div>
               </div>
 
-              <div className="fixed bottom-0  lg:left-auto  border-t w-full bg-card shadow-xl border-2 rounded-t-xl p-2 max-w-4xl m-auto">
+              <div className="fixed bottom-0 lg:left-auto border-t w-full bg-card shadow-xl border-2 rounded-t-xl p-2 max-w-4xl m-auto">
                 <div
-                  className="rounded-t-xl  cursor-pointer border-b border-dashed pb-2"
+                  className="rounded-t-xl cursor-pointer border-b border-dashed pb-2"
                   onClick={() => setDetailedAddressDrawerOpen(true)}
                 >
                   <div className="flex items-center gap-2">
@@ -147,11 +146,14 @@ function RouteComponent() {
                   </div>
                 </div>
 
+                {/* Uncomment and use this when PlaceOrder component is available */}
+                {/* 
                 <PlaceOrder
                   setOpen={setDetailedAddressDrawerOpen}
                   storeId={storeInfo?.id}
                   customOrder
                 />
+                */}
               </div>
             </div>
           ) : (
@@ -169,7 +171,7 @@ function RouteComponent() {
           fullAddress={deliveryLocation}
           open={detailedAddressDrawerOpen}
           onOpenChange={setDetailedAddressDrawerOpen}
-          label={"Edit"}
+          label="Edit"
           isDeliveryAddress
         />
       )}

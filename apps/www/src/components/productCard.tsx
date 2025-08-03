@@ -45,6 +45,7 @@ export default function ProductCard({
     product.variants[0]?.price as number,
     product.variants[0]?.maxPrice as number
   );
+  const { cart } = useCartStore();
 
   const [variantDrawer, setVariantDrawer] = useState(false);
   const [_, setActiveProduct] = useState<ProductType>();
@@ -56,7 +57,6 @@ export default function ProductCard({
 
     default: {
       let cartCount = 0;
-      const { cart } = useCartStore();
 
       for (const cartItem of cart) {
         if (cart.length === 0) break;

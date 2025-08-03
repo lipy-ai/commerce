@@ -1,3 +1,5 @@
+name: Deploy Partners
+
 on:
   push:
     branches: ["main"]

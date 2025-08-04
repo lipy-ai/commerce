@@ -1,4 +1,3 @@
-import { AddToCart } from "@/components/cart/addToCart";
 import { publicProductApi, publicShopApi } from "@lipy/lib/api";
 import { discountCalculator } from "@lipy/lib/helper/discountCalculator";
 import { formatAmount } from "@lipy/lib/utils/intl";
@@ -23,6 +22,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import type { InferResponseType } from "hono/client";
 import { Share } from "lucide-react";
 import { useEffect, useState } from "react";
+import { AddToCart } from "@/components/cart/addToCart";
 import { StoreNav } from "../-nav";
 
 export const Route = createFileRoute(
@@ -104,7 +104,7 @@ function RouteComponent() {
           </DashboardHeader>
 
           <div className="lg:grid lg:grid-cols-12  lg:p-8">
-            <div className="lg:col-span-6">
+            <div className="lg:col-span-6 bg-card">
               <ImageCarousel images={product.images || []} />
             </div>
 

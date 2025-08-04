@@ -9,6 +9,7 @@ import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Card, CardContent } from "@lipy/web-ui/components/ui/card";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
+
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute, Link } from "@tanstack/react-router";
@@ -206,7 +207,7 @@ function MobileView({ items }: { items: Response["items"] }) {
                   alt={m.title || ""}
                   className={cn(
                     v?.active ? "grayscale-0" : "grayscale-100",
-                    "w-28 h-28 border border-border/50 rounded-xl bg-accent object-cover"
+                    "w-28 h-28 border border-border/40 rounded-xl bg-card object-contain "
                   )}
                 />
                 <p
@@ -255,7 +256,7 @@ function DesktopView({ items }: { items: Response["items"] }) {
               <img
                 src={m.thumbnail || ""}
                 alt={m.title || ""}
-                className="size-12 border rounded bg-accent object-cover"
+                className="size-12 border rounded bg-card object-contain border-border/40"
               />
             </div>
             <div className="flex-2">
@@ -341,7 +342,6 @@ function DesktopView({ items }: { items: Response["items"] }) {
 //     <Table className="bg-background border p-8">
 //       <TableHeader>
 //         <TableRow>
-
 //           <TableHead className="">Product</TableHead>
 
 //           <TableHead className="w-32">Status</TableHead>
@@ -360,7 +360,6 @@ function DesktopView({ items }: { items: Response["items"] }) {
 //             }
 //             className="cursor-pointer focus:bg-accent"
 //           >
-
 //             <TableCell>
 //               <div className="grid grid-cols-[50px_auto] gap-2">
 //                 <img

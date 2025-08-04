@@ -4,6 +4,7 @@ import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { Card, CardAction, CardContent } from "@lipy/web-ui/components/ui/card";
 import { Label } from "@lipy/web-ui/components/ui/label";
+import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
@@ -31,7 +32,9 @@ function RouteComponent() {
   return (
     <>
       <DashboardHeader title="Customer Details" />
-      {!isLoading && !data ? null : (
+      {isLoading ? (
+        <Skeleton className="m-4 max-w-5xl" />
+      ) : !data ? null : (
         <Card className="m-4 max-w-5xl">
           <CardContent className="space-y-8">
             <CardAction className={cn("flex gap-2")}>

@@ -3,10 +3,9 @@ import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { ScrollingTabs } from "@lipy/web-ui/components/custom-ui/scrollable-tabs";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
-import { buttonVariants } from "@lipy/web-ui/components/ui/button";
+import { Input } from "@lipy/web-ui/components/ui/input";
 import Loading from "@lipy/web-ui/components/ui/loading";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
-import { cn } from "@lipy/web-ui/lib/utils";
 import { Link } from "@tanstack/react-router";
 import {
   Bike,
@@ -33,7 +32,8 @@ const CATEGORIES = [
 ];
 
 export default function NearByShops() {
-  const [_, setActiveCategory] = useState("all");
+  const [activeCategory, setActiveCategory] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
   const { isMobile } = useViewport();
   const { deliveryLocation } = useLocationStore();
   const { data: shops, isFetching } = useAPIQuery(
@@ -53,28 +53,33 @@ export default function NearByShops() {
     }
   );
 
+  const filteredShops =
+    shops?.filter((shop) => {
+      const matchesSearch = shop.name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      const matchesCategory =
+        activeCategory === "all" || shop.type === activeCategory;
+      return matchesSearch && matchesCategory;
+    }) || [];
   return (
     <>
       {isMobile ? (
         <div className=" border-b sticky top-0 z-50 bg-card  overflow-hidden shadow-xs">
           <div className="relative z-10 space-y-2">
-            <div className="px-4 py-2">
-              <Link
-                className={cn(
-                  buttonVariants({ variant: "tertiary" }),
-                  "w-full justify-start text-muted-foreground border bg-tertiary/50d"
-                )}
-                to="/"
-              >
-                <Search />
-                Search for stores near you
-              </Link>
+            <div className="px-4 py-1">
+              <Input
+                prefixEl={<Search className="size-8 mr-1  stroke-2" />}
+                className="rounded-xl"
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search shops near you"
+              />
             </div>
 
             <div>
               <ScrollingTabs
                 tabs={CATEGORIES}
-                handleTabChange={setActiveCategory}
+                handleTabChange={(id) => setActiveCategory(id)}
                 className="text-foreground "
               />
             </div>
@@ -85,7 +90,7 @@ export default function NearByShops() {
           <div className="bg-accent/20 px-12">
             <ScrollingTabs
               tabs={CATEGORIES}
-              handleTabChange={setActiveCategory}
+              handleTabChange={(id) => setActiveCategory(id)}
               className="text-foreground"
             />
           </div>
@@ -94,7 +99,7 @@ export default function NearByShops() {
 
       {isFetching ? (
         <Loading />
-      ) : !shops || shops.length === 0 ? (
+      ) : !shops || (searchTerm === "" && activeCategory !== "all") ? (
         <EmptyPage
           title="Coming soon to your doorstep!"
           label="We are currently not available at your location. We will be in your
@@ -106,11 +111,19 @@ export default function NearByShops() {
             className="aspect-square object-cover size-40"
           />
         </EmptyPage>
+      ) : filteredShops.length === 0 && searchTerm !== "" ? (
+        <EmptyPage title="No shop found">
+          <img
+            src="/assets/no-results-found.png"
+            alt=""
+            className="aspect-square object-cover size-40"
+          />
+        </EmptyPage>
       ) : (
         <div>
           <div className="m-auto  px-2 lg:px-16">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-center gap-4 py-4">
-              {shops.map((shop) => (
+              {filteredShops.map((shop) => (
                 <div key={shop.id} className="space-y-6">
                   <div className="bg-card border p-0 rounded-xl  shadow-sm">
                     <Link

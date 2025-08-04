@@ -1,11 +1,11 @@
+import { Hono } from "hono";
+import { z } from "zod";
 import { db } from "@/db";
 import type { SUM_TYPE } from "@/db/schema";
 import { getStore } from "@/helpers/store";
 import { orderCalculator } from "@/lib/orderCalculators";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
-import { Hono } from "hono";
-import { z } from "zod";
 
 const cartSchema = z.object({
 	inventoryId: z.string().uuid(),
@@ -90,10 +90,10 @@ const route = new Hono<ServerContext>()
 					discounts: [],
 				});
 
-				itemsTotal += calc.itemsTotal;
-				maxItemsTotal += calc.maxItemsTotal;
-				taxTotal += calc.taxTotal;
-				totalSaved += calc.totalSaved;
+				itemsTotal += calc.itemTotalAmount;
+				maxItemsTotal += calc.maxItemTotalAmount;
+				taxTotal += calc.totalTaxAmount;
+				totalSaved += calc.amountSaved;
 				totalAmount += calc.totalAmount;
 
 				return {
@@ -101,9 +101,10 @@ const route = new Hono<ServerContext>()
 					storeHandle: handle,
 					storeImage: image,
 					storeName: name,
-					storeTax: calc.taxTotal,
-					storeItemsTotal: calc.itemsTotal,
-					storeMaxItemsTotal: calc.maxItemsTotal,
+					storeMinimumOrderValue: store.minimumOrderValue,
+					storeTax: calc.totalTaxAmount,
+					storeItemsTotal: calc.itemTotalAmount,
+					storeMaxItemsTotal: calc.maxItemTotalAmount,
 					items,
 				};
 			}),

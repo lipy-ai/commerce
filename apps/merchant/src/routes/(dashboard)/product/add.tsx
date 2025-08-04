@@ -434,8 +434,8 @@ function EditInventory({
           disabled={
             variant?.inventoryId
               ? form.formState.isSubmitting ||
-                form.formState.isSubmitSuccessful ||
-                !form.formState.isDirty
+                !form.formState.isDirty ||
+                form.formState.isSubmitSuccessful
               : false
           }
           variant={variant?.inventoryId ? "secondary" : "default"}

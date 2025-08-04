@@ -26,7 +26,6 @@ import { AddressSetter } from "./-addressSetter";
 function LocationComponent() {
   const [error, setError] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [deliveryAddressSetter, setDeliveryAddressSetter] = useState(false);
 
   const { setDeliveryLocation } = useLocationStore();
 
@@ -88,49 +87,41 @@ function LocationComponent() {
 
   if (error && !isLoading) {
     return (
-      <>
-        <DrawerDialogSwitcher
-          open={drawerOpen}
-          onOpenChange={setDrawerOpen}
-          dismissible={false}
-          className="[&>button]:hidden"
-        >
-          <DrawerDialogHeader className="mx-auto">
-            <div className="mx-auto rounded-xl p-4 border my-6">
-              <MapPinOff className="size-16" />
-            </div>
+      <DrawerDialogSwitcher
+        open={drawerOpen}
+        onOpenChange={setDrawerOpen}
+        dismissible={false}
+        className="[&>button]:hidden"
+      >
+        <DrawerDialogHeader className="mx-auto">
+          <div className="mx-auto rounded-xl p-4 border my-6">
+            <MapPinOff className="size-16" />
+          </div>
 
-            <DrawerDialogTitle className="mx-auto text-xl text-center font-semibold">
-              {error}
-            </DrawerDialogTitle>
+          <DrawerDialogTitle className="mx-auto text-xl text-center font-semibold">
+            {error}
+          </DrawerDialogTitle>
 
-            <DrawerDialogDescription className="mx-auto text-base text-center">
-              Please allow location permission for a better experience.
-            </DrawerDialogDescription>
-          </DrawerDialogHeader>
+          <DrawerDialogDescription className="mx-auto text-base text-center">
+            Please allow location permission for a better experience.
+          </DrawerDialogDescription>
+        </DrawerDialogHeader>
 
-          <DrawerDialogFooter>
-            <Button onClick={() => window.location.reload()}>Retry</Button>
+        <DrawerDialogFooter>
+          <Button onClick={() => window.location.reload()}>Retry</Button>
+          <AddressSetter>
             <Button
               variant={"outline"}
               onClick={() => {
                 setDrawerOpen(false);
-                setDeliveryAddressSetter(true);
               }}
             >
               <Search className="stroke-2" />
               Search your location
             </Button>
-          </DrawerDialogFooter>
-        </DrawerDialogSwitcher>
-
-        {deliveryAddressSetter && (
-          <AddressSetter
-            open={deliveryAddressSetter}
-            onOpenChange={setDeliveryAddressSetter}
-          />
-        )}
-      </>
+          </AddressSetter>
+        </DrawerDialogFooter>
+      </DrawerDialogSwitcher>
     );
   }
 

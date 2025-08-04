@@ -8,7 +8,7 @@ export const AppCartInitializer = () => {
 
   const { data, isFetched } = useAPIQuery(loggedInCartApi.basic, "$get", {});
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: false positive
   useEffect(() => {
     if (isFetched && data) {
       setCart(data as ProductInCart[]);

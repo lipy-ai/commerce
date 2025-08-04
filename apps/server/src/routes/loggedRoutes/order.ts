@@ -122,7 +122,12 @@ const generateOrders = async ({
 
 		const calcs = orderCalculator({ items, discounts, taxes });
 
+		if (store.minimumOrderValue > calcs.itemTotalAmount) {
+			break;
+		}
+
 		orders.push({
+			...calcs,
 			id: idGenerate(),
 			pk: crypto.randomUUID(),
 			status: "created",
@@ -146,18 +151,12 @@ const generateOrders = async ({
 			},
 			paymentMethod: "cod",
 			orderedAt: new Date(),
-			totalTaxAmount: calcs.taxTotal,
-			totalDiscountAmount: calcs.discountTotal,
-			maxItemTotalAmount: calcs.maxItemsTotal,
-			itemTotalAmount: calcs.itemsTotal,
-			totalAmount: calcs.totalAmount,
-			amountSaved: calcs.totalSaved,
 			delivery: null,
 			canceledAt: null,
 			refundedAt: null,
 			deliveredAt: null,
 			deliveryAgentAssignedAt: null,
-			confirmationOtp: idGenerate({ length: 5 }),
+			confirmationOtp: idGenerate({ length: 5, alphabet_type: "0-9" }),
 			cancelReason: null,
 			paidAt: null,
 			timeline: [
@@ -290,8 +289,6 @@ const route = new Hono<ServerContext>()
 		const user = c.get("user");
 		const values = c.req.valid("json");
 
-		console.log("values", values);
-
 		if (!values.address)
 			throw new HTTPError(404, { message: "Address not found!" });
 
@@ -351,6 +348,26 @@ const route = new Hono<ServerContext>()
 			c.get("emitter").emit(c, "order:created", ord);
 		}
 		return c.json({ orders: orders.map((o) => o.id) });
-	});
+	})
+	.patch(
+		"/:id",
+		zValidator("param", paramSchema),
+		zValidator(
+			"json",
+			z.object({
+				status: z.enum(["accepted", "canceled"]),
+			}),
+		),
+		async (c) => {
+			const { id } = c.req.valid("param");
+			const { status } = c.req.valid("json");
+			await db
+				.updateTable("orders")
+				.where("id", "=", id)
+				.set({ status: status })
+				.execute();
+			return c.json({ success: true });
+		},
+	);
 
 export { route as orderRoute };

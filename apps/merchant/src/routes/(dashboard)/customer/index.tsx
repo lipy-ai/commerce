@@ -10,6 +10,7 @@ import {
 } from "@lipy/web-ui/components/ui/avatar";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { Card, CardContent } from "@lipy/web-ui/components/ui/card";
+import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -19,7 +20,7 @@ import {
   TableRow,
 } from "@lipy/web-ui/components/ui/table";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
-import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import type { InferResponseType } from "hono/client";
 import { Dot, Plus } from "lucide-react";
 import { z } from "zod";
@@ -62,7 +63,9 @@ function RouteComponent() {
         <div className="p-4 lg:p-0">
           <SearchBar placeholder="Search customers" defaultValue={q} />
         </div>
-        {isLoading ? null : !data || data.items.length === 0 ? (
+        {isLoading ? (
+          <Skeleton className="flex-1 mx-4 lg:mx-0" />
+        ) : !data || data.items.length === 0 ? (
           <Card className="border-border">
             <CardContent className="flex flex-1 justify-center flex-col items-center m-auto min-h-[60vh]  text-center">
               <img

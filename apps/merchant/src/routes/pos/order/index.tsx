@@ -154,9 +154,7 @@ function DesktopView({ items }: { items: Response["items"] }) {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-32">#</TableHead>
-          {/* <TableHead className="">Customer</TableHead>
-					<TableHead className="">Delivery Partner</TableHead>{" "} */}
+          <TableHead className="w-32">Id</TableHead>
           <TableHead className="w-32">Ordered</TableHead>
           <TableHead className="w-32">Customer</TableHead>
 

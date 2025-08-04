@@ -4,6 +4,11 @@ import { formatAmount } from "@lipy/lib/utils/intl";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { OrderChart } from "@lipy/web-ui/components/charts/orderChart";
 import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@lipy/web-ui/components/ui/alert";
+import {
   Avatar,
   AvatarFallback,
   AvatarImage,
@@ -125,6 +130,17 @@ function RouteComponent() {
             <h1 className="text-2xl">{data?.name || "Store"}</h1>
           </div>
         </div>
+
+        {!data?.active && (
+          <Alert variant={"info"}>
+            <AlertTitle>Your store is under verification</AlertTitle>
+            <AlertDescription>
+              We are reviewing your store and will be live in sometime. In the
+              mean time you can setup your inventory.
+            </AlertDescription>
+          </Alert>
+        )}
+
         <Card className="">
           <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {btns.map((d, i) => (

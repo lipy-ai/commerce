@@ -1,6 +1,5 @@
-import { type LucideIcon, Package2 } from "lucide-react";
-
 import { cn } from "@lipy/web-ui/lib/utils";
+import { type LucideIcon, Package2 } from "lucide-react";
 import { Label } from "../ui/label";
 
 export default function EmptyPage(props: {

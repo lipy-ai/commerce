@@ -172,7 +172,7 @@ function Orders({
         <CardTitle>Pending Orders</CardTitle>
       </CardHeader>
 
-      <CardContent className="divide-y flex-1 flex">
+      <CardContent className="divide-y">
         {isLoading ? (
           <Skeleton className="flex-1 h-screen" />
         ) : !data || data?.length === 0 ? (

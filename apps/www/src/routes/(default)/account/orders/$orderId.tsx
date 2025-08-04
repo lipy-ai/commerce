@@ -449,8 +449,8 @@ function RouteComponent() {
                     </Collapsible>
                   </CardContent>
                   <CardFooter className="w-full flex items-center justify-between border-t">
-                    <p className="font-semibold text-xl">Total Payable</p>
-                    <p className="font-semibold text-3xl">
+                    <p className="font-semibold text-lg">Total Payable</p>
+                    <p className="font-semibold text-xl">
                       {formatAmount("inr", Number(order?.totalAmount))}
                     </p>
                   </CardFooter>

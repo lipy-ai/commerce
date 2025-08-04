@@ -1,8 +1,8 @@
-import { DashboardNav } from "@/components/nav.dashboard";
 import { useAuthSession } from "@lipy/lib/hooks/use-auth";
 import { useStore } from "@lipy/lib/hooks/use-store";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
+import { DashboardNav } from "@/components/nav.dashboard";
 
 export const Route = createFileRoute("/(dashboard)")({
   component: Component,

@@ -14,6 +14,7 @@ import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { DetailedAddress } from "@lipy/web-ui/components/maps/detailedAddress";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
+import { Alert } from "@lipy/web-ui/components/ui/alert";
 import {
   Avatar,
   AvatarFallback,
@@ -26,6 +27,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import type { InferResponseType } from "hono/client";
 import {
+  AlertCircle,
   ChevronDown,
   ChevronRight,
   Clock,
@@ -233,6 +235,18 @@ export const CartMainContent = () => {
                         );
                       })}
                   </CardContent>
+
+                  {s.storeMinimumOrderValue > s.storeItemsTotal && (
+                    <Alert variant="info">
+                      <AlertCircle className="size-4" />
+                      <p>
+                        Minimum order value for this store is{" "}
+                        <span className="font-semibold">
+                          {formatAmount("inr", s.storeMinimumOrderValue)}
+                        </span>
+                      </p>
+                    </Alert>
+                  )}
                 </Card>
               ))}
 
@@ -318,7 +332,9 @@ export function ProductComp({
             <img
               alt={""}
               src={product.thumbnail || "/assets/paper-bag-items.webp"}
-              className={cn("w-full h-full object-cover rounded-md bg-accent")}
+              className={cn(
+                "w-full h-full object-contain  bg-card rounded-md border border-border/40"
+              )}
             />
           </Link>
         </div>

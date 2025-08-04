@@ -5,6 +5,7 @@ import {
   loggedIOrderApi,
 } from "@lipy/lib/api";
 import { authClient } from "@lipy/lib/providers/auth";
+import { formatAmount } from "@lipy/lib/utils/intl";
 import {
   apiQueryOptions,
   useAPIMutation,
@@ -56,6 +57,18 @@ export default function PlaceOrder({
       setOpen(true);
       return;
     }
+
+    const isInvalid = data?.store.some((s) => {
+      if (s.storeMinimumOrderValue > s.storeItemsTotal) {
+        toast.error(
+          `Minimum order value for ${s.storeName} is ${formatAmount("inr", s.storeMinimumOrderValue)}. Either add more items or remove all items from ${s.storeName}.`
+        );
+        return true; // This short-circuits the loop
+      }
+      return false;
+    });
+
+    if (isInvalid) return;
 
     setOrderPlaced(true);
   };

@@ -1,7 +1,6 @@
-import NavBar from "@/components/navBar";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
-import { createFileRoute } from "@tanstack/react-router";
-import { Outlet } from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
+import NavBar from "@/components/navBar";
 
 export const Route = createFileRoute("/(default)/account")({
   component: RouteComponent,

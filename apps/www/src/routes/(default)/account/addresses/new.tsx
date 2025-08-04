@@ -37,8 +37,6 @@ function RouteComponent() {
     googleMapsApiKey: env.GOOGLE_MAP_API_KEY,
     libraries: env.GOOGLE_MAP_LIBRARIES,
   });
-
-  const [autocomplpeteDrawer, setAutocomplpeteDrawer] = useState(false);
   const [mapCenter, setMapCenter] = useState({
     lat: 26.121832,
     lng: 85.358553,
@@ -72,7 +70,7 @@ function RouteComponent() {
     }
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: false positive
   useEffect(() => {
     if (isLoaded && mapCenter) {
       handleMapCenterChange();
@@ -82,75 +80,81 @@ function RouteComponent() {
   if (!isLoaded) return <Loading />;
   return (
     <AccountNav>
-      <DashboardHeader
-        title={type === "deliveryAddress" ? "Delivery Address" : "New Address"}
-      />
-      <div className="flex flex-col flex-1 relative">
+      <div className="flex flex-col min-h-screen">
+        <DashboardHeader
+          title={
+            type === "deliveryAddress" ? "Delivery Address" : "New Address"
+          }
+        />
+
+        {/* Search Bar */}
         <div className="p-2 lg:p-4">
-          <Button
-            className="w-full justify-start text-muted-foreground bg-tertiary/50 border"
-            variant={"tertiary"}
-            onClick={() => setAutocomplpeteDrawer(true)}
-          >
-            <Search />
-            Search your location
-          </Button>
+          <AddressSetter autocompleteOnly setMapCenter={setMapCenter}>
+            <Button
+              className="w-full justify-start text-muted-foreground bg-tertiary/50 border"
+              variant="tertiary"
+            >
+              <Search />
+              Search your location
+            </Button>
+          </AddressSetter>
         </div>
 
-        <GoogleMap
-          zoom={15}
-          center={mapCenter}
-          mapContainerStyle={{
-            width: "100%",
-            height: "100%",
-          }}
-          options={{
-            zoomControl: false,
-            streetViewControl: false,
-            mapTypeControl: false,
-            fullscreenControl: false,
-            cameraControl: false,
-          }}
-        >
-          <Marker
-            position={mapCenter}
-            draggable={true}
-            onDragEnd={(e) => {
-              const lat = e?.latLng?.lat();
-              const lng = e?.latLng?.lng();
-              if (lat && lng) {
-                setMapCenter({ lat, lng });
-              }
-            }}
-          />
-        </GoogleMap>
-        <div className="absolute bottom-20 lg:bottom-24 left-1/2 transform -translate-x-1/2 z-10">
-          <Button
-            className="text-primary border-primary font-semibold shadow-md hover:bg-primary/10"
-            variant="outline"
-            onClick={() => {
-              navigator.geolocation.getCurrentPosition((position) => {
-                const { latitude, longitude } = position.coords;
-                setMapCenter({ lat: latitude, lng: longitude });
-              });
+        {/* Map and Use Current Location Button */}
+        <div className="relative flex-1">
+          <GoogleMap
+            zoom={15}
+            center={mapCenter}
+            mapContainerClassName="absolute inset-0"
+            options={{
+              zoomControl: false,
+              streetViewControl: false,
+              mapTypeControl: false,
+              fullscreenControl: false,
+              cameraControl: false,
             }}
           >
-            <LocateFixed className="text-primary mr-1d stroke-2" />
-            Use current location
-          </Button>
+            <Marker
+              position={mapCenter}
+              draggable
+              onDragEnd={(e) => {
+                const lat = e?.latLng?.lat();
+                const lng = e?.latLng?.lng();
+                if (lat && lng) setMapCenter({ lat, lng });
+              }}
+            />
+          </GoogleMap>
+
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
+            <Button
+              className="text-primary border-primary font-semibold shadow-md hover:bg-primary/10"
+              variant="outline"
+              onClick={() => {
+                navigator.geolocation.getCurrentPosition((position) => {
+                  const { latitude, longitude } = position.coords;
+                  setMapCenter({ lat: latitude, lng: longitude });
+                });
+              }}
+            >
+              <LocateFixed className="text-primary mr-1 stroke-2" />
+              Use current location
+            </Button>
+          </div>
         </div>
 
-        <div className="border-t  bg-background  p-4 shadow-md z-20 fixed lg:absolute bottom-0 right-0  w-full ">
+        {/* Footer */}
+        <div className="sticky bottom-0 z-20 bg-background border-t p-4 shadow-md">
           <div
             className={cn(
-              "flex items-center gap-4 ",
+              "flex items-center gap-4",
               isMobile
                 ? "flex-col w-full justify-start"
                 : "flex-row justify-between"
             )}
           >
+            {/* Address Display */}
             <div className="flex items-center gap-3 w-full">
-              <MapPinned className="size-8 text-primary  flex-shrink-0" />
+              <MapPinned className="size-8 text-primary flex-shrink-0" />
               <div className="overflow-hidden">
                 <h1 className="text-lg font-semibold truncate">
                   {fetchingAddress
@@ -166,31 +170,31 @@ function RouteComponent() {
               </div>
             </div>
 
+            {/* Action Buttons */}
             {type === "saveAddress" && (
-              <div className="lg:w-fit  w-full">
+              <div className="w-full lg:w-auto">
                 <Button
                   className="font-semibold px-6 w-full"
-                  onClick={() => {
-                    setIsConfirm(true);
-                  }}
+                  onClick={() => setIsConfirm(true)}
                 >
                   Confirm this address
                   <StepForward className="ml-2 h-4 w-4" />
                 </Button>
               </div>
             )}
+
             {type === "deliveryAddress" && (
               <Button
-                className="font-semibold w-full lg:w-fit"
+                className="font-semibold w-full lg:w-auto"
                 onClick={() => {
                   setDeliveryLocation(fullAddress);
-
                   navigate({ to: "/" });
                 }}
               >
                 Confirm & Proceed
               </Button>
             )}
+
             {isConfirm && (
               <DetailedAddress
                 fullAddress={fullAddress}
@@ -202,15 +206,6 @@ function RouteComponent() {
           </div>
         </div>
       </div>
-
-      {autocomplpeteDrawer && (
-        <AddressSetter
-          open={autocomplpeteDrawer}
-          onOpenChange={setAutocomplpeteDrawer}
-          autocompleteOnly
-          setMapCenter={setMapCenter}
-        />
-      )}
     </AccountNav>
   );
 }

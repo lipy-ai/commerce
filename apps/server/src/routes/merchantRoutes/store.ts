@@ -1,3 +1,6 @@
+import { addSeconds } from "date-fns";
+import { Hono } from "hono";
+import { z } from "zod";
 import { db } from "@/db";
 import env from "@/env";
 import { updateSession } from "@/helpers/session";
@@ -8,9 +11,6 @@ import { zValidator } from "@/middlewares/validator";
 import { emailSchema, phoneSchema, timeSchema } from "@/schema/common";
 import { sendTransactionalEmail } from "@/services/ses";
 import type { ServerContext } from "@/types";
-import { addSeconds } from "date-fns";
-import { Hono } from "hono";
-import { z } from "zod";
 import { coreAddressSchema } from "../loggedRoutes/address";
 
 export const storeSchema = z.object({
@@ -31,6 +31,7 @@ export const storeSchema = z.object({
 	deliveryDistance: z.number().int().min(0).max(100),
 	freeDeliveryDistance: z.number().int().min(0).max(100),
 	deliveryChargePerKm: z.number().int().min(0).max(50),
+	minimumOrderValue: z.number().int().min(0).max(200),
 	refunds: z.object({
 		enabled: z.boolean(),
 		content: z.string(),

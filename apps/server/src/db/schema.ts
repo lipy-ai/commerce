@@ -1,9 +1,4 @@
-import type {
-	addressSchema,
-	coreAddressSchema,
-} from "@/routes/loggedRoutes/address";
 import { sql } from "drizzle-orm";
-
 import {
 	type AnyPgColumn,
 	bigint,
@@ -26,6 +21,10 @@ import {
 	uuid,
 } from "drizzle-orm/pg-core";
 import type { z } from "zod";
+import type {
+	addressSchema,
+	coreAddressSchema,
+} from "@/routes/loggedRoutes/address";
 
 export const ORDER_STATUS = [
 	"created",
@@ -191,6 +190,7 @@ export const store = schema.table(
 		closingHour: time("closingHour").notNull().default("00:00"),
 		deliveryDistance: real("deliveryDistance").notNull().default(1),
 		freeDeliveryDistance: real("freeDeliveryDistance").notNull().default(1),
+		minimumOrderValue: real("minimumOrderValue").notNull().default(0),
 		deliveryChargePerKm: real("deliveryChargePerKm").notNull().default(1),
 		payments: jsonb("payments").$type<{
 			upiIds: Array<{ id: string; name: string }>;

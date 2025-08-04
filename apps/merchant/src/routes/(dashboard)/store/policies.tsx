@@ -67,6 +67,7 @@ export const defaultStorePolicies = {
   gstTax: "0",
   openingHour: decimalToTime(0),
   closingHour: decimalToTime(0),
+  minimumOrderValue: 0,
 };
 
 function RouteComponent() {
@@ -96,6 +97,7 @@ function RouteComponent() {
       gstTax: String(data.gstTax) || defaultStorePolicies.gstTax,
       openingHour: formatToHrMm(data.openingHour),
       closingHour: formatToHrMm(data.closingHour),
+      minimumOrderValue: data.minimumOrderValue,
     });
   }, [data]);
 
@@ -193,120 +195,142 @@ export function StorePolicesForm() {
   };
 
   return (
-    <>
-      <div className="space-y-8">
-        <div className="bg-accent/30 rounded border">
-          <div className="space-y-1 p-4">
-            <FormLabel>Store Opening Hours</FormLabel>
-          </div>
+    <div className="space-y-8">
+      <div className="bg-accent/30 rounded border">
+        <div className="space-y-1 p-4">
+          <FormLabel>Store Opening Hours</FormLabel>
+        </div>
 
-          <div className="p-4 bg-card">
-            <RadioGroup value={hrsVal} onValueChange={handleValChange} required>
-              <div className="flex items-center gap-3">
-                <RadioGroupItem value="24hrs" id="r1" />
-                <FormLabel htmlFor="r1">24 hours</FormLabel>
-              </div>
-              <div className="flex items-center gap-3">
-                <RadioGroupItem value="9-11" id="r2" />
-                <FormLabel htmlFor="r2">9 am to 11 pm</FormLabel>
-              </div>
-              <div className="flex items-top gap-3">
-                <RadioGroupItem value="custom" id="r3" />
-                <div className="flex items-center flex-wrap gap-6 w-full justify-between">
-                  <FormLabel htmlFor="r3">Custom</FormLabel>
-                  <div className="flex items-center gap-2 h-4 relative -top-1">
-                    <FormInput
-                      type="time"
-                      name="openingHour"
-                      placeholder="Opens At"
-                      wrapperClassName="mb-0 w-fit"
-                      className="h-6"
-                      style={{ fontSize: "0.8rem" }}
-                    />
-                    To
-                    <FormInput
-                      type="time"
-                      name="closingHour"
-                      placeholder="Closes At"
-                      wrapperClassName="mb-0 w-fit"
-                      className="h-6"
-                      style={{ fontSize: "0.8rem" }}
-                    />
-                  </div>
+        <div className="p-4 bg-card">
+          <RadioGroup value={hrsVal} onValueChange={handleValChange} required>
+            <div className="flex items-center gap-3">
+              <RadioGroupItem value="24hrs" id="r1" />
+              <FormLabel htmlFor="r1">24 hours</FormLabel>
+            </div>
+            <div className="flex items-center gap-3">
+              <RadioGroupItem value="9-11" id="r2" />
+              <FormLabel htmlFor="r2">9 am to 11 pm</FormLabel>
+            </div>
+            <div className="flex items-top gap-3">
+              <RadioGroupItem value="custom" id="r3" />
+              <div className="flex items-center flex-wrap gap-6 w-full justify-between">
+                <FormLabel htmlFor="r3">Custom</FormLabel>
+                <div className="flex items-center gap-2 h-4 relative -top-1">
+                  <FormInput
+                    type="time"
+                    name="openingHour"
+                    placeholder="Opens At"
+                    wrapperClassName="mb-0 w-fit"
+                    className="h-6"
+                    style={{ fontSize: "0.8rem" }}
+                  />
+                  To
+                  <FormInput
+                    type="time"
+                    name="closingHour"
+                    placeholder="Closes At"
+                    wrapperClassName="mb-0 w-fit"
+                    className="h-6"
+                    style={{ fontSize: "0.8rem" }}
+                  />
                 </div>
               </div>
-            </RadioGroup>
-          </div>
-        </div>
-        <div className="bg-accent/30 rounded border">
-          <div className="space-y-1 p-4">
-            <FormLabel>Home Delivery</FormLabel>
-            {/* <FormDescription>Do you provide refunds?</FormDescription> */}
-          </div>
-
-          <div className="p-4 bg-card">
-            <FormSlider
-              name="deliveryDistance"
-              label="Distance"
-              suffix="kms"
-              maxLabel="100+"
-              required
-            />
-          </div>
-        </div>
-        <div className="bg-accent/30 rounded border">
-          <div className="space-y-1 p-4">
-            <FormLabel>Delivery Charges</FormLabel>
-          </div>
-          <div className="p-4 bg-card">
-            <FormSlider
-              name="freeDeliveryDistance"
-              label="Free Delivery"
-              prefix="Till"
-              suffix="kms"
-              max={deliveryDistance || 100}
-              required
-            />
-
-            <FormLabel className="flex pt-2 flex-wrap">
-              {formatAmount("inr", 10)} per km delivery charge.
-              <span className="text-muted-foreground font-normal">
-                (Applicable for orders out of free delivery range.)
-              </span>
-            </FormLabel>
-          </div>
-        </div>
-        <div className="bg-accent/30 rounded border">
-          <div className="space-y-1 p-4">
-            <FormLabel>Goods and Service Tax (GST)</FormLabel>
-          </div>
-          <div className="p-4 bg-card">
-            <FormRadioInput name="gstTax" opts={gstOpts} required />
-          </div>
-        </div>
-        <div className="flex items-center justify-between bg-accent/30 rounded border p-4">
-          <div className="space-y-1">
-            <FormLabel>Refunds</FormLabel>
-            <FormDescription>Do you provide refunds?</FormDescription>
-          </div>
-          <FormSwitch
-            name="refunds.enabled"
-            wrapperClassName="w-fit"
-            required
-          />
-        </div>
-        <div className="flex items-center justify-between bg-accent/30 rounded border p-4">
-          <div className="space-y-1">
-            <FormLabel>Replacements</FormLabel>
-            <FormDescription>Do you provide replacements?</FormDescription>
-          </div>
-          <FormSwitch
-            name="replacements.enabled"
-            wrapperClassName="w-fit"
-            required
-          />
+            </div>
+          </RadioGroup>
         </div>
       </div>
-    </>
+      <div className="bg-accent/30 rounded border">
+        <div className="space-y-1 p-4">
+          <FormLabel>Home Delivery</FormLabel>
+          {/* <FormDescription>Do you provide refunds?</FormDescription> */}
+        </div>
+
+        <div className="p-4 bg-card">
+          <FormSlider
+            name="deliveryDistance"
+            label="Distance"
+            suffix="kms"
+            maxLabel="100+"
+            required
+          />
+          <FormLabel className="flex pt-2 flex-wrap">
+            <span className="text-muted-foreground font-normal">
+              Delivery is to be managed by store itself.
+            </span>
+          </FormLabel>
+        </div>
+      </div>
+      <div className="bg-accent/30 rounded border">
+        <div className="space-y-1 p-4">
+          <FormLabel>Minimum Order Value</FormLabel>
+          {/* <FormDescription>Do you provide refunds?</FormDescription> */}
+        </div>
+
+        <div className="p-4 bg-card">
+          <FormSlider
+            name="minimumOrderValue"
+            label="Minimum Order Value"
+            prefix="₹"
+            suffix=""
+            min={0}
+            max={200}
+            required
+          />
+          <FormLabel className="flex pt-2 flex-wrap">
+            <span className="text-muted-foreground font-normal">
+              Your customers will not be able to place order below this amount
+            </span>
+          </FormLabel>
+        </div>
+      </div>
+      <div className="bg-accent/30 rounded border">
+        <div className="space-y-1 p-4">
+          <FormLabel>Delivery Charges</FormLabel>
+        </div>
+        <div className="p-4 bg-card">
+          <FormSlider
+            name="freeDeliveryDistance"
+            label="Free Delivery"
+            prefix="Till"
+            suffix="kms"
+            max={deliveryDistance || 100}
+            required
+          />
+
+          <FormLabel className="flex pt-2 flex-wrap">
+            {formatAmount("inr", 10)} per km delivery charge.
+            <span className="text-muted-foreground font-normal">
+              (Applicable for orders out of free delivery range.)
+            </span>
+          </FormLabel>
+        </div>
+      </div>
+      <div className="bg-accent/30 rounded border">
+        <div className="space-y-1 p-4">
+          <FormLabel>Goods and Service Tax (GST)</FormLabel>
+        </div>
+        <div className="p-4 bg-card">
+          <FormRadioInput name="gstTax" opts={gstOpts} required />
+        </div>
+      </div>
+      <div className="flex items-center justify-between bg-accent/30 rounded border p-4">
+        <div className="space-y-1">
+          <FormLabel>Refunds</FormLabel>
+          <FormDescription>Do you provide refunds?</FormDescription>
+        </div>
+        <FormSwitch name="refunds.enabled" wrapperClassName="w-fit" required />
+      </div>
+      <div className="flex items-center justify-between bg-accent/30 rounded border p-4">
+        <div className="space-y-1">
+          <FormLabel>Replacements</FormLabel>
+          <FormDescription>Do you provide replacements?</FormDescription>
+        </div>
+        <FormSwitch
+          name="replacements.enabled"
+          wrapperClassName="w-fit"
+          required
+        />
+      </div>
+    </div>
   );
 }

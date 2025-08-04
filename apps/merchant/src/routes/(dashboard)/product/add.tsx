@@ -338,7 +338,7 @@ function DesktopView({
               <img
                 src={m.thumbnail || ""}
                 alt={m.title || ""}
-                className="size-12 border rounded bg-accent object-cover"
+                className="size-12 border rounded bg-card object-contain border-border/40"
               />
             </div>
             <div className="flex-2">
@@ -465,7 +465,7 @@ function SingProduct({
           <img
             src={m.thumbnail || ""}
             alt={m.title || ""}
-            className="size-full object-cover"
+            className="size-full object-contain rounded border border-border/40 bg-card"
           />
         </div>
         <div className="flex-1">

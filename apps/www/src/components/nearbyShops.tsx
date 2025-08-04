@@ -99,7 +99,7 @@ export default function NearByShops() {
 
       {isFetching ? (
         <Loading />
-      ) : !shops || (searchTerm === "" && activeCategory !== "all") ? (
+      ) : !shops || (searchTerm === "" && filteredShops.length === 0) ? (
         <EmptyPage
           title="Coming soon to your doorstep!"
           label="We are currently not available at your location. We will be in your

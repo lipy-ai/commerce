@@ -1,4 +1,3 @@
-// import PlaceOrder from "@/components/order/placeOrder";
 import { publicShopApi } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";

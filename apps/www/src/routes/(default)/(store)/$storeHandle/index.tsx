@@ -1,5 +1,3 @@
-import { PrimaryCartFooter } from "@/components/cart/cartFooter";
-import ProductCard from "@/components/productCard";
 import { env } from "@envClient";
 import { publicShopApi } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
@@ -15,8 +13,7 @@ import Loading from "@lipy/web-ui/components/ui/loading";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { shareContent } from "@lipy/web-ui/lib/share";
 import { cn } from "@lipy/web-ui/lib/utils";
-import { Link, useNavigate } from "@tanstack/react-router";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import type { InferResponseType } from "hono/client";
 import {
@@ -27,6 +24,8 @@ import {
   Share,
 } from "lucide-react";
 import { useState } from "react";
+import { PrimaryCartFooter } from "@/components/cart/cartFooter";
+import ProductCard from "@/components/productCard";
 import { StoreNav } from "./-nav";
 import { StoreHeroSection } from "./-storeHeroSection";
 

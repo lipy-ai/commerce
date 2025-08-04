@@ -1,4 +1,3 @@
-import { useInventoryInvalidate } from "@/routes/admin/product/-hook-invalidate";
 import { merchantInventoryApi, type merchantProductApi } from "@lipy/lib/api";
 import { useAPIMutation } from "@lipy/lib/utils/useQueryClient";
 import {
@@ -20,6 +19,7 @@ import {
 import type { InferResponseType } from "hono/client";
 import { type ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useInventoryInvalidate } from "@/routes/admin/product/-hook-invalidate";
 export default function FormEditInventory({
   children,
   type,
@@ -84,7 +84,7 @@ export default function FormEditInventory({
         <img
           src={data.thumbnail || ""}
           alt={data.title || ""}
-          className="size-20 border rounded bg-accent object-cover aspect-square"
+          className="size-20 border rounded bg-card border-border/40 object-contain aspect-square"
         />
         <div>
           <p className=" text-base line-clamp-2 break-words">{data?.title}</p>

@@ -1,14 +1,13 @@
-import { UPIQRCode } from "@lipy/web-ui/components/custom-ui/upiCard";
-import { FormButton, FormInput } from "@lipy/web-ui/components/forms/elements";
-import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
-import { Form } from "@lipy/web-ui/components/ui/form";
-
 import { merchantStoreApi } from "@lipy/lib/api";
 import { useStore } from "@lipy/lib/hooks/use-store";
 import {
   apiQueryOptions,
   useAPIMutation,
 } from "@lipy/lib/utils/useQueryClient";
+import { UPIQRCode } from "@lipy/web-ui/components/custom-ui/upiCard";
+import { FormButton, FormInput } from "@lipy/web-ui/components/forms/elements";
+import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
+import { Form } from "@lipy/web-ui/components/ui/form";
 import { Label } from "@lipy/web-ui/components/ui/label";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
@@ -21,16 +20,6 @@ export const Route = createFileRoute("/(dashboard)/store/payments")({
 });
 
 function RouteComponent() {
-  const defaultValues = {
-    payments: {
-      upiIds: [
-        {
-          id: "",
-          name: "",
-        },
-      ],
-    },
-  };
   const { data } = useStore();
   const queryClient = useQueryClient();
   const qOpts = apiQueryOptions(merchantStoreApi.index, "$get", {});
@@ -41,6 +30,17 @@ function RouteComponent() {
     },
   });
 
+  console.log(data);
+  const defaultValues = {
+    payments: {
+      upiIds: [
+        {
+          id: "",
+          name: "",
+        },
+      ],
+    },
+  };
   const form = useForm({ defaultValues });
 
   const payments = form.watch("payments");

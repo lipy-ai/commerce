@@ -12,12 +12,14 @@ import {
   Bike,
   BrickWall,
   BriefcaseMedical,
+  Cherry,
   Coffee,
   Dot,
   Search,
+  ShoppingBasket,
+  Store,
   Utensils,
 } from "lucide-react";
-import { Cherry, ShoppingBasket, Store } from "lucide-react";
 import { useState } from "react";
 
 const CATEGORIES = [

@@ -410,7 +410,7 @@ function RouteComponent() {
                           "https://api.dicebear.com/9.x/glass/svg"
                         }
                         alt={m.title}
-                        className="size-12 border rounded bg-accent print:hidden"
+                        className="size-12 border border-border/40 object-contain rounded bg-card print:hidden"
                       />
                       <div className="flex-1">
                         <h2 className="max-w-11/12 line-clamp-2">{m.title}</h2>
@@ -457,6 +457,7 @@ function RouteComponent() {
                           </HoverCard>
                         </p>
                         <p className="">
+                          -{" "}
                           {formatAmount(
                             "inr",
                             Number(data?.totalDiscountAmount)
@@ -465,7 +466,7 @@ function RouteComponent() {
                       </div>
                     </CollapsibleTrigger>
                     <CollapsibleContent className="space-y-2 my-2 py-2  text-muted-foreground">
-                      {data?.taxes && data?.taxes?.length > 0
+                      {data?.discounts && data?.discounts?.length > 0
                         ? data?.discounts?.map((t, i) => (
                             <div
                               key={i}
@@ -473,7 +474,9 @@ function RouteComponent() {
                             >
                               <p className="capitalize">{t.name}</p>
                               <p className="">
-                                {formatAmount("inr", Number(t?.amount))}
+                                {t.sum === "flat"
+                                  ? formatAmount("inr", Number(t?.amount))
+                                  : `${t?.amount} %`}
                               </p>
                             </div>
                           ))
@@ -508,7 +511,9 @@ function RouteComponent() {
                             >
                               <p className="capitalize">{t.name}</p>
                               <p className="">
-                                {formatAmount("inr", Number(t?.amount))}
+                                {t.sum === "flat"
+                                  ? formatAmount("inr", Number(t?.amount))
+                                  : `${t?.amount} %`}
                               </p>
                             </div>
                           ))

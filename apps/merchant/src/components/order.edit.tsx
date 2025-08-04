@@ -57,8 +57,8 @@ export function OrderEdit({ data }: { data?: Order }) {
   const [open, setOpen] = useState<"product" | "tax" | "discount" | null>(null);
   const defaultValues: UpdateOrderReq = {
     items: (data?.items as any) || [],
-    taxes: [],
-    discounts: [],
+    taxes: data?.taxes || [],
+    discounts: data?.discounts || [],
     status: "created",
   };
 
@@ -137,15 +137,35 @@ export function OrderEdit({ data }: { data?: Order }) {
           <span className="p-4 bg-primary text-primary-foreground w-fit rounded-full m-auto">
             <Check />
           </span>
-          <DrawerDialogTitle>Order Successful</DrawerDialogTitle>
-          <DrawerDescription>Order was successfully created.</DrawerDescription>
+          <DrawerDialogTitle>
+            {data ? "Order updated successfully " : "Order Successful"}
+          </DrawerDialogTitle>
+          <DrawerDescription className="text-center">
+            {data
+              ? "Order was successfully updated. Your customer will be asked to verify the updates."
+              : "Order was successfully created."}
+          </DrawerDescription>
         </DrawerDialogHeader>
         <div className="grid grid-cols-2 gap-4">
           <Link to="/" className={cn(buttonVariants({ variant: "outline" }))}>
             Back
           </Link>
-          <Button onClick={() => form.reset()}>New Order</Button>
+          <Button
+            onClick={() => {
+              if (!data) {
+                form.reset();
+              }
+            }}
+          >
+            {data ? "Done" : "New Order"}
+          </Button>
         </div>
+        {data && (
+          <p className="text-muted-foreground text-xs mt-4">
+            * If your customer agrees for the updated order , the order will be
+            updated otherwise the order will be cancelled.
+          </p>
+        )}
       </DrawerDialogSwitcher>
       {!isMobile && (
         <div className="overflow-y-auto focus:bg-primary/50 md:p-8">
@@ -347,34 +367,36 @@ export function OrderEdit({ data }: { data?: Order }) {
                   <Label className="block">Item Total</Label>
                   <div className="flex gap-2 items-baseline">
                     <p className="text-base">
-                      {formatAmount("INR", calcs.itemsTotal || 0)}
+                      {formatAmount("INR", calcs.itemTotalAmount || 0)}
                     </p>
                     <p className="text-muted-foreground line-through">
-                      {formatAmount("INR", calcs.maxItemsTotal || 0)}
+                      {formatAmount("INR", calcs.maxItemTotalAmount || 0)}
                     </p>
                   </div>
                 </div>
                 <div className="flex  gap-4 justify-between items-center truncate">
                   <Label className="block">Taxes</Label>
-                  <p className="">{formatAmount("INR", calcs.taxTotal || 0)}</p>
+                  <p className="">
+                    {formatAmount("INR", calcs.totalTaxAmount || 0)}
+                  </p>
                 </div>
                 <div className="flex  gap-4 justify-between items-center truncate">
                   <Label className="block"> Discount</Label>
                   <p className="">
-                    {formatAmount("INR", -calcs.discountTotal || 0)}
+                    {formatAmount("INR", -calcs.totalDiscountAmount || 0)}
                   </p>
                 </div>
                 <div className="flex  gap-4 justify-between items-center truncate">
                   <CardTitle className="block">Total Payable </CardTitle>
                   <p className="text-lg font-bold text-end">
                     {formatAmount("INR", calcs.totalAmount || 0)}
-                    {calcs.totalSaved ? (
+                    {calcs.amountSaved ? (
                       <Badge
                         variant={"success"}
                         className="block"
                         appearance="solid"
                       >
-                        Saved {formatAmount("INR", calcs.totalSaved || 0)}
+                        Saved {formatAmount("INR", calcs.amountSaved || 0)}
                       </Badge>
                     ) : (
                       ""
@@ -423,7 +445,7 @@ function ProductList({
     setSelectedVariants({ product, selectedVariant });
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: false positive
   useEffect(() => {
     if (!select) return;
     console.log(select?.variants);

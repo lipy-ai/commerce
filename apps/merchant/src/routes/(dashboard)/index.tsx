@@ -2,6 +2,7 @@ import { merchantDashboardApi } from "@lipy/lib/api";
 import { useStore } from "@lipy/lib/hooks/use-store";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
+import { OrderChart } from "@lipy/web-ui/components/charts/orderChart";
 import {
   Avatar,
   AvatarFallback,
@@ -13,17 +14,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@lipy/web-ui/components/ui/card";
+import { Label } from "@lipy/web-ui/components/ui/label";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { cn } from "@lipy/web-ui/lib/utils";
-import { Link } from "@tanstack/react-router";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { format } from "date-fns";
-import { Clock10, StoreIcon } from "lucide-react";
-import { Shirt, ShoppingCart, SquareUser, Store } from "lucide-react";
-
-import { OrderChart } from "@lipy/web-ui/components/charts/orderChart";
-import { Label } from "@lipy/web-ui/components/ui/label";
 import type { InferResponseType } from "hono";
+import {
+  Clock10,
+  Shirt,
+  ShoppingCart,
+  SquareUser,
+  Store,
+  StoreIcon,
+} from "lucide-react";
 
 // const setupSteps = [
 //   {
@@ -168,12 +172,12 @@ function Orders({
         <CardTitle>Pending Orders</CardTitle>
       </CardHeader>
 
-      <CardContent className="divide-y">
+      <CardContent className="divide-y flex-1 flex">
         {isLoading ? (
           <Skeleton className="flex-1 h-screen" />
         ) : !data || data?.length === 0 ? (
-          <div className="flex flex-1 justify-center flex-col gap-4 text-muted-foreground items-center">
-            <Clock10 className="size-16" />
+          <div className="flex flex-1 flex-col justify-center items-center text-center m-auto text-muted-foreground">
+            <Clock10 className="size-16 mb-2" />
             <Label className="text-lg">No Incoming Orders.</Label>
           </div>
         ) : (
@@ -183,7 +187,7 @@ function Orders({
                 to={"/pos/order/$id"}
                 params={{ id: v.id }}
                 key={i}
-                className="leading-none flex py-4 space-y-2"
+                className="leading-none flex py-4 space-y-2 hover:bg-accent/40"
               >
                 <div className="flex gap-4 flex-1 justify-between text-base lg:text-sm">
                   <div className="flex-1 flex gap-2">

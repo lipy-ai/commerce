@@ -1,0 +1,1 @@
+ALTER TABLE "lipy-dev"."store" ADD COLUMN "minimumOrderValue" real DEFAULT 0 NOT NULL;

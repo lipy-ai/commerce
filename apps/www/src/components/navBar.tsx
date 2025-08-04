@@ -10,9 +10,7 @@ import {
   MapPin,
   UserRound,
 } from "lucide-react";
-
 import { AddressSetter } from "@/routes/(default)/account/addresses/-addressSetter";
-import { useState } from "react";
 import { CartInDesktop } from "./cart/cartInDesktop";
 
 export default function NavBar() {
@@ -20,15 +18,13 @@ export default function NavBar() {
   const { deliveryLocation } = useLocationStore();
   // Mobile layout
 
-  const [deliveryAddressSetter, setDeliveryAddressSetter] = useState(false);
-
   if (isMobile) {
     return (
-      <>
-        <div className="relative  text-background bg-card p-4 space-y-4">
-          <div className="flex items-center justify-between text-foreground">
+      <div className="relative  text-background bg-card p-4 space-y-4">
+        <div className="flex items-center justify-between text-foreground">
+          <AddressSetter>
             {deliveryLocation && (
-              <div onClick={() => setDeliveryAddressSetter(true)}>
+              <div>
                 <div className="flex items-center gap-2">
                   {<MapPin className="fill-secondary/60" />}
                   <p className="truncate max-w-[250px] font-bold text-lg capitalize">
@@ -48,43 +44,33 @@ export default function NavBar() {
                 </p>
               </div>
             )}
+          </AddressSetter>
 
-            <Link to="/account" viewTransition={{ types: ["slide-left"] }}>
-              <div className="py-1 px-2 rounded-full bg-black">
-                <UserRound className="size-6 fill-background" />
-              </div>
-            </Link>
-          </div>
+          <Link to="/account" viewTransition={{ types: ["slide-left"] }}>
+            <div className="py-1 px-2 rounded-full bg-black">
+              <UserRound className="size-6 fill-background" />
+            </div>
+          </Link>
         </div>
-
-        {deliveryAddressSetter && (
-          <AddressSetter
-            open={deliveryAddressSetter}
-            onOpenChange={setDeliveryAddressSetter}
-          />
-        )}
-      </>
+      </div>
     );
   }
 
   return (
-    <>
-      <div className="sticky top-0   bg-background border-b z-10">
-        <div className="px-16 p-6 bg-accent/20 ">
-          <div className="flex items-center  gap-8">
-            <Link to="/">
-              <img
-                src={"/logo/logo.png"}
-                alt={"lipy-logo"}
-                className="w-36 h-12 rounded-md flex-shrink-0 aspect-square object-cover"
-              />
-            </Link>
+    <div className="sticky top-0   bg-background border-b z-10">
+      <div className="px-16 p-6 bg-accent/20 ">
+        <div className="flex items-center  gap-8">
+          <Link to="/">
+            <img
+              src={"/logo/logo.png"}
+              alt={"lipy-logo"}
+              className="w-36 h-12 rounded-md flex-shrink-0 aspect-square object-cover"
+            />
+          </Link>
 
+          <AddressSetter>
             {deliveryLocation && (
-              <div
-                onClick={() => setDeliveryAddressSetter(true)}
-                className="max-w-[400px]"
-              >
+              <div className="max-w-[400px] cursor-pointer">
                 <div className="text-xl font-bold flex items-center gap-2">
                   {deliveryLocation?.tag === "home" ? (
                     <House />
@@ -115,25 +101,20 @@ export default function NavBar() {
                 )}
               </div>
             )}
-            <div className="w-full px-2">
-              <SearchBar
-                placeholder="Search for shop, grocery, fruits..."
-                defaultValue=""
-              />
-            </div>
-            <Link to="/account">
-              <CircleUserRound className="size-8" />
-            </Link>
-            <CartInDesktop />
+          </AddressSetter>
+
+          <div className="w-full px-2">
+            <SearchBar
+              placeholder="Search for shop, grocery, fruits..."
+              defaultValue=""
+            />
           </div>
+          <Link to="/account">
+            <CircleUserRound className="size-8" />
+          </Link>
+          <CartInDesktop />
         </div>
       </div>
-      {deliveryAddressSetter && (
-        <AddressSetter
-          open={deliveryAddressSetter}
-          onOpenChange={setDeliveryAddressSetter}
-        />
-      )}
-    </>
+    </div>
   );
 }

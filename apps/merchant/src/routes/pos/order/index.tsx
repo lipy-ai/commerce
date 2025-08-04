@@ -18,7 +18,7 @@ import {
 } from "@lipy/web-ui/components/ui/table";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
-import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { formatDistanceToNow } from "date-fns";
 // import { formatDistanceToNow } from "date-fns";
 import type { InferResponseType } from "hono/client";

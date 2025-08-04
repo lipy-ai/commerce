@@ -54,30 +54,30 @@ export const posOrderRoute = new Hono<ServerContext>()
 		const offset = limit * (page - 1);
 		const query = db
 			.selectFrom("orders as o")
-			.where("o.storeId", "=", activeStoreId!)
-			.where("status", "in", [
-				"created",
-				"accepted",
-				"packed",
-				"out_for_delivery",
-			]);
+			.where("o.storeId", "=", activeStoreId!);
+		// .where("status", "in", [
+		// 	"created",
+		// 	"accepted",
+		// 	"packed",
+		// 	"out_for_delivery",
+		// ]);
 		const countPromise = query
 			.select(sql<number>`count(*)`.as("total_count"))
 			.executeTakeFirst();
 
 		const resultsPromise = query
-			.orderBy(
-				sql`
-                CASE o.status
-                    WHEN 'created' THEN 1
-					WHEN 'awaiting_customer_confirmation' THEN 1
-					WHEN 'return_requested' THEN 1
-                    WHEN 'accepted' THEN 2
-                    WHEN 'packed' THEN 3
-                    WHEN 'out_for_delivery' THEN 4
-                    ELSE 5
-                END`,
-			)
+			// .orderBy(
+			// 	sql`
+			//     CASE o.status
+			//         WHEN 'created' THEN 1
+			// 		WHEN 'awaiting_customer_confirmation' THEN 1
+			// 		WHEN 'return_requested' THEN 1
+			//         WHEN 'accepted' THEN 2
+			//         WHEN 'packed' THEN 3
+			//         WHEN 'out_for_delivery' THEN 4
+			//         ELSE 5
+			//     END`,
+			// )
 			.orderBy("orderedAt", "desc")
 			.selectAll()
 			.limit(limit)
@@ -182,6 +182,7 @@ export const posOrderRoute = new Hono<ServerContext>()
 		async (c) => {
 			const { id } = c.req.valid("param");
 			const { type, ...data } = c.req.valid("json");
+			// console.log("data", data);
 			const user = c.get("user");
 
 			const ord = await db

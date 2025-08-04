@@ -1,3 +1,8 @@
+import { isBefore } from "date-fns";
+import { Hono } from "hono";
+import { sql } from "kysely";
+import slugify from "slugify";
+import { z } from "zod";
 import { db } from "@/db";
 import { STORE_TYPE } from "@/db/schema";
 import { updateSession } from "@/helpers/session";
@@ -6,11 +11,6 @@ import { idGenerate } from "@/lib/generateId";
 import { zValidator } from "@/middlewares/validator";
 import { emailSchema, phoneSchema, timeSchema } from "@/schema/common";
 import type { ServerContext } from "@/types";
-import { isBefore } from "date-fns";
-import { Hono } from "hono";
-import { sql } from "kysely";
-import slugify from "slugify";
-import { z } from "zod";
 import { coreAddressSchema } from "../loggedRoutes/address";
 
 export const storeSchema = z.object({
@@ -26,6 +26,7 @@ export const storeSchema = z.object({
 	closingHour: timeSchema,
 	deliveryDistance: z.number().int().min(0).max(100),
 	freeDeliveryDistance: z.number().int().min(0).max(100),
+	minimumOrderValue: z.number().int().min(0).max(200),
 	deliveryChargePerKm: z.number().int().min(0).max(50).optional(),
 	refunds: z.object({
 		enabled: z.boolean(),

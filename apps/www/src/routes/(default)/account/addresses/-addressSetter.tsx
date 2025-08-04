@@ -32,16 +32,15 @@ import { useDebouncedCallback } from "use-debounce";
 import { AddressComponent } from ".";
 
 export const AddressSetter = ({
-  open,
-  onOpenChange,
   autocompleteOnly,
   setMapCenter,
+  children,
 }: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
   autocompleteOnly?: boolean;
   setMapCenter?: ({ lat, lng }: { lat: number; lng: number }) => void;
+  children?: React.ReactNode;
 }) => {
+  const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [predictions, setPredictions] = useState<
     google.maps.places.AutocompletePrediction[]
@@ -64,9 +63,9 @@ export const AddressSetter = ({
   const handleAddressSelect = useCallback(
     (address: AddressType) => {
       setDeliveryLocation(address);
-      onOpenChange(false);
+      setOpen(false);
     },
-    [setDeliveryLocation, onOpenChange]
+    [setDeliveryLocation]
   );
 
   const fetchPredictions = useDebouncedCallback(async (text: string) => {
@@ -95,8 +94,9 @@ export const AddressSetter = ({
   return (
     <DrawerDialogSwitcher
       open={open}
-      onOpenChange={onOpenChange}
+      onOpenChange={setOpen}
       className="h-[90%]"
+      trigger={children}
     >
       <DrawerDialogHeader className="space-y-4 fixed top-4 bg-background  right-4 left-4">
         <DrawerDialogTitle>
@@ -116,9 +116,10 @@ export const AddressSetter = ({
       {predictions.length > 0 ? (
         <PlacesSuggestionList
           predictions={predictions}
-          onOpenChange={onOpenChange}
+          onOpenChange={setOpen}
           autocompleteOnly={autocompleteOnly}
           setMapCenter={setMapCenter}
+          handleAddressSelect={handleAddressSelect}
         />
       ) : !autocompleteOnly ? (
         <div className="space-y-8 mt-24">
@@ -179,22 +180,24 @@ function PlacesSuggestionList({
   onOpenChange,
   autocompleteOnly,
   setMapCenter,
+  handleAddressSelect,
 }: {
   predictions: google.maps.places.AutocompletePrediction[];
   onOpenChange: (open: boolean) => void;
   autocompleteOnly?: boolean;
   setMapCenter?: ({ lat, lng }: { lat: number; lng: number }) => void;
+  handleAddressSelect?: (address: AddressType) => void;
 }) {
-  const { setDeliveryLocation } = useLocationStore();
+  // const { setDeliveryLocation } = useLocationStore();
 
-  const handleAddressSelect = async (
+  const handleSelect = async (
     prediction: google.maps.places.AutocompletePrediction
   ) => {
     try {
       const { result } = await geocode(prediction.description);
 
-      if (!autocompleteOnly) {
-        setDeliveryLocation({
+      if (!autocompleteOnly && handleAddressSelect) {
+        handleAddressSelect({
           ...defaultDeliveryLocationState.deliveryLocation,
           ...fillBaseAddress(result),
         });
@@ -216,9 +219,9 @@ function PlacesSuggestionList({
       {predictions.map((prediction, index) => (
         <div
           key={index}
-          className="flex items-start gap-2  py-4"
+          className="flex items-start gap-2  py-4 cursor-pointer"
           onClick={() => {
-            handleAddressSelect(prediction);
+            handleSelect(prediction);
           }}
         >
           <MapPin className="flex-shrink-0 size-6 fill-secondary/40 mt-1" />

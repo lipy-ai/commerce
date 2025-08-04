@@ -1,7 +1,3 @@
-import { AppCartInitializer } from "@/components/cart/appCartInitializer";
-import { useCartStore } from "@/components/cart/store";
-import NavBar from "@/components/navBar";
-import NearByShops from "@/components/nearbyShops";
 import {
   DashboardBody,
   DashboardLayout,
@@ -14,6 +10,10 @@ import {
   ShoppingCart,
   Store,
 } from "lucide-react";
+import { AppCartInitializer } from "@/components/cart/appCartInitializer";
+import { useCartStore } from "@/components/cart/store";
+import NavBar from "@/components/navBar";
+import NearByShops from "@/components/nearbyShops";
 
 export const Route = createFileRoute("/(default)/")({
   component: Home,

@@ -1,7 +1,7 @@
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
-import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
 import LocationComponent from "./account/addresses/-deliveryAddressAlert";
 

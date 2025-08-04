@@ -8,10 +8,8 @@ export const Route = createFileRoute("/(default)/account/profile")({
 
 function RouteComponent() {
   return (
-    <>
-      <AccountNav>
-        <UserProfile />
-      </AccountNav>
-    </>
+    <AccountNav>
+      <UserProfile />
+    </AccountNav>
   );
 }

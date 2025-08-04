@@ -85,7 +85,7 @@ export default function ProductCard({
                   alt=""
                   src={product.thumbnail || "/assets/paper-bag-items.webp"}
                   className={cn(
-                    "w-full h-full object-cover rounded-xl  bg-accent",
+                    "w-full h-full object-contain rounded-xl  bg-card border border-border/50",
                     product?.variants[0].inStock ? "" : "",
                     className?.classNameImg
                   )}
@@ -121,7 +121,7 @@ export default function ProductCard({
                       setVariantDrawer(true);
                       setActiveProduct(product);
                     }}
-                    size="sm"
+                    size={isMobile ? "xs" : "sm"}
                     type="button"
                     aria-label="Add to cart"
                     className="text-secondary border border-secondary min-w-16 hover:text-secondary border-b-2 border-r-2 disabled:opacity-100 flex flex-col p-0  gap-0"

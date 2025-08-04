@@ -1,3 +1,4 @@
+import { env } from "@envClient";
 import { loggedInStoreApi } from "@lipy/lib/api";
 import { useStore } from "@lipy/lib/hooks/use-store";
 import { useAPIMutation } from "@lipy/lib/utils/useQueryClient";
@@ -10,20 +11,17 @@ import {
   MultiStepLayout,
   useMultiStepForm,
 } from "@lipy/web-ui/components/forms/multi-step";
-
-import { env } from "@envClient";
 import {
   fillBaseAddress,
   geocode,
 } from "@lipy/web-ui/components/maps/utils/helper";
 import { useJsApiLoader } from "@react-google-maps/api";
-import { useRouter } from "@tanstack/react-router";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import {
-  StorePolicesForm,
   defaultStorePolicies,
+  StorePolicesForm,
 } from "../(dashboard)/store/policies";
 
 export const Route = createFileRoute("/register/")({
@@ -194,8 +192,6 @@ function RouteComponent() {
   });
 
   const handleSubmit = async (data: any) => {
-    console.log(data);
-
     const geocodedAddress = await geocoder(
       `${data.address.line1}, ${data.address.line2}, ${data.address.city}, ${data.address.state}, ${data.address.postalCode}, ${data.address.country}`
     );
@@ -212,7 +208,7 @@ function RouteComponent() {
     await mutation.mutateAsync({ json: payload });
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: false positive
   useEffect(() => {
     if (store.isLoading) return;
     store.data?.id &&

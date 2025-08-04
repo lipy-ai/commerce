@@ -1,4 +1,3 @@
-import { useCartStore } from "@/components/cart/store";
 import {
   DrawerDialogHeader,
   DrawerDialogSwitcher,
@@ -20,6 +19,7 @@ import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { createFileRoute } from "@tanstack/react-router";
 import { Camera, ChevronRight, Images, X } from "lucide-react";
 import { useState } from "react";
+import { useCartStore } from "@/components/cart/store";
 import { StoreNav } from "../../-nav";
 
 export const Route = createFileRoute(
@@ -40,78 +40,76 @@ function RouteComponent() {
       <StoreNav storeHandle={storeHandle}>
         <DashboardHeader title="Upload prescription" />
 
-        <div className="lg:p-8">
-          {uploadedImages.length > 0 && (
-            <div className="grid grid-cols-2 lg:grid-cols-6 gap-4 p-4 mb-32">
-              {uploadedImages.map((file, index) => (
-                <div key={index} className="relative w-40 h-48">
-                  <img
-                    src={URL.createObjectURL(file)}
-                    alt={`Prescription ${index + 1}`}
-                    className="object-cover w-full h-full border rounded-xl"
-                  />
+        {uploadedImages.length > 0 && (
+          <div className="grid grid-cols-2 lg:grid-cols-6 gap-4 p-4 lg:p-8 mb-32">
+            {uploadedImages.map((file, index) => (
+              <div key={index} className="relative w-40 h-48">
+                <img
+                  src={URL.createObjectURL(file)}
+                  alt={`Prescription ${index + 1}`}
+                  className="object-cover w-full h-full border rounded-xl"
+                />
 
-                  <Button
-                    variant={"outline"}
-                    className="absolute top-2 right-2 rounded-full bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground"
-                    size="icon-sm"
-                    onClick={() => {
-                      setUploadedImages(
-                        uploadedImages.filter((_, i) => i !== index)
-                      );
-                    }}
-                  >
-                    <X />
-                  </Button>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {uploadedImages.length > 0 && uploadedImages.length < 10 && (
-            <Button
-              className="text-secondary font-medium w-full"
-              variant="ghost"
-              onClick={() => setOpenOptions(true)}
-            >
-              Upload more prescriptions
-            </Button>
-          )}
-
-          <div className="flex flex-1 flex-col items-center justify-center m-auto">
-            {uploadedImages.length === 0 && (
-              <img
-                src="/assets/prescription.svg"
-                alt="prescription"
-                className="size-64 object-cover "
-              />
-            )}
+                <Button
+                  variant={"outline"}
+                  className="absolute top-2 right-2 rounded-full bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground"
+                  size="icon-sm"
+                  onClick={() => {
+                    setUploadedImages(
+                      uploadedImages.filter((_, i) => i !== index)
+                    );
+                  }}
+                >
+                  <X />
+                </Button>
+              </div>
+            ))}
           </div>
+        )}
 
-          <div className="fixed bottom-0 w-full bg-card p-4 flex items-center gap-10 justify-center">
-            <p className="text-base font-medium hidden lg:block">
-              We will review your prescriptions and arrange your medicines
-            </p>
-            <Button
-              className="w-full lg:w-fit"
-              onClick={() => {
-                if (uploadedImages.length === 0) setOpenOptions(true);
-                else {
-                  navigate({
-                    to: "/$storeHandle/order/checkout",
-                    params: {
-                      storeHandle: storeHandle,
-                    },
-                  });
-                }
-              }}
-            >
-              {uploadedImages.length > 0
-                ? "Proceed to order"
-                : "Upload Prescription"}
-            </Button>
-          </div>
+        {uploadedImages.length > 0 && uploadedImages.length < 10 && (
+          <Button
+            className="text-secondary font-medium w-full"
+            variant="ghost"
+            onClick={() => setOpenOptions(true)}
+          >
+            Upload more prescriptions
+          </Button>
+        )}
+
+        <div className="fixed bottom-0 w-full bg-card p-4 flex items-center gap-10 justify-center">
+          <p className="text-base font-medium hidden lg:block">
+            We will review your prescriptions and arrange your medicines
+          </p>
+          <Button
+            className="w-full lg:w-fit"
+            onClick={() => {
+              if (uploadedImages.length === 0) setOpenOptions(true);
+              else {
+                navigate({
+                  to: "/$storeHandle/order/checkout",
+                  params: {
+                    storeHandle: storeHandle,
+                  },
+                });
+              }
+            }}
+          >
+            {uploadedImages.length > 0
+              ? "Proceed to order"
+              : "Upload Prescription"}
+          </Button>
         </div>
+
+        {uploadedImages.length === 0 && (
+          <div className="flex flex-1 flex-col items-center justify-center m-auto">
+            <img
+              src="/assets/prescription.svg"
+              alt="prescription"
+              className="size-64 object-cover "
+            />
+          </div>
+        )}
       </StoreNav>
 
       {openOptions && (

@@ -1,11 +1,11 @@
-import { PrimaryCartFooter } from "@/components/cart/cartFooter";
-import ProductCard, { type ProductType } from "@/components/productCard";
 import { publicProductApi, publicShopApi } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import Loading from "@lipy/web-ui/components/ui/loading";
 import { createFileRoute } from "@tanstack/react-router";
+import { PrimaryCartFooter } from "@/components/cart/cartFooter";
+import ProductCard, { type ProductType } from "@/components/productCard";
 
 export const Route = createFileRoute(
   "/(default)/(store)/$storeHandle/products/category/$categorySlug"

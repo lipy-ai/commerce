@@ -3,7 +3,7 @@ import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { z } from "zod";
 import { StoreNav } from "../-nav";
 
@@ -72,7 +72,7 @@ function RouteComponent() {
                 <img
                   alt={product.title || ""}
                   src={product.thumbnail || ""}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain border border-border/40 bg-card "
                 />
                 <div className="absolute bottom-0 w-full px-2 py-1 bg-black/50 backdrop-blur-md text-white text-sm font-medium line-clamp-1">
                   {product.title}

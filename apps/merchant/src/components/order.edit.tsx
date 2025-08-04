@@ -55,6 +55,7 @@ type SelectedVariants = Array<{
 export function OrderEdit({ data }: { data?: Order }) {
   const { isMobile } = useViewport();
   const [open, setOpen] = useState<"product" | "tax" | "discount" | null>(null);
+
   const defaultValues: UpdateOrderReq = {
     items: (data?.items as any) || [],
     taxes: data?.taxes || [],

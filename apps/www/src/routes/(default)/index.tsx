@@ -8,7 +8,6 @@ import {
   type LucideIcon,
   ShoppingBag,
   ShoppingCart,
-  Store,
 } from "lucide-react";
 import { AppCartInitializer } from "@/components/cart/appCartInitializer";
 import { useCartStore } from "@/components/cart/store";
@@ -27,13 +26,6 @@ function Home() {
       label: "Home",
       url: "/",
       icon: HomeIcon,
-      mobile: true,
-    },
-
-    {
-      label: "Shops",
-      url: "/shops",
-      icon: Store,
       mobile: true,
     },
     {

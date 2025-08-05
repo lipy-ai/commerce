@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from "@lipy/web-ui/components/ui/card";
 import type { InferResponseType } from "hono/client";
-import { PercentCircle, ReceiptText } from "lucide-react";
+import { Bike, PercentCircle, ReceiptText } from "lucide-react";
 import { useState } from "react";
 
 type Response = InferResponseType<typeof loggedInCartApi.index.$get>;
@@ -43,6 +43,23 @@ export function Billing({ data }: { data: Response }) {
             </p>
           </div>
         ))}
+        <div className="flex items-center justify-between gap-6">
+          <div className="flex items-center gap-2">
+            <Bike className="size-4 mt-1" />
+            <BillingDetails data={data} type="delivery">
+              <p
+                className="underline decoration-dashed  cursor-pointer decoration-muted-foreground"
+                style={{ textUnderlineOffset: "4px" }}
+              >
+                Delivery Charge
+              </p>
+            </BillingDetails>
+          </div>
+
+          <span className="font-medium">
+            {formatAmount("inr", data?.totalDeliveryCharge)}
+          </span>
+        </div>
         <div className="flex items-center justify-between gap-6">
           <div className="flex items-center gap-2">
             <PercentCircle className="size-4 mt-1" />
@@ -88,7 +105,7 @@ function BillingDetails({
 }: {
   children: React.ReactNode;
   data: Response;
-  type: "tax";
+  type: "tax" | "delivery";
 }) {
   const [open, setOpen] = useState(false);
   return (
@@ -98,16 +115,40 @@ function BillingDetails({
       trigger={<div>{children}</div>}
       className="p-4 "
     >
-      <div className="py-4">
+      <div className="py-4 space-y-2">
         {data?.store.map((s) => (
           <div key={s.storeId} className="space-y-2">
             <div className="flex items-center justify-between gap-6 font-medium text-base">
               <p>{s.storeName}</p>
-              <p>{formatAmount("inr", type === "tax" ? s.storeTax : 0)}</p>
+              <p>
+                {formatAmount(
+                  "inr",
+                  type === "tax"
+                    ? s.storeTax
+                    : type === "delivery"
+                      ? s.storDeliveryCharge
+                      : 0
+                )}
+              </p>
             </div>
             <div className="flex items-center justify-between gap-6 ">
-              <p>GST on item total</p>
-              <p>{formatAmount("inr", type === "tax" ? s.storeTax : 0)}</p>
+              <p>
+                {type === "tax"
+                  ? "GST on item total"
+                  : type === "delivery"
+                    ? "Delivery Charge"
+                    : ""}
+              </p>
+              <p>
+                {formatAmount(
+                  "inr",
+                  type === "tax"
+                    ? s.storeTax
+                    : type === "delivery"
+                      ? s.storDeliveryCharge
+                      : 0
+                )}
+              </p>
             </div>
           </div>
         ))}
@@ -116,7 +157,16 @@ function BillingDetails({
       <DrawerDialogFooter className="border-t py-4">
         <div className="flex items-center justify-between gap-6 font-medium text-base">
           <p>Total</p>
-          <p>{formatAmount("inr", type === "tax" ? data?.taxTotal : 0)}</p>
+          <p>
+            {formatAmount(
+              "inr",
+              type === "tax"
+                ? data?.taxTotal
+                : type === "delivery"
+                  ? data?.totalDeliveryCharge
+                  : 0
+            )}
+          </p>
         </div>
       </DrawerDialogFooter>
     </DrawerDialogSwitcher>

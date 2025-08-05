@@ -9,6 +9,7 @@ import { idGenerate } from "@/lib/generateId";
 import { orderCalculator } from "@/lib/orderCalculators";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
+import { getDistanceMatrix } from "../publicRoutes/shop";
 import { addressSchema } from "./address";
 
 const paramSchema = z.object({
@@ -89,13 +90,54 @@ const generateOrders = async ({
 		}
 		const store = await getStore(s.id);
 
+		let distanceMatrix = null;
+
+		try {
+			distanceMatrix = await getDistanceMatrix(
+				{
+					lat: Number(address.lat),
+					lng: Number(address.lng),
+				},
+				[
+					{
+						lat: Number(store?.address?.lat),
+						lng: Number(store?.address?.lng),
+					},
+				],
+			);
+		} catch {}
+
+		let distanceFromUser = 0;
+		let deliveryCharge = 0;
+
+		if (distanceMatrix) {
+			distanceFromUser = Number(
+				distanceMatrix.rows[0].elements[0].distance.value,
+			);
+			deliveryCharge =
+				((distanceFromUser - store.freeDeliveryDistance * 1000) *
+					store.deliveryChargePerKm) /
+				1000;
+
+			if (deliveryCharge < 0) {
+				deliveryCharge = 0;
+			}
+		}
+
 		const items: NonNullable<DBTypes["orders"]["items"]> = [];
 
 		const taxes: Array<{
 			amount: number;
 			sum: (typeof SUM_TYPE)[number];
 			name: string;
-		}> = [{ amount: store.gstTax, sum: "percent", name: "GST" }];
+		}> = [
+			{ amount: store.gstTax, sum: "percent", name: "GST" },
+			{
+				amount: deliveryCharge,
+				sum: "flat",
+				name: "Delivery Charge",
+			},
+		];
 		const discounts: DBTypes["orders"]["discounts"] = [];
 
 		for (const c of cart) {

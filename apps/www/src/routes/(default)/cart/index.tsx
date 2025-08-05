@@ -1,5 +1,4 @@
 import { loggedInCartApi } from "@lipy/lib/api";
-// import PlaceOrder from "@/components/order/placeOrder";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import {
   apiQueryOptions,
@@ -95,11 +94,19 @@ function RouteComponent() {
 
 export const CartMainContent = () => {
   const { setCart, resetCart } = useCartStore();
+  const { deliveryLocation } = useLocationStore();
   const { data, isLoading, isFetched } = useAPIQuery(
     loggedInCartApi.index,
     "$get",
-    {}
+    {
+      query: {
+        lat: String(deliveryLocation?.lat),
+        lng: String(deliveryLocation.lng),
+      },
+    }
   );
+
+  console.log(data);
 
   useEffect(() => {
     resetCart();
@@ -132,12 +139,16 @@ export const CartMainContent = () => {
     {
       onSuccess() {
         queryClient.invalidateQueries({
-          queryKey: apiQueryOptions(loggedInCartApi.index, "$get", {}).queryKey,
+          queryKey: apiQueryOptions(loggedInCartApi.index, "$get", {
+            query: {
+              lat: String(deliveryLocation?.lat),
+              lng: String(deliveryLocation.lng),
+            },
+          }).queryKey,
         });
       },
     }
   );
-  const { deliveryLocation } = useLocationStore();
   const [detailedAddressDrawerOpen, setDetailedAddressDrawerOpen] =
     useState(false);
 

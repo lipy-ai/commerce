@@ -1,8 +1,5 @@
 "use client";
 
-import { Check, ChevronsUpDown } from "lucide-react";
-import * as React from "react";
-
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import {
   Command,
@@ -19,6 +16,8 @@ import {
   PopoverTrigger,
 } from "@lipy/web-ui/components/ui/popover";
 import { cn } from "@lipy/web-ui/lib/utils";
+import { Check, ChevronsUpDown } from "lucide-react";
+import * as React from "react";
 
 type FacetedValue<Multiple extends boolean> = Multiple extends true
   ? string[]

@@ -6,15 +6,21 @@ import { getStore } from "@/helpers/store";
 import { orderCalculator } from "@/lib/orderCalculators";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
+import { getDistanceMatrix } from "../publicRoutes/shop";
 
 const cartSchema = z.object({
 	inventoryId: z.string().uuid(),
 	quantity: z.number().min(0).int(),
 });
 
+const deliveryLocationSchema = z.object({
+	lat: z.coerce.number(),
+	lng: z.coerce.number(),
+});
 const route = new Hono<ServerContext>()
-	.get("/", async (c) => {
+	.get("/", zValidator("query", deliveryLocationSchema), async (c) => {
 		const session = c.get("session");
+		const deliveryLocation = c.req.valid("query");
 
 		const cartItemsQuery = db
 			.selectFrom("cart as c")
@@ -57,22 +63,62 @@ const route = new Hono<ServerContext>()
 				"s.handle",
 				"s.image",
 				"s.name",
+				"s.address",
 				eb.fn.jsonAgg("items").as("items"),
 			])
 			.groupBy("s.id")
 			.execute();
+
+		let distanceMatrix = null;
+
+		try {
+			distanceMatrix = await getDistanceMatrix(
+				{
+					lat: deliveryLocation.lat,
+					lng: deliveryLocation.lng,
+				},
+				groupedStores.map(({ address }) => ({
+					lat: address?.lat as number,
+					lng: address?.lng as number,
+				})),
+			);
+		} catch {}
 
 		let itemsTotal = 0;
 		let maxItemsTotal = 0;
 		let taxTotal = 0;
 		let totalSaved = 0;
 		let totalAmount = 0;
+		let totalDeliveryCharge = 0;
 
 		const storesData = await Promise.all(
-			groupedStores.map(async ({ id, handle, image, name, items }) => {
+			groupedStores.map(async ({ id, handle, image, name, items }, i) => {
 				const store = await getStore(id);
+				let distanceFromUser = 0;
+				let deliveryCharge = 0;
+				if (distanceMatrix) {
+					distanceFromUser = Number(
+						distanceMatrix.rows[0].elements[i].distance.value,
+					);
+
+					deliveryCharge =
+						((distanceFromUser - store.freeDeliveryDistance * 1000) *
+							store.deliveryChargePerKm) /
+						1000;
+
+					if (deliveryCharge < 0) {
+						deliveryCharge = 0;
+					}
+				}
+
 				const taxes: Array<{ amount: number; sum: (typeof SUM_TYPE)[number] }> =
-					[{ amount: store.gstTax, sum: "percent" }];
+					[
+						{ amount: store.gstTax, sum: "percent" },
+						{
+							amount: deliveryCharge,
+							sum: "flat",
+						},
+					];
 
 				const formattedItems = items
 					.filter(
@@ -92,9 +138,10 @@ const route = new Hono<ServerContext>()
 
 				itemsTotal += calc.itemTotalAmount;
 				maxItemsTotal += calc.maxItemTotalAmount;
-				taxTotal += calc.totalTaxAmount;
+				taxTotal += calc.totalTaxAmount - deliveryCharge;
 				totalSaved += calc.amountSaved;
 				totalAmount += calc.totalAmount;
+				totalDeliveryCharge += deliveryCharge;
 
 				return {
 					storeId: id,
@@ -102,9 +149,10 @@ const route = new Hono<ServerContext>()
 					storeImage: image,
 					storeName: name,
 					storeMinimumOrderValue: store.minimumOrderValue,
-					storeTax: calc.totalTaxAmount,
+					storeTax: calc.totalTaxAmount - deliveryCharge,
 					storeItemsTotal: calc.itemTotalAmount,
 					storeMaxItemsTotal: calc.maxItemTotalAmount,
+					storDeliveryCharge: deliveryCharge,
 					items,
 				};
 			}),
@@ -116,6 +164,7 @@ const route = new Hono<ServerContext>()
 			taxTotal,
 			totalSaved,
 			totalAmount,
+			totalDeliveryCharge,
 			store: storesData,
 		});
 	})

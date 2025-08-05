@@ -560,11 +560,11 @@ function RouteComponent() {
                       </h1>
                       <div className="flex items-center gap-2">
                         <Phone className="size-4" />
-                        <p>+91 {data?.customerDetails?.phone}</p>
+                        <p>{data?.customerDetails?.phone || " - "}</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <Mail className="size-4" />
-                        <p>{data?.customerDetails?.email}</p>
+                        <p>{data?.customerDetails?.email || " - "}</p>
                       </div>
                     </div>
 

@@ -1,4 +1,5 @@
 import { posOrderApi } from "@lipy/lib/api";
+import { useSoundPlayer } from "@lipy/lib/hooks/use-sound";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { OrderStatus } from "@lipy/web-ui/components/custom-ui/orderStatus";
@@ -20,9 +21,9 @@ import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { formatDistanceToNow } from "date-fns";
-// import { formatDistanceToNow } from "date-fns";
 import type { InferResponseType } from "hono/client";
 import { ArrowUpRight } from "lucide-react";
+import { useEffect, useRef } from "react";
 import { z } from "zod";
 
 export const Route = createFileRoute("/pos/order/")({
@@ -38,8 +39,8 @@ type Response = InferResponseType<typeof posOrderApi.index.$get>;
 function RouteComponent() {
   const { isMobile } = useViewport();
   const { page, q } = Route.useSearch();
-
-  const { data, isLoading } = useAPIQuery(
+  const itemRef = useRef<Response["items"]>(undefined);
+  const { data, isLoading, isFetching } = useAPIQuery(
     posOrderApi.index,
     "$get",
     {
@@ -47,6 +48,21 @@ function RouteComponent() {
     },
     { placeholderData: (p) => p, refetchInterval: 20000 }
   );
+
+  const { play } = useSoundPlayer();
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: suppress dependencies
+  useEffect(() => {
+    const prevItem = itemRef.current;
+    itemRef.current = data?.items;
+    if (
+      !isFetching &&
+      prevItem &&
+      prevItem.length !== itemRef.current?.length
+    ) {
+      play();
+    }
+  }, [isFetching]);
 
   return (
     <>

@@ -62,8 +62,8 @@ export const Route = createFileRoute("/(dashboard)/store/policies")({
 export const defaultStorePolicies = {
   refunds: { enabled: false, content: "" },
   replacements: { enabled: false, content: "" },
-  deliveryDistance: 1,
-  freeDeliveryDistance: 1,
+  deliveryDistance: 5,
+  freeDeliveryDistance: 2,
   gstTax: "0",
   openingHour: decimalToTime(0),
   closingHour: decimalToTime(0),

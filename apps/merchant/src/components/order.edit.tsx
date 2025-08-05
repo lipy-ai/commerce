@@ -501,7 +501,7 @@ function ProductList({
           <SearchBar className="flex-1" />
         </div>
         {isLoading ? (
-          <Skeleton className="size-full flex-1 aspect-square" />
+          <Skeleton className="h-[600px] w-full flex-1 aspect-square" />
         ) : !data || data?.items?.length === 0 ? (
           <div className="flex flex-1 justify-center flex-col items-center m-auto  text-center min-h-full">
             <img
@@ -520,13 +520,16 @@ function ProductList({
               return (
                 <div
                   key={d.id}
-                  className="space-y-1"
+                  className={cn(
+                    isIncl ? "bg-tertiary border rounded p-0.5" : "",
+                    "space-y-1"
+                  )}
                   onClick={() => setSelect(d)}
                 >
                   <div className="aspect-square relative rounded overflow-hidden cursor-pointer">
-                    {isIncl && (
+                    {/* {isIncl && (
                       <span className="absolute size-full bg-secondary/30 flex justify-center items-center" />
-                    )}
+                    )} */}
                     <div className="absolute right-1 bottom-1">
                       <div className="flex flex-col border bg-background rounded text-center text-xs items-center justify-center">
                         <span className="py-0.5 px-1">

@@ -17,7 +17,7 @@ import {
 import { Label } from "@lipy/web-ui/components/ui/label";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { cn } from "@lipy/web-ui/lib/utils";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { Clock10, Shirt, ShoppingCart, Store, StoreIcon } from "lucide-react";
 export const Route = createFileRoute("/pos/")({

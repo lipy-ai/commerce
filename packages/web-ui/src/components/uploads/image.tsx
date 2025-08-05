@@ -1,9 +1,8 @@
-import * as React from "react";
-
 import { useDeleteUpload, useUpload } from "@lipy/lib/hooks/use-upload";
 import { createResizedImage } from "@lipy/web-ui/lib/resizer";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Plus, X } from "lucide-react";
+import * as React from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import CircularProgress from "../ui/circular-progress";

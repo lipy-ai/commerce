@@ -46,7 +46,7 @@ export const AddToCart = ({
         updateCart(product, loadingState.operation);
       }
       queryClient.invalidateQueries({
-        queryKey: apiQueryOptions(loggedInCartApi.index, "$get", {}).queryKey,
+        queryKey: apiQueryOptions(loggedInCartApi.basic, "$get", {}).queryKey,
       });
     },
     onError: () => {

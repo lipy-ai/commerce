@@ -145,7 +145,7 @@ function PlaceOrderProgress({
             navigate({ to: "/account/orders" });
           }
           queryClient.invalidateQueries({
-            queryKey: apiQueryOptions(loggedInCartApi.index, "$get", {})
+            queryKey: apiQueryOptions(loggedInCartApi.basic, "$get", {})
               .queryKey,
           });
           resetCart();

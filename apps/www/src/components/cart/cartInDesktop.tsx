@@ -15,7 +15,7 @@ export function CartInDesktop() {
     <Sheet>
       <SheetTrigger asChild>
         <Button>
-          <ShoppingCart className="size-8" />
+          <ShoppingCart className="size-6" />
           <p className="font-medium text-base">{cart.length} items</p>
         </Button>
       </SheetTrigger>

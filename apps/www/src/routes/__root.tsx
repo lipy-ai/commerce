@@ -103,11 +103,9 @@ export const Route = createRootRoute({
 function RootComponent() {
   useGlobalVibration();
   return (
-    <PHProvider>
-      <RootDocument>
-        <Outlet />
-      </RootDocument>
-    </PHProvider>
+    <RootDocument>
+      <Outlet />
+    </RootDocument>
   );
 }
 
@@ -128,15 +126,18 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         suppressHydrationWarning
         className="m-auto outline-1 outline-border shadow min-h-screen flex flex-col"
       >
-        <Toaster />
         <ViewportProvider isMobile={data.isSsrMobile}>
-          <QueryProvider handleThrowOnError={handleThrowOnError}>
-            <NuqsAdapter>{children}</NuqsAdapter>
-          </QueryProvider>
-          {env.SHOW_DEV_TOOLS && (
-            <TanStackRouterDevtools position="bottom-right" />
-          )}
-          <Scripts />
+          <PHProvider>
+            <Toaster />
+
+            <QueryProvider handleThrowOnError={handleThrowOnError}>
+              <NuqsAdapter>{children}</NuqsAdapter>
+            </QueryProvider>
+            {env.SHOW_DEV_TOOLS && (
+              <TanStackRouterDevtools position="bottom-right" />
+            )}
+            <Scripts />
+          </PHProvider>
         </ViewportProvider>
       </body>
     </html>

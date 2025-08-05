@@ -82,11 +82,9 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
-    <PHProvider>
-      <RootDocument>
-        <Outlet />
-      </RootDocument>
-    </PHProvider>
+    <RootDocument>
+      <Outlet />
+    </RootDocument>
   );
 }
 
@@ -125,18 +123,20 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         className="m-auto outline-1 outline-border shadow min-h-screen flex flex-col"
       >
         <ViewportProvider isMobile={data.isSsrMobile}>
-          <QueryProvider handleThrowOnError={handleThrowOnError}>
-            <NuqsAdapter>
-              {/* <EventsProvider /> */}
+          <PHProvider>
+            <QueryProvider handleThrowOnError={handleThrowOnError}>
+              <NuqsAdapter>
+                {/* <EventsProvider /> */}
 
-              {isPending ? <Loading /> : children}
-            </NuqsAdapter>
-            <Toaster />
-          </QueryProvider>
-          {env.SHOW_DEV_TOOLS && (
-            <TanStackRouterDevtools position="bottom-right" />
-          )}
-          <Scripts />
+                {isPending ? <Loading /> : children}
+              </NuqsAdapter>
+              <Toaster />
+            </QueryProvider>
+            {env.SHOW_DEV_TOOLS && (
+              <TanStackRouterDevtools position="bottom-right" />
+            )}
+            <Scripts />
+          </PHProvider>
         </ViewportProvider>
       </body>
     </html>

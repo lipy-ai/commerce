@@ -20,7 +20,7 @@ import {
   TableRow,
 } from "@lipy/web-ui/components/ui/table";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import type { InferResponseType } from "hono/client";
 import { Dot, Plus } from "lucide-react";
 import { z } from "zod";
@@ -108,12 +108,7 @@ function MobileView({ items }: { items: Response["items"] }) {
   return (
     <div className="bg-background border divide-y">
       {items.map((m) => (
-        <Link
-          to={"/customer/$id"}
-          params={{ id: m?.id || "" }}
-          className="flex p-4"
-          key={m.id}
-        >
+        <div className="flex p-4" key={m.id}>
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <Avatar className="size-10">
@@ -130,15 +125,13 @@ function MobileView({ items }: { items: Response["items"] }) {
               </div>
             </div>
           </div>
-        </Link>
+        </div>
       ))}
     </div>
   );
 }
 
 function DesktopView({ items }: { items: Response["items"] }) {
-  const navigate = useNavigate();
-
   return (
     <Table>
       <TableHeader>
@@ -151,13 +144,7 @@ function DesktopView({ items }: { items: Response["items"] }) {
       </TableHeader>
       <TableBody>
         {items.map((m) => (
-          <TableRow
-            key={m.id}
-            onClick={() =>
-              navigate({ to: "/customer/$id", params: { id: m.id || "" } })
-            }
-            className="cursor-pointer focus:bg-accent"
-          >
+          <TableRow key={m.id} className="cursor-pointer focus:bg-accent">
             <TableCell>
               <Avatar className="size-10">
                 <AvatarImage src={m.image || ""} />

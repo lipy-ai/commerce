@@ -1,6 +1,7 @@
 import { env } from "@envClient";
 import { useAuthSession } from "@lipy/lib/hooks/use-auth";
 import useGlobalVibration from "@lipy/lib/hooks/use-vibrate";
+import { PHProvider } from "@lipy/lib/providers/posthog";
 import QueryProvider from "@lipy/lib/providers/queryProvider";
 import { getIsSsrMobile } from "@lipy/lib/utils/isServerMobile";
 import Loading from "@lipy/web-ui/components/ui/loading";
@@ -81,9 +82,11 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
-    <RootDocument>
-      <Outlet />
-    </RootDocument>
+    <PHProvider>
+      <RootDocument>
+        <Outlet />
+      </RootDocument>
+    </PHProvider>
   );
 }
 

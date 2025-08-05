@@ -27,6 +27,7 @@ import type { InferRequestType } from "hono";
 import { Check } from "lucide-react";
 import { type ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
+
 type PatchTypes = InferRequestType<(typeof posOrderApi)[":id"]["$patch"]>;
 
 export default function OrderDeliverForm({
@@ -103,7 +104,7 @@ export default function OrderDeliverForm({
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <InputOTP maxLength={5} {...field}>
+                      <InputOTP maxLength={5} inputMode="text" {...field}>
                         <InputOTPGroup className="grid grid-cols-5 w-full">
                           <InputOTPSlot index={0} className="h-14 w-full" />
                           <InputOTPSlot index={1} className="h-14 w-full" />

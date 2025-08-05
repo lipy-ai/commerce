@@ -17,6 +17,7 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { createServerFn } from "@tanstack/react-start";
 import { getHeader } from "@tanstack/react-start/server";
 import { NuqsAdapter } from "nuqs/adapters/react";
+import { PostHogProvider } from "posthog-js/react";
 import * as React from "react";
 // import EventsProvider from "@/events";
 import { DefaultCatchBoundary, NotFound } from "@/router";
@@ -81,9 +82,17 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
-    <RootDocument>
-      <Outlet />
-    </RootDocument>
+    <PostHogProvider
+      apiKey={env.POSTHOG_PUBLIC_KEY}
+      options={{
+        api_host: env.POSTHOG_HOST,
+        defaults: "2025-05-24",
+      }}
+    >
+      <RootDocument>
+        <Outlet />
+      </RootDocument>
+    </PostHogProvider>
   );
 }
 

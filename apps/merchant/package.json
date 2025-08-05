@@ -30,6 +30,7 @@
 		"immer": "^10.1.1",
 		"lucide-react": "^0.492.0",
 		"nuqs": "^2.4.3",
+		"posthog-js": "^1.258.5",
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0",
 		"react-hook-form": "^7.55.0",

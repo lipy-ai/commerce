@@ -64,7 +64,6 @@ const route = new Hono<ServerContext>()
 
 	.get("/", zValidator("query", shopSearchSchema), async (c) => {
 		const query = c.req.valid("query");
-
 		const radiusInMeters = 50_000; // 50km
 		const resp = await db
 			.selectFrom("store as s")

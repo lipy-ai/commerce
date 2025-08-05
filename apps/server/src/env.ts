@@ -34,6 +34,8 @@ const EnvSchema = z.object({
 		.optional()
 		// biome-ignore lint/suspicious/noDoubleEquals:false positive
 		.transform((t) => t && t == "true"),
+	VITE_POSTHOG_PUBLIC_KEY: z.string(),
+	VITE_POSTHOG_HOST: z.string(),
 	GOOGLE_CLIENT_SECRET: z.string(),
 	BETTER_AUTH_SECRET: z.string(),
 	BETTER_AUTH_URL: z.string(),

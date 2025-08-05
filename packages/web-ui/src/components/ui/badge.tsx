@@ -1,11 +1,11 @@
 "use client";
 
 import { cn } from "@lipy/web-ui/lib/utils";
-import { type VariantProps, cva } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 
 export const badgeVariants = cva(
-  "inline-flex items-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "inline-flex items-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 gap-1 [&_svg:not([class*='size-'])]:size-5 shrink-0 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -26,9 +26,8 @@ export const badgeVariants = cva(
         ghost: "bg-transparent ring-0",
       },
       size: {
-        xs: "px-1 py-0.5 text-[12px]",
-
-        sm: "px-2 py-0.5 text-xs",
+        xs: "px-1 py-0.5 rounded-sm text-[12px] [&_svg:not([class*='size-'])]:size-4",
+        sm: "px-2 py-0.5 text-xs [&_svg:not([class*='size-'])]:size-4",
         default: "px-2.5 py-0.5 text-sm",
         lg: "px-3 py-1 text-base",
       },

@@ -184,7 +184,7 @@ export default function ProductCard({
                     !product.variants[0].inStock
                       ? "text-muted-foreground"
                       : null,
-                    "font-medium line-clamp-3"
+                    "font-medium line-clamp-3 leading-tight "
                   )}
                 >
                   {product.title}

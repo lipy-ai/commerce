@@ -45,7 +45,7 @@ function RouteComponent() {
     {
       query: { page: String(page), limit: String(10), q },
     },
-    { placeholderData: (p) => p }
+    { placeholderData: (p) => p, refetchInterval: 20000 }
   );
 
   return (

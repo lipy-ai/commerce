@@ -9,7 +9,6 @@ import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Card, CardContent } from "@lipy/web-ui/components/ui/card";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
-
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute, Link } from "@tanstack/react-router";
@@ -335,64 +334,38 @@ function DesktopView({ items }: { items: Response["items"] }) {
     </div>
   );
 }
+
 // function DesktopView({ items }: { items: Response["items"] }) {
 //   const navigate = useNavigate();
 
 //   return (
-//     <Table className="bg-background border p-8">
+//     <Table>
 //       <TableHeader>
 //         <TableRow>
-//           <TableHead className="">Product</TableHead>
+//           <TableHead>Product</TableHead>
 
-//           <TableHead className="w-32">Status</TableHead>
-//           <TableHead className="w-32">Stock</TableHead>
-//           <TableHead className="w-24">Amount</TableHead>
+//           <TableHead>Status</TableHead>
+//           <TableHead>Stock</TableHead>
+//           <TableHead>Amount</TableHead>
 
-//           <TableHead className="w-10" />
+//           <TableHead />
 //         </TableRow>
 //       </TableHeader>
 //       <TableBody>
 //         {items.map((m) => (
-//           <TableRow
-//             key={m.id}
-//             onClick={() =>
-//               navigate({ to: "/product/$id", params: { id: m.id } })
-//             }
-//             className="cursor-pointer focus:bg-accent"
-//           >
-//             <TableCell>
-//               <div className="grid grid-cols-[50px_auto] gap-2">
-//                 <img
-//                   src={m.thumbnail || ""}
-//                   alt={m.title || ""}
-//                   className="size-12 border rounded bg-accent"
-//                 />
-//                 <div className="block break-words">
-//                   <p className="font-medium">{m.title}</p>
-//                   <p className="font-light">{m.summary}</p>
-//                 </div>
+//           <TableRow key={m.id} className="focus:bg-card">
+//             <TableCell className="flex items-center gap-2">
+//               <img
+//                 src={m.thumbnail || ""}
+//                 alt={m.title || ""}
+//                 className="size-12 border rounded bg-card object-contain border-border/40"
+//               />
+//               <div>
+//                 <p className="font-medium break-words">{m.title}</p>
+//                 <p className="text-muted-foreground text-sm">{m.category}</p>
 //               </div>
 //             </TableCell>
 
-//             <TableCell>
-//               <p>Active</p>
-//             </TableCell>
-//             <TableCell>
-//               <Badge className="" variant={"success"}>
-//                 In Stock
-//               </Badge>
-//             </TableCell>
-//             <TableCell> {formatAmount("inr", m?.price || 0)}</TableCell>
-//             <TableCell>
-//               <Link
-//                 to="/"
-//                 className={cn(
-//                   buttonVariants({ size: "icon", variant: "ghost" })
-//                 )}
-//               >
-//                 <ArrowUpRight />
-//               </Link>
-//             </TableCell>
 //           </TableRow>
 //         ))}
 //       </TableBody>

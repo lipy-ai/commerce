@@ -46,6 +46,8 @@ jobs:
           VITE_CDN_URL: ${{ secrets.VITE_CDN_URL }}
           VITE_GOOGLE_MAP_API_KEY: ${{ secrets.VITE_GOOGLE_MAP_API_KEY }}
           VITE_GOOGLE_MAP_LIBRARIES: ${{ secrets.VITE_GOOGLE_MAP_LIBRARIES }}
+          VITE_POSTHOG_PUBLIC_KEY: ${{ secrets.VITE_POSTHOG_PUBLIC_KEY }}
+          VITE_POSTHOG_HOST: ${{ secrets.VITE_POSTHOG_HOST }}
 
       - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3

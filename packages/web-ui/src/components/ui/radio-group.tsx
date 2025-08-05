@@ -1,8 +1,7 @@
+import { cn } from "@lipy/web-ui/lib/utils";
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import { CircleIcon } from "lucide-react";
 import type * as React from "react";
-
-import { cn } from "@lipy/web-ui/lib/utils";
 
 function RadioGroup({
   className,

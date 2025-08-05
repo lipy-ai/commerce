@@ -1,8 +1,13 @@
+import { useAuthSession } from "@lipy/lib/hooks/use-auth";
+import SettingsCard from "@lipy/web-ui/components/custom-ui/settingsCard";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
+import { Spinner } from "@lipy/web-ui/components/ui/spinner";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
+import { cn } from "@lipy/web-ui/lib/utils";
 import {
   Headset,
   LogOut,
@@ -12,12 +17,6 @@ import {
   UserCircle2,
   Users,
 } from "lucide-react";
-
-import { useAuthSession } from "@lipy/lib/hooks/use-auth";
-import SettingsCard from "@lipy/web-ui/components/custom-ui/settingsCard";
-import { Spinner } from "@lipy/web-ui/components/ui/spinner";
-import { useViewport } from "@lipy/web-ui/contexts/viewport";
-import { cn } from "@lipy/web-ui/lib/utils";
 import type { ReactNode } from "react";
 
 export function AccountNav({ children }: { children?: ReactNode }) {

@@ -52,7 +52,7 @@ type SingleStore = InferResponseType<(typeof publicShopApi)[":handle"]["$get"]>;
 export const StoreHeroSection = ({ storeInfo }: { storeInfo: SingleStore }) => {
   const typeInfo = storeType[storeInfo?.type as keyof typeof storeType];
   return (
-    <div className="space-y-2 lg:divide-y">
+    <div className="space-y-1 lg:divide-y">
       <div className="bg-card lg:bg-background p-4 space-y-2">
         <div className="flex items-start justify-between">
           <div className="space-y-1">

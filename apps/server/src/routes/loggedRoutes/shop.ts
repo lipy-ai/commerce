@@ -20,7 +20,7 @@ export const storeSchema = z.object({
 	type: z.enum(STORE_TYPE),
 	address: coreAddressSchema,
 	payments: z.object({
-		upiIds: z.array(z.object({ name: z.string(), id: z.string() })).min(1),
+		upiIds: z.array(z.object({ id: z.string(), name: z.string() })).min(1),
 	}),
 	openingHour: timeSchema,
 	closingHour: timeSchema,
@@ -46,7 +46,7 @@ export const loggedStoreRoute = new Hono<ServerContext>()
 		const session = c.get("session");
 		const user = c.get("user");
 
-		const { payments, ...vals } = c.req.valid("json");
+		const vals = c.req.valid("json");
 
 		const oldStore = await db
 			.selectFrom("storeMember")
@@ -82,7 +82,7 @@ export const loggedStoreRoute = new Hono<ServerContext>()
 				.values({
 					id: store.id,
 					acceptedPayments: ["cod"],
-					upiIds: payments.upiIds,
+					upiIds: vals.payments.upiIds,
 				})
 				.execute();
 

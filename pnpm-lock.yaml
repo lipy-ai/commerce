@@ -480,6 +480,9 @@ importers:
       nuqs:
         specifier: ^2.4.3
         version: 2.4.3(react@19.1.1)
+      posthog-js:
+        specifier: ^1.258.5
+        version: 1.258.5
       react-cookie:
         specifier: ^8.0.1
         version: 8.0.1(@types/react@19.1.9)(react@19.1.1)

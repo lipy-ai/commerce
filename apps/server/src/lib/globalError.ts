@@ -37,8 +37,8 @@ export const globalError: ErrorHandler<ServerContext> = (err, c) => {
 			path: c.req.path,
 			method: c.req.method,
 			url: c.req.url,
-			headers: c.req.header(),
-			variables: c.var,
+			headers: JSON.stringify(c.req.header()),
+			variables: JSON.stringify(c.var),
 		},
 	);
 	posthog.shutdown();

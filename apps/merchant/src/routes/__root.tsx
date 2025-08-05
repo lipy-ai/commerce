@@ -1,6 +1,7 @@
 import { env } from "@envClient";
 import { useAuthSession } from "@lipy/lib/hooks/use-auth";
 import useGlobalVibration from "@lipy/lib/hooks/use-vibrate";
+import { PHProvider } from "@lipy/lib/providers/posthog";
 import QueryProvider from "@lipy/lib/providers/queryProvider";
 import { getIsSsrMobile } from "@lipy/lib/utils/isServerMobile";
 import Loading from "@lipy/web-ui/components/ui/loading";
@@ -17,7 +18,6 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { createServerFn } from "@tanstack/react-start";
 import { getHeader } from "@tanstack/react-start/server";
 import { NuqsAdapter } from "nuqs/adapters/react";
-import { PostHogProvider } from "posthog-js/react";
 import * as React from "react";
 // import EventsProvider from "@/events";
 import { DefaultCatchBoundary, NotFound } from "@/router";
@@ -82,17 +82,11 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
-    <PostHogProvider
-      apiKey={env.POSTHOG_PUBLIC_KEY}
-      options={{
-        api_host: env.POSTHOG_HOST,
-        defaults: "2025-05-24",
-      }}
-    >
+    <PHProvider>
       <RootDocument>
         <Outlet />
       </RootDocument>
-    </PostHogProvider>
+    </PHProvider>
   );
 }
 

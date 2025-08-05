@@ -1,6 +1,7 @@
 import { env } from "@envClient";
 import { useAuthSession } from "@lipy/lib/hooks/use-auth";
 import useGlobalVibration from "@lipy/lib/hooks/use-vibrate";
+import { PHProvider } from "@lipy/lib/providers/posthog";
 import QueryProvider from "@lipy/lib/providers/queryProvider";
 import { getIsSsrMobile } from "@lipy/lib/utils/isServerMobile";
 import Loading from "@lipy/web-ui/components/ui/loading";
@@ -122,18 +123,20 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         className="m-auto outline-1 outline-border shadow min-h-screen flex flex-col"
       >
         <ViewportProvider isMobile={data.isSsrMobile}>
-          <QueryProvider handleThrowOnError={handleThrowOnError}>
-            <NuqsAdapter>
-              {/* <EventsProvider /> */}
+          <PHProvider>
+            <QueryProvider handleThrowOnError={handleThrowOnError}>
+              <NuqsAdapter>
+                {/* <EventsProvider /> */}
 
-              {isPending ? <Loading /> : children}
-            </NuqsAdapter>
-            <Toaster />
-          </QueryProvider>
-          {env.SHOW_DEV_TOOLS && (
-            <TanStackRouterDevtools position="bottom-right" />
-          )}
-          <Scripts />
+                {isPending ? <Loading /> : children}
+              </NuqsAdapter>
+              <Toaster />
+            </QueryProvider>
+            {env.SHOW_DEV_TOOLS && (
+              <TanStackRouterDevtools position="bottom-right" />
+            )}
+            <Scripts />
+          </PHProvider>
         </ViewportProvider>
       </body>
     </html>

@@ -1,5 +1,6 @@
 import { env } from "@envClient";
 import useGlobalVibration from "@lipy/lib/hooks/use-vibrate";
+import { PHProvider } from "@lipy/lib/providers/posthog";
 import QueryProvider from "@lipy/lib/providers/queryProvider";
 import { getIsSsrMobile } from "@lipy/lib/utils/isServerMobile";
 import { Toaster, toast } from "@lipy/web-ui/components/ui/sonner";
@@ -18,7 +19,6 @@ import { NuqsAdapter } from "nuqs/adapters/react";
 import * as React from "react";
 import { DefaultCatchBoundary, NotFound } from "@/router";
 import { seo } from "@/utils/seo";
-
 export const globalInit = createServerFn({ method: "GET" }).handler(
   async () => {
     const userAgent = getHeader("User-Agent");
@@ -126,15 +126,18 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         suppressHydrationWarning
         className="m-auto outline-1 outline-border shadow min-h-screen flex flex-col"
       >
-        <Toaster />
         <ViewportProvider isMobile={data.isSsrMobile}>
-          <QueryProvider handleThrowOnError={handleThrowOnError}>
-            <NuqsAdapter>{children}</NuqsAdapter>
-          </QueryProvider>
-          {env.SHOW_DEV_TOOLS && (
-            <TanStackRouterDevtools position="bottom-right" />
-          )}
-          <Scripts />
+          <PHProvider>
+            <Toaster />
+
+            <QueryProvider handleThrowOnError={handleThrowOnError}>
+              <NuqsAdapter>{children}</NuqsAdapter>
+            </QueryProvider>
+            {env.SHOW_DEV_TOOLS && (
+              <TanStackRouterDevtools position="bottom-right" />
+            )}
+            <Scripts />
+          </PHProvider>
         </ViewportProvider>
       </body>
     </html>

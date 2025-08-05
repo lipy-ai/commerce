@@ -124,12 +124,12 @@ function RouteComponent() {
         )}
 
         {fetchedProduct && productData && productData.items.length > 0 && (
-          <div className="mb-32 px-4 lg:px-8">
+          <div className="mb-32  bg-card my-2 px-4 lg:px-8">
             {productData.items.map((productGroup, _idx) => {
               const productArray = productGroup.products;
 
               return (
-                <div key={_idx} className="my-10">
+                <div key={_idx} className="">
                   <p className="text-xl font-bold my-4">{productGroup.title}</p>
 
                   <div className="grid grid-cols-2 lg:grid-cols-5 gap-x-4 lg:gap-x-6 gap-y-6 w-full">

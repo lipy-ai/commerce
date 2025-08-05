@@ -109,7 +109,14 @@ const btns = [
 function RouteComponent() {
   const { data } = useStore();
 
-  const res = useAPIQuery(merchantDashboardApi.index, "$get", {});
+  const res = useAPIQuery(
+    merchantDashboardApi.index,
+    "$get",
+    {},
+    {
+      refetchInterval: 20000,
+    }
+  );
 
   return (
     <div className="grid lg:grid-cols-12  lg:p-8 gap-8">

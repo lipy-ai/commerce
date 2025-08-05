@@ -19,7 +19,7 @@ type LatLang = {
 	lng: number;
 };
 
-const getDistanceMatrix = async (
+export const getDistanceMatrix = async (
 	origin: LatLang,
 	destinations: LatLang[],
 	options?: {

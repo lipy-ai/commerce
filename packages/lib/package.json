@@ -29,6 +29,7 @@
 		"hono": "^4.8.5",
 		"mobile-detect": "^1.4.5",
 		"nuqs": "^2.4.3",
+		"posthog-js": "^1.258.5",
 		"react-cookie": "^8.0.1",
 		"react-hook-form": "^7.55.0"
 	},

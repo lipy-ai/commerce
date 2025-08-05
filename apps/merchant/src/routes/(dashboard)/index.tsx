@@ -1,4 +1,5 @@
 import { merchantDashboardApi } from "@lipy/lib/api";
+import { useSoundPlayer } from "@lipy/lib/hooks/use-sound";
 import { useStore } from "@lipy/lib/hooks/use-store";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
@@ -33,6 +34,7 @@ import {
   Store,
   StoreIcon,
 } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 // const setupSteps = [
 //   {
@@ -76,6 +78,8 @@ import {
 //   },
 // ];
 
+type Response = InferResponseType<typeof merchantDashboardApi.index.$get>;
+
 export const Route = createFileRoute("/(dashboard)/")({
   component: RouteComponent,
 });
@@ -109,6 +113,7 @@ const btns = [
 function RouteComponent() {
   const { data } = useStore();
 
+  const itemRef = useRef<Response["pendingOrders"]>(undefined);
   const res = useAPIQuery(
     merchantDashboardApi.index,
     "$get",
@@ -117,6 +122,21 @@ function RouteComponent() {
       refetchInterval: 20000,
     }
   );
+
+  const { play } = useSoundPlayer();
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: suppress dependencies
+  useEffect(() => {
+    const prevItem = itemRef.current;
+    itemRef.current = res.data?.pendingOrders;
+    if (
+      !res.isFetching &&
+      prevItem &&
+      prevItem.length !== itemRef.current?.length
+    ) {
+      play();
+    }
+  }, [res.isFetching]);
 
   return (
     <div className="grid lg:grid-cols-12  lg:p-8 gap-8">

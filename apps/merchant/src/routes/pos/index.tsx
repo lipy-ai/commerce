@@ -15,6 +15,7 @@ import {
   CardTitle,
 } from "@lipy/web-ui/components/ui/card";
 import { Label } from "@lipy/web-ui/components/ui/label";
+import Loading from "@lipy/web-ui/components/ui/loading";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute, Link } from "@tanstack/react-router";
@@ -26,9 +27,11 @@ export const Route = createFileRoute("/pos/")({
 
 function RouteComponent() {
   const { data: sess } = useAuthSession();
-  const { data: store } = usePublicStore({
+  const { data: store, isLoading } = usePublicStore({
     handle: sess?.session.activeStoreHandle || "",
   });
+
+  // console.log(store);
 
   const btns = [
     {
@@ -53,7 +56,7 @@ function RouteComponent() {
 
   const BTNS = (
     <Card className="">
-      <CardContent className="grid grid-cols-9 gap-4">
+      <CardContent className="grid grid-cols-3 lg:grid-cols-9 gap-4">
         {btns.map((d, i) => (
           <Link
             key={i}
@@ -72,6 +75,8 @@ function RouteComponent() {
       </CardContent>
     </Card>
   );
+
+  if (isLoading) return <Loading />;
 
   return (
     <div className="h-full">
@@ -130,6 +135,7 @@ function Orders() {
       <CardContent className="">
         <div className="divide-y">
           {data.items.map((v, i) => {
+            if (v?.status === "delivered") return null;
             return (
               <Link
                 to={"/pos/order/$id"}

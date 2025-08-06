@@ -1,3 +1,4 @@
+// biome-ignore assist/source/organizeImports: <explanation>
 import {
 	type SkipToken,
 	type UseMutationOptions,
@@ -21,6 +22,10 @@ import type {
 } from "hono/utils/http-status";
 import { useRedirect } from "../hooks/use-navigate";
 
+type ErrType = {
+	message?: string;
+	code?: string;
+};
 type ErrorStatusCode = ClientErrorStatusCode | ServerErrorStatusCode;
 
 type HttpMethodKey =
@@ -139,34 +144,22 @@ export const apiQueryOptions = <
 	const endpointFn = endpoint[method] as unknown as (
 		params: any,
 	) => Promise<Response>;
+
 	const result = {
 		queryKey: getAPIQueryKey(endpoint, method, params),
 		queryFn: async () => {
 			const res = await endpointFn(params);
+
 			if (res.status >= 200 && res.status < 300) {
 				return (await res.json()) as TResponse;
 			}
-			const errorData = (await res
-				.json()
-				.then((e) => {
-					return e.error;
-				})
-				.catch(
-					async (_e) =>
-						await res
-							.text()
-							.catch((_f) => ({ message: "Failed to decode response..." })),
-				)) as TError & {
-				code?: string;
-				cause: Record<string, any>;
-				message?: string;
-			};
+			const errorData = (await res.json())?.error as ErrType;
 
 			const error = new Error(
-				`Request failed with status ${res.status}`,
+				errorData?.message || `Request failed with status ${res.status}`,
 			) as Error & {
 				status: number;
-				data: TError;
+				data: ErrType;
 			};
 
 			error.status = res.status;
@@ -176,7 +169,6 @@ export const apiQueryOptions = <
 		},
 		...options,
 	};
-
 	return result as any;
 };
 
@@ -206,59 +198,19 @@ export const apiMutationOptions = <
 			if (res.status >= 200 && res.status < 300) {
 				return (await res.json()) as TResponse;
 			}
-			const errorData = (await res.json()) as TError;
+			const errorData = (await res.json()).error as ErrType;
 
 			const error = new Error(
-				`Request failed with status ${res.status}`,
+				errorData?.message || `Request failed with status ${res.status}`,
 			) as Error & {
 				status: number;
-				data: TError;
+				data: ErrType;
 			};
 
 			error.status = res.status;
 			error.data = errorData;
 
 			throw error;
-			// const res = await endpointFn(variables);
-
-			// if (res.status >= 200 && res.status < 300) {
-			// 	return (await res.json()) as TResponse;
-			// }
-			// const errorData = (await res
-			// 	.json()
-			// 	.then((e) => {
-			// 		return e.error;
-			// 	})
-			// 	.catch(
-			// 		async (_e) =>
-			// 			await res
-			// 				.text()
-			// 				.catch((_f) => ({ message: "Failed to decode response..." })),
-			// 	)) as TError & {
-			// 	code?: string;
-			// 	cause: Record<string, any>;
-			// 	message?: string;
-			// };
-			// if (errorData?.code === "VALIDATION_ERR" && options?.form?.setError) {
-			// 	for (const [field, message] of Object.entries(errorData.cause.issues)) {
-			// 		options?.form.setError(field as any, {
-			// 			type: "server",
-			// 			message: message as string,
-			// 		});
-			// 	}
-			// }
-
-			// const error = new Error(
-			// 	errorData.message || `Request failed with status ${res.status}`,
-			// ) as Error & {
-			// 	status: number;
-			// 	data: TError;
-			// };
-
-			// error.status = res.status;
-			// error.data = errorData;
-
-			// throw errorData;
 		},
 		...options,
 	};
@@ -289,7 +241,6 @@ export const useAPIQuery = <
 	TError
 > => {
 	const { handleNavigate } = useRedirect();
-
 	const q = useRQQuery(
 		apiQueryOptions<T, M, Params, Options, TResponse, TError>(
 			endpoint,
@@ -298,6 +249,7 @@ export const useAPIQuery = <
 			options,
 		),
 	);
+
 	handleNavigate((q.error as any)?.data?.code);
 
 	return q;

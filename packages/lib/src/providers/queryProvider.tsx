@@ -20,25 +20,25 @@ export default function QueryProvider({
   handleThrowOnError: (v: Error) => boolean;
 }) {
   // Instead do this, which ensures each request has its own cache:
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            // networkMode: "offlineFirst",
-            staleTime: 60 * 1000,
-            retry: 1,
-          },
-          mutations: {
-            // networkMode: "offlineFirst",
-            onError: (e) => {
-              console.log("Eee", e);
-              handleThrowOnError(e);
-            },
+  const [queryClient] = useState(() => {
+    return new QueryClient({
+      defaultOptions: {
+        queries: {
+          // networkMode: "offlineFirst",
+          staleTime: 60 * 1000,
+          retry: false,
+          retryOnMount: false,
+        },
+        mutations: {
+          // networkMode: "offlineFirst",
+          onError: (e) => {
+            console.log("Eee", e);
+            handleThrowOnError(e);
           },
         },
-      })
-  );
+      },
+    });
+  });
 
   return (
     <QueryClientProvider client={queryClient}>

@@ -67,7 +67,7 @@ export const loggedStoreRoute = new Hono<ServerContext>()
 						}),
 					deliveryChargePerKm: 10,
 					id: crypto.randomUUID(),
-					handle: `${slugify(vals.name)}-${idGenerate()}`,
+					handle: `${slugify(vals.name, { lower: true })}-${idGenerate({ length, alphabet_type: "0-9/a-z" })}`,
 					createdAt: sql`now()`,
 				})
 				.returningAll()

@@ -1,4 +1,5 @@
 import type { publicShopApi } from "@lipy/lib/api";
+import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link } from "@tanstack/react-router";
@@ -9,11 +10,11 @@ import {
   Cherry,
   Coffee,
   MapPin,
-  Phone,
   Search,
   ShoppingBasket,
   Utensils,
 } from "lucide-react";
+import { getStoreStatus } from "./-helper";
 
 export const storeType = {
   pharmacy: {
@@ -51,6 +52,11 @@ export const storeType = {
 type SingleStore = InferResponseType<(typeof publicShopApi)[":handle"]["$get"]>;
 export const StoreHeroSection = ({ storeInfo }: { storeInfo: SingleStore }) => {
   const typeInfo = storeType[storeInfo?.type as keyof typeof storeType];
+
+  const { isOpen } = getStoreStatus(
+    storeInfo.openingHour,
+    storeInfo.closingHour
+  );
   return (
     <div className="space-y-1 lg:divide-y">
       <div className="bg-card lg:bg-background p-4 space-y-2">
@@ -69,24 +75,23 @@ export const StoreHeroSection = ({ storeInfo }: { storeInfo: SingleStore }) => {
               )}
               <p>{typeInfo?.label || ""}</p>
             </div>
-            <h1 className="text-3xl font-bold">{storeInfo.name}</h1>
+            <div className="flex items-end gap-2 justify-between">
+              <h1 className="text-3xl font-bold">{storeInfo.name}</h1>
+              {!isOpen && (
+                <img
+                  src="/assets/icons/closed-signboard.svg"
+                  alt="closed signboard"
+                  className="size-14"
+                />
+              )}
+            </div>
+
             <div className="inline-flex items-center gap-1  text-muted-foreground">
               <MapPin className="size-4 flex-shrink-0 stroke-2" />
               {[storeInfo?.address?.line2, storeInfo?.address?.city]
                 .filter(Boolean)
                 .join(", ")}
             </div>
-          </div>
-          <div>
-            <a
-              href={`tel:${storeInfo?.phone}`}
-              className={cn(
-                buttonVariants({ variant: "outline", size: "icon" }),
-                "rounded-full"
-              )}
-            >
-              <Phone className="text-ring size-5" />
-            </a>
           </div>
         </div>
 
@@ -101,6 +106,29 @@ export const StoreHeroSection = ({ storeInfo }: { storeInfo: SingleStore }) => {
           <Search />
           Search in {storeInfo?.name}
         </Link>
+        {!isOpen && (
+          <div className="bg-destructive/10 p-2 rounded-md">
+            <Badge
+              variant={"destructive"}
+              appearance={"soft"}
+              size={"xs"}
+              className="p-0"
+            >
+              Closed Now
+            </Badge>
+            <div className="flex items-center gap-1 justify-between">
+              <p className="">
+                You can place order now, the order will be executed as soon as
+                we are open.
+              </p>
+              <img
+                src="/assets/icons/clock.svg"
+                alt="clock"
+                className="size-8"
+              />
+            </div>
+          </div>
+        )}
       </div>
       {storeInfo?.type === "pharmacy" && (
         <PharmacyPrescriptionUpload storeInfo={storeInfo} />

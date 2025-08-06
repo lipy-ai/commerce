@@ -110,12 +110,7 @@ function LocationComponent() {
         <DrawerDialogFooter>
           <Button onClick={() => window.location.reload()}>Retry</Button>
           <AddressSetter>
-            <Button
-              variant={"outline"}
-              onClick={() => {
-                setDrawerOpen(false);
-              }}
-            >
+            <Button variant={"outline"}>
               <Search className="stroke-2" />
               Search your location
             </Button>

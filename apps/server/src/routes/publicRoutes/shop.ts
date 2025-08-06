@@ -4,6 +4,7 @@ import { jsonBuildObject } from "kysely/helpers/postgres";
 import { z } from "zod";
 import { db } from "@/db";
 import env from "@/env";
+import { getStore } from "@/helpers/store";
 import { HTTPError } from "@/lib/exception";
 import { zValidator } from "@/middlewares/validator";
 import { listZodSchema } from "@/schema/common";
@@ -116,7 +117,15 @@ const route = new Hono<ServerContext>()
 
 		return c.json(nearbyShops);
 	})
-
+	.get(
+		"/id/:id",
+		zValidator("param", z.object({ id: z.string().uuid() })),
+		async (c) => {
+			const { id } = c.req.valid("param");
+			const store = await getStore(id);
+			return c.json(store.handle);
+		},
+	)
 	.get(
 		"/:handle",
 		zValidator("param", z.object({ handle: z.string() })),
@@ -140,7 +149,10 @@ const route = new Hono<ServerContext>()
 					"type",
 					"freeDeliveryDistance",
 				])
-				.executeTakeFirstOrThrow();
+				.executeTakeFirstOrThrow()
+				.catch(() => {
+					throw new HTTPError(404, { message: "Shop not found!" });
+				});
 
 			return c.json(data);
 		},

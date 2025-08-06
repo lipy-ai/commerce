@@ -1,9 +1,5 @@
 "use client";
 
-import type { Option } from "@lipy/web-ui/types/data-table";
-import type { Column } from "@tanstack/react-table";
-import { Check, PlusCircle, XCircle } from "lucide-react";
-
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import {
@@ -22,6 +18,9 @@ import {
 } from "@lipy/web-ui/components/ui/popover";
 import { Separator } from "@lipy/web-ui/components/ui/separator";
 import { cn } from "@lipy/web-ui/lib/utils";
+import type { Option } from "@lipy/web-ui/types/data-table";
+import type { Column } from "@tanstack/react-table";
+import { Check, PlusCircle, XCircle } from "lucide-react";
 import * as React from "react";
 
 interface DataTableFacetedFilterProps<TData, TValue> {

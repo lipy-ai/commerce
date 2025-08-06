@@ -17,7 +17,7 @@ import {
 } from "@lipy/web-ui/components/ui/card";
 import Loading from "@lipy/web-ui/components/ui/loading";
 import { cn } from "@lipy/web-ui/lib/utils";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import type { InferRequestType } from "hono";
 import { ArrowRight, Check, CheckCircle, X, XCircle } from "lucide-react";
 
@@ -33,6 +33,8 @@ function RouteComponent() {
     "$get",
     { param: { id } }
   );
+
+  console.log("hello", data);
 
   const mutation = useAPIMutation(
     loggedInStoreApi.invitation[":id"][":type"],
@@ -119,7 +121,7 @@ function RouteComponent() {
                   {data?.storeName?.[0] || "A"}
                 </AvatarFallback>
               </Avatar>
-              <CardTitle>Store Invitation</CardTitle>
+              <CardTitle>Store </CardTitle>
               <CardDescription className="text-balance">
                 You have been invited to join store{" "}
                 <span className="capitalize">({data?.storeName})</span> as role{" "}

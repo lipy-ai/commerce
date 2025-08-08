@@ -1,4 +1,4 @@
-import { publicProductApi, publicShopApi } from "@lipy/lib/api";
+import { publicProductApi } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
@@ -30,10 +30,6 @@ function RouteComponent() {
     }
   );
 
-  const { data: storeInfo } = useAPIQuery(publicShopApi[":handle"], "$get", {
-    param: { handle: storeHandle },
-  });
-
   return (
     <>
       {isLoading ? (
@@ -56,7 +52,6 @@ function RouteComponent() {
                   product={product as ProductType}
                   className={{ classNameImg: "aspect-square h-full" }}
                   storeHandle={storeHandle}
-                  storeId={storeInfo?.id as string}
                 />
               </div>
             ))}

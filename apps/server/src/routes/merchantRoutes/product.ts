@@ -1,22 +1,19 @@
 import { Hono } from "hono";
-import { type Insertable, sql } from "kysely";
+import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { z } from "zod";
-import { type DBTypes, db } from "@/db";
-import { PRODUCT_TYPE } from "@/db/schema";
+import { db } from "@/db";
+import { diffById } from "@/lib/compare";
 import { zValidator } from "@/middlewares/validator";
 import { listZodSchema } from "@/schema/common";
 import type { ServerContext } from "@/types";
-import { sseEmitter } from "./events";
 
 const productSchema = z.object({
 	title: z.string(),
 	category: z.string(),
-	price: z.coerce.number().min(1),
-	maxPrice: z.coerce.number().min(1),
-	type: z.enum(PRODUCT_TYPE),
+	price: z.coerce.number().min(0),
+	maxPrice: z.coerce.number().min(0),
 	summary: z.string(),
-	thumbnail: z.string(),
 	images: z.preprocess(
 		(e) => (Array.isArray(e) ? e.filter((e) => !!e) : e),
 		z.array(z.string()),
@@ -24,6 +21,16 @@ const productSchema = z.object({
 
 	highlights: z.array(z.object({ value: z.string(), name: z.string() })),
 	information: z.array(z.object({ value: z.string(), name: z.string() })),
+
+	variants: z.array(
+		z.object({
+			id: z.string().uuid(),
+			unit: z.string(),
+			price: z.coerce.number().min(0),
+			maxPrice: z.coerce.number().min(0).catch(0),
+			images: z.array(z.string()).nullish(),
+		}),
+	),
 });
 
 const listZodValidator = zValidator(
@@ -46,6 +53,9 @@ const route = new Hono<ServerContext>()
 
 		const query = db
 			.selectFrom("product as p")
+			.where((eb) =>
+				eb.or([eb("p.store", "=", activeStoreId!), eb("p.store", "is", null)]),
+			)
 			.$if(!!q, (qb) => {
 				const words = q!.trim().split(/\s+/);
 				return words.reduce(
@@ -76,17 +86,22 @@ const route = new Hono<ServerContext>()
 				"p.thumbnail",
 				"p.price",
 				"p.maxPrice",
-				"c.title as category",
 				"p.summary",
+				"p.store",
+				"p.status",
+				jsonBuildObject({
+					id: eb.ref("c.id"),
+					title: eb.ref("c.title"),
+				}).as("category"),
 				eb.fn
 					.jsonAgg(
 						jsonBuildObject({
 							id: eb.ref("pv.id"),
 							inventoryId: eb.ref("si.id"),
-
 							images: eb.ref("pv.images"),
 							price: eb.ref("pv.price"),
 							unit: eb.ref("pv.unit"),
+							maxPrice: eb.ref("pv.maxPrice"),
 							productId: eb.ref("pv.productId"),
 							stock: eb.fn.coalesce(eb.ref("si.stock")),
 							sku: eb.fn.coalesce(eb.ref("si.sku")),
@@ -97,7 +112,9 @@ const route = new Hono<ServerContext>()
 					.filterWhere("pv.id", "is not", null)
 					.as("variants"),
 			])
-			.groupBy(["p.id", "c.title"])
+			.groupBy(["p.id", "c.id"])
+
+			.orderBy("p.store")
 			.limit(limit)
 			.offset(offset)
 			.execute();
@@ -144,6 +161,7 @@ const route = new Hono<ServerContext>()
 								id: eb.ref("pv.id"),
 								images: eb.ref("pv.images"),
 								price: eb.ref("pv.price"),
+								maxPrice: eb.ref("pv.maxPrice"),
 								unit: eb.ref("pv.unit"),
 								productId: eb.ref("pv.productId"),
 								stock: eb.ref("si.stock"),
@@ -160,60 +178,139 @@ const route = new Hono<ServerContext>()
 			return c.json(result);
 		},
 	)
-	.post(
-		"/",
-		zValidator(
-			"json",
-			z.object({
-				products: z.array(productSchema),
-			}),
-		),
-		async (c) => {
-			const { products } = c.req.valid("json");
-			const activeStoreId = c.var.session?.activeStoreId!;
+	.post("/", zValidator("json", productSchema), async (c) => {
+		const { variants, ...vals } = c.req.valid("json");
+		const sess = c.get("session");
 
-			const newProducts = products.map((p) => ({
-				...p,
-				id: crypto.randomUUID(),
-				storeId: activeStoreId,
-			})) satisfies Insertable<DBTypes["product"]>[];
-
-			const result = await db
+		const result = await db.transaction().execute(async (trx) => {
+			const p = await trx
 				.insertInto("product")
-				.values(newProducts)
+				.values({
+					id: crypto.randomUUID(),
+					...vals,
+					status: "underReview",
+					thumbnail: vals.images[0] || "",
+					store: sess?.activeStoreId!,
+				})
+				.returningAll()
 				.executeTakeFirstOrThrow();
-			return c.json(result);
-		},
-	)
+
+			const v = variants.map((m) => ({
+				...m,
+				id: crypto.randomUUID(),
+				productId: p.id,
+			}));
+
+			if (v.length > 0) {
+				await trx.insertInto("productVariant").values(v).execute();
+			}
+
+			return { ...p, variants: v };
+		});
+
+		return c.json(result);
+	})
 	.patch(
 		"/:id",
-		zValidator(
-			"param",
-			z.object({
-				id: z.string().uuid(),
-			}),
-		),
+		zValidator("param", z.object({ id: z.string().uuid() })),
 		zValidator("json", productSchema.partial()),
 		async (c) => {
-			const { images: _, ...values } = c.req.valid("json");
-			console.log("emitted msg");
-			sseEmitter.emit("send-to-user", {
-				userId: c.var.session?.userId,
-				event: "notify",
-				data: "message",
+			const { id } = c.req.valid("param");
+			const { variants, ...vals } = c.req.valid("json");
+
+			await db.transaction().execute(async (trx) => {
+				const p = await trx
+					.updateTable("product")
+					.where("id", "=", id)
+					.set({
+						...vals,
+						thumbnail: vals ? (vals.images ? vals.images[0] : "") : "",
+						status: "underReview",
+					})
+					.executeTakeFirstOrThrow();
+
+				if (!variants || variants?.length === 0) return p;
+
+				const oldVars = await trx
+					.selectFrom("productVariant")
+					.where("productId", "=", id)
+					.select(["id", "images", "price", "unit", "maxPrice"])
+					.execute();
+
+				const diff = diffById(
+					oldVars,
+					variants.map((v) => ({ ...v, images: v.images || null })),
+				);
+
+				await Promise.all([
+					diff.added.length > 0
+						? trx
+								.insertInto("productVariant")
+								.values(
+									diff.added.map((v) => ({
+										...v,
+
+										productId: id,
+									})),
+								)
+								.execute()
+						: Promise.resolve(),
+					diff.deleted.length > 0
+						? trx
+								.deleteFrom("productVariant")
+								.where(
+									"id",
+									"in",
+									diff.deleted.map((m) => m.id),
+								)
+								.execute()
+						: Promise.resolve(),
+
+					...diff.updated.map((u) => {
+						return trx
+							.updateTable("productVariant")
+							.where("id", "=", u.updated.id)
+							.set(u.updated)
+							.execute();
+					}),
+				]);
+
+				return p;
 			});
 
-			// const activeStoreId = c.var.session?.activeStoreId!;
-			// await db
-			// 	.updateTable("product")
-			// 	.where("id", "=", id)
-			// 	.where("storeId", "=", activeStoreId)
-			// 	.set(values)
-			// 	.executeTakeFirstOrThrow();
-
-			return c.json(values);
+			return c.json({ success: true });
 		},
 	)
+
+	// .patch(
+	// 	"/:id",
+	// 	zValidator(
+	// 		"param",
+	// 		z.object({
+	// 			id: z.string().uuid(),
+	// 		}),
+	// 	),
+	// 	zValidator("json", productSchema.partial()),
+	// 	async (c) => {
+	// 		const { images: _, ...values } = c.req.valid("json");
+	// 		console.log("emitted msg");
+	// 		sseEmitter.emit("send-to-user", {
+	// 			userId: c.var.session?.userId,
+	// 			event: "notify",
+	// 			data: "message",
+	// 		});
+
+	// 		// const activeStoreId = c.var.session?.activeStoreId!;
+	// 		// await db
+	// 		// 	.updateTable("product")
+	// 		// 	.where("id", "=", id)
+	// 		// 	.where("storeId", "=", activeStoreId)
+	// 		// 	.set(values)
+	// 		// 	.executeTakeFirstOrThrow();
+
+	// 		return c.json(values);
+	// 	},
+	// )
 	.delete(
 		"/",
 		zValidator(

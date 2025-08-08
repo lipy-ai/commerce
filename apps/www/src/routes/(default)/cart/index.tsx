@@ -19,6 +19,8 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
+import { Badge } from "@lipy/web-ui/components/ui/badge";
+import { Button } from "@lipy/web-ui/components/ui/button";
 import { Card, CardContent, CardHeader } from "@lipy/web-ui/components/ui/card";
 import Loading from "@lipy/web-ui/components/ui/loading";
 import { cn } from "@lipy/web-ui/lib/utils";
@@ -202,18 +204,20 @@ export const CartMainContent = () => {
                         </p>
                       </div>
                     </Link>
-                    <p
-                      className="text-muted-foreground underline decoration-dashed px-4 cursor-pointer"
-                      style={{ textUnderlineOffset: "4px" }}
+
+                    <Button
+                      variant="underline"
+                      className="text-muted-foreground"
                       onClick={() =>
                         handleRemoveFromCart(s?.storeHandle as string)
                       }
+                      size="sm"
                     >
                       {isRemovingFromCart &&
                       removingShopHandle === s?.storeHandle
                         ? "Removing..."
                         : "Remove"}
-                    </p>
+                    </Button>
                   </CardHeader>
 
                   <CardContent className="space-y-8">
@@ -247,7 +251,23 @@ export const CartMainContent = () => {
                       })}
                   </CardContent>
 
-                  {s.storeMinimumOrderValue > s.storeItemsTotal && (
+                  {!s?.storeIsServiceable ? (
+                    <div className="bg-destructive/10 p-2 rounded-md">
+                      <Badge
+                        variant={"destructive"}
+                        appearance={"soft"}
+                        size={"xs"}
+                        className="p-0"
+                      >
+                        Service Unavailable
+                      </Badge>
+
+                      <p className="">
+                        The store is {s?.storeDistanceFromUser} km away from
+                        your location
+                      </p>
+                    </div>
+                  ) : s?.storeMinimumOrderValue > s?.storeItemsTotal ? (
                     <Alert variant="info">
                       <AlertCircle className="size-4" />
                       <p>
@@ -257,7 +277,7 @@ export const CartMainContent = () => {
                         </span>
                       </p>
                     </Alert>
-                  )}
+                  ) : null}
                 </Card>
               ))}
 

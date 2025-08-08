@@ -1,12 +1,10 @@
-import { createParser } from "nuqs/server";
-import { z } from "zod";
-
 import { dataTableConfig } from "@lipy/web-ui/config/data-table";
-
 import type {
 	ExtendedColumnFilter,
 	ExtendedColumnSort,
 } from "@lipy/web-ui/types/data-table";
+import { createParser } from "nuqs/server";
+import { z } from "zod";
 
 const sortingItemSchema = z.object({
 	id: z.string(),

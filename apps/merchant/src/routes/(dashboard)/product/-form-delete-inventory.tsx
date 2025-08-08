@@ -1,5 +1,3 @@
-import { useInventoryInvalidate } from "@/routes/admin/product/-hook-invalidate";
-import { useGlobalSessionStore } from "@/stores/global";
 import { merchantInventoryApi, type merchantProductApi } from "@lipy/lib/api";
 import { useAPIMutation } from "@lipy/lib/utils/useQueryClient";
 import {
@@ -18,6 +16,8 @@ import { useDebouncedCallback } from "@lipy/web-ui/hooks/use-debounced-callback"
 import { cn } from "@lipy/web-ui/lib/utils";
 import type { InferResponseType } from "hono/client";
 import { type ReactNode, useState } from "react";
+import { useInventoryInvalidate } from "@/routes/admin/product/-hook-invalidate";
+import { useGlobalSessionStore } from "@/stores/global";
 
 export default function FormDeleteInventory({
   children,

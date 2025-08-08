@@ -1,0 +1,2 @@
+ALTER TABLE "lipy-dev"."product" ADD COLUMN "store" uuid;--> statement-breakpoint
+ALTER TABLE "lipy-dev"."product" ADD CONSTRAINT "product_store_store_id_fk" FOREIGN KEY ("store") REFERENCES "lipy-dev"."store"("id") ON DELETE cascade ON UPDATE no action;

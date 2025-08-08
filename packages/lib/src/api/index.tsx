@@ -22,6 +22,7 @@ import type { posStoreRoute } from "@lipy/server/routes/posRoutes/shop";
 import type { productRoute } from "@lipy/server/routes/publicRoutes/product";
 import type { shopRoute } from "@lipy/server/routes/publicRoutes/shop";
 import { type ClientRequestOptions, hc } from "hono/client";
+
 const opts: ClientRequestOptions = {
   init: {
     credentials: "include",

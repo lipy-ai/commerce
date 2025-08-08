@@ -3,6 +3,7 @@ import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { z } from "zod";
 import { db } from "@/db";
+import { PRODUCT_STATUS } from "@/db/schema";
 import { diffById } from "@/lib/compare";
 import { zValidator } from "@/middlewares/validator";
 import { listZodSchema } from "@/schema/common";
@@ -83,6 +84,7 @@ export const adminProductRoute = new Hono<ServerContext>()
 					.as("variants"),
 			])
 			.groupBy(["p.id", "c.id"])
+			.orderBy("p.store")
 			.limit(limit)
 			.offset(offset)
 			.execute();
@@ -248,6 +250,26 @@ export const adminProductRoute = new Hono<ServerContext>()
 				return p;
 			});
 
+			return c.json({ success: true });
+		},
+	)
+	.patch(
+		"/:id/status",
+		zValidator(
+			"param",
+			z.object({
+				id: z.string().uuid(),
+			}),
+		),
+		zValidator("json", z.object({ status: z.enum(PRODUCT_STATUS) })),
+		async (c) => {
+			const { id } = c.req.valid("param");
+			const { status } = c.req.valid("json");
+			await db
+				.updateTable("product")
+				.where("id", "=", id)
+				.set({ status: status })
+				.executeTakeFirstOrThrow();
 			return c.json({ success: true });
 		},
 	)

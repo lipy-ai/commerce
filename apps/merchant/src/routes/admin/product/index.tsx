@@ -2,8 +2,8 @@ import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
 import { SearchInput } from "@lipy/web-ui/components/forms/searchInput";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Pagination } from "@lipy/web-ui/components/pages/pagination";
+import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
-
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import {
   Table,
@@ -17,6 +17,7 @@ import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
 import { PenLine, Store, Tickets, Trash } from "lucide-react";
 import { z } from "zod";
+import { ApproveProduct } from "./-approve-request";
 import FormEdit from "./-form.edit";
 import FormDelete from "./-form-delete";
 import { ProductProvider, useProduct } from "./-provider";
@@ -132,6 +133,7 @@ function DesktopView() {
           <TableHead>Product</TableHead>
           <TableHead>Category</TableHead>
           <TableHead>Variants</TableHead>
+          <TableHead>Status</TableHead>
           <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
@@ -143,7 +145,7 @@ function DesktopView() {
               <img
                 src={m.thumbnail || ""}
                 alt={m.title || ""}
-                className="size-12 border rounded bg-accent"
+                className="size-12 border rounded bg-accent object-contain bg-card"
               />
               <p className="font-medium block break-words">{m.title}</p>
             </TableCell>
@@ -159,7 +161,17 @@ function DesktopView() {
                 <Tickets /> Assign Variants
               </Link>
             </TableCell>
+            <TableCell>
+              <Badge
+                variant={m.status === "underReview" ? "warning" : "default"}
+                appearance={"solid"}
+              >
+                {m.status}
+              </Badge>
+            </TableCell>
+
             <TableCell className="space-x-2">
+              {m.status === "underReview" && <ApproveProduct data={m} />}
               <Link
                 to={"/admin/product"}
                 search={(s) => ({ ...s, view: "edit", product: m.id })}

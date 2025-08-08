@@ -50,7 +50,13 @@ export const PRODUCT_TYPE = [
 	"fruits",
 ] as const;
 
-export const PRODUCT_STATUS = ["draft", "published", "archived"] as const;
+export const PRODUCT_STATUS = [
+	"draft",
+	"published",
+	"archived",
+	"underReview",
+	"rejected",
+] as const;
 
 export const STORE_TYPE = [
 	"grocery",
@@ -396,6 +402,9 @@ export const product = schema.table("product", {
 		.$type<{ name: string; value: string }[]>(),
 	keywords: text("keywords").array(),
 	status: text("status", { enum: PRODUCT_STATUS }).default("draft"),
+	store: uuid("store").references(() => store.id, {
+		onDelete: "cascade",
+	}),
 });
 
 export const productVariant = schema.table("productVariant", {

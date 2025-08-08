@@ -134,7 +134,11 @@ function MobileView({ items }: { items: Response["items"] }) {
             className={cn(v?.active ? "opacity-100" : "opacity-80", "p-4 py-6")}
             key={v.id}
           >
-            <div className="flex items-start gap-4 justify-between">
+            <Link
+              className="flex items-start gap-4 justify-between"
+              to="/product/$id"
+              params={{ id: m.id }}
+            >
               <div className="space-y-3">
                 <div className="space-y-1.5">
                   <div className="flex items-center gap-1">
@@ -156,11 +160,11 @@ function MobileView({ items }: { items: Response["items"] }) {
                   </div>
 
                   <div>
-                    <h3 className="font-semibold text-foreground text-base line-clamp-2 break-words">
+                    <h3 className="font-semibold text-foreground text-base line-clamp-2 break-words leading-tight">
                       {m.title}
                     </h3>
                     <p className="text-muted-foreground text-xs truncate">
-                      {m.category}
+                      {m.category.title}
                     </p>
                   </div>
 
@@ -176,28 +180,6 @@ function MobileView({ items }: { items: Response["items"] }) {
                   </div>
                   <p className="text-muted-foreground">{v?.unit}</p>
                 </div>
-
-                <div className="flex gap-4 ">
-                  <FormEditInventory type="update" data={m} variantId={v.id!}>
-                    <Button
-                      size="icon"
-                      className="rounded-full"
-                      variant={"outline"}
-                    >
-                      <Edit />
-                    </Button>
-                  </FormEditInventory>
-
-                  <FormDeleteInventory inventory={v}>
-                    <Button
-                      size="icon"
-                      variant={"outline"}
-                      className="rounded-full"
-                    >
-                      <Trash />
-                    </Button>
-                  </FormDeleteInventory>
-                </div>
               </div>
 
               <div className="flex-shrink-0 space-y-1.5 text-center">
@@ -206,7 +188,7 @@ function MobileView({ items }: { items: Response["items"] }) {
                   alt={m.title || ""}
                   className={cn(
                     v?.active ? "grayscale-0" : "grayscale-100",
-                    "w-28 h-28 border border-border/40 rounded-xl bg-card object-contain "
+                    "size-30 border rounded-xl bg-card object-contain "
                   )}
                 />
                 <p
@@ -222,6 +204,28 @@ function MobileView({ items }: { items: Response["items"] }) {
                   stock
                 </p>
               </div>
+            </Link>
+
+            <div className="flex gap-2 ">
+              <FormEditInventory type="update" data={m} variantId={v.id!}>
+                <Button
+                  size="icon"
+                  className="rounded-full"
+                  variant={"outline"}
+                >
+                  <Edit />
+                </Button>
+              </FormEditInventory>
+
+              <FormDeleteInventory inventory={v}>
+                <Button
+                  size="icon"
+                  variant={"outline"}
+                  className="rounded-full"
+                >
+                  <Trash />
+                </Button>
+              </FormDeleteInventory>
             </div>
           </div>
         ))
@@ -255,13 +259,15 @@ function DesktopView({ items }: { items: Response["items"] }) {
               <img
                 src={m.thumbnail || ""}
                 alt={m.title || ""}
-                className="size-12 border rounded bg-card object-contain border-border/40"
+                className="size-12 border rounded bg-card object-contain"
               />
             </div>
-            <div className="flex-2">
+            <Link className="flex-2" to="/product/$id" params={{ id: m.id }}>
               <p className="font-medium break-words">{m.title}</p>
-              <p className="text-muted-foreground text-sm">{m.category}</p>
-            </div>
+              <p className="text-muted-foreground text-sm">
+                {m.category.title}
+              </p>
+            </Link>
             <div className="flex-3">
               {m?.variants && m.variants.length > 0 && (
                 <div
@@ -334,41 +340,3 @@ function DesktopView({ items }: { items: Response["items"] }) {
     </div>
   );
 }
-
-// function DesktopView({ items }: { items: Response["items"] }) {
-//   const navigate = useNavigate();
-
-//   return (
-//     <Table>
-//       <TableHeader>
-//         <TableRow>
-//           <TableHead>Product</TableHead>
-
-//           <TableHead>Status</TableHead>
-//           <TableHead>Stock</TableHead>
-//           <TableHead>Amount</TableHead>
-
-//           <TableHead />
-//         </TableRow>
-//       </TableHeader>
-//       <TableBody>
-//         {items.map((m) => (
-//           <TableRow key={m.id} className="focus:bg-card">
-//             <TableCell className="flex items-center gap-2">
-//               <img
-//                 src={m.thumbnail || ""}
-//                 alt={m.title || ""}
-//                 className="size-12 border rounded bg-card object-contain border-border/40"
-//               />
-//               <div>
-//                 <p className="font-medium break-words">{m.title}</p>
-//                 <p className="text-muted-foreground text-sm">{m.category}</p>
-//               </div>
-//             </TableCell>
-
-//           </TableRow>
-//         ))}
-//       </TableBody>
-//     </Table>
-//   );
-// }

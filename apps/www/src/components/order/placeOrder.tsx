@@ -59,7 +59,10 @@ export default function PlaceOrder({
     }
 
     const isInvalid = data?.store.some((s) => {
-      if (s.storeMinimumOrderValue > s.storeItemsTotal) {
+      if (
+        s.storeIsServiceable &&
+        s.storeMinimumOrderValue > s.storeItemsTotal
+      ) {
         toast.error(
           `Minimum order value for ${s.storeName} is ${formatAmount("inr", s.storeMinimumOrderValue)}. Either add more items or remove all items from ${s.storeName}.`
         );
@@ -209,9 +212,6 @@ function PlaceOrderProgress({
             instruction: "",
             attachments: [],
           }));
-
-      console.log("location", deliveryLocation);
-      console.log(stores);
 
       await orderMutation.mutateAsync({
         json: {

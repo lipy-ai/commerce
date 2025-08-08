@@ -1,8 +1,8 @@
+import { Hono } from "hono";
+import { z } from "zod";
 import { type DBTypes, db } from "@/db";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
-import { Hono } from "hono";
-import { z } from "zod";
 
 const schema = z.object({
 	unit: z.string(),

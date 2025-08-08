@@ -96,7 +96,7 @@ function RouteComponent() {
                             key={index}
                             src={objectUrl}
                             alt={`Prescription ${index + 1}`}
-                            className="object-cover size-40 border rounded-xl aspect-square"
+                            className="object-contain size-40 border rounded-xl aspect-square"
                             onLoad={() => URL.revokeObjectURL(objectUrl)}
                           />
                         );

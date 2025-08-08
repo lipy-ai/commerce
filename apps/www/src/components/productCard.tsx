@@ -13,6 +13,7 @@ import { cn } from "@lipy/web-ui/lib/utils";
 import { Link } from "@tanstack/react-router";
 import type { InferResponseType } from "hono";
 import { Minus, Plus } from "lucide-react";
+import type React from "react";
 import { useState } from "react";
 import { AddToCart } from "./cart/addToCart";
 import { useCartStore } from "./cart/store";
@@ -29,7 +30,6 @@ export default function ProductCard({
   className,
   variant = "default",
   storeHandle,
-  storeId,
 }: {
   className?: {
     classNameBox?: string;
@@ -38,7 +38,6 @@ export default function ProductCard({
   product: ProductType;
   variant?: "default" | "horizontal";
   storeHandle?: string;
-  storeId?: string;
 }) {
   const { isMobile } = useViewport();
   const discountPercentage = discountCalculator(
@@ -47,35 +46,29 @@ export default function ProductCard({
   );
   const { cart } = useCartStore();
 
-  const [variantDrawer, setVariantDrawer] = useState(false);
-  const [_, setActiveProduct] = useState<ProductType>();
+  let cartCount = 0;
+
+  for (const cartItem of cart) {
+    if (cart.length === 0) break;
+    for (const variant of product.variants as any) {
+      if (product?.variants && product?.variants.length === 0) break;
+
+      if (variant.inventoryId === cartItem.inventoryId) {
+        cartCount += 1;
+      }
+    }
+  }
 
   switch (variant) {
     case "horizontal": {
-      return;
+      return null;
     }
 
     default: {
-      let cartCount = 0;
-
-      for (const cartItem of cart) {
-        if (cart.length === 0) break;
-        for (const variant of product.variants as any) {
-          if (product?.variants && product?.variants.length === 0) break;
-
-          if (variant.inventoryId === cartItem.inventoryId) {
-            cartCount += 1;
-          }
-        }
-      }
-
       return (
         <div>
           <Link
-            className={cn(
-              variantDrawer ? "pointer-events-none" : "pointer-events-auto",
-              className?.classNameBox
-            )}
+            className={cn(className?.classNameBox)}
             to="/$storeHandle/products/$productId"
             params={{ storeHandle: storeHandle ?? "", productId: product.id }}
           >
@@ -113,58 +106,56 @@ export default function ProductCard({
                     />
                   )
                 ) : cartCount === 0 ? (
-                  <Button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-
-                      setVariantDrawer(true);
-                      setActiveProduct(product);
-                    }}
-                    size={isMobile ? "xs" : "sm"}
-                    type="button"
-                    aria-label="Add to cart"
-                    className="text-secondary border border-secondary min-w-16 hover:text-secondary border-b-2 border-r-2 disabled:opacity-100 flex flex-col p-0  gap-0"
-                    variant={"outline"}
-                  >
-                    <p className=" text-sm font-medium">ADD</p>
-                    <p className="-mt-1 bg-secondary/20 w-full text-xs text-muted-foreground font-normal  rounded-b-md pb-0.5">
-                      {product.variants.length} options
-                    </p>
-                  </Button>
+                  <VariantList product={product}>
+                    <Button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
+                      size={isMobile ? "xs" : "sm"}
+                      type="button"
+                      aria-label="Add to cart"
+                      className="text-secondary border border-secondary min-w-16 hover:text-secondary border-b-2 border-r-2 disabled:opacity-100 flex flex-col p-0  gap-0"
+                      variant={"outline"}
+                    >
+                      <p className=" text-sm font-medium">ADD</p>
+                      <p className="-mt-1 bg-secondary/20 w-full text-xs text-muted-foreground font-normal  rounded-b-md pb-0.5">
+                        {product.variants.length} options
+                      </p>
+                    </Button>
+                  </VariantList>
                 ) : (
-                  <div
-                    className="bg-secondary flex items-center  shadow-sm rounded-md"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-
-                      setVariantDrawer(true);
-                      setActiveProduct(product);
-                    }}
-                  >
-                    <Button
-                      size={isMobile ? "xs" : "sm"}
-                      variant="ghost"
-                      className="text-primary-foreground hover:bg-secondary hover:text-primary-foreground"
+                  <VariantList product={product}>
+                    <div
+                      className="bg-secondary flex items-center  shadow-sm rounded-md"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
                     >
-                      <Minus className="h-3 w-3 stroke-3" />
-                    </Button>
+                      <Button
+                        size={isMobile ? "xs" : "sm"}
+                        variant="ghost"
+                        className="text-primary-foreground hover:bg-secondary hover:text-primary-foreground"
+                      >
+                        <Minus className="h-3 w-3 stroke-3" />
+                      </Button>
 
-                    <div className="min-w-[2px] flex items-center justify-center">
-                      <span className="font-semibold text-primary-foreground text-sm px-1">
-                        {cartCount}
-                      </span>
+                      <div className="min-w-[2px] flex items-center justify-center">
+                        <span className="font-semibold text-primary-foreground text-sm px-1">
+                          {cartCount}
+                        </span>
+                      </div>
+
+                      <Button
+                        size={isMobile ? "xs" : "sm"}
+                        variant="ghost"
+                        className="text-primary-foreground hover:bg-secondary hover:text-primary-foreground"
+                      >
+                        <Plus className="h-3 w-3 stroke-3" />
+                      </Button>
                     </div>
-
-                    <Button
-                      size={isMobile ? "xs" : "sm"}
-                      variant="ghost"
-                      className="text-primary-foreground hover:bg-secondary hover:text-primary-foreground"
-                    >
-                      <Plus className="h-3 w-3 stroke-3" />
-                    </Button>
-                  </div>
+                  </VariantList>
                 )}
               </div>
             </div>
@@ -213,15 +204,6 @@ export default function ProductCard({
               </div>
             </div>
           </Link>
-          {variantDrawer && (
-            <VariantList
-              open={variantDrawer}
-              onOpenChange={setVariantDrawer}
-              product={product}
-              storeHandle={storeHandle}
-              storeId={storeId}
-            />
-          )}
         </div>
       );
     }
@@ -229,18 +211,15 @@ export default function ProductCard({
 }
 
 function VariantList({
-  open,
-  onOpenChange,
   product,
+  children,
 }: {
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
   product: ProductType;
-  storeHandle?: string;
-  storeId?: string;
+  children?: React.ReactNode;
 }) {
+  const [open, setOpen] = useState(false);
   return (
-    <DrawerDialogSwitcher open={open} onOpenChange={onOpenChange}>
+    <DrawerDialogSwitcher open={open} onOpenChange={setOpen} trigger={children}>
       <DrawerDialogHeader>
         <DrawerDialogTitle>{product.title}</DrawerDialogTitle>
       </DrawerDialogHeader>

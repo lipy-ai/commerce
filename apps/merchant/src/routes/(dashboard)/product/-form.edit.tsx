@@ -1,8 +1,5 @@
 import { merchantProductApi } from "@lipy/lib/api";
-import {
-  apiQueryOptions,
-  useAPIMutation,
-} from "@lipy/lib/utils/useQueryClient";
+import { useAPIMutation, useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import {
   DrawerDialogClose,
   DrawerDialogFooter,
@@ -12,8 +9,8 @@ import {
 } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
 import {
   FormButton,
-  FormImage,
   FormInput,
+  FormMultiImage,
   FormSelect,
   FormTextarea,
 } from "@lipy/web-ui/components/forms/elements";
@@ -24,7 +21,13 @@ import {
   AccordionTrigger,
 } from "@lipy/web-ui/components/ui/accordion";
 import { Button } from "@lipy/web-ui/components/ui/button";
-import { Form, FormItem, FormLabel } from "@lipy/web-ui/components/ui/form";
+import {
+  Form,
+  FormDescription,
+  FormItem,
+  FormLabel,
+} from "@lipy/web-ui/components/ui/form";
+import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import {
   Sortable,
   SortableContent,
@@ -32,76 +35,134 @@ import {
   SortableItemHandle,
   SortableOverlay,
 } from "@lipy/web-ui/components/ui/sortable";
-import { useQueryClient } from "@tanstack/react-query";
-import type { InferResponseType } from "hono";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import { GripVertical, Trash } from "lucide-react";
-import { Fragment, type ReactNode, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import {
   useFieldArray,
   useForm,
   useFormContext,
   useWatch,
 } from "react-hook-form";
+import { toast } from "sonner";
+import { VariantForm } from "./-variation";
 
-export default function FormEdit({
-  type,
-  data,
-  children,
-}: {
-  data?: InferResponseType<(typeof merchantProductApi)[":id"]["$get"]>;
-  type: "create" | "update";
-  children: ReactNode;
-}) {
+export default function FormEdit() {
   const [open, setOpen] = useState(false);
+  const { product, view } = useSearch({ from: "/(dashboard)/product/add" });
+  const navigate = useNavigate({ from: "/product/add" });
 
   const defaultValues = {
-    title: data?.title || "",
-    category: data?.category?.id || "",
-    price: data?.price || 0,
-    maxPrice: data?.maxPrice || 0,
-    summary: data?.summary || "",
-    images: data?.images || [],
-    highlights: data?.highlights || [],
-    information: data?.information || [],
+    title: "",
+    category: "",
+    price: 0,
+    maxPrice: 0,
+    summary: "",
+    images: [],
+    highlights: [],
+    information: [],
+    variants: [],
+  };
+
+  const opts = {
+    onMutate: () => {},
+    onError: () => {},
+    onSuccess: () => {
+      toast.success(
+        "Your product is under review. You can add it in your inventory in sometime."
+      );
+      setOpen(false);
+    },
   };
 
   const form = useForm({
     defaultValues,
   });
-  const queryClient = useQueryClient();
 
-  const mutation = useAPIMutation(merchantProductApi[":id"], "$patch");
+  const { data, isLoading } = useAPIQuery(
+    merchantProductApi[":id"],
+    "$get",
+    {
+      param: { id: product! },
+    },
+    {
+      enabled: !!product,
+    }
+  );
 
-  const onSubmit = async (body: typeof defaultValues) => {
-    if (!data?.id) return;
-    await mutation.mutateAsync(
-      { param: { id: data.id }, json: body },
-      {
-        onSuccess: () => {
-          queryClient.invalidateQueries({
-            queryKey: apiQueryOptions(merchantProductApi[":id"], "$get", {
-              param: { id: data.id },
-            }).queryKey,
-          });
-          setOpen(false);
-        },
+  // biome-ignore lint/correctness/useExhaustiveDependencies: suppress dependencies
+  useEffect(() => {
+    if (view === "create") {
+      setOpen(true);
+      form.reset({});
+    }
+
+    if (view === "edit") {
+      setOpen(true);
+      if (data) {
+        form.reset({
+          title: data?.title || "",
+          category: data?.category?.id || "",
+          summary: data?.summary || "",
+          images: data?.images || ([] as any),
+          highlights: data?.highlights || ([] as any),
+          information: data?.information || ([] as any),
+          variants: (data?.variants || []) as any,
+        });
       }
-    );
+    }
+  }, [view, isLoading]);
+
+  const updateProductMutation = useAPIMutation(
+    merchantProductApi[":id"],
+    "$patch",
+    opts
+  );
+
+  const createProductMutation = useAPIMutation(
+    merchantProductApi.index,
+    "$post",
+    opts
+  );
+
+  const onSubmit = async (body: any) => {
+    console.log(body);
+    if (data?.id && view === "edit") {
+      await updateProductMutation.mutateAsync({
+        param: { id: data.id },
+        json: body,
+      });
+    } else {
+      await createProductMutation.mutateAsync({
+        json: body,
+      });
+    }
   };
 
   return (
-    <>
-      <DrawerDialogSwitcher
-        className=""
-        open={open}
-        onOpenChange={setOpen}
-        trigger={children}
-      >
-        <DrawerDialogHeader>
-          <DrawerDialogTitle>
-            {type === "create" ? "Create Product" : "Edit Product"}
-          </DrawerDialogTitle>
-        </DrawerDialogHeader>
+    <DrawerDialogSwitcher
+      className="sm:max-w-5xl"
+      open={open}
+      onOpenChange={(v) => {
+        setOpen(v);
+
+        if (!v) {
+          navigate({
+            search: (s) => ({ ...s, view: undefined, product: undefined }),
+            replace: true,
+          });
+          form.reset(defaultValues);
+        }
+      }}
+    >
+      <DrawerDialogHeader>
+        <DrawerDialogTitle>
+          {view === "create" ? "Create Product" : "Edit Product"}
+        </DrawerDialogTitle>
+      </DrawerDialogHeader>
+      {isLoading ? (
+        <Skeleton className="m-4 max-w-5xl h-96" />
+      ) : (
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-8">
             <div className="grid">
@@ -109,6 +170,7 @@ export default function FormEdit({
                 name="title"
                 label="Title"
                 placeholder="Product Title"
+                required
               />
 
               <FormSelect
@@ -117,24 +179,7 @@ export default function FormEdit({
                 label="Category"
                 placeholder="Search Categories"
               />
-              <div className="grid grid-cols-2 gap-4">
-                <FormInput
-                  label="Selling Price"
-                  name="price"
-                  type="number"
-                  placeholder="0.00"
-                  className="col-span-6"
-                  prefixEl={<span>₹</span>}
-                />
-                <FormInput
-                  label="Max Retail Price (MRP)"
-                  name="maxPrice"
-                  type="number"
-                  placeholder="0.00"
-                  className="col-span-6"
-                  prefixEl={<span>₹</span>}
-                />
-              </div>
+              <VariantForm />
 
               <FormTextarea
                 name="summary"
@@ -143,16 +188,10 @@ export default function FormEdit({
               />
               <FormItem>
                 <FormLabel>Images</FormLabel>
-
-                <div className="grid grid-cols-3 lg:grid-cols-6 gap-4">
-                  {[...Array(6)].map((m, i) => (
-                    <FormImage
-                      key={m}
-                      name={`images.${i}`}
-                      wrapperClassName="size-full"
-                    />
-                  ))}
-                </div>
+                <FormDescription>
+                  First image will be used as thumbnail
+                </FormDescription>
+                <FormMultiImage name="images" />
               </FormItem>
               <br />
               <SortableForm name="highlights" label="Highlights" />
@@ -161,12 +200,14 @@ export default function FormEdit({
             </div>
             <DrawerDialogFooter>
               <DrawerDialogClose />
-              <FormButton>Save Changes</FormButton>
+              <FormButton disabled={!form.formState.isValid}>
+                Save Changes
+              </FormButton>
             </DrawerDialogFooter>
           </form>
         </Form>
-      </DrawerDialogSwitcher>
-    </>
+      )}
+    </DrawerDialogSwitcher>
   );
 }
 
@@ -191,7 +232,7 @@ function SortableForm({ name, label }: { name: string; label: string }) {
           size={"sm"}
           type="button"
           onClick={() => {
-            arr.prepend({ label: "Untitled", value: "Untitled" });
+            arr.prepend({ name: "Untitled", value: "Untitled" });
           }}
         >
           Add New
@@ -227,7 +268,7 @@ function SortableForm({ name, label }: { name: string; label: string }) {
                             </Button>
                           </SortableItemHandle>
                           <div className="text-start flex-1">
-                            <p>{watch[i]?.label}</p>
+                            <p>{watch[i]?.name}</p>
                             <p className="text-sm text-muted-foreground">
                               {watch[i]?.value}
                             </p>
@@ -246,7 +287,7 @@ function SortableForm({ name, label }: { name: string; label: string }) {
                       </AccordionTrigger>
                       <AccordionContent className="p-4">
                         <FormInput
-                          name={`${name}.${i}.label`}
+                          name={`${name}.${i}.name`}
                           placeholder={`${name} Key`}
                         />
                         <FormTextarea

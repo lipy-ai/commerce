@@ -1,19 +1,16 @@
+import { emitter } from "@hono/event-emitter";
 import { Hono } from "hono";
-
 import { showRoutes } from "hono/dev";
 import { logger as httpLogger } from "hono/logger";
-import { trimTrailingSlash } from "hono/trailing-slash";
-
-import { logger } from "./lib/logger";
-
-import { emitter } from "@hono/event-emitter";
 import { secureHeaders } from "hono/secure-headers";
+import { trimTrailingSlash } from "hono/trailing-slash";
 import { auth } from "./auth";
 import { db, pingDatabase } from "./db";
 import env from "./env";
 import { handlers } from "./events";
 import { HTTPError } from "./lib/exception";
 import { globalError } from "./lib/globalError";
+import { logger } from "./lib/logger";
 import {
 	authMiddleware,
 	hasStorePermission,

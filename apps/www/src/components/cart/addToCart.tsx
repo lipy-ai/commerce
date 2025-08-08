@@ -1,4 +1,5 @@
 import { loggedInCartApi } from "@lipy/lib/api";
+import { redirectToLoginURL } from "@lipy/lib/hooks/use-navigate";
 import {
   apiQueryOptions,
   useAPIMutation,
@@ -49,7 +50,11 @@ export const AddToCart = ({
         queryKey: apiQueryOptions(loggedInCartApi.basic, "$get", {}).queryKey,
       });
     },
-    onError: () => {
+    onError: (e: any) => {
+      if (e?.data?.code === "NOT_LOGGED_IN") {
+        return redirectToLoginURL();
+      }
+
       toast.error("Something went wrong while adding to cart");
     },
   });

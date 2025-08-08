@@ -1,3 +1,5 @@
+import { adminProductApi } from "@lipy/lib/api";
+import { useAPIMutation } from "@lipy/lib/utils/useQueryClient";
 import {
   DrawerDialogClose,
   DrawerDialogFooter,
@@ -5,10 +7,6 @@ import {
   DrawerDialogSwitcher,
   DrawerDialogTitle,
 } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
-import { Form, FormItem, FormLabel } from "@lipy/web-ui/components/ui/form";
-
-import { adminProductApi } from "@lipy/lib/api";
-import { useAPIMutation } from "@lipy/lib/utils/useQueryClient";
 import {
   FormButton,
   FormInput,
@@ -16,8 +14,6 @@ import {
   FormSelect,
   FormTextarea,
 } from "@lipy/web-ui/components/forms/elements";
-import type { InferRequestType } from "hono";
-
 import {
   Accordion,
   AccordionContent,
@@ -25,6 +21,7 @@ import {
   AccordionTrigger,
 } from "@lipy/web-ui/components/ui/accordion";
 import { Button } from "@lipy/web-ui/components/ui/button";
+import { Form, FormItem, FormLabel } from "@lipy/web-ui/components/ui/form";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
 import {
   Sortable,
@@ -34,6 +31,7 @@ import {
   SortableOverlay,
 } from "@lipy/web-ui/components/ui/sortable";
 import { useNavigate, useSearch } from "@tanstack/react-router";
+import type { InferRequestType } from "hono";
 import { GripVertical, Trash } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
 import {
@@ -119,67 +117,61 @@ export default function FormEdit() {
   };
 
   return (
-    <>
-      <DrawerDialogSwitcher
-        className="sm:max-w-5xl"
-        open={open}
-        onOpenChange={(v) => {
-          setOpen(v);
+    <DrawerDialogSwitcher
+      className="sm:max-w-5xl"
+      open={open}
+      onOpenChange={(v) => {
+        setOpen(v);
 
-          if (!v) {
-            navigate({
-              search: (s) => ({ ...s, view: undefined, product: undefined }),
-            });
-            form.reset(defaultValues);
-          }
-        }}
-      >
-        <DrawerDialogHeader>
-          <DrawerDialogTitle>
-            {view === "create" ? "Create Product" : "Edit Product"}
-          </DrawerDialogTitle>
-        </DrawerDialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-8">
-            <div>
-              <FormInput
-                name="title"
-                label="Title"
-                placeholder="Product Title"
-              />
+        if (!v) {
+          navigate({
+            search: (s) => ({ ...s, view: undefined, product: undefined }),
+          });
+          form.reset(defaultValues);
+        }
+      }}
+    >
+      <DrawerDialogHeader>
+        <DrawerDialogTitle>
+          {view === "create" ? "Create Product" : "Edit Product"}
+        </DrawerDialogTitle>
+      </DrawerDialogHeader>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-8">
+          <div>
+            <FormInput name="title" label="Title" placeholder="Product Title" />
 
-              <FormSelect
-                name="category"
-                type="categories"
-                label="Category"
-                placeholder="Search Categories"
-              />
+            <FormSelect
+              name="category"
+              type="categories"
+              label="Category"
+              placeholder="Search Categories"
+            />
 
-              <FormTextarea
-                name="summary"
-                label="Summary"
-                placeholder="Brief summary about this product..."
-              />
-              <FormItem>
-                <FormLabel>Images</FormLabel>
+            <FormTextarea
+              name="summary"
+              label="Summary"
+              placeholder="Brief summary about this product..."
+            />
+            <FormItem>
+              <FormLabel>Images</FormLabel>
 
-                <FormMultiImage name="images" />
-              </FormItem>
-              <br />
-              <VariantForm />
-              <br />
-              <SortableForm name="highlights" label="Highlights" />
-              <br />
-              <SortableForm name="information" label="More Information" />
-            </div>
-            <DrawerDialogFooter>
-              <DrawerDialogClose />
-              <FormButton>Save Changes</FormButton>
-            </DrawerDialogFooter>
-          </form>
-        </Form>
-      </DrawerDialogSwitcher>
-    </>
+              <FormMultiImage name="images" />
+            </FormItem>
+            <br />
+            <VariantForm />
+            <br />
+            <SortableForm name="highlights" label="Highlights" />
+            <br />
+            <SortableForm name="information" label="More Information" />
+          </div>
+          <DrawerDialogFooter>
+            <DrawerDialogClose />
+            <FormButton>Save Changes</FormButton>
+          </DrawerDialogFooter>
+        </form>
+      </Form>
+    </DrawerDialogSwitcher>
   );
 }
 

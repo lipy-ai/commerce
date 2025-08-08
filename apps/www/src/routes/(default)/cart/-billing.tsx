@@ -30,22 +30,22 @@ export function Billing({ data }: { data: Response }) {
             className="flex items-center justify-between gap-6"
           >
             <div className="flex items-center gap-2">
-              <ReceiptText className="size-4" />
+              <ReceiptText className="size-4 flex-shrink-0" />
               <p>Item total ({s.storeName})</p>
             </div>
             <p>
               <span className="text-muted-foreground line-through pr-2">
-                {formatAmount("inr", s.storeMaxItemsTotal)}
+                {formatAmount("inr", s?.storeMaxItemsTotal)}
               </span>
               <span className="font-medium">
-                {formatAmount("inr", s.storeItemsTotal)}
+                {formatAmount("inr", s?.storeItemsTotal)}
               </span>
             </p>
           </div>
         ))}
         <div className="flex items-center justify-between gap-6">
           <div className="flex items-center gap-2">
-            <Bike className="size-4 mt-1" />
+            <Bike className="size-4 mt-1 flex-shrink-0" />
             <BillingDetails data={data} type="delivery">
               <p
                 className="underline decoration-dashed  cursor-pointer decoration-muted-foreground"
@@ -62,7 +62,7 @@ export function Billing({ data }: { data: Response }) {
         </div>
         <div className="flex items-center justify-between gap-6">
           <div className="flex items-center gap-2">
-            <PercentCircle className="size-4 mt-1" />
+            <PercentCircle className="size-4 mt-1 flex-shrink-0" />
             <BillingDetails data={data} type="tax">
               <p
                 className="underline decoration-dashed  cursor-pointer decoration-muted-foreground"

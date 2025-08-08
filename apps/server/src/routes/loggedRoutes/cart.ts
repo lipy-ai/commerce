@@ -96,10 +96,15 @@ const route = new Hono<ServerContext>()
 				const store = await getStore(id);
 				let distanceFromUser = 0;
 				let deliveryCharge = 0;
+				let isServiceable = true;
 				if (distanceMatrix) {
 					distanceFromUser = Number(
 						distanceMatrix.rows[0].elements[i].distance.value,
 					);
+
+					if (distanceFromUser > (store.deliveryDistance + 5) * 1000) {
+						isServiceable = false;
+					}
 
 					deliveryCharge =
 						((distanceFromUser - store.freeDeliveryDistance * 1000) *
@@ -135,6 +140,14 @@ const route = new Hono<ServerContext>()
 					taxes,
 					discounts: [],
 				});
+				if (!isServiceable) {
+					calc.itemTotalAmount = 0;
+					calc.totalAmount = 0;
+					calc.maxItemTotalAmount = 0;
+					calc.totalTaxAmount = 0;
+					calc.amountSaved = 0;
+					deliveryCharge = 0;
+				}
 
 				itemsTotal += calc.itemTotalAmount;
 				maxItemsTotal += calc.maxItemTotalAmount;
@@ -153,6 +166,8 @@ const route = new Hono<ServerContext>()
 					storeItemsTotal: calc.itemTotalAmount,
 					storeMaxItemsTotal: calc.maxItemTotalAmount,
 					storDeliveryCharge: deliveryCharge,
+					storeDistanceFromUser: distanceFromUser / 1000,
+					storeIsServiceable: isServiceable,
 					items,
 				};
 			}),

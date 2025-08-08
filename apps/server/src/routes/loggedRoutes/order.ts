@@ -122,6 +122,9 @@ const generateOrders = async ({
 			if (deliveryCharge < 0) {
 				deliveryCharge = 0;
 			}
+			if (distanceFromUser > (store.deliveryDistance + 5) * 1000) {
+				break;
+			}
 		}
 
 		const items: NonNullable<DBTypes["orders"]["items"]> = [];

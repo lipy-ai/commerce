@@ -1,9 +1,9 @@
-import { db } from "@/db";
-import { zValidator } from "@/middlewares/validator";
-import type { ServerContext } from "@/types";
 import { Hono } from "hono";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { z } from "zod";
+import { db } from "@/db";
+import { zValidator } from "@/middlewares/validator";
+import type { ServerContext } from "@/types";
 
 const schema = z.object({
 	categorySlug: z.string().optional(),

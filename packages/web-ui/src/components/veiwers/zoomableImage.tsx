@@ -37,11 +37,11 @@ const Controls = () => {
 export default function ZoomImg({ src }: { src: string }) {
   return (
     <Dialog>
-      <DialogTrigger className="cursor-">
+      <DialogTrigger className="cursor-pointer">
         <img
           src={src}
           alt="test"
-          className="size-24 border rounded bg-card object-cover"
+          className="size-24 border rounded bg-card object-contain"
         />
       </DialogTrigger>
       <DialogContent className="sm:max-w-none h-screen w-screen max-h-none max-w-none rounded-none">

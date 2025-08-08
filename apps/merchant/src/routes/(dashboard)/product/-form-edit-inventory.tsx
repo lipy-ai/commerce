@@ -90,7 +90,7 @@ export default function FormEditInventory({
           <p className=" text-base line-clamp-2 break-words">{data?.title}</p>
           <div>
             <span className="text-base font-medium">Category : </span>
-            <span>{data?.category}</span>
+            <span>{data?.category.title}</span>
           </div>
           <div>
             <span className="text-base font-medium">Pack size : </span>

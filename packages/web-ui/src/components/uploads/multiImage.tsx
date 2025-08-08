@@ -106,7 +106,7 @@ export default function MultiImage({
   return (
     <div className="grid grid-cols-5 gap-4">
       {files.length < 10 && (
-        <div className="rounded relative bg-white border border-input flex justify-center items-center cursor-pointer pointer-events-auto aspect-square">
+        <div className="rounded-lg relative bg-white border-2 border-dashed  flex justify-center items-center cursor-pointer pointer-events-auto aspect-square">
           <input
             id="upload-input"
             type={"file"}

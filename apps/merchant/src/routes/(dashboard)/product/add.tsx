@@ -5,33 +5,19 @@ import {
   useAPIMutation,
   useAPIQuery,
 } from "@lipy/lib/utils/useQueryClient";
-
-import {
-  DrawerDialogClose,
-  DrawerDialogFooter,
-  DrawerDialogHeader,
-  DrawerDialogSwitcher,
-  DrawerDialogTitle,
-} from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
+import { DrawerDialogSwitcher } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
 import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
-import {
-  FormButton,
-  FormInput,
-  FormSwitch,
-} from "@lipy/web-ui/components/forms/elements";
+import { FormInput, FormSwitch } from "@lipy/web-ui/components/forms/elements";
 import { SearchInput } from "@lipy/web-ui/components/forms/searchInput";
 import {
   DashboardHeader,
   useLayout,
 } from "@lipy/web-ui/components/layouts/dashboard";
 import { Pagination } from "@lipy/web-ui/components/pages/pagination";
+import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { Card, CardContent } from "@lipy/web-ui/components/ui/card";
-import {
-  Form,
-  FormDescription,
-  FormLabel,
-} from "@lipy/web-ui/components/ui/form";
+import { Form, FormLabel } from "@lipy/web-ui/components/ui/form";
 import { Label } from "@lipy/web-ui/components/ui/label";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
@@ -39,16 +25,19 @@ import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import type { InferResponseType } from "hono";
 import { produce } from "immer";
-import { CheckCircle, PenLine, XCircle } from "lucide-react";
+import { CheckCircle, PencilLine, PenLine, Plus, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import FormEdit from "./-form.edit";
 export const Route = createFileRoute("/(dashboard)/product/add")({
   component: RouteComponent,
   validateSearch: z.object({
     page: z.coerce.number().int().min(1).catch(1).default(1),
     q: z.string().default(""),
     category: z.string().optional(),
+    product: z.string().uuid().optional(),
+    view: z.enum(["edit", "assign", "delete", "create"]).optional(),
   }),
 });
 
@@ -187,7 +176,23 @@ function RouteComponent() {
 
   return (
     <div>
-      <DashboardHeader title="Add Products" />
+      <DashboardHeader title="Add Products">
+        <Button
+          onClick={() =>
+            navigate({
+              to: "/product/add",
+              search: (s) => ({ ...s, view: "create" }),
+              replace: true,
+            })
+          }
+          size={isMobile ? "icon" : "default"}
+        >
+          <Plus />
+          {!isMobile && "Add My Product"}
+        </Button>
+      </DashboardHeader>
+
+      <FormEdit />
 
       <div className="lg:p-8 lg:space-y-8">
         <div className="p-4 lg:p-0">
@@ -225,11 +230,12 @@ function RouteComponent() {
         ) : (
           <>
             {isMobile ? (
-              <div className="grid md:grid-cols-3 2xl:grid-cols-3  divide-x divide-y border">
-                {data.items.map((m, i) => (
-                  <SingProduct product={m} key={i} onSubmit={onSubmit} />
-                ))}
-              </div>
+              // <div className="grid md:grid-cols-3 2xl:grid-cols-3  divide-x divide-y border">
+              //   {data.items.map((m, i) => (
+              //     <SingProduct product={m} key={i} onSubmit={onSubmit} />
+              //   ))}
+              // </div>
+              <MobileView items={data.items} onSubmit={onSubmit} />
             ) : (
               <DesktopView items={data.items} onSubmit={onSubmit} />
             )}
@@ -241,65 +247,106 @@ function RouteComponent() {
   );
 }
 
-// function MobileView({
-//   items,
-//   onSubmit,
-// }: {
-//   items: Response["items"];
-//   onSubmit: (
-//     v: Response["items"][0]["variants"][0] & { inStore: boolean }
-//   ) => void;
-// }) {
-//   return (
-//     <div className="bg-card border-y divide-y divide-dashed">
-//       {items?.map((m) => (
-//         <div key={m.id} className="p-4 py-6 space-y-2">
-//           <div className=" flex justify-between gap-4">
-//             <div>
-//               <div>
-//                 <h3 className="font-semibold text-foreground text-base line-clamp-2 break-words">
-//                   {m.title}
-//                 </h3>
-//                 <p className="text-muted-foreground text-xs truncate">
-//                   {m.category}
-//                 </p>
-//               </div>
-//             </div>
-//             <div className="flex-shrink-0 w-20">
-//               <img
-//                 src={m.thumbnail || ""}
-//                 alt={m.title || ""}
-//                 className={
-//                   "w-full h-20 border border-border/50 rounded-xl bg-accent object-cover ml-auto"
-//                 }
-//               />
-//             </div>
-//           </div>
-//           <div className="space-y-2">
-//             {m.variants?.map((v) => (
-//               <div
-//                 key={v.id}
-//                 className="border rounded p-2 flex items-center justify-between gap-8 bg-accent/20"
-//               >
-//                 <div>
-//                   <div className="flex items-center gap-1">
-//                     <p className="font-medium">Pack:</p>
-//                     <p>{v?.unit}</p>
-//                   </div>
-//                   <div className="flex items-center  gap-1">
-//                     <p className="font-medium">MRP:</p>
-//                     <p>{formatAmount("inr", v?.price!)}</p>
-//                   </div>
-//                 </div>
-//                 <EditInventory variant={v} onSubmit={onSubmit} />
-//               </div>
-//             ))}
-//           </div>
-//         </div>
-//       ))}
-//     </div>
-//   );
-// }
+function MobileView({
+  items,
+  onSubmit,
+}: {
+  items: Response["items"];
+  onSubmit: (
+    v: Response["items"][0]["variants"][0] & { inStore: boolean }
+  ) => void;
+}) {
+  const navigate = Route.useNavigate();
+  return (
+    <div className="space-y-1.5">
+      {items?.map((m) => (
+        <div
+          key={m.id}
+          className={cn(
+            m.status === "underReview" ? "bg-muted-foreground/10" : "bg-card",
+            "p-4 py-6 space-y-2"
+          )}
+        >
+          <div className=" flex justify-between gap-4">
+            <div>
+              <div>
+                {m.store && (
+                  <div className="flex items-center gap-2">
+                    <Badge size="sm" variant="warning">
+                      Customized
+                    </Badge>
+                    <Button
+                      onClick={() =>
+                        navigate({
+                          to: "/product/add",
+                          search: (s) => ({
+                            ...s,
+                            view: "edit",
+                            product: m.id,
+                          }),
+                          replace: true,
+                        })
+                      }
+                      size="icon-xs"
+                      variant="ghost"
+                    >
+                      <PencilLine />
+                    </Button>
+                  </div>
+                )}
+                <h3 className="font-semibold text-foreground text-base line-clamp-2 break-words leading-tight">
+                  {m.title}
+                </h3>
+                <p className="text-muted-foreground text-xs truncate">
+                  {m.category.title}
+                </p>
+              </div>
+            </div>
+            <div className="flex-shrink-0 w-20">
+              <img
+                src={m.thumbnail || ""}
+                alt={m.title || ""}
+                className={
+                  "w-full h-20 border border-border rounded-xl bg-card object-contain ml-auto"
+                }
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            {m.status === "underReview" ? (
+              <p className="py-6   flex  justify-center text-base font-semibold">
+                Product is under review
+              </p>
+            ) : (
+              m.variants?.map((v) => (
+                <div
+                  key={v.id}
+                  className="border  p-2 flex items-center justify-between gap-8 bg-accent/20"
+                >
+                  <div>
+                    <div className="flex items-center gap-1">
+                      <p className="font-medium">Pack:</p>
+                      <p>{v?.unit}</p>
+                    </div>
+                    <div className="flex items-center  gap-1">
+                      <p className="font-medium">MRP:</p>
+                      <p>{formatAmount("inr", v?.price!)}</p>
+                    </div>
+                  </div>
+                  <DrawerDialogSwitcher
+                    trigger={<Button size="xs">Add</Button>}
+                  >
+                    <EditInventory variant={v} onSubmit={onSubmit} />
+                  </DrawerDialogSwitcher>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 function DesktopView({
   items,
   onSubmit,
@@ -309,6 +356,7 @@ function DesktopView({
     v: Response["items"][0]["variants"][0] & { inStore: boolean }
   ) => void;
 }) {
+  const navigate = Route.useNavigate();
   return (
     <div className="border rounded-xl overflow-y-auto bg-card shadow-xs">
       {items.length > 0 && (
@@ -333,32 +381,64 @@ function DesktopView({
             "border-b last:border-b-0 px-4"
           )}
         >
-          <div className="flex items-center gap-4">
+          <div
+            className={cn(
+              m.status === "underReview" && "bg-muted-foreground/20 -mx-4 px-4",
+              "flex items-center gap-4"
+            )}
+          >
             <div>
               <img
                 src={m.thumbnail || ""}
                 alt={m.title || ""}
-                className="size-12 border rounded bg-card object-contain border-border/40"
+                className="size-12 border rounded bg-card object-contain"
               />
             </div>
-            <div className="flex-2">
-              <p className="font-medium break-words">{m.title}</p>
-              <p className="text-muted-foreground text-sm">{m.category}</p>
+            <div className="flex-2 flex items-center justify-between gap-2 pr-4">
+              <div>
+                <p className="font-medium break-words">{m.title}</p>
+                <p className="text-muted-foreground text-sm">
+                  {m.category.title}
+                </p>
+              </div>
+
+              {m.store && (
+                <Button
+                  onClick={() =>
+                    navigate({
+                      to: "/product/add",
+                      search: (s) => ({ ...s, view: "edit", product: m.id }),
+                      replace: true,
+                    })
+                  }
+                  size="icon"
+                  variant="outline"
+                >
+                  <PencilLine />
+                </Button>
+              )}
             </div>
             <div className="flex-3">
-              {m?.variants && m.variants.length > 0 && (
-                <div
-                  className={cn(
-                    m?.variants?.length > 1 && "border-l ",
-                    "divide-y"
-                  )}
-                >
-                  {m.variants.map((v) => (
-                    <div key={v.id} className="py-4">
-                      <EditInventory variant={v} onSubmit={onSubmit} />
-                    </div>
-                  ))}
-                </div>
+              {m?.status !== "underReview" ? (
+                m?.variants &&
+                m.variants.length > 0 && (
+                  <div
+                    className={cn(
+                      m?.variants?.length > 1 && "border-l ",
+                      "divide-y"
+                    )}
+                  >
+                    {m.variants.map((v) => (
+                      <div key={v.id} className="py-4">
+                        <EditInventory variant={v} onSubmit={onSubmit} />
+                      </div>
+                    ))}
+                  </div>
+                )
+              ) : (
+                <p className="py-6   flex  justify-center text-base font-semibold">
+                  Product is under review
+                </p>
               )}
             </div>
           </div>
@@ -403,8 +483,15 @@ function EditInventory({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="grid grid-cols-2 lg:grid-cols-5 items-center lg:px-6  gap-6"
+        className="grid lg:grid-cols-5 items-center lg:px-6  gap-6"
       >
+        {isMobile && (
+          <div>
+            <p>Variant Unit : {variant?.unit}</p>
+            <p>MRP : {formatAmount("inr", variant?.price!)}</p>
+          </div>
+        )}
+
         <p className="hidden lg:block">{variant?.unit}</p>
         <p className="hidden lg:block">
           {formatAmount("inr", variant?.price!)}
@@ -413,24 +500,33 @@ function EditInventory({
         <FormInput
           type="number"
           name="price"
+          label={isMobile ? "Price" : ""}
           min={0}
           placeholder="0"
-          suffixEl={<PenLine className="size-4 hidden lg:blocks" />}
+          suffixEl={<PenLine className="size-4" />}
           prefixEl={<span>₹</span>}
           wrapperClassName="-mb-1 "
-          className="h-8 lg:h-10"
+          className="h-10"
           required
         />
-        {!isMobile && (
+        {isMobile ? (
+          <div className="flex items-center justify-between  w-full border rounded bg-accent p-2">
+            <FormLabel>Stock</FormLabel>
+            <FormSwitch
+              name="inStock"
+              wrapperClassName={"flex justify-end ml-auto pr-2 -mb-1"}
+            />
+          </div>
+        ) : (
           <FormSwitch
             name="inStock"
-            wrapperClassName="flex justify-end pr-3 items-center -mb-2 "
+            wrapperClassName={"flex justify-end ml-auto pr-2 -mb-1"}
           />
         )}
 
         <Button
           type="submit"
-          className="ml-auto"
+          className={cn(!isMobile && "ml-auto")}
           disabled={
             variant?.inventoryId
               ? form.formState.isSubmitting ||
@@ -448,223 +544,201 @@ function EditInventory({
   );
 }
 
-function SingProduct({
-  product,
-  onSubmit,
-}: {
-  product: Response["items"][0];
-  onSubmit: (
-    v: Response["items"][0]["variants"][0] & { inStore: boolean }
-  ) => void;
-}) {
-  const m = product;
-  return (
-    <div className="space-y-8  p-8 border-r" key={m.id}>
-      <div className="flex gap-4">
-        <div className="size-14 overflow-hidden">
-          <img
-            src={m.thumbnail || ""}
-            alt={m.title || ""}
-            className="size-full object-contain rounded border border-border/40 bg-card"
-          />
-        </div>
-        <div className="flex-1">
-          <p className="font-semibold">{m.title}</p>
-          <p className="line-clamp-2"> {m.summary}</p>
-          <p className="line-clamp-2"> {m.category}</p>
-        </div>
-      </div>
-      <div className="flex-1">
-        <div className="grid gap-6">
-          {!m.variants || m.variants?.length === 0 ? (
-            <div className="p-4 text-base gap-2 items-center border flex justify-between">
-              <span>No Variants Yet....</span>
-              <Button variant={"link"} className="text-base">
-                Raise Request
-              </Button>
-            </div>
-          ) : (
-            m.variants?.map((v, i) => {
-              // const isActive = activeIds.includes(v.id || "");
-              return <EditVariation data={v} key={i} onSubmit={onSubmit} />;
-            })
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// function StockToggle({
-// 	onPressedChange,
-// }: { onPressedChange?: (v: boolean) => void }) {
-// 	const [active, setActive] = useState(false);
-
-// 	return (
-// 		<Toggle
-// 			pressed={active}
-// 			onPressedChange={(v) => {
-// 				setActive(v);
-// 				onPressedChange(v);
-// 			}}
-// 			className={cn(
-// 				"flex flex-col justify-center min-w-auto text-center items-center py-2 gap-0  h-12 text-xs cursor-pointer bg-accent rounded-none",
-// 			)}
-// 		>
-// 			<span className="font-semibold">{active ? "IN" : "OUT"}</span>
-// 			<span className="font-light">Stock</span>
-// 		</Toggle>
-// 	);
+// function SingProduct({
+//   product,
+//   onSubmit,
+// }: {
+//   product: Response["items"][0];
+//   onSubmit: (
+//     v: Response["items"][0]["variants"][0] & { inStore: boolean }
+//   ) => void;
+// }) {
+//   const m = product;
+//   return (
+//     <div className="space-y-8  p-8 border-r" key={m.id}>
+//       <div className="flex gap-4">
+//         <div className="size-14 overflow-hidden">
+//           <img
+//             src={m.thumbnail || ""}
+//             alt={m.title || ""}
+//             className="size-full object-contain rounded border border-border/40 bg-card"
+//           />
+//         </div>
+//         <div className="flex-1">
+//           <p className="font-semibold">{m.title}</p>
+//           <p className="line-clamp-2"> {m.summary}</p>
+//           <p className="line-clamp-2"> {m.category.title}</p>
+//         </div>
+//       </div>
+//       <div className="flex-1">
+//         <div className="grid gap-6">
+//           {!m.variants || m.variants?.length === 0 ? (
+//             <div className="p-4 text-base gap-2 items-center border flex justify-between">
+//               <span>No Variants Yet....</span>
+//               <Button variant={"link"} className="text-base">
+//                 Raise Request
+//               </Button>
+//             </div>
+//           ) : (
+//             m.variants?.map((v, i) => {
+//               // const isActive = activeIds.includes(v.id || "");
+//               return <EditVariation data={v} key={i} onSubmit={onSubmit} />;
+//             })
+//           )}
+//         </div>
+//       </div>
+//     </div>
+//   );
 // }
 
-function EditVariation({
-  data,
-  onSubmit,
-}: {
-  data: Response["items"][0]["variants"][0];
-  onSubmit: (
-    v: Response["items"][0]["variants"][0] & { inStore: boolean }
-  ) => void;
-}) {
-  const [open, setOpen] = useState(false);
+// function EditVariation({
+//   data,
+//   onSubmit,
+// }: {
+//   data: Response["items"][0]["variants"][0];
+//   onSubmit: (
+//     v: Response["items"][0]["variants"][0] & { inStore: boolean }
+//   ) => void;
+// }) {
+//   const [open, setOpen] = useState(false);
 
-  const defaultValues = {
-    inStore: !!data.inventoryId || false,
-    price: data?.storePrice || data?.price || 0,
-    stock: data?.stock || 0,
-    sku: data?.sku || "",
-  };
+//   const defaultValues = {
+//     inStore: !!data.inventoryId || false,
+//     price: data?.storePrice || data?.price || 0,
+//     stock: data?.stock || 0,
+//     sku: data?.sku || "",
+//   };
 
-  const form = useForm({
-    defaultValues,
-  });
+//   const form = useForm({
+//     defaultValues,
+//   });
 
-  const isActivated = form.watch("inStore");
+//   const isActivated = form.watch("inStore");
 
-  const handle = async (body: typeof defaultValues) => {
-    onSubmit({ ...data, ...body });
+//   const handle = async (body: typeof defaultValues) => {
+//     onSubmit({ ...data, ...body });
 
-    setOpen(false);
-  };
+//     setOpen(false);
+//   };
 
-  return (
-    <>
-      <div
-        onClick={() => setOpen(true)}
-        className={cn("text-sm border border-primary/30 relative")}
-      >
-        <p
-          className={cn(
-            "absolute before:absolute before:-z-10 before:-inset-1 before:block before before:bg-primary/20 after:absolute after:-z-20 after:-inset-1 after after:block after:bg-white -top-3 z-10 inline-flex text-foreground bg-white text-xs px-2",
-            data.stock &&
-              data.stock !== 0 &&
-              "before:bg-primary text-primary-foreground"
-          )}
-        >
-          {data?.unit}
-        </p>
-        <div className="text-sm md:text-base">
-          <div
-            className={cn(
-              "flex has-[input:focus]:bg-muted overflow-hidden h-12",
-              data.inventoryId ? "" : "disabled-background"
-            )}
-          >
-            <span className="pl-2 flex items-center justify-center text-muted-foreground">
-              ₹
-            </span>
-            <span className="flex flex-1 flex-col px-2 h-12 justify-center">
-              {data?.storePrice || data?.price}
-            </span>
-            {/* <Editable.Root
-												defaultValue={String(v.price)}
-												onValueChange={(val) => {
-													String(val) !== String(v.price) &&
-														updateInventory({ ...v, price: Number(val) });
-												}}
-												placeholder="0"
-												triggerMode="focus"
-												className="flex w-full"
-											>
-												<Editable.Area className="flex flex-1 flex-col px-2 h-12 justify-center">
-													<Editable.Preview className="" />
-													<Editable.Input type="number" className="w-full " />
-													<Editable.Trigger />
-												</Editable.Area>
-											</Editable.Root> */}
-            {/* <StockToggle />
-											<EditVariation /> */}
-          </div>
-        </div>
-        <div
-          className={cn(
-            "bg-accent/50 border-t border-accent text-sm px-2 py-0.5 flex justify-between gap-4 flex-wrap font-light",
-            data.stock &&
-              data.stock !== 0 &&
-              "bg-primary text-primary-foreground"
-          )}
-        >
-          <div className="flex">
-            <span>
-              {!data.storePrice
-                ? "Inactive"
-                : !data?.stock
-                  ? "Out of Stock"
-                  : data?.stock === -1
-                    ? "In Stock"
-                    : data?.stock > 0
-                      ? `${data?.stock} left`
-                      : "-"}
-            </span>
-          </div>
-          {data.sku && (
-            <div className="flex">
-              <span>SKU: {data?.sku || "-"}</span>
-            </div>
-          )}
-        </div>
-      </div>
-      <DrawerDialogSwitcher open={open} onOpenChange={setOpen}>
-        <DrawerDialogHeader>
-          <DrawerDialogTitle>Edit Variant</DrawerDialogTitle>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(handle)} className="grid gap-8">
-              <div className="grid">
-                <div className="flex gap-4 flex-row items-center justify-between rounded-lg border p-3 my-4 shadow-sm">
-                  <div className="space-y-0.5 flex-1">
-                    <FormLabel>Activate / Deactivate</FormLabel>
-                    <FormDescription>Do you sell this variant?</FormDescription>
-                  </div>
-                  <FormSwitch name="inStore" wrapperClassName="w-fit" />
-                </div>
-                {isActivated && (
-                  <>
-                    <FormInput
-                      name="price"
-                      label="Price"
-                      placeholder="0"
-                      type="number"
-                      min={0}
-                    />
-                    <FormInput
-                      name="stock"
-                      label="Stock Quantity"
-                      placeholder="0"
-                      type="number"
-                      min={-1}
-                    />
-                    <FormInput name="sku" label="SKU" min={0} />
-                  </>
-                )}
-              </div>
-              <DrawerDialogFooter>
-                <DrawerDialogClose />
-                <FormButton>Save Changes</FormButton>
-              </DrawerDialogFooter>
-            </form>
-          </Form>
-        </DrawerDialogHeader>
-      </DrawerDialogSwitcher>
-    </>
-  );
-}
+//   return (
+//     <>
+//       <div
+//         onClick={() => setOpen(true)}
+//         className={cn("text-sm border border-primary/30 relative")}
+//       >
+//         <p
+//           className={cn(
+//             "absolute before:absolute before:-z-10 before:-inset-1 before:block before before:bg-primary/20 after:absolute after:-z-20 after:-inset-1 after after:block after:bg-white -top-3 z-10 inline-flex text-foreground bg-white text-xs px-2",
+//             data.stock &&
+//               data.stock !== 0 &&
+//               "before:bg-primary text-primary-foreground"
+//           )}
+//         >
+//           {data?.unit}
+//         </p>
+//         <div className="text-sm md:text-base">
+//           <div
+//             className={cn(
+//               "flex has-[input:focus]:bg-muted overflow-hidden h-12",
+//               data.inventoryId ? "" : "disabled-background"
+//             )}
+//           >
+//             <span className="pl-2 flex items-center justify-center text-muted-foreground">
+//               ₹
+//             </span>
+//             <span className="flex flex-1 flex-col px-2 h-12 justify-center">
+//               {data?.storePrice || data?.price}
+//             </span>
+//             {/* <Editable.Root
+// 												defaultValue={String(v.price)}
+// 												onValueChange={(val) => {
+// 													String(val) !== String(v.price) &&
+// 														updateInventory({ ...v, price: Number(val) });
+// 												}}
+// 												placeholder="0"
+// 												triggerMode="focus"
+// 												className="flex w-full"
+// 											>
+// 												<Editable.Area className="flex flex-1 flex-col px-2 h-12 justify-center">
+// 													<Editable.Preview className="" />
+// 													<Editable.Input type="number" className="w-full " />
+// 													<Editable.Trigger />
+// 												</Editable.Area>
+// 											</Editable.Root> */}
+//             {/* <StockToggle />
+// 											<EditVariation /> */}
+//           </div>
+//         </div>
+//         <div
+//           className={cn(
+//             "bg-accent/50 border-t border-accent text-sm px-2 py-0.5 flex justify-between gap-4 flex-wrap font-light",
+//             data.stock &&
+//               data.stock !== 0 &&
+//               "bg-primary text-primary-foreground"
+//           )}
+//         >
+//           <div className="flex">
+//             <span>
+//               {!data.storePrice
+//                 ? "Inactive"
+//                 : !data?.stock
+//                   ? "Out of Stock"
+//                   : data?.stock === -1
+//                     ? "In Stock"
+//                     : data?.stock > 0
+//                       ? `${data?.stock} left`
+//                       : "-"}
+//             </span>
+//           </div>
+//           {data.sku && (
+//             <div className="flex">
+//               <span>SKU: {data?.sku || "-"}</span>
+//             </div>
+//           )}
+//         </div>
+//       </div>
+//       <DrawerDialogSwitcher open={open} onOpenChange={setOpen}>
+//         <DrawerDialogHeader>
+//           <DrawerDialogTitle>Edit Variant</DrawerDialogTitle>
+//           <Form {...form}>
+//             <form onSubmit={form.handleSubmit(handle)} className="grid gap-8">
+//               <div className="grid">
+//                 <div className="flex gap-4 flex-row items-center justify-between rounded-lg border p-3 my-4 shadow-sm">
+//                   <div className="space-y-0.5 flex-1">
+//                     <FormLabel>Activate / Deactivate</FormLabel>
+//                     <FormDescription>Do you sell this variant?</FormDescription>
+//                   </div>
+//                   <FormSwitch name="inStore" wrapperClassName="w-fit" />
+//                 </div>
+//                 {isActivated && (
+//                   <>
+//                     <FormInput
+//                       name="price"
+//                       label="Price"
+//                       placeholder="0"
+//                       type="number"
+//                       min={0}
+//                     />
+//                     <FormInput
+//                       name="stock"
+//                       label="Stock Quantity"
+//                       placeholder="0"
+//                       type="number"
+//                       min={-1}
+//                     />
+//                     <FormInput name="sku" label="SKU" min={0} />
+//                   </>
+//                 )}
+//               </div>
+//               <DrawerDialogFooter>
+//                 <DrawerDialogClose />
+//                 <FormButton>Save Changes</FormButton>
+//               </DrawerDialogFooter>
+//             </form>
+//           </Form>
+//         </DrawerDialogHeader>
+//       </DrawerDialogSwitcher>
+//     </>
+//   );
+// }

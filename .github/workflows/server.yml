@@ -1,0 +1,40 @@
+name: Deploy Server
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - apps/server/** # Trigger
+      - .github/workflows/server.yaml
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9.1.1
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.6.1
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install global dependencies
+        run: pnpm i -g dotenv-cli @posthog/cli
+
+      - name: Build project
+        run: pnpm run build --filter="@lipy/server" && pnpm posthog-cli sourcemap inject --directory apps/server/build && pnpm posthog-cli sourcemap upload --directory apps/server/build
+        env:
+          # Add your environment variables here
+          POSTHOG_CLI_ENV_ID: ${{ secrets.POSTHOG_CLI_ENV_ID }}
+          POSTHOG_CLI_TOKEN: ${{ secrets.POSTHOG_CLI_TOKEN }}

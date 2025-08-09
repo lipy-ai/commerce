@@ -146,7 +146,7 @@ function RouteComponent() {
               <div className="flex items-start gap-2.5">
                 <Clock className="flex-shrink-0 size-4 mt-1" />
                 <div>
-                  <p className="font-medium ">Opening Hours</p>
+                  <p>Opening Hours</p>
                   <p className="text-muted-foreground">
                     {storeStatus?.openTime} - {storeStatus?.closeTime}
                   </p>

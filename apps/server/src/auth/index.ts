@@ -1,5 +1,5 @@
 import { betterAuth } from "better-auth";
-import { emailOTP, phoneNumber } from "better-auth/plugins";
+import { bearer, emailOTP, phoneNumber } from "better-auth/plugins";
 import { schema as s } from "@/db/schema";
 import { redis } from "@/services/cache";
 import { plunkSendEmail } from "@/services/ses";
@@ -118,6 +118,7 @@ export const auth: any = betterAuth({
 	socialProviders,
 	plugins: [
 		// organizationsPlugin,
+		bearer(),
 		emailOTPPlugin,
 		phoneOTPPlugin,
 		emailHarmony(),

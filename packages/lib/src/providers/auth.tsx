@@ -6,6 +6,12 @@ import {
 } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 
+const isWindow = typeof window !== "undefined";
+export const bearerToken = () =>
+  (isWindow && localStorage?.getItem("bearer_token")) || undefined;
+export const setBearerToken = (val: string) =>
+  isWindow && localStorage?.setItem("bearer_token", val);
+
 export const authClient = createAuthClient({
   baseURL: env.API_URL,
   plugins: [
@@ -25,6 +31,18 @@ export const authClient = createAuthClient({
     emailOTPClient(),
     phoneNumberClient(),
   ],
+  fetchOptions: {
+    auth: {
+      type: "Bearer",
+      token: () => bearerToken(), // get the token from localStorage
+    },
+    onSuccess: (ctx) => {
+      const authToken = ctx.response.headers.get("set-auth-token");
+      if (authToken) {
+        setBearerToken(authToken);
+      }
+    },
+  },
 });
 
 export const getSsrSession = async (headers?: Headers) => {

@@ -67,7 +67,7 @@ export const loggedStoreRoute = new Hono<ServerContext>()
 						}),
 					deliveryChargePerKm: 10,
 					id: crypto.randomUUID(),
-					handle: `${slugify(vals.name, { lower: true })}-${idGenerate({ length, alphabet_type: "0-9/a-z" })}`,
+					handle: `${slugify(vals.name, { lower: true })}-${idGenerate({ length: 5, alphabet_type: "0-9/a-z" })}`,
 					createdAt: sql`now()`,
 				})
 				.returningAll()
@@ -96,8 +96,6 @@ export const loggedStoreRoute = new Hono<ServerContext>()
 					createdAt: sql`now()`,
 				})
 				.executeTakeFirst();
-
-			console.log(session?.token);
 
 			await updateSession(c, {
 				session: {

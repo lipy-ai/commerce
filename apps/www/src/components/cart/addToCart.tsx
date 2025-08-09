@@ -181,7 +181,7 @@ export const AddToCart = ({
           <Button
             size={
               activeVariant === "secondary-active"
-                ? "lg"
+                ? "default"
                 : activeVariant === "tertiary-active"
                   ? "icon-xs"
                   : isMobile
@@ -244,7 +244,7 @@ export const AddToCart = ({
           <Button
             size={
               activeVariant === "secondary-active"
-                ? "lg"
+                ? "default"
                 : activeVariant === "tertiary-active"
                   ? "icon-xs"
                   : isMobile

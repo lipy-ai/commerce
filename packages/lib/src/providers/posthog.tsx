@@ -17,6 +17,6 @@ export function PHProvider({ children }: { children: React.ReactNode }) {
     setHydrated(true);
   }, []);
 
-  if (!hydrated) return <>{children}</>;
+  if (!hydrated || !env.IN_PROD) return <>{children}</>;
   return <PostHogProvider client={posthog}>{children}</PostHogProvider>;
 }

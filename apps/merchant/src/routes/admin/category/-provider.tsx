@@ -1,12 +1,11 @@
 import { adminCategoryApi } from "@lipy/lib/api";
-import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
-import { getAPIQueryKey } from "@lipy/lib/utils/useQueryClient";
+import { getAPIQueryKey, useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { useMutationState } from "@tanstack/react-query";
 import type { InferRequestType, InferResponseType } from "hono";
 import { produce } from "immer";
 import {
-  type ReactNode,
   createContext,
+  type ReactNode,
   useContext,
   useMemo,
   useState,
@@ -75,6 +74,7 @@ export const CategoryProvider = ({
     if (!q?.data?.items) return q.data;
 
     let result: NonNullable<typeof q.data>["items"] = [...q.data.items];
+    console.log({ createVars });
 
     if (deleteVars.length > 0) {
       const toDeleteIds = new Set(deleteVars.map((v) => v.json.ids[0]));
@@ -87,7 +87,10 @@ export const CategoryProvider = ({
           result = produce(result, (d) => {
             const findIdx = d.findIndex((f) => f.id === v.parentId);
             if (findIdx !== -1) {
-              d[findIdx].items = [...d[findIdx].items, v];
+              d[findIdx].items = [...d[findIdx].items, v].filter(
+                (obj, index, self) =>
+                  index === self.findIndex((o) => o.id === obj.id)
+              );
             }
             return d;
           });

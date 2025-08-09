@@ -44,8 +44,6 @@ function RouteComponent() {
       </CardContent>
     </Card>
   );
-
-  console.log(data);
   return (
     <>
       {isLoading ? (

@@ -130,9 +130,33 @@ function RouteComponent() {
 
               return (
                 <div key={_idx} className="">
-                  <p className="text-xl font-bold my-4">{productGroup.title}</p>
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-xl font-bold my-4 line-clamp-1 break-words">
+                      {productGroup.title}
+                    </p>
+                    {productArray.length === 6 && (
+                      <Link
+                        className={cn(
+                          buttonVariants({
+                            variant: "ghost",
+                            className: "font-semibold p-0",
+                            size: isMobile ? "sm" : "default",
+                          }),
+                          "font-semibold text-green-700"
+                        )}
+                        to="/$storeHandle/products/category/$categorySlug"
+                        params={{
+                          storeHandle,
+                          categorySlug: productGroup.slug as string,
+                        }}
+                      >
+                        See all
+                        <ChevronRight className="fill-green-700" />
+                      </Link>
+                    )}
+                  </div>
 
-                  <div className="grid grid-cols-2 lg:grid-cols-5 gap-x-4 lg:gap-x-6 gap-y-6 w-full">
+                  <div className="grid grid-cols-2 lg:grid-cols-6 gap-x-4 lg:gap-x-6 gap-y-6 w-full">
                     {productArray?.map((product) => (
                       <div key={product.id}>
                         <ProductCard
@@ -146,24 +170,6 @@ function RouteComponent() {
                       </div>
                     ))}
                   </div>
-                  {productArray.length === 6 && (
-                    <Link
-                      className={cn(
-                        buttonVariants({
-                          variant: "outline",
-                          className: "w-full my-2 font-semibold",
-                        })
-                      )}
-                      to="/$storeHandle/products/category/$categorySlug"
-                      params={{
-                        storeHandle,
-                        categorySlug: productGroup.slug as string,
-                      }}
-                    >
-                      See more products
-                      <ChevronRight />
-                    </Link>
-                  )}
                 </div>
               );
             })}

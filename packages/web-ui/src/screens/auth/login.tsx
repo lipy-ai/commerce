@@ -49,7 +49,6 @@ export function LoginScreen({
   }, [data, isPending, callbackURL]);
 
   const handler = (p: Parameters<typeof signIn>) => {
-    console.log("git");
     trans(async () => {
       await signIn(p[0], { ...p[1], callbackURL }, (v: string) => {
         navigate({ href: v, replace: true });

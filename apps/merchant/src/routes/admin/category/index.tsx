@@ -79,7 +79,10 @@ export const DesktopView = () => {
 
   return (
     <div className="space-y-4">
-      <div className="flex gap-4 overflow-x-auto">
+      <div
+        className="flex overflow-x-auto gap-4"
+        style={{ maxWidth: "calc(100vw - 130px)" }}
+      >
         <CategoryFormEdit type="create">
           <div className="rounded space-y-2 text-center">
             <div className="bg-card rounded size-24 flex items-center justify-center overflow-hidden">
@@ -141,9 +144,9 @@ export const DesktopView = () => {
         {!currentParent || currentParent?.items?.length === 0 ? (
           <p className="p-4">No Results Found...</p>
         ) : (
-          currentParent?.items?.map((m) => (
+          currentParent?.items?.map((m, i) => (
             <div
-              key={m.id}
+              key={i}
               className="h-full flex flex-row gap-4 px-3 py-3 items-center"
             >
               <div

@@ -20,28 +20,32 @@ export const globalError: ErrorHandler<ServerContext> = (err, c) => {
 		return errResponse;
 	}
 
-	const posthog = new PostHog(env.VITE_POSTHOG_PUBLIC_KEY, {
-		host: env.VITE_POSTHOG_HOST,
-	});
+	if (env.IN_PROD) {
+		const posthog = new PostHog(env.VITE_POSTHOG_PUBLIC_KEY, {
+			host: env.VITE_POSTHOG_HOST,
+		});
 
-	posthog.captureException(
-		new Error(
-			err.message ||
-				((err as any)?.code
-					? ERR_CODES_MSGS[(err as any)?.code as keyof typeof ERR_CODES_MSGS]
-					: ""),
-			{ cause: err },
-		),
-		"backend_err",
-		{
-			path: c.req.path,
-			method: c.req.method,
-			url: c.req.url,
-			headers: JSON.stringify(c.req.header()),
-			variables: JSON.stringify(c.var),
-		},
-	);
-	posthog.shutdown();
+		posthog.captureException(
+			new Error(
+				err.message ||
+					((err as any)?.code
+						? ERR_CODES_MSGS[(err as any)?.code as keyof typeof ERR_CODES_MSGS]
+						: ""),
+				{ cause: err },
+			),
+			"backend_err",
+			{
+				path: c.req.path,
+				method: c.req.method,
+				url: c.req.url,
+				headers: JSON.stringify(c.req.header()),
+				variables: JSON.stringify(c.var),
+			},
+		);
+		posthog.shutdown();
+	} else {
+		console.log(err);
+	}
 
 	return c.json<ErrorResponse>(
 		{

@@ -1,2 +1,2 @@
-bun install
-bun pm trust --all
+pnpm install
+pnpm pm trust --all

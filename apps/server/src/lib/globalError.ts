@@ -43,6 +43,7 @@ export const globalError: ErrorHandler<ServerContext> = (err, c) => {
 			},
 		);
 		posthog.shutdown();
+		console.log(err);
 	} else {
 		console.log(err);
 	}

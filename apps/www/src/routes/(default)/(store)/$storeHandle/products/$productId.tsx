@@ -12,17 +12,18 @@ import {
   AccordionTrigger,
 } from "@lipy/web-ui/components/ui/accordion";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
-import { Button } from "@lipy/web-ui/components/ui/button";
+import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { Label } from "@lipy/web-ui/components/ui/label";
 import Loading from "@lipy/web-ui/components/ui/loading";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { shareContent } from "@lipy/web-ui/lib/share";
 import { cn } from "@lipy/web-ui/lib/utils";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import type { InferResponseType } from "hono/client";
-import { Share } from "lucide-react";
+import { Share, ShoppingCart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AddToCart } from "@/components/cart/addToCart";
+import { useCartStore } from "@/components/cart/store";
 import { StoreNav } from "../-nav";
 
 export const Route = createFileRoute(
@@ -40,6 +41,8 @@ function RouteComponent() {
     "$get",
     { param: { handle: storeHandle } }
   );
+
+  const { cart } = useCartStore();
 
   const { data: product, isLoading } = useAPIQuery(
     publicProductApi.singleProduct,
@@ -192,9 +195,9 @@ function RouteComponent() {
                               {formatAmount("inr", selectedVariant?.maxPrice)}
                             </span>
                           )}
-                          {discount > 0 && (
+                          {/* {discount > 0 && (
                             <Badge variant="info">{discount}% OFF</Badge>
-                          )}
+                          )} */}
                         </div>
                       </div>
                       {selectedVariant?.inStock ? (
@@ -208,6 +211,16 @@ function RouteComponent() {
                         />
                       ) : (
                         <Button disabled>Out of stock</Button>
+                      )}
+                      {isMobile && cart.length > 0 && (
+                        <Link
+                          to="/cart"
+                          className={cn(
+                            buttonVariants({ variant: "secondary" })
+                          )}
+                        >
+                          <ShoppingCart />
+                        </Link>
                       )}
                     </div>
                   </div>

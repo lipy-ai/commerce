@@ -263,7 +263,7 @@ function MobileView({
         <div
           key={m.id}
           className={cn(
-            m.status === "underReview" ? "bg-muted-foreground/10" : "bg-card",
+            m.status === "underReview" ? "bg-tertiary" : "bg-card",
             "p-4 py-6 space-y-2"
           )}
         >
@@ -334,7 +334,14 @@ function MobileView({
                     </div>
                   </div>
                   <DrawerDialogSwitcher
-                    trigger={<Button size="xs">Add</Button>}
+                    trigger={
+                      <Button
+                        size="xs"
+                        variant={v?.inventoryId ? "secondary" : "default"}
+                      >
+                        {v?.inventoryId ? "Update" : "Add"}
+                      </Button>
+                    }
                   >
                     <EditInventory variant={v} onSubmit={onSubmit} />
                   </DrawerDialogSwitcher>
@@ -383,8 +390,8 @@ function DesktopView({
         >
           <div
             className={cn(
-              m.status === "underReview" && "bg-muted-foreground/20 -mx-4 px-4",
-              "flex items-center gap-4"
+              m.status === "underReview" && "bg-tertiary -mx-4 px-4",
+              "flex items-center gap-4 cursor-pointer"
             )}
           >
             <div>

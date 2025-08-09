@@ -30,6 +30,8 @@ function RouteComponent() {
     }
   );
 
+  console.log("data", data);
+
   return (
     <>
       {isLoading ? (

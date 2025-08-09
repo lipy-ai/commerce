@@ -125,39 +125,68 @@ function RouteComponent() {
 }
 
 export function MobileView({ items }: { items: Response["items"] }) {
+  const getItemsStr = (items: Response["items"][number]) => {
+    let itemsStr = "";
+    items?.items?.forEach((item, i) => {
+      itemsStr += `${item?.title} x ${item?.qty}`;
+      if (items?.items) {
+        if (i < items?.items?.length - 1) {
+          itemsStr += " | ";
+        }
+      }
+    });
+
+    return itemsStr.trim();
+  };
   return (
-    <div className="divide-y border-y bg-card">
+    <div className="space-y-1.5">
       {items.map((m) => (
-        <Link
-          key={m.id}
-          to="/pos/order/$id"
-          params={{ id: m.id }}
-          className="flex items-start justify-between p-4 "
-        >
-          <div className="flex flex-col gap-1">
-            <div className="text-xs text-muted-foreground font-medium">
-              Order #{m.id}
+        <Card key={m.id}>
+          <CardContent>
+            <div className="flex gap-2 items-center justify-between">
+              {" "}
+              <h1 className="font-semibold text-lg "># {m.id}</h1>
+              <OrderStatus status={m.status || "created"} size="sm" />
             </div>
 
-            <div className="text-sm font-medium line-clamp-1">
-              {m?.customerDetails?.name || m?.customerDetails?.email || ""}
-            </div>
+            <p className="text-muted-foreground line-clamp-2 break-words py-1.5 pb-3">
+              {getItemsStr(m)}
+            </p>
+            <p className="border-y border-dashed py-1 line-clamp-1 break-words">
+              {m?.customerDetails?.address?.line1}
+            </p>
+          </CardContent>
+        </Card>
+        // <Link
+        //   key={m.id}
+        //   to="/pos/order/$id"
+        //   params={{ id: m.id }}
+        //   className="flex items-start justify-between p-4 "
+        // >
+        //   <div className="flex flex-col gap-1">
+        //     <div className="text-xs text-muted-foreground font-medium">
+        //       Order #{m.id}
+        //     </div>
 
-            <div className="text-xs text-muted-foreground">
-              {m?.customerDetails?.phone || ""}
-            </div>
-          </div>
+        //     <div className="text-sm font-medium line-clamp-1">
+        //       {m?.customerDetails?.name || m?.customerDetails?.email || ""}
+        //     </div>
 
-          <div className="text-right flex flex-col gap-1 items-end">
-            <OrderStatus status={m.status || "created"} />
-            <div className="text-lg font-semibold">
-              {formatAmount("inr", Number(m.itemTotalAmount))}
-            </div>
-            <div className="text-xs text-muted-foreground">
-              {m.orderedAt && `${formatDistanceToNow(m.orderedAt)} ago`}
-            </div>
-          </div>
-        </Link>
+        //     <div className="text-xs text-muted-foreground">
+        //       {m?.customerDetails?.phone || ""}
+        //     </div>
+        //   </div>
+
+        //   <div className="text-right flex flex-col gap-1 items-end">
+        //     <OrderStatus status={m.status || "created"} />
+        //     <div className="text-lg font-semibold">
+        //       {formatAmount("inr", Number(m.itemTotalAmount))}
+        //     </div>
+        //     <div className="text-xs text-muted-foreground">
+        //       {m.orderedAt && `${formatDistanceToNow(m.orderedAt)} ago`}
+        //     </div>
+        //   </div>
+        // </Link>
       ))}
     </div>
   );

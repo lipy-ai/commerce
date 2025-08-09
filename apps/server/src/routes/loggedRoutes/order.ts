@@ -123,7 +123,7 @@ const generateOrders = async ({
 				deliveryCharge = 0;
 			}
 			if (distanceFromUser > (store.deliveryDistance + 5) * 1000) {
-				break;
+				continue;
 			}
 		}
 
@@ -168,7 +168,7 @@ const generateOrders = async ({
 		const calcs = orderCalculator({ items, discounts, taxes });
 
 		if (store.minimumOrderValue > calcs.itemTotalAmount) {
-			break;
+			continue;
 		}
 
 		orders.push({

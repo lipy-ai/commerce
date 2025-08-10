@@ -47,7 +47,7 @@ export default function OrderDeliverForm({
   return (
     <DrawerDialogSwitcher
       trigger={children}
-      className="sm:max-w-sm text-center"
+      className="sm:max-w-sm text-center h-[95vh]"
       open={open}
       onOpenChange={setOpen}
     >

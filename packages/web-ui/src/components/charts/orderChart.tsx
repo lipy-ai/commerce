@@ -7,6 +7,7 @@ import {
 } from "@lipy/web-ui/components/ui/chart";
 import { eachDayOfInterval, endOfMonth, format, startOfMonth } from "date-fns";
 import type { InferResponseType } from "hono";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import {
   Card,
   CardContent,
@@ -15,8 +16,6 @@ import {
   CardTitle,
 } from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
-
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 export function OrderChart({
   data,
   isLoading,
@@ -71,10 +70,7 @@ export function OrderChart({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer
-          config={chartConfig}
-          className="max-h-[calc(50vh-140px)] w-full"
-        >
+        <ChartContainer config={chartConfig} className="max-h-[200px] w-full">
           <BarChart accessibilityLayer data={chartMap || []}>
             <CartesianGrid vertical={false} />
             <XAxis

@@ -215,11 +215,14 @@ function RouteComponent() {
                       {isMobile && cart.length > 0 && (
                         <Link
                           to="/cart"
-                          className={cn(
-                            buttonVariants({ variant: "secondary" })
-                          )}
+                          className={cn(buttonVariants(), "relative")}
                         >
                           <ShoppingCart />
+                          {cart.length > 0 && (
+                            <span className="absolute -top-2 -right-2 bg-primary text-card text-xs font-semibold rounded-full px-2">
+                              {cart.length}
+                            </span>
+                          )}
                         </Link>
                       )}
                     </div>

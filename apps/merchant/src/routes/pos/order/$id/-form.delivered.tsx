@@ -47,9 +47,10 @@ export default function OrderDeliverForm({
   return (
     <DrawerDialogSwitcher
       trigger={children}
-      className="sm:max-w-sm text-center h-[95vh]"
+      className="sm:max-w-sm text-center"
       open={open}
       onOpenChange={setOpen}
+      key={form.formState.submitCount}
     >
       {form.formState.isSubmitSuccessful ? (
         <div className="space-y-4">

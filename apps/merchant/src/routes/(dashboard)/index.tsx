@@ -143,7 +143,7 @@ function RouteComponent() {
   return (
     <div className="grid lg:grid-cols-12  lg:p-8 gap-8">
       <div className="col-span-8  flex gap-4  flex-col md:sticky md:top-0">
-        <div className="flex gap-4  items-center p-4 lg:p-0">
+        <Link to={"/store"} className="flex gap-4  items-center p-4 lg:p-0">
           <Avatar className="size-12 rounded bg-primary">
             <AvatarImage
               alt=""
@@ -158,7 +158,7 @@ function RouteComponent() {
             <p>Welcome to,</p>
             <h1 className="text-2xl">{data?.name || "Store"}</h1>
           </div>
-        </div>
+        </Link>
 
         {!data?.active && (
           <Alert variant={"info"}>

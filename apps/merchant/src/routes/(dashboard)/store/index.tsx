@@ -14,7 +14,7 @@ function RouteComponent() {
   const navigate = Route.useNavigate();
 
   useLayoutEffect(() => {
-    !isMobile && navigate({ to: "/store/general" });
+    !isMobile && navigate({ to: "/store/general", replace: true });
   }, [isMobile, navigate]);
 
   if (!isMobile) {

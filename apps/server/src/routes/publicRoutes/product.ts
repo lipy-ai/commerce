@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { z } from "zod";
 import { db } from "@/db";
+import { getAllCategory, getCategory } from "@/helpers/category";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
 
@@ -72,6 +73,18 @@ const route = new Hono<ServerContext>()
 
 		return c.json(data || []);
 	})
+	.get(
+		"/category/:name",
+		zValidator("param", z.object({ name: z.string() })),
+		async (c) => {
+			const { name } = c.req.valid("param");
+			let result = null;
+			if (name === "all") {
+				result = await getAllCategory();
+			}
+			return c.json(result);
+		},
+	)
 	.get(
 		"/singleProduct",
 		zValidator(

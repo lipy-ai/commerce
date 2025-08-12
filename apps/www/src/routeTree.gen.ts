@@ -11,7 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as defaultRouteRouteImport } from './routes/(default)/route'
 import { Route as defaultIndexRouteImport } from './routes/(default)/index'
+import { Route as defaultTermsConditionRouteImport } from './routes/(default)/terms-condition'
 import { Route as defaultShareRouteImport } from './routes/(default)/share'
+import { Route as defaultPrivacyRouteImport } from './routes/(default)/privacy'
 import { Route as authLogoutRouteImport } from './routes/(auth)/logout'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as defaultAccountRouteRouteImport } from './routes/(default)/account/route'
@@ -41,9 +43,19 @@ const defaultIndexRoute = defaultIndexRouteImport.update({
   path: '/',
   getParentRoute: () => defaultRouteRoute,
 } as any)
+const defaultTermsConditionRoute = defaultTermsConditionRouteImport.update({
+  id: '/terms-condition',
+  path: '/terms-condition',
+  getParentRoute: () => defaultRouteRoute,
+} as any)
 const defaultShareRoute = defaultShareRouteImport.update({
   id: '/share',
   path: '/share',
+  getParentRoute: () => defaultRouteRoute,
+} as any)
+const defaultPrivacyRoute = defaultPrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => defaultRouteRoute,
 } as any)
 const authLogoutRoute = authLogoutRouteImport.update({
@@ -158,7 +170,9 @@ export interface FileRoutesByFullPath {
   '/account': typeof defaultAccountRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
+  '/privacy': typeof defaultPrivacyRoute
   '/share': typeof defaultShareRoute
+  '/terms-condition': typeof defaultTermsConditionRoute
   '/account/profile': typeof defaultAccountProfileRoute
   '/account/': typeof defaultAccountIndexRoute
   '/cart': typeof defaultCartIndexRoute
@@ -179,7 +193,9 @@ export interface FileRoutesByTo {
   '/': typeof defaultIndexRoute
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
+  '/privacy': typeof defaultPrivacyRoute
   '/share': typeof defaultShareRoute
+  '/terms-condition': typeof defaultTermsConditionRoute
   '/account/profile': typeof defaultAccountProfileRoute
   '/account': typeof defaultAccountIndexRoute
   '/cart': typeof defaultCartIndexRoute
@@ -203,7 +219,9 @@ export interface FileRoutesById {
   '/(default)/account': typeof defaultAccountRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/logout': typeof authLogoutRoute
+  '/(default)/privacy': typeof defaultPrivacyRoute
   '/(default)/share': typeof defaultShareRoute
+  '/(default)/terms-condition': typeof defaultTermsConditionRoute
   '/(default)/': typeof defaultIndexRoute
   '/(default)/account/profile': typeof defaultAccountProfileRoute
   '/(default)/account/': typeof defaultAccountIndexRoute
@@ -228,7 +246,9 @@ export interface FileRouteTypes {
     | '/account'
     | '/login'
     | '/logout'
+    | '/privacy'
     | '/share'
+    | '/terms-condition'
     | '/account/profile'
     | '/account/'
     | '/cart'
@@ -249,7 +269,9 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/logout'
+    | '/privacy'
     | '/share'
+    | '/terms-condition'
     | '/account/profile'
     | '/account'
     | '/cart'
@@ -272,7 +294,9 @@ export interface FileRouteTypes {
     | '/(default)/account'
     | '/(auth)/login'
     | '/(auth)/logout'
+    | '/(default)/privacy'
     | '/(default)/share'
+    | '/(default)/terms-condition'
     | '/(default)/'
     | '/(default)/account/profile'
     | '/(default)/account/'
@@ -313,11 +337,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof defaultIndexRouteImport
       parentRoute: typeof defaultRouteRoute
     }
+    '/(default)/terms-condition': {
+      id: '/(default)/terms-condition'
+      path: '/terms-condition'
+      fullPath: '/terms-condition'
+      preLoaderRoute: typeof defaultTermsConditionRouteImport
+      parentRoute: typeof defaultRouteRoute
+    }
     '/(default)/share': {
       id: '/(default)/share'
       path: '/share'
       fullPath: '/share'
       preLoaderRoute: typeof defaultShareRouteImport
+      parentRoute: typeof defaultRouteRoute
+    }
+    '/(default)/privacy': {
+      id: '/(default)/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof defaultPrivacyRouteImport
       parentRoute: typeof defaultRouteRoute
     }
     '/(auth)/logout': {
@@ -511,7 +549,9 @@ const defaultAccountRouteRouteWithChildren =
 interface defaultRouteRouteChildren {
   defaultstoreRouteRoute: typeof defaultstoreRouteRouteWithChildren
   defaultAccountRouteRoute: typeof defaultAccountRouteRouteWithChildren
+  defaultPrivacyRoute: typeof defaultPrivacyRoute
   defaultShareRoute: typeof defaultShareRoute
+  defaultTermsConditionRoute: typeof defaultTermsConditionRoute
   defaultIndexRoute: typeof defaultIndexRoute
   defaultCartIndexRoute: typeof defaultCartIndexRoute
 }
@@ -519,7 +559,9 @@ interface defaultRouteRouteChildren {
 const defaultRouteRouteChildren: defaultRouteRouteChildren = {
   defaultstoreRouteRoute: defaultstoreRouteRouteWithChildren,
   defaultAccountRouteRoute: defaultAccountRouteRouteWithChildren,
+  defaultPrivacyRoute: defaultPrivacyRoute,
   defaultShareRoute: defaultShareRoute,
+  defaultTermsConditionRoute: defaultTermsConditionRoute,
   defaultIndexRoute: defaultIndexRoute,
   defaultCartIndexRoute: defaultCartIndexRoute,
 }

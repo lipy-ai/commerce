@@ -263,7 +263,6 @@ function RouteComponent() {
         dialog: OrderRejectForm,
       },
     ];
-    console.log(arr);
     return arr;
   }, [data]);
 
@@ -367,7 +366,9 @@ function RouteComponent() {
                       return (
                         <Fragment key={a.name}>
                           {a.dialog ? (
-                            <a.dialog onSubmit={handlePatch}>{btn}</a.dialog>
+                            <a.dialog onSubmit={handlePatch} data={data}>
+                              {btn}
+                            </a.dialog>
                           ) : (
                             btn
                           )}

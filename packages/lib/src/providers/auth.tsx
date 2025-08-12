@@ -82,8 +82,8 @@ export const signIn = async (
           type: "sign-in",
         })
         .then((r) => {
-          if (r.data?.success === false) {
-            throw new Error("Failed to send login OTP");
+          if (r.error || r.data?.success === false) {
+            throw new Error(r.error?.message || "Failed to send login OTP");
           }
         })
         .catch((e) => {

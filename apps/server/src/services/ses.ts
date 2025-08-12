@@ -1,7 +1,7 @@
+import type { SendEmailCommandInput } from "@aws-sdk/client-ses";
+import { SES } from "@aws-sdk/client-ses";
 import env from "@/env";
 import { HTTPError } from "@/lib/exception";
-import { SES } from "@aws-sdk/client-ses";
-import type { SendEmailCommandInput } from "@aws-sdk/client-ses";
 
 const ses = new SES({
 	region: env.AWS_SES_REGION,
@@ -99,12 +99,12 @@ export const awsSendEmail = async (props: {
 			Body: {
 				Html: {
 					Charset: "UTF-8",
-					Data: props.html,
+					Data: props.html.replace(/"/g, "&quot;").replace(/'/g, "&#39;"),
 				},
 			},
 			Subject: {
 				Charset: "UTF-8",
-				Data: props.subject,
+				Data: props.subject.replace(/"/g, "&quot;"),
 			},
 		},
 	};

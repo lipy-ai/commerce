@@ -90,6 +90,7 @@ export const awsSendEmail = async (props: {
 	html: string;
 	to: string;
 }) => {
+	console.log(JSON.stringify(props));
 	const params: SendEmailCommandInput = {
 		Source: env.TRANSACTIONAL_EMAIL,
 		Destination: {
@@ -109,7 +110,9 @@ export const awsSendEmail = async (props: {
 		},
 	};
 
-	return await ses.sendEmail(params);
+	return await ses.sendEmail(params).catch((e) => {
+		throw new HTTPError(400, { message: "Failed to send email!", cause: e });
+	});
 };
 
 export const sendTransactionalEmail = async (body: {

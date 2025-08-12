@@ -121,7 +121,7 @@ export const auth: any = betterAuth({
 		bearer(),
 		emailOTPPlugin,
 		phoneOTPPlugin,
-		// emailHarmony(),
+		emailHarmony(),
 		phoneHarmony({ defaultCountry: "IN" }),
 	],
 	hooks: {

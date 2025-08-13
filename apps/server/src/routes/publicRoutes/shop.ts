@@ -179,6 +179,7 @@ const route = new Hono<ServerContext>()
 					"p.title",
 					"p.thumbnail",
 					"p.category",
+					"p.summary",
 					sql`ROW_NUMBER() OVER (PARTITION BY p.category ORDER BY p.id)`.as(
 						"rn",
 					),

@@ -4,6 +4,7 @@ import { z } from "zod";
 import { type Database, type DBTypes, db } from "@/db";
 import type { SUM_TYPE } from "@/db/schema";
 import { getStore } from "@/helpers/store";
+import { couponCalculator } from "@/lib/couponCalculator";
 import { HTTPError } from "@/lib/exception";
 import { idGenerate } from "@/lib/generateId";
 import { orderCalculator } from "@/lib/orderCalculators";
@@ -129,20 +130,6 @@ const generateOrders = async ({
 
 		const items: NonNullable<DBTypes["orders"]["items"]> = [];
 
-		const taxes: Array<{
-			amount: number;
-			sum: (typeof SUM_TYPE)[number];
-			name: string;
-		}> = [
-			{ amount: store.gstTax, sum: "percent", name: "GST" },
-			{
-				amount: deliveryCharge,
-				sum: "flat",
-				name: "Delivery Charge",
-			},
-		];
-		const discounts: DBTypes["orders"]["discounts"] = [];
-
 		for (const c of cart) {
 			if (c.inventory.storeId === s.id) {
 				items.push({
@@ -164,6 +151,30 @@ const generateOrders = async ({
 				message: "No cart items nor instructions order!",
 			});
 		}
+
+		const orderValue = items.reduce(
+			(acc, item) => acc + item.price * item.qty,
+			0,
+		);
+
+		const { discounts, deliveryFee } = couponCalculator(
+			store.coupons,
+			orderValue,
+			deliveryCharge,
+		);
+
+		const taxes: Array<{
+			amount: number;
+			sum: (typeof SUM_TYPE)[number];
+			name: string;
+		}> = [
+			{ amount: store.gstTax, sum: "percent", name: "GST" },
+			{
+				amount: deliveryFee as number,
+				sum: "flat",
+				name: "Delivery Charge",
+			},
+		];
 
 		const calcs = orderCalculator({ items, discounts, taxes });
 

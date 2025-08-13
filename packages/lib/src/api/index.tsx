@@ -10,6 +10,7 @@ import type { loggedInSessionRoute } from "@lipy/server/routes/loggedRoutes/sess
 import type { loggedStoreRoute } from "@lipy/server/routes/loggedRoutes/shop";
 import type { uploadRoute } from "@lipy/server/routes/loggedRoutes/upload";
 import type { merchantComboboxRoute } from "@lipy/server/routes/merchantRoutes/combobox";
+import type { merchantCouponRoute } from "@lipy/server/routes/merchantRoutes/coupon";
 import type { merchantCustomerRoute } from "@lipy/server/routes/merchantRoutes/customer";
 import type { merchantDashboardRoute } from "@lipy/server/routes/merchantRoutes/dashboard";
 import type { eventsRoute } from "@lipy/server/routes/merchantRoutes/events";
@@ -87,6 +88,10 @@ export const merchantEventsApi = hc<typeof eventsRoute>(
 );
 export const merchantDashboardApi = hc<typeof merchantDashboardRoute>(
   `${basepath}/merchant/dashboard`,
+  opts
+);
+export const merchantCouponApi = hc<typeof merchantCouponRoute>(
+  `${basepath}/merchant/coupon`,
   opts
 );
 

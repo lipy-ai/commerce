@@ -2,7 +2,7 @@ import { betterAuth } from "better-auth";
 import { bearer, emailOTP, phoneNumber } from "better-auth/plugins";
 import { schema as s } from "@/db/schema";
 import { redis } from "@/services/cache";
-import { plunkSendEmail } from "@/services/ses";
+import { awsSendEmail } from "@/services/ses";
 import { sendSMS } from "@/services/sns";
 import { db } from "../db";
 import env from "../env";
@@ -12,10 +12,10 @@ import phoneHarmony from "./plugins/phoneValidator";
 const emailOTPPlugin = emailOTP({
 	otpLength: 6,
 	sendVerificationOTP: async ({ email, otp }) => {
-		await plunkSendEmail({
+		await awsSendEmail({
 			to: email,
 			subject: "Login OTP - Lipy",
-			body: `Hello,<br/>Login to Lipy using this OTP:<br/><br/><b>${otp}</b>`,
+			html: `Hello,<br/>Login to Lipy using this OTP:<br/><br/><b>${otp}</b>`,
 		});
 	},
 });

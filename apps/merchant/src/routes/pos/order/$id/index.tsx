@@ -188,12 +188,6 @@ function RouteComponent() {
 
   const statusIdx = ORDER_STATUS.indexOf(data?.status as any);
   const isCurrStatusAfterIdx = (s: (typeof ORDER_STATUS)[number]) => {
-    // console.log(
-    //   statusIdx,
-    //   ORDER_STATUS.indexOf(s),
-    //   s,
-    //   statusIdx >= ORDER_STATUS.indexOf(s)
-    // );
     if (statusIdx >= ORDER_STATUS.indexOf(s)) return true;
     return false;
   };
@@ -269,7 +263,6 @@ function RouteComponent() {
         dialog: OrderRejectForm,
       },
     ];
-    console.log(arr);
     return arr;
   }, [data]);
 
@@ -340,16 +333,21 @@ function RouteComponent() {
                 <CardContent>
                   <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                     {actions?.map((a) => {
+                      const delivered = a.name === "Order Delivered";
                       if (a.show === false) return;
                       const btn = (
                         <div
                           className={cn(
                             "flex gap-2 items-center border rounded bg-card p-4 cursor-pointer hover:bg-accent",
-                            a.disabled &&
-                              "cursor-not-allowed bg-muted pointer-events-none"
+                            !delivered &&
+                              a.disabled &&
+                              "cursor-not-allowed bg-muted pointer-events-none",
+                            delivered && "bg-muted"
                           )}
                           key={a.name}
-                          onClick={() => !a.disabled && a?.onClick?.()}
+                          onClick={() =>
+                            !a.disabled && !delivered && a?.onClick?.()
+                          }
                         >
                           <span
                             className={cn(
@@ -368,7 +366,9 @@ function RouteComponent() {
                       return (
                         <Fragment key={a.name}>
                           {a.dialog ? (
-                            <a.dialog onSubmit={handlePatch}>{btn}</a.dialog>
+                            <a.dialog onSubmit={handlePatch} data={data}>
+                              {btn}
+                            </a.dialog>
                           ) : (
                             btn
                           )}

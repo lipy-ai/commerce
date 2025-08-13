@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from "@lipy/web-ui/components/ui/card";
 import type { InferResponseType } from "hono/client";
-import { Bike, PercentCircle, ReceiptText } from "lucide-react";
+import { Bike, PercentCircle, ReceiptText, Tag } from "lucide-react";
 import { useState } from "react";
 
 type Response = InferResponseType<typeof loggedInCartApi.index.$get>;
@@ -75,6 +75,17 @@ export function Billing({ data }: { data: Response }) {
 
           <span className="font-medium">
             {formatAmount("inr", data?.taxTotal)}
+          </span>
+        </div>
+
+        <div className="flex items-center justify-between gap-6">
+          <div className="flex items-center gap-2">
+            <Tag className="size-4 mt-1 flex-shrink-0" />
+            Discount
+          </div>
+
+          <span className="font-medium">
+            - {formatAmount("inr", data?.totalDiscount)}
           </span>
         </div>
       </CardContent>

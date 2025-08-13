@@ -30,6 +30,7 @@ import { loggedInSessionRoute } from "./routes/loggedRoutes/session";
 import { loggedStoreRoute } from "./routes/loggedRoutes/shop";
 import { uploadRoute } from "./routes/loggedRoutes/upload";
 import { merchantComboboxRoute } from "./routes/merchantRoutes/combobox";
+import { merchantCouponRoute } from "./routes/merchantRoutes/coupon";
 import { merchantCustomerRoute } from "./routes/merchantRoutes/customer";
 import { merchantDashboardRoute } from "./routes/merchantRoutes/dashboard";
 import { eventsRoute } from "./routes/merchantRoutes/events";
@@ -96,7 +97,8 @@ const merchantRouter = new Hono()
 	.route("/combobox", merchantComboboxRoute)
 	.route("/inventory", merchantInventoryRoute)
 	.route("/events", eventsRoute)
-	.route("/dashboard", merchantDashboardRoute);
+	.route("/dashboard", merchantDashboardRoute)
+	.route("/coupon", merchantCouponRoute);
 
 const posRouter = new Hono()
 	.basePath("/pos")

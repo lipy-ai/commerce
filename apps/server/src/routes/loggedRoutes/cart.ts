@@ -3,6 +3,7 @@ import { z } from "zod";
 import { db } from "@/db";
 import type { SUM_TYPE } from "@/db/schema";
 import { getStore } from "@/helpers/store";
+import { couponCalculator } from "@/lib/couponCalculator";
 import { orderCalculator } from "@/lib/orderCalculators";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
@@ -90,10 +91,12 @@ const route = new Hono<ServerContext>()
 		let totalSaved = 0;
 		let totalAmount = 0;
 		let totalDeliveryCharge = 0;
+		let totalDiscount = 0;
 
 		const storesData = await Promise.all(
 			groupedStores.map(async ({ id, handle, image, name, items }, i) => {
 				const store = await getStore(id);
+				const discount = couponCalculator(store.coupons);
 				let distanceFromUser = 0;
 				let deliveryCharge = 0;
 				let isServiceable = true;
@@ -138,7 +141,7 @@ const route = new Hono<ServerContext>()
 				const calc = orderCalculator({
 					items: formattedItems,
 					taxes,
-					discounts: [],
+					discounts: discount,
 				});
 				if (!isServiceable) {
 					calc.itemTotalAmount = 0;
@@ -146,6 +149,7 @@ const route = new Hono<ServerContext>()
 					calc.maxItemTotalAmount = 0;
 					calc.totalTaxAmount = 0;
 					calc.amountSaved = 0;
+					calc.totalDiscountAmount = 0;
 					deliveryCharge = 0;
 				}
 
@@ -155,6 +159,7 @@ const route = new Hono<ServerContext>()
 				totalSaved += calc.amountSaved;
 				totalAmount += calc.totalAmount;
 				totalDeliveryCharge += deliveryCharge;
+				totalDiscount += calc.totalDiscountAmount;
 
 				return {
 					storeId: id,
@@ -168,6 +173,7 @@ const route = new Hono<ServerContext>()
 					storDeliveryCharge: deliveryCharge,
 					storeDistanceFromUser: distanceFromUser / 1000,
 					storeIsServiceable: isServiceable,
+					storeDiscount: discount,
 					items,
 				};
 			}),
@@ -179,6 +185,7 @@ const route = new Hono<ServerContext>()
 			taxTotal,
 			totalSaved,
 			totalAmount,
+			totalDiscount,
 			totalDeliveryCharge,
 			store: storesData,
 		});

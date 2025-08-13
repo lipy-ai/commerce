@@ -1,0 +1,1 @@
+ALTER TABLE "lipy-dev"."coupons" ADD COLUMN "text" text;

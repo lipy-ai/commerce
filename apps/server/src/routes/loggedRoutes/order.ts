@@ -4,6 +4,7 @@ import { z } from "zod";
 import { type Database, type DBTypes, db } from "@/db";
 import type { SUM_TYPE } from "@/db/schema";
 import { getStore } from "@/helpers/store";
+import { couponCalculator } from "@/lib/couponCalculator";
 import { HTTPError } from "@/lib/exception";
 import { idGenerate } from "@/lib/generateId";
 import { orderCalculator } from "@/lib/orderCalculators";
@@ -141,7 +142,9 @@ const generateOrders = async ({
 				name: "Delivery Charge",
 			},
 		];
-		const discounts: DBTypes["orders"]["discounts"] = [];
+		const discounts: DBTypes["orders"]["discounts"] = couponCalculator(
+			store.coupons,
+		);
 
 		for (const c of cart) {
 			if (c.inventory.storeId === s.id) {

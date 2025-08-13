@@ -10,7 +10,6 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogTrigger,
 } from "@lipy/web-ui/components/ui/dialog";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
@@ -135,17 +134,8 @@ const ShopQr = ({ data }: { data: Response }) => {
         </div>
 
         <QRCode value={`${env.WEB_URL}/${data?.handle}`} className="w-full" />
-        <DialogFooter>
-          <a
-            href={`${env.WEB_URL}/${data?.handle}`}
-            target="_blank"
-            rel="noreferrer"
-            className="text-xs"
-          >
-            {`${env.WEB_URL}/${data?.handle}`}
-          </a>
-          <p className="text-center "> Scan the QR to start shopping</p>
-        </DialogFooter>
+
+        <p className="text-center "> Scan the QR to start shopping</p>
       </DialogContent>
     </Dialog>
   );

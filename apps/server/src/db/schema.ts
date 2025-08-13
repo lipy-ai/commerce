@@ -67,6 +67,8 @@ export const STORE_TYPE = [
 	"hardware",
 ] as const;
 
+export const COUPON_TYPE = ["amount-off", "free-delivery"] as const;
+
 export const schema = pgSchema("lipy-dev");
 
 // export const enableUuidExtension = sql`CREATE EXTENSION IF NOT EXISTS "postgis";`;
@@ -213,6 +215,28 @@ export const store = schema.table(
 	},
 	(t) => [index("store_spatial_index").using("gist", t.location)],
 );
+export const coupons = schema.table("coupons", {
+	id: uuid("id").primaryKey(),
+	storeId: uuid("storeId")
+		.notNull()
+		.references(() => store.id, { onDelete: "cascade" }),
+	title: text("title"),
+	type: text("type", { enum: COUPON_TYPE }),
+	discountType: text("discountType", { enum: SUM_TYPE }),
+	discountValue: numeric("discountValue", {
+		precision: 10,
+		scale: 2,
+		mode: "number",
+	}),
+	minimumOrderValue: numeric("minimumOrderValue", {
+		precision: 10,
+		scale: 2,
+		mode: "number",
+	}).default(0),
+	status: text("status", { enum: ["active", "inactive", "expired"] }).default(
+		"active",
+	),
+});
 
 export const storePayments = schema.table("storePayments", {
 	id: uuid("id")
@@ -580,6 +604,7 @@ export const dbTables = {
 	session,
 	verification,
 	store,
+	coupons,
 	storeMember,
 	storeInvitation,
 	customer,

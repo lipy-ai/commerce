@@ -13,7 +13,6 @@ import { cn } from "@lipy/web-ui/lib/utils";
 import { Link } from "@tanstack/react-router";
 import type { InferResponseType } from "hono";
 import { Minus, Plus } from "lucide-react";
-import type React from "react";
 import { useState } from "react";
 import { AddToCart } from "./cart/addToCart";
 import { useCartStore } from "./cart/store";
@@ -45,6 +44,7 @@ export default function ProductCard({
     product.variants[0]?.maxPrice as number
   );
   const { cart } = useCartStore();
+  const [variantListOpen, setVariantListOpen] = useState(false);
 
   let cartCount = 0;
 
@@ -106,56 +106,54 @@ export default function ProductCard({
                     />
                   )
                 ) : cartCount === 0 ? (
-                  <VariantList product={product}>
-                    <Button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                      }}
-                      size={isMobile ? "xs" : "sm"}
-                      type="button"
-                      aria-label="Add to cart"
-                      className="text-secondary border border-secondary min-w-16 hover:text-secondary border-b-2 border-r-2 disabled:opacity-100 flex flex-col p-0  gap-0"
-                      variant={"outline"}
-                    >
-                      <p className=" text-sm font-medium">ADD</p>
-                      <p className="-mt-1 bg-secondary/20 w-full text-xs text-muted-foreground font-normal  rounded-b-md pb-0.5">
-                        {product.variants.length} options
-                      </p>
-                    </Button>
-                  </VariantList>
+                  <Button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setVariantListOpen(true);
+                    }}
+                    size={isMobile ? "xs" : "sm"}
+                    type="button"
+                    aria-label="Add to cart"
+                    className="text-secondary border border-secondary min-w-16 hover:text-secondary border-b-2 border-r-2 disabled:opacity-100 flex flex-col p-0  gap-0"
+                    variant={"outline"}
+                  >
+                    <p className=" text-sm font-medium">ADD</p>
+                    <p className="-mt-1 bg-secondary/20 w-full text-xs text-muted-foreground font-normal  rounded-b-md pb-0.5">
+                      {product.variants.length} options
+                    </p>
+                  </Button>
                 ) : (
-                  <VariantList product={product}>
-                    <div
-                      className="bg-secondary flex items-center  shadow-sm rounded-md"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                      }}
+                  <div
+                    className="bg-secondary flex items-center  shadow-sm rounded-md"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setVariantListOpen(true);
+                    }}
+                  >
+                    <Button
+                      size={isMobile ? "xs" : "sm"}
+                      variant="ghost"
+                      className="text-primary-foreground hover:bg-secondary hover:text-primary-foreground"
                     >
-                      <Button
-                        size={isMobile ? "xs" : "sm"}
-                        variant="ghost"
-                        className="text-primary-foreground hover:bg-secondary hover:text-primary-foreground"
-                      >
-                        <Minus className="h-3 w-3 stroke-3" />
-                      </Button>
+                      <Minus className="h-3 w-3 stroke-3" />
+                    </Button>
 
-                      <div className="min-w-[2px] flex items-center justify-center">
-                        <span className="font-semibold text-primary-foreground text-sm px-1">
-                          {cartCount}
-                        </span>
-                      </div>
-
-                      <Button
-                        size={isMobile ? "xs" : "sm"}
-                        variant="ghost"
-                        className="text-primary-foreground hover:bg-secondary hover:text-primary-foreground"
-                      >
-                        <Plus className="h-3 w-3 stroke-3" />
-                      </Button>
+                    <div className="min-w-[2px] flex items-center justify-center">
+                      <span className="font-semibold text-primary-foreground text-sm px-1">
+                        {cartCount}
+                      </span>
                     </div>
-                  </VariantList>
+
+                    <Button
+                      size={isMobile ? "xs" : "sm"}
+                      variant="ghost"
+                      className="text-primary-foreground hover:bg-secondary hover:text-primary-foreground"
+                    >
+                      <Plus className="h-3 w-3 stroke-3" />
+                    </Button>
+                  </div>
                 )}
               </div>
             </div>
@@ -204,6 +202,14 @@ export default function ProductCard({
               </div>
             </div>
           </Link>
+
+          {variantListOpen && (
+            <VariantList
+              open={variantListOpen}
+              onOpenChange={setVariantListOpen}
+              product={product}
+            />
+          )}
         </div>
       );
     }
@@ -212,14 +218,15 @@ export default function ProductCard({
 
 function VariantList({
   product,
-  children,
+  open,
+  onOpenChange,
 }: {
   product: ProductType;
-  children?: React.ReactNode;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }) {
-  const [open, setOpen] = useState(false);
   return (
-    <DrawerDialogSwitcher open={open} onOpenChange={setOpen} trigger={children}>
+    <DrawerDialogSwitcher open={open} onOpenChange={onOpenChange}>
       <DrawerDialogHeader>
         <DrawerDialogTitle>{product.title}</DrawerDialogTitle>
       </DrawerDialogHeader>

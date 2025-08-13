@@ -43,6 +43,7 @@ const route = new Hono<ServerContext>()
 				"p.id as id",
 				"p.title",
 				"p.thumbnail",
+				"p.summary",
 				"c.title as categoryTitle",
 				"c.id as category",
 				"c.slug as categorySlug",

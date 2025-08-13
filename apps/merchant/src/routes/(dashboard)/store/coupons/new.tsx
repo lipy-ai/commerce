@@ -22,7 +22,7 @@ import {
   CardTitle,
 } from "@lipy/web-ui/components/ui/card";
 import { Form } from "@lipy/web-ui/components/ui/form";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -38,7 +38,6 @@ export const Route = createFileRoute("/(dashboard)/store/coupons/new")({
 });
 
 function RouteComponent() {
-  const navigate = useNavigate();
   const { type, couponId } = Route.useSearch();
 
   const { data, isLoading } = useAPIQuery(
@@ -59,6 +58,7 @@ function RouteComponent() {
     discountType: "percent" as (typeof SUM_TYPE)[number],
     discountValue: 0,
     type: type || "amount-off",
+    minimumOrderValue: 0,
   };
 
   const form = useForm({
@@ -73,6 +73,7 @@ function RouteComponent() {
         discountType: data?.discountType || "percent",
         discountValue: data?.discountValue || 0,
         type: data?.type || "amount-off",
+        minimumOrderValue: data?.minimumOrderValue || 0,
       });
     }
   }, [isLoading]);
@@ -80,14 +81,18 @@ function RouteComponent() {
   const opts = {
     onSuccess: () => {
       toast.success("Coupon created successfully and activated");
-      navigate({ to: "/store/coupons" });
     },
   };
 
   const couponMutation = useAPIMutation(merchantCouponApi.index, "$post", opts);
+  const patchCoupon = useAPIMutation(merchantCouponApi[":id"], "$patch", opts);
 
-  const onSubmit = (data: typeof defaultValues) => {
-    couponMutation.mutate({ json: data });
+  const onSubmit = async (data: typeof defaultValues) => {
+    if (couponId) {
+      await patchCoupon.mutateAsync({ param: { id: couponId }, json: data });
+    } else {
+      await couponMutation.mutateAsync({ json: data });
+    }
   };
 
   return (
@@ -124,30 +129,60 @@ function RouteComponent() {
                     name="title"
                     label="Title"
                     description="Short and descriptive name of the discount"
-                    placeholder="25% off on all orders"
+                    placeholder={
+                      type === "amount-off"
+                        ? "25% off on all orders"
+                        : "Free delivery on orders above ₹500"
+                    }
                     required
                   />
                 </Card>
 
+                {type === "amount-off" && (
+                  <Card className="bg-tertiary/50">
+                    <CardHeader>
+                      <CardTitle className="capitalize">
+                        Discount value
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="md:grid md:grid-cols-2 gap-4">
+                      <FormDropdown
+                        name="discountType"
+                        wrapperClassName="block"
+                        opts={[
+                          { value: "flat", label: "(+/-) Flat" },
+                          { value: "percent", label: "(%) Percent" },
+                        ]}
+                      />
+                      <FormInput
+                        name="discountValue"
+                        suffixEl={
+                          form.watch("discountType") === "percent" && "%"
+                        }
+                        prefixEl={form.watch("discountType") === "flat" && "₹"}
+                        placeholder="0"
+                        type="number"
+                        min={0}
+                        required
+                      />
+                    </CardContent>
+                  </Card>
+                )}
+
                 <Card className="bg-tertiary/50">
                   <CardHeader>
-                    <CardTitle className="capitalize">Discount value</CardTitle>
+                    <CardTitle className="capitalize">
+                      Minimum order requirement
+                    </CardTitle>
                   </CardHeader>
-                  <CardContent className="md:grid md:grid-cols-2 gap-4">
-                    <FormDropdown
-                      name="discountType"
-                      wrapperClassName="block"
-                      opts={[
-                        { value: "flat", label: "(+/-) Flat" },
-                        { value: "percent", label: "(%) Percent" },
-                      ]}
-                    />
+                  <CardContent>
                     <FormInput
-                      name="discountValue"
-                      suffixEl={form.watch("discountType") === "percent" && "%"}
-                      prefixEl={form.watch("discountType") === "flat" && "₹"}
+                      name="minimumOrderValue"
+                      label="Minimum order value to apply this coupon"
+                      prefixEl={"₹"}
                       placeholder="0"
                       type="number"
+                      wrapperClassName="max-w-96"
                       min={0}
                       required
                     />

@@ -7,18 +7,39 @@ type Discount = Array<{
   amount: number;
   sum: (typeof SUM_TYPE)[number];
 }>;
-export const couponCalculator = (coupons: Coupon[]) => {
+export const couponCalculator = (
+  coupons: Coupon[],
+  itemsTotalAmount?: number,
+  deliveryFee?: number
+) => {
   const discounts: Discount = [];
 
   for (const coupon of coupons) {
     if (coupon.type === "amount-off") {
-      discounts.push({
-        name: coupon.title,
-        amount: coupon?.discountValue,
-        sum: coupon.discountType,
-      } as Discount[0]);
+      if (
+        itemsTotalAmount &&
+        coupon.minimumOrderValue &&
+        itemsTotalAmount >= coupon.minimumOrderValue
+      ) {
+        discounts.push({
+          name: coupon.title,
+          amount: coupon?.discountValue,
+          sum: coupon.discountType,
+        } as Discount[0]);
+      }
+    }
+
+    if (coupon.type === "free-delivery") {
+      if (
+        deliveryFee &&
+        coupon.minimumOrderValue &&
+        itemsTotalAmount &&
+        itemsTotalAmount >= coupon.minimumOrderValue
+      ) {
+        deliveryFee = 0;
+      }
     }
   }
 
-  return discounts;
+  return { discounts, deliveryFee };
 };

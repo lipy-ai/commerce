@@ -221,6 +221,8 @@ export const auth: any = betterAuth({
 							...session,
 							activeStoreHandle: store?.handle || null,
 							activeStoreId: store?.id || null,
+							// activeStoreId: "da5f03fa-2f17-4f17-949f-bacefb789fd1",
+							// activeStoreHandle: "biriyani-express-and-momos-rw0hd",
 							activeStoreRole: store?.role || null,
 						},
 					};

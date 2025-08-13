@@ -1,6 +1,7 @@
 import type { Context, Env } from "hono";
 
 export * from "./auth";
+
 import type { Emitter } from "@hono/event-emitter";
 import type { Session, User } from "better-auth";
 import type { AvailableEvents } from "@/events";
@@ -101,6 +102,7 @@ export type MerchantComboboxRoute = typeof merchantComboboxRoute;
 export type MerchantInventoryRoute = typeof merchantInventoryRoute;
 export type MerchantEventsRoute = typeof eventsRoute;
 export type MerchantDashboardRoute = typeof merchantDashboardRoute;
+export type MerchantCouponRoute = typeof merchantCouponRoute;
 
 // Logged In Routes
 export type LoggedInUploadRoute = typeof uploadRoute;

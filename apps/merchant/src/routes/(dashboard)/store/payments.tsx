@@ -29,8 +29,6 @@ function RouteComponent() {
       queryClient.invalidateQueries({ queryKey: qOpts.queryKey });
     },
   });
-
-  console.log(data);
   const defaultValues = {
     payments: {
       upiIds: [

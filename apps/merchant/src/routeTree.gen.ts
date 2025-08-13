@@ -40,11 +40,12 @@ import { Route as dashboardStoreStaffRouteImport } from './routes/(dashboard)/st
 import { Route as dashboardStorePoliciesRouteImport } from './routes/(dashboard)/store/policies'
 import { Route as dashboardStorePaymentsRouteImport } from './routes/(dashboard)/store/payments'
 import { Route as dashboardStoreGeneralRouteImport } from './routes/(dashboard)/store/general'
-import { Route as dashboardStoreCouponsRouteImport } from './routes/(dashboard)/store/coupons'
 import { Route as dashboardProductAddRouteImport } from './routes/(dashboard)/product/add'
 import { Route as dashboardProductIdRouteImport } from './routes/(dashboard)/product/$id'
 import { Route as dashboardCustomerIdRouteImport } from './routes/(dashboard)/customer/$id'
 import { Route as PosOrderIdIndexRouteImport } from './routes/pos/order/$id/index'
+import { Route as dashboardStoreCouponsIndexRouteImport } from './routes/(dashboard)/store/coupons/index'
+import { Route as dashboardStoreCouponsNewRouteImport } from './routes/(dashboard)/store/coupons/new'
 
 const ErrorRoute = ErrorRouteImport.update({
   id: '/error',
@@ -201,11 +202,6 @@ const dashboardStoreGeneralRoute = dashboardStoreGeneralRouteImport.update({
   path: '/store/general',
   getParentRoute: () => dashboardRouteRoute,
 } as any)
-const dashboardStoreCouponsRoute = dashboardStoreCouponsRouteImport.update({
-  id: '/store/coupons',
-  path: '/store/coupons',
-  getParentRoute: () => dashboardRouteRoute,
-} as any)
 const dashboardProductAddRoute = dashboardProductAddRouteImport.update({
   id: '/product/add',
   path: '/product/add',
@@ -226,6 +222,18 @@ const PosOrderIdIndexRoute = PosOrderIdIndexRouteImport.update({
   path: '/order/$id/',
   getParentRoute: () => PosRouteRoute,
 } as any)
+const dashboardStoreCouponsIndexRoute =
+  dashboardStoreCouponsIndexRouteImport.update({
+    id: '/store/coupons/',
+    path: '/store/coupons/',
+    getParentRoute: () => dashboardRouteRoute,
+  } as any)
+const dashboardStoreCouponsNewRoute =
+  dashboardStoreCouponsNewRouteImport.update({
+    id: '/store/coupons/new',
+    path: '/store/coupons/new',
+    getParentRoute: () => dashboardRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof dashboardIndexRoute
@@ -246,7 +254,6 @@ export interface FileRoutesByFullPath {
   '/customer/$id': typeof dashboardCustomerIdRoute
   '/product/$id': typeof dashboardProductIdRoute
   '/product/add': typeof dashboardProductAddRoute
-  '/store/coupons': typeof dashboardStoreCouponsRoute
   '/store/general': typeof dashboardStoreGeneralRoute
   '/store/payments': typeof dashboardStorePaymentsRoute
   '/store/policies': typeof dashboardStorePoliciesRoute
@@ -262,6 +269,8 @@ export interface FileRoutesByFullPath {
   '/admin/review-products': typeof AdminReviewProductsIndexRoute
   '/pos/checkout': typeof PosCheckoutIndexRoute
   '/pos/order': typeof PosOrderIndexRoute
+  '/store/coupons/new': typeof dashboardStoreCouponsNewRoute
+  '/store/coupons': typeof dashboardStoreCouponsIndexRoute
   '/pos/order/$id': typeof PosOrderIdIndexRoute
 }
 export interface FileRoutesByTo {
@@ -280,7 +289,6 @@ export interface FileRoutesByTo {
   '/customer/$id': typeof dashboardCustomerIdRoute
   '/product/$id': typeof dashboardProductIdRoute
   '/product/add': typeof dashboardProductAddRoute
-  '/store/coupons': typeof dashboardStoreCouponsRoute
   '/store/general': typeof dashboardStoreGeneralRoute
   '/store/payments': typeof dashboardStorePaymentsRoute
   '/store/policies': typeof dashboardStorePoliciesRoute
@@ -296,6 +304,8 @@ export interface FileRoutesByTo {
   '/admin/review-products': typeof AdminReviewProductsIndexRoute
   '/pos/checkout': typeof PosCheckoutIndexRoute
   '/pos/order': typeof PosOrderIndexRoute
+  '/store/coupons/new': typeof dashboardStoreCouponsNewRoute
+  '/store/coupons': typeof dashboardStoreCouponsIndexRoute
   '/pos/order/$id': typeof PosOrderIdIndexRoute
 }
 export interface FileRoutesById {
@@ -319,7 +329,6 @@ export interface FileRoutesById {
   '/(dashboard)/customer/$id': typeof dashboardCustomerIdRoute
   '/(dashboard)/product/$id': typeof dashboardProductIdRoute
   '/(dashboard)/product/add': typeof dashboardProductAddRoute
-  '/(dashboard)/store/coupons': typeof dashboardStoreCouponsRoute
   '/(dashboard)/store/general': typeof dashboardStoreGeneralRoute
   '/(dashboard)/store/payments': typeof dashboardStorePaymentsRoute
   '/(dashboard)/store/policies': typeof dashboardStorePoliciesRoute
@@ -335,6 +344,8 @@ export interface FileRoutesById {
   '/admin/review-products/': typeof AdminReviewProductsIndexRoute
   '/pos/checkout/': typeof PosCheckoutIndexRoute
   '/pos/order/': typeof PosOrderIndexRoute
+  '/(dashboard)/store/coupons/new': typeof dashboardStoreCouponsNewRoute
+  '/(dashboard)/store/coupons/': typeof dashboardStoreCouponsIndexRoute
   '/pos/order/$id/': typeof PosOrderIdIndexRoute
 }
 export interface FileRouteTypes {
@@ -358,7 +369,6 @@ export interface FileRouteTypes {
     | '/customer/$id'
     | '/product/$id'
     | '/product/add'
-    | '/store/coupons'
     | '/store/general'
     | '/store/payments'
     | '/store/policies'
@@ -374,6 +384,8 @@ export interface FileRouteTypes {
     | '/admin/review-products'
     | '/pos/checkout'
     | '/pos/order'
+    | '/store/coupons/new'
+    | '/store/coupons'
     | '/pos/order/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -392,7 +404,6 @@ export interface FileRouteTypes {
     | '/customer/$id'
     | '/product/$id'
     | '/product/add'
-    | '/store/coupons'
     | '/store/general'
     | '/store/payments'
     | '/store/policies'
@@ -408,6 +419,8 @@ export interface FileRouteTypes {
     | '/admin/review-products'
     | '/pos/checkout'
     | '/pos/order'
+    | '/store/coupons/new'
+    | '/store/coupons'
     | '/pos/order/$id'
   id:
     | '__root__'
@@ -430,7 +443,6 @@ export interface FileRouteTypes {
     | '/(dashboard)/customer/$id'
     | '/(dashboard)/product/$id'
     | '/(dashboard)/product/add'
-    | '/(dashboard)/store/coupons'
     | '/(dashboard)/store/general'
     | '/(dashboard)/store/payments'
     | '/(dashboard)/store/policies'
@@ -446,6 +458,8 @@ export interface FileRouteTypes {
     | '/admin/review-products/'
     | '/pos/checkout/'
     | '/pos/order/'
+    | '/(dashboard)/store/coupons/new'
+    | '/(dashboard)/store/coupons/'
     | '/pos/order/$id/'
   fileRoutesById: FileRoutesById
 }
@@ -680,13 +694,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof dashboardStoreGeneralRouteImport
       parentRoute: typeof dashboardRouteRoute
     }
-    '/(dashboard)/store/coupons': {
-      id: '/(dashboard)/store/coupons'
-      path: '/store/coupons'
-      fullPath: '/store/coupons'
-      preLoaderRoute: typeof dashboardStoreCouponsRouteImport
-      parentRoute: typeof dashboardRouteRoute
-    }
     '/(dashboard)/product/add': {
       id: '/(dashboard)/product/add'
       path: '/product/add'
@@ -715,6 +722,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PosOrderIdIndexRouteImport
       parentRoute: typeof PosRouteRoute
     }
+    '/(dashboard)/store/coupons/': {
+      id: '/(dashboard)/store/coupons/'
+      path: '/store/coupons'
+      fullPath: '/store/coupons'
+      preLoaderRoute: typeof dashboardStoreCouponsIndexRouteImport
+      parentRoute: typeof dashboardRouteRoute
+    }
+    '/(dashboard)/store/coupons/new': {
+      id: '/(dashboard)/store/coupons/new'
+      path: '/store/coupons/new'
+      fullPath: '/store/coupons/new'
+      preLoaderRoute: typeof dashboardStoreCouponsNewRouteImport
+      parentRoute: typeof dashboardRouteRoute
+    }
   }
 }
 
@@ -723,7 +744,6 @@ interface dashboardRouteRouteChildren {
   dashboardCustomerIdRoute: typeof dashboardCustomerIdRoute
   dashboardProductIdRoute: typeof dashboardProductIdRoute
   dashboardProductAddRoute: typeof dashboardProductAddRoute
-  dashboardStoreCouponsRoute: typeof dashboardStoreCouponsRoute
   dashboardStoreGeneralRoute: typeof dashboardStoreGeneralRoute
   dashboardStorePaymentsRoute: typeof dashboardStorePaymentsRoute
   dashboardStorePoliciesRoute: typeof dashboardStorePoliciesRoute
@@ -731,6 +751,8 @@ interface dashboardRouteRouteChildren {
   dashboardCustomerIndexRoute: typeof dashboardCustomerIndexRoute
   dashboardProductIndexRoute: typeof dashboardProductIndexRoute
   dashboardStoreIndexRoute: typeof dashboardStoreIndexRoute
+  dashboardStoreCouponsNewRoute: typeof dashboardStoreCouponsNewRoute
+  dashboardStoreCouponsIndexRoute: typeof dashboardStoreCouponsIndexRoute
 }
 
 const dashboardRouteRouteChildren: dashboardRouteRouteChildren = {
@@ -738,7 +760,6 @@ const dashboardRouteRouteChildren: dashboardRouteRouteChildren = {
   dashboardCustomerIdRoute: dashboardCustomerIdRoute,
   dashboardProductIdRoute: dashboardProductIdRoute,
   dashboardProductAddRoute: dashboardProductAddRoute,
-  dashboardStoreCouponsRoute: dashboardStoreCouponsRoute,
   dashboardStoreGeneralRoute: dashboardStoreGeneralRoute,
   dashboardStorePaymentsRoute: dashboardStorePaymentsRoute,
   dashboardStorePoliciesRoute: dashboardStorePoliciesRoute,
@@ -746,6 +767,8 @@ const dashboardRouteRouteChildren: dashboardRouteRouteChildren = {
   dashboardCustomerIndexRoute: dashboardCustomerIndexRoute,
   dashboardProductIndexRoute: dashboardProductIndexRoute,
   dashboardStoreIndexRoute: dashboardStoreIndexRoute,
+  dashboardStoreCouponsNewRoute: dashboardStoreCouponsNewRoute,
+  dashboardStoreCouponsIndexRoute: dashboardStoreCouponsIndexRoute,
 }
 
 const dashboardRouteRouteWithChildren = dashboardRouteRoute._addFileChildren(

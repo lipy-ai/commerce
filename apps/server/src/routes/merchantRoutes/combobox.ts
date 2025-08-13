@@ -1,9 +1,8 @@
+import { Hono } from "hono";
+import { z } from "zod";
 import { db } from "@/db";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
-import { Hono } from "hono";
-
-import { z } from "zod";
 
 const listZodSchema = z.object({
 	type: z.enum(["categories", "stores", "products"]),

@@ -60,8 +60,8 @@ function Home() {
     >
       <DashboardBody>
         <NavBar />
+        {/* <Category /> */}
         <NearByShops />
-
         {!initialized && <AppCartInitializer />}
       </DashboardBody>
     </DashboardLayout>

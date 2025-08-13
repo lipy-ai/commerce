@@ -23,19 +23,22 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@lipy/web-ui/components/ui/input-otp";
-import type { InferRequestType } from "hono";
+import type { InferRequestType, InferResponseType } from "hono";
 import { Check } from "lucide-react";
 import { type ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
 
 type PatchTypes = InferRequestType<(typeof posOrderApi)[":id"]["$patch"]>;
+type Order = InferResponseType<(typeof posOrderApi)[":id"]["$get"]>;
 
 export default function OrderDeliverForm({
   children,
   onSubmit,
+  data: order,
 }: {
   children: ReactNode;
   onSubmit: (json: PatchTypes["json"]) => Promise<void>;
+  data?: Order;
 }) {
   const defaultValues = {
     otp: "",
@@ -47,11 +50,12 @@ export default function OrderDeliverForm({
   return (
     <DrawerDialogSwitcher
       trigger={children}
-      className="sm:max-w-sm text-center h-[95vh]"
+      className="sm:max-w-sm text-center"
       open={open}
       onOpenChange={setOpen}
+      key={form.formState.submitCount}
     >
-      {form.formState.isSubmitSuccessful ? (
+      {order?.status === "delivered" || form.formState.isSubmitSuccessful ? (
         <div className="space-y-4">
           <div className="p-4 rounded-full bg-primary text-primary-foreground inline-flex">
             <Check className="size-10" />

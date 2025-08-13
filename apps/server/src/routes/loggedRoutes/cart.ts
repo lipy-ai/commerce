@@ -96,7 +96,7 @@ const route = new Hono<ServerContext>()
 		const storesData = await Promise.all(
 			groupedStores.map(async ({ id, handle, image, name, items }, i) => {
 				const store = await getStore(id);
-				const discount = couponCalculator(store.coupons);
+
 				let distanceFromUser = 0;
 				let deliveryCharge = 0;
 				let isServiceable = true;
@@ -119,15 +119,6 @@ const route = new Hono<ServerContext>()
 					}
 				}
 
-				const taxes: Array<{ amount: number; sum: (typeof SUM_TYPE)[number] }> =
-					[
-						{ amount: store.gstTax, sum: "percent" },
-						{
-							amount: deliveryCharge,
-							sum: "flat",
-						},
-					];
-
 				const formattedItems = items
 					.filter(
 						(item: (typeof groupedStores)[number]["items"][number]) =>
@@ -138,10 +129,30 @@ const route = new Hono<ServerContext>()
 						maxPrice: item.maxPrice || undefined,
 						qty: item.quantity || 1,
 					}));
+				const orderValue = formattedItems.reduce(
+					(acc, item) => acc + item.price * item.qty,
+					0,
+				);
+
+				let { discounts, deliveryFee } = couponCalculator(
+					store.coupons,
+					orderValue,
+					deliveryCharge,
+				);
+
+				const taxes: Array<{ amount: number; sum: (typeof SUM_TYPE)[number] }> =
+					[
+						{ amount: store.gstTax, sum: "percent" },
+						{
+							amount: deliveryFee as number,
+							sum: "flat",
+						},
+					];
+
 				const calc = orderCalculator({
 					items: formattedItems,
 					taxes,
-					discounts: discount,
+					discounts: discounts,
 				});
 				if (!isServiceable) {
 					calc.itemTotalAmount = 0;
@@ -150,15 +161,15 @@ const route = new Hono<ServerContext>()
 					calc.totalTaxAmount = 0;
 					calc.amountSaved = 0;
 					calc.totalDiscountAmount = 0;
-					deliveryCharge = 0;
+					deliveryFee = 0;
 				}
 
 				itemsTotal += calc.itemTotalAmount;
 				maxItemsTotal += calc.maxItemTotalAmount;
-				taxTotal += calc.totalTaxAmount - deliveryCharge;
+				taxTotal += calc.totalTaxAmount - (deliveryFee as number);
 				totalSaved += calc.amountSaved;
 				totalAmount += calc.totalAmount;
-				totalDeliveryCharge += deliveryCharge;
+				totalDeliveryCharge += deliveryFee as number;
 				totalDiscount += calc.totalDiscountAmount;
 
 				return {
@@ -170,10 +181,10 @@ const route = new Hono<ServerContext>()
 					storeTax: calc.totalTaxAmount - deliveryCharge,
 					storeItemsTotal: calc.itemTotalAmount,
 					storeMaxItemsTotal: calc.maxItemTotalAmount,
-					storDeliveryCharge: deliveryCharge,
+					storDeliveryCharge: deliveryFee,
 					storeDistanceFromUser: distanceFromUser / 1000,
 					storeIsServiceable: isServiceable,
-					storeDiscount: discount,
+					storeDiscount: discounts,
 					items,
 				};
 			}),

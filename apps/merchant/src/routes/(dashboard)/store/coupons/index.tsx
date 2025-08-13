@@ -23,7 +23,7 @@ import {
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import type { InferResponseType } from "hono/client";
-import { BadgePercent, ChevronRight, Plus, Tag } from "lucide-react";
+import { BadgePercent, Bike, ChevronRight, Plus, Tag } from "lucide-react";
 import { useState } from "react";
 import { StoreNav } from "../-nav";
 
@@ -192,12 +192,12 @@ const CouponTypeOptions = ({ children }: { children: React.ReactNode }) => {
     icon: any;
     couponType: (typeof COUPON_TYPE)[number];
   }[] = [
-    // {
-    //   label: "Free Delivery",
-    //   description: "Offer free delivery on an order",
-    //   icon: Bike,
-    //   couponType: "free-delivery",
-    // },
+    {
+      label: "Free Delivery",
+      description: "Offer free delivery on an order",
+      icon: Bike,
+      couponType: "free-delivery",
+    },
     {
       label: "Amount off",
       description: "Discount on total order amount",

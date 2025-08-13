@@ -137,7 +137,7 @@ function BillingDetails({
                   type === "tax"
                     ? s.storeTax
                     : type === "delivery"
-                      ? s.storDeliveryCharge
+                      ? (s.storDeliveryCharge as number)
                       : 0
                 )}
               </p>
@@ -156,7 +156,7 @@ function BillingDetails({
                   type === "tax"
                     ? s.storeTax
                     : type === "delivery"
-                      ? s.storDeliveryCharge
+                      ? (s.storDeliveryCharge as number)
                       : 0
                 )}
               </p>

@@ -131,28 +131,38 @@ const route = new Hono<ServerContext>()
 		zValidator("param", z.object({ handle: z.string() })),
 		async (c) => {
 			const { handle } = c.req.valid("param");
+
 			const data = await db
-				.selectFrom("store")
-				.where("handle", "=", handle)
-				.select([
-					"id",
-					"handle",
-					"image",
-					"address",
-					"phone",
-					"email",
-					"openingHour",
-					"closingHour",
-					"name",
-					"description",
-					"createdAt",
-					"type",
-					"freeDeliveryDistance",
+				.selectFrom("store as s")
+				.leftJoin("coupons as c", "s.id", "c.storeId")
+				.where("s.handle", "=", handle)
+				.where("s.active", "=", true)
+				.select((eb) => [
+					"s.id",
+					"s.handle",
+					"s.image",
+					"s.address",
+					"s.phone",
+					"s.email",
+					"s.openingHour",
+					"s.closingHour",
+					"s.name",
+					"s.description",
+					"s.createdAt",
+					"s.type",
+					"s.freeDeliveryDistance",
+					eb.fn
+						.jsonAgg(
+							jsonBuildObject({
+								id: eb.ref("c.id"),
+								title: eb.ref("c.title"),
+								type: eb.ref("c.type"),
+							}),
+						)
+						.as("coupons"),
 				])
-				.executeTakeFirstOrThrow()
-				.catch(() => {
-					throw new HTTPError(404, { message: "Shop not found!" });
-				});
+				.groupBy("s.id")
+				.executeTakeFirstOrThrow();
 
 			return c.json(data);
 		},

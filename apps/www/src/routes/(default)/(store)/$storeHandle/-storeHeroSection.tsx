@@ -3,6 +3,7 @@ import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link } from "@tanstack/react-router";
+import { AnimatePresence, motion } from "framer-motion";
 import type { InferResponseType } from "hono/client";
 import {
   BrickWall,
@@ -14,6 +15,7 @@ import {
   ShoppingBasket,
   Utensils,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { getStoreStatus } from "./-helper";
 
 export const storeType = {
@@ -75,18 +77,10 @@ export const StoreHeroSection = ({ storeInfo }: { storeInfo: SingleStore }) => {
               )}
               <p>{typeInfo?.label || ""}</p>
             </div>
-            <div className="flex items-end gap-2 justify-between">
-              <h1 className="text-3xl font-bold">{storeInfo.name}</h1>
-              {!isOpen && (
-                <img
-                  src="/assets/icons/closed-signboard.svg"
-                  alt="closed signboard"
-                  className="size-14"
-                />
-              )}
-            </div>
 
-            <div className="inline-flex items-center gap-1  text-muted-foreground">
+            <h1 className="text-3xl font-bold pb-2">{storeInfo.name}</h1>
+
+            <div className="inline-flex items-center gap-1">
               <MapPin className="size-4 flex-shrink-0 stroke-2" />
               {[storeInfo?.address?.line2, storeInfo?.address?.city]
                 .filter(Boolean)
@@ -95,7 +89,7 @@ export const StoreHeroSection = ({ storeInfo }: { storeInfo: SingleStore }) => {
           </div>
         </div>
 
-        <Link
+        {/* <Link
           className={cn(
             buttonVariants({ variant: "tertiary" }),
             "w-full justify-start text-muted-foreground bg-tertiary/50"
@@ -105,7 +99,7 @@ export const StoreHeroSection = ({ storeInfo }: { storeInfo: SingleStore }) => {
         >
           <Search />
           Search in {storeInfo?.name}
-        </Link>
+        </Link> */}
         {!isOpen && (
           <div className="bg-destructive/10 p-2 rounded-md">
             <Badge
@@ -129,10 +123,28 @@ export const StoreHeroSection = ({ storeInfo }: { storeInfo: SingleStore }) => {
             </div>
           </div>
         )}
+        {storeInfo?.coupons.length > 0 && (
+          <div className="border-t pt-2">
+            <StoreCoupons coupons={storeInfo?.coupons} />
+          </div>
+        )}
       </div>
       {storeInfo?.type === "pharmacy" && (
         <PharmacyPrescriptionUpload storeInfo={storeInfo} />
       )}
+      <div className="bg-card px-4 py-2">
+        <Link
+          className={cn(
+            buttonVariants({ variant: "tertiary", size: "sm" }),
+            "w-full justify-start text-muted-foreground bg-tertiary/50 border border-border/50"
+          )}
+          to="/$storeHandle/products/search"
+          params={{ storeHandle: storeInfo?.handle || "" }}
+        >
+          <Search className="text-primary" />
+          Search in {storeInfo?.name}
+        </Link>
+      </div>
     </div>
   );
 };
@@ -162,5 +174,43 @@ function PharmacyPrescriptionUpload({ storeInfo }: { storeInfo: SingleStore }) {
         Order now
       </Link>
     </div>
+  );
+}
+
+function StoreCoupons({ coupons }: { coupons: SingleStore["coupons"] }) {
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(
+      () => setCurrent((i) => (i + 1) % coupons.length),
+      6000
+    );
+    return () => clearInterval(timer);
+  }, [coupons.length]);
+
+  const coupon = coupons[current];
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={current}
+        initial={{ y: 10, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: -10, opacity: 0 }}
+        transition={{ duration: 0.8, ease: "easeInOut" }}
+        // className="absolute inset-0 flex flex-col items-center justify-center space-y-4"
+        className="flex items-center gap-2 "
+      >
+        <img
+          src={
+            coupon?.type === "free-delivery"
+              ? "/assets/icons/scooter-delivery.svg"
+              : "/assets/icons/discount.svg"
+          }
+          alt=""
+          className="flex-shrink-0 size-5"
+        />
+        <h2>{coupon.title}</h2>
+      </motion.div>
+    </AnimatePresence>
   );
 }

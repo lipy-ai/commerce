@@ -1,4 +1,5 @@
-import { publicProductApi, publicShopApi } from "@lipy/lib/api";
+import { publicProductApi } from "@lipy/lib/api";
+import { usePublicStore } from "@lipy/lib/hooks/use-store";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
@@ -20,16 +21,14 @@ function RouteComponent() {
   const { storeHandle } = Route.useParams();
   const { q } = Route.useSearch();
 
-  const { data: storeInfo } = useAPIQuery(publicShopApi[":handle"], "$get", {
-    param: { handle: storeHandle },
-  });
+  const res = usePublicStore({ handle: storeHandle });
 
   const { data: products, isFetching } = useAPIQuery(
     publicProductApi[":id"].search,
     "$get",
     {
       param: {
-        id: storeInfo?.id as string,
+        id: res.data?.id as string,
       },
       query: {
         q: q,
@@ -37,7 +36,7 @@ function RouteComponent() {
     },
 
     {
-      enabled: !!storeInfo?.id,
+      enabled: !!res.data?.id,
       placeholderData: (p) => p,
     }
   );
@@ -48,7 +47,7 @@ function RouteComponent() {
         <SearchBar
           className="w-full pr-4"
           fullPageSearch
-          placeholder={`Search in ${storeInfo?.name}`}
+          placeholder={`Search in ${res.data?.name}`}
         />
       </DashboardHeader>
 

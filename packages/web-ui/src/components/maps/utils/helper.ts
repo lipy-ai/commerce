@@ -95,3 +95,47 @@ export const fillBaseAddress = (result: google.maps.GeocoderResult) => {
 		postalCode: getComponent(addressComponent, "postal_code"),
 	};
 };
+
+export async function nearbySearch(
+	center: google.maps.LatLngLiteral,
+	radius: number,
+	includedTypes: string[] = ["restaurant", "cafe"],
+	fields: string[] = [
+		"displayName",
+		"formattedAddress",
+		"businessStatus",
+		"googleMapsURI",
+		"hasDelivery",
+		"hasDineIn",
+		"hasTakeout",
+		"internationalPhoneNumber",
+		"location",
+		"nationalPhoneNumber",
+		"rating",
+		"websiteURI",
+		"userRatingCount",
+	],
+	// fields: string[] = ["*"],
+): Promise<any[]> {
+	if (!window.google || !google.maps || !google.maps.places) {
+		throw new Error("Google Maps Places API is not loaded");
+	}
+
+	const request: google.maps.places.SearchNearbyRequest = {
+		fields,
+		locationRestriction: {
+			center,
+			radius,
+		},
+		includedPrimaryTypes: includedTypes,
+		maxResultCount: 20, // default or adjust as needed
+	};
+
+	const response = await google.maps.places.Place.searchNearby(request);
+
+	if (!response.places) {
+		throw new Error("No places returned");
+	}
+
+	return response.places.map((place) => place.toJSON());
+}

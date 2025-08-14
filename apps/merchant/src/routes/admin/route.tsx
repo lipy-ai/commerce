@@ -1,15 +1,15 @@
-import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { useStore } from "@lipy/lib/hooks/use-store";
 
 import {
   DashboardBody,
   DashboardLayout,
 } from "@lipy/web-ui/components/layouts/dashboard";
-
-import { useStore } from "@lipy/lib/hooks/use-store";
 import Loading from "@lipy/web-ui/components/ui/loading";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 import {
   CircleUser,
   LogOut,
+  MapPin,
   Settings,
   Shirt,
   ShoppingBag,
@@ -32,6 +32,7 @@ export const dashboardNav = {
 
     { label: "Products", url: "/admin/product", icon: Shirt },
     { label: "Categories", url: "/admin/category", icon: ShoppingBag },
+    { label: "Leads", url: "/admin/leads", icon: MapPin },
   ],
   secondary: [
     { label: "Account", url: "/account", icon: Settings },

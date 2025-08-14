@@ -159,6 +159,7 @@ const route = new Hono<ServerContext>()
 								type: eb.ref("c.type"),
 							}),
 						)
+						.filterWhere("c.id", "is not", null)
 						.as("coupons"),
 				])
 				.groupBy("s.id")

@@ -59,6 +59,7 @@ export const StoreHeroSection = ({ storeInfo }: { storeInfo: SingleStore }) => {
     storeInfo.openingHour,
     storeInfo.closingHour
   );
+
   return (
     <div className="space-y-1 lg:divide-y">
       <div className="bg-card lg:bg-background p-4 space-y-2">
@@ -89,17 +90,6 @@ export const StoreHeroSection = ({ storeInfo }: { storeInfo: SingleStore }) => {
           </div>
         </div>
 
-        {/* <Link
-          className={cn(
-            buttonVariants({ variant: "tertiary" }),
-            "w-full justify-start text-muted-foreground bg-tertiary/50"
-          )}
-          to="/$storeHandle/products/search"
-          params={{ storeHandle: storeInfo?.handle || "" }}
-        >
-          <Search />
-          Search in {storeInfo?.name}
-        </Link> */}
         {!isOpen && (
           <div className="bg-destructive/10 p-2 rounded-md">
             <Badge
@@ -123,7 +113,7 @@ export const StoreHeroSection = ({ storeInfo }: { storeInfo: SingleStore }) => {
             </div>
           </div>
         )}
-        {storeInfo?.coupons.length > 0 && (
+        {storeInfo?.coupons && storeInfo?.coupons.length > 0 && (
           <div className="border-t pt-2">
             <StoreCoupons coupons={storeInfo?.coupons} />
           </div>
@@ -209,7 +199,7 @@ function StoreCoupons({ coupons }: { coupons: SingleStore["coupons"] }) {
           alt=""
           className="flex-shrink-0 size-5"
         />
-        <h2>{coupon.title}</h2>
+        <h2 className="font-medium">{coupon.title}</h2>
       </motion.div>
     </AnimatePresence>
   );

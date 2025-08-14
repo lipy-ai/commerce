@@ -91,7 +91,7 @@ function RouteComponent() {
             <TableHead>Ratings</TableHead>
             <TableHead>Highlights</TableHead>
 
-            <TableHead className="w-48">Address</TableHead>
+            <TableHead className="w-64">Address</TableHead>
             <TableHead>Direction</TableHead>
           </TableRow>
         </TableHeader>
@@ -106,7 +106,7 @@ function RouteComponent() {
                   shop.internationalPhoneNumber ||
                   "-"}
               </TableCell>
-              <TableCell className="w-56 whitespace-normal">
+              <TableCell className="w-48 whitespace-normal">
                 {shop.websiteURI}
               </TableCell>
               <TableCell>
@@ -119,7 +119,7 @@ function RouteComponent() {
                 <p>{shop.hasDineIn && "Dine In"}</p>
               </TableCell>
 
-              <TableCell className="w-48 whitespace-normal">
+              <TableCell className="w-64 whitespace-normal">
                 {shop?.formattedAddress || "-"}
               </TableCell>
               <TableCell>
@@ -129,6 +129,7 @@ function RouteComponent() {
                     buttonVariants({ variant: "outline", size: "icon" }),
                     "flex items-center gap-2"
                   )}
+                  target="_blank"
                 >
                   <MapPin className="size-4" />
                 </a>

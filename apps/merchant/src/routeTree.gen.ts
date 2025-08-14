@@ -29,6 +29,7 @@ import { Route as PosOrderIndexRouteImport } from './routes/pos/order/index'
 import { Route as PosCheckoutIndexRouteImport } from './routes/pos/checkout/index'
 import { Route as AdminReviewProductsIndexRouteImport } from './routes/admin/review-products/index'
 import { Route as AdminProductIndexRouteImport } from './routes/admin/product/index'
+import { Route as AdminLeadsIndexRouteImport } from './routes/admin/leads/index'
 import { Route as AdminCategoryIndexRouteImport } from './routes/admin/category/index'
 import { Route as AcceptInvitationIdIndexRouteImport } from './routes/accept-invitation/$id/index'
 import { Route as dashboardStoreIndexRouteImport } from './routes/(dashboard)/store/index'
@@ -145,6 +146,11 @@ const AdminReviewProductsIndexRoute =
 const AdminProductIndexRoute = AdminProductIndexRouteImport.update({
   id: '/product/',
   path: '/product/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminLeadsIndexRoute = AdminLeadsIndexRouteImport.update({
+  id: '/leads/',
+  path: '/leads/',
   getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminCategoryIndexRoute = AdminCategoryIndexRouteImport.update({
@@ -265,6 +271,7 @@ export interface FileRoutesByFullPath {
   '/store': typeof dashboardStoreIndexRoute
   '/accept-invitation/$id': typeof AcceptInvitationIdIndexRoute
   '/admin/category': typeof AdminCategoryIndexRoute
+  '/admin/leads': typeof AdminLeadsIndexRoute
   '/admin/product': typeof AdminProductIndexRoute
   '/admin/review-products': typeof AdminReviewProductsIndexRoute
   '/pos/checkout': typeof PosCheckoutIndexRoute
@@ -300,6 +307,7 @@ export interface FileRoutesByTo {
   '/store': typeof dashboardStoreIndexRoute
   '/accept-invitation/$id': typeof AcceptInvitationIdIndexRoute
   '/admin/category': typeof AdminCategoryIndexRoute
+  '/admin/leads': typeof AdminLeadsIndexRoute
   '/admin/product': typeof AdminProductIndexRoute
   '/admin/review-products': typeof AdminReviewProductsIndexRoute
   '/pos/checkout': typeof PosCheckoutIndexRoute
@@ -340,6 +348,7 @@ export interface FileRoutesById {
   '/(dashboard)/store/': typeof dashboardStoreIndexRoute
   '/accept-invitation/$id/': typeof AcceptInvitationIdIndexRoute
   '/admin/category/': typeof AdminCategoryIndexRoute
+  '/admin/leads/': typeof AdminLeadsIndexRoute
   '/admin/product/': typeof AdminProductIndexRoute
   '/admin/review-products/': typeof AdminReviewProductsIndexRoute
   '/pos/checkout/': typeof PosCheckoutIndexRoute
@@ -380,6 +389,7 @@ export interface FileRouteTypes {
     | '/store'
     | '/accept-invitation/$id'
     | '/admin/category'
+    | '/admin/leads'
     | '/admin/product'
     | '/admin/review-products'
     | '/pos/checkout'
@@ -415,6 +425,7 @@ export interface FileRouteTypes {
     | '/store'
     | '/accept-invitation/$id'
     | '/admin/category'
+    | '/admin/leads'
     | '/admin/product'
     | '/admin/review-products'
     | '/pos/checkout'
@@ -454,6 +465,7 @@ export interface FileRouteTypes {
     | '/(dashboard)/store/'
     | '/accept-invitation/$id/'
     | '/admin/category/'
+    | '/admin/leads/'
     | '/admin/product/'
     | '/admin/review-products/'
     | '/pos/checkout/'
@@ -615,6 +627,13 @@ declare module '@tanstack/react-router' {
       path: '/product'
       fullPath: '/admin/product'
       preLoaderRoute: typeof AdminProductIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/leads/': {
+      id: '/admin/leads/'
+      path: '/leads'
+      fullPath: '/admin/leads'
+      preLoaderRoute: typeof AdminLeadsIndexRouteImport
       parentRoute: typeof AdminRouteRoute
     }
     '/admin/category/': {
@@ -799,6 +818,7 @@ interface AdminRouteRouteChildren {
   AdminIndexRoute: typeof AdminIndexRoute
   AdminProductIdRoute: typeof AdminProductIdRoute
   AdminCategoryIndexRoute: typeof AdminCategoryIndexRoute
+  AdminLeadsIndexRoute: typeof AdminLeadsIndexRoute
   AdminProductIndexRoute: typeof AdminProductIndexRoute
   AdminReviewProductsIndexRoute: typeof AdminReviewProductsIndexRoute
 }
@@ -807,6 +827,7 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminIndexRoute: AdminIndexRoute,
   AdminProductIdRoute: AdminProductIdRoute,
   AdminCategoryIndexRoute: AdminCategoryIndexRoute,
+  AdminLeadsIndexRoute: AdminLeadsIndexRoute,
   AdminProductIndexRoute: AdminProductIndexRoute,
   AdminReviewProductsIndexRoute: AdminReviewProductsIndexRoute,
 }

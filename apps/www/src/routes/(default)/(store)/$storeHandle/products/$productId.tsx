@@ -1,5 +1,6 @@
-import { publicProductApi, publicShopApi } from "@lipy/lib/api";
+import { publicProductApi } from "@lipy/lib/api";
 import { discountCalculator } from "@lipy/lib/helper/discountCalculator";
+import { usePublicStore } from "@lipy/lib/hooks/use-store";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import ImageCarousel from "@lipy/web-ui/components/custom-ui/imageCarousel";
@@ -36,11 +37,7 @@ function RouteComponent() {
   const { productId, storeHandle } = Route.useParams();
   const { isMobile } = useViewport();
 
-  const { data: storeInfo, isLoading: isStoreLoading } = useAPIQuery(
-    publicShopApi[":handle"],
-    "$get",
-    { param: { handle: storeHandle } }
-  );
+  const res = usePublicStore({ handle: storeHandle });
 
   const { cart } = useCartStore();
 
@@ -54,7 +51,7 @@ function RouteComponent() {
       },
     },
     {
-      enabled: !!storeInfo?.id,
+      enabled: !!res.data?.id,
     }
   );
 
@@ -80,7 +77,7 @@ function RouteComponent() {
 
   return (
     <StoreNav storeHandle={storeHandle}>
-      {isLoading || isStoreLoading ? (
+      {isLoading || res.isLoading ? (
         <Loading />
       ) : !product ? (
         <EmptyPage

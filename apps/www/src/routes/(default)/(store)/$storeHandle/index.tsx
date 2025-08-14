@@ -1,5 +1,6 @@
 import { env } from "@envClient";
 import { publicShopApi } from "@lipy/lib/api";
+import { usePublicStore } from "@lipy/lib/hooks/use-store";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
@@ -46,21 +47,7 @@ function RouteComponent() {
     }
   });
 
-  const {
-    data: shopData,
-    isFetching: fetchingShopData,
-    isFetched: fetchedShopData,
-  } = useAPIQuery(
-    publicShopApi[":handle"],
-    "$get",
-    {
-      param: { handle: storeHandle },
-    },
-    {
-      placeholderData: (p) => p,
-    }
-  );
-
+  const res = usePublicStore({ handle: storeHandle });
   const {
     data: productData,
     isFetched: fetchedProduct,
@@ -84,7 +71,7 @@ function RouteComponent() {
     }
   );
 
-  if (fetchingShopData || fetchingProduct) return <Loading />;
+  if (res.isFetching || fetchingProduct) return <Loading />;
 
   return (
     <>
@@ -98,7 +85,7 @@ function RouteComponent() {
             }
             transition={{ duration: 0.5, ease: "easeInOut" }}
           >
-            {shopData?.name}
+            {res.data?.name}
           </motion.h1>
         }
         className="bg-card shadow-none border-b-0 lg:hidden"
@@ -116,12 +103,10 @@ function RouteComponent() {
           </Link>
         )}
 
-        {shopData && <ShopOptions shop={shopData} />}
+        {res.data && <ShopOptions shop={res.data} />}
       </DashboardHeader>
       <StoreNav storeHandle={storeHandle}>
-        {fetchedShopData && shopData && isMobile && (
-          <StoreHeroSection storeInfo={shopData} />
-        )}
+        {res.data && isMobile && <StoreHeroSection storeInfo={res.data} />}
 
         {fetchedProduct && productData && productData.items.length > 0 && (
           <div className="mb-32  bg-card my-2 px-4 lg:px-8">

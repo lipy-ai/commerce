@@ -1,6 +1,7 @@
 import { env } from "@envClient";
 import { nearbySearch } from "@lipy/web-ui/components/maps/utils/helper";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
+import Loading from "@lipy/web-ui/components/ui/loading";
 import {
   Table,
   TableBody,
@@ -20,7 +21,7 @@ export const Route = createFileRoute("/admin/leads/")({
 });
 
 function RouteComponent() {
-  useJsApiLoader({
+  const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: env.GOOGLE_MAP_API_KEY,
     libraries: env.GOOGLE_MAP_LIBRARIES,
   });
@@ -53,6 +54,8 @@ function RouteComponent() {
         console.error(err);
       });
   };
+
+  if (!isLoaded) return <Loading />;
 
   return (
     <div className="p-8 space-y-4">

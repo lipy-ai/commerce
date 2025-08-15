@@ -449,7 +449,7 @@ function ProductList({
   // biome-ignore lint/correctness/useExhaustiveDependencies: false positive
   useEffect(() => {
     if (!select) return;
-    console.log(select?.variants);
+
     if (select?.variants?.length > 1) {
       return setDialog("variant");
     }

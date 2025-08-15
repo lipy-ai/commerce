@@ -35,8 +35,8 @@ import {
   SortableItemHandle,
   SortableOverlay,
 } from "@lipy/web-ui/components/ui/sortable";
-import { useNavigate, useSearch } from "@tanstack/react-router";
 import { GripVertical, Trash } from "lucide-react";
+import type React from "react";
 import { Fragment, useEffect, useState } from "react";
 import {
   useFieldArray,
@@ -47,10 +47,16 @@ import {
 import { toast } from "sonner";
 import { VariantForm } from "./-variation";
 
-export default function FormEdit() {
+export default function FormEdit({
+  children,
+  product,
+  view,
+}: {
+  children: React.ReactNode;
+  product?: string;
+  view: "edit" | "assign" | "delete" | "create";
+}) {
   const [open, setOpen] = useState(false);
-  const { product, view } = useSearch({ from: "/(dashboard)/product/add" });
-  const navigate = useNavigate({ from: "/product/add" });
 
   const defaultValues = {
     title: "",
@@ -93,12 +99,10 @@ export default function FormEdit() {
   // biome-ignore lint/correctness/useExhaustiveDependencies: suppress dependencies
   useEffect(() => {
     if (view === "create") {
-      setOpen(true);
       form.reset({});
     }
 
     if (view === "edit") {
-      setOpen(true);
       if (data) {
         form.reset({
           title: data?.title || "",
@@ -126,7 +130,6 @@ export default function FormEdit() {
   );
 
   const onSubmit = async (body: any) => {
-    console.log(body);
     if (data?.id && view === "edit") {
       await updateProductMutation.mutateAsync({
         param: { id: data.id },
@@ -143,17 +146,8 @@ export default function FormEdit() {
     <DrawerDialogSwitcher
       className="sm:max-w-5xl"
       open={open}
-      onOpenChange={(v) => {
-        setOpen(v);
-
-        if (!v) {
-          navigate({
-            search: (s) => ({ ...s, view: undefined, product: undefined }),
-            replace: true,
-          });
-          form.reset(defaultValues);
-        }
-      }}
+      onOpenChange={setOpen}
+      trigger={children}
     >
       <DrawerDialogHeader>
         <DrawerDialogTitle>

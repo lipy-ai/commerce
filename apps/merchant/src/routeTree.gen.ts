@@ -41,6 +41,7 @@ import { Route as dashboardStoreStaffRouteImport } from './routes/(dashboard)/st
 import { Route as dashboardStorePoliciesRouteImport } from './routes/(dashboard)/store/policies'
 import { Route as dashboardStorePaymentsRouteImport } from './routes/(dashboard)/store/payments'
 import { Route as dashboardStoreGeneralRouteImport } from './routes/(dashboard)/store/general'
+import { Route as dashboardProductLipyLibraryRouteImport } from './routes/(dashboard)/product/lipy-library'
 import { Route as dashboardProductAddRouteImport } from './routes/(dashboard)/product/add'
 import { Route as dashboardProductIdRouteImport } from './routes/(dashboard)/product/$id'
 import { Route as dashboardCustomerIdRouteImport } from './routes/(dashboard)/customer/$id'
@@ -208,6 +209,12 @@ const dashboardStoreGeneralRoute = dashboardStoreGeneralRouteImport.update({
   path: '/store/general',
   getParentRoute: () => dashboardRouteRoute,
 } as any)
+const dashboardProductLipyLibraryRoute =
+  dashboardProductLipyLibraryRouteImport.update({
+    id: '/product/lipy-library',
+    path: '/product/lipy-library',
+    getParentRoute: () => dashboardRouteRoute,
+  } as any)
 const dashboardProductAddRoute = dashboardProductAddRouteImport.update({
   id: '/product/add',
   path: '/product/add',
@@ -260,6 +267,7 @@ export interface FileRoutesByFullPath {
   '/customer/$id': typeof dashboardCustomerIdRoute
   '/product/$id': typeof dashboardProductIdRoute
   '/product/add': typeof dashboardProductAddRoute
+  '/product/lipy-library': typeof dashboardProductLipyLibraryRoute
   '/store/general': typeof dashboardStoreGeneralRoute
   '/store/payments': typeof dashboardStorePaymentsRoute
   '/store/policies': typeof dashboardStorePoliciesRoute
@@ -296,6 +304,7 @@ export interface FileRoutesByTo {
   '/customer/$id': typeof dashboardCustomerIdRoute
   '/product/$id': typeof dashboardProductIdRoute
   '/product/add': typeof dashboardProductAddRoute
+  '/product/lipy-library': typeof dashboardProductLipyLibraryRoute
   '/store/general': typeof dashboardStoreGeneralRoute
   '/store/payments': typeof dashboardStorePaymentsRoute
   '/store/policies': typeof dashboardStorePoliciesRoute
@@ -337,6 +346,7 @@ export interface FileRoutesById {
   '/(dashboard)/customer/$id': typeof dashboardCustomerIdRoute
   '/(dashboard)/product/$id': typeof dashboardProductIdRoute
   '/(dashboard)/product/add': typeof dashboardProductAddRoute
+  '/(dashboard)/product/lipy-library': typeof dashboardProductLipyLibraryRoute
   '/(dashboard)/store/general': typeof dashboardStoreGeneralRoute
   '/(dashboard)/store/payments': typeof dashboardStorePaymentsRoute
   '/(dashboard)/store/policies': typeof dashboardStorePoliciesRoute
@@ -378,6 +388,7 @@ export interface FileRouteTypes {
     | '/customer/$id'
     | '/product/$id'
     | '/product/add'
+    | '/product/lipy-library'
     | '/store/general'
     | '/store/payments'
     | '/store/policies'
@@ -414,6 +425,7 @@ export interface FileRouteTypes {
     | '/customer/$id'
     | '/product/$id'
     | '/product/add'
+    | '/product/lipy-library'
     | '/store/general'
     | '/store/payments'
     | '/store/policies'
@@ -454,6 +466,7 @@ export interface FileRouteTypes {
     | '/(dashboard)/customer/$id'
     | '/(dashboard)/product/$id'
     | '/(dashboard)/product/add'
+    | '/(dashboard)/product/lipy-library'
     | '/(dashboard)/store/general'
     | '/(dashboard)/store/payments'
     | '/(dashboard)/store/policies'
@@ -713,6 +726,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof dashboardStoreGeneralRouteImport
       parentRoute: typeof dashboardRouteRoute
     }
+    '/(dashboard)/product/lipy-library': {
+      id: '/(dashboard)/product/lipy-library'
+      path: '/product/lipy-library'
+      fullPath: '/product/lipy-library'
+      preLoaderRoute: typeof dashboardProductLipyLibraryRouteImport
+      parentRoute: typeof dashboardRouteRoute
+    }
     '/(dashboard)/product/add': {
       id: '/(dashboard)/product/add'
       path: '/product/add'
@@ -763,6 +783,7 @@ interface dashboardRouteRouteChildren {
   dashboardCustomerIdRoute: typeof dashboardCustomerIdRoute
   dashboardProductIdRoute: typeof dashboardProductIdRoute
   dashboardProductAddRoute: typeof dashboardProductAddRoute
+  dashboardProductLipyLibraryRoute: typeof dashboardProductLipyLibraryRoute
   dashboardStoreGeneralRoute: typeof dashboardStoreGeneralRoute
   dashboardStorePaymentsRoute: typeof dashboardStorePaymentsRoute
   dashboardStorePoliciesRoute: typeof dashboardStorePoliciesRoute
@@ -779,6 +800,7 @@ const dashboardRouteRouteChildren: dashboardRouteRouteChildren = {
   dashboardCustomerIdRoute: dashboardCustomerIdRoute,
   dashboardProductIdRoute: dashboardProductIdRoute,
   dashboardProductAddRoute: dashboardProductAddRoute,
+  dashboardProductLipyLibraryRoute: dashboardProductLipyLibraryRoute,
   dashboardStoreGeneralRoute: dashboardStoreGeneralRoute,
   dashboardStorePaymentsRoute: dashboardStorePaymentsRoute,
   dashboardStorePoliciesRoute: dashboardStorePoliciesRoute,

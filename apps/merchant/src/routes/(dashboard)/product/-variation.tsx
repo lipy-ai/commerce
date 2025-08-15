@@ -24,7 +24,7 @@ import { FormLabel } from "@lipy/web-ui/components/ui/form";
 // import { useQueryClient } from "@tanstack/react-query";
 // import type { InferResponseType } from "hono";
 import { ArrowRight, Trash } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 // export function ProductVariationForm({
@@ -137,15 +137,19 @@ export function VariantForm() {
     keyName: "kid",
   });
 
+  // Add ref to track if we've already initialized
+  const initializedRef = useRef(false);
+
   // Add default variant once if empty
   useEffect(() => {
-    if (!arr.fields.length) {
+    if (!arr.fields.length && !initializedRef.current) {
       arr.prepend({
         unit: "Untitled",
         price: 0,
         id: crypto.randomUUID(),
         images: [],
       });
+      initializedRef.current = true;
     }
   }, [arr]);
 

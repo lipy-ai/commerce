@@ -23,7 +23,7 @@ export default function MultiImage({
 }) {
   const [files, setFiles] = React.useState<
     Array<{ url?: string; file?: File }>
-  >(urls.map((c) => ({ url: c })) || []);
+  >(urls?.map((c) => ({ url: c })) || []);
 
   const mimeTypes = defaultImgMimes;
 
@@ -88,7 +88,7 @@ export default function MultiImage({
     setUrls(newUrls);
 
     setFiles((prev) =>
-      prev.map((f) =>
+      prev?.map((f) =>
         f.file && !f.url && !f.url?.startsWith("http")
           ? { ...f, url: s.url }
           : f
@@ -125,7 +125,7 @@ export default function MultiImage({
           </label>
         </div>
       )}
-      {files.map((f, i) => (
+      {files?.map((f, i) => (
         <SingleImg
           key={i}
           item={f}

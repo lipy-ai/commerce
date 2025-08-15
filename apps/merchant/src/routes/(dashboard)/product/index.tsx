@@ -15,6 +15,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import type { InferResponseType } from "hono/client";
 import { Edit, Plus, Trash } from "lucide-react";
 import { z } from "zod";
+import { AddInventory } from "./-add-inventory";
 import FormDeleteInventory from "./-form-delete-inventory";
 import FormEditInventory from "./-form-edit-inventory";
 
@@ -24,6 +25,8 @@ export const Route = createFileRoute("/(dashboard)/product/")({
     page: z.coerce.number().int().min(1).catch(1),
     q: z.string().default(""),
     category: z.string().optional(),
+    product: z.string().uuid().optional(),
+    view: z.enum(["edit", "assign", "delete", "create"]).optional(),
   }),
 });
 
@@ -112,10 +115,17 @@ function RouteComponent() {
           </Card>
         ) : (
           <>
+            <AddInventory
+              items={data.items.filter((m) => m.status === "underReview")}
+            />
             {isMobile ? (
-              <MobileView items={data.items} />
+              <MobileView
+                items={data.items.filter((m) => m.status !== "underReview")}
+              />
             ) : (
-              <DesktopView items={data.items} />
+              <DesktopView
+                items={data.items.filter((m) => m.status !== "underReview")}
+              />
             )}
             <Pagination {...data} />
           </>

@@ -100,23 +100,23 @@ export async function nearbySearch(
 	center: google.maps.LatLngLiteral,
 	radius: number,
 	includedTypes: string[] = ["restaurant", "cafe"],
-	// fields: string[] = [
-	// 	"displayName",
-	// 	"formattedAddress",
-	// 	"businessStatus",
-	// 	"googleMapsURI",
-	// 	"hasDelivery",
-	// 	"hasDineIn",
-	// 	"hasTakeout",
-	// 	"internationalPhoneNumber",
-	// 	"location",
-	// 	"nationalPhoneNumber",
-	// 	"rating",
-	// 	"websiteURI",
-	// 	"userRatingCount",
-	// ],
-	fields: string[] = ["*"],
-): Promise<any[]> {
+	fields: string[] = [
+		"displayName",
+		"formattedAddress",
+		"businessStatus",
+		"googleMapsURI",
+		"hasDelivery",
+		"hasDineIn",
+		"hasTakeout",
+		"internationalPhoneNumber",
+		"location",
+		"nationalPhoneNumber",
+		"rating",
+		"websiteURI",
+		"userRatingCount",
+		"primaryTypeDisplayName",
+	],
+): Promise<Partial<google.maps.places.Place>[]> {
 	if (!window.google || !google.maps || !google.maps.places) {
 		throw new Error("Google Maps Places API is not loaded");
 	}

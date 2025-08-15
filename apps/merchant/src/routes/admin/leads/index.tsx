@@ -1,5 +1,8 @@
 import { env } from "@envClient";
+import { adminTestApi } from "@lipy/lib/api";
+import { useAPIMutation } from "@lipy/lib/utils/useQueryClient";
 import { nearbySearch } from "@lipy/web-ui/components/maps/utils/helper";
+import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 import Loading from "@lipy/web-ui/components/ui/loading";
 import {
@@ -13,8 +16,9 @@ import {
 import { cn } from "@lipy/web-ui/lib/utils";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import { createFileRoute } from "@tanstack/react-router";
-import { MapPin } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Download, MapPin } from "lucide-react";
+import { toast } from "sonner";
+import { useLeadStore } from "./-store";
 
 export const Route = createFileRoute("/admin/leads/")({
   component: RouteComponent,
@@ -26,33 +30,40 @@ function RouteComponent() {
     libraries: env.GOOGLE_MAP_LIBRARIES,
   });
 
-  const [shops, setShops] = useState<any[]>([]);
+  const { mapCenter, setMapCenter, result, setResult } = useLeadStore();
 
-  const [mapCenter, setMapCenter] = useState({
-    lat: 28.6139,
-    lng: 77.209,
+  const mutate = useAPIMutation(adminTestApi.lead, "$post", {
+    onSuccess: () => {
+      toast.success("Lead added ");
+    },
   });
-
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setMapCenter({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
-      });
-    }
-  }, []);
 
   const handle = async () => {
     await nearbySearch(mapCenter, 500, ["restaurant", "cafe"])
       .then((results) => {
         console.log("Nearby restaurants:", results);
-        setShops(results);
+        setResult(results as google.maps.places.Place[]);
       })
       .catch((err) => {
         console.error(err);
       });
+  };
+
+  const downloadLead = async (result: google.maps.places.Place) => {
+    await mutate.mutateAsync({
+      json: {
+        name: result.displayName || "",
+        type: result.primaryTypeDisplayName || "",
+        address: result.formattedAddress || "",
+        phone:
+          result.nationalPhoneNumber || result.internationalPhoneNumber || "-",
+        website: result.websiteURI,
+        rating: result.rating || 0,
+        ratingCount: result.userRatingCount || 0,
+        highlights: `${result.hasDelivery ? "Delivery" : ""}  | ${result.hasDineIn ? "Dine In" : ""} |  ${result.hasTakeout ? "Take Out" : ""}`,
+        gmapurl: result.googleMapsURI,
+      } as any,
+    });
   };
 
   if (!isLoaded) return <Loading />;
@@ -92,14 +103,15 @@ function RouteComponent() {
             <TableHead>Highlights</TableHead>
 
             <TableHead className="w-64">Address</TableHead>
-            <TableHead>Direction</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {shops.map((shop, index) => (
+          {result.map((shop, index) => (
             <TableRow key={index}>
-              <TableCell className="font-medium text-base">
-                {shop.displayName}
+              <TableCell className=" w-40">
+                <p className="font-medium text-base">{shop.displayName}</p>
+                <Badge variant={"warning"}>{shop.primaryTypeDisplayName}</Badge>
               </TableCell>
               <TableCell>
                 {shop.nationalPhoneNumber ||
@@ -107,7 +119,13 @@ function RouteComponent() {
                   "-"}
               </TableCell>
               <TableCell className="w-48 whitespace-normal">
-                {shop.websiteURI}
+                <a
+                  href={shop.websiteURI || ""}
+                  target="_blank"
+                  className="text-blue-500"
+                >
+                  {shop.websiteURI}
+                </a>
               </TableCell>
               <TableCell>
                 <p className="text-base font-medium">{shop.rating}</p>
@@ -122,9 +140,9 @@ function RouteComponent() {
               <TableCell className="w-64 whitespace-normal">
                 {shop?.formattedAddress || "-"}
               </TableCell>
-              <TableCell>
+              <TableCell className="flex gap-2 items-center justify-end">
                 <a
-                  href={shop.googleMapsURI}
+                  href={shop.googleMapsURI || ""}
                   className={cn(
                     buttonVariants({ variant: "outline", size: "icon" }),
                     "flex items-center gap-2"
@@ -133,6 +151,10 @@ function RouteComponent() {
                 >
                   <MapPin className="size-4" />
                 </a>
+
+                <Button size="icon" onClick={() => downloadLead(shop)}>
+                  <Download />
+                </Button>
               </TableCell>
             </TableRow>
           ))}

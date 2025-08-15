@@ -54,6 +54,7 @@ const EnvSchema = z.object({
 	DISCORD_WEBHOOK: z.string(),
 	RESEND_SECRET_KEY: z.string(),
 	GOOGLE_MAP_API_KEY: z.string(),
+	GOOGLE_SHEET_LEAD: z.string(),
 	TRUSTED_ORIGINS: z
 		.string()
 		.transform((t) => t.split(",").map((e) => e.trim())),

@@ -22,7 +22,6 @@ function RouteComponent() {
   const { q } = Route.useSearch();
 
   const res = usePublicStore({ handle: storeHandle });
-
   const { data: products, isFetching } = useAPIQuery(
     publicProductApi[":id"].search,
     "$get",
@@ -40,6 +39,20 @@ function RouteComponent() {
       placeholderData: (p) => p,
     }
   );
+
+  // const { data, isLoading, error } = useAPIQuery(
+  //   publicProductApi.search,
+  //   "$get",
+  //   {
+  //     query: {
+  //       q: q,
+  //       lat: String(deliveryLocation?.lat),
+  //       lng: String(deliveryLocation.lng),
+  //     },
+  //   }
+  // );
+
+  // console.log(data);
 
   return (
     <StoreNav storeHandle={storeHandle}>

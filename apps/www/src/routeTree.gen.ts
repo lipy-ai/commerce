@@ -14,6 +14,7 @@ import { Route as defaultIndexRouteImport } from './routes/(default)/index'
 import { Route as defaultTermsRouteImport } from './routes/(default)/terms'
 import { Route as defaultShareRouteImport } from './routes/(default)/share'
 import { Route as defaultSellerRouteImport } from './routes/(default)/seller'
+import { Route as defaultSearchRouteImport } from './routes/(default)/search'
 import { Route as defaultPrivacyRouteImport } from './routes/(default)/privacy'
 import { Route as defaultContactRouteImport } from './routes/(default)/contact'
 import { Route as defaultAboutRouteImport } from './routes/(default)/about'
@@ -59,6 +60,11 @@ const defaultShareRoute = defaultShareRouteImport.update({
 const defaultSellerRoute = defaultSellerRouteImport.update({
   id: '/seller',
   path: '/seller',
+  getParentRoute: () => defaultRouteRoute,
+} as any)
+const defaultSearchRoute = defaultSearchRouteImport.update({
+  id: '/search',
+  path: '/search',
   getParentRoute: () => defaultRouteRoute,
 } as any)
 const defaultPrivacyRoute = defaultPrivacyRouteImport.update({
@@ -191,6 +197,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof defaultAboutRoute
   '/contact': typeof defaultContactRoute
   '/privacy': typeof defaultPrivacyRoute
+  '/search': typeof defaultSearchRoute
   '/seller': typeof defaultSellerRoute
   '/share': typeof defaultShareRoute
   '/terms': typeof defaultTermsRoute
@@ -217,6 +224,7 @@ export interface FileRoutesByTo {
   '/about': typeof defaultAboutRoute
   '/contact': typeof defaultContactRoute
   '/privacy': typeof defaultPrivacyRoute
+  '/search': typeof defaultSearchRoute
   '/seller': typeof defaultSellerRoute
   '/share': typeof defaultShareRoute
   '/terms': typeof defaultTermsRoute
@@ -246,6 +254,7 @@ export interface FileRoutesById {
   '/(default)/about': typeof defaultAboutRoute
   '/(default)/contact': typeof defaultContactRoute
   '/(default)/privacy': typeof defaultPrivacyRoute
+  '/(default)/search': typeof defaultSearchRoute
   '/(default)/seller': typeof defaultSellerRoute
   '/(default)/share': typeof defaultShareRoute
   '/(default)/terms': typeof defaultTermsRoute
@@ -276,6 +285,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/privacy'
+    | '/search'
     | '/seller'
     | '/share'
     | '/terms'
@@ -302,6 +312,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/privacy'
+    | '/search'
     | '/seller'
     | '/share'
     | '/terms'
@@ -330,6 +341,7 @@ export interface FileRouteTypes {
     | '/(default)/about'
     | '/(default)/contact'
     | '/(default)/privacy'
+    | '/(default)/search'
     | '/(default)/seller'
     | '/(default)/share'
     | '/(default)/terms'
@@ -392,6 +404,13 @@ declare module '@tanstack/react-router' {
       path: '/seller'
       fullPath: '/seller'
       preLoaderRoute: typeof defaultSellerRouteImport
+      parentRoute: typeof defaultRouteRoute
+    }
+    '/(default)/search': {
+      id: '/(default)/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof defaultSearchRouteImport
       parentRoute: typeof defaultRouteRoute
     }
     '/(default)/privacy': {
@@ -609,6 +628,7 @@ interface defaultRouteRouteChildren {
   defaultAboutRoute: typeof defaultAboutRoute
   defaultContactRoute: typeof defaultContactRoute
   defaultPrivacyRoute: typeof defaultPrivacyRoute
+  defaultSearchRoute: typeof defaultSearchRoute
   defaultSellerRoute: typeof defaultSellerRoute
   defaultShareRoute: typeof defaultShareRoute
   defaultTermsRoute: typeof defaultTermsRoute
@@ -622,6 +642,7 @@ const defaultRouteRouteChildren: defaultRouteRouteChildren = {
   defaultAboutRoute: defaultAboutRoute,
   defaultContactRoute: defaultContactRoute,
   defaultPrivacyRoute: defaultPrivacyRoute,
+  defaultSearchRoute: defaultSearchRoute,
   defaultSellerRoute: defaultSellerRoute,
   defaultShareRoute: defaultShareRoute,
   defaultTermsRoute: defaultTermsRoute,

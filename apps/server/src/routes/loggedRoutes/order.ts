@@ -4,6 +4,7 @@ import { z } from "zod";
 import { type Database, type DBTypes, db } from "@/db";
 import type { SUM_TYPE } from "@/db/schema";
 import { getStore } from "@/helpers/store";
+import { getFeedStores } from "@/helpers/storeFeed";
 import { couponCalculator } from "@/lib/couponCalculator";
 import { HTTPError } from "@/lib/exception";
 import { idGenerate } from "@/lib/generateId";
@@ -71,6 +72,11 @@ const generateOrders = async ({
 >): Promise<DBTypes["orders"][]> => {
 	const orders: DBTypes["orders"][] = [];
 
+	const nearbyStores = await getFeedStores({
+		lat: Number(address.lat),
+		lng: Number(address.lng),
+	});
+
 	for (const s of stores) {
 		let customer = await trx
 			.selectFrom("customer")
@@ -91,41 +97,26 @@ const generateOrders = async ({
 		}
 		const store = await getStore(s.id);
 
-		let distanceMatrix = null;
+		const currentStore = nearbyStores.find((store) => store.id === s.id);
 
-		try {
-			distanceMatrix = await getDistanceMatrix(
-				{
-					lat: Number(address.lat),
-					lng: Number(address.lng),
-				},
-				[
-					{
-						lat: Number(store?.address?.lat),
-						lng: Number(store?.address?.lng),
-					},
-				],
-			);
-		} catch {}
+		if (!currentStore) continue;
 
-		let distanceFromUser = 0;
 		let deliveryCharge = 0;
 
-		if (distanceMatrix) {
-			distanceFromUser = Number(
-				distanceMatrix.rows[0].elements[0].distance.value,
-			);
-			deliveryCharge =
-				((distanceFromUser - store.freeDeliveryDistance * 1000) *
-					store.deliveryChargePerKm) /
-				1000;
+		deliveryCharge =
+			((Number(currentStore.distance.value) -
+				store.freeDeliveryDistance * 1000) *
+				store.deliveryChargePerKm) /
+			1000;
 
-			if (deliveryCharge < 0) {
-				deliveryCharge = 0;
-			}
-			if (distanceFromUser > (store.deliveryDistance + 5) * 1000) {
-				continue;
-			}
+		if (deliveryCharge < 0) {
+			deliveryCharge = 0;
+		}
+		if (
+			Number(currentStore.distance.value) >
+			(store.deliveryDistance + 5) * 1000
+		) {
+			continue;
 		}
 
 		const items: NonNullable<DBTypes["orders"]["items"]> = [];

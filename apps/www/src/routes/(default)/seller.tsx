@@ -10,7 +10,7 @@ export const Route = createFileRoute("/(default)/seller")({
 function RouteComponent() {
   const navigate = Route.useNavigate();
   useEffect(() => {
-    navigate({ href: env.MERCHANT_URL });
+    navigate({ href: env.MERCHANT_URL, replace: true });
   });
 
   return <Loading />;

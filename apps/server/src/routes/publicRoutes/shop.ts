@@ -5,6 +5,7 @@ import { z } from "zod";
 import { db } from "@/db";
 import env from "@/env";
 import { getStore } from "@/helpers/store";
+import { getFeedStores } from "@/helpers/storeFeed";
 import { HTTPError } from "@/lib/exception";
 import { zValidator } from "@/middlewares/validator";
 import { listZodSchema } from "@/schema/common";
@@ -65,56 +66,11 @@ const route = new Hono<ServerContext>()
 
 	.get("/", zValidator("query", shopSearchSchema), async (c) => {
 		const query = c.req.valid("query");
-		const radiusInMeters = 50_000; // 50km
-		const resp = await db
-			.selectFrom("store as s")
-			.where("s.active", "=", true)
-			.where("s.address", "is not", null)
-			.where(
-				sql<boolean>`ST_DWithin(s.location, ST_SetSRID(ST_MakePoint(${query.originLng}, ${query.originLat}), 4326)::geography, ${radiusInMeters})`,
-			)
-			.where(
-				sql<boolean>`ST_Distance(s.location, ST_SetSRID(ST_MakePoint(${query.originLng}, ${query.originLat}), 4326)::geography) <= (s."deliveryDistance"+ 5) * 1000`,
-			)
-			.select([
-				"id",
-				"handle",
-				"type",
-				"name",
-				"image",
-				"address",
-				"freeDeliveryDistance",
-				"deliveryDistance",
-			])
-			.limit(25)
-			.execute();
 
-		if (resp.length === 0) {
-			throw new HTTPError(404, { message: "No shops found!" });
-		}
-
-		const distanceMatrix = await getDistanceMatrix(
-			{ lat: query.originLat, lng: query.originLng },
-			resp.map((item) => ({
-				lat: (item.address!.lat || 0) as number,
-				lng: (item.address!.lng || 0) as number,
-			})),
-		);
-
-		const shopData = resp.map((shop, i) => ({
-			...shop,
-			distance: distanceMatrix.rows[0].elements[i].distance || 0,
-			duration: distanceMatrix.rows[0].elements[i].duration || 0,
-		}));
-
-		const nearbyShops = shopData.filter((shop) => {
-			return Number(shop.distance.value) < (shop.deliveryDistance + 5) * 1000;
+		const nearbyShops = await getFeedStores({
+			lat: query.originLat,
+			lng: query.originLng,
 		});
-
-		nearbyShops.sort((a, b) => {
-			return Number(a.distance.value) - Number(b.distance.value);
-		});
-
 		return c.json(nearbyShops);
 	})
 	.get(

@@ -3,6 +3,7 @@ import { jsonBuildObject } from "kysely/helpers/postgres";
 import { z } from "zod";
 import { db } from "@/db";
 import { getAllCategory, getCategory } from "@/helpers/category";
+import { getFeedStores } from "@/helpers/storeFeed";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
 
@@ -10,6 +11,12 @@ const schema = z.object({
 	categorySlug: z.string().optional(),
 	storeHandle: z.string().optional(),
 	search: z.string().optional(),
+});
+
+const searchSchema = z.object({
+	q: z.string().optional(),
+	lat: z.coerce.number(),
+	lng: z.coerce.number(),
 });
 
 const route = new Hono<ServerContext>()
@@ -140,6 +147,58 @@ const route = new Hono<ServerContext>()
 			return c.json(data);
 		},
 	)
+	.get("/search", zValidator("query", searchSchema), async (c) => {
+		const query = c.req.valid("query");
+
+		const nearbyShops = await getFeedStores({
+			lat: query.lat,
+			lng: query.lng,
+		});
+
+		const storeIds = nearbyShops.map((shop) => shop.id);
+
+		const qb = db
+			.selectFrom("storeInventory as si")
+			.where("si.storeId", "in", storeIds)
+			.where("si.active", "=", true)
+			.rightJoin("store as s", "s.id", "si.storeId")
+			.rightJoin("productVariant as pv", "pv.id", "si.variantId")
+			.rightJoin("product as p", "p.id", "pv.productId")
+			.$if(!!query.q, (qb) => {
+				const words = query.q!.trim().split(/\s+/);
+				return words.reduce(
+					(acc, word) => acc.where("p.title", "ilike", `%${word}%`),
+					qb,
+				);
+			});
+
+		const data = await qb
+			.select([
+				"p.id as productId",
+				"p.title",
+				"p.thumbnail",
+				"si.storeId",
+				"s.handle",
+				"s.name",
+				"si.price",
+				"pv.unit",
+			])
+			.groupBy([
+				"p.id",
+				"p.title",
+				"p.thumbnail",
+				"si.storeId",
+				"s.handle",
+				"s.name",
+				"si.price",
+				"pv.unit",
+			])
+			.limit(10)
+			.execute();
+
+		return c.json(data);
+	})
+
 	.get(
 		"/:id/search",
 		zValidator("param", z.object({ id: z.string().uuid() })),

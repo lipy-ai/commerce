@@ -11,10 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as defaultRouteRouteImport } from './routes/(default)/route'
 import { Route as defaultIndexRouteImport } from './routes/(default)/index'
-import { Route as defaultTermsConditionRouteImport } from './routes/(default)/terms-condition'
+import { Route as defaultTermsRouteImport } from './routes/(default)/terms'
 import { Route as defaultShareRouteImport } from './routes/(default)/share'
+import { Route as defaultSellerRouteImport } from './routes/(default)/seller'
 import { Route as defaultSearchRouteImport } from './routes/(default)/search'
 import { Route as defaultPrivacyRouteImport } from './routes/(default)/privacy'
+import { Route as defaultContactRouteImport } from './routes/(default)/contact'
+import { Route as defaultAboutRouteImport } from './routes/(default)/about'
 import { Route as authLogoutRouteImport } from './routes/(auth)/logout'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as defaultAccountRouteRouteImport } from './routes/(default)/account/route'
@@ -44,14 +47,19 @@ const defaultIndexRoute = defaultIndexRouteImport.update({
   path: '/',
   getParentRoute: () => defaultRouteRoute,
 } as any)
-const defaultTermsConditionRoute = defaultTermsConditionRouteImport.update({
-  id: '/terms-condition',
-  path: '/terms-condition',
+const defaultTermsRoute = defaultTermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => defaultRouteRoute,
 } as any)
 const defaultShareRoute = defaultShareRouteImport.update({
   id: '/share',
   path: '/share',
+  getParentRoute: () => defaultRouteRoute,
+} as any)
+const defaultSellerRoute = defaultSellerRouteImport.update({
+  id: '/seller',
+  path: '/seller',
   getParentRoute: () => defaultRouteRoute,
 } as any)
 const defaultSearchRoute = defaultSearchRouteImport.update({
@@ -62,6 +70,16 @@ const defaultSearchRoute = defaultSearchRouteImport.update({
 const defaultPrivacyRoute = defaultPrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => defaultRouteRoute,
+} as any)
+const defaultContactRoute = defaultContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => defaultRouteRoute,
+} as any)
+const defaultAboutRoute = defaultAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => defaultRouteRoute,
 } as any)
 const authLogoutRoute = authLogoutRouteImport.update({
@@ -176,10 +194,13 @@ export interface FileRoutesByFullPath {
   '/account': typeof defaultAccountRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
+  '/about': typeof defaultAboutRoute
+  '/contact': typeof defaultContactRoute
   '/privacy': typeof defaultPrivacyRoute
   '/search': typeof defaultSearchRoute
+  '/seller': typeof defaultSellerRoute
   '/share': typeof defaultShareRoute
-  '/terms-condition': typeof defaultTermsConditionRoute
+  '/terms': typeof defaultTermsRoute
   '/account/profile': typeof defaultAccountProfileRoute
   '/account/': typeof defaultAccountIndexRoute
   '/cart': typeof defaultCartIndexRoute
@@ -200,10 +221,13 @@ export interface FileRoutesByTo {
   '/': typeof defaultIndexRoute
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
+  '/about': typeof defaultAboutRoute
+  '/contact': typeof defaultContactRoute
   '/privacy': typeof defaultPrivacyRoute
   '/search': typeof defaultSearchRoute
+  '/seller': typeof defaultSellerRoute
   '/share': typeof defaultShareRoute
-  '/terms-condition': typeof defaultTermsConditionRoute
+  '/terms': typeof defaultTermsRoute
   '/account/profile': typeof defaultAccountProfileRoute
   '/account': typeof defaultAccountIndexRoute
   '/cart': typeof defaultCartIndexRoute
@@ -227,10 +251,13 @@ export interface FileRoutesById {
   '/(default)/account': typeof defaultAccountRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/logout': typeof authLogoutRoute
+  '/(default)/about': typeof defaultAboutRoute
+  '/(default)/contact': typeof defaultContactRoute
   '/(default)/privacy': typeof defaultPrivacyRoute
   '/(default)/search': typeof defaultSearchRoute
+  '/(default)/seller': typeof defaultSellerRoute
   '/(default)/share': typeof defaultShareRoute
-  '/(default)/terms-condition': typeof defaultTermsConditionRoute
+  '/(default)/terms': typeof defaultTermsRoute
   '/(default)/': typeof defaultIndexRoute
   '/(default)/account/profile': typeof defaultAccountProfileRoute
   '/(default)/account/': typeof defaultAccountIndexRoute
@@ -255,10 +282,13 @@ export interface FileRouteTypes {
     | '/account'
     | '/login'
     | '/logout'
+    | '/about'
+    | '/contact'
     | '/privacy'
     | '/search'
+    | '/seller'
     | '/share'
-    | '/terms-condition'
+    | '/terms'
     | '/account/profile'
     | '/account/'
     | '/cart'
@@ -279,10 +309,13 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/logout'
+    | '/about'
+    | '/contact'
     | '/privacy'
     | '/search'
+    | '/seller'
     | '/share'
-    | '/terms-condition'
+    | '/terms'
     | '/account/profile'
     | '/account'
     | '/cart'
@@ -305,10 +338,13 @@ export interface FileRouteTypes {
     | '/(default)/account'
     | '/(auth)/login'
     | '/(auth)/logout'
+    | '/(default)/about'
+    | '/(default)/contact'
     | '/(default)/privacy'
     | '/(default)/search'
+    | '/(default)/seller'
     | '/(default)/share'
-    | '/(default)/terms-condition'
+    | '/(default)/terms'
     | '/(default)/'
     | '/(default)/account/profile'
     | '/(default)/account/'
@@ -349,11 +385,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof defaultIndexRouteImport
       parentRoute: typeof defaultRouteRoute
     }
-    '/(default)/terms-condition': {
-      id: '/(default)/terms-condition'
-      path: '/terms-condition'
-      fullPath: '/terms-condition'
-      preLoaderRoute: typeof defaultTermsConditionRouteImport
+    '/(default)/terms': {
+      id: '/(default)/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof defaultTermsRouteImport
       parentRoute: typeof defaultRouteRoute
     }
     '/(default)/share': {
@@ -361,6 +397,13 @@ declare module '@tanstack/react-router' {
       path: '/share'
       fullPath: '/share'
       preLoaderRoute: typeof defaultShareRouteImport
+      parentRoute: typeof defaultRouteRoute
+    }
+    '/(default)/seller': {
+      id: '/(default)/seller'
+      path: '/seller'
+      fullPath: '/seller'
+      preLoaderRoute: typeof defaultSellerRouteImport
       parentRoute: typeof defaultRouteRoute
     }
     '/(default)/search': {
@@ -375,6 +418,20 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof defaultPrivacyRouteImport
+      parentRoute: typeof defaultRouteRoute
+    }
+    '/(default)/contact': {
+      id: '/(default)/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof defaultContactRouteImport
+      parentRoute: typeof defaultRouteRoute
+    }
+    '/(default)/about': {
+      id: '/(default)/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof defaultAboutRouteImport
       parentRoute: typeof defaultRouteRoute
     }
     '/(auth)/logout': {
@@ -568,10 +625,13 @@ const defaultAccountRouteRouteWithChildren =
 interface defaultRouteRouteChildren {
   defaultstoreRouteRoute: typeof defaultstoreRouteRouteWithChildren
   defaultAccountRouteRoute: typeof defaultAccountRouteRouteWithChildren
+  defaultAboutRoute: typeof defaultAboutRoute
+  defaultContactRoute: typeof defaultContactRoute
   defaultPrivacyRoute: typeof defaultPrivacyRoute
   defaultSearchRoute: typeof defaultSearchRoute
+  defaultSellerRoute: typeof defaultSellerRoute
   defaultShareRoute: typeof defaultShareRoute
-  defaultTermsConditionRoute: typeof defaultTermsConditionRoute
+  defaultTermsRoute: typeof defaultTermsRoute
   defaultIndexRoute: typeof defaultIndexRoute
   defaultCartIndexRoute: typeof defaultCartIndexRoute
 }
@@ -579,10 +639,13 @@ interface defaultRouteRouteChildren {
 const defaultRouteRouteChildren: defaultRouteRouteChildren = {
   defaultstoreRouteRoute: defaultstoreRouteRouteWithChildren,
   defaultAccountRouteRoute: defaultAccountRouteRouteWithChildren,
+  defaultAboutRoute: defaultAboutRoute,
+  defaultContactRoute: defaultContactRoute,
   defaultPrivacyRoute: defaultPrivacyRoute,
   defaultSearchRoute: defaultSearchRoute,
+  defaultSellerRoute: defaultSellerRoute,
   defaultShareRoute: defaultShareRoute,
-  defaultTermsConditionRoute: defaultTermsConditionRoute,
+  defaultTermsRoute: defaultTermsRoute,
   defaultIndexRoute: defaultIndexRoute,
   defaultCartIndexRoute: defaultCartIndexRoute,
 }

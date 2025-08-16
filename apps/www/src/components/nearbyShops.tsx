@@ -3,9 +3,10 @@ import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { ScrollingTabs } from "@lipy/web-ui/components/custom-ui/scrollable-tabs";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
-import { Input } from "@lipy/web-ui/components/ui/input";
+import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import Loading from "@lipy/web-ui/components/ui/loading";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
+import { cn } from "@lipy/web-ui/lib/utils";
 import { Link } from "@tanstack/react-router";
 import {
   Bike,
@@ -33,7 +34,6 @@ const CATEGORIES = [
 
 export default function NearByShops() {
   const [activeCategory, setActiveCategory] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
   const { isMobile } = useViewport();
   const { deliveryLocation } = useLocationStore();
   const { data: shops, isFetching } = useAPIQuery(
@@ -55,12 +55,9 @@ export default function NearByShops() {
 
   const filteredShops =
     shops?.filter((shop) => {
-      const matchesSearch = shop.name
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
       const matchesCategory =
         activeCategory === "all" || shop.type === activeCategory;
-      return matchesSearch && matchesCategory;
+      return matchesCategory;
     }) || [];
   return (
     <>
@@ -68,12 +65,16 @@ export default function NearByShops() {
         <div className=" border-b sticky top-0 z-50 bg-card  overflow-hidden shadow-xs">
           <div className="relative z-10 space-y-2">
             <div className="px-4 py-1">
-              <Input
-                prefixEl={<Search className="size-8 mr-1  stroke-2" />}
-                className="rounded-xl"
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search shops near you"
-              />
+              <Link
+                to="/search"
+                className={cn(
+                  buttonVariants({ variant: "outline" }),
+                  "w-full rounded-lg shadow-xs flex justify-start"
+                )}
+              >
+                <Search className="size-5 mr-1 stroke-2" />
+                Search for products
+              </Link>
             </div>
 
             <div>
@@ -99,7 +100,7 @@ export default function NearByShops() {
 
       {isFetching ? (
         <Loading />
-      ) : !shops || (searchTerm === "" && filteredShops.length === 0) ? (
+      ) : !shops || filteredShops.length === 0 ? (
         <EmptyPage
           title="Coming soon to your doorstep!"
           label="We are currently not available at your location. We will be in your
@@ -111,7 +112,7 @@ export default function NearByShops() {
             className="aspect-square object-cover size-40"
           />
         </EmptyPage>
-      ) : filteredShops.length === 0 && searchTerm !== "" ? (
+      ) : filteredShops.length === 0 ? (
         <EmptyPage title="No shop found">
           <img
             src="/assets/no-results-found.png"

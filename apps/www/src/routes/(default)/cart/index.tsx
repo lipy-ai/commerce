@@ -105,10 +105,12 @@ export const CartMainContent = () => {
         lat: String(deliveryLocation?.lat),
         lng: String(deliveryLocation.lng),
       },
+    },
+    {
+      staleTime: 0,
+      cacheTime: 0,
     }
   );
-
-  console.log(data);
 
   useEffect(() => {
     resetCart();

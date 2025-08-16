@@ -3,11 +3,11 @@ import { z } from "zod";
 import { db } from "@/db";
 import type { SUM_TYPE } from "@/db/schema";
 import { getStore } from "@/helpers/store";
+import { getFeedStores } from "@/helpers/storeFeed";
 import { couponCalculator } from "@/lib/couponCalculator";
 import { orderCalculator } from "@/lib/orderCalculators";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
-import { getDistanceMatrix } from "../publicRoutes/shop";
 
 const cartSchema = z.object({
 	inventoryId: z.string().uuid(),
@@ -70,20 +70,26 @@ const route = new Hono<ServerContext>()
 			.groupBy("s.id")
 			.execute();
 
-		let distanceMatrix = null;
+		const nearbyShops = await getFeedStores({
+			lat: deliveryLocation.lat,
+			lng: deliveryLocation.lng,
+		});
 
-		try {
-			distanceMatrix = await getDistanceMatrix(
-				{
-					lat: deliveryLocation.lat,
-					lng: deliveryLocation.lng,
-				},
-				groupedStores.map(({ address }) => ({
-					lat: address?.lat as number,
-					lng: address?.lng as number,
-				})),
-			);
-		} catch {}
+		const targetStores = groupedStores
+			.map((store) => {
+				const storeExtraData = nearbyShops.find((nearbyStore) => {
+					return nearbyStore.id === store.id;
+				});
+				if (!storeExtraData) return null;
+
+				return {
+					...store,
+					distanceFromUser: storeExtraData.distance.value,
+					deliveryDistance: storeExtraData.deliveryDistance,
+					freeDeliveryDistance: storeExtraData.freeDeliveryDistance,
+				};
+			})
+			.filter((s) => s !== null);
 
 		let itemsTotal = 0;
 		let maxItemsTotal = 0;
@@ -94,18 +100,22 @@ const route = new Hono<ServerContext>()
 		let totalDiscount = 0;
 
 		const storesData = await Promise.all(
-			groupedStores.map(async ({ id, handle, image, name, items }, i) => {
-				const store = await getStore(id);
+			targetStores.map(
+				async ({
+					id,
+					handle,
+					image,
+					name,
+					items,
+					distanceFromUser,
+					deliveryDistance,
+				}) => {
+					const store = await getStore(id);
 
-				let distanceFromUser = 0;
-				let deliveryCharge = 0;
-				let isServiceable = true;
-				if (distanceMatrix) {
-					distanceFromUser = Number(
-						distanceMatrix.rows[0].elements[i].distance.value,
-					);
+					let deliveryCharge = 0;
+					let isServiceable = true;
 
-					if (distanceFromUser > (store.deliveryDistance + 5) * 1000) {
+					if (Number(distanceFromUser) > (deliveryDistance + 5) * 1000) {
 						isServiceable = false;
 					}
 
@@ -117,31 +127,32 @@ const route = new Hono<ServerContext>()
 					if (deliveryCharge < 0) {
 						deliveryCharge = 0;
 					}
-				}
 
-				const formattedItems = items
-					.filter(
-						(item: (typeof groupedStores)[number]["items"][number]) =>
-							item.inStock === true,
-					)
-					.map((item) => ({
-						price: item.price || 0,
-						maxPrice: item.maxPrice || undefined,
-						qty: item.quantity || 1,
-					}));
-				const orderValue = formattedItems.reduce(
-					(acc, item) => acc + item.price * item.qty,
-					0,
-				);
+					const formattedItems = items
+						.filter(
+							(item: (typeof groupedStores)[number]["items"][number]) =>
+								item.inStock === true,
+						)
+						.map((item) => ({
+							price: item.price || 0,
+							maxPrice: item.maxPrice || undefined,
+							qty: item.quantity || 1,
+						}));
+					const orderValue = formattedItems.reduce(
+						(acc, item) => acc + item.price * item.qty,
+						0,
+					);
 
-				let { discounts, deliveryFee } = couponCalculator(
-					store.coupons,
-					orderValue,
-					deliveryCharge,
-				);
+					let { discounts, deliveryFee } = couponCalculator(
+						store.coupons,
+						orderValue,
+						deliveryCharge,
+					);
 
-				const taxes: Array<{ amount: number; sum: (typeof SUM_TYPE)[number] }> =
-					[
+					const taxes: Array<{
+						amount: number;
+						sum: (typeof SUM_TYPE)[number];
+					}> = [
 						{ amount: store.gstTax, sum: "percent" },
 						{
 							amount: deliveryFee as number,
@@ -149,45 +160,46 @@ const route = new Hono<ServerContext>()
 						},
 					];
 
-				const calc = orderCalculator({
-					items: formattedItems,
-					taxes,
-					discounts: discounts,
-				});
-				if (!isServiceable) {
-					calc.itemTotalAmount = 0;
-					calc.totalAmount = 0;
-					calc.maxItemTotalAmount = 0;
-					calc.totalTaxAmount = 0;
-					calc.amountSaved = 0;
-					calc.totalDiscountAmount = 0;
-					deliveryFee = 0;
-				}
+					const calc = orderCalculator({
+						items: formattedItems,
+						taxes,
+						discounts: discounts,
+					});
+					if (!isServiceable) {
+						calc.itemTotalAmount = 0;
+						calc.totalAmount = 0;
+						calc.maxItemTotalAmount = 0;
+						calc.totalTaxAmount = 0;
+						calc.amountSaved = 0;
+						calc.totalDiscountAmount = 0;
+						deliveryFee = 0;
+					}
 
-				itemsTotal += calc.itemTotalAmount;
-				maxItemsTotal += calc.maxItemTotalAmount;
-				taxTotal += calc.totalTaxAmount - (deliveryFee as number);
-				totalSaved += calc.amountSaved;
-				totalAmount += calc.totalAmount;
-				totalDeliveryCharge += deliveryFee as number;
-				totalDiscount += calc.totalDiscountAmount;
+					itemsTotal += calc.itemTotalAmount;
+					maxItemsTotal += calc.maxItemTotalAmount;
+					taxTotal += calc.totalTaxAmount - (deliveryFee as number);
+					totalSaved += calc.amountSaved;
+					totalAmount += calc.totalAmount;
+					totalDeliveryCharge += deliveryFee as number;
+					totalDiscount += calc.totalDiscountAmount;
 
-				return {
-					storeId: id,
-					storeHandle: handle,
-					storeImage: image,
-					storeName: name,
-					storeMinimumOrderValue: store.minimumOrderValue,
-					storeTax: calc.totalTaxAmount - deliveryCharge,
-					storeItemsTotal: calc.itemTotalAmount,
-					storeMaxItemsTotal: calc.maxItemTotalAmount,
-					storDeliveryCharge: deliveryFee,
-					storeDistanceFromUser: distanceFromUser / 1000,
-					storeIsServiceable: isServiceable,
-					storeDiscount: discounts,
-					items,
-				};
-			}),
+					return {
+						storeId: id,
+						storeHandle: handle,
+						storeImage: image,
+						storeName: name,
+						storeMinimumOrderValue: store.minimumOrderValue,
+						storeTax: calc.totalTaxAmount - deliveryCharge,
+						storeItemsTotal: calc.itemTotalAmount,
+						storeMaxItemsTotal: calc.maxItemTotalAmount,
+						storDeliveryCharge: deliveryFee,
+						storeDistanceFromUser: distanceFromUser / 1000,
+						storeIsServiceable: isServiceable,
+						storeDiscount: discounts,
+						items,
+					};
+				},
+			),
 		);
 
 		return c.json({

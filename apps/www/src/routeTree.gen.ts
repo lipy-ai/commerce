@@ -13,6 +13,7 @@ import { Route as defaultRouteRouteImport } from './routes/(default)/route'
 import { Route as defaultIndexRouteImport } from './routes/(default)/index'
 import { Route as defaultTermsConditionRouteImport } from './routes/(default)/terms-condition'
 import { Route as defaultShareRouteImport } from './routes/(default)/share'
+import { Route as defaultSearchRouteImport } from './routes/(default)/search'
 import { Route as defaultPrivacyRouteImport } from './routes/(default)/privacy'
 import { Route as authLogoutRouteImport } from './routes/(auth)/logout'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
@@ -51,6 +52,11 @@ const defaultTermsConditionRoute = defaultTermsConditionRouteImport.update({
 const defaultShareRoute = defaultShareRouteImport.update({
   id: '/share',
   path: '/share',
+  getParentRoute: () => defaultRouteRoute,
+} as any)
+const defaultSearchRoute = defaultSearchRouteImport.update({
+  id: '/search',
+  path: '/search',
   getParentRoute: () => defaultRouteRoute,
 } as any)
 const defaultPrivacyRoute = defaultPrivacyRouteImport.update({
@@ -171,6 +177,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
   '/privacy': typeof defaultPrivacyRoute
+  '/search': typeof defaultSearchRoute
   '/share': typeof defaultShareRoute
   '/terms-condition': typeof defaultTermsConditionRoute
   '/account/profile': typeof defaultAccountProfileRoute
@@ -194,6 +201,7 @@ export interface FileRoutesByTo {
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
   '/privacy': typeof defaultPrivacyRoute
+  '/search': typeof defaultSearchRoute
   '/share': typeof defaultShareRoute
   '/terms-condition': typeof defaultTermsConditionRoute
   '/account/profile': typeof defaultAccountProfileRoute
@@ -220,6 +228,7 @@ export interface FileRoutesById {
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/logout': typeof authLogoutRoute
   '/(default)/privacy': typeof defaultPrivacyRoute
+  '/(default)/search': typeof defaultSearchRoute
   '/(default)/share': typeof defaultShareRoute
   '/(default)/terms-condition': typeof defaultTermsConditionRoute
   '/(default)/': typeof defaultIndexRoute
@@ -247,6 +256,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/logout'
     | '/privacy'
+    | '/search'
     | '/share'
     | '/terms-condition'
     | '/account/profile'
@@ -270,6 +280,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/logout'
     | '/privacy'
+    | '/search'
     | '/share'
     | '/terms-condition'
     | '/account/profile'
@@ -295,6 +306,7 @@ export interface FileRouteTypes {
     | '/(auth)/login'
     | '/(auth)/logout'
     | '/(default)/privacy'
+    | '/(default)/search'
     | '/(default)/share'
     | '/(default)/terms-condition'
     | '/(default)/'
@@ -349,6 +361,13 @@ declare module '@tanstack/react-router' {
       path: '/share'
       fullPath: '/share'
       preLoaderRoute: typeof defaultShareRouteImport
+      parentRoute: typeof defaultRouteRoute
+    }
+    '/(default)/search': {
+      id: '/(default)/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof defaultSearchRouteImport
       parentRoute: typeof defaultRouteRoute
     }
     '/(default)/privacy': {
@@ -550,6 +569,7 @@ interface defaultRouteRouteChildren {
   defaultstoreRouteRoute: typeof defaultstoreRouteRouteWithChildren
   defaultAccountRouteRoute: typeof defaultAccountRouteRouteWithChildren
   defaultPrivacyRoute: typeof defaultPrivacyRoute
+  defaultSearchRoute: typeof defaultSearchRoute
   defaultShareRoute: typeof defaultShareRoute
   defaultTermsConditionRoute: typeof defaultTermsConditionRoute
   defaultIndexRoute: typeof defaultIndexRoute
@@ -560,6 +580,7 @@ const defaultRouteRouteChildren: defaultRouteRouteChildren = {
   defaultstoreRouteRoute: defaultstoreRouteRouteWithChildren,
   defaultAccountRouteRoute: defaultAccountRouteRouteWithChildren,
   defaultPrivacyRoute: defaultPrivacyRoute,
+  defaultSearchRoute: defaultSearchRoute,
   defaultShareRoute: defaultShareRoute,
   defaultTermsConditionRoute: defaultTermsConditionRoute,
   defaultIndexRoute: defaultIndexRoute,

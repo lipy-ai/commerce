@@ -46,6 +46,10 @@ function LocationComponent() {
       return;
     }
 
+    // if (window?.ReactNativeWebView) {
+    //   handleError("Reactnative");
+    // }
+
     navigator.geolocation.getCurrentPosition(
       async ({ coords }) => {
         const { latitude: lat, longitude: lng } = coords;

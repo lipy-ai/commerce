@@ -342,7 +342,7 @@ function RouteComponent() {
                             !delivered &&
                               a.disabled &&
                               "cursor-not-allowed bg-muted pointer-events-none",
-                            delivered && "bg-muted"
+                            delivered && a.disabled && "bg-muted"
                           )}
                           key={a.name}
                           onClick={() =>

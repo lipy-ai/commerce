@@ -29,6 +29,7 @@ export default function SearchBar({
         page: p?.q !== q ? 1 : p.page,
         q,
       }),
+      replace: true,
     });
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>

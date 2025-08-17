@@ -42,7 +42,7 @@ function RouteComponent() {
   return (
     <div>
       <DashboardHeader title="Add Product" />
-      <div className="grid lg:grid-cols-12 gap-4 lg:p-8 h-[80vh]">
+      <div className="grid lg:grid-cols-12 gap-4  lg:p-8 min-h-[80vh]">
         <Card className="lg:col-span-8">
           <CardContent className="flex flex-1 flex-col justify-center items-center m-auto space-y-4">
             <img
@@ -70,7 +70,7 @@ function RouteComponent() {
             </div>
           </CardContent>
         </Card>
-        <Card className="lg:col-span-4">
+        <Card className=" lg:col-span-4">
           <CardHeader>
             <CardTitle className="font-semibold text-xl">
               Explore in Lipy Library

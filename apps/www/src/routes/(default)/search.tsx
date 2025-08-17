@@ -32,7 +32,6 @@ function RouteComponent() {
     }
   );
 
-  console.log(data);
   return (
     <div className="p-4">
       <SearchBar

@@ -178,7 +178,7 @@ const route = new Hono<ServerContext>()
 			const result = await db
 				.selectFrom(r)
 				.innerJoin("category", "category.id", "limited_products.category")
-				.where("limited_products.rn", "<=", 6)
+				// .where("limited_products.rn", "<=", 6)
 				.select((eb) => [
 					"category.id",
 					"category.title",
@@ -187,7 +187,7 @@ const route = new Hono<ServerContext>()
 					eb.fn.jsonAgg("limited_products").as("products"),
 				])
 				.groupBy("category.id")
-				.limit(limit)
+				// .limit(limit)
 				.offset(offset)
 				.execute();
 

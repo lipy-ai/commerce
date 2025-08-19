@@ -16,7 +16,7 @@ import {
 import { cn } from "@lipy/web-ui/lib/utils";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import { createFileRoute } from "@tanstack/react-router";
-import { Download, MapPin } from "lucide-react";
+import { Download, MapPin, TableIcon } from "lucide-react";
 import { toast } from "sonner";
 import { useLeadStore } from "./-store";
 
@@ -92,7 +92,19 @@ function RouteComponent() {
           }}
         />
       </GoogleMap>
-      <Button onClick={handle}>Generate Leads</Button>
+      <div className="flex items-center gap-6">
+        <Button onClick={handle}>Generate Leads</Button>
+        <a
+          className={cn(buttonVariants(), "bg-green-700")}
+          href="https://docs.google.com/spreadsheets/d/1rZUqODJpCodULp8Ngy-pG3o3qITLkRa8O6BcZfSYeXw/edit?gid=1247998655#gid=1247998655"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <TableIcon />
+          Leads
+        </a>
+      </div>
+
       <Table>
         <TableHeader>
           <TableRow>
@@ -148,6 +160,7 @@ function RouteComponent() {
                     "flex items-center gap-2"
                   )}
                   target="_blank"
+                  rel="noreferrer"
                 >
                   <MapPin className="size-4" />
                 </a>

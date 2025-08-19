@@ -160,7 +160,7 @@ export const adminProductRoute = new Hono<ServerContext>()
 					id: crypto.randomUUID(),
 					status: "draft",
 					type: "food",
-					thumbnail: "",
+					thumbnail: vals.images[0] || "",
 					keywords: null,
 				})
 				.returningAll()

@@ -17,13 +17,7 @@ import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import type { InferResponseType } from "hono/client";
-import {
-  ChevronRight,
-  EllipsisVertical,
-  Info,
-  Search,
-  Share,
-} from "lucide-react";
+import { EllipsisVertical, Info, Search, Share } from "lucide-react";
 import { useState } from "react";
 import { PrimaryCartFooter } from "@/components/cart/cartFooter";
 import ProductCard from "@/components/productCard";
@@ -109,17 +103,17 @@ function RouteComponent() {
         {res.data && isMobile && <StoreHeroSection storeInfo={res.data} />}
 
         {fetchedProduct && productData && productData.items.length > 0 && (
-          <div className="mb-32  bg-card my-2 px-4 lg:px-8">
+          <div className="mb-32   my-2  space-y-4">
             {productData.items.map((productGroup, _idx) => {
               const productArray = productGroup.products;
 
               return (
-                <div key={_idx} className="">
+                <div key={_idx} className="bg-card p-4 lg:px-8">
                   <div className="flex items-center justify-between gap-2">
                     <p className="text-xl font-bold my-4 line-clamp-1 break-words">
                       {productGroup.title}
                     </p>
-                    {productArray.length === 6 && (
+                    {/* {productArray.length === 6 && (
                       <Link
                         className={cn(
                           buttonVariants({
@@ -138,7 +132,7 @@ function RouteComponent() {
                         See all
                         <ChevronRight className="fill-green-700" />
                       </Link>
-                    )}
+                    )} */}
                   </div>
 
                   <div className="grid grid-cols-2 lg:grid-cols-6 gap-x-4 lg:gap-x-6 gap-y-6 w-full">

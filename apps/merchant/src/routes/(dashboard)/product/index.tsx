@@ -14,6 +14,7 @@ import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import type { InferResponseType } from "hono/client";
 import { Edit, Plus, Trash } from "lucide-react";
+import { toast } from "sonner";
 import { z } from "zod";
 import { AddInventory } from "./-add-inventory";
 import FormDeleteInventory from "./-form-delete-inventory";
@@ -116,15 +117,33 @@ function RouteComponent() {
         ) : (
           <>
             <AddInventory
-              items={data.items.filter((m) => m.status === "underReview")}
+              items={data.items.filter(
+                (m) =>
+                  m.status === "underReview" ||
+                  (m.status === "published" &&
+                    m.variants.some((v) => !v.inventoryId))
+              )}
+              opts={{
+                onSuccess() {
+                  toast.success("Inventory updated");
+                },
+              }}
             />
             {isMobile ? (
               <MobileView
-                items={data.items.filter((m) => m.status !== "underReview")}
+                items={data.items.filter(
+                  (m) =>
+                    m.status !== "underReview" &&
+                    m.variants.every((v) => v.inventoryId)
+                )}
               />
             ) : (
               <DesktopView
-                items={data.items.filter((m) => m.status !== "underReview")}
+                items={data.items.filter(
+                  (m) =>
+                    m.status !== "underReview" &&
+                    m.variants.every((v) => v.inventoryId)
+                )}
               />
             )}
             <Pagination {...data} />

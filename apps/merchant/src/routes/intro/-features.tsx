@@ -78,7 +78,7 @@ export function Features() {
       {/* Parent container with proper spacing for overlay */}
       <div className="relative pr-8 md:pr-12 pt-16 md:pt-20">
         <img
-          src={"/assets/order.png"}
+          src={"/assets/landing/assets/order.png"}
           alt="order"
           className="rounded-2xl w-full md:w-[450px] lg:w-[600px] border drop-shadow-xl"
         />

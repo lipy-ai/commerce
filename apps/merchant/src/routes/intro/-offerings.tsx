@@ -76,7 +76,7 @@ export function Offerings() {
         {/* Left Side Image */}
         <div className="flex-1 flex justify-center">
           <img
-            src="/assets/network.png"
+            src="/assets/landing/assets/network.png"
             alt="Network"
             className="w-[280px] md:w-[420px] lg:w-[500px] object-contain"
           />
@@ -127,7 +127,7 @@ export function Offerings() {
         {/* Right Section (Phone) */}
         <div className="relative mt-6 md:mt-0 md:ml-8 flex-shrink-0 h-96 w-full md:w-72 overflow-hidden flex items-start justify-center pt-8 ">
           <img
-            src="/assets/storeFront.png"
+            src="/assets/landing/assets/storeFront.png"
             alt="Mobile Preview"
             className="h-[32rem] object-contain rounded-xl"
           />

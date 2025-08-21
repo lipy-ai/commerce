@@ -16,6 +16,7 @@ import { Route as AccountRouteRouteImport } from './routes/account/route'
 import { Route as dashboardRouteRouteImport } from './routes/(dashboard)/route'
 import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as PosIndexRouteImport } from './routes/pos/index'
+import { Route as IntroIndexRouteImport } from './routes/intro/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AccountIndexRouteImport } from './routes/account/index'
 import { Route as dashboardIndexRouteImport } from './routes/(dashboard)/index'
@@ -82,6 +83,11 @@ const PosIndexRoute = PosIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => PosRouteRoute,
+} as any)
+const IntroIndexRoute = IntroIndexRouteImport.update({
+  id: '/intro/',
+  path: '/intro/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
@@ -262,6 +268,7 @@ export interface FileRoutesByFullPath {
   '/account/support': typeof AccountSupportRoute
   '/account/': typeof AccountIndexRoute
   '/admin/': typeof AdminIndexRoute
+  '/intro': typeof IntroIndexRoute
   '/pos/': typeof PosIndexRoute
   '/register': typeof RegisterIndexRoute
   '/customer/$id': typeof dashboardCustomerIdRoute
@@ -299,6 +306,7 @@ export interface FileRoutesByTo {
   '/': typeof dashboardIndexRoute
   '/account': typeof AccountIndexRoute
   '/admin': typeof AdminIndexRoute
+  '/intro': typeof IntroIndexRoute
   '/pos': typeof PosIndexRoute
   '/register': typeof RegisterIndexRoute
   '/customer/$id': typeof dashboardCustomerIdRoute
@@ -341,6 +349,7 @@ export interface FileRoutesById {
   '/(dashboard)/': typeof dashboardIndexRoute
   '/account/': typeof AccountIndexRoute
   '/admin/': typeof AdminIndexRoute
+  '/intro/': typeof IntroIndexRoute
   '/pos/': typeof PosIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/(dashboard)/customer/$id': typeof dashboardCustomerIdRoute
@@ -383,6 +392,7 @@ export interface FileRouteTypes {
     | '/account/support'
     | '/account/'
     | '/admin/'
+    | '/intro'
     | '/pos/'
     | '/register'
     | '/customer/$id'
@@ -420,6 +430,7 @@ export interface FileRouteTypes {
     | '/'
     | '/account'
     | '/admin'
+    | '/intro'
     | '/pos'
     | '/register'
     | '/customer/$id'
@@ -461,6 +472,7 @@ export interface FileRouteTypes {
     | '/(dashboard)/'
     | '/account/'
     | '/admin/'
+    | '/intro/'
     | '/pos/'
     | '/register/'
     | '/(dashboard)/customer/$id'
@@ -496,6 +508,7 @@ export interface RootRouteChildren {
   ErrorRoute: typeof ErrorRoute
   authLoginRoute: typeof authLoginRoute
   authLogoutRoute: typeof authLogoutRoute
+  IntroIndexRoute: typeof IntroIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
   AcceptInvitationIdIndexRoute: typeof AcceptInvitationIdIndexRoute
 }
@@ -550,6 +563,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/pos/'
       preLoaderRoute: typeof PosIndexRouteImport
       parentRoute: typeof PosRouteRoute
+    }
+    '/intro/': {
+      id: '/intro/'
+      path: '/intro'
+      fullPath: '/intro'
+      preLoaderRoute: typeof IntroIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/admin/': {
       id: '/admin/'
@@ -886,6 +906,7 @@ const rootRouteChildren: RootRouteChildren = {
   ErrorRoute: ErrorRoute,
   authLoginRoute: authLoginRoute,
   authLogoutRoute: authLogoutRoute,
+  IntroIndexRoute: IntroIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
   AcceptInvitationIdIndexRoute: AcceptInvitationIdIndexRoute,
 }

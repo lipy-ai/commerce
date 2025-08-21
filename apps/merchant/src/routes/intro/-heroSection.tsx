@@ -79,7 +79,7 @@ export function HeroSection() {
             </div>
           </div>
           <img
-            src="/assets/delivery.png"
+            src="/assets/landing/assets/delivery.png"
             alt="Lipy app preview"
             className="w-[500px] md:w-[800px] mx-auto drop-shadow-2xl"
           />

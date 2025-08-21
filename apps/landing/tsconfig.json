@@ -1,5 +1,5 @@
 {
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "../merchant/src/routes/intro/-features.tsx", "../merchant/src/routes/intro/-heroSection.tsx", "../merchant/src/routes/intro/-footer.tsx", "../merchant/src/routes/intro/-offerings.tsx"],
   "references": [{ "path": "../../apps/server" }],
 
   "compilerOptions": {

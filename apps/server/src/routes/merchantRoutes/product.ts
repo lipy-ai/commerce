@@ -11,8 +11,8 @@ import type { ServerContext } from "@/types";
 const productSchema = z.object({
 	title: z.string(),
 	category: z.string(),
-	price: z.coerce.number().min(0),
-	maxPrice: z.coerce.number().min(0),
+	// price: z.coerce.number().min(0),
+	// maxPrice: z.coerce.number().min(0),
 	summary: z.string(),
 	images: z.preprocess(
 		(e) => (Array.isArray(e) ? e.filter((e) => !!e) : e),

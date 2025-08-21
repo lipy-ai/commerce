@@ -8,6 +8,10 @@ export const useAuthSession = () => {
 		redirectToLoginURL();
 	}
 
+	// if (!res.data?.session?.userId && !res.isPending) {
+	// 	window.location.href = `/intro`;
+	// }
+
 	const role = res.data?.session.activeStoreRole || "";
 	let view: "full" | "staff" | "delivery" | null = null;
 

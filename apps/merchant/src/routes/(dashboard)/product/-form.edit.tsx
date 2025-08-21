@@ -61,8 +61,6 @@ export default function FormEdit({
   const defaultValues = {
     title: "",
     category: "",
-    price: 0,
-    maxPrice: 0,
     summary: "",
     images: [],
     highlights: [],
@@ -99,7 +97,7 @@ export default function FormEdit({
   // biome-ignore lint/correctness/useExhaustiveDependencies: suppress dependencies
   useEffect(() => {
     if (view === "create") {
-      form.reset({});
+      form.reset(defaultValues);
     }
 
     if (view === "edit") {

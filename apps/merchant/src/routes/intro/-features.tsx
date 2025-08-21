@@ -60,12 +60,12 @@ export function Features() {
       {/* Parent container with proper spacing for overlay */}
       <div className="relative pl-8 md:pl-12 pb-16 md:pb-20">
         <img
-          src={"/assets/lipy-dashboard.png"}
+          src={"/assets/landing/assets/lipy-dashboard.png"}
           alt="Dashboard preview"
           className="rounded-2xl w-full md:w-[450px] lg:w-[600px] border drop-shadow-xl"
         />
         <img
-          src={"/assets/mobile-dashboard.png"}
+          src={"/assets/landing/assets/mobile-dashboard.png"}
           alt="Mobile dashboard preview"
           className="absolute bottom-0 left-0 w-[90px] md:w-[120px] lg:w-[140px] border rounded-2xl drop-shadow-xl"
         />
@@ -83,7 +83,7 @@ export function Features() {
           className="rounded-2xl w-full md:w-[450px] lg:w-[600px] border drop-shadow-xl"
         />
         <img
-          src={"/assets/product.png"}
+          src={"/assets/landing/assets/product.png"}
           alt="Product preview"
           className="absolute top-0 right-0 w-[90px] md:w-[120px] lg:w-[140px] border rounded-2xl drop-shadow-xl"
         />
@@ -96,7 +96,7 @@ export function Features() {
       {/* Parent container with proper spacing for overlay */}
       <div className="relative">
         <img
-          src={"/assets/pos.png"}
+          src={"/assets/landing/assets/pos.png"}
           alt="order"
           className="rounded-2xl w-full md:w-[450px] lg:w-[700px] border drop-shadow-xl"
         />

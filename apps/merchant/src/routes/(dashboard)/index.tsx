@@ -38,48 +38,6 @@ import {
 } from "lucide-react";
 import { useEffect, useRef } from "react";
 
-// const setupSteps = [
-//   {
-//     name: "shopDetailsComplete",
-//     completed: true,
-//     title: "Fill necessary information about your shop",
-//     description: "These information will help you run your shop smoothly.",
-//     action: (
-//       <Link
-//         className={cn(
-//           buttonVariants({ variant: "link" }),
-//           "h-fit p-0 underline"
-//         )}
-//         to="/store"
-//       >
-//         Complete store details
-//       </Link>
-//     ),
-//   },
-//   {
-//     name: "productAdded",
-//     completed: false,
-//     title: "List products at your shop",
-//     description: "Add products in your shop.",
-//     action: (
-//       <Link className={cn(buttonVariants())} to="/product/add">
-//         Add products
-//       </Link>
-//     ),
-//   },
-//   {
-//     name: "productAdded",
-//     completed: false,
-//     title: "List products at your shop",
-//     description: "Add products in your shop.",
-//     action: (
-//       <Link className={cn(buttonVariants())} to="/product/add">
-//         Add products
-//       </Link>
-//     ),
-//   },
-// ];
-
 type Response = InferResponseType<typeof merchantDashboardApi.index.$get>;
 
 export const Route = createFileRoute("/(dashboard)/")({

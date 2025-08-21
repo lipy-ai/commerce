@@ -13,9 +13,9 @@ export function HeroSection() {
       <div className="relative z-10 flex flex-col md:flex-row items-center justify-between w-full  mx-auto px-6 md:px-12">
         <Link to="/">
           <img
-            src="/logo/ico.png"
+            src="/logo/logo.png"
             alt="Lipy logo"
-            className="absolute w-16 h-12 rounded-lg shrink-0 top-4 left-6"
+            className="absolute w-16 h-12  shrink-0 top-4 left-6"
           />
         </Link>
         {/* Left Content */}

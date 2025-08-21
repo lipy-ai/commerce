@@ -159,8 +159,9 @@ export default function NearByShops() {
 
                         <div className="flex items-center gap-0 text-muted-foreground">
                           <p>{shop.address?.line2 || shop.address?.city}</p>
+
                           <Dot className="fill-muted-foreground" />
-                          {shop.distance.text}
+                          <p>{shop.distance.text}</p>
                         </div>
                       </div>
                     </Link>

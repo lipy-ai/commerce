@@ -41,10 +41,10 @@ export const Footer = ({
     {
       title: "",
       links: [
-        { text: "About", url: "/about" },
-        { text: "Contact", url: "/contact" },
-        { text: "Privacy", url: "/privacy" },
-        { text: "Terms & Condition", url: "/terms" },
+        { text: "About", url: `${env.WEB_URL}/about` },
+        { text: "Contact", url: `${env.WEB_URL}/contact` },
+        { text: "Privacy", url: `${env.WEB_URL}/privacy` },
+        { text: "Terms & Condition", url: `${env.WEB_URL}/terms` },
         { text: "Want to be seller?", url: env.MERCHANT_URL },
       ],
     },
@@ -77,9 +77,9 @@ export const Footer = ({
               <div className="flex items-center gap-2 lg:justify-start shrink-0">
                 <Link to="/">
                   <img
-                    src="/logo/ico.png"
+                    src="/logo/logo.png"
                     alt="Lipy logo"
-                    className="size-20 rounded-lg shrink-0"
+                    className="w-20 h-16 rounded-lg shrink-0"
                   />
                 </Link>
               </div>

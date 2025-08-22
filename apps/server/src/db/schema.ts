@@ -69,6 +69,8 @@ export const STORE_TYPE = [
 
 export const COUPON_TYPE = ["amount-off", "free-delivery"] as const;
 
+export const STORE_STATUS = ["closed", "open"] as const;
+
 export const schema = pgSchema("lipy-dev");
 
 // export const enableUuidExtension = sql`CREATE EXTENSION IF NOT EXISTS "postgis";`;
@@ -212,6 +214,7 @@ export const store = schema.table(
 			content?: string;
 		}>(),
 		gstTax: integer("gstTax").notNull().default(0),
+		status: text("status", { enum: STORE_STATUS }).default("open"),
 	},
 	(t) => [index("store_spatial_index").using("gist", t.location)],
 );

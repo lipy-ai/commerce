@@ -2,6 +2,7 @@ import { addSeconds } from "date-fns";
 import { Hono } from "hono";
 import { z } from "zod";
 import { db } from "@/db";
+import { STORE_STATUS } from "@/db/schema";
 import env from "@/env";
 import { updateSession } from "@/helpers/session";
 import { getStore } from "@/helpers/store";
@@ -32,6 +33,7 @@ export const storeSchema = z.object({
 	freeDeliveryDistance: z.number().int().min(0).max(100),
 	deliveryChargePerKm: z.number().int().min(0).max(50),
 	minimumOrderValue: z.number().int().min(0).max(200),
+	status: z.enum(STORE_STATUS).default("open"),
 	refunds: z.object({
 		enabled: z.boolean(),
 		content: z.string(),

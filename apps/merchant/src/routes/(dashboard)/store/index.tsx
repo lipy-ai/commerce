@@ -23,7 +23,7 @@ function RouteComponent() {
 
   return (
     <>
-      <DashboardHeader title="My Store" />
+      <DashboardHeader title="" className="border-b-0" />
       <StoreNav />
     </>
   );

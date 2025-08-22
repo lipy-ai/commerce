@@ -1,11 +1,13 @@
 import { env } from "@envClient";
 import { usePublicStore } from "@lipy/lib/hooks/use-store";
+import type { STORE_STATUS } from "@lipy/server/db/schema";
 import { GoogleMapsIcon } from "@lipy/web-ui/components/icons";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 import Loading from "@lipy/web-ui/components/ui/loading";
+import { getStoreStatus } from "@lipy/web-ui/lib/helper";
 import { shareContent } from "@lipy/web-ui/lib/share";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
@@ -13,7 +15,6 @@ import { format } from "date-fns";
 import { Bike, Clock, Handshake, Mail, Phone, Share2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { PrimaryCartFooter } from "@/components/cart/cartFooter";
-import { getStoreStatus } from "./-helper";
 
 type StoreStatus = {
   open: boolean;
@@ -37,7 +38,8 @@ function RouteComponent() {
     if (res.data) {
       const { isOpen, openTime, closeTime } = getStoreStatus(
         res.data.openingHour,
-        res.data.closingHour
+        res.data.closingHour,
+        res.data.status as (typeof STORE_STATUS)[number]
       );
       setStoreStatus({ open: isOpen, openTime, closeTime });
     }

@@ -107,6 +107,7 @@ const route = new Hono<ServerContext>()
 					"s.createdAt",
 					"s.type",
 					"s.freeDeliveryDistance",
+					"s.status",
 					eb.fn
 						.jsonAgg(
 							jsonBuildObject({

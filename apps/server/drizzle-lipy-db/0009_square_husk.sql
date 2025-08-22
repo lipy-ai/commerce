@@ -1,0 +1,1 @@
+ALTER TABLE "lipy-dev"."store" ALTER COLUMN "status" DROP DEFAULT;

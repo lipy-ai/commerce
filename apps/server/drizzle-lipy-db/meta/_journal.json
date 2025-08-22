@@ -64,6 +64,13 @@
       "when": 1755835042350,
       "tag": "0008_elite_korvac",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1755842310950,
+      "tag": "0009_square_husk",
+      "breakpoints": true
     }
   ]
 }

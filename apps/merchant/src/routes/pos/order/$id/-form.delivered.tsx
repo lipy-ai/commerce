@@ -108,7 +108,7 @@ export default function OrderDeliverForm({
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <InputOTP maxLength={5} inputMode="text" {...field}>
+                      <InputOTP maxLength={5} inputMode="numeric" {...field}>
                         <InputOTPGroup className="grid grid-cols-5 w-full">
                           <InputOTPSlot index={0} className="h-14 w-full" />
                           <InputOTPSlot index={1} className="h-14 w-full" />

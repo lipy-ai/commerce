@@ -4,6 +4,7 @@ import {
   apiQueryOptions,
   useAPIMutation,
 } from "@lipy/lib/utils/useQueryClient";
+import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
@@ -40,6 +41,7 @@ export const AddToCart = ({
     operation: null,
   });
 
+  const { deliveryLocation } = useLocationStore();
   const queryClient = useQueryClient();
   const mutation = useAPIMutation(loggedInCartApi.index, "$patch", {
     onSuccess: () => {
@@ -48,6 +50,14 @@ export const AddToCart = ({
       }
       queryClient.invalidateQueries({
         queryKey: apiQueryOptions(loggedInCartApi.basic, "$get", {}).queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: apiQueryOptions(loggedInCartApi.index, "$get", {
+          query: {
+            lat: String(deliveryLocation?.lat),
+            lng: String(deliveryLocation.lng),
+          },
+        }).queryKey,
       });
     },
     onError: (e: any) => {

@@ -1,6 +1,8 @@
 import type { publicShopApi } from "@lipy/lib/api";
+import type { STORE_STATUS } from "@lipy/server/db/schema";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
+import { getStoreStatus } from "@lipy/web-ui/lib/helper";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
@@ -16,7 +18,6 @@ import {
   Utensils,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { getStoreStatus } from "./-helper";
 
 export const storeType = {
   pharmacy: {
@@ -57,9 +58,9 @@ export const StoreHeroSection = ({ storeInfo }: { storeInfo: SingleStore }) => {
 
   const { isOpen } = getStoreStatus(
     storeInfo.openingHour,
-    storeInfo.closingHour
+    storeInfo.closingHour,
+    storeInfo.status as (typeof STORE_STATUS)[number]
   );
-
   return (
     <div className="space-y-1 lg:divide-y">
       <div className="bg-card lg:bg-background p-4 space-y-2">

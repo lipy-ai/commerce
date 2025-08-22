@@ -1,5 +1,11 @@
 import { env } from "@envClient";
+import { merchantStoreApi } from "@lipy/lib/api";
 import { useStore } from "@lipy/lib/hooks/use-store";
+import {
+  apiQueryOptions,
+  useAPIMutation,
+} from "@lipy/lib/utils/useQueryClient";
+import type { STORE_STATUS } from "@lipy/server/db/schema";
 import SettingsCard from "@lipy/web-ui/components/custom-ui/settingsCard";
 import {
   Avatar,
@@ -7,11 +13,15 @@ import {
   AvatarImage,
 } from "@lipy/web-ui/components/ui/avatar";
 import { Button } from "@lipy/web-ui/components/ui/button";
+import { Card, CardContent } from "@lipy/web-ui/components/ui/card";
 import { CopyButton } from "@lipy/web-ui/components/ui/copy-button";
 import { Dialog, DialogContent } from "@lipy/web-ui/components/ui/dialog";
 import { Spinner } from "@lipy/web-ui/components/ui/spinner";
+import { Switch } from "@lipy/web-ui/components/ui/switch";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
+import { getStoreStatus } from "@lipy/web-ui/lib/helper";
 import { cn } from "@lipy/web-ui/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Landmark,
   QrCode,
@@ -22,13 +32,42 @@ import {
   UserCircle2,
   Users,
 } from "lucide-react";
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import QRCode from "react-qr-code";
+import { toast } from "sonner";
 
 export function StoreNav({ children }: { children?: ReactNode }) {
   const { data, isPending } = useStore();
   const { isMobile } = useViewport();
   const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
+  const [isStoreOpen, setIsStoreOpen] = useState(false);
+
+  const updateMutation = useAPIMutation(merchantStoreApi.index, "$patch", {
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: apiQueryOptions(merchantStoreApi.index, "$get", {}).queryKey,
+      });
+      toast.success("Status updated");
+    },
+  });
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (data) {
+      const { isOpen } = getStoreStatus(
+        data.openingHour,
+        data.closingHour,
+        data.status as (typeof STORE_STATUS)[number]
+      );
+      setIsStoreOpen(isOpen);
+    }
+  }, [isPending]);
+
+  const onSubmit = async (json: any) => {
+    await updateMutation.mutateAsync({ json });
+  };
+
   if (isPending) return <Spinner />;
 
   if (children && isMobile)
@@ -83,37 +122,66 @@ export function StoreNav({ children }: { children?: ReactNode }) {
           )}
         >
           {data && (
-            <div className="flex items-center gap-4 p-2">
+            <div className="flex items-start gap-4 bg-card -mx-4 -mt-8 px-4 py-8 justify-between border-b">
+              <div>
+                <h1 className="font-semibold text-xl">
+                  {data?.name || "Hello, User"}
+                </h1>
+                <p className="text-muted-foreground">{data?.email || ""}</p>
+                <p className="pt-2">{data?.phone}</p>
+              </div>
+
               <div className="relative">
                 <Avatar
-                  className="size-14 rounded-full"
+                  className="size-20 rounded-full"
                   onClick={() => setOpen(true)}
                 >
                   <AvatarImage src={data?.image || ""} alt={data.name} />
-                  <AvatarFallback className="">
-                    <Store width={30} height={30} strokeWidth={1.5} />
+                  <AvatarFallback className="bg-background">
+                    <Store width={36} height={36} strokeWidth={1.5} />
                   </AvatarFallback>
                 </Avatar>
+                <div
+                  className={cn(
+                    isStoreOpen ? "bg-green-500 " : "bg-muted-foreground",
+                    "absolute top-2 right-2 w-3 h-3  rounded-full ring ring-card"
+                  )}
+                ></div>
                 <Button
-                  className="absolute right-0 bottom-0"
-                  size={"icon-xs"}
+                  className="absolute right-0 bottom-0 rounded-full"
+                  size={"icon-sm"}
                   onClick={() => setOpen(true)}
                 >
                   <QrCode />
                 </Button>
               </div>
-              <div>
-                <h1 className="font-semibold text-xl">
-                  {data?.name || "Hello, User"}
-                </h1>
-                <p className="text-muted-foreground">
-                  {data?.email || data?.phone}
-                </p>
-              </div>
             </div>
           )}
 
           <div className="space-y-2 max-w-2xl w-full">
+            <Card className="rounded-xl border border-border/20 shadow-xs">
+              <CardContent>
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <p className="font-medium">
+                      {isStoreOpen ? "Close" : "Open"} store
+                    </p>
+                    <p className="text-muted-foreground">
+                      You can change the status anytime.
+                    </p>
+                  </div>
+
+                  <Switch
+                    checked={isStoreOpen}
+                    onCheckedChange={(v) => {
+                      onSubmit({ status: v ? "open" : "closed" });
+                    }}
+                    className="cursor-pointer"
+                    disabled={updateMutation.isPending}
+                  />
+                </div>
+              </CardContent>
+            </Card>
             <SettingsCard items={generalInfo} />
           </div>
         </div>

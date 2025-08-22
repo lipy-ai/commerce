@@ -5,7 +5,6 @@ import {
   apiQueryOptions,
   useAPIMutation,
 } from "@lipy/lib/utils/useQueryClient";
-import type { STORE_STATUS } from "@lipy/server/db/schema";
 import SettingsCard from "@lipy/web-ui/components/custom-ui/settingsCard";
 import {
   Avatar,
@@ -37,7 +36,7 @@ import QRCode from "react-qr-code";
 import { toast } from "sonner";
 
 export function StoreNav({ children }: { children?: ReactNode }) {
-  const { data, isPending } = useStore();
+  const { data, isPending, isFetching } = useStore();
   const { isMobile } = useViewport();
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
@@ -58,11 +57,11 @@ export function StoreNav({ children }: { children?: ReactNode }) {
       const { isOpen } = getStoreStatus(
         data.openingHour,
         data.closingHour,
-        data.status as (typeof STORE_STATUS)[number]
+        data.status
       );
       setIsStoreOpen(isOpen);
     }
-  }, [isPending]);
+  }, [isFetching]);
 
   const onSubmit = async (json: any) => {
     await updateMutation.mutateAsync({ json });

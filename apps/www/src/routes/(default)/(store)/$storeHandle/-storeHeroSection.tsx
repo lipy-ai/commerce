@@ -1,5 +1,4 @@
 import type { publicShopApi } from "@lipy/lib/api";
-import type { STORE_STATUS } from "@lipy/server/db/schema";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { getStoreStatus } from "@lipy/web-ui/lib/helper";
@@ -59,7 +58,7 @@ export const StoreHeroSection = ({ storeInfo }: { storeInfo: SingleStore }) => {
   const { isOpen } = getStoreStatus(
     storeInfo.openingHour,
     storeInfo.closingHour,
-    storeInfo.status as (typeof STORE_STATUS)[number]
+    storeInfo.status
   );
   return (
     <div className="space-y-1 lg:divide-y">

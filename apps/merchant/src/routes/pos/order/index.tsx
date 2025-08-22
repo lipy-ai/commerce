@@ -151,12 +151,10 @@ export function MobileView({ items }: { items: Response["items"] }) {
                 <OrderStatus status={m.status || "created"} size="sm" />
               </div>
 
-              <p className="text-muted-foreground line-clamp-2 break-words py-3">
-                {getItemsStr(m)}
-              </p>
+              <p className="text-muted-foreground py-2">{getItemsStr(m)}</p>
 
-              <Separator />
-              <div className="flex justify-between pt-2">
+              <Separator className="my-2" />
+              <div className="flex justify-between ">
                 <p className="text-xs">
                   {" "}
                   Order placed

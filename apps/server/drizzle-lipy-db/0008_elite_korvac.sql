@@ -1,0 +1,1 @@
+ALTER TABLE "lipy-dev"."store" ADD COLUMN "status" text DEFAULT 'open';

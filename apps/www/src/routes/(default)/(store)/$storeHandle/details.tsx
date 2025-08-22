@@ -1,6 +1,5 @@
 import { env } from "@envClient";
 import { usePublicStore } from "@lipy/lib/hooks/use-store";
-import type { STORE_STATUS } from "@lipy/server/db/schema";
 import { GoogleMapsIcon } from "@lipy/web-ui/components/icons";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
@@ -39,7 +38,7 @@ function RouteComponent() {
       const { isOpen, openTime, closeTime } = getStoreStatus(
         res.data.openingHour,
         res.data.closingHour,
-        res.data.status as (typeof STORE_STATUS)[number]
+        res.data.status
       );
       setStoreStatus({ open: isOpen, openTime, closeTime });
     }

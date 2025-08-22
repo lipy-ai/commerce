@@ -110,7 +110,7 @@ function RouteComponent() {
               return (
                 <div key={_idx} className="bg-card p-4 lg:px-8">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-xl font-bold my-4 line-clamp-1 break-words">
+                    <p className="text-xl font-bold pb-2 line-clamp-1 break-words">
                       {productGroup.title}
                     </p>
                     {/* {productArray.length === 6 && (

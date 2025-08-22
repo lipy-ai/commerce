@@ -4,7 +4,7 @@ import { format, parse } from "date-fns";
 export const getStoreStatus = (
   openingHour: string,
   closingHour: string,
-  status: (typeof STORE_STATUS)[number]
+  status: (typeof STORE_STATUS)[number] | null
 ) => {
   if (status === "closed") {
     return {

@@ -214,7 +214,7 @@ export const store = schema.table(
 			content?: string;
 		}>(),
 		gstTax: integer("gstTax").notNull().default(0),
-		status: text("status", { enum: STORE_STATUS }).default("open"),
+		status: text("status", { enum: STORE_STATUS }),
 	},
 	(t) => [index("store_spatial_index").using("gist", t.location)],
 );

@@ -58,7 +58,7 @@ export const adminReviewProductRoute = new Hono<ServerContext>()
 				.selectFrom("reviewProducts as p")
 				.$if(!!q, (qb) =>
 					qb.where(
-						sql<boolean>`p."searchVector" @@ plainto_tsquery('english', ${q})`,
+						sql<boolean>`p."searchVector" @@ to_tsquery('english', ${q} || ':*')`,
 					),
 				);
 
@@ -90,6 +90,16 @@ export const adminReviewProductRoute = new Hono<ServerContext>()
 				.leftJoin("category as c", "c.id", "p.category")
 				.selectAll(["p"])
 				.select((eb) => [eb.fn.toJson("c").as("category")])
+				.$if(!!q, (qb) =>
+					qb
+						.select(() => [
+							sql<number>`COALESCE(ts_rank_cd(p."searchVector", to_tsquery('english', ${q} || ':*'), 32), 0)`.as(
+								"rank",
+							),
+						])
+						.orderBy(sql`rank DESC`),
+				)
+
 				.orderBy("title")
 				.limit(limit)
 				.offset(offset)

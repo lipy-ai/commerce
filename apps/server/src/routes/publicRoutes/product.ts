@@ -3,10 +3,9 @@ import { jsonBuildObject } from "kysely/helpers/postgres";
 import { z } from "zod";
 import { db } from "@/db";
 import { getAllCategory } from "@/helpers/category";
+import { getFeedStores } from "@/helpers/storeFeed";
 import { zValidator } from "@/middlewares/validator";
-import { createCall } from "@/services/call";
 import type { ServerContext } from "@/types";
-import { firebase_messaging } from "@/services/firebase";
 
 const schema = z.object({
   categorySlug: z.string().optional(),
@@ -21,39 +20,6 @@ const searchSchema = z.object({
 });
 
 const route = new Hono<ServerContext>()
-  .post("/call", async (c) => {
-    await firebase_messaging.send({
-      token:
-        // "c-F3tGBbRI6jqYdqfw33Sm:APA91bE-UMIp6RyoFlJHBEMS3xZoLu1HjmdqDToK2b0gsSZi0D4GBmhjQy0MPML96yp2Qe0Gfnsgbjkm7wfVf3FXuKlWONeNL9JhFHrXefJUtQFlmTYKQ8Y",
-        "ev9tFrHhRl-GJQMLksEsuD:APA91bFPm7aPQ3PpJNKwMYtYiqeKabpTvLY5N_PCQkJp24MJypQ8ZQfg70XbO4sDRIr0H6ccpNAyXo1c2yWpfF37Yk61kQ6cjxZJQOONuGZRZKfJu-QPAG4",
-      notification: {
-        title: "asdas New Order Incoming asadasd",
-        body: "New order has been forwarded please accept ASAP. adsad",
-        imageUrl: "https://picsum.photos/200/300",
-      },
-      android: {
-        priority: "high",
-        notification: {
-          channelId: "urgent",
-          sound: "urgent.wav",
-        },
-      },
-      apns: {
-        payload: {
-          aps: {
-            sound: "urgent.wav",
-            alert: {
-              title: "Urgent Alert",
-              body: "This is important!",
-            },
-            category: "CALL_CATEGORY",
-          },
-        },
-      },
-    });
-
-    return c.json({ success: true });
-  })
   .get("/", zValidator("query", schema), async (c) => {
     const q = c.req.valid("query");
 
@@ -181,6 +147,58 @@ const route = new Hono<ServerContext>()
       return c.json(data);
     }
   )
+  .get("/search", zValidator("query", searchSchema), async (c) => {
+    const query = c.req.valid("query");
+
+    const nearbyShops = await getFeedStores({
+      lat: query.lat,
+      lng: query.lng,
+    });
+
+    const storeIds = nearbyShops.map((shop) => shop.id);
+
+    const qb = db
+      .selectFrom("storeInventory as si")
+      .where("si.storeId", "in", storeIds)
+      .where("si.active", "=", true)
+      .rightJoin("store as s", "s.id", "si.storeId")
+      .rightJoin("productVariant as pv", "pv.id", "si.variantId")
+      .rightJoin("product as p", "p.id", "pv.productId")
+      .$if(!!query.q, (qb) => {
+        const words = query.q!.trim().split(/\s+/);
+        return words.reduce(
+          (acc, word) => acc.where("p.title", "ilike", `%${word}%`),
+          qb
+        );
+      });
+
+    const data = await qb
+      .select([
+        "p.id as productId",
+        "p.title",
+        "p.thumbnail",
+        "si.storeId",
+        "s.handle",
+        "s.name",
+        "si.price",
+        "pv.unit",
+      ])
+      .groupBy([
+        "p.id",
+        "p.title",
+        "p.thumbnail",
+        "si.storeId",
+        "s.handle",
+        "s.name",
+        "si.price",
+        "pv.unit",
+      ])
+      .limit(10)
+      .execute();
+
+    return c.json(data);
+  })
+
   .get(
     "/:id/search",
     zValidator("param", z.object({ id: z.string().uuid() })),

@@ -23,6 +23,15 @@ if (IS_REACT_NATIVE && !REACT_NATIVE_APP_SCHEME) {
   window.alert("Scheme not defined!");
 }
 
+export const sendMessageToReactNative = (
+  payload: any,
+  opts?: { id?: string }
+) => {
+  window.ReactNativeWebView?.postMessage(
+    JSON.stringify({ ...opts, type: "request", payload })
+  );
+};
+
 export function useReactNativeBridge() {
   const pending = useRef<PendingMap>({});
 
@@ -46,9 +55,7 @@ export function useReactNativeBridge() {
     return new Promise((resolve) => {
       const id = Math.random().toString(36).slice(2);
       pending.current[id] = resolve;
-      window.ReactNativeWebView?.postMessage(
-        JSON.stringify({ id, type: "request", payload })
-      );
+      sendMessageToReactNative(payload, { id });
     });
   }
 

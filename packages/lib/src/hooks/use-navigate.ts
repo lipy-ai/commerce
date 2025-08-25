@@ -1,18 +1,20 @@
 import { env } from "@envClient";
 import { useNavigate } from "@tanstack/react-router";
-import { IS_REACT_NATIVE } from "./use-reactNative";
+import { IS_REACT_NATIVE, sendMessageToReactNative } from "./use-reactNative";
 
 export const redirectToLoginURL = () => {
-  if (IS_REACT_NATIVE) return;
+  if (IS_REACT_NATIVE) return sendMessageToReactNative({ action: "login" });
+
   const url = `${!IS_REACT_NATIVE ? `${env.WEB_URL}/` : ""}login?cb=${btoa(window.location.href)}`;
   window.location.href = url;
 };
 
-export const redirectToSessionRefreshURL = () => {
-  // Handler Reactnative
-  if (IS_REACT_NATIVE) return;
-  window.location.href = `${!IS_REACT_NATIVE ? `${env.WEB_URL}/` : ""}refresh?cb=${btoa(window.location.href)}`;
-};
+// export const redirectToSessionRefreshURL = () => {
+//   // Handler Reactnative
+//   if (IS_REACT_NATIVE)
+//     return sendMessageToReactNative({ action: "refreshSession" });
+//   window.location.href = `${!IS_REACT_NATIVE ? `${env.WEB_URL}/` : ""}refresh?cb=${btoa(window.location.href)}`;
+// };
 
 export const useRedirect = () => {
   const navigate = useNavigate() as any;

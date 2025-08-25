@@ -3,7 +3,6 @@ import path from "node:path";
 import { config } from "dotenv";
 import { expand } from "dotenv-expand";
 import { z } from "zod";
-import { getServerIpAddress } from "./lib/serverIp";
 
 expand(
   config({
@@ -29,11 +28,7 @@ const EnvSchema = z.object({
   DATABASE_URL: z.string().url(),
   // DATABASE_AUTH_TOKEN: z.string().optional(),
   GOOGLE_CLIENT_ID: z.string(),
-  VITE_USE_IP: z
-    .string()
-    .optional()
-    // biome-ignore lint/suspicious/noDoubleEquals:false positive
-    .transform((t) => t && t == "true"),
+  VITE_LOCAL_IP: z.string().optional(),
   VITE_POSTHOG_PUBLIC_KEY: z.string(),
   VITE_POSTHOG_HOST: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
@@ -89,7 +84,8 @@ if (error) {
 const rest = {
   IN_PROD: env.NODE_ENV === "production",
 };
-if (env.VITE_USE_IP) {
+
+if (env.VITE_LOCAL_IP) {
   const replaceIp = (value: unknown) => {
     if (
       typeof value === "string" &&
@@ -98,23 +94,38 @@ if (env.VITE_USE_IP) {
     ) {
       try {
         const url = new URL(value);
-        url.hostname = getServerIpAddress() || "localhost";
+        url.hostname = env.VITE_LOCAL_IP || "localhost";
 
         return url.toString().replace(/\/$/, "");
       } catch (_e) {
         console.warn(`Invalid URL ${value}`);
+        return value;
       }
     }
+    return value;
   };
+
+  const keys = [
+    "WEB_URL",
+    "API_URL",
+    "AUTH_URL",
+    "MERCHANT_URL",
+    "AUTH_REDIRECT_URL",
+    "TRUSTED_ORIGINS",
+  ];
 
   for (const key of Object.keys(env)) {
     const value = (env as any)[key];
     let vals: any = null;
-    if (Array.isArray(value)) {
-      vals = value.map((m) => replaceIp(m));
-    } else {
-      vals = replaceIp(value);
+
+    if (keys.includes(key as any)) {
+      if (Array.isArray(value)) {
+        vals = [...value, ...value.map((m) => replaceIp(m))];
+      } else {
+        vals = replaceIp(value);
+      }
     }
+
     vals && ((env as any)[key] = vals);
   }
 }

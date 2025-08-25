@@ -6,14 +6,22 @@ declare global {
     ReactNativeWebView?: {
       postMessage: (message: string) => void;
     };
-    isReactNativeWebView?: boolean;
+    IS_REACT_NATIVE?: boolean;
+    REACT_NATIVE_APP_SCHEME?: string;
   }
 }
 
 type PendingMap = Record<string, (val: any) => void>;
 
 export const IS_REACT_NATIVE =
-  typeof window !== "undefined" && window.isReactNativeWebView === true;
+  typeof window !== "undefined" && window.IS_REACT_NATIVE === true;
+
+export const REACT_NATIVE_APP_SCHEME =
+  typeof window !== "undefined" && window.REACT_NATIVE_APP_SCHEME;
+
+if (IS_REACT_NATIVE && !REACT_NATIVE_APP_SCHEME) {
+  window.alert("Scheme not defined!");
+}
 
 export function useReactNativeBridge() {
   const pending = useRef<PendingMap>({});

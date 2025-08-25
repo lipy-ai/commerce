@@ -4,7 +4,7 @@ export const env = {
   IN_PROD: e.NODE_ENV === "production",
   GTAG_ID: e.VITE_GTAG_ID,
   // biome-ignore lint/suspicious/noDoubleEquals: <explanation>
-  VITE_USE_IP: e.VITE_USE_IP == "true",
+  VITE_LOCAL_IP: e.VITE_LOCAL_IP,
   AUTH_URL: e.VITE_AUTH_URL,
   MERCHANT_URL: e.VITE_MERCHANT_URL,
   WEB_URL: e.VITE_WEB_URL,
@@ -21,18 +21,26 @@ export const env = {
   LINKEDIN: "https://www.linkedin.com/company/lipy-in",
 };
 
-if (env.VITE_USE_IP) {
+if (env.VITE_LOCAL_IP) {
   for (const key of Object.keys(env)) {
     const value = env[key as keyof typeof env];
 
+    const keys = [
+      "WEB_URL",
+      "API_URL",
+      "AUTH_URL",
+      "MERCHANT_URL",
+      "AUTH_REDIRECT_URL",
+    ] satisfies Partial<keyof typeof env>[];
     if (
+      keys.includes(key as any) &&
       typeof value === "string" &&
       value.startsWith("http") &&
       value.includes("localhost")
     ) {
       try {
         const url = new URL(value);
-        url.hostname = import.meta.env.VITE_LOCAL_IP || "localhost";
+        url.hostname = "localhost"; //import.meta.env.VITE_LOCAL_IP || "localhost";
 
         (env as any)[key as keyof typeof env] = url
           .toString()

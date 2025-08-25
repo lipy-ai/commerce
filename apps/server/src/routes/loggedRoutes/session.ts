@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { HTTPError } from "@/lib/exception";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
+import { logger } from "@/lib/logger";
 
 const deviceSchema = z.object({
   id: z.string().uuid().optional(),

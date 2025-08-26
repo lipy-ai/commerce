@@ -1,5 +1,6 @@
 import {
   IS_REACT_NATIVE,
+  REACT_NATIVE_APP_SCHEME,
   useReactNativeBridge,
 } from "@lipy/lib/hooks/use-reactNative";
 import { authClient } from "@lipy/lib/providers/auth";
@@ -16,6 +17,7 @@ function RouteComponent() {
   const { callReactNative } = useReactNativeBridge();
   useEffect(() => {
     if (IS_REACT_NATIVE) {
+      navigate({ href: `${REACT_NATIVE_APP_SCHEME}logout` });
       callReactNative({ action: "signOut" });
     } else {
       authClient.signOut().then((_e) => navigate({ to: "/", replace: true }));

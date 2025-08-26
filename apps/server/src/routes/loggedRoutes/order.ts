@@ -55,6 +55,8 @@ const notifyStore = async ({
 
   const tokens = storeDevices.map((t) => t.pushToken || "");
 
+  console.log(`sending notification to ${tokens.length} devices`);
+
   await firebase_messaging
     .sendEachForMulticast({
       notification: {

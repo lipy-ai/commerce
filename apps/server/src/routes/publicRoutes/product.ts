@@ -52,34 +52,34 @@ const route = new Hono<ServerContext>()
   //         url: `https://partners.lipy.in/pos/order/${"orderId"}`,
   //       },
 
-  //       apns: {
-  //         headers: {
-  //           "apns-priority": "5",
-  //         },
-  //         payload: {
-  //           aps: {
-  //             sound: "urgent.wav",
-  //           },
-  //         },
-  //       },
-  //       tokens,
-  //     })
-  //     .then((r) => {
-  //       if (r.failureCount === tokens.length) {
-  //         throw new HTTPError(400, { message: "Failed to notify stores!" });
-  //       }
-  //       if (r.failureCount > 0) {
-  //         const failedTokens: string[] = [];
-  //         r.responses.forEach((resp, idx) => {
-  //           if (!resp.success) {
-  //             failedTokens.push(tokens[idx]);
-  //           }
-  //         });
-  //         console.log("List of tokens that caused failures: " + failedTokens);
-  //       }
-  //     });
-  //   return c.json({ s: true });
-  // })
+        apns: {
+          headers: {
+            "apns-priority": "5",
+          },
+          payload: {
+            aps: {
+              sound: "urgent.wav",
+            },
+          },
+        },
+        tokens,
+      })
+      .then((r) => {
+        if (r.failureCount === tokens.length) {
+          throw new HTTPError(400, { message: "Failed to notify stores!" });
+        }
+        if (r.failureCount > 0) {
+          const failedTokens: string[] = [];
+          r.responses.forEach((resp, idx) => {
+            if (!resp.success) {
+              failedTokens.push(tokens[idx]);
+            }
+          });
+          console.log("List of tokens that caused failures: " + failedTokens);
+        }
+      });
+    return c.json({ s: true });
+  })
   .get("/", zValidator("query", schema), async (c) => {
     const q = c.req.valid("query");
 

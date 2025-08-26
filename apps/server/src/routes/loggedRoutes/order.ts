@@ -48,19 +48,18 @@ const notifyStore = async ({
     .where("sm.storeId", "=", storeId)
     .where("sm.role", "in", ["admin", "owner", "staff"])
     .leftJoin("devices as d", "d.userId", "sm.userId")
-    .where("d.fcmToken", "is not", null)
+    .where("d.pushToken", "is not", null)
     .selectAll(["d"])
     .orderBy("lastSeenAt", "desc")
     .execute();
 
-  const tokens = storeDevices.map((t) => t.fcmToken || "");
+  const tokens = storeDevices.map((t) => t.pushToken || "");
 
   await firebase_messaging
     .sendEachForMulticast({
-      data: { storeId, orderId: id },
       notification: {
         title: "New Order",
-        body: `You have a new order from ${rest.customerDetails?.name}`,
+        body: `You have a new order from ${rest.customerDetails?.name || "customer"}`,
       },
       android: {
         notification: {
@@ -68,6 +67,15 @@ const notifyStore = async ({
           sound: "urgent.wav",
         },
       },
+      data: {
+        duration: String(30 * 1000),
+        showTimestamp: String(true),
+        ongoing: String(true),
+        showChronometer: String(true),
+        chronometerDirection: "down",
+        url: `https://partners.lipy.in/pos/order/${id}`,
+      },
+
       apns: {
         headers: {
           "apns-priority": "5",

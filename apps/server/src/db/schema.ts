@@ -110,11 +110,10 @@ export const devices = schema.table("devices", {
   userId: uuid("userId")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
-  fcmToken: text("fcmToken").notNull(),
+  pushToken: text("pushToken").notNull(),
   platform: text("platform", {
     enum: ["android", "ios", "web", "windows", "macos"],
   }),
-  fcmTokenUpdatedAt: timestamp("fcmTokenUpdatedAt", { withTimezone: true }),
   lastSeenAt: timestamp("lastSeenAt", { withTimezone: true }),
 });
 

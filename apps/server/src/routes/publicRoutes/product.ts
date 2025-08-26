@@ -6,6 +6,8 @@ import { getAllCategory } from "@/helpers/category";
 import { getFeedStores } from "@/helpers/storeFeed";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
+import { firebase_messaging } from "@/services/firebase";
+import { HTTPError } from "@/lib/exception";
 
 const schema = z.object({
   categorySlug: z.string().optional(),
@@ -22,6 +24,7 @@ const searchSchema = z.object({
 const route = new Hono<ServerContext>()
   // .post("/call", async (c) => {
   //   const tokens = [
+  //     "f60xymMTS328KUyjYCNFzO:APA91bHbqHTzZr8S40W0H8syTIwst_fGqEsSSSk4KmtG-4tR48Ppr5YUwyCp8pwJUvIfncRjxVD1IkT0lI8DW_FvkUp2zizTD2UF6VnIV1Poel-DQy1_2xQ",
   //   ];
 
   //   await firebase_messaging
@@ -37,6 +40,15 @@ const route = new Hono<ServerContext>()
   //           sound: "urgent.wav",
   //         },
   //       },
+  //       data: {
+  //         duration: String(30 * 1000),
+  //         showTimestamp: String(true),
+  //         ongoing: String(true),
+  //         showChronometer: String(true),
+  //         chronometerDirection: "down",
+  //         url: `https://partners.lipy.in/pos/order/${orderId}`,
+  //       },
+
   //       apns: {
   //         headers: {
   //           "apns-priority": "5",

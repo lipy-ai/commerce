@@ -4,11 +4,10 @@ import { db } from "@/db";
 import { HTTPError } from "@/lib/exception";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
-import { logger } from "@/lib/logger";
 
 const deviceSchema = z.object({
   id: z.string().uuid().optional(),
-  fcmToken: z.string(),
+  pushToken: z.string(),
   platform: z.string() as any,
 });
 
@@ -35,7 +34,7 @@ export const loggedInSessionRoute = new Hono<ServerContext>()
   )
   .post("/device", zValidator("json", deviceSchema), async (c) => {
     const sess = c.get("session");
-    const { fcmToken, platform, ...rest } = c.req.valid("json");
+    const { pushToken, platform, ...rest } = c.req.valid("json");
 
     let id = rest.id;
 
@@ -49,18 +48,14 @@ export const loggedInSessionRoute = new Hono<ServerContext>()
         id,
         userId: sess?.userId!,
         platform,
-        fcmToken,
-        fcmTokenUpdatedAt: new Date(),
+        pushToken,
         lastSeenAt: new Date(),
       })
       .onConflict((eb) =>
-        eb
-          .column("id")
-          .doUpdateSet({
-            fcmToken,
-            fcmTokenUpdatedAt: new Date(),
-            lastSeenAt: new Date(),
-          })
+        eb.column("id").doUpdateSet({
+          pushToken,
+          lastSeenAt: new Date(),
+        })
       )
       .execute();
 

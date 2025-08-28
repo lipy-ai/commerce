@@ -118,7 +118,7 @@ export const apiQueryOptions = <
 >(
   endpoint: T,
   method: M,
-  params: Params,
+  params?: Params,
   options?: Options
 ): NoInfer<
   Omit<

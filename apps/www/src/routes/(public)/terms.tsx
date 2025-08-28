@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Footer } from "./-footer";
 import Header from "./-header";
 
-export const Route = createFileRoute("/(default)/terms")({
+export const Route = createFileRoute("/(public)/terms")({
   component: RouteComponent,
 });
 

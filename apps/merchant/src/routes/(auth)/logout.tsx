@@ -1,7 +1,6 @@
 import {
   IS_REACT_NATIVE,
-  REACT_NATIVE_APP_SCHEME,
-  useReactNativeBridge,
+  sendMessageToReactNative,
 } from "@lipy/lib/hooks/use-reactNative";
 import { authClient } from "@lipy/lib/providers/auth";
 import Loading from "@lipy/web-ui/components/ui/loading";
@@ -14,11 +13,9 @@ export const Route = createFileRoute("/(auth)/logout")({
 
 function RouteComponent() {
   const navigate = Route.useNavigate();
-  const { callReactNative } = useReactNativeBridge();
   useEffect(() => {
     if (IS_REACT_NATIVE) {
-      navigate({ href: `${REACT_NATIVE_APP_SCHEME}logout` });
-      callReactNative({ action: "signOut" });
+      sendMessageToReactNative({ action: "signOut" });
     } else {
       authClient.signOut().then((_e) => navigate({ to: "/", replace: true }));
     }

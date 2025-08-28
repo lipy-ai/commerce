@@ -4,7 +4,6 @@ import { IS_REACT_NATIVE, sendMessageToReactNative } from "./use-reactNative";
 
 export const redirectToLoginURL = () => {
   if (IS_REACT_NATIVE) return sendMessageToReactNative({ action: "login" });
-
   const url = `${!IS_REACT_NATIVE ? `${env.WEB_URL}/` : ""}login?cb=${btoa(window.location.href)}`;
   window.location.href = url;
 };

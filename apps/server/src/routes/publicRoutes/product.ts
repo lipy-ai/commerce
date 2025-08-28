@@ -22,61 +22,64 @@ const searchSchema = z.object({
 });
 
 const route = new Hono<ServerContext>()
-  .post("/call", async (c) => {
-    const tokens = [
-      "f60xymMTS328KUyjYCNFzO:APA91bHbqHTzZr8S40W0H8syTIwst_fGqEsSSSk4KmtG-4tR48Ppr5YUwyCp8pwJUvIfncRjxVD1IkT0lI8DW_FvkUp2zizTD2UF6VnIV1Poel-DQy1_2xQ",
-    ];
+  // .post("/call", async (c) => {
+  //   const tokens = [
+  //     // "f60xymMTS328KUyjYCNFzO:APA91bHbqHTzZr8S40W0H8syTIwst_fGqEsSSSk4KmtG-4tR48Ppr5YUwyCp8pwJUvIfncRjxVD1IkT0lI8DW_FvkUp2zizTD2UF6VnIV1Poel-DQy1_2xQ",
+  //     "e1ItVRUZTOeQukf14DVz66:APA91bF3Pb8bYqTJ-N2OHEFPTnlXTlNes-M7VNvLWANQyVACLWeyVI-WyxoyB4T2lscsQTfv8C-i_cc4F4gAw29KFM0SBywJ-A4mUqREM0xpsWPAfwO6QRs",
+  //   ];
 
-    await firebase_messaging
-      .sendEachForMulticast({
-        // data: { storeId, orderId: id },
-        notification: {
-          title: "New Order",
-          body: `You have a new order from "Kundan"`,
-        },
-        android: {
-          notification: {
-            channelId: "order",
-            sound: "urgent.wav",
-          },
-        },
-        data: {
-          duration: String(30 * 1000),
-          showTimestamp: String(true),
-          ongoing: String(true),
-          showChronometer: String(true),
-          chronometerDirection: "down",
-          url: `https://partners.lipy.in/pos/order/${"orderId"}`,
-        },
+  //   await firebase_messaging
+  //     .sendEachForMulticast({
+  //       // data: { storeId, orderId: id },
 
-        apns: {
-          headers: {
-            "apns-priority": "5",
-          },
-          payload: {
-            aps: {
-              sound: "urgent.wav",
-            },
-          },
-        },
-        tokens,
-      })
-      .then((r) => {
-        if (r.failureCount === tokens.length) {
-          throw new HTTPError(400, { message: "Failed to notify stores!" });
-        }
-        if (r.failureCount > 0) {
-          const failedTokens: string[] = [];
-          r.responses.forEach((resp, idx) => {
-            if (!resp.success) {
-              failedTokens.push(tokens[idx]);
-            }
-          });
-          console.log("List of tokens that caused failures: " + failedTokens);
-        }
-      });
-    return c.json({ s: true });
-  })
+  //       android: {
+  //         // notification: {
+  //         //   channelId: "order",
+  //         //   sound: "urgent.wav",
+  //         // },
+  //       },
+  //       data: {
+  //         channelId: "order",
+  //         sound: "urgent.wav",
+  //         title: "New Order",
+  //         body: `You have a new order from "Kundan"`,
+  //         largeIcon: "https://partners.lipy.in/logo/ico.png",
+  //         duration: String(30 * 1000),
+  //         showTimestamp: String(true),
+  //         ongoing: String(true),
+  //         showChronometer: String(true),
+  //         chronometerDirection: "down",
+  //         url: `https://partners.lipy.in/pos/order/${"orderId"}`,
+  //       },
+
+  //       apns: {
+  //         headers: {
+  //           "apns-priority": "5",
+  //         },
+  //         payload: {
+  //           aps: {
+  //             sound: "urgent.wav",
+  //           },
+  //         },
+  //       },
+  //       tokens,
+  //     })
+  //     .then((r) => {
+  //       if (r.failureCount === tokens.length) {
+  //         throw new HTTPError(400, { message: "Failed to notify stores!" });
+  //       }
+  //       if (r.failureCount > 0) {
+  //         const failedTokens: string[] = [];
+  //         r.responses.forEach((resp, idx) => {
+  //           if (!resp.success) {
+  //             failedTokens.push(tokens[idx]);
+  //           }
+  //         });
+  //         console.log("List of tokens that caused failures: " + failedTokens);
+  //       }
+  //     });
+  //   return c.json({ s: true });
+  // })
   .get("/", zValidator("query", schema), async (c) => {
     const q = c.req.valid("query");
 

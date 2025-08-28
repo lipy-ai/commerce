@@ -59,17 +59,15 @@ const notifyStore = async ({
 
   await firebase_messaging
     .sendEachForMulticast({
-      notification: {
-        title: "New Order",
-        body: `You have a new order from ${rest.customerDetails?.name || "customer"}`,
-      },
       android: {
-        notification: {
-          channelId: "order",
-          sound: "urgent.wav",
-        },
+        priority: "high",
       },
       data: {
+        channelId: "order",
+        sound: "urgent.wav",
+        title: "New Order",
+        body: `You have a new order from ${rest.customerDetails?.name || "customer"}`,
+        largeIcon: "https://partners.lipy.in/logo/ico.png",
         duration: String(30 * 1000),
         showTimestamp: String(true),
         ongoing: String(true),
@@ -91,6 +89,7 @@ const notifyStore = async ({
       tokens,
     })
     .then((r) => {
+      console.log(r);
       if (r.failureCount === tokens.length) {
         throw new HTTPError(400, { message: "Failed to notify stores!" });
       }

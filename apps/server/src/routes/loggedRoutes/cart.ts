@@ -93,8 +93,6 @@ const route = new Hono<ServerContext>()
       })
       .filter((s) => s !== null);
 
-    console.log(targetStores);
-
     let itemsTotal = 0;
     let maxItemsTotal = 0;
     let taxTotal = 0;

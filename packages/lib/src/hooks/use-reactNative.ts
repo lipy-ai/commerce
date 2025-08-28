@@ -13,11 +13,15 @@ declare global {
 
 type PendingMap = Record<string, (val: any) => void>;
 
-export const IS_REACT_NATIVE =
-  typeof window !== "undefined" && window.IS_REACT_NATIVE === true;
+export const IS_REACT_NATIVE: boolean =
+  (typeof window !== "undefined" &&
+    JSON.parse(localStorage.getItem("is_app") || "false")) ||
+  false;
 
-export const REACT_NATIVE_APP_SCHEME =
-  typeof window !== "undefined" && window.REACT_NATIVE_APP_SCHEME;
+export const REACT_NATIVE_APP_SCHEME: string | undefined =
+  (typeof window !== "undefined" &&
+    (localStorage.getItem("app_scheme") || undefined)) ||
+  undefined;
 
 if (IS_REACT_NATIVE && !REACT_NATIVE_APP_SCHEME) {
   window.alert("Scheme not defined!");

@@ -40,14 +40,13 @@ if (env.VITE_LOCAL_IP) {
     ) {
       try {
         const url = new URL(value);
-        url.hostname = "localhost"; //import.meta.env.VITE_LOCAL_IP || "localhost";
+        url.hostname = env.VITE_LOCAL_IP || "localhost";
 
-        (env as any)[key as keyof typeof env] = url
-          .toString()
-          .replace(/\/$/, "");
+        (env as any)[key as any] = url.toString().replace(/\/$/, "");
       } catch (e) {
         console.warn(`Invalid URL in env[${key}]:`, value);
       }
     }
   }
+  console.log(env);
 }

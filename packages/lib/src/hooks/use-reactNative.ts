@@ -27,6 +27,7 @@ export const sendMessageToReactNative = (
   payload: any,
   opts?: { id?: string }
 ) => {
+  console.info("Sending message --->", payload);
   window.ReactNativeWebView?.postMessage(
     JSON.stringify({ ...opts, type: "request", payload })
   );

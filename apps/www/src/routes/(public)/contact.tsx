@@ -4,7 +4,7 @@ import { Footer } from "./-footer";
 import { env } from "@envClient";
 import { ArrowUpRight } from "lucide-react";
 
-export const Route = createFileRoute("/(default)/contact")({
+export const Route = createFileRoute("/(public)/contact")({
   component: RouteComponent,
 });
 

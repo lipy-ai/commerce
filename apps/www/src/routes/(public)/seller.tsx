@@ -3,7 +3,7 @@ import Loading from "@lipy/web-ui/components/ui/loading";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
 
-export const Route = createFileRoute("/(default)/seller")({
+export const Route = createFileRoute("/(public)/seller")({
   component: RouteComponent,
 });
 

@@ -52,6 +52,26 @@ const route = new Hono<ServerContext>()
   //         url: `https://partners.lipy.in/pos/order/${"orderId"}`,
   //       },
 
+  //       android: {
+  //         // notification: {
+  //         //   channelId: "order",
+  //         //   sound: "urgent.wav",
+  //         // },
+  //       },
+  //       data: {
+  //         channelId: "order",
+  //         sound: "urgent.wav",
+  //         title: "New Order",
+  //         body: `You have a new order from "Kundan"`,
+  //         largeIcon: "https://partners.lipy.in/logo/ico.png",
+  //         duration: String(30 * 1000),
+  //         showTimestamp: String(true),
+  //         ongoing: String(true),
+  //         showChronometer: String(true),
+  //         chronometerDirection: "down",
+  //         url: `https://partners.lipy.in/pos/order/${"orderId"}`,
+  //       },
+
   //       apns: {
   //         headers: {
   //           "apns-priority": "5",

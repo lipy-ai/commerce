@@ -30,6 +30,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { AddressComponent } from ".";
+import { authClient } from "@lipy/lib/providers/auth";
 
 export const AddressSetter = ({
   autocompleteOnly,
@@ -46,6 +47,7 @@ export const AddressSetter = ({
     google.maps.places.AutocompletePrediction[]
   >([]);
   const [loadingPrediction, setLoadingPrediction] = useState(false);
+  const { data: session } = authClient.useSession();
 
   const { isLoaded: gmapLoaded } = useJsApiLoader({
     googleMapsApiKey: env.GOOGLE_MAP_API_KEY,
@@ -55,7 +57,8 @@ export const AddressSetter = ({
   const { data: savedAddresses, isLoading } = useAPIQuery(
     loggedInAddressApi.index,
     "$get",
-    {}
+    {},
+    { enabled: !!session }
   );
   const { setDeliveryLocation, deliveryLocation, hasHydrated } =
     useLocationStore();

@@ -265,8 +265,11 @@ export const CartMainContent = () => {
                       </Badge>
 
                       <p className="">
-                        The store is {s?.storeDistanceFromUser} km away from
-                        your location
+                        The store is{" "}
+                        {s?.storeDistanceFromUser
+                          ? `${s?.storeDistanceFromUser} km}`
+                          : "far"}
+                        &nbsp;away from your location.
                       </p>
                     </div>
                   ) : s?.storeMinimumOrderValue > s?.storeItemsTotal ? (

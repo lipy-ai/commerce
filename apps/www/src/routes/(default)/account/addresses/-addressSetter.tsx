@@ -126,20 +126,22 @@ export const AddressSetter = ({
         />
       ) : !autocompleteOnly ? (
         <div className="space-y-8 mt-24">
-          <Link
-            to="/account/addresses/new"
-            search={{
-              type: "deliveryAddress",
-            }}
-            className="flex items-center justify-between gap-4 text-secondary"
-          >
-            <div className="flex items-center gap-2">
-              <LocateFixed className="size-6 stroke-2" />
-              <p className="font-medium text-lg">Use current location</p>
-            </div>
+          {deliveryLocation.line1 && (
+            <Link
+              to="/account/addresses/new"
+              search={{
+                type: "deliveryAddress",
+              }}
+              className="flex items-center justify-between gap-4 text-secondary"
+            >
+              <div className="flex items-center gap-2">
+                <LocateFixed className="size-6 stroke-2" />
+                <p className="font-medium text-lg">Use current location</p>
+              </div>
 
-            <ChevronRight className="stroke-2" />
-          </Link>
+              <ChevronRight className="stroke-2" />
+            </Link>
+          )}
 
           {hasHydrated && deliveryLocation.line1 && (
             <section>

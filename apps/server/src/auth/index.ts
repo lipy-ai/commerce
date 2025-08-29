@@ -223,8 +223,8 @@ export const auth: any = betterAuth({
 							...session,
 							activeStoreHandle: store?.handle || null,
 							activeStoreId: store?.id || null,
-							// activeStoreHandle: "khana-zaikedar-ya9o1",
-							// activeStoreId: "94b3ed52-e558-4e06-b2d6-f62cd59c1cf5",
+							// activeStoreHandle: "zaika-delhi-6-wss4c",
+							// activeStoreId: "eea9f282-5913-40f7-a3f7-77abc2c89142",
 							activeStoreRole: store?.role || null,
 						},
 					};

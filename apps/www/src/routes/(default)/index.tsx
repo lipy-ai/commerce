@@ -13,7 +13,7 @@ import { AppCartInitializer } from "@/components/cart/appCartInitializer";
 import { useCartStore } from "@/components/cart/store";
 import NavBar from "@/components/navBar";
 import NearByShops from "@/components/nearbyShops";
-import { Footer } from "./-footer";
+import { Footer } from "../(public)/-footer";
 
 export const Route = createFileRoute("/(default)/")({
   component: Home,

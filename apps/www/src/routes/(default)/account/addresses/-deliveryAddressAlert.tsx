@@ -22,11 +22,12 @@ import { useJsApiLoader } from "@react-google-maps/api";
 import { MapPinOff, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AddressSetter } from "./-addressSetter";
+import { authClient } from "@lipy/lib/providers/auth";
 
 function LocationComponent() {
   const [error, setError] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-
+  const { data: session } = authClient.useSession();
   const { setDeliveryLocation } = useLocationStore();
 
   const { isLoaded: mapLoaded } = useJsApiLoader({
@@ -37,7 +38,8 @@ function LocationComponent() {
   const { data: primaryAddress, isLoading } = useAPIQuery(
     loggedInAddressApi.primary,
     "$get",
-    {}
+    {},
+    { enabled: !!session }
   );
 
   const handleGeolocation = async () => {

@@ -16,6 +16,7 @@ import {
   CardTitle,
 } from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
+
 export function OrderChart({
   data,
   isLoading,
@@ -23,6 +24,7 @@ export function OrderChart({
   data:
     | InferResponseType<typeof merchantDashboardApi.index.$get>["counts"]
     | undefined;
+
   isLoading: boolean;
 }) {
   const monthStart = startOfMonth(new Date());

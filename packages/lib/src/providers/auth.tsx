@@ -34,7 +34,10 @@ export const authClient = createAuthClient({
   fetchOptions: {
     auth: {
       type: "Bearer",
-      token: () => bearerToken(), // get the token from localStorage
+      token: () => {
+        const t = bearerToken();
+        return t;
+      }, // get the token from localStorage
     },
     onSuccess: (ctx) => {
       const authToken = ctx.response.headers.get("set-auth-token");

@@ -24,6 +24,7 @@ import type { merchantProductRoute } from "@/routes/merchantRoutes/product";
 import type { merchantStoreRoute } from "@/routes/merchantRoutes/store";
 import type { productRoute } from "@/routes/publicRoutes/product";
 import type { shopRoute } from "@/routes/publicRoutes/shop";
+export type { loggedInSessionRoute } from "@/routes/loggedRoutes/session";
 
 // import type {
 // 	EmitAsyncOptions,
@@ -53,36 +54,41 @@ import type { shopRoute } from "@/routes/publicRoutes/shop";
 // 	): Promise<void>;
 // }
 
+// export interface Env {
+//   Bindings: unknown;
+//   Variables: {}; // at minimum, must be object
+// }
+
 export interface ServerContext extends Env {
-	Variables: {
-		emitter: Emitter<AvailableEvents>;
-		user:
-			| (User & {
-					phoneNumber?: string;
-					phoneNumberVerified?: boolean;
-			  })
-			| null;
-		session:
-			| (Session & {
-					activeStoreId: string | null;
-					activeStoreRole: (typeof STORE_ROLES)[number] | null;
-			  })
-			| null;
-	};
+  Variables: {
+    emitter: Emitter<AvailableEvents>;
+    user:
+      | (User & {
+          phoneNumber?: string;
+          phoneNumberVerified?: boolean;
+        })
+      | null;
+    session:
+      | (Session & {
+          activeStoreId: string | null;
+          activeStoreRole: (typeof STORE_ROLES)[number] | null;
+        })
+      | null;
+  };
 }
 
 export type SuccessResponse<T = void> = {
-	success: true;
-	message: string;
+  success: true;
+  message: string;
 } & (T extends void ? {} : { data: T });
 
 export type ErrorResponse = {
-	success: false;
-	error: { message: string; cause: any; code?: ErrCode };
+  success: false;
+  error: { message: string; cause: any; code?: ErrCode };
 };
 
 export type AwaitedReturn<T extends (...args: any) => any> = Awaited<
-	ReturnType<T>
+  ReturnType<T>
 >;
 
 export type HonoContext = Context;
@@ -113,3 +119,5 @@ export type LoggedIOrderRoute = typeof orderRoute;
 // Public Routes
 export type PublicProductRoute = typeof productRoute;
 export type PublicShopRoute = typeof shopRoute;
+
+export type LoggedInSessionRoute = typeof loggedInSessionRoute;

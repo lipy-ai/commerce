@@ -200,10 +200,22 @@ export const StoreShareCard = () => {
     const svg = document.getElementById("qrCodeId") as SVGSVGElement | null;
     if (!svg) return;
 
+    // Get the SVG dimensions
+    const svgRect = svg.getBoundingClientRect();
+    const svgWidth = svgRect.width || 200;
+    const svgHeight = svgRect.height || 200;
+
+    // Define padding around the QR code
+    const padding = 20;
+
+    // Calculate canvas dimensions with padding
+    const canvasWidth = svgWidth + padding * 2;
+    const canvasHeight = svgHeight + padding * 2;
+
     const serializer = new XMLSerializer();
     const svgString = serializer.serializeToString(svg);
 
-    // Create an image
+    // Create an image from the SVG
     const img = new Image();
     const svgBlob = new Blob([svgString], {
       type: "image/svg+xml;charset=utf-8",
@@ -211,23 +223,30 @@ export const StoreShareCard = () => {
     const url = URL.createObjectURL(svgBlob);
 
     img.onload = () => {
-      // Create a canvas and draw the SVG on it
+      // Create a canvas with padding
       const canvas = document.createElement("canvas");
-      canvas.width = svg.clientWidth;
-      canvas.height = svg.clientHeight;
+      canvas.width = canvasWidth;
+      canvas.height = canvasHeight;
       const ctx = canvas.getContext("2d");
+
       if (ctx) {
-        ctx.drawImage(img, 0, 0);
+        // Fill the entire canvas with white background
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+        // Draw the QR code SVG centered with padding
+        ctx.drawImage(img, padding, padding, svgWidth, svgHeight);
 
         // Convert to PNG and download
         const pngUrl = canvas.toDataURL("image/png");
         const downloadLink = document.createElement("a");
         downloadLink.href = pngUrl;
-        downloadLink.download = data?.name || "my-shop" + ".png";
+        downloadLink.download = (data?.name || "my-shop") + ".png";
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);
       }
+
       URL.revokeObjectURL(url);
     };
 

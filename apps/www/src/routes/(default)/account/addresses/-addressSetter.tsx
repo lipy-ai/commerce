@@ -1,5 +1,6 @@
 import { env } from "@envClient";
 import { loggedInAddressApi } from "@lipy/lib/api";
+import { authClient } from "@lipy/lib/providers/auth";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import {
   DrawerDialogHeader,
@@ -30,7 +31,6 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { AddressComponent } from ".";
-import { authClient } from "@lipy/lib/providers/auth";
 
 export const AddressSetter = ({
   autocompleteOnly,
@@ -126,7 +126,8 @@ export const AddressSetter = ({
         />
       ) : !autocompleteOnly ? (
         <div className="space-y-8 mt-24">
-          <Link
+          {
+           deliveryLocation.line1 && <Link
             to="/account/addresses/new"
             search={{
               type: "deliveryAddress",
@@ -140,6 +141,8 @@ export const AddressSetter = ({
 
             <ChevronRight className="stroke-2" />
           </Link>
+          }
+          
 
           {hasHydrated && deliveryLocation.line1 && (
             <section>

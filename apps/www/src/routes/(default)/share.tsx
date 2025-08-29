@@ -20,7 +20,7 @@ export const getStore = createServerFn({ method: "GET" })
   .handler(async ({ data }) => {
     const res = await publicShopApi.id[":id"]
       ["$get"]({ param: { id: data.sid } })
-      .then(async (r) => await r.json());
+      .then(async (r: any) => await r.json());
 
     if (res) {
       throw redirect({ to: "/$storeHandle", params: { storeHandle: res } });

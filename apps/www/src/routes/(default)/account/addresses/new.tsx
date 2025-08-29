@@ -30,6 +30,7 @@ export const Route = createFileRoute("/(default)/account/addresses/new")({
   },
 });
 
+
 function RouteComponent() {
   const { type } = Route.useSearch();
 

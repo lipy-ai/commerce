@@ -1,5 +1,6 @@
 import { env } from "@envClient";
 import { loggedInAddressApi } from "@lipy/lib/api";
+import { authClient } from "@lipy/lib/providers/auth";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import {
   DrawerDialogDescription,
@@ -22,7 +23,6 @@ import { useJsApiLoader } from "@react-google-maps/api";
 import { MapPinOff, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AddressSetter } from "./-addressSetter";
-import { authClient } from "@lipy/lib/providers/auth";
 
 function LocationComponent() {
   const [error, setError] = useState<string | null>(null);

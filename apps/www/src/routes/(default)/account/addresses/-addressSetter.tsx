@@ -1,5 +1,6 @@
 import { env } from "@envClient";
 import { loggedInAddressApi } from "@lipy/lib/api";
+import { authClient } from "@lipy/lib/providers/auth";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import {
   DrawerDialogHeader,
@@ -30,7 +31,6 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { AddressComponent } from ".";
-import { authClient } from "@lipy/lib/providers/auth";
 
 export const AddressSetter = ({
   autocompleteOnly,

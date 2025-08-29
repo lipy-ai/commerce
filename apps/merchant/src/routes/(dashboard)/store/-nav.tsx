@@ -22,6 +22,7 @@ import { getStoreStatus } from "@lipy/web-ui/lib/helper";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import {
+  Download,
   Landmark,
   QrCode,
   ScrollText,
@@ -110,7 +111,7 @@ export function StoreNav({ children }: { children?: ReactNode }) {
     <div className="flex flex-1 ">
       <div className="flex-1 md:max-w-sm border-r min-h-screen">
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogContent>
+          <DialogContent className="p-0">
             <StoreShareCard />
           </DialogContent>
         </Dialog>
@@ -194,21 +195,64 @@ export function StoreNav({ children }: { children?: ReactNode }) {
 
 export const StoreShareCard = () => {
   const { data } = useStore();
+
+  const handleDownload = () => {
+    const svg = document.getElementById("qrCodeId") as SVGSVGElement | null;
+    if (!svg) return;
+
+    const serializer = new XMLSerializer();
+    const svgString = serializer.serializeToString(svg);
+
+    // Create an image
+    const img = new Image();
+    const svgBlob = new Blob([svgString], {
+      type: "image/svg+xml;charset=utf-8",
+    });
+    const url = URL.createObjectURL(svgBlob);
+
+    img.onload = () => {
+      // Create a canvas and draw the SVG on it
+      const canvas = document.createElement("canvas");
+      canvas.width = svg.clientWidth;
+      canvas.height = svg.clientHeight;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.drawImage(img, 0, 0);
+
+        // Convert to PNG and download
+        const pngUrl = canvas.toDataURL("image/png");
+        const downloadLink = document.createElement("a");
+        downloadLink.href = pngUrl;
+        downloadLink.download = data?.name || "my-shop" + ".png";
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+      }
+      URL.revokeObjectURL(url);
+    };
+
+    img.src = url;
+  };
+
   return (
-    <div className="border flex flex-col justify-center items-center rounded-lg bg-card space-y-4 py-8">
+    <div className="flex flex-col justify-center items-center bg-card space-y-4 py-8">
       <div className="flex items-center gap-2 justify-center">
         <Avatar className="size-8 rounded-full">
           <AvatarImage src={data?.image || ""} alt={data?.name} />
-          <AvatarFallback className="">
+          <AvatarFallback>
             <Store />
           </AvatarFallback>
         </Avatar>
         <h1 className="font-semibold text-lg">{data?.name}</h1>
       </div>
+
+      {/* Render QR as SVG (default) */}
       <QRCode
+        id="qrCodeId"
         value={`${env.WEB_URL}/share?sid=${data?.id}`}
-        className="w-full"
+        size={200}
       />
+
       <div className="text-center w-full">
         <div className="flex gap-1 items-center justify-center">
           <a
@@ -221,7 +265,12 @@ export const StoreShareCard = () => {
           </a>
           <CopyButton value={`${env.WEB_URL}/${data?.handle}`} />
         </div>
-        <p className="font-semibold">Store QR Code</p>
+        <div className="flex items-center gap-2 justify-center">
+          <p className="font-semibold">Store QR Code</p>
+          <Button size="icon" variant="ghost" onClick={handleDownload}>
+            <Download />
+          </Button>
+        </div>
       </div>
     </div>
   );

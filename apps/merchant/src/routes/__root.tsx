@@ -90,6 +90,7 @@ function RootComponent() {
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   const handleThrowOnError = React.useCallback((error: Error) => {
+    console.log("jot");
     toast.error(error?.message || "Something went wrong!");
     return false;
   }, []);

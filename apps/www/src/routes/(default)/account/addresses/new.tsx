@@ -38,10 +38,12 @@ function RouteComponent() {
     googleMapsApiKey: env.GOOGLE_MAP_API_KEY,
     libraries: env.GOOGLE_MAP_LIBRARIES,
   });
+
   const [mapCenter, setMapCenter] = useState({
-    lat: 26.121832,
-    lng: 85.358553,
+    lat: 28.6901242,
+    lng: 77.1700795,
   });
+
   const [isConfirm, setIsConfirm] = useState(false);
 
   const { setDeliveryLocation } = useLocationStore();

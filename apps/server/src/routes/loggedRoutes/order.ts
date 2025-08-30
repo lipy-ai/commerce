@@ -13,6 +13,7 @@ import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
 import { addressSchema } from "./address";
 import { firebase_messaging } from "@/services/firebase";
+import { vibrate30sPattern } from "@/lib/vibrate";
 
 const paramSchema = z.object({
   id: z.string(),
@@ -61,13 +62,21 @@ const notifyStore = async ({
     .sendEachForMulticast({
       android: {
         priority: "high",
+        notification: {
+          channelId: "order",
+          sound: "urgent.wav",
+          priority: "max",
+          vibrateTimingsMillis: vibrate30sPattern(),
+          visibility: "public",
+          icon: "ic_ico",
+        },
       },
-      data: {
-        channelId: "order",
-        sound: "urgent.wav",
+      notification: {
         title: "New Order",
         body: `You have a new order from ${rest.customerDetails?.name || "customer"}`,
-        largeIcon: "https://partners.lipy.in/logo/ico.png",
+        imageUrl: "https://partners.lipy.in/logo/ico.png",
+      },
+      data: {
         duration: String(30 * 1000),
         showTimestamp: String(true),
         ongoing: String(true),
@@ -82,7 +91,11 @@ const notifyStore = async ({
         },
         payload: {
           aps: {
-            sound: "urgent.wav",
+            sound: {
+              name: "urgent.wav",
+              critical: true,
+              volume: 0.7,
+            },
           },
         },
       },

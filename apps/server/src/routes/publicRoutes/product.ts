@@ -8,6 +8,7 @@ import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
 import { firebase_messaging } from "@/services/firebase";
 import { HTTPError } from "@/lib/exception";
+import { vibrate30sPattern } from "@/lib/vibrate";
 
 const schema = z.object({
   categorySlug: z.string().optional(),
@@ -22,85 +23,79 @@ const searchSchema = z.object({
 });
 
 const route = new Hono<ServerContext>()
-  // .post("/call", async (c) => {
-  //   const tokens = [
-  //     // "f60xymMTS328KUyjYCNFzO:APA91bHbqHTzZr8S40W0H8syTIwst_fGqEsSSSk4KmtG-4tR48Ppr5YUwyCp8pwJUvIfncRjxVD1IkT0lI8DW_FvkUp2zizTD2UF6VnIV1Poel-DQy1_2xQ",
+  .post("/call", async (c) => {
+    const tokens = [
+      // "f60xymMTS328KUyjYCNFzO:APA91bHbqHTzZr8S40W0H8syTIwst_fGqEsSSSk4KmtG-4tR48Ppr5YUwyCp8pwJUvIfncRjxVD1IkT0lI8DW_FvkUp2zizTD2UF6VnIV1Poel-DQy1_2xQ",
+      "d4ns9HtnSciJ7oRTpY4CAk:APA91bGUuh0tlmnIORyr8q722vkqV3stPQNyqMOHYmhgaDS3PxS-acYuGbNO6d57U6b6daO1H2Ow1ADcJrg3AROv_HinbgPQmdqa9hq3RxBgXHazWF7dHTc",
+    ];
 
-  //     "cNtBU9x6RVKVL0ekrr8fl_:APA91bGXEzY6aPnZBVCdRLRJxlwwOayo8SLVAG3CIhzHwE9Hijb6A558-Pwgmstugcs0ponsfQ1km4sUJCiTT1zjLKEOqvJMWjQnQjRAGHuQmQZmxDIuu-o",
-  //   ];
+    await firebase_messaging
+      .sendEachForMulticast({
+        // data: { storeId, orderId: id },
+        android: {
+          priority: "high",
+          notification: {
+            channelId: "order",
+            sound: "urgent.wav",
+            priority: "max",
+            vibrateTimingsMillis: vibrate30sPattern(),
+            visibility: "public",
+            icon: "ic_ico",
+            color: "#ffffff",
+          },
+        },
 
-  //   await firebase_messaging
-  //     .sendEachForMulticast({
-  //       // data: { storeId, orderId: id },
+        notification: {
+          title: "New Order",
+          body: `You have a new order from ${"customer"}`,
+        },
 
-  //       android: {
-  //         // notification: {
-  //         //   channelId: "order",
-  //         //   sound: "urgent.wav",
-  //         // },
-  //       },
-  //       data: {
-  //         channelId: "order",
-  //         sound: "urgent.wav",
-  //         title: "New Order",
-  //         body: `You have a new order from "Kundan"`,
-  //         largeIcon: "https://partners.lipy.in/logo/ico.png",
-  //         duration: String(30 * 1000),
-  //         showTimestamp: String(true),
-  //         ongoing: String(true),
-  //         showChronometer: String(true),
-  //         chronometerDirection: "down",
-  //         url: `https://partners.lipy.in/pos/order/${"orderId"}`,
-  //       },
+        data: {
+          channelId: "order",
+          sound: "urgent.wav",
+          title: "New Order",
+          body: `You have a new order from "Kundan"`,
+          largeIcon: "https://partners.lipy.in/logo/ico.png",
+          duration: String(30 * 1000),
+          showTimestamp: String(true),
+          ongoing: String(true),
+          showChronometer: String(true),
+          chronometerDirection: "down",
+          url: `https://partners.lipy.in/pos/order/${"orderId"}`,
+        },
 
-  //       android: {
-  //         // notification: {
-  //         //   channelId: "order",
-  //         //   sound: "urgent.wav",
-  //         // },
-  //       },
-  //       data: {
-  //         channelId: "order",
-  //         sound: "urgent.wav",
-  //         title: "New Order",
-  //         body: `You have a new order from "Kundan"`,
-  //         largeIcon: "https://partners.lipy.in/logo/ico.png",
-  //         duration: String(30 * 1000),
-  //         showTimestamp: String(true),
-  //         ongoing: String(true),
-  //         showChronometer: String(true),
-  //         chronometerDirection: "down",
-  //         url: `https://partners.lipy.in/pos/order/${"orderId"}`,
-  //       },
-
-  //       apns: {
-  //         headers: {
-  //           "apns-priority": "5",
-  //         },
-  //         payload: {
-  //           aps: {
-  //             sound: "urgent.wav",
-  //           },
-  //         },
-  //       },
-  //       tokens,
-  //     })
-  //     .then((r) => {
-  //       if (r.failureCount === tokens.length) {
-  //         throw new HTTPError(400, { message: "Failed to notify stores!" });
-  //       }
-  //       if (r.failureCount > 0) {
-  //         const failedTokens: string[] = [];
-  //         r.responses.forEach((resp, idx) => {
-  //           if (!resp.success) {
-  //             failedTokens.push(tokens[idx]);
-  //           }
-  //         });
-  //         console.log("List of tokens that caused failures: " + failedTokens);
-  //       }
-  //     });
-  //   return c.json({ s: true });
-  // })
+        apns: {
+          headers: {
+            "apns-priority": "5",
+          },
+          payload: {
+            aps: {
+              sound: {
+                name: "urgent.wav",
+                critical: true,
+                volume: 0.7,
+              },
+            },
+          },
+        },
+        tokens,
+      })
+      .then((r) => {
+        if (r.failureCount === tokens.length) {
+          throw new HTTPError(400, { message: "Failed to notify stores!" });
+        }
+        if (r.failureCount > 0) {
+          const failedTokens: string[] = [];
+          r.responses.forEach((resp, idx) => {
+            if (!resp.success) {
+              failedTokens.push(tokens[idx]);
+            }
+          });
+          console.log("List of tokens that caused failures: " + failedTokens);
+        }
+      });
+    return c.json({ s: true });
+  })
   .get("/", zValidator("query", schema), async (c) => {
     const q = c.req.valid("query");
 

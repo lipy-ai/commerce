@@ -15,8 +15,9 @@ function RouteComponent() {
   const navigate = Route.useNavigate();
   useEffect(() => {
     console.info("Signing out -", IS_REACT_NATIVE ? "native" : "web");
-
     if (IS_REACT_NATIVE) {
+      authClient.signOut();
+      localStorage.clear();
       sendMessageToReactNative({ action: "signOut" });
     } else {
       authClient.signOut().then((_e) => navigate({ to: "/", replace: true }));

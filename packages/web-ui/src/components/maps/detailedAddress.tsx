@@ -155,7 +155,7 @@ export function DetailedAddress({
       onOpenChange={onOpenChange}
       trigger={<p>{children}</p>}
     >
-      <div className="p-4">
+      <div>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}

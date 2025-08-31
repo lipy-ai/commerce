@@ -125,8 +125,8 @@ export const StoreHeroSection = ({ storeInfo }: { storeInfo: SingleStore }) => {
       <div className="bg-card px-4 py-2">
         <Link
           className={cn(
-            buttonVariants({ variant: "tertiary", size: "sm" }),
-            "w-full justify-start text-muted-foreground bg-tertiary/50 border border-border/50"
+            buttonVariants({ variant: "tertiary" }),
+            "w-full justify-start text-muted-foreground bg-tertiary/30 border border-border/50"
           )}
           to="/$storeHandle/products/search"
           params={{ storeHandle: storeInfo?.handle || "" }}

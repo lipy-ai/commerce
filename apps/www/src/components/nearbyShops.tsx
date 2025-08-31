@@ -8,28 +8,16 @@ import Loading from "@lipy/web-ui/components/ui/loading";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link } from "@tanstack/react-router";
-import {
-  Bike,
-  BrickWall,
-  BriefcaseMedical,
-  Cherry,
-  Coffee,
-  Dot,
-  Search,
-  ShoppingBasket,
-  Store,
-  Utensils,
-} from "lucide-react";
+import { Bike, Dot, Search } from "lucide-react";
 import { useState } from "react";
 
 const CATEGORIES = [
-  { id: "all", name: "All Stores", icon: Store },
-  { id: "grocery", name: "Grocery", icon: ShoppingBasket },
-  { id: "pharmacy", name: "Pharmacy", icon: BriefcaseMedical },
-  { id: "restaurant", name: "Restaurant", icon: Utensils },
-  { id: "cafe", name: "Cafe", icon: Coffee },
-  { id: "fruits_and_vegetables", name: "Fruits & Vegetables", icon: Cherry },
-  { id: "hardware", name: "Hardware", icon: BrickWall },
+  { id: "all", name: "All", src: "/assets/food/all-food.png" },
+  { id: "biryani", name: "Biryani", src: "/assets/food/biryani.png" },
+  { id: "pizza", name: "Pizza", src: "/assets/food/pizza.png" },
+  { id: "burger", name: "Burger", src: "/assets/food/burger.png" },
+  { id: "thali", name: "Thali", src: "/assets/food/thali.png" },
+  { id: "dosa", name: "Dosa", src: "/assets/food/dosa.png" },
 ];
 
 export default function NearByShops() {

@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as defaultRouteRouteImport } from './routes/(default)/route'
+import { Route as IntroIndexRouteImport } from './routes/intro/index'
 import { Route as defaultIndexRouteImport } from './routes/(default)/index'
 import { Route as publicTermsRouteImport } from './routes/(public)/terms'
 import { Route as publicSellerRouteImport } from './routes/(public)/seller'
@@ -40,6 +41,11 @@ import { Route as defaultstoreStoreHandleOrderpharmacyCheckoutRouteImport } from
 
 const defaultRouteRoute = defaultRouteRouteImport.update({
   id: '/(default)',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IntroIndexRoute = IntroIndexRouteImport.update({
+  id: '/intro/',
+  path: '/intro/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const defaultIndexRoute = defaultIndexRouteImport.update({
@@ -201,6 +207,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof publicPrivacyRoute
   '/seller': typeof publicSellerRoute
   '/terms': typeof publicTermsRoute
+  '/intro': typeof IntroIndexRoute
   '/account/profile': typeof defaultAccountProfileRoute
   '/account/': typeof defaultAccountIndexRoute
   '/cart': typeof defaultCartIndexRoute
@@ -228,6 +235,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof publicPrivacyRoute
   '/seller': typeof publicSellerRoute
   '/terms': typeof publicTermsRoute
+  '/intro': typeof IntroIndexRoute
   '/account/profile': typeof defaultAccountProfileRoute
   '/account': typeof defaultAccountIndexRoute
   '/cart': typeof defaultCartIndexRoute
@@ -259,6 +267,7 @@ export interface FileRoutesById {
   '/(public)/seller': typeof publicSellerRoute
   '/(public)/terms': typeof publicTermsRoute
   '/(default)/': typeof defaultIndexRoute
+  '/intro/': typeof IntroIndexRoute
   '/(default)/account/profile': typeof defaultAccountProfileRoute
   '/(default)/account/': typeof defaultAccountIndexRoute
   '/(default)/cart/': typeof defaultCartIndexRoute
@@ -289,6 +298,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/seller'
     | '/terms'
+    | '/intro'
     | '/account/profile'
     | '/account/'
     | '/cart'
@@ -316,6 +326,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/seller'
     | '/terms'
+    | '/intro'
     | '/account/profile'
     | '/account'
     | '/cart'
@@ -346,6 +357,7 @@ export interface FileRouteTypes {
     | '/(public)/seller'
     | '/(public)/terms'
     | '/(default)/'
+    | '/intro/'
     | '/(default)/account/profile'
     | '/(default)/account/'
     | '/(default)/cart/'
@@ -372,6 +384,7 @@ export interface RootRouteChildren {
   publicPrivacyRoute: typeof publicPrivacyRoute
   publicSellerRoute: typeof publicSellerRoute
   publicTermsRoute: typeof publicTermsRoute
+  IntroIndexRoute: typeof IntroIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -381,6 +394,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof defaultRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/intro/': {
+      id: '/intro/'
+      path: '/intro'
+      fullPath: '/intro'
+      preLoaderRoute: typeof IntroIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(default)/': {
@@ -658,6 +678,7 @@ const rootRouteChildren: RootRouteChildren = {
   publicPrivacyRoute: publicPrivacyRoute,
   publicSellerRoute: publicSellerRoute,
   publicTermsRoute: publicTermsRoute,
+  IntroIndexRoute: IntroIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

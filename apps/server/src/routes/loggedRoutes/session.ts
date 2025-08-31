@@ -12,6 +12,24 @@ const deviceSchema = z.object({
 });
 
 export const loggedInSessionRoute = new Hono<ServerContext>()
+  .post(
+    "/signout",
+    zValidator("json", z.object({ deviceId: z.string().uuid().optional() })),
+    async (c) => {
+      const sess = c.get("session");
+      const { deviceId } = c.req.valid("json");
+
+      if (deviceId) {
+        await db
+          .deleteFrom("devices")
+          .where("id", "=", deviceId)
+          .where("userId", "=", sess?.userId!)
+          .execute();
+      }
+
+      return c.json({ success: true });
+    }
+  )
   .get(
     "/invitation/:id",
     zValidator("param", z.object({ id: z.string().uuid() })),

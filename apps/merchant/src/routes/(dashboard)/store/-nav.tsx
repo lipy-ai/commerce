@@ -200,22 +200,12 @@ export const StoreShareCard = () => {
     const svg = document.getElementById("qrCodeId") as SVGSVGElement | null;
     if (!svg) return;
 
-    // Get the SVG dimensions
-    const svgRect = svg.getBoundingClientRect();
-    const svgWidth = svgRect.width || 200;
-    const svgHeight = svgRect.height || 200;
-
-    // Define padding around the QR code
-    const padding = 20;
-
-    // Calculate canvas dimensions with padding
-    const canvasWidth = svgWidth + padding * 2;
-    const canvasHeight = svgHeight + padding * 2;
+    const exportSize = 1024; // target size for downloaded image
+    const padding = 40; // padding around QR in the final PNG
 
     const serializer = new XMLSerializer();
     const svgString = serializer.serializeToString(svg);
 
-    // Create an image from the SVG
     const img = new Image();
     const svgBlob = new Blob([svgString], {
       type: "image/svg+xml;charset=utf-8",
@@ -223,21 +213,18 @@ export const StoreShareCard = () => {
     const url = URL.createObjectURL(svgBlob);
 
     img.onload = () => {
-      // Create a canvas with padding
       const canvas = document.createElement("canvas");
-      canvas.width = canvasWidth;
-      canvas.height = canvasHeight;
+      canvas.width = exportSize + padding * 2;
+      canvas.height = exportSize + padding * 2;
       const ctx = canvas.getContext("2d");
 
       if (ctx) {
-        // Fill the entire canvas with white background
         ctx.fillStyle = "white";
-        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Draw the QR code SVG centered with padding
-        ctx.drawImage(img, padding, padding, svgWidth, svgHeight);
+        // Draw image scaled to 1024×1024 inside the padding
+        ctx.drawImage(img, padding, padding, exportSize, exportSize);
 
-        // Convert to PNG and download
         const pngUrl = canvas.toDataURL("image/png");
         const downloadLink = document.createElement("a");
         downloadLink.href = pngUrl;
@@ -275,14 +262,14 @@ export const StoreShareCard = () => {
       <div className="text-center w-full">
         <div className="flex gap-1 items-center justify-center">
           <a
-            href={`${env.WEB_URL}/${data?.handle}`}
+            href={`${env.WEB_URL}/share?sid=${data?.id}`}
             target="_blank"
             rel="noreferrer"
             className="line-clamp-1 max-w-54"
           >
-            {`${env.WEB_URL}/${data?.handle}`}
+            {`${env.WEB_URL}/share?sid=${data?.id}`}
           </a>
-          <CopyButton value={`${env.WEB_URL}/${data?.handle}`} />
+          <CopyButton value={`${env.WEB_URL}/share?sid=${data?.id}`} />
         </div>
         <div className="flex items-center gap-2 justify-center">
           <p className="font-semibold">Store QR Code</p>

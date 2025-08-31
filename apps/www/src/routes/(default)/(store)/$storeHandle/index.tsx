@@ -3,6 +3,12 @@ import { publicShopApi } from "@lipy/lib/api";
 import { usePublicStore } from "@lipy/lib/hooks/use-store";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@lipy/web-ui/components/ui/accordion";
 import { Button, buttonVariants } from "@lipy/web-ui/components/ui/button";
 import {
   DropdownMenu,
@@ -103,53 +109,39 @@ function RouteComponent() {
         {res.data && isMobile && <StoreHeroSection storeInfo={res.data} />}
 
         {fetchedProduct && productData && productData.items.length > 0 && (
-          <div className="mb-32   my-2  space-y-4">
+          <div className="mb-32   my-2  space-y-2">
             {productData.items.map((productGroup, _idx) => {
               const productArray = productGroup.products;
 
               return (
-                <div key={_idx} className="bg-card p-4 lg:px-8">
-                  <div className="flex items-center justify-between gap-2">
-                    <p className="text-xl font-bold pb-2 line-clamp-1 break-words">
+                <Accordion
+                  key={_idx}
+                  type="single"
+                  collapsible
+                  className="bg-card rounded-xl  lg:border  border-border/40 px-4"
+                  defaultValue="item-1"
+                >
+                  <AccordionItem value="item-1" className="border-b-0">
+                    <AccordionTrigger className="hover:no-underline   text-xl font-bold break-words">
                       {productGroup.title}
-                    </p>
-                    {/* {productArray.length === 6 && (
-                      <Link
-                        className={cn(
-                          buttonVariants({
-                            variant: "ghost",
-                            className: "font-semibold p-0",
-                            size: isMobile ? "sm" : "default",
-                          }),
-                          "font-semibold text-green-700"
-                        )}
-                        to="/$storeHandle/products/category/$categorySlug"
-                        params={{
-                          storeHandle,
-                          categorySlug: productGroup.slug as string,
-                        }}
-                      >
-                        See all
-                        <ChevronRight className="fill-green-700" />
-                      </Link>
-                    )} */}
-                  </div>
+                    </AccordionTrigger>
 
-                  <div className="grid grid-cols-2 lg:grid-cols-6 gap-x-4 lg:gap-x-6 gap-y-6 w-full">
-                    {productArray?.map((product) => (
-                      <div key={product.id}>
-                        <ProductCard
-                          product={product}
-                          className={{
-                            classNameImg: "aspect-square h-full",
-                            classNameBox: "w-full h-full",
-                          }}
-                          storeHandle={storeHandle}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                    <AccordionContent className="grid grid-cols-2 lg:grid-cols-6 gap-x-4 lg:gap-x-6 gap-y-6 w-full">
+                      {productArray?.map((product) => (
+                        <div key={product.id}>
+                          <ProductCard
+                            product={product}
+                            className={{
+                              classNameImg: "aspect-square h-full",
+                              classNameBox: "w-full h-full",
+                            }}
+                            storeHandle={storeHandle}
+                          />
+                        </div>
+                      ))}
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
               );
             })}
           </div>

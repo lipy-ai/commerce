@@ -38,10 +38,10 @@ export function LeadForm() {
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-12 px-4">
-          <h1 className="text-4xl md:text-5xl font-bold  mb-4 text-background">
+          <h1 className="text-2xl md:text-5xl font-bold  mb-4 text-background">
             Go online with Lipy
           </h1>
-          <p className="text-xl text-background max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base md:text-lg text-background max-w-2xl mx-auto leading-relaxed">
             Fill the form below and we will get back to you.
           </p>
         </div>
@@ -78,7 +78,10 @@ export function LeadForm() {
                       name="delivery"
                       label="Do you provide delivery services?"
                       opts={[
-                        { label: "Yes, we deliver orders", value: "yes" },
+                        {
+                          label: "Yes, we deliver orders ourselves",
+                          value: "yes",
+                        },
                         { label: "No, pickup only", value: "no" },
                       ]}
                     />

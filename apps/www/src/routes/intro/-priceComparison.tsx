@@ -1,7 +1,10 @@
 import { Button } from "@lipy/web-ui/components/ui/button";
+import { Card, CardContent, CardFooter } from "@lipy/web-ui/components/ui/card";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { Minus, Plus } from "lucide-react";
 
 const CartComparison = () => {
+  const { isMobile } = useViewport();
   const CompetitorCart = () => (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden w-full max-w-xs sm:max-w-sm mx-auto border">
       {/* Header */}
@@ -23,7 +26,6 @@ const CartComparison = () => {
           <div>
             <h4 className="font-semibold text-gray-800">Rasoi Ghar</h4>
             <p className="text-xs text-gray-500">2 items</p>
-            <div className="text-xs text-gray-500 mt-1">Remove</div>
           </div>
         </div>
       </div>
@@ -154,12 +156,14 @@ const CartComparison = () => {
           {/* Competitor Cart */}
           <div className="flex flex-col items-center relative">
             <CompetitorCart />
-            <div className="mt-4 flex items-center md:absolute md:-right-16 md:top-80">
-              <div className="w-12 h-12 bg-red-100 border-2 border-red-500 rounded-full flex items-center justify-center">
-                <span className="text-red-600 font-bold text-sm">₹367</span>
+            {!isMobile && (
+              <div className="mt-4 flex items-center md:absolute md:-right-16 md:top-80">
+                <div className="w-12 h-12 bg-red-100 border-2 border-red-500 rounded-full flex items-center justify-center">
+                  <span className="text-red-600 font-bold text-sm">₹367</span>
+                </div>
+                <div className="hidden md:block w-0 h-0 border-l-8 border-l-red-500 border-t-4 border-t-transparent border-b-4 border-b-transparent ml-2"></div>
               </div>
-              <div className="hidden md:block w-0 h-0 border-l-8 border-l-red-500 border-t-4 border-t-transparent border-b-4 border-b-transparent ml-2"></div>
-            </div>
+            )}
           </div>
 
           {/* VS */}
@@ -182,49 +186,58 @@ const CartComparison = () => {
               alt=""
               className="border-2 rounded-xl w-full max-w-xs"
             />
-            <div className="mt-4 flex items-center md:absolute md:-left-16 md:top-72">
-              <div className="hidden md:block w-0 h-0 border-r-8 border-r-green-500 border-t-4 border-t-transparent border-b-4 border-b-transparent mr-2"></div>
-              <div className="w-12 h-12 bg-green-100 border-2 border-green-500 rounded-full flex items-center justify-center">
-                <span className="text-green-600 font-bold text-sm">₹187</span>
+            {!isMobile && (
+              <div className="mt-4 flex items-center md:absolute md:-left-16 md:top-72">
+                <div className="w-0 h-0 border-r-8 border-r-green-500 border-t-4 border-t-transparent border-b-4 border-b-transparent mr-2"></div>
+                <div className="w-12 h-12 bg-green-100 border-2 border-green-500 rounded-full flex items-center justify-center">
+                  <span className="text-green-600 font-bold text-sm  ">
+                    ₹187
+                  </span>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 
         {/* Bottom explanation */}
-        <div className="bg-white rounded-xl p-6 sm:p-8 shadow-lg">
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-8 mb-6">
-            <div className="text-center">
-              <div className="text-4xl mb-2">😰</div>
-              <div className="text-sm font-semibold text-red-600">
-                Customer thinks:
+
+        <Card>
+          <CardContent>
+            <div className="flex  justify-center items-center gap-8 mb-6">
+              <div className="text-center">
+                <div className="text-4xl mb-2">😰</div>
+                <div className="text-sm font-semibold text-red-600">
+                  Customer thinks:
+                </div>
+                <div className="text-xs text-gray-600">"Too expensive!"</div>
+                <div className="text-xs text-red-500 font-semibold mt-1">
+                  Orders less
+                </div>
               </div>
-              <div className="text-xs text-gray-600">"Too expensive!"</div>
-              <div className="text-xs text-red-500 font-semibold mt-1">
-                Orders less
+
+              <div className="text-3xl text-gray-400">→</div>
+
+              <div className="text-center">
+                <div className="text-4xl mb-2">😊</div>
+                <div className="text-sm font-semibold text-green-600">
+                  Customer thinks:
+                </div>
+                <div className="text-xs text-gray-600">"Fair price!"</div>
+                <div className="text-xs text-green-500 font-semibold mt-1">
+                  Orders more
+                </div>
               </div>
             </div>
-
-            <div className="hidden sm:block text-3xl text-gray-400">→</div>
-
-            <div className="text-center">
-              <div className="text-4xl mb-2">😊</div>
-              <div className="text-sm font-semibold text-green-600">
-                Customer thinks:
-              </div>
-              <div className="text-xs text-gray-600">"Fair price!"</div>
-              <div className="text-xs text-green-500 font-semibold mt-1">
-                Orders more
-              </div>
-            </div>
-          </div>
-
-          <p className="text-center text-lg sm:text-xl font-bold text-gray-800">
-            Result: <span className="text-green-600">More orders</span> ={" "}
-            <span className="text-green-600">More revenue</span> for your
-            restaurant
-          </p>
-        </div>
+            <CardFooter className="justify-center text-center">
+              {" "}
+              <p className=" text-lg sm:text-xl font-bold text-gray-800">
+                Result: <span className="text-green-600">More orders</span> ={" "}
+                <span className="text-green-600">More revenue</span> for your
+                restaurant
+              </p>
+            </CardFooter>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

@@ -53,7 +53,7 @@ export function HeroSection() {
 
         {/* Right Content (Image) */}
         <div className="relative flex-1 mt-10 md:mt-0">
-          <div className="absolute top-16 -left-4 bg-card p-4 rounded-2xl shadow-xl">
+          <div className="absolute top-16 -left-4 bg-card p-4 rounded-2xl shadow-xl hidden md:block">
             <div className="flex items-center gap-3">
               <CircleCheck className="text-white fill-green-500 size-8 flex items-center justify-center" />
 
@@ -65,7 +65,7 @@ export function HeroSection() {
               </div>
             </div>
           </div>
-          <div className="absolute bottom-16 -right-4 bg-card p-4 rounded-2xl shadow-xl animate-float animation-delay-1000 z-20">
+          <div className="absolute bottom-16 -right-4 bg-card p-4 rounded-2xl shadow-xl animate-float animation-delay-1000 z-20 hidden md:block">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-gradient-to-r from-orange-400 to-red-500 rounded-xl flex items-center justify-center">
                 🍕

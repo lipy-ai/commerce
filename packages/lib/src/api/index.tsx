@@ -21,8 +21,10 @@ import type { merchantStoreRoute } from "@lipy/server/routes/merchantRoutes/stor
 import type { posOrderRoute } from "@lipy/server/routes/posRoutes/order";
 import type { posProductRoute } from "@lipy/server/routes/posRoutes/product";
 import type { posStoreRoute } from "@lipy/server/routes/posRoutes/shop";
+import type { publicLandingRoute } from "@lipy/server/routes/publicRoutes/landing";
 import type { productRoute } from "@lipy/server/routes/publicRoutes/product";
 import type { shopRoute } from "@lipy/server/routes/publicRoutes/shop";
+
 import { type ClientRequestOptions, hc } from "hono/client";
 import { bearerToken } from "../providers/auth";
 
@@ -144,5 +146,10 @@ export const publicProductApi = hc<typeof productRoute>(
 );
 export const publicShopApi = hc<typeof shopRoute>(
   `${basepath}/public/shops`,
+  opts
+);
+
+export const publicLandingApi = hc<typeof publicLandingRoute>(
+  `${basepath}/public/landing`,
   opts
 );

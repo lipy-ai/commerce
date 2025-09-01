@@ -1,14 +1,3 @@
-import { env } from "@envClient";
-import { buttonVariants } from "@lipy/web-ui/components/ui/button";
-import { useViewport } from "@lipy/web-ui/contexts/viewport";
-import { cn } from "@lipy/web-ui/lib/utils";
-import { CheckCircle } from "lucide-react";
-
-const lipyForShopping = [
-  "Get to shop from all the shops nearby at a single place.",
-  "Compare prices of items in from a single place rather than going out and asking in each shop.",
-  "Items are listed at shop owner's price directly , so no need to pay any hidden charges.",
-];
 const offers = [
   {
     title: "Inventory Management",
@@ -48,7 +37,6 @@ const offers = [
   },
 ];
 export function Offerings() {
-  const { isMobile } = useViewport();
   return (
     <div>
       <div className="p-4 md:p-16 mx-auto bg-blue-100">
@@ -100,8 +88,8 @@ export function Offerings() {
         </div>
       </div>
 
-      <div className="bg-gradient-to-r from-yellow-100 to-blue-200 rounded-2xl m-4 md:m-12  flex flex-col md:flex-row items-center justify-between overflow-hidden  md:px-20">
-        {/* Left Section */}
+      {/* <div className="bg-gradient-to-r from-yellow-100 to-blue-200 rounded-2xl m-4 md:m-12  flex flex-col md:flex-row items-center justify-between overflow-hidden  md:px-20">
+       
         <div className="max-w-2xl space-y-4 p-4">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 leading-snug">
             Why choose Lipy for shopping?
@@ -124,7 +112,7 @@ export function Offerings() {
           </a>
         </div>
 
-        {/* Right Section (Phone) */}
+  
         <div className="relative mt-6 md:mt-0 md:ml-8 flex-shrink-0 h-96 w-full md:w-72 overflow-hidden flex items-start justify-center pt-8 ">
           <img
             src="/assets/landing/assets/storeFront.png"
@@ -132,7 +120,7 @@ export function Offerings() {
             className="h-[32rem] object-contain rounded-xl"
           />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

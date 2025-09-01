@@ -2,7 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Features } from "./-features";
 import { Footer } from "./-footer";
 import { HeroSection } from "./-heroSection";
+import { LeadForm } from "./-leadForm";
 import { Offerings } from "./-offerings";
+import CartComparison from "./-priceComparison";
 
 export const Route = createFileRoute("/intro/")({
   component: RouteComponent,
@@ -14,6 +16,8 @@ function RouteComponent() {
       <HeroSection />
       <Features />
       <Offerings />
+      <CartComparison />
+      <LeadForm />
       <Footer />
     </div>
   );

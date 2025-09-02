@@ -76,6 +76,7 @@ export default function FormEdit({
         "Your product is under review. You can add it in your inventory in sometime."
       );
       setOpen(false);
+      form.reset(defaultValues);
     },
   };
 

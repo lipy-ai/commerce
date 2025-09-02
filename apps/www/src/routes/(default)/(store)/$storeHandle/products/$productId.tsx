@@ -109,10 +109,11 @@ function RouteComponent() {
             </div>
 
             <div className="lg:col-span-6 lg:p-4 lg:space-y-4 ">
-              <div className="bg-card rounded-xl  mx-2 border border-border/40">
-                <h3 className="font-bold text-lg px-4 pt-2">{product.title}</h3>
+              <div className="bg-card rounded-xl  mx-2 border border-border/40 px-4 py-2 space-y-2">
+                <h3 className="font-bold text-lg">{product.title}</h3>
+                <p className="text-muted-foreground">{product.summary}</p>
                 {product.variants?.length === 1 ? (
-                  <div className="px-4 py-2">
+                  <div className="">
                     <p className="font-medium text-base">
                       {product.variants[0]?.unit}
                     </p>

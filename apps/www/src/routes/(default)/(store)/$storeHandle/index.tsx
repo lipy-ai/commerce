@@ -122,13 +122,28 @@ function RouteComponent() {
                   defaultValue="item-1"
                 >
                   <AccordionItem value="item-1" className="border-b-0">
-                    <AccordionTrigger className="hover:no-underline   text-xl font-bold break-words">
-                      {productGroup.title}
+                    <AccordionTrigger className="hover:no-underline break-words">
+                      <div className="flex flex-col">
+                        <p className="  text-xl font-bold ">
+                          {productGroup.title}
+                        </p>
+                        <p className="text-muted-foreground font-normal line-clamp-1 break-words">
+                          {productGroup.summary}
+                        </p>
+                      </div>
                     </AccordionTrigger>
 
-                    <AccordionContent className="grid grid-cols-2 lg:grid-cols-6 gap-x-4 lg:gap-x-6 gap-y-6 w-full">
+                    <AccordionContent
+                      className={cn(
+                        isMobile ? "divide-y divide-dashed" : "gap-y-6",
+                        "grid grid-cols-1 lg:grid-cols-3 gap-x-4 lg:gap-x-6  w-full "
+                      )}
+                    >
                       {productArray?.map((product) => (
-                        <div key={product.id}>
+                        <div
+                          key={product.id}
+                          className={cn(isMobile ? "" : "border px-4")}
+                        >
                           <ProductCard
                             product={product}
                             className={{

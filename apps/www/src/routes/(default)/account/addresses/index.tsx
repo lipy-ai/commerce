@@ -26,7 +26,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { AccountNav } from "../-nav";
-//@ts-ignore
 import { DetailedAddress } from "@/components/address/detailedAddress";
 
 //@ts-ignore

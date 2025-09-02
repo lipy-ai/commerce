@@ -25,9 +25,9 @@ import {
   Trash,
 } from "lucide-react";
 import { useState } from "react";
-import { AccountNav } from "../-nav";
+//@ts-ignore
 import { DetailedAddress } from "@/components/address/detailedAddress";
-
+import { AccountNav } from "../-nav";
 //@ts-ignore
 export const Route = createFileRoute("/(default)/account/addresses/")({
   component: RouteComponent,

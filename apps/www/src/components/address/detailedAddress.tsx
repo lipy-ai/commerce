@@ -1,7 +1,7 @@
 import { env } from "@envClient";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loggedInAddressApi } from "@lipy/lib/api";
-// @ts-nocheck
+
 import { authClient } from "@lipy/lib/providers/auth";
 import {
   apiQueryOptions,
@@ -19,6 +19,11 @@ import {
   FormInputWithAnimatedLabel,
 } from "@lipy/web-ui/components/forms/elements";
 import {
+  type AddressType,
+  useLocationStore,
+} from "@lipy/web-ui/components/maps/utils/store";
+import { Button } from "@lipy/web-ui/components/ui/button";
+import {
   Form,
   FormControl,
   FormField,
@@ -27,16 +32,11 @@ import {
   FormMessage,
 } from "@lipy/web-ui/components/ui/form";
 import { useQueryClient } from "@tanstack/react-query";
+import { PenLine } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import {
-  type AddressType,
-  useLocationStore,
-} from "@lipy/web-ui/components/maps/utils/store";
-import { Button } from "@lipy/web-ui/components/ui/button";
 import { AddressSetter } from "./addressSetter";
-import { PenLine } from "lucide-react";
 
 const addressTypesItems = [
   { value: "home", label: "Home" },

@@ -22,7 +22,7 @@ import { Button } from "@lipy/web-ui/components/ui/button";
 import { useJsApiLoader } from "@react-google-maps/api";
 import { MapPinOff, Search } from "lucide-react";
 import { useEffect, useState } from "react";
-import { AddressSetter } from "./-addressSetter";
+import { AddressSetter } from "../../../../components/address/addressSetter";
 
 function LocationComponent() {
   const [error, setError] = useState<string | null>(null);

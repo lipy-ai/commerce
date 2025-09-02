@@ -25,6 +25,7 @@ import { Route as defaultAccountRouteRouteImport } from './routes/(default)/acco
 import { Route as defaultstoreRouteRouteImport } from './routes/(default)/(store)/route'
 import { Route as defaultCartIndexRouteImport } from './routes/(default)/cart/index'
 import { Route as defaultAccountIndexRouteImport } from './routes/(default)/account/index'
+import { Route as defaultCategorySlugRouteImport } from './routes/(default)/category/$slug'
 import { Route as defaultAccountProfileRouteImport } from './routes/(default)/account/profile'
 import { Route as defaultAccountOrdersIndexRouteImport } from './routes/(default)/account/orders/index'
 import { Route as defaultAccountAddressesIndexRouteImport } from './routes/(default)/account/addresses/index'
@@ -116,6 +117,11 @@ const defaultAccountIndexRoute = defaultAccountIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => defaultAccountRouteRoute,
+} as any)
+const defaultCategorySlugRoute = defaultCategorySlugRouteImport.update({
+  id: '/category/$slug',
+  path: '/category/$slug',
+  getParentRoute: () => defaultRouteRoute,
 } as any)
 const defaultAccountProfileRoute = defaultAccountProfileRouteImport.update({
   id: '/profile',
@@ -209,6 +215,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof publicTermsRoute
   '/intro': typeof IntroIndexRoute
   '/account/profile': typeof defaultAccountProfileRoute
+  '/category/$slug': typeof defaultCategorySlugRoute
   '/account/': typeof defaultAccountIndexRoute
   '/cart': typeof defaultCartIndexRoute
   '/$storeHandle/details': typeof defaultstoreStoreHandleDetailsRoute
@@ -237,6 +244,7 @@ export interface FileRoutesByTo {
   '/terms': typeof publicTermsRoute
   '/intro': typeof IntroIndexRoute
   '/account/profile': typeof defaultAccountProfileRoute
+  '/category/$slug': typeof defaultCategorySlugRoute
   '/account': typeof defaultAccountIndexRoute
   '/cart': typeof defaultCartIndexRoute
   '/$storeHandle/details': typeof defaultstoreStoreHandleDetailsRoute
@@ -269,6 +277,7 @@ export interface FileRoutesById {
   '/(default)/': typeof defaultIndexRoute
   '/intro/': typeof IntroIndexRoute
   '/(default)/account/profile': typeof defaultAccountProfileRoute
+  '/(default)/category/$slug': typeof defaultCategorySlugRoute
   '/(default)/account/': typeof defaultAccountIndexRoute
   '/(default)/cart/': typeof defaultCartIndexRoute
   '/(default)/(store)/$storeHandle/details': typeof defaultstoreStoreHandleDetailsRoute
@@ -300,6 +309,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/intro'
     | '/account/profile'
+    | '/category/$slug'
     | '/account/'
     | '/cart'
     | '/$storeHandle/details'
@@ -328,6 +338,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/intro'
     | '/account/profile'
+    | '/category/$slug'
     | '/account'
     | '/cart'
     | '/$storeHandle/details'
@@ -359,6 +370,7 @@ export interface FileRouteTypes {
     | '/(default)/'
     | '/intro/'
     | '/(default)/account/profile'
+    | '/(default)/category/$slug'
     | '/(default)/account/'
     | '/(default)/cart/'
     | '/(default)/(store)/$storeHandle/details'
@@ -500,6 +512,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/account/'
       preLoaderRoute: typeof defaultAccountIndexRouteImport
       parentRoute: typeof defaultAccountRouteRoute
+    }
+    '/(default)/category/$slug': {
+      id: '/(default)/category/$slug'
+      path: '/category/$slug'
+      fullPath: '/category/$slug'
+      preLoaderRoute: typeof defaultCategorySlugRouteImport
+      parentRoute: typeof defaultRouteRoute
     }
     '/(default)/account/profile': {
       id: '/(default)/account/profile'
@@ -653,6 +672,7 @@ interface defaultRouteRouteChildren {
   defaultSearchRoute: typeof defaultSearchRoute
   defaultShareRoute: typeof defaultShareRoute
   defaultIndexRoute: typeof defaultIndexRoute
+  defaultCategorySlugRoute: typeof defaultCategorySlugRoute
   defaultCartIndexRoute: typeof defaultCartIndexRoute
 }
 
@@ -662,6 +682,7 @@ const defaultRouteRouteChildren: defaultRouteRouteChildren = {
   defaultSearchRoute: defaultSearchRoute,
   defaultShareRoute: defaultShareRoute,
   defaultIndexRoute: defaultIndexRoute,
+  defaultCategorySlugRoute: defaultCategorySlugRoute,
   defaultCartIndexRoute: defaultCartIndexRoute,
 }
 

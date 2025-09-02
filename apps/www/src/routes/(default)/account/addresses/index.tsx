@@ -7,7 +7,6 @@ import {
 } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import { DeleteAddress } from "@lipy/web-ui/components/maps/deleteAdderess";
-import { DetailedAddress } from "@lipy/web-ui/components/maps/detailedAddress";
 import type { AddressType } from "@lipy/web-ui/components/maps/utils/store";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
@@ -27,6 +26,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { AccountNav } from "../-nav";
+import { DetailedAddress } from "@/components/address/detailedAddress";
 
 //@ts-ignore
 export const Route = createFileRoute("/(default)/account/addresses/")({

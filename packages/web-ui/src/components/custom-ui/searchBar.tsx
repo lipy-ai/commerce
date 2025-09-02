@@ -10,12 +10,18 @@ export default function SearchBar({
   placeholder,
   defaultValue,
   className,
+  inputClassName,
   fullPageSearch,
+  prefixClassName,
+  formClassName,
 }: {
   placeholder?: string;
   defaultValue?: string;
   className?: string;
+  inputClassName?: string;
   fullPageSearch?: boolean;
+  prefixClassName?: string;
+  formClassName?: string;
 }) {
   const [value, setValue] = useState(defaultValue || "");
   const [debounced] = useDebounce(value, 300);
@@ -43,10 +49,12 @@ export default function SearchBar({
         onSearch(value);
         e.preventDefault();
       }}
-      className={cn("", className)}
+      className={cn("", formClassName)}
     >
       <Input
-        className="rounded-lg "
+        className={cn("rounded-lg", className)}
+        inputClassName={inputClassName}
+        prefixClassName={prefixClassName}
         value={value}
         onChange={(e) => {
           setValue(e.currentTarget.value);

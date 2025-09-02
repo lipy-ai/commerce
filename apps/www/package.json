@@ -14,6 +14,7 @@
 	},
 	"dependencies": {
 		"@bprogress/core": "^1.3.4",
+		"@hookform/resolvers": "^5.0.1",
 		"@lipy/lib": "workspace:*",
 		"@lipy/server": "workspace:*",
 		"@lipy/web-ui": "workspace:*",
@@ -33,6 +34,7 @@
 		"react-dom": "^19.1.0",
 		"react-hook-form": "^7.55.0",
 		"react-qr-code": "^2.0.18",
+		"sonner": "^2.0.3",
 		"tailwindcss": "^4.1.11",
 		"use-debounce": "^10.0.5",
 		"zod": "^4.0.14",

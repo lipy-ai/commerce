@@ -30,7 +30,13 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { type AddressType, useLocationStore } from "./utils/store";
+import {
+  type AddressType,
+  useLocationStore,
+} from "@lipy/web-ui/components/maps/utils/store";
+import { Button } from "@lipy/web-ui/components/ui/button";
+import { AddressSetter } from "./addressSetter";
+import { PenLine } from "lucide-react";
 
 const addressTypesItems = [
   { value: "home", label: "Home" },
@@ -154,6 +160,7 @@ export function DetailedAddress({
       open={open}
       onOpenChange={onOpenChange}
       trigger={<p>{children}</p>}
+      className="z-[998]"
     >
       <div>
         <Form {...form}>
@@ -165,8 +172,18 @@ export function DetailedAddress({
               <DrawerDialogTitle>Add address details</DrawerDialogTitle>
             </DrawerDialogHeader>
 
-            <div className="text-sm rounded-md border p-2 bg-accent/30 font-medium">
+            <div className="text-sm rounded-md border p-2 bg-accent/30 font-medium space-y-2">
               <p>{fullAddress?.line1}</p>
+              <AddressSetter>
+                <Button
+                  className=""
+                  variant={"outline"}
+                  size="sm"
+                  // onClick={handleChange}
+                >
+                  <PenLine /> Change Address
+                </Button>
+              </AddressSetter>
             </div>
 
             <FormInputWithAnimatedLabel

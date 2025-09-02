@@ -30,7 +30,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { AddressComponent } from ".";
+import { AddressComponent } from "../../routes/(default)/account/addresses";
 
 export const AddressSetter = ({
   autocompleteOnly,
@@ -98,7 +98,7 @@ export const AddressSetter = ({
     <DrawerDialogSwitcher
       open={open}
       onOpenChange={setOpen}
-      className="h-[90%]"
+      className="h-[90%] z-[999]"
       trigger={children}
     >
       <DrawerDialogHeader className="space-y-4 fixed top-4 bg-background  right-4 left-4">

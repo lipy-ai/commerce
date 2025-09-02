@@ -1,7 +1,7 @@
 import { publicShopApi } from "@lipy/lib/api";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
-import { DetailedAddress } from "@lipy/web-ui/components/maps/detailedAddress";
+import { DetailedAddress } from "@/components/address/detailedAddress";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import {

@@ -10,7 +10,7 @@ import {
   DrawerDialogSwitcher,
 } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
-import { DetailedAddress } from "@lipy/web-ui/components/maps/detailedAddress";
+import { DetailedAddress } from "@/components/address/detailedAddress";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { Alert } from "@lipy/web-ui/components/ui/alert";

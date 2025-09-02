@@ -1,6 +1,6 @@
 import { env } from "@envClient";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
-import { DetailedAddress } from "@lipy/web-ui/components/maps/detailedAddress";
+import { DetailedAddress } from "@/components/address/detailedAddress";
 import {
   fillBaseAddress,
   reverseGeocode,
@@ -19,8 +19,8 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { LocateFixed, MapPinned, Search, StepForward } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AccountNav } from "../-nav";
-import { AddressSetter } from "./-addressSetter";
-
+import { AddressSetter } from "../../../../components/address/addressSetter";
+import { useCurrentLocation } from "@lipy/lib/hooks/use-location";
 export const Route = createFileRoute("/(default)/account/addresses/new")({
   component: RouteComponent,
   validateSearch: (search: Record<string, unknown>) => {
@@ -30,7 +30,6 @@ export const Route = createFileRoute("/(default)/account/addresses/new")({
   },
 });
 
-
 function RouteComponent() {
   const { type } = Route.useSearch();
 
@@ -39,7 +38,12 @@ function RouteComponent() {
     libraries: env.GOOGLE_MAP_LIBRARIES,
   });
 
-  const [mapCenter, setMapCenter] = useState({
+  const { location, isLoading } = useCurrentLocation();
+
+  const [mapCenter, setMapCenter] = useState<{
+    lat: number;
+    lng: number;
+  }>({
     lat: 28.6901242,
     lng: 77.1700795,
   });
@@ -57,8 +61,10 @@ function RouteComponent() {
   const [fetchingAddress, setFetchingAddress] = useState(false);
 
   const handleMapCenterChange = async () => {
+    console.log(mapCenter);
     try {
       setFetchingAddress(true);
+      if (!mapCenter) return;
       const { result } = await reverseGeocode(mapCenter.lat, mapCenter.lng);
 
       setAddressName(result.address_components?.[1]?.long_name || "");
@@ -75,15 +81,20 @@ function RouteComponent() {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: false positive
   useEffect(() => {
-    if (isLoaded && mapCenter) {
+    if (isLoaded && mapCenter && !isLoading) {
       handleMapCenterChange();
     }
-  }, [isLoaded, mapCenter]);
+  }, [isLoaded, isLoading]);
+
+  useEffect(() => {
+    if (!location?.latitude || !location.longitude) return;
+    setMapCenter({ lat: location?.latitude, lng: location?.longitude });
+  }, [location]);
 
   if (!isLoaded) return <Loading />;
   return (
     <AccountNav>
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col flex-1">
         <DashboardHeader
           title={
             type === "deliveryAddress" ? "Delivery Address" : "New Address"
@@ -128,19 +139,22 @@ function RouteComponent() {
             />
           </GoogleMap>
 
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
+          <div className="absolute bottom-1/12 left-1/2 transform -translate-x-1/2 z-10 drop-shadow-2xl">
             <Button
-              className="text-primary border-primary font-semibold shadow-md hover:bg-primary/10"
-              variant="outline"
+              className=""
+              variant="default"
               onClick={() => {
-                navigator.geolocation.getCurrentPosition((position) => {
-                  const { latitude, longitude } = position.coords;
-                  setMapCenter({ lat: latitude, lng: longitude });
-                });
+                location?.latitude &&
+                  location.longitude &&
+                  setMapCenter({
+                    lat: location?.latitude,
+                    lng: location?.longitude,
+                  });
               }}
+              disabled={isLoading}
             >
-              <LocateFixed className="text-primary mr-1 stroke-2" />
-              Use current location
+              <LocateFixed className="mr-1 stroke-2" />
+              {isLoading ? "Locating..." : "Use current location"}
             </Button>
           </div>
         </div>

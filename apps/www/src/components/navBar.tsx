@@ -10,7 +10,7 @@ import {
   MapPin,
   UserRound,
 } from "lucide-react";
-import { AddressSetter } from "@/routes/(default)/account/addresses/-addressSetter";
+import { AddressSetter } from "@/components/address/addressSetter";
 import { CartInDesktop } from "./cart/cartInDesktop";
 
 export default function NavBar() {

@@ -8,7 +8,6 @@ import {
 } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
 import { Badge } from "@lipy/web-ui/components/ui/badge";
 import { Button } from "@lipy/web-ui/components/ui/button";
-import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { Link } from "@tanstack/react-router";
 import type { InferResponseType } from "hono";
@@ -38,7 +37,6 @@ export default function ProductCard({
   variant?: "default" | "horizontal";
   storeHandle?: string;
 }) {
-  const { isMobile } = useViewport();
   const discountPercentage = discountCalculator(
     product.variants[0]?.price as number,
     product.variants[0]?.maxPrice as number
@@ -66,19 +64,65 @@ export default function ProductCard({
 
     default: {
       return (
-        <div>
+        <div className="py-8">
           <Link
-            className={cn(className?.classNameBox)}
+            className={cn(
+              className?.classNameBox,
+              "flex gap-4 justify-between"
+            )}
             to="/$storeHandle/products/$productId"
             params={{ storeHandle: storeHandle ?? "", productId: product.id }}
           >
-            <div className="relative aspect-square ">
+            <div className="space-y-2">
+              <p
+                className={cn(
+                  !product.variants[0].inStock ? "text-muted-foreground" : null,
+                  "font-medium line-clamp-3 leading-tight text-base"
+                )}
+              >
+                {product.title}
+              </p>
+
+              <Badge
+                className="text-xs"
+                variant="warning"
+                size="sm"
+                appearance={"soft"}
+              >
+                {product.variants[0].unit}
+              </Badge>
+
+              <div>
+                <span className="font-bold text-base pr-1">
+                  {" "}
+                  {formatAmount("inr", product.variants[0]?.price as number)}
+                </span>
+                {product.variants[0] &&
+                  product.variants[0].maxPrice != null &&
+                  product.variants[0].price != null &&
+                  product.variants[0].maxPrice > product.variants[0].price && (
+                    <span className="text-xs line-through text-muted-foreground">
+                      {formatAmount("inr", product.variants[0].maxPrice)}
+                    </span>
+                  )}
+                {discountPercentage > 0 && (
+                  <p className="text-xs text-blue-600 font-medium">
+                    {discountPercentage}% OFF
+                  </p>
+                )}
+              </div>
+              <p className="text-muted-foreground text-xs line-clamp-3 break-words">
+                {product.summary}
+              </p>
+            </div>
+
+            <div className="relative aspect-square flex-shrink-0 w-[140px]">
               <div className="relative w-full">
                 <img
                   alt=""
                   src={product.thumbnail || "/assets/paper-bag-items.webp"}
                   className={cn(
-                    "w-full h-full object-contain rounded-xl  bg-card border border-border/50",
+                    "w-full h-full object-contain rounded-xl  bg-card border border-border/80",
                     product?.variants[0].inStock ? "" : "",
                     className?.classNameImg
                   )}
@@ -93,7 +137,7 @@ export default function ProductCard({
                 )}
               </div>
 
-              <div className="absolute bottom-1 right-1">
+              <div className="absolute left-1/2  -translate-x-1/2 -translate-y-1/2">
                 {product?.variants && product?.variants.length <= 1 ? (
                   product?.variants[0].inStock && (
                     <AddToCart
@@ -112,10 +156,10 @@ export default function ProductCard({
                       e.stopPropagation();
                       setVariantListOpen(true);
                     }}
-                    size={isMobile ? "xs" : "sm"}
+                    size="sm"
                     type="button"
                     aria-label="Add to cart"
-                    className="text-secondary border border-secondary min-w-16 hover:text-secondary border-b-2 border-r-2 disabled:opacity-100 flex flex-col p-0  gap-0"
+                    className="text-secondary border border-secondary min-w-24 hover:text-secondary border-b-2 border-r-2 disabled:opacity-100 flex flex-col p-0  gap-0"
                     variant={"outline"}
                   >
                     <p className=" text-sm font-medium">ADD</p>
@@ -125,7 +169,7 @@ export default function ProductCard({
                   </Button>
                 ) : (
                   <div
-                    className="bg-secondary flex items-center  shadow-sm rounded-md"
+                    className="bg-secondary flex items-center  shadow-sm rounded-md min-w-24"
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
@@ -133,7 +177,7 @@ export default function ProductCard({
                     }}
                   >
                     <Button
-                      size={isMobile ? "xs" : "sm"}
+                      size="sm"
                       variant="ghost"
                       className="text-primary-foreground hover:bg-secondary hover:text-primary-foreground"
                     >
@@ -147,7 +191,7 @@ export default function ProductCard({
                     </div>
 
                     <Button
-                      size={isMobile ? "xs" : "sm"}
+                      size="sm"
                       variant="ghost"
                       className="text-primary-foreground hover:bg-secondary hover:text-primary-foreground"
                     >
@@ -155,50 +199,6 @@ export default function ProductCard({
                     </Button>
                   </div>
                 )}
-              </div>
-            </div>
-
-            <div className="space-y-0.5 my-1">
-              <div className="py-1">
-                <Badge
-                  className="text-xs"
-                  variant="info"
-                  size="sm"
-                  appearance={"outline"}
-                >
-                  {product.variants[0].unit}
-                </Badge>
-                <p
-                  className={cn(
-                    !product.variants[0].inStock
-                      ? "text-muted-foreground"
-                      : null,
-                    "font-medium line-clamp-3 leading-tight "
-                  )}
-                >
-                  {product.title}
-                </p>
-              </div>
-
-              <div>
-                {discountPercentage > 0 && (
-                  <p className="text-xs text-blue-600 font-medium">
-                    {discountPercentage}% OFF
-                  </p>
-                )}
-
-                <span className="font-bold text-md pr-1">
-                  {" "}
-                  {formatAmount("inr", product.variants[0]?.price as number)}
-                </span>
-                {product.variants[0] &&
-                  product.variants[0].maxPrice != null &&
-                  product.variants[0].price != null &&
-                  product.variants[0].maxPrice > product.variants[0].price && (
-                    <span className="text-xs line-through text-muted-foreground">
-                      {formatAmount("inr", product.variants[0].maxPrice)}
-                    </span>
-                  )}
               </div>
             </div>
           </Link>

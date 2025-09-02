@@ -190,6 +190,7 @@ const route = new Hono<ServerContext>()
 				.select((eb) => [
 					"p.id as id",
 					"p.title as title",
+					"p.summary as summary",
 					"p.thumbnail as thumbnail",
 					"si.storeId as storeId",
 					"p.category as category",

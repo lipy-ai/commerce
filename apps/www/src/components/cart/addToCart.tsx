@@ -7,7 +7,6 @@ import {
 // import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import { Button } from "@lipy/web-ui/components/ui/button";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
-import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { Loader2, Minus, Plus } from "lucide-react";
@@ -35,7 +34,6 @@ export const AddToCart = ({
   thumbnail?: string;
 }) => {
   const { cart, updateCart } = useCartStore();
-  const { isMobile } = useViewport();
   const [loadingState, setLoadingState] = useState<LoadingState>({
     isLoading: false,
     operation: null,
@@ -138,12 +136,12 @@ export const AddToCart = ({
     case "primary":
       return (
         <Button
-          size={isMobile ? "xs" : "sm"}
+          size="sm"
           onClick={handleAddToCart}
           disabled={disabled || isLoading}
           type="button"
           aria-label="Add to cart"
-          className="text-secondary border border-secondary min-w-12  hover:text-secondary border-b-2 border-r-2 disabled:opacity-100 font-medium"
+          className="text-secondary border border-secondary min-w-24  hover:text-secondary border-b-2 border-r-2 disabled:opacity-100 font-semibold "
           variant={"outline"}
         >
           {isLoading ? <Loader2 className="animate-spin" /> : <p>ADD</p>}
@@ -181,7 +179,7 @@ export const AddToCart = ({
               ? "bg-primary min-w-32"
               : activeVariant === "tertiary-active"
                 ? "bg-secondary/20 ring-1 ring-secondary/40"
-                : "bg-secondary ",
+                : "bg-secondary min-w-24",
             "flex items-center  shadow-sm rounded-md justify-between"
           )}
         >
@@ -191,9 +189,7 @@ export const AddToCart = ({
                 ? "default"
                 : activeVariant === "tertiary-active"
                   ? "icon-xs"
-                  : isMobile
-                    ? "xs"
-                    : "sm"
+                  : "sm"
             }
             onClick={handleQuantityChange("decrement")}
             disabled={disabled || isLoading}
@@ -254,9 +250,7 @@ export const AddToCart = ({
                 ? "default"
                 : activeVariant === "tertiary-active"
                   ? "icon-xs"
-                  : isMobile
-                    ? "xs"
-                    : "sm"
+                  : "sm"
             }
             onClick={handleQuantityChange("increment")}
             disabled={disabled || isLoading}

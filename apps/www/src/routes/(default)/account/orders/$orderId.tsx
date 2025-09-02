@@ -38,6 +38,7 @@ import {
 } from "@lipy/web-ui/components/ui/hover-card";
 import Loading from "@lipy/web-ui/components/ui/loading";
 import ZoomImg from "@lipy/web-ui/components/veiwers/zoomableImage";
+import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
@@ -61,6 +62,7 @@ export const Route = createFileRoute("/(default)/account/orders/$orderId")({
 function RouteComponent() {
   const { orderId } = Route.useParams();
   const queryClient = useQueryClient();
+  const { isMobile } = useViewport();
   const { data: order, isLoading } = useAPIQuery(
     loggedIOrderApi[":id"],
     "$get",
@@ -477,6 +479,21 @@ function RouteComponent() {
                 </CardContent>
               </Card>
             </div>
+            {(order?.status === "created" ||
+              order?.status === "accepted" ||
+              order?.status === "awaiting_customer_confirmation" ||
+              order?.status === "packed" ||
+              order?.status === "out_for_delivery") &&
+              isMobile && (
+                <div className="fixed bottom-0 bg-card p-4 w-full border-t">
+                  <a
+                    className={cn(buttonVariants(), "w-full")}
+                    href={`upi://pay?pa=${order?.payments?.upiIds[0]?.id}&am=${order?.totalAmount}&cu=INR`}
+                  >
+                    Make Payment now
+                  </a>
+                </div>
+              )}
           </div>
         </div>
       )}

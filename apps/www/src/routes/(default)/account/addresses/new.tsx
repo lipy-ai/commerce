@@ -83,7 +83,7 @@ function RouteComponent() {
     if (isLoaded && mapCenter && !isLoading) {
       handleMapCenterChange();
     }
-  }, [isLoaded, isLoading, mapCenter]);
+  }, [mapCenter]);
 
   useEffect(() => {
     if (!location?.latitude || !location.longitude) return;

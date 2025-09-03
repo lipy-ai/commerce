@@ -32,7 +32,7 @@ import {
   FormMessage,
 } from "@lipy/web-ui/components/ui/form";
 import { useQueryClient } from "@tanstack/react-query";
-import { PenLine } from "lucide-react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -79,6 +79,16 @@ export function DetailedAddress({
       receiverPhone: fullAddress.phone || "",
     },
   });
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: false positive
+  useEffect(() => {
+    form.reset({
+      building: fullAddress.metadata?.building || "",
+      addressType: fullAddress.tag || "home",
+      receiverName: fullAddress.name || data?.user?.name || "",
+      receiverPhone: fullAddress.phone || "",
+    });
+  }, [fullAddress]);
 
   const mutation = useAPIMutation(loggedInAddressApi.index, "$post", {
     onSuccess: () => {
@@ -174,16 +184,13 @@ export function DetailedAddress({
 
             <div className="text-sm rounded-md border p-2 bg-accent/30 font-medium space-y-2">
               <p>{fullAddress?.line1}</p>
-              <AddressSetter>
-                <Button
-                  className=""
-                  variant={"outline"}
-                  size="sm"
-                  // onClick={handleChange}
-                >
-                  <PenLine /> Change Address
-                </Button>
-              </AddressSetter>
+              <div className="flex justify-end">
+                <AddressSetter>
+                  <Button className="" size="xs">
+                    Change
+                  </Button>
+                </AddressSetter>
+              </div>
             </div>
 
             <FormInputWithAnimatedLabel

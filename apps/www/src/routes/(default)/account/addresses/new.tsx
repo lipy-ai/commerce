@@ -1,6 +1,6 @@
 import { env } from "@envClient";
+import { useCurrentLocation } from "@lipy/lib/hooks/use-location";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
-import { DetailedAddress } from "@/components/address/detailedAddress";
 import {
   fillBaseAddress,
   reverseGeocode,
@@ -18,9 +18,9 @@ import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { LocateFixed, MapPinned, Search, StepForward } from "lucide-react";
 import { useEffect, useState } from "react";
-import { AccountNav } from "../-nav";
+import { DetailedAddress } from "@/components/address/detailedAddress";
 import { AddressSetter } from "../../../../components/address/addressSetter";
-import { useCurrentLocation } from "@lipy/lib/hooks/use-location";
+import { AccountNav } from "../-nav";
 export const Route = createFileRoute("/(default)/account/addresses/new")({
   component: RouteComponent,
   validateSearch: (search: Record<string, unknown>) => {
@@ -61,7 +61,6 @@ function RouteComponent() {
   const [fetchingAddress, setFetchingAddress] = useState(false);
 
   const handleMapCenterChange = async () => {
-    console.log(mapCenter);
     try {
       setFetchingAddress(true);
       if (!mapCenter) return;
@@ -84,7 +83,7 @@ function RouteComponent() {
     if (isLoaded && mapCenter && !isLoading) {
       handleMapCenterChange();
     }
-  }, [isLoaded, isLoading]);
+  }, [isLoaded, isLoading, mapCenter]);
 
   useEffect(() => {
     if (!location?.latitude || !location.longitude) return;

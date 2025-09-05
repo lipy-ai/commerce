@@ -25,7 +25,7 @@ import { Route as defaultAccountRouteRouteImport } from './routes/(default)/acco
 import { Route as defaultstoreRouteRouteImport } from './routes/(default)/(store)/route'
 import { Route as defaultCartIndexRouteImport } from './routes/(default)/cart/index'
 import { Route as defaultAccountIndexRouteImport } from './routes/(default)/account/index'
-import { Route as defaultCategorySlugRouteImport } from './routes/(default)/category/$slug'
+import { Route as defaultDiscoverTypeRouteImport } from './routes/(default)/discover/$type'
 import { Route as defaultAccountProfileRouteImport } from './routes/(default)/account/profile'
 import { Route as defaultAccountOrdersIndexRouteImport } from './routes/(default)/account/orders/index'
 import { Route as defaultAccountAddressesIndexRouteImport } from './routes/(default)/account/addresses/index'
@@ -33,7 +33,6 @@ import { Route as defaultstoreStoreHandleIndexRouteImport } from './routes/(defa
 import { Route as defaultAccountOrdersOrderIdRouteImport } from './routes/(default)/account/orders/$orderId'
 import { Route as defaultAccountAddressesNewRouteImport } from './routes/(default)/account/addresses/new'
 import { Route as defaultstoreStoreHandleDetailsRouteImport } from './routes/(default)/(store)/$storeHandle/details'
-import { Route as defaultstoreStoreHandleProductsIndexRouteImport } from './routes/(default)/(store)/$storeHandle/products/index'
 import { Route as defaultstoreStoreHandleProductsSearchRouteImport } from './routes/(default)/(store)/$storeHandle/products/search'
 import { Route as defaultstoreStoreHandleProductsProductIdRouteImport } from './routes/(default)/(store)/$storeHandle/products/$productId'
 import { Route as defaultstoreStoreHandleProductsCategoryCategorySlugRouteImport } from './routes/(default)/(store)/$storeHandle/products/category/$categorySlug'
@@ -118,9 +117,9 @@ const defaultAccountIndexRoute = defaultAccountIndexRouteImport.update({
   path: '/',
   getParentRoute: () => defaultAccountRouteRoute,
 } as any)
-const defaultCategorySlugRoute = defaultCategorySlugRouteImport.update({
-  id: '/category/$slug',
-  path: '/category/$slug',
+const defaultDiscoverTypeRoute = defaultDiscoverTypeRouteImport.update({
+  id: '/discover/$type',
+  path: '/discover/$type',
   getParentRoute: () => defaultRouteRoute,
 } as any)
 const defaultAccountProfileRoute = defaultAccountProfileRouteImport.update({
@@ -162,12 +161,6 @@ const defaultstoreStoreHandleDetailsRoute =
   defaultstoreStoreHandleDetailsRouteImport.update({
     id: '/$storeHandle/details',
     path: '/$storeHandle/details',
-    getParentRoute: () => defaultstoreRouteRoute,
-  } as any)
-const defaultstoreStoreHandleProductsIndexRoute =
-  defaultstoreStoreHandleProductsIndexRouteImport.update({
-    id: '/$storeHandle/products/',
-    path: '/$storeHandle/products/',
     getParentRoute: () => defaultstoreRouteRoute,
   } as any)
 const defaultstoreStoreHandleProductsSearchRoute =
@@ -215,7 +208,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof publicTermsRoute
   '/intro': typeof IntroIndexRoute
   '/account/profile': typeof defaultAccountProfileRoute
-  '/category/$slug': typeof defaultCategorySlugRoute
+  '/discover/$type': typeof defaultDiscoverTypeRoute
   '/account/': typeof defaultAccountIndexRoute
   '/cart': typeof defaultCartIndexRoute
   '/$storeHandle/details': typeof defaultstoreStoreHandleDetailsRoute
@@ -226,7 +219,6 @@ export interface FileRoutesByFullPath {
   '/account/orders': typeof defaultAccountOrdersIndexRoute
   '/$storeHandle/products/$productId': typeof defaultstoreStoreHandleProductsProductIdRoute
   '/$storeHandle/products/search': typeof defaultstoreStoreHandleProductsSearchRoute
-  '/$storeHandle/products': typeof defaultstoreStoreHandleProductsIndexRoute
   '/$storeHandle/order/checkout': typeof defaultstoreStoreHandleOrderpharmacyCheckoutRoute
   '/$storeHandle/order/new': typeof defaultstoreStoreHandleOrderpharmacyNewRoute
   '/$storeHandle/products/category/$categorySlug': typeof defaultstoreStoreHandleProductsCategoryCategorySlugRoute
@@ -244,7 +236,7 @@ export interface FileRoutesByTo {
   '/terms': typeof publicTermsRoute
   '/intro': typeof IntroIndexRoute
   '/account/profile': typeof defaultAccountProfileRoute
-  '/category/$slug': typeof defaultCategorySlugRoute
+  '/discover/$type': typeof defaultDiscoverTypeRoute
   '/account': typeof defaultAccountIndexRoute
   '/cart': typeof defaultCartIndexRoute
   '/$storeHandle/details': typeof defaultstoreStoreHandleDetailsRoute
@@ -255,7 +247,6 @@ export interface FileRoutesByTo {
   '/account/orders': typeof defaultAccountOrdersIndexRoute
   '/$storeHandle/products/$productId': typeof defaultstoreStoreHandleProductsProductIdRoute
   '/$storeHandle/products/search': typeof defaultstoreStoreHandleProductsSearchRoute
-  '/$storeHandle/products': typeof defaultstoreStoreHandleProductsIndexRoute
   '/$storeHandle/order/checkout': typeof defaultstoreStoreHandleOrderpharmacyCheckoutRoute
   '/$storeHandle/order/new': typeof defaultstoreStoreHandleOrderpharmacyNewRoute
   '/$storeHandle/products/category/$categorySlug': typeof defaultstoreStoreHandleProductsCategoryCategorySlugRoute
@@ -277,7 +268,7 @@ export interface FileRoutesById {
   '/(default)/': typeof defaultIndexRoute
   '/intro/': typeof IntroIndexRoute
   '/(default)/account/profile': typeof defaultAccountProfileRoute
-  '/(default)/category/$slug': typeof defaultCategorySlugRoute
+  '/(default)/discover/$type': typeof defaultDiscoverTypeRoute
   '/(default)/account/': typeof defaultAccountIndexRoute
   '/(default)/cart/': typeof defaultCartIndexRoute
   '/(default)/(store)/$storeHandle/details': typeof defaultstoreStoreHandleDetailsRoute
@@ -288,7 +279,6 @@ export interface FileRoutesById {
   '/(default)/account/orders/': typeof defaultAccountOrdersIndexRoute
   '/(default)/(store)/$storeHandle/products/$productId': typeof defaultstoreStoreHandleProductsProductIdRoute
   '/(default)/(store)/$storeHandle/products/search': typeof defaultstoreStoreHandleProductsSearchRoute
-  '/(default)/(store)/$storeHandle/products/': typeof defaultstoreStoreHandleProductsIndexRoute
   '/(default)/(store)/$storeHandle/order/(pharmacy)/checkout': typeof defaultstoreStoreHandleOrderpharmacyCheckoutRoute
   '/(default)/(store)/$storeHandle/order/(pharmacy)/new': typeof defaultstoreStoreHandleOrderpharmacyNewRoute
   '/(default)/(store)/$storeHandle/products/category/$categorySlug': typeof defaultstoreStoreHandleProductsCategoryCategorySlugRoute
@@ -309,7 +299,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/intro'
     | '/account/profile'
-    | '/category/$slug'
+    | '/discover/$type'
     | '/account/'
     | '/cart'
     | '/$storeHandle/details'
@@ -320,7 +310,6 @@ export interface FileRouteTypes {
     | '/account/orders'
     | '/$storeHandle/products/$productId'
     | '/$storeHandle/products/search'
-    | '/$storeHandle/products'
     | '/$storeHandle/order/checkout'
     | '/$storeHandle/order/new'
     | '/$storeHandle/products/category/$categorySlug'
@@ -338,7 +327,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/intro'
     | '/account/profile'
-    | '/category/$slug'
+    | '/discover/$type'
     | '/account'
     | '/cart'
     | '/$storeHandle/details'
@@ -349,7 +338,6 @@ export interface FileRouteTypes {
     | '/account/orders'
     | '/$storeHandle/products/$productId'
     | '/$storeHandle/products/search'
-    | '/$storeHandle/products'
     | '/$storeHandle/order/checkout'
     | '/$storeHandle/order/new'
     | '/$storeHandle/products/category/$categorySlug'
@@ -370,7 +358,7 @@ export interface FileRouteTypes {
     | '/(default)/'
     | '/intro/'
     | '/(default)/account/profile'
-    | '/(default)/category/$slug'
+    | '/(default)/discover/$type'
     | '/(default)/account/'
     | '/(default)/cart/'
     | '/(default)/(store)/$storeHandle/details'
@@ -381,7 +369,6 @@ export interface FileRouteTypes {
     | '/(default)/account/orders/'
     | '/(default)/(store)/$storeHandle/products/$productId'
     | '/(default)/(store)/$storeHandle/products/search'
-    | '/(default)/(store)/$storeHandle/products/'
     | '/(default)/(store)/$storeHandle/order/(pharmacy)/checkout'
     | '/(default)/(store)/$storeHandle/order/(pharmacy)/new'
     | '/(default)/(store)/$storeHandle/products/category/$categorySlug'
@@ -513,11 +500,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof defaultAccountIndexRouteImport
       parentRoute: typeof defaultAccountRouteRoute
     }
-    '/(default)/category/$slug': {
-      id: '/(default)/category/$slug'
-      path: '/category/$slug'
-      fullPath: '/category/$slug'
-      preLoaderRoute: typeof defaultCategorySlugRouteImport
+    '/(default)/discover/$type': {
+      id: '/(default)/discover/$type'
+      path: '/discover/$type'
+      fullPath: '/discover/$type'
+      preLoaderRoute: typeof defaultDiscoverTypeRouteImport
       parentRoute: typeof defaultRouteRoute
     }
     '/(default)/account/profile': {
@@ -569,13 +556,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof defaultstoreStoreHandleDetailsRouteImport
       parentRoute: typeof defaultstoreRouteRoute
     }
-    '/(default)/(store)/$storeHandle/products/': {
-      id: '/(default)/(store)/$storeHandle/products/'
-      path: '/$storeHandle/products'
-      fullPath: '/$storeHandle/products'
-      preLoaderRoute: typeof defaultstoreStoreHandleProductsIndexRouteImport
-      parentRoute: typeof defaultstoreRouteRoute
-    }
     '/(default)/(store)/$storeHandle/products/search': {
       id: '/(default)/(store)/$storeHandle/products/search'
       path: '/$storeHandle/products/search'
@@ -619,7 +599,6 @@ interface defaultstoreRouteRouteChildren {
   defaultstoreStoreHandleIndexRoute: typeof defaultstoreStoreHandleIndexRoute
   defaultstoreStoreHandleProductsProductIdRoute: typeof defaultstoreStoreHandleProductsProductIdRoute
   defaultstoreStoreHandleProductsSearchRoute: typeof defaultstoreStoreHandleProductsSearchRoute
-  defaultstoreStoreHandleProductsIndexRoute: typeof defaultstoreStoreHandleProductsIndexRoute
   defaultstoreStoreHandleOrderpharmacyCheckoutRoute: typeof defaultstoreStoreHandleOrderpharmacyCheckoutRoute
   defaultstoreStoreHandleOrderpharmacyNewRoute: typeof defaultstoreStoreHandleOrderpharmacyNewRoute
   defaultstoreStoreHandleProductsCategoryCategorySlugRoute: typeof defaultstoreStoreHandleProductsCategoryCategorySlugRoute
@@ -632,8 +611,6 @@ const defaultstoreRouteRouteChildren: defaultstoreRouteRouteChildren = {
     defaultstoreStoreHandleProductsProductIdRoute,
   defaultstoreStoreHandleProductsSearchRoute:
     defaultstoreStoreHandleProductsSearchRoute,
-  defaultstoreStoreHandleProductsIndexRoute:
-    defaultstoreStoreHandleProductsIndexRoute,
   defaultstoreStoreHandleOrderpharmacyCheckoutRoute:
     defaultstoreStoreHandleOrderpharmacyCheckoutRoute,
   defaultstoreStoreHandleOrderpharmacyNewRoute:
@@ -672,7 +649,7 @@ interface defaultRouteRouteChildren {
   defaultSearchRoute: typeof defaultSearchRoute
   defaultShareRoute: typeof defaultShareRoute
   defaultIndexRoute: typeof defaultIndexRoute
-  defaultCategorySlugRoute: typeof defaultCategorySlugRoute
+  defaultDiscoverTypeRoute: typeof defaultDiscoverTypeRoute
   defaultCartIndexRoute: typeof defaultCartIndexRoute
 }
 
@@ -682,7 +659,7 @@ const defaultRouteRouteChildren: defaultRouteRouteChildren = {
   defaultSearchRoute: defaultSearchRoute,
   defaultShareRoute: defaultShareRoute,
   defaultIndexRoute: defaultIndexRoute,
-  defaultCategorySlugRoute: defaultCategorySlugRoute,
+  defaultDiscoverTypeRoute: defaultDiscoverTypeRoute,
   defaultCartIndexRoute: defaultCartIndexRoute,
 }
 

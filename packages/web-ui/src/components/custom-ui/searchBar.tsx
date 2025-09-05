@@ -49,7 +49,7 @@ export default function SearchBar({
         onSearch(value);
         e.preventDefault();
       }}
-      className={cn("", formClassName)}
+      className={cn("w-full", formClassName)}
     >
       <Input
         className={cn("rounded-lg", className)}

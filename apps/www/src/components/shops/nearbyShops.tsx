@@ -5,7 +5,13 @@ import StoreCard from "./storeCard";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 
-export default function NearbyShops({ category }: { category?: string }) {
+export default function NearbyShops({
+  category,
+  storeTypes,
+}: {
+  category?: string;
+  storeTypes?: string[];
+}) {
   const { deliveryLocation } = useLocationStore();
 
   const { data: shops, isLoading } = useAPIQuery(
@@ -15,7 +21,9 @@ export default function NearbyShops({ category }: { category?: string }) {
       query: {
         originLat: String(deliveryLocation.lat),
         originLng: String(deliveryLocation.lng),
+
         category,
+        storeTypes,
       },
     },
     {
@@ -30,8 +38,8 @@ export default function NearbyShops({ category }: { category?: string }) {
     <div className="">
       {isLoading ? (
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
-          {[...Array(3)].map((m) => (
-            <Skeleton key={m} className="aspect-video" />
+          {[...Array(3)].map((_, i) => (
+            <Skeleton key={i} className="aspect-video" />
           ))}
         </div>
       ) : shops?.length === 0 ? (

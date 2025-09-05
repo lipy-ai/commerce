@@ -9,11 +9,19 @@ import { getFeedStores } from "@/helpers/storeFeed";
 import { zValidator } from "@/middlewares/validator";
 import { listZodSchema } from "@/schema/common";
 import type { ServerContext } from "@/types";
+import { STORE_TYPE } from "@/db/schema";
 
 const shopSearchSchema = z.object({
   originLat: z.coerce.number(),
   originLng: z.coerce.number(),
   category: z.string().optional(),
+  storeTypes: z
+    .preprocess(
+      (v) => (typeof v === "string" ? [v] : v),
+      z.array(z.enum(STORE_TYPE))
+    )
+
+    .optional(),
 });
 
 type LatLang = {
@@ -66,11 +74,17 @@ const route = new Hono<ServerContext>()
 
   .get("/", zValidator("query", shopSearchSchema), async (c) => {
     const query = c.req.valid("query");
-
     const nearbyShops = await getFeedStores({
       lat: query.originLat,
       lng: query.originLng,
-    }).catch(() => []);
+    })
+      .then((t) => {
+        if (query.storeTypes && query.storeTypes.length > 0) {
+          return t.filter((f) => query.storeTypes?.includes(f.type as any));
+        }
+        return t;
+      })
+      .catch(() => []);
 
     const storeIds = nearbyShops.map((f) => f.id);
 
@@ -80,6 +94,7 @@ const route = new Hono<ServerContext>()
         .where("s.storeId", "in", storeIds)
         .leftJoin("productVariant as pv", "pv.id", "s.variantId")
         .leftJoin("product as p", "p.id", "pv.productId")
+        .leftJoin("store as st", "st.id", "s.storeId")
         .leftJoin("category as c", "c.id", "p.category")
         .where("c.slug", "=", query.category)
         .select("storeId")

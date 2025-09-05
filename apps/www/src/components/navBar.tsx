@@ -8,6 +8,7 @@ import {
   CircleUserRound,
   House,
   MapPin,
+  Search,
   UserRound,
 } from "lucide-react";
 import { AddressSetter } from "@/components/address/addressSetter";
@@ -104,10 +105,13 @@ export default function NavBar() {
           </AddressSetter>
 
           <div className="w-full px-2">
-            <SearchBar
-              placeholder="Search for shop, grocery, fruits..."
-              defaultValue=""
-            />
+            <Link
+              to="/search"
+              className="h-12 flex flex-1 text-base items-center gap-2 px-4 border rounded-lg bg-background"
+            >
+              <Search />
+              <span>Search Shops</span>
+            </Link>
           </div>
           <Link to="/account">
             <CircleUserRound className="size-8" />

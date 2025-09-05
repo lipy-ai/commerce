@@ -27,6 +27,7 @@ import type { shopRoute } from "@lipy/server/routes/publicRoutes/shop";
 
 import { type ClientRequestOptions, hc } from "hono/client";
 import { bearerToken } from "../providers/auth";
+import type { publicSearchRoute } from "@lipy/server/routes/publicRoutes/search";
 
 const opts: ClientRequestOptions = {
   init: {
@@ -146,6 +147,10 @@ export const publicProductApi = hc<typeof productRoute>(
 );
 export const publicShopApi = hc<typeof shopRoute>(
   `${basepath}/public/shops`,
+  opts
+);
+export const publicSearchApi = hc<typeof publicSearchRoute>(
+  `${basepath}/public/search`,
   opts
 );
 

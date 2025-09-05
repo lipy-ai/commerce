@@ -22,7 +22,7 @@ import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import { cn } from "@lipy/web-ui/lib/utils";
 import { buttonVariants } from "@lipy/web-ui/components/ui/button";
 import { authClient } from "@lipy/lib/providers/auth";
-import { useViewport } from "@lipy/web-ui/contexts/viewport";
+// import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import NearbyShops from "@/components/shops/nearbyShops";
 import {
   Carousel,
@@ -33,8 +33,8 @@ import {
 } from "@lipy/web-ui/components/ui/carousel";
 import {
   FOOD_CATEGORIES,
-  GENERAL_CATEGORIES,
-  WELLNESS_CATEGORIES,
+  // GENERAL_CATEGORIES,
+  // WELLNESS_CATEGORIES,
 } from "@/utils/config";
 export const Route = createFileRoute("/(default)/")({
   component: Home,
@@ -44,7 +44,7 @@ function Home() {
   const { cart } = useCartStore();
   const { deliveryLocation } = useLocationStore();
   const { data: sess } = authClient.useSession();
-  const { isMobile } = useViewport();
+  // const { isMobile } = useViewport();
 
   // const mobileNav = [
   //   {

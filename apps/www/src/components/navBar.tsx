@@ -1,4 +1,3 @@
-import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import { useViewport } from "@lipy/web-ui/contexts/viewport";
 import { Link } from "@tanstack/react-router";

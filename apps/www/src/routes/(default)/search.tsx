@@ -1,11 +1,11 @@
 import StoreCard from "@/components/shops/storeCard";
-import { publicProductApi, publicSearchApi } from "@lipy/lib/api";
-import { formatAmount } from "@lipy/lib/utils/intl";
+import { publicSearchApi } from "@lipy/lib/api";
+// import { formatAmount } from "@lipy/lib/utils/intl";
 import { useAPIQuery } from "@lipy/lib/utils/useQueryClient";
 import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
-import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
-import { Spinner } from "@lipy/web-ui/components/ui/spinner";
-import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+// import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
+// import { Spinner } from "@lipy/web-ui/components/ui/spinner";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import z from "zod";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";

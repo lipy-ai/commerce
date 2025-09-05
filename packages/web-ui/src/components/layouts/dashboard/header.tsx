@@ -45,12 +45,16 @@ export const DashboardHeader = ({
             </Link>
           )}
 
-          <div className="flex items-center min-w-0 gap-2">
-            <h1 className="font-semibold text-lg lg:text-xl leading-none py-2 truncate">
-              {title}
-            </h1>
-            {titleChildren}
-          </div>
+          {(title || titleChildren) && (
+            <div className="flex items-center min-w-0 gap-2">
+              {title && (
+                <h1 className="font-semibold text-lg lg:text-xl leading-none py-2 truncate">
+                  {title}
+                </h1>
+              )}
+              {titleChildren}
+            </div>
+          )}
         </div>
 
         <div className="flex-1 flex justify-end gap-4">{children}</div>

@@ -118,7 +118,7 @@ function Home() {
                     to="/login"
                     className={cn(
                       buttonVariants({ variant: "outline" }),
-                      "rounded-full px-8"
+                      "rounded-full px-8 h-10"
                     )}
                   >
                     <span className="flex items-center gap-2">
@@ -131,7 +131,7 @@ function Home() {
                       to="/account"
                       className={cn(
                         buttonVariants({ variant: "outline", size: "icon" }),
-                        "rounded-full"
+                        "rounded-full h-10"
                       )}
                     >
                       <User2 className="size-5" />
@@ -140,7 +140,7 @@ function Home() {
                       to="/cart"
                       className={cn(
                         buttonVariants({ variant: "outline" }),
-                        "text-lg rounded-full px-8"
+                        "text-lg rounded-full px-8  h-10"
                       )}
                     >
                       <ShoppingCart className="size-5" />

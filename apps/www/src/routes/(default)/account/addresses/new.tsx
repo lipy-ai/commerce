@@ -80,15 +80,16 @@ function RouteComponent() {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: false positive
   useEffect(() => {
+    if (!location?.latitude || !location.longitude) return;
+    setMapCenter({ lat: location?.latitude, lng: location?.longitude });
+  }, [isLoading]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: false positive
+  useEffect(() => {
     if (isLoaded && mapCenter && !isLoading) {
       handleMapCenterChange();
     }
   }, [mapCenter]);
-
-  useEffect(() => {
-    if (!location?.latitude || !location.longitude) return;
-    setMapCenter({ lat: location?.latitude, lng: location?.longitude });
-  }, [location]);
 
   if (!isLoaded) return <Loading />;
   return (

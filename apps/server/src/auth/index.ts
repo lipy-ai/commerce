@@ -223,8 +223,8 @@ export const auth: any = betterAuth({
 							...session,
 							activeStoreHandle: store?.handle || null,
 							activeStoreId: store?.id || null,
-							// activeStoreHandle: "zaika-delhi-6-wss4c",
-							// activeStoreId: "eea9f282-5913-40f7-a3f7-77abc2c89142",
+							// activeStoreHandle: "k.g.f-king-of-great-food-h13zf",
+							// activeStoreId: "709fbec2-d2fb-4e4f-9638-3f6b4b5201b8",
 							activeStoreRole: store?.role || null,
 						},
 					};

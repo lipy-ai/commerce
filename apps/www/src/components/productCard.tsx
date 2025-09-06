@@ -122,7 +122,7 @@ export default function ProductCard({
                   alt=""
                   src={product.thumbnail || "/assets/paper-bag-items.webp"}
                   className={cn(
-                    "w-full h-full object-contain rounded-xl  bg-card border border-border/80",
+                    "w-full h-full object-cover rounded-xl  bg-card border border-border/80",
                     product?.variants[0].inStock ? "" : "",
                     className?.classNameImg
                   )}

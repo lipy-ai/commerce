@@ -56,12 +56,14 @@ function RouteComponent() {
 
   return (
     <StoreNav storeHandle={storeHandle}>
-      <DashboardHeader className="bg-background px-0" hideBackBtn>
-        <SearchBar
-          className="w-full pr-4"
-          fullPageSearch
-          placeholder={`Search in ${res.data?.name}`}
-        />
+      <DashboardHeader className="bg-background px-0 h-20" hideBackBtn>
+        <div className="p-2 w-full">
+          <SearchBar
+            className="w-full flex-1 pr-4"
+            fullPageSearch
+            placeholder={`Search in ${res.data?.name}`}
+          />
+        </div>
       </DashboardHeader>
 
       <div>

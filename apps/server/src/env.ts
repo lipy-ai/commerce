@@ -58,6 +58,8 @@ const EnvSchema = z.object({
 	TWILIO_ACCOUNT_SID: z.string(),
 	FIREBASE_SERVICE_ACCOUNT: z.string(),
 	TWILIO_AUTH_TOKEN: z.string(),
+	GOOGLE_VISION_KEY: z.string().optional(),
+	GROQ_API_KEY: z.string().optional(),
 });
 // .superRefine((input, ctx) => {
 //   if (input.NODE_ENV === "production" && !input.DATABASE_AUTH_TOKEN) {

@@ -10,14 +10,10 @@ import {
 import { cn } from "@lipy/web-ui/lib/utils";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight, Plus } from "lucide-react";
-import FormEdit from "./-form.edit";
+import FormEdit from "../-form.edit";
 
-export const Route = createFileRoute("/(dashboard)/product/add")({
+export const Route = createFileRoute("/(dashboard)/product/add/")({
   component: RouteComponent,
-  // validateSearch: z.object({
-  //   product: z.string().uuid().optional(),
-  //   view: z.enum(["edit", "assign", "delete", "create"]).optional(),
-  // }),
 });
 
 const features = [
@@ -60,7 +56,12 @@ function RouteComponent() {
             </div>
 
             <div className="flex gap-4 flex-col md:flex-row w-full md:w-fit">
-              <Button variant={"outline"}>Bulk upload products</Button>
+              <Link
+                className={cn(buttonVariants({ variant: "outline" }))}
+                to="/product/add/bulk"
+              >
+                Bulk upload products
+              </Link>
               <FormEdit view="create">
                 <Button>
                   <Plus />

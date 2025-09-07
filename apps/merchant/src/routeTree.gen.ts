@@ -42,12 +42,13 @@ import { Route as dashboardStorePoliciesRouteImport } from './routes/(dashboard)
 import { Route as dashboardStorePaymentsRouteImport } from './routes/(dashboard)/store/payments'
 import { Route as dashboardStoreGeneralRouteImport } from './routes/(dashboard)/store/general'
 import { Route as dashboardProductLipyLibraryRouteImport } from './routes/(dashboard)/product/lipy-library'
-import { Route as dashboardProductAddRouteImport } from './routes/(dashboard)/product/add'
 import { Route as dashboardProductIdRouteImport } from './routes/(dashboard)/product/$id'
 import { Route as dashboardCustomerIdRouteImport } from './routes/(dashboard)/customer/$id'
 import { Route as PosOrderIdIndexRouteImport } from './routes/pos/order/$id/index'
 import { Route as dashboardStoreCouponsIndexRouteImport } from './routes/(dashboard)/store/coupons/index'
+import { Route as dashboardProductAddIndexRouteImport } from './routes/(dashboard)/product/add/index'
 import { Route as dashboardStoreCouponsNewRouteImport } from './routes/(dashboard)/store/coupons/new'
+import { Route as dashboardProductAddBulkRouteImport } from './routes/(dashboard)/product/add/bulk'
 
 const ErrorRoute = ErrorRouteImport.update({
   id: '/error',
@@ -215,11 +216,6 @@ const dashboardProductLipyLibraryRoute =
     path: '/product/lipy-library',
     getParentRoute: () => dashboardRouteRoute,
   } as any)
-const dashboardProductAddRoute = dashboardProductAddRouteImport.update({
-  id: '/product/add',
-  path: '/product/add',
-  getParentRoute: () => dashboardRouteRoute,
-} as any)
 const dashboardProductIdRoute = dashboardProductIdRouteImport.update({
   id: '/product/$id',
   path: '/product/$id',
@@ -241,12 +237,23 @@ const dashboardStoreCouponsIndexRoute =
     path: '/store/coupons/',
     getParentRoute: () => dashboardRouteRoute,
   } as any)
+const dashboardProductAddIndexRoute =
+  dashboardProductAddIndexRouteImport.update({
+    id: '/product/add/',
+    path: '/product/add/',
+    getParentRoute: () => dashboardRouteRoute,
+  } as any)
 const dashboardStoreCouponsNewRoute =
   dashboardStoreCouponsNewRouteImport.update({
     id: '/store/coupons/new',
     path: '/store/coupons/new',
     getParentRoute: () => dashboardRouteRoute,
   } as any)
+const dashboardProductAddBulkRoute = dashboardProductAddBulkRouteImport.update({
+  id: '/product/add/bulk',
+  path: '/product/add/bulk',
+  getParentRoute: () => dashboardRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof dashboardIndexRoute
@@ -266,7 +273,6 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterIndexRoute
   '/customer/$id': typeof dashboardCustomerIdRoute
   '/product/$id': typeof dashboardProductIdRoute
-  '/product/add': typeof dashboardProductAddRoute
   '/product/lipy-library': typeof dashboardProductLipyLibraryRoute
   '/store/general': typeof dashboardStoreGeneralRoute
   '/store/payments': typeof dashboardStorePaymentsRoute
@@ -284,7 +290,9 @@ export interface FileRoutesByFullPath {
   '/admin/review-products': typeof AdminReviewProductsIndexRoute
   '/pos/checkout': typeof PosCheckoutIndexRoute
   '/pos/order': typeof PosOrderIndexRoute
+  '/product/add/bulk': typeof dashboardProductAddBulkRoute
   '/store/coupons/new': typeof dashboardStoreCouponsNewRoute
+  '/product/add': typeof dashboardProductAddIndexRoute
   '/store/coupons': typeof dashboardStoreCouponsIndexRoute
   '/pos/order/$id': typeof PosOrderIdIndexRoute
 }
@@ -303,7 +311,6 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterIndexRoute
   '/customer/$id': typeof dashboardCustomerIdRoute
   '/product/$id': typeof dashboardProductIdRoute
-  '/product/add': typeof dashboardProductAddRoute
   '/product/lipy-library': typeof dashboardProductLipyLibraryRoute
   '/store/general': typeof dashboardStoreGeneralRoute
   '/store/payments': typeof dashboardStorePaymentsRoute
@@ -321,7 +328,9 @@ export interface FileRoutesByTo {
   '/admin/review-products': typeof AdminReviewProductsIndexRoute
   '/pos/checkout': typeof PosCheckoutIndexRoute
   '/pos/order': typeof PosOrderIndexRoute
+  '/product/add/bulk': typeof dashboardProductAddBulkRoute
   '/store/coupons/new': typeof dashboardStoreCouponsNewRoute
+  '/product/add': typeof dashboardProductAddIndexRoute
   '/store/coupons': typeof dashboardStoreCouponsIndexRoute
   '/pos/order/$id': typeof PosOrderIdIndexRoute
 }
@@ -345,7 +354,6 @@ export interface FileRoutesById {
   '/register/': typeof RegisterIndexRoute
   '/(dashboard)/customer/$id': typeof dashboardCustomerIdRoute
   '/(dashboard)/product/$id': typeof dashboardProductIdRoute
-  '/(dashboard)/product/add': typeof dashboardProductAddRoute
   '/(dashboard)/product/lipy-library': typeof dashboardProductLipyLibraryRoute
   '/(dashboard)/store/general': typeof dashboardStoreGeneralRoute
   '/(dashboard)/store/payments': typeof dashboardStorePaymentsRoute
@@ -363,7 +371,9 @@ export interface FileRoutesById {
   '/admin/review-products/': typeof AdminReviewProductsIndexRoute
   '/pos/checkout/': typeof PosCheckoutIndexRoute
   '/pos/order/': typeof PosOrderIndexRoute
+  '/(dashboard)/product/add/bulk': typeof dashboardProductAddBulkRoute
   '/(dashboard)/store/coupons/new': typeof dashboardStoreCouponsNewRoute
+  '/(dashboard)/product/add/': typeof dashboardProductAddIndexRoute
   '/(dashboard)/store/coupons/': typeof dashboardStoreCouponsIndexRoute
   '/pos/order/$id/': typeof PosOrderIdIndexRoute
 }
@@ -387,7 +397,6 @@ export interface FileRouteTypes {
     | '/register'
     | '/customer/$id'
     | '/product/$id'
-    | '/product/add'
     | '/product/lipy-library'
     | '/store/general'
     | '/store/payments'
@@ -405,7 +414,9 @@ export interface FileRouteTypes {
     | '/admin/review-products'
     | '/pos/checkout'
     | '/pos/order'
+    | '/product/add/bulk'
     | '/store/coupons/new'
+    | '/product/add'
     | '/store/coupons'
     | '/pos/order/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -424,7 +435,6 @@ export interface FileRouteTypes {
     | '/register'
     | '/customer/$id'
     | '/product/$id'
-    | '/product/add'
     | '/product/lipy-library'
     | '/store/general'
     | '/store/payments'
@@ -442,7 +452,9 @@ export interface FileRouteTypes {
     | '/admin/review-products'
     | '/pos/checkout'
     | '/pos/order'
+    | '/product/add/bulk'
     | '/store/coupons/new'
+    | '/product/add'
     | '/store/coupons'
     | '/pos/order/$id'
   id:
@@ -465,7 +477,6 @@ export interface FileRouteTypes {
     | '/register/'
     | '/(dashboard)/customer/$id'
     | '/(dashboard)/product/$id'
-    | '/(dashboard)/product/add'
     | '/(dashboard)/product/lipy-library'
     | '/(dashboard)/store/general'
     | '/(dashboard)/store/payments'
@@ -483,7 +494,9 @@ export interface FileRouteTypes {
     | '/admin/review-products/'
     | '/pos/checkout/'
     | '/pos/order/'
+    | '/(dashboard)/product/add/bulk'
     | '/(dashboard)/store/coupons/new'
+    | '/(dashboard)/product/add/'
     | '/(dashboard)/store/coupons/'
     | '/pos/order/$id/'
   fileRoutesById: FileRoutesById
@@ -733,13 +746,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof dashboardProductLipyLibraryRouteImport
       parentRoute: typeof dashboardRouteRoute
     }
-    '/(dashboard)/product/add': {
-      id: '/(dashboard)/product/add'
-      path: '/product/add'
-      fullPath: '/product/add'
-      preLoaderRoute: typeof dashboardProductAddRouteImport
-      parentRoute: typeof dashboardRouteRoute
-    }
     '/(dashboard)/product/$id': {
       id: '/(dashboard)/product/$id'
       path: '/product/$id'
@@ -768,11 +774,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof dashboardStoreCouponsIndexRouteImport
       parentRoute: typeof dashboardRouteRoute
     }
+    '/(dashboard)/product/add/': {
+      id: '/(dashboard)/product/add/'
+      path: '/product/add'
+      fullPath: '/product/add'
+      preLoaderRoute: typeof dashboardProductAddIndexRouteImport
+      parentRoute: typeof dashboardRouteRoute
+    }
     '/(dashboard)/store/coupons/new': {
       id: '/(dashboard)/store/coupons/new'
       path: '/store/coupons/new'
       fullPath: '/store/coupons/new'
       preLoaderRoute: typeof dashboardStoreCouponsNewRouteImport
+      parentRoute: typeof dashboardRouteRoute
+    }
+    '/(dashboard)/product/add/bulk': {
+      id: '/(dashboard)/product/add/bulk'
+      path: '/product/add/bulk'
+      fullPath: '/product/add/bulk'
+      preLoaderRoute: typeof dashboardProductAddBulkRouteImport
       parentRoute: typeof dashboardRouteRoute
     }
   }
@@ -782,7 +802,6 @@ interface dashboardRouteRouteChildren {
   dashboardIndexRoute: typeof dashboardIndexRoute
   dashboardCustomerIdRoute: typeof dashboardCustomerIdRoute
   dashboardProductIdRoute: typeof dashboardProductIdRoute
-  dashboardProductAddRoute: typeof dashboardProductAddRoute
   dashboardProductLipyLibraryRoute: typeof dashboardProductLipyLibraryRoute
   dashboardStoreGeneralRoute: typeof dashboardStoreGeneralRoute
   dashboardStorePaymentsRoute: typeof dashboardStorePaymentsRoute
@@ -791,7 +810,9 @@ interface dashboardRouteRouteChildren {
   dashboardCustomerIndexRoute: typeof dashboardCustomerIndexRoute
   dashboardProductIndexRoute: typeof dashboardProductIndexRoute
   dashboardStoreIndexRoute: typeof dashboardStoreIndexRoute
+  dashboardProductAddBulkRoute: typeof dashboardProductAddBulkRoute
   dashboardStoreCouponsNewRoute: typeof dashboardStoreCouponsNewRoute
+  dashboardProductAddIndexRoute: typeof dashboardProductAddIndexRoute
   dashboardStoreCouponsIndexRoute: typeof dashboardStoreCouponsIndexRoute
 }
 
@@ -799,7 +820,6 @@ const dashboardRouteRouteChildren: dashboardRouteRouteChildren = {
   dashboardIndexRoute: dashboardIndexRoute,
   dashboardCustomerIdRoute: dashboardCustomerIdRoute,
   dashboardProductIdRoute: dashboardProductIdRoute,
-  dashboardProductAddRoute: dashboardProductAddRoute,
   dashboardProductLipyLibraryRoute: dashboardProductLipyLibraryRoute,
   dashboardStoreGeneralRoute: dashboardStoreGeneralRoute,
   dashboardStorePaymentsRoute: dashboardStorePaymentsRoute,
@@ -808,7 +828,9 @@ const dashboardRouteRouteChildren: dashboardRouteRouteChildren = {
   dashboardCustomerIndexRoute: dashboardCustomerIndexRoute,
   dashboardProductIndexRoute: dashboardProductIndexRoute,
   dashboardStoreIndexRoute: dashboardStoreIndexRoute,
+  dashboardProductAddBulkRoute: dashboardProductAddBulkRoute,
   dashboardStoreCouponsNewRoute: dashboardStoreCouponsNewRoute,
+  dashboardProductAddIndexRoute: dashboardProductAddIndexRoute,
   dashboardStoreCouponsIndexRoute: dashboardStoreCouponsIndexRoute,
 }
 

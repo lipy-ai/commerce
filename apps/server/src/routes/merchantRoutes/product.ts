@@ -1,18 +1,24 @@
+import vision from "@google-cloud/vision";
 import { Hono } from "hono";
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { z } from "zod";
+import { getGroqChatStream } from "@/ai";
 import { db } from "@/db";
+import env from "@/env";
 import { diffById } from "@/lib/compare";
 import { zValidator } from "@/middlewares/validator";
 import { listZodSchema } from "@/schema/common";
 import type { ServerContext } from "@/types";
 
+const client = new vision.ImageAnnotatorClient({
+	credentials: JSON.parse(env.GOOGLE_VISION_KEY!),
+});
+
 const productSchema = z.object({
 	title: z.string(),
 	category: z.string(),
-	// price: z.coerce.number().min(0),
-	// maxPrice: z.coerce.number().min(0),
+
 	summary: z.string(),
 	images: z.preprocess(
 		(e) => (Array.isArray(e) ? e.filter((e) => !!e) : e),
@@ -32,7 +38,6 @@ const productSchema = z.object({
 		}),
 	),
 });
-
 const listZodValidator = zValidator(
 	"query",
 	z.object({
@@ -291,36 +296,6 @@ const route = new Hono<ServerContext>()
 			return c.json({ success: true });
 		},
 	)
-
-	// .patch(
-	// 	"/:id",
-	// 	zValidator(
-	// 		"param",
-	// 		z.object({
-	// 			id: z.string().uuid(),
-	// 		}),
-	// 	),
-	// 	zValidator("json", productSchema.partial()),
-	// 	async (c) => {
-	// 		const { images: _, ...values } = c.req.valid("json");
-	// 		console.log("emitted msg");
-	// 		sseEmitter.emit("send-to-user", {
-	// 			userId: c.var.session?.userId,
-	// 			event: "notify",
-	// 			data: "message",
-	// 		});
-
-	// 		// const activeStoreId = c.var.session?.activeStoreId!;
-	// 		// await db
-	// 		// 	.updateTable("product")
-	// 		// 	.where("id", "=", id)
-	// 		// 	.where("storeId", "=", activeStoreId)
-	// 		// 	.set(values)
-	// 		// 	.executeTakeFirstOrThrow();
-
-	// 		return c.json(values);
-	// 	},
-	// )
 	.delete(
 		"/",
 		zValidator(
@@ -334,6 +309,59 @@ const route = new Hono<ServerContext>()
 
 			await db.deleteFrom("product").where("id", "in", ids).execute();
 			return c.json({ success: true });
+		},
+	)
+	.post(
+		"/bulk",
+		zValidator("json", z.object({ file: z.string() })),
+		async (c) => {
+			const { file } = c.req.valid("json");
+
+			const buffer = Buffer.from(file, "base64");
+
+			const [result] = await client.textDetection(buffer);
+			const rawText = result.textAnnotations?.[0]?.description || "";
+
+			const groqResponse = await getGroqChatStream({
+				messages: [
+					{
+						role: "system",
+						content:
+							"You are a menu parser. Convert OCR menu text into structured JSON.",
+					},
+					{
+						role: "user",
+						content: `Here is the OCR text:\n${rawText}\n\nConvert it into an array of JSON objects with the following structure:
+[
+  {
+    "title": "Name of the item",
+    "category": "Category of the item",
+    "summary": "Short description of the item",
+    "variants": [
+      {
+        "id": "unique uuid string (generate a unique one)",
+        "unit": "Give the variant a name  (use 'serves 1' if not specified).",
+        "price": number,
+        "maxPrice": number
+      }
+    ]
+  }
+]
+
+- Always include at least one variant per item.
+- Generate unique UUIDs for each variant.
+- Only return the JSON array; do not include any explanations or extra text.`,
+					},
+				],
+			});
+
+			const content = groqResponse.choices[0].message.content;
+
+			if (!content) {
+				return c.json({ error: "Something went wrong" }, 400);
+			}
+
+			return c.json(content);
 		},
 	);
 

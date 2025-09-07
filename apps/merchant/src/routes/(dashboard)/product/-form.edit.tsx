@@ -51,10 +51,12 @@ export default function FormEdit({
   children,
   product,
   view,
+  productData,
 }: {
   children: React.ReactNode;
   product?: string;
   view: "edit" | "assign" | "delete" | "create";
+  productData?: any;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -97,7 +99,16 @@ export default function FormEdit({
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: suppress dependencies
   useEffect(() => {
-    if (view === "create") {
+    if (view === "create" && productData) {
+      form.reset({
+        ...defaultValues,
+        title: productData.title || "",
+        summary: productData.summary || "",
+        variants: productData.variants || [],
+      });
+    }
+
+    if (view === "create" && !productData) {
       form.reset(defaultValues);
     }
 

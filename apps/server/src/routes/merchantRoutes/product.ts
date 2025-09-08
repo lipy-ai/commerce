@@ -317,10 +317,13 @@ const route = new Hono<ServerContext>()
 		async (c) => {
 			const { file } = c.req.valid("json");
 
+			console.log(file);
+
 			const buffer = Buffer.from(file, "base64");
 
 			const [result] = await client.textDetection(buffer);
 			const rawText = result.textAnnotations?.[0]?.description || "";
+			console.log(rawText);
 
 			const groqResponse = await getGroqChatStream({
 				messages: [
@@ -360,6 +363,8 @@ const route = new Hono<ServerContext>()
 			if (!content) {
 				return c.json({ error: "Something went wrong" }, 400);
 			}
+
+			console.log(content);
 
 			return c.json(content);
 		},

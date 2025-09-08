@@ -1,3 +1,4 @@
+import vision from "@google-cloud/vision";
 import { Groq } from "groq-sdk";
 import env from "@/env";
 
@@ -20,3 +21,7 @@ export const getGroqChatStream = async ({
 		{ timeout: 10000 },
 	);
 };
+
+export const googleVisionClient = new vision.ImageAnnotatorClient({
+	credentials: JSON.parse(env.GOOGLE_VISION_KEY),
+});

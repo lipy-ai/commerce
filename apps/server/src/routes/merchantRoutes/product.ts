@@ -1,19 +1,13 @@
-import vision from "@google-cloud/vision";
 import { Hono } from "hono";
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { z } from "zod";
-import { getGroqChatStream } from "@/ai";
+import { getGroqChatStream, googleVisionClient } from "@/ai";
 import { db } from "@/db";
-import env from "@/env";
 import { diffById } from "@/lib/compare";
 import { zValidator } from "@/middlewares/validator";
 import { listZodSchema } from "@/schema/common";
 import type { ServerContext } from "@/types";
-
-const client = new vision.ImageAnnotatorClient({
-	credentials: JSON.parse(env.GOOGLE_VISION_KEY!),
-});
 
 const productSchema = z.object({
 	title: z.string(),
@@ -321,7 +315,7 @@ const route = new Hono<ServerContext>()
 
 			const buffer = Buffer.from(file, "base64");
 
-			const [result] = await client.textDetection(buffer);
+			const [result] = await googleVisionClient.textDetection(buffer);
 			const rawText = result.textAnnotations?.[0]?.description || "";
 			console.log(rawText);
 

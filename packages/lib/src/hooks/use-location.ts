@@ -1,10 +1,20 @@
 import { useEffect, useState } from "react";
 
 const getCurrentPosition = () => {
-  return navigator.geolocation.getCurrentPosition((position) => {
-    const { latitude, longitude } = position.coords;
-    return { latitude, longitude };
-  });
+  return navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const { latitude, longitude } = position.coords;
+      return { latitude, longitude };
+    },
+    (error) => {
+      console.error("Error getting location:", error.message);
+    },
+    {
+      enableHighAccuracy: true, // more accurate but uses more battery
+      timeout: 5000, // max time to wait
+      maximumAge: 0, // no cached positions
+    }
+  );
 };
 
 export function useCurrentLocation(options = {}) {

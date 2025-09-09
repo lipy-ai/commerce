@@ -109,9 +109,9 @@ function Home() {
           </div>
           <div className="max-w-7xl m-auto relative z-10 drop-shadow-2xl">
             <header className="m-auto w-full flex justify-between">
-              <div>
+              <Link to="/">
                 <img src="/logo/lipy.webp" alt="Lipy" className="h-8" />
-              </div>
+              </Link>
               <div className="text-xl flex items-center gap-4">
                 {!sess?.session.token ? (
                   <Link

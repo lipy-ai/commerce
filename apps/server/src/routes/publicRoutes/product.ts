@@ -26,7 +26,7 @@ const route = new Hono<ServerContext>()
   .post("/call", async (c) => {
     const tokens = [
       // "f60xymMTS328KUyjYCNFzO:APA91bHbqHTzZr8S40W0H8syTIwst_fGqEsSSSk4KmtG-4tR48Ppr5YUwyCp8pwJUvIfncRjxVD1IkT0lI8DW_FvkUp2zizTD2UF6VnIV1Poel-DQy1_2xQ",
-      "d4ns9HtnSciJ7oRTpY4CAk:APA91bGUuh0tlmnIORyr8q722vkqV3stPQNyqMOHYmhgaDS3PxS-acYuGbNO6d57U6b6daO1H2Ow1ADcJrg3AROv_HinbgPQmdqa9hq3RxBgXHazWF7dHTc",
+      "8053429FC4BC4CAF3E1532E3A5826E511BA9099C0552BC35013EDEE47A4B2CFFF9E0FD1C470597F76A63D3623334ED588393C3CA1865FD7FA6AF4F005E203A532A822649F79CA8D5B3B4B762FDC4EF68",
     ];
 
     await firebase_messaging
@@ -82,7 +82,10 @@ const route = new Hono<ServerContext>()
       })
       .then((r) => {
         if (r.failureCount === tokens.length) {
-          throw new HTTPError(400, { message: "Failed to notify stores!" });
+          throw new HTTPError(400, {
+            message: "Failed to notify stores!",
+            cause: r,
+          });
         }
         if (r.failureCount > 0) {
           const failedTokens: string[] = [];
@@ -94,6 +97,7 @@ const route = new Hono<ServerContext>()
           console.log("List of tokens that caused failures: " + failedTokens);
         }
       });
+
     return c.json({ s: true });
   })
   .get("/", zValidator("query", schema), async (c) => {

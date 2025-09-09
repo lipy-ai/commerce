@@ -16,11 +16,10 @@ function RouteComponent() {
   return (
     <>
       {hasHydrated && deliveryLocation.line1 === "" && <LocationComponent />}
-      {hasHydrated && deliveryLocation.line1 === "" ? (
-        isMobile && <AddressFetchingSkeleton />
-      ) : (
-        <Outlet />
+      {hasHydrated && deliveryLocation.line1 === "" && isMobile && (
+        <AddressFetchingSkeleton />
       )}
+      <Outlet />
     </>
   );
 }

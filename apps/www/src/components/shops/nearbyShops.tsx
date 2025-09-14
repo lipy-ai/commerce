@@ -4,7 +4,9 @@ import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import StoreCard from "./storeCard";
 import { Skeleton } from "@lipy/web-ui/components/ui/skeleton";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
-
+// import LocationComponent from "@/routes/(default)/account/addresses/-deliveryAddressAlert";
+// import { Button } from "@lipy/web-ui/components/ui/button";
+// import { useCurrentLocation } from "@lipy/lib/hooks/use-location";
 export default function NearbyShops({
   category,
   storeTypes,
@@ -13,8 +15,12 @@ export default function NearbyShops({
   storeTypes?: string[];
 }) {
   const { deliveryLocation } = useLocationStore();
-
-  const { data: shops, isLoading } = useAPIQuery(
+  // const { location } = useCurrentLocation();
+  const {
+    data: shops,
+    isLoading,
+    error,
+  } = useAPIQuery(
     publicShopApi.index,
     "$get",
     {
@@ -36,7 +42,20 @@ export default function NearbyShops({
 
   return (
     <div className="">
-      {isLoading ? (
+      {!deliveryLocation?.lat || !deliveryLocation?.lng || error ? (
+        <EmptyPage
+          title="No stores found, Enable Location."
+          label="We couldn't find nearby stores, please enable location for better
+            experience."
+          className="bg-muted/60 py-12 rounded-2xl"
+        >
+          <img
+            src="/assets/no-results-found.png"
+            alt=""
+            className="aspect-square object-cover size-40 mb-8"
+          />
+        </EmptyPage>
+      ) : isLoading ? (
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
           {[...Array(3)].map((_, i) => (
             <Skeleton key={i} className="aspect-video" />

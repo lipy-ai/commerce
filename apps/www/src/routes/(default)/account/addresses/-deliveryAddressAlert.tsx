@@ -93,12 +93,7 @@ function LocationComponent() {
 
   if (error && !isLoading) {
     return (
-      <DrawerDialogSwitcher
-        open={drawerOpen}
-        onOpenChange={setDrawerOpen}
-        dismissible={false}
-        className="[&>button]:hidden"
-      >
+      <DrawerDialogSwitcher open={drawerOpen} onOpenChange={setDrawerOpen}>
         <DrawerDialogHeader className="mx-auto">
           <div className="mx-auto rounded-xl p-4 border my-6">
             <MapPinOff className="size-16" />

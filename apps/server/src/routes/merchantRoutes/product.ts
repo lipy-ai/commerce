@@ -311,8 +311,6 @@ const route = new Hono<ServerContext>()
 		async (c) => {
 			const { file } = c.req.valid("json");
 
-			console.log(file);
-
 			const buffer = Buffer.from(file, "base64");
 
 			const [result] = await googleVisionClient.textDetection(buffer);
@@ -337,7 +335,7 @@ const route = new Hono<ServerContext>()
     "variants": [
       {
         "id": "unique uuid string (generate a unique one)",
-        "unit": "Give the variant a name  (use 'serves 1' if not specified).",
+        "unit": "try to find a name for that variant  (use 'serves 1' if not cannot find any name).",
         "price": number,
         "maxPrice": number
       }
@@ -345,7 +343,7 @@ const route = new Hono<ServerContext>()
   }
 ]
 
-- Always include at least one variant per item.
+- Always include at least one variant per item. Items can have more than one variant.
 - Generate unique UUIDs for each variant.
 - Only return the JSON array; do not include any explanations or extra text.`,
 					},

@@ -13,6 +13,7 @@ import {
   Shirt,
   ShoppingBag,
   Users,
+  Utensils,
 } from "lucide-react";
 // Navigation configuration
 export const dashboardNav = {
@@ -45,9 +46,10 @@ const mobileNav = [
       </svg>
     ),
   },
-  { label: "Products", url: "/product", icon: Shirt },
+
   { label: "Orders", url: "/pos/order", icon: ShoppingBag },
-  { label: "Customers", url: "/customer", icon: Users },
+  { label: "Menu", url: "/product", icon: Utensils },
+  // { label: "Customers", url: "/customer", icon: Users },
   { label: "Account", url: "/account", icon: CircleUser },
 ];
 

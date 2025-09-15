@@ -6,6 +6,7 @@ import QueryProvider from "@lipy/lib/providers/queryProvider";
 import { getIsSsrMobile } from "@lipy/lib/utils/isServerMobile";
 import Loading from "@lipy/web-ui/components/ui/loading";
 import { Toaster, toast } from "@lipy/web-ui/components/ui/sonner";
+import { ThemeProvider } from "@lipy/web-ui/components/ui/theme-provider";
 import { ViewportProvider } from "@lipy/web-ui/contexts/viewport";
 import appCss from "@lipy/web-ui/styles.css?url";
 import {
@@ -122,22 +123,20 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         suppressHydrationWarning
         className="m-auto outline-1 outline-border shadow min-h-screen flex flex-col"
       >
-        <ViewportProvider isMobile={data.isSsrMobile}>
-          <PHProvider>
-            <QueryProvider handleThrowOnError={handleThrowOnError}>
-              <NuqsAdapter>
-                {/* <EventsProvider /> */}
-
-                {isPending ? <Loading /> : children}
-              </NuqsAdapter>
-              <Toaster />
-            </QueryProvider>
-            {env.SHOW_DEV_TOOLS && (
-              <TanStackRouterDevtools position="bottom-right" />
-            )}
-            <Scripts />
-          </PHProvider>
-        </ViewportProvider>
+        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+          <ViewportProvider isMobile={data.isSsrMobile}>
+            <PHProvider>
+              <QueryProvider handleThrowOnError={handleThrowOnError}>
+                <NuqsAdapter>{isPending ? <Loading /> : children}</NuqsAdapter>
+                <Toaster />
+              </QueryProvider>
+              {env.SHOW_DEV_TOOLS && (
+                <TanStackRouterDevtools position="bottom-right" />
+              )}
+              <Scripts />
+            </PHProvider>
+          </ViewportProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

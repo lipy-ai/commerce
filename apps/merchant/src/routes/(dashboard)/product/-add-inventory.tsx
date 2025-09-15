@@ -75,7 +75,7 @@ function MobileView({
         <div
           key={m.id}
           className={cn(
-            m.status === "underReview" ? "bg-tertiary" : "bg-card",
+            m.status === "underReview" ? "bg-muted-foreground/10" : "bg-card",
             "p-4 py-6 space-y-2"
           )}
         >
@@ -190,7 +190,7 @@ function DesktopView({
         >
           <div
             className={cn(
-              m.status === "underReview" && "bg-tertiary -mx-4 px-4",
+              m.status === "underReview" && "bg-muted-foreground/10 -mx-4 px-4",
               "flex items-center gap-4 cursor-pointer"
             )}
           >

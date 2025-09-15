@@ -48,25 +48,25 @@ const btns = [
   {
     name: "Store Settings",
     icon: StoreIcon,
-    className: "bg-yellow-400 text-foreground",
+    className: "bg-yellow-400 text-background",
     href: "/store",
   },
   {
     name: "Express Checkout",
     icon: ShoppingCart,
-    className: "bg-emerald-600 text-primary-foreground",
+    className: "bg-emerald-600 text-foreground",
     href: "/pos/checkout",
   },
   {
     name: "My Customers",
     icon: SquareUser,
-    className: "bg-amber-600 text-primary-foreground",
+    className: "bg-amber-600 text-foreground",
     href: "/customer",
   },
   {
     name: "My Products",
     icon: Shirt,
-    className: "bg-indigo-600 text-primary-foreground",
+    className: "bg-indigo-600 text-foreground",
     href: "/product",
   },
 ];
@@ -207,14 +207,14 @@ function Orders({
                           "border size-12 text-[7px] break-words text-center text-balance flex flex-col items-center justify-center",
 
                           v.status === "created" &&
-                            "text-primary-foreground bg-red-800",
+                            "text-foreground bg-red-800",
                           v.status === "accepted" &&
-                            "text-primary-foreground bg-blue-700",
+                            "text-foreground bg-blue-700",
                           ["packed", "awaiting_customer_confirmation"].includes(
                             v.status || ""
                           ) && "text-foreground bg-amber-400",
                           v.status === "out_for_delivery" &&
-                            "text-primary-foreground bg-green-700"
+                            "text-foreground bg-green-700"
                         )}
                       >
                         <span className="uppercase">

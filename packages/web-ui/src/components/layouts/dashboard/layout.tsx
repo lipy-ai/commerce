@@ -287,32 +287,38 @@ function NavLink({
         open && "justify-start",
         mobile && "px-0 justify-center rounded-none",
         mobile
-          ? isActive && "text-primary [&_svg]:stroke-primary"
+          ? isActive && " [&_svg]:stroke-primary"
           : isActive
             ? "bg-primary text-primary-foreground"
             : "hover:bg-accent"
       )}
     >
-      {mobile && (
+      {/* {mobile && (
         <span
           className={cn(
             "h-2 w-4/5 block bg-transparent rounded-b-2xl m-auto",
             isActive && "bg-primary"
           )}
         />
-      )}
+      )} */}
       <Link
         className={cn(
-          "inline-flex items-center font-medium py-2 gap-2",
+          "inline-flex items-center font-medium py-2 gap-1",
           mobile && "flex-col font-normal w-full"
         )}
         to={nav.url}
       >
-        <span className="flex justify-center items-center w-[30px]">
+        <span
+          className={cn(
+            isActive ? "bg-muted-foreground/30  rounded-full" : "",
+            "flex justify-center items-center px-4 py-2"
+          )}
+        >
           <nav.icon
             className={cn(
               "size-5",
-              mobile && "flex-col font-normal w-full stroke-1.5"
+              mobile && isActive ? "stroke-2" : "stroke-1.5",
+              "flex-col font-normal w-full  "
             )}
           />
         </span>
@@ -326,7 +332,9 @@ function NavLink({
             {nav.label}
           </motion.span>
         )}
-        {mobile && <span>{nav.label}</span>}
+        {mobile && (
+          <span className={cn(isActive ? "font-medium" : "")}>{nav.label}</span>
+        )}
       </Link>
     </div>
   );

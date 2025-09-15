@@ -104,7 +104,7 @@ function RouteComponent() {
                   Ready to get started?
                 </h4>
               </div>
-              <p className=" text-sm">
+              <p className="text-muted-foreground text-sm">
                 Begin exploring our extensive collection today and set your
                 inventory in just simple click.
               </p>

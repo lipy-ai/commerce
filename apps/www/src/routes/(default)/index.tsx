@@ -36,6 +36,7 @@ import {
   // GENERAL_CATEGORIES,
   // WELLNESS_CATEGORIES,
 } from "@/utils/config";
+
 export const Route = createFileRoute("/(default)/")({
   component: Home,
 });

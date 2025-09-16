@@ -23,13 +23,14 @@ import { useJsApiLoader } from "@react-google-maps/api";
 import { MapPinOff, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AddressSetter } from "../../../../components/address/addressSetter";
+import { useCurrentLocation } from "@lipy/lib/hooks/use-location";
 
 function LocationComponent() {
   const [error, setError] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { data: session } = authClient.useSession();
   const { setDeliveryLocation } = useLocationStore();
-
+  const { location } = useCurrentLocation();
   const { isLoaded: mapLoaded } = useJsApiLoader({
     googleMapsApiKey: env.GOOGLE_MAP_API_KEY,
     libraries: env.GOOGLE_MAP_LIBRARIES,
@@ -52,27 +53,31 @@ function LocationComponent() {
     //   handleError("Reactnative");
     // }
 
-    navigator.geolocation.getCurrentPosition(
-      async ({ coords }) => {
-        const { latitude: lat, longitude: lng } = coords;
-        if (!lat || !lng || !mapLoaded) {
-          handleError("Unable to retrieve coordinates.");
-          return;
-        }
+    // navigator.geolocation.getCurrentPosition(
+    //   async ({ coords }) => {
 
-        try {
-          const { result } = await reverseGeocode(lat, lng);
-          const newLocation: AddressType = {
-            ...defaultDeliveryLocationState.deliveryLocation,
-            ...fillBaseAddress(result),
-          };
-          setDeliveryLocation(newLocation);
-        } catch {
-          handleError("Unable to fetch location details.");
-        }
-      },
-      () => handleError("Location permission is off.")
-    );
+    //   },
+    //   () => handleError("Location permission is off.")
+    // );
+
+    const lat = location?.latitude;
+    const lng = location?.longitude;
+
+    if (!lat || !lng || !mapLoaded) {
+      handleError("Unable to retrieve coordinates.");
+      return;
+    }
+
+    try {
+      const { result } = await reverseGeocode(lat, lng);
+      const newLocation: AddressType = {
+        ...defaultDeliveryLocationState.deliveryLocation,
+        ...fillBaseAddress(result),
+      };
+      setDeliveryLocation(newLocation);
+    } catch {
+      handleError("Unable to fetch location details.");
+    }
   };
 
   const handleError = (message: string) => {

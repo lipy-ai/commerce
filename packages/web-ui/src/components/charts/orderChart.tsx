@@ -22,7 +22,10 @@ export function OrderChart({
   isLoading,
 }: {
   data:
-    | InferResponseType<typeof merchantDashboardApi.index.$get>["counts"]
+    | Exclude<
+        InferResponseType<typeof merchantDashboardApi.index.$get>,
+        string
+      >["counts"]
     | undefined;
 
   isLoading: boolean;

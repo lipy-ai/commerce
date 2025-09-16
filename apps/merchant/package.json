@@ -27,7 +27,7 @@
     "@tanstack/react-virtual": "^3.13.12",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.23.6",
-    "hono": "^4.9.4",
+    "hono": "^4.9.6",
     "immer": "^10.1.1",
     "lucide-react": "^0.492.0",
     "nuqs": "^2.4.3",

@@ -22,6 +22,6 @@ function RouteComponent() {
     } else {
       authClient.signOut().then((_e) => navigate({ to: "/", replace: true }));
     }
-  });
+  }, [navigate]);
   return <Loading title="Logging out..." />;
 }

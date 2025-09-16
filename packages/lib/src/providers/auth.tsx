@@ -12,6 +12,8 @@ export const bearerToken = () =>
 export const setBearerToken = (val: string) =>
   isWindow && localStorage?.setItem("bearer_token", val);
 
+console.log(bearerToken());
+
 export const authClient = createAuthClient({
   baseURL: env.API_URL,
   plugins: [

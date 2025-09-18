@@ -32,7 +32,7 @@ const SingleImage = (
   return (
     <div
       className={cn(
-        "rounded relative bg-white border border-input flex justify-center items-center cursor-pointer pointer-events-auto aspect-square",
+        " relative bg-card border border-dashed rounded-lg flex justify-center items-center cursor-pointer pointer-events-auto aspect-square",
         props.wrapperClassName
       )}
     >

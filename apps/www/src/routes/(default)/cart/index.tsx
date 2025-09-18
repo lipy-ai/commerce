@@ -10,7 +10,6 @@ import {
   DrawerDialogSwitcher,
 } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
-import { DetailedAddress } from "@/components/address/detailedAddress";
 import { useLocationStore } from "@lipy/web-ui/components/maps/utils/store";
 import EmptyPage from "@lipy/web-ui/components/pages/empty";
 import { Alert } from "@lipy/web-ui/components/ui/alert";
@@ -41,6 +40,7 @@ import {
   Store,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { DetailedAddress } from "@/components/address/detailedAddress";
 import { AddToCart } from "@/components/cart/addToCart";
 import { type ProductInCart, useCartStore } from "@/components/cart/store";
 import PlaceOrder from "@/components/order/placeOrder";
@@ -245,7 +245,7 @@ export const CartMainContent = () => {
 
                             <ProductComp
                               product={product}
-                              inStock={product.inStock}
+                              inStock={product.inStock as boolean}
                               className={`${!product.inStock ? "opacity-50" : ""}`}
                             />
                           </div>

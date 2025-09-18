@@ -16,21 +16,21 @@ const route = new Hono<ServerContext>().get(
 	listZodValidator,
 	async (c) => {
 		const { type, q } = c.req.valid("query");
+		const sess = c.get("session");
 
 		const exec = () => {
 			switch (type) {
 				case "categories":
 					return db
 						.selectFrom("category")
+						.where("store", "=", sess?.activeStoreId!)
 						.$if(!!q, (qb) => {
 							const words = q!.trim().split(/\s+/);
-							console.log(words);
 							return words.reduce(
 								(acc, word) => acc.where("title", "ilike", `%${word}%`),
 								qb,
 							);
 						})
-
 						.select(["id as value", "title as label", "image as icon"]);
 
 				case "stores":

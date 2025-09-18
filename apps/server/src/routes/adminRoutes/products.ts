@@ -136,7 +136,7 @@ export const adminProductRoute = new Hono<ServerContext>()
 								maxPrice: eb.ref("pv.maxPrice"),
 								unit: eb.ref("pv.unit"),
 								productId: eb.ref("pv.productId"),
-								stock: eb.ref("si.stock"),
+								stock: eb.ref("si.inStock"),
 								sku: eb.ref("si.sku"),
 								storePrice: eb.ref("si.price"),
 							}),
@@ -159,7 +159,6 @@ export const adminProductRoute = new Hono<ServerContext>()
 					...vals,
 					id: crypto.randomUUID(),
 					status: "draft",
-					type: "food",
 					thumbnail: vals.images[0] || "",
 					keywords: null,
 				})

@@ -95,7 +95,7 @@ export const posProductRoute = new Hono<ServerContext>().get(
 							price: eb.ref("pv.price"),
 							unit: eb.ref("pv.unit"),
 							productId: eb.ref("pv.productId"),
-							stock: eb.fn.coalesce(eb.ref("si.stock")),
+							stock: eb.fn.coalesce(eb.ref("si.inStock")),
 							sku: eb.fn.coalesce(eb.ref("si.sku")),
 							storePrice: eb.fn.coalesce(eb.ref("si.price")),
 						}),

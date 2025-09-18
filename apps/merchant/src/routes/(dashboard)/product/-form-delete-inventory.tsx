@@ -1,4 +1,4 @@
-import { merchantInventoryApi, type merchantProductApi } from "@lipy/lib/api";
+import { merchantInventoryApi } from "@lipy/lib/api";
 import { useAPIMutation } from "@lipy/lib/utils/useQueryClient";
 import {
   DrawerDialogClose,
@@ -14,7 +14,6 @@ import { Label } from "@lipy/web-ui/components/ui/label";
 import { toast } from "@lipy/web-ui/components/ui/sonner";
 import { useDebouncedCallback } from "@lipy/web-ui/hooks/use-debounced-callback";
 import { cn } from "@lipy/web-ui/lib/utils";
-import type { InferResponseType } from "hono/client";
 import { type ReactNode, useState } from "react";
 import { useInventoryInvalidate } from "@/routes/admin/product/-hook-invalidate";
 import { useGlobalSessionStore } from "@/stores/global";
@@ -23,9 +22,7 @@ export default function FormDeleteInventory({
   children,
   inventory,
 }: {
-  inventory: InferResponseType<
-    (typeof merchantProductApi.index)["$get"]
-  >["items"][0]["variants"][0];
+  inventory: any;
   children: ReactNode;
 }) {
   const { promptOnDelete, update } = useGlobalSessionStore();

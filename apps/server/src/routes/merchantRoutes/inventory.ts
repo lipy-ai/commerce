@@ -12,7 +12,7 @@ export const merchantInventoryRoute = new Hono<ServerContext>().patch(
 			id: z.string().uuid(),
 			variantId: z.string().uuid(),
 			price: z.coerce.number().min(1).optional(),
-			stock: z.coerce.number().min(-1).optional(),
+			inStock: z.boolean().optional(),
 			sku: z.string().optional(),
 			active: z.boolean().optional(),
 			operation: z.enum(["create", "update", "delete"]),
@@ -20,7 +20,7 @@ export const merchantInventoryRoute = new Hono<ServerContext>().patch(
 	),
 	async (c) => {
 		try {
-			const { id, variantId, price, stock, sku, operation, active } =
+			const { id, variantId, price, inStock, sku, operation, active } =
 				c.req.valid("json");
 
 			const sess = c.get("session");
@@ -32,7 +32,7 @@ export const merchantInventoryRoute = new Hono<ServerContext>().patch(
 						id: crypto.randomUUID(),
 						variantId,
 						price,
-						stock,
+						inStock,
 						sku,
 						active: true,
 						storeId: sess?.activeStoreId!,
@@ -46,7 +46,7 @@ export const merchantInventoryRoute = new Hono<ServerContext>().patch(
 					.set({
 						variantId,
 						price,
-						stock,
+						inStock,
 						sku,
 						active,
 					})

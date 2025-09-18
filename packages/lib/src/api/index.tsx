@@ -10,6 +10,7 @@ import type { orderRoute } from "@lipy/server/routes/loggedRoutes/order";
 import type { loggedInSessionRoute } from "@lipy/server/routes/loggedRoutes/session";
 import type { loggedStoreRoute } from "@lipy/server/routes/loggedRoutes/shop";
 import type { uploadRoute } from "@lipy/server/routes/loggedRoutes/upload";
+import type { merchantCategoryRoute } from "@lipy/server/routes/merchantRoutes/category";
 import type { merchantComboboxRoute } from "@lipy/server/routes/merchantRoutes/combobox";
 import type { merchantCouponRoute } from "@lipy/server/routes/merchantRoutes/coupon";
 import type { merchantCustomerRoute } from "@lipy/server/routes/merchantRoutes/customer";
@@ -23,11 +24,10 @@ import type { posProductRoute } from "@lipy/server/routes/posRoutes/product";
 import type { posStoreRoute } from "@lipy/server/routes/posRoutes/shop";
 import type { publicLandingRoute } from "@lipy/server/routes/publicRoutes/landing";
 import type { productRoute } from "@lipy/server/routes/publicRoutes/product";
+import type { publicSearchRoute } from "@lipy/server/routes/publicRoutes/search";
 import type { shopRoute } from "@lipy/server/routes/publicRoutes/shop";
-
 import { type ClientRequestOptions, hc } from "hono/client";
 import { bearerToken } from "../providers/auth";
-import type { publicSearchRoute } from "@lipy/server/routes/publicRoutes/search";
 
 const opts: ClientRequestOptions = {
   init: {
@@ -74,6 +74,11 @@ export const merchantStoreApi = hc<typeof merchantStoreRoute>(
 
 export const merchantProductApi = hc<typeof merchantProductRoute>(
   `${basepath}/merchant/product`,
+  opts
+);
+
+export const merchantCategoryApi = hc<typeof merchantCategoryRoute>(
+  `${basepath}/merchant/category`,
   opts
 );
 

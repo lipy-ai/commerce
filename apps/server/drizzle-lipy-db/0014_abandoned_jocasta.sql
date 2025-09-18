@@ -1,0 +1,1 @@
+ALTER TABLE "lipy-dev"."storeInventory" DROP COLUMN "stock";

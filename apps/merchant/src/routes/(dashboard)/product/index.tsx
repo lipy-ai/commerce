@@ -204,11 +204,14 @@ function MobileView({ items }: { items: Response["items"] }) {
 
                     <div className="flex items-center justify-between pt-2">
                       <Link
-                        className={cn(buttonVariants({ variant: "ghost" }))}
+                        className={cn(
+                          buttonVariants({ variant: "ghost", size: "sm" }),
+                          "has-[>svg]:px-0"
+                        )}
                         to="/product/add"
                         search={{ product: p.id as string, type: "product" }}
                       >
-                        <Edit className="size-6" /> Edit
+                        <Edit /> Edit
                       </Link>
 
                       <div className="flex items-center gap-2">
@@ -225,8 +228,12 @@ function MobileView({ items }: { items: Response["items"] }) {
                       </div>
 
                       <ProductPreview product={p}>
-                        <Button variant={"ghost"}>
-                          <Eye className="size-6" /> Preview
+                        <Button
+                          variant={"ghost"}
+                          size="sm"
+                          className="has-[>svg]:px-0"
+                        >
+                          <Eye /> Preview
                         </Button>
                       </ProductPreview>
                     </div>

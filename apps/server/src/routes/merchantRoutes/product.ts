@@ -12,7 +12,7 @@ import type { ServerContext } from "@/types";
 const productSchema = z.object({
 	title: z.string(),
 	category: z.string(),
-
+	type: z.enum(["veg", "non-veg", "egg"]),
 	summary: z.string(),
 	images: z.preprocess(
 		(e) => (Array.isArray(e) ? e.filter((e) => !!e) : e),
@@ -47,17 +47,13 @@ const listZodValidator = zValidator(
 
 const route = new Hono<ServerContext>()
 	.get("/", listZodValidator, async (c) => {
-		const { limit, page, q, category, showAll, globalOnly } =
-			c.req.valid("query");
+		const { limit, page, q } = c.req.valid("query");
 		const activeStoreId = c.var.session?.activeStoreId!;
 		const offset = limit * (page - 1);
 
-		const query = db
+		const r = db
 			.selectFrom("product as p")
-			// .where((eb) =>
-			// 	eb.or([eb("p.store", "=", activeStoreId!), eb("p.store", "is", null)]),
-			// )
-			.$if(!!globalOnly, (qb) => qb.where("p.store", "is", null))
+			.where("p.store", "=", activeStoreId!)
 			.$if(!!q, (qb) => {
 				const words = q!.trim().split(/\s+/);
 				return words.reduce(
@@ -66,78 +62,142 @@ const route = new Hono<ServerContext>()
 				);
 			})
 			.leftJoin("productVariant as pv", "pv.productId", "p.id")
-			.leftJoin("category as c", "p.category", "c.id")
-
 			.leftJoin("storeInventory as si", (join) =>
 				join
 					.onRef("si.variantId", "=", "pv.id")
 					.on("si.storeId", "=", activeStoreId!),
 			)
-			.$if(!!category, (qb) => qb.where("category", "=", category!))
-			.$if(!showAll, (qb) =>
-				qb.where((eb) =>
-					eb.or([
-						eb("p.store", "=", activeStoreId!),
-						eb("si.storeId", "=", activeStoreId!),
-					]),
-				),
-			);
-
-		const countPromise = query
-			.select(sql<number>`count(*)`.as("total_count"))
-			.executeTakeFirst();
-
-		const resultsPromise = query
+			.groupBy("p.id")
 
 			.select((eb) => [
 				"p.id",
 				"p.title",
 				"p.thumbnail",
-				"p.price",
-				"p.maxPrice",
+				"p.category",
 				"p.summary",
-				"p.store",
-				"p.status",
-				jsonBuildObject({
-					id: eb.ref("c.id"),
-					title: eb.ref("c.title"),
-				}).as("category"),
+				"p.type",
 				eb.fn
 					.jsonAgg(
 						jsonBuildObject({
 							id: eb.ref("pv.id"),
 							inventoryId: eb.ref("si.id"),
-							images: eb.ref("pv.images"),
-							price: eb.ref("pv.price"),
-							unit: eb.ref("pv.unit"),
+							price: eb.fn.coalesce(eb.ref("si.price")),
 							maxPrice: eb.ref("pv.maxPrice"),
+							unit: eb.ref("pv.unit"),
 							productId: eb.ref("pv.productId"),
-							stock: eb.fn.coalesce(eb.ref("si.stock")),
-							sku: eb.fn.coalesce(eb.ref("si.sku")),
-							storePrice: eb.fn.coalesce(eb.ref("si.price")),
-							active: eb.fn.coalesce(eb.ref("si.active")),
+							inStock: eb.ref("si.inStock"),
 						}),
 					)
-					.filterWhere("pv.id", "is not", null)
 					.as("variants"),
 			])
-			.groupBy(["p.id", "c.id"])
+			.as("limited_products");
 
-			.orderBy("p.store")
-			.limit(limit)
+		const result = await db
+			.selectFrom("category")
+			.leftJoin(r, "category.id", "limited_products.category")
+			.where("category.store", "=", activeStoreId!)
+			.select((eb) => [
+				"category.id",
+				"category.title",
+				"category.image",
+				"category.slug",
+				"category.summary",
+				eb.fn
+					.coalesce(eb.fn.jsonAgg("limited_products"), eb.val([]))
+					.as("products"),
+			])
+			.groupBy("category.id")
 			.offset(offset)
 			.execute();
 
-		const [countResult, items] = await Promise.all([
-			countPromise,
-			resultsPromise,
-		]);
+		// const query = db
+		// 	.selectFrom("product as p")
+		// 	.$if(!!globalOnly, (qb) => qb.where("p.store", "is", null))
+		// 	.$if(!!q, (qb) => {
+		// 		const words = q!.trim().split(/\s+/);
+		// 		return words.reduce(
+		// 			(acc, word) => acc.where("p.title", "ilike", `%${word}%`),
+		// 			qb,
+		// 		);
+		// 	})
+		// 	.leftJoin("productVariant as pv", "pv.productId", "p.id")
+		// 	.leftJoin("category as c", "p.category", "c.id")
 
-		const totalCount = countResult?.total_count ?? 0;
+		// 	.leftJoin("storeInventory as si", (join) =>
+		// 		join
+		// 			.onRef("si.variantId", "=", "pv.id")
+		// 			.on("si.storeId", "=", activeStoreId!),
+		// 	)
+		// 	.$if(!!category, (qb) => qb.where("category", "=", category!))
+		// 	.$if(!showAll, (qb) =>
+		// 		qb.where((eb) =>
+		// 			eb.or([
+		// 				eb("p.store", "=", activeStoreId!),
+		// 				eb("si.storeId", "=", activeStoreId!),
+		// 			]),
+		// 		),
+		// 	);
 
-		const totalPages = Math.ceil(totalCount / limit);
+		// const countPromise = query
+		// 	.select(sql<number>`count(*)`.as("total_count"))
+		// 	.executeTakeFirst();
 
-		return c.json({ items, page, limit, totalPages, totalResults: totalCount });
+		// const resultsPromise = query
+
+		// 	.select((eb) => [
+		// 		"p.id",
+		// 		"p.title",
+		// 		"p.thumbnail",
+		// 		"p.price",
+		// 		"p.maxPrice",
+		// 		"p.summary",
+		// 		"p.store",
+		// 		"p.status",
+		// 		jsonBuildObject({
+		// 			id: eb.ref("c.id"),
+		// 			title: eb.ref("c.title"),
+		// 		}).as("category"),
+		// 		eb.fn
+		// 			.jsonAgg(
+		// 				jsonBuildObject({
+		// 					id: eb.ref("pv.id"),
+		// 					inventoryId: eb.ref("si.id"),
+		// 					images: eb.ref("pv.images"),
+		// 					price: eb.ref("pv.price"),
+		// 					unit: eb.ref("pv.unit"),
+		// 					maxPrice: eb.ref("pv.maxPrice"),
+		// 					productId: eb.ref("pv.productId"),
+		// 					stock: eb.fn.coalesce(eb.ref("si.stock")),
+		// 					sku: eb.fn.coalesce(eb.ref("si.sku")),
+		// 					storePrice: eb.fn.coalesce(eb.ref("si.price")),
+		// 					active: eb.fn.coalesce(eb.ref("si.active")),
+		// 				}),
+		// 			)
+		// 			.filterWhere("pv.id", "is not", null)
+		// 			.as("variants"),
+		// 	])
+		// 	.groupBy(["p.id", "c.id"])
+
+		// 	.orderBy("p.store")
+		// 	.limit(limit)
+		// 	.offset(offset)
+		// 	.execute();
+
+		// const [countResult, items] = await Promise.all([
+		// 	countPromise,
+		// 	resultsPromise,
+		// ]);
+
+		// const totalCount = countResult?.total_count ?? 0;
+
+		// const totalPages = Math.ceil(totalCount / limit);
+
+		return c.json({
+			items: result,
+			page,
+			limit,
+			hasMore: result.length === limit,
+		});
 	})
 	.get(
 		"/:id",
@@ -173,7 +233,7 @@ const route = new Hono<ServerContext>()
 								maxPrice: eb.ref("pv.maxPrice"),
 								unit: eb.ref("pv.unit"),
 								productId: eb.ref("pv.productId"),
-								stock: eb.ref("si.stock"),
+								stock: eb.ref("si.inStock"),
 								sku: eb.ref("si.sku"),
 								storePrice: eb.ref("si.price"),
 								active: eb.fn.coalesce(eb.ref("si.active")),
@@ -210,8 +270,17 @@ const route = new Hono<ServerContext>()
 				productId: p.id,
 			}));
 
+			const i = v.map((n) => ({
+				id: crypto.randomUUID(),
+				variantId: n.id,
+				storeId: sess?.activeStoreId!,
+				price: n.price,
+			}));
+
 			if (v.length > 0) {
 				await trx.insertInto("productVariant").values(v).execute();
+
+				await trx.insertInto("storeInventory").values(i).execute();
 			}
 
 			return { ...p, variants: v };

@@ -149,9 +149,6 @@ const create = async (user: DBTypes["user"]) => {
 					price: Math.round(
 						Number(faker.commerce.price({ min: 100, max: 1000, dec: 0 })),
 					),
-					stock: Math.round(
-						Number(faker.commerce.price({ min: -1, max: 1000, dec: 0 })),
-					),
 				})
 				.execute();
 		}

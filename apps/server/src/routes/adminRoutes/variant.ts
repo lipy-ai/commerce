@@ -59,7 +59,7 @@ export const adminVariantRoute = new Hono<ServerContext>()
 						id: z.string().uuid(),
 						active: z.boolean(),
 						price: z.coerce.number(),
-						stock: z.coerce.number(),
+						stock: z.boolean(),
 						storeId: z.string().uuid(),
 						variantId: z.string().uuid(),
 					}),

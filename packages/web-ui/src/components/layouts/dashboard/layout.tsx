@@ -287,7 +287,7 @@ function NavLink({
         open && "justify-start",
         mobile && "px-0 justify-center rounded-none",
         mobile
-          ? isActive && " [&_svg]:stroke-primary"
+          ? isActive && "text-primary [&_svg]:stroke-primary"
           : isActive
             ? "bg-primary text-primary-foreground"
             : "hover:bg-accent"
@@ -310,15 +310,18 @@ function NavLink({
       >
         <span
           className={cn(
-            isActive ? "bg-muted-foreground/30  rounded-full" : "",
-            "flex justify-center items-center px-4 py-2"
+            mobile
+              ? isActive
+                ? "bg-muted-foreground/30  rounded-full px-6 py-2"
+                : "px-6 py-2"
+              : "w-[30px]",
+            "flex justify-center items-center "
           )}
         >
           <nav.icon
             className={cn(
               "size-5",
-              mobile && isActive ? "stroke-2" : "stroke-1.5",
-              "flex-col font-normal w-full  "
+              mobile && "flex-col font-normal w-full stroke-1.5"
             )}
           />
         </span>

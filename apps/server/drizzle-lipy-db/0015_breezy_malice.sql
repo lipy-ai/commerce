@@ -1,0 +1,1 @@
+ALTER TABLE "lipy-dev"."storeInventory" ADD COLUMN "stock" boolean DEFAULT true;

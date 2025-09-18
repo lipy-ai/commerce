@@ -53,7 +53,7 @@ export default function AssignProductVariationForm() {
   const d = {
     id: "",
     price: 0,
-    stock: 0,
+    stock: true,
     active: false,
     storeId: shop || "",
     variantId: "",
@@ -81,7 +81,7 @@ export default function AssignProductVariationForm() {
         items: data?.map((m) => ({
           id: m?.inventory?.id || crypto.randomUUID(),
           price: m?.inventory?.price || 0,
-          stock: m?.inventory?.stock || 0,
+          stock: m?.inventory?.inStock || true,
           active: m?.inventory?.active || false,
           storeId: m?.inventory?.storeId || shop,
           variantId: m?.id || "",
@@ -145,8 +145,8 @@ export default function AssignProductVariationForm() {
                   <div className="w-1/3">
                     <FormInput label="Price" name={`items.${i}.price`} />
                   </div>
-                  <div className="w-1/4">
-                    <FormInput label="Stock" name={`items.${i}.stock`} />
+                  <div className="w-14">
+                    <FormSwitch label="Stock" name={`items.${i}.stock`} />
                   </div>
                   <div className="w-14">
                     <FormSwitch label="Active" name={`items.${i}.active`} />

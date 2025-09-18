@@ -29,7 +29,7 @@ export function ProductPreview({
         open={open}
         onOpenChange={setOpen}
         trigger={children}
-        className="max-h-[65%]"
+        className="max-h-[75%]"
       >
         <img
           src={product.thumbnail || "/assets/placeholder-image.svg"}

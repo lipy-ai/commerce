@@ -25,6 +25,7 @@ import type { InferResponseType } from "hono/client";
 import { ChevronRight, Edit, Eye, Plus } from "lucide-react";
 import { useState } from "react";
 import { z } from "zod";
+import { FormStockStatus } from "./-form-inventory";
 import { ProductPreview } from "./-preview";
 
 export const Route = createFileRoute("/(dashboard)/product/")({
@@ -173,7 +174,7 @@ function MobileView({ items }: { items: Response["items"] }) {
               </p>
             </AccordionTrigger>
 
-            <AccordionContent className="pl-4 py-4 divide-y divide-dashed">
+            <AccordionContent className="pl-4  divide-y divide-dashed">
               {m.products[0] &&
                 m.products.map((p) => (
                   <div key={p.id} className="py-6">
@@ -214,18 +215,22 @@ function MobileView({ items }: { items: Response["items"] }) {
                         <Edit /> Edit
                       </Link>
 
-                      <div className="flex items-center gap-2">
-                        <Switch
-                          checked={p.variants?.some((v) => v.inStock) ?? false}
-                          className="data-[state=checked]:bg-green-600 "
-                        />
-                        <p>
-                          {" "}
-                          {p.variants?.some((v) => v.inStock)
-                            ? "In Stock"
-                            : "Out of Stock"}
-                        </p>
-                      </div>
+                      <FormStockStatus product={p}>
+                        <div className="flex items-center gap-2">
+                          <Switch
+                            checked={
+                              p.variants?.some((v) => v.inStock) ?? false
+                            }
+                            className="data-[state=checked]:bg-green-600 "
+                          />
+                          <p>
+                            {" "}
+                            {p.variants?.some((v) => v.inStock)
+                              ? "In Stock"
+                              : "Out of Stock"}
+                          </p>
+                        </div>
+                      </FormStockStatus>
 
                       <ProductPreview product={p}>
                         <Button

@@ -27,6 +27,7 @@ import { Route as authLogoutRouteImport } from './routes/(auth)/logout'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as PosOrderIndexRouteImport } from './routes/pos/order/index'
 import { Route as PosCheckoutIndexRouteImport } from './routes/pos/checkout/index'
+import { Route as AdminStoreIndexRouteImport } from './routes/admin/store/index'
 import { Route as AdminReviewProductsIndexRouteImport } from './routes/admin/review-products/index'
 import { Route as AdminProductIndexRouteImport } from './routes/admin/product/index'
 import { Route as AdminLeadsIndexRouteImport } from './routes/admin/leads/index'
@@ -36,6 +37,7 @@ import { Route as dashboardStoreIndexRouteImport } from './routes/(dashboard)/st
 import { Route as dashboardProductIndexRouteImport } from './routes/(dashboard)/product/index'
 import { Route as dashboardCustomerIndexRouteImport } from './routes/(dashboard)/customer/index'
 import { Route as PosOrderCreateRouteImport } from './routes/pos/order/create'
+import { Route as AdminStoreFormRouteImport } from './routes/admin/store/form'
 import { Route as AdminProductIdRouteImport } from './routes/admin/product/$id'
 import { Route as dashboardStoreStaffRouteImport } from './routes/(dashboard)/store/staff'
 import { Route as dashboardStorePoliciesRouteImport } from './routes/(dashboard)/store/policies'
@@ -137,6 +139,11 @@ const PosCheckoutIndexRoute = PosCheckoutIndexRouteImport.update({
   path: '/checkout/',
   getParentRoute: () => PosRouteRoute,
 } as any)
+const AdminStoreIndexRoute = AdminStoreIndexRouteImport.update({
+  id: '/store/',
+  path: '/store/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 const AdminReviewProductsIndexRoute =
   AdminReviewProductsIndexRouteImport.update({
     id: '/review-products/',
@@ -182,6 +189,11 @@ const PosOrderCreateRoute = PosOrderCreateRouteImport.update({
   id: '/order/create',
   path: '/order/create',
   getParentRoute: () => PosRouteRoute,
+} as any)
+const AdminStoreFormRoute = AdminStoreFormRouteImport.update({
+  id: '/store/form',
+  path: '/store/form',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminProductIdRoute = AdminProductIdRouteImport.update({
   id: '/product/$id',
@@ -265,6 +277,7 @@ export interface FileRoutesByFullPath {
   '/store/policies': typeof dashboardStorePoliciesRoute
   '/store/staff': typeof dashboardStoreStaffRoute
   '/admin/product/$id': typeof AdminProductIdRoute
+  '/admin/store/form': typeof AdminStoreFormRoute
   '/pos/order/create': typeof PosOrderCreateRoute
   '/customer': typeof dashboardCustomerIndexRoute
   '/product': typeof dashboardProductIndexRoute
@@ -274,6 +287,7 @@ export interface FileRoutesByFullPath {
   '/admin/leads': typeof AdminLeadsIndexRoute
   '/admin/product': typeof AdminProductIndexRoute
   '/admin/review-products': typeof AdminReviewProductsIndexRoute
+  '/admin/store': typeof AdminStoreIndexRoute
   '/pos/checkout': typeof PosCheckoutIndexRoute
   '/pos/order': typeof PosOrderIndexRoute
   '/store/coupons/new': typeof dashboardStoreCouponsNewRoute
@@ -301,6 +315,7 @@ export interface FileRoutesByTo {
   '/store/policies': typeof dashboardStorePoliciesRoute
   '/store/staff': typeof dashboardStoreStaffRoute
   '/admin/product/$id': typeof AdminProductIdRoute
+  '/admin/store/form': typeof AdminStoreFormRoute
   '/pos/order/create': typeof PosOrderCreateRoute
   '/customer': typeof dashboardCustomerIndexRoute
   '/product': typeof dashboardProductIndexRoute
@@ -310,6 +325,7 @@ export interface FileRoutesByTo {
   '/admin/leads': typeof AdminLeadsIndexRoute
   '/admin/product': typeof AdminProductIndexRoute
   '/admin/review-products': typeof AdminReviewProductsIndexRoute
+  '/admin/store': typeof AdminStoreIndexRoute
   '/pos/checkout': typeof PosCheckoutIndexRoute
   '/pos/order': typeof PosOrderIndexRoute
   '/store/coupons/new': typeof dashboardStoreCouponsNewRoute
@@ -342,6 +358,7 @@ export interface FileRoutesById {
   '/(dashboard)/store/policies': typeof dashboardStorePoliciesRoute
   '/(dashboard)/store/staff': typeof dashboardStoreStaffRoute
   '/admin/product/$id': typeof AdminProductIdRoute
+  '/admin/store/form': typeof AdminStoreFormRoute
   '/pos/order/create': typeof PosOrderCreateRoute
   '/(dashboard)/customer/': typeof dashboardCustomerIndexRoute
   '/(dashboard)/product/': typeof dashboardProductIndexRoute
@@ -351,6 +368,7 @@ export interface FileRoutesById {
   '/admin/leads/': typeof AdminLeadsIndexRoute
   '/admin/product/': typeof AdminProductIndexRoute
   '/admin/review-products/': typeof AdminReviewProductsIndexRoute
+  '/admin/store/': typeof AdminStoreIndexRoute
   '/pos/checkout/': typeof PosCheckoutIndexRoute
   '/pos/order/': typeof PosOrderIndexRoute
   '/(dashboard)/store/coupons/new': typeof dashboardStoreCouponsNewRoute
@@ -383,6 +401,7 @@ export interface FileRouteTypes {
     | '/store/policies'
     | '/store/staff'
     | '/admin/product/$id'
+    | '/admin/store/form'
     | '/pos/order/create'
     | '/customer'
     | '/product'
@@ -392,6 +411,7 @@ export interface FileRouteTypes {
     | '/admin/leads'
     | '/admin/product'
     | '/admin/review-products'
+    | '/admin/store'
     | '/pos/checkout'
     | '/pos/order'
     | '/store/coupons/new'
@@ -419,6 +439,7 @@ export interface FileRouteTypes {
     | '/store/policies'
     | '/store/staff'
     | '/admin/product/$id'
+    | '/admin/store/form'
     | '/pos/order/create'
     | '/customer'
     | '/product'
@@ -428,6 +449,7 @@ export interface FileRouteTypes {
     | '/admin/leads'
     | '/admin/product'
     | '/admin/review-products'
+    | '/admin/store'
     | '/pos/checkout'
     | '/pos/order'
     | '/store/coupons/new'
@@ -459,6 +481,7 @@ export interface FileRouteTypes {
     | '/(dashboard)/store/policies'
     | '/(dashboard)/store/staff'
     | '/admin/product/$id'
+    | '/admin/store/form'
     | '/pos/order/create'
     | '/(dashboard)/customer/'
     | '/(dashboard)/product/'
@@ -468,6 +491,7 @@ export interface FileRouteTypes {
     | '/admin/leads/'
     | '/admin/product/'
     | '/admin/review-products/'
+    | '/admin/store/'
     | '/pos/checkout/'
     | '/pos/order/'
     | '/(dashboard)/store/coupons/new'
@@ -616,6 +640,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PosCheckoutIndexRouteImport
       parentRoute: typeof PosRouteRoute
     }
+    '/admin/store/': {
+      id: '/admin/store/'
+      path: '/store'
+      fullPath: '/admin/store'
+      preLoaderRoute: typeof AdminStoreIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/admin/review-products/': {
       id: '/admin/review-products/'
       path: '/review-products'
@@ -678,6 +709,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/pos/order/create'
       preLoaderRoute: typeof PosOrderCreateRouteImport
       parentRoute: typeof PosRouteRoute
+    }
+    '/admin/store/form': {
+      id: '/admin/store/form'
+      path: '/store/form'
+      fullPath: '/admin/store/form'
+      preLoaderRoute: typeof AdminStoreFormRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/admin/product/$id': {
       id: '/admin/product/$id'
@@ -818,19 +856,23 @@ const AccountRouteRouteWithChildren = AccountRouteRoute._addFileChildren(
 interface AdminRouteRouteChildren {
   AdminIndexRoute: typeof AdminIndexRoute
   AdminProductIdRoute: typeof AdminProductIdRoute
+  AdminStoreFormRoute: typeof AdminStoreFormRoute
   AdminCategoryIndexRoute: typeof AdminCategoryIndexRoute
   AdminLeadsIndexRoute: typeof AdminLeadsIndexRoute
   AdminProductIndexRoute: typeof AdminProductIndexRoute
   AdminReviewProductsIndexRoute: typeof AdminReviewProductsIndexRoute
+  AdminStoreIndexRoute: typeof AdminStoreIndexRoute
 }
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminIndexRoute: AdminIndexRoute,
   AdminProductIdRoute: AdminProductIdRoute,
+  AdminStoreFormRoute: AdminStoreFormRoute,
   AdminCategoryIndexRoute: AdminCategoryIndexRoute,
   AdminLeadsIndexRoute: AdminLeadsIndexRoute,
   AdminProductIndexRoute: AdminProductIndexRoute,
   AdminReviewProductsIndexRoute: AdminReviewProductsIndexRoute,
+  AdminStoreIndexRoute: AdminStoreIndexRoute,
 }
 
 const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(

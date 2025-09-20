@@ -8,6 +8,7 @@ import {
   FormSelect,
   FormTextarea,
 } from "@lipy/web-ui/components/forms/elements";
+import { EggIcon, NonVegIcon, VegIcon } from "@lipy/web-ui/components/icons";
 import {
   Form,
   FormControl,
@@ -45,9 +46,9 @@ export default function FormEdit({
   };
 
   const itemTypes = [
-    { value: "veg", label: "Veg" },
-    { value: "non-veg", label: "Non-Veg" },
-    { value: "egg", label: "Egg" },
+    { value: "veg", label: "Veg", icon: VegIcon },
+    { value: "non-veg", label: "Non-Veg", icon: NonVegIcon },
+    { value: "egg", label: "Egg", icon: EggIcon },
   ];
 
   const opts = {

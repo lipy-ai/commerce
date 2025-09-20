@@ -2,6 +2,7 @@ import { env } from "@envClient";
 import type { adminCategoryRoute } from "@lipy/server/routes/adminRoutes";
 import type { adminProductRoute } from "@lipy/server/routes/adminRoutes/products";
 import type { adminReviewProductRoute } from "@lipy/server/routes/adminRoutes/reviewProducts";
+import type { adminStoreRoute } from "@lipy/server/routes/adminRoutes/store";
 import type { adminTestRoute } from "@lipy/server/routes/adminRoutes/test";
 import type { adminVariantRoute } from "@lipy/server/routes/adminRoutes/variant";
 import type { addressRoute } from "@lipy/server/routes/loggedRoutes/address";
@@ -58,6 +59,11 @@ export const adminCategoryApi = hc<typeof adminCategoryRoute>(
 
 export const adminReviewProductApi = hc<typeof adminReviewProductRoute>(
   `${basepath}/admin/review-products`,
+  opts
+);
+
+export const adminStoreApi = hc<typeof adminStoreRoute>(
+  `${basepath}/admin/store`,
   opts
 );
 

@@ -22,6 +22,7 @@ import { globalMiddleware } from "./middlewares/global";
 import { adminCategoryRoute } from "./routes/adminRoutes";
 import { adminProductRoute } from "./routes/adminRoutes/products";
 import { adminReviewProductRoute } from "./routes/adminRoutes/reviewProducts";
+import { adminStoreRoute } from "./routes/adminRoutes/store";
 import { adminTestRoute } from "./routes/adminRoutes/test";
 import { adminVariantRoute } from "./routes/adminRoutes/variant";
 import { addressRoute } from "./routes/loggedRoutes/address";
@@ -88,7 +89,8 @@ const adminRouter = new Hono()
 	.route("/product", adminProductRoute)
 	.route("/category", adminCategoryRoute)
 	.route("/variant", adminVariantRoute)
-	.route("/review-products", adminReviewProductRoute);
+	.route("/review-products", adminReviewProductRoute)
+	.route("/store", adminStoreRoute);
 // .route("/test", adminTestRoute);
 
 const merchantRouter = new Hono()

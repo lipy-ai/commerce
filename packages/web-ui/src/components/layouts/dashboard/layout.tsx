@@ -58,7 +58,7 @@ export const DashboardLayout = ({
     alt: string;
   };
 }) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const { isMobile } = useViewport();
   const { isInstallable, promptInstall } = usePWAInstall();
   const [footer, setFooter] = useState<ContextType["footer"]>([]);
@@ -131,7 +131,7 @@ export const DashboardLayout = ({
 
           <div
             className="w-full flex flex-col flex-1"
-            onClick={() => open && setOpen(false)}
+            // onClick={() => open && setOpen(false)}
             style={{
               viewTransitionName: "main-content",
             }}
@@ -151,7 +151,7 @@ function ActiveLinks({
   mobileNav,
   logo,
   isMobile = false,
-  open = false,
+  open = true,
   setOpen,
   footer,
   // ...props
@@ -283,8 +283,8 @@ function NavLink({
   return (
     <div
       className={cn(
-        "overflow-hidden border-b border-border/20 truncate rounded-md px-1.5 relative w-full",
-        open && "justify-start",
+        "overflow-hidden truncate rounded-md px-1.5 relative w-full py-2",
+        open && "justify-start ",
         mobile && "px-0 justify-center rounded-none",
         mobile
           ? isActive && "text-primary [&_svg]:stroke-primary"
@@ -327,7 +327,7 @@ function NavLink({
         </span>
         {!mobile && (
           <motion.span
-            className="flex justify-between gap-2 w-full items-center flex-1 font-medium"
+            className="flex justify-between gap-2 w-full items-center flex-1 text-base"
             initial={{ opacity: 0 }}
             animate={{ opacity: open ? 1 : 0 }}
             transition={{ duration: 0.2 }}

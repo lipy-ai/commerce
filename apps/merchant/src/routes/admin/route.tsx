@@ -13,6 +13,7 @@ import {
   Settings,
   Shirt,
   ShoppingBag,
+  Store,
   Timer,
 } from "lucide-react";
 
@@ -28,6 +29,7 @@ export const dashboardNav = {
     // 	url: "/admin/",
     // 	icon: LayoutDashboard,
     // },
+    { label: "Stores", url: "/admin/store", icon: Store },
     { label: "Review Products", url: "/admin/review-products", icon: Timer },
 
     { label: "Products", url: "/admin/product", icon: Shirt },

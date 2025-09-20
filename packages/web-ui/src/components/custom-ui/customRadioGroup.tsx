@@ -2,6 +2,7 @@
 
 import { cn } from "@lipy/web-ui/lib/utils";
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
+import type { LucideProps } from "lucide-react";
 import * as React from "react";
 import { Label } from "../ui/label";
 
@@ -58,7 +59,11 @@ function CustomRadioGroup({
   React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>,
   "onChange"
 > & {
-  items: { value: string; label: string }[];
+  items: {
+    value: string;
+    label: string;
+    icon?: (props: LucideProps) => React.ReactNode;
+  }[];
   onChange?: (value: string) => void;
 }) {
   const id = React.useId();
@@ -78,6 +83,7 @@ function CustomRadioGroup({
             className="relative flex flex-col items-start gap-4 rounded-lg border border-input p-3 shadow-sm shadow-black/5 has-[[data-state=checked]]:border-ring"
           >
             <div className="flex items-center gap-3">
+              {item.icon && <item.icon className="size-5 stroke-2" />}
               <Label htmlFor={`${id}-${item.value}`}>{item.label}</Label>
               <RadioGroupItem
                 id={`${id}-${item.value}`}

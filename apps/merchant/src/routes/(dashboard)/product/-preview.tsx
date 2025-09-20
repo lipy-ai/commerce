@@ -37,8 +37,7 @@ export function ProductPreview({
           className="w-full h-54 object-contain  rounded-xl bg-accent"
           alt={product.title || ""}
         />
-
-        <div className="size-6 mt-3 mb-0.5">
+        <div className="size-5 mt-3 mb-0.5">
           {product?.type === "veg" ? (
             <VegIcon />
           ) : product?.type === "non-veg" ? (
@@ -47,11 +46,8 @@ export function ProductPreview({
             <EggIcon />
           ) : null}
         </div>
-
-        <p className="text-xl font-semibold ">{product.title}</p>
-
+        <p className="text-xl font-semibold ">{product.title}</p>s
         <p>{product.summary}</p>
-
         {product.variants && product.variants.length > 0 && (
           <Card className="border-2 rounded-xl my-8">
             <CardHeader className="bg-background -m-4 p-4 border-b rounded-t-xl">

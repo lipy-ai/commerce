@@ -36,3 +36,98 @@ export const GoogleMapsIcon = (props: LucideProps) => {
     </svg>
   );
 };
+
+export const VegIcon = (props: LucideProps) => {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 100 100"
+      shapeRendering="geometricPrecision"
+      textRendering="geometricPrecision"
+      imageRendering="optimizeQuality"
+      fillRule="evenodd"
+      clipRule="evenodd"
+    >
+      <title>Vegetarian Icon</title>
+      {/* Green border square */}
+      <rect
+        x="10"
+        y="10"
+        width="80"
+        height="80"
+        rx="4"
+        ry="4"
+        fill="none"
+        stroke="#22c55e"
+        strokeWidth="6"
+      />
+      {/* Green filled circle */}
+      <circle cx="50" cy="50" r="20" fill="#22c55e" />
+    </svg>
+  );
+};
+
+// Non-Vegetarian Icon - Red square with red circle
+export const NonVegIcon = (props: LucideProps) => {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 100 100"
+      shapeRendering="geometricPrecision"
+      textRendering="geometricPrecision"
+      imageRendering="optimizeQuality"
+      fillRule="evenodd"
+      clipRule="evenodd"
+    >
+      <title>Non-Vegetarian Icon</title>
+      {/* Red border square */}
+      <rect
+        x="10"
+        y="10"
+        width="80"
+        height="80"
+        rx="4"
+        ry="4"
+        fill="none"
+        stroke="#ef4444"
+        strokeWidth="6"
+      />
+      {/* Red filled circle */}
+      <circle cx="50" cy="50" r="20" fill="#ef4444" />
+    </svg>
+  );
+};
+
+// Egg Icon - Brown/Orange square with brown circle
+export const EggIcon = (props: LucideProps) => {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 100 100"
+      shapeRendering="geometricPrecision"
+      textRendering="geometricPrecision"
+      imageRendering="optimizeQuality"
+      fillRule="evenodd"
+      clipRule="evenodd"
+    >
+      <title>Egg Icon</title>
+      {/* Brown border square */}
+      <rect
+        x="10"
+        y="10"
+        width="80"
+        height="80"
+        rx="4"
+        ry="4"
+        fill="none"
+        stroke="#d97706"
+        strokeWidth="6"
+      />
+      {/* Brown filled circle */}
+      <circle cx="50" cy="50" r="20" fill="#d97706" />
+    </svg>
+  );
+};

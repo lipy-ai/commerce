@@ -103,7 +103,12 @@ const route = new Hono<ServerContext>()
 				"category.slug",
 				"category.summary",
 				eb.fn
-					.coalesce(eb.fn.jsonAgg("limited_products"), eb.val([]))
+					.coalesce(
+						eb.fn
+							.jsonAgg("limited_products")
+							.filterWhere("limited_products.id", "is not", null),
+						eb.val([]),
+					)
 					.as("products"),
 			])
 			.groupBy("category.id")

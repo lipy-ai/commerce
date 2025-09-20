@@ -1,6 +1,7 @@
 import type { merchantProductApi } from "@lipy/lib/api";
 import { formatAmount } from "@lipy/lib/utils/intl";
 import { DrawerDialogSwitcher } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
+import { EggIcon, NonVegIcon, VegIcon } from "@lipy/web-ui/components/icons";
 import {
   Card,
   CardContent,
@@ -37,7 +38,17 @@ export function ProductPreview({
           alt={product.title || ""}
         />
 
-        <p className="text-xl font-semibold pt-4">{product.title}</p>
+        <div className="size-6 mt-3 mb-0.5">
+          {product?.type === "veg" ? (
+            <VegIcon />
+          ) : product?.type === "non-veg" ? (
+            <NonVegIcon />
+          ) : product?.type === "egg" ? (
+            <EggIcon />
+          ) : null}
+        </div>
+
+        <p className="text-xl font-semibold ">{product.title}</p>
 
         <p>{product.summary}</p>
 

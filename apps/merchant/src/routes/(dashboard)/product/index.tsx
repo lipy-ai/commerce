@@ -7,6 +7,7 @@ import {
   DrawerDialogTitle,
 } from "@lipy/web-ui/components/custom-ui/drawerDialogSwitcher";
 import SearchBar from "@lipy/web-ui/components/custom-ui/searchBar";
+import { EggIcon, NonVegIcon, VegIcon } from "@lipy/web-ui/components/icons";
 import { DashboardHeader } from "@lipy/web-ui/components/layouts/dashboard";
 import {
   Accordion,
@@ -164,13 +165,13 @@ function MobileView({ items }: { items: Response["items"] }) {
           key={m.id}
           type="single"
           collapsible
-          defaultValue="item-1"
+          defaultValue={m.products.length > 0 ? "item-1" : undefined}
           className="pr-4 bg-card"
         >
           <AccordionItem value="item-1" className="border-b-0">
             <AccordionTrigger className="hover:no-underline break-words">
               <p className="font-semibold text-lg border-l-4 px-3 border-red-600">
-                {m.title} ({m.products.length})
+                {m.title} ({m.products.length || 0})
               </p>
             </AccordionTrigger>
 
@@ -180,10 +181,23 @@ function MobileView({ items }: { items: Response["items"] }) {
                   <div key={p.id} className="py-6">
                     <div className="flex items-start justify-between">
                       <div className="space-y-2">
-                        <p className="font-medium text-base">{p.title}</p>
+                        <div>
+                          <div className="size-5 ">
+                            {p?.type === "veg" ? (
+                              <VegIcon />
+                            ) : p?.type === "non-veg" ? (
+                              <NonVegIcon />
+                            ) : p?.type === "egg" ? (
+                              <EggIcon />
+                            ) : null}
+                          </div>
+                          <p className="font-medium text-base">{p.title}</p>
+                        </div>
 
                         {p.variants && (
-                          <p>{formatAmount("inr", p.variants[0].price || 0)}</p>
+                          <p className="font-medium">
+                            {formatAmount("inr", p.variants[0].price || 0)}
+                          </p>
                         )}
 
                         <p
@@ -198,7 +212,7 @@ function MobileView({ items }: { items: Response["items"] }) {
                         <img
                           src={p.thumbnail || "/assets/placeholder-image.svg"}
                           alt={p.title || ""}
-                          className="flex-shrink-0 size-28 rounded-xl border-2"
+                          className="flex-shrink-0 size-32 rounded-xl border-2"
                         />
                       </div>
                     </div>

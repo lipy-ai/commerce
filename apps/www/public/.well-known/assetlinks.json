@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.lipy.app",
+      "sha256_cert_fingerprints": [
+        "34:A0:F8:3B:9F:8E:CA:CD:9C:40:27:92:E0:B7:B9:05:03:6B:1F:55:6F:07:B2:C5:E4:65:53:2C:C2:A2:D8:C5"
+      ]
+    }
+  }
+]

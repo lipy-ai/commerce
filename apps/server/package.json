@@ -6,10 +6,6 @@
     "start": "bun run env -- bun build/index.js",
     "dev": "bun run env bun run --hot src/index.ts",
     "build": "bun build src/index.ts --outdir ./build --target bun --minify --sourcemap=linked",
-    "studio": "bun drizzle-kit studio --port 3001",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "bun run db:generate && bun run env drizzle-kit migrate",
-    "db:seed": "bun run env bun ./src/db/seed.ts",
     "format": "biome format",
     "lint": "tsc && biome lint",
     "check": "biome check"

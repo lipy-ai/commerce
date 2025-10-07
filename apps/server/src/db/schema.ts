@@ -116,7 +116,7 @@ export const address = schema.table(
 	{
 		id: uuid("id").primaryKey(),
 		name: text("name").notNull(),
-		tag: text({ enum: ["home", "work", "other"] }).notNull(),
+		tag: text().notNull(),
 		line1: text("line1").notNull(),
 		line2: text("line2"),
 		city: text("city").notNull(),

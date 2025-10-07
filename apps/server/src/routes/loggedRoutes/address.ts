@@ -4,6 +4,8 @@ import { z } from "zod";
 import { db } from "@/db";
 import { zValidator } from "@/middlewares/validator";
 import type { ServerContext } from "@/types";
+import { isUUID } from "validator";
+import { HTTPError } from "@/lib/exception";
 
 export const coreAddressSchema = z.object({
   line1: z.string().min(1),
@@ -18,7 +20,7 @@ export const coreAddressSchema = z.object({
 
 export const addressSchema = z.object({
   name: z.string(),
-  tag: z.enum(["home", "work", "other"]),
+  tag: z.string(),
   phone: z.string().optional(),
   metadata: z
     .object({
@@ -43,34 +45,49 @@ const route = new Hono<ServerContext>()
       .execute();
     return c.json(address);
   })
-  .get(
-    "/:id",
-    zValidator("param", z.object({ id: z.string().uuid() })),
-    async (c) => {
-      const session = c.get("session");
-      const { id } = c.req.valid("param");
-
-      const address = await db
-        .selectFrom("userAddress")
-        .where("userAddress.userId", "=", session?.userId!)
-        .where("userAddress.id", "=", id)
-
-        .rightJoin("address", "address.id", "userAddress.id")
+  .get("/:id", zValidator("param", z.object({ id: z.string() })), async (c) => {
+    const session = c.get("session");
+    const { id } = c.req.valid("param");
+    if (id === "primary") {
+      const result = await db
+        .selectFrom("user")
+        .leftJoin("userAddress", "userAddress.id", "user.address")
+        .leftJoin("address", "address.id", "userAddress.id")
+        .where("user.id", "=", session?.userId!)
         .selectAll(["address"])
         .select([
-          sql<number>`ST_Y(address.location::geometry)`.as("lat"),
-          sql<number>`ST_X(address.location::geometry)`.as("lng"),
+          sql<number>`ST_Y(location::geometry)`.as("lat"),
+          sql<number>`ST_X(location::geometry)`.as("lng"),
         ])
-        .execute();
-      return c.json(address);
+        .executeTakeFirst();
+
+      return c.json(result);
     }
-  )
+
+    if (!isUUID(id)) {
+      throw new HTTPError(400, { message: "Invalid id" });
+    }
+    const address = await db
+      .selectFrom("userAddress")
+      .where("userAddress.userId", "=", session?.userId!)
+      .where("userAddress.id", "=", id)
+
+      .rightJoin("address", "address.id", "userAddress.id")
+      .selectAll(["address"])
+      .select([
+        sql<number>`ST_Y(address.location::geometry)`.as("lat"),
+        sql<number>`ST_X(address.location::geometry)`.as("lng"),
+      ])
+      .executeTakeFirst();
+    return c.json(address);
+  })
   .delete(
     "/:id",
     zValidator("param", z.object({ id: z.string().uuid() })),
     async (c) => {
       const session = c.get("session");
       const { id } = c.req.valid("param");
+
       const address = await db
         .deleteFrom("userAddress")
         .where("id", "=", id)
@@ -91,7 +108,7 @@ const route = new Hono<ServerContext>()
           location: sql`ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326)::geography`,
           ...values,
         })
-        .returning(["id"])
+        .returningAll()
         .executeTakeFirst();
 
       if (!address) throw Error("Failed to create address");
@@ -140,28 +157,6 @@ const route = new Hono<ServerContext>()
 
       return c.json(address);
     }
-  )
-  // FIXME: remove this
-  .get("/primary", async (c) => {
-    const user = c.get("user");
-
-    if (!user) {
-      return c.json(null);
-    }
-
-    const result = await db
-      .selectFrom("user")
-      .leftJoin("userAddress", "userAddress.id", "user.address")
-      .leftJoin("address", "address.id", "userAddress.id")
-      .where("user.id", "=", user?.id!)
-      .selectAll(["address"])
-      .select([
-        sql<number>`ST_Y(location::geometry)`.as("lat"),
-        sql<number>`ST_X(location::geometry)`.as("lng"),
-      ])
-      .executeTakeFirstOrThrow();
-
-    return c.json(result);
-  });
+  );
 
 export { route as addressRoute };

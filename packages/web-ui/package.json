@@ -62,7 +62,7 @@
 		"date-fns": "^4.1.0",
 		"embla-carousel-react": "^8.6.0",
 		"framer-motion": "^12.7.4",
-		"hono": "^4.9.6",
+		"hono": "^4.12.7",
 		"input-otp": "^1.4.2",
 		"lucide-react": "^0.492.0",
 		"nanoid": "^5.1.5",

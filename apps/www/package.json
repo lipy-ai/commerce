@@ -46,11 +46,11 @@
 		"@types/react": "^19.1.8",
 		"@types/react-dom": "^19.1.6",
 		"@vitejs/plugin-react": "^4.6.0",
-		"hono": "^4.9.6",
+		"hono": "^4.12.7",
 		"jsdom": "^26.1.0",
 		"rollup-plugin-visualizer": "^5.14.0",
 		"typescript": "^5.8.3",
-		"vite": "^6.3.5",
+		"vite": "^6.4.1",
 		"vite-plugin-pwa": "^1.0.2",
 		"vitest": "^3.2.4",
 		"web-vitals": "^4.2.4"
